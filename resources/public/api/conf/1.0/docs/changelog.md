@@ -1,0 +1,1 @@
+You can find the changelog in the [individuals-income-received-api](https://github.com/hmrc/mtd-api/wiki/Changelog) GitHub wiki.
