@@ -23,10 +23,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.SampleConnector
 import v1.controllers.EndpointLogContext
-import v1.models.domain.SampleResponse
 import v1.models.errors.{DownstreamError, ErrorWrapper, NotFoundError}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.SampleRequestData
+import v1.models.request.sample.SampleRequest
+import v1.models.response.SampleResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SampleService @Inject()(sampleConnector: SampleConnector) extends DesResponseMappingSupport with Logging {
 
-  def doServiceThing(request: SampleRequestData)(
+  def doServiceThing(request: SampleRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[SampleResponse]]] = {

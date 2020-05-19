@@ -22,10 +22,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockSampleConnector
 import v1.models.des.DesSampleResponse
-import v1.models.domain.{SampleRequestBody, SampleResponse}
+import v1.models.domain.{DesTaxYear, SampleRequestBody}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.{DesTaxYear, SampleRequestData}
+import v1.models.request.sample.SampleRequest
+import v1.models.response.SampleResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +39,7 @@ class SampleServiceSpec extends UnitSpec {
 
   private val requestBody = SampleRequestBody("someData")
 
-  private val requestData = SampleRequestData(Nino(nino), DesTaxYear.fromMtd(taxYear), requestBody)
+  private val requestData = SampleRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), requestBody)
 
   trait Test extends MockSampleConnector {
     implicit val hc: HeaderCarrier = HeaderCarrier()

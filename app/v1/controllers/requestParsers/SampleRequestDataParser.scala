@@ -19,13 +19,14 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.SampleValidator
-import v1.models.domain.SampleRequestBody
-import v1.models.requestData.{DesTaxYear, SampleRawData, SampleRequestData}
+import v1.models.domain.{DesTaxYear, SampleRequestBody}
+import v1.models.request.sample.{SampleRawData, SampleRequest}
+import v1.models.request.sample
 
 class SampleRequestDataParser @Inject()(val validator: SampleValidator)
-  extends RequestParser[SampleRawData, SampleRequestData] {
+  extends RequestParser[SampleRawData, SampleRequest] {
 
-  override protected def requestFor(data: SampleRawData): SampleRequestData =
-    SampleRequestData(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.as[SampleRequestBody])
+  override protected def requestFor(data: SampleRawData): SampleRequest =
+    sample.SampleRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.as[SampleRequestBody])
 
 }

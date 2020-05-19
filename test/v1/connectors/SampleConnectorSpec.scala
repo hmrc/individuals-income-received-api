@@ -20,9 +20,9 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.des.DesSampleResponse
-import v1.models.domain.{EmptyJsonBody, SampleRequestBody}
+import v1.models.domain.{DesTaxYear, EmptyJsonBody, SampleRequestBody}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.{DesTaxYear, SampleRequestData}
+import v1.models.request.sample.SampleRequest
 
 import scala.concurrent.Future
 
@@ -42,7 +42,7 @@ class SampleConnectorSpec extends ConnectorSpec {
   }
 
   "doService" must {
-    val request = SampleRequestData(nino, taxYear, SampleRequestBody("someData"))
+    val request = SampleRequest(nino, taxYear, SampleRequestBody("someData"))
 
     "post an empty body and return the result" in new Test {
       val outcome = Right(ResponseWrapper(correlationId, DesSampleResponse(calcId)))

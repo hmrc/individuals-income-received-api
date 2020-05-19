@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request.sample
 
 import play.api.libs.json.JsValue
+import v1.models.request.RawData
 
 case class SampleRawData(nino: String, taxYear: String, body: JsValue) extends RawData

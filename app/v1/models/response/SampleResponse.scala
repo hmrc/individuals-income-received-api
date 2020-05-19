@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.domain
+package v1.models.response
 
 import config.AppConfig
 import play.api.libs.json.{Json, OWrites}

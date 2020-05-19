@@ -20,11 +20,11 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockSampleValidator
-import v1.models.domain.SampleRequestBody
+import v1.models.domain.{DesTaxYear, SampleRequestBody}
 import v1.models.errors._
-import v1.models.requestData.{DesTaxYear, SampleRawData, SampleRequestData}
+import v1.models.request.sample.{SampleRawData, SampleRequest}
 
-class SampleRequestDataParserSpec extends UnitSpec {
+class SampleRequestParserSpec extends UnitSpec {
   val nino = "AA123456B"
   val taxYear = "2017-18"
   val calcId = "someCalcId"
@@ -49,7 +49,7 @@ class SampleRequestDataParserSpec extends UnitSpec {
         MockSampleValidator.validate(inputData).returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(SampleRequestData(Nino(nino), DesTaxYear("2018"), SampleRequestBody("someData")))
+          Right(SampleRequest(Nino(nino), DesTaxYear("2018"), SampleRequestBody("someData")))
       }
     }
 

@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, SampleConnector}
 import v1.models.des.DesSampleResponse
-import v1.models.requestData.SampleRequestData
+import v1.models.request.sample.SampleRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,9 +31,9 @@ trait MockSampleConnector extends MockFactory {
 
   object MockSampleConnector {
 
-    def doConnectorThing(requestData: SampleRequestData): CallHandler[Future[DesOutcome[DesSampleResponse]]] = {
+    def doConnectorThing(requestData: SampleRequest): CallHandler[Future[DesOutcome[DesSampleResponse]]] = {
       (mockSampleConnector
-        .doConnectorThing(_: SampleRequestData)(_: HeaderCarrier, _: ExecutionContext))
+        .doConnectorThing(_: SampleRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)
     }
   }

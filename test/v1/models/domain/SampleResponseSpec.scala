@@ -18,6 +18,7 @@ package v1.models.domain
 
 import play.api.libs.json.Json
 import support.UnitSpec
+import v1.models.response.SampleResponse
 
 class SampleResponseSpec extends UnitSpec {
   "writes" must {
