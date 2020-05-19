@@ -17,5 +17,6 @@
 package v1.models.request.savings.delete
 
 import uk.gov.hmrc.domain.Nino
+import v1.models.domain.DesTaxYear
 
-case class DeleteSavingsRequest(nino: Nino, taxYear: String)
+case class DeleteSavingsRequest(nino: Nino, taxYear: DesTaxYear)
