@@ -25,7 +25,7 @@ import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
-import v1.controllers.requestParsers.SampleRequestDataParser
+import v1.controllers.requestParsers.SampleRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, SampleAuditDetail, SampleAuditResponse}
 import v1.models.auth.UserDetails
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SampleController @Inject()(val authService: EnrolmentsAuthService,
                                  val lookupService: MtdIdLookupService,
-                                 requestDataParser: SampleRequestDataParser,
+                                 requestDataParser: SampleRequestParser,
                                  sampleService: SampleService,
                                  hateoasFactory: HateoasFactory,
                                  auditService: AuditService,

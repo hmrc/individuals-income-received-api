@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.controllers.requestParsers
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.SampleValidator
-import v1.models.errors.MtdError
-import v1.models.request.sample.SampleRawData
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.DeleteSavingsValidator
+import v1.models.domain.DesTaxYear
+import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
 
-class MockSampleValidator extends MockFactory {
+class DeleteSavingsRequestParser @Inject()(val validator: DeleteSavingsValidator)
+  extends RequestParser[DeleteSavingsRawData, DeleteSavingsRequest] {
 
-  val mockValidator: SampleValidator = mock[SampleValidator]
-
-  object MockSampleValidator {
-
-    def validate(data: SampleRawData): CallHandler1[SampleRawData, List[MtdError]] = {
-      (mockValidator
-        .validate(_: SampleRawData))
-        .expects(data)
-    }
-  }
-
+  override protected def requestFor(data: DeleteSavingsRawData): DeleteSavingsRequest =
+    DeleteSavingsRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
 }

@@ -21,12 +21,10 @@ import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.SampleValidator
 import v1.models.domain.{DesTaxYear, SampleRequestBody}
 import v1.models.request.sample.{SampleRawData, SampleRequest}
-import v1.models.request.sample
 
-class SampleRequestDataParser @Inject()(val validator: SampleValidator)
+class SampleRequestParser @Inject()(val validator: SampleValidator)
   extends RequestParser[SampleRawData, SampleRequest] {
 
   override protected def requestFor(data: SampleRawData): SampleRequest =
-    sample.SampleRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.as[SampleRequestBody])
-
+    SampleRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.as[SampleRequestBody])
 }

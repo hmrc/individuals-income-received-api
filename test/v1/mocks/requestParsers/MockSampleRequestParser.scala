@@ -18,13 +18,13 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.SampleRequestDataParser
+import v1.controllers.requestParsers.SampleRequestParser
 import v1.models.errors.ErrorWrapper
 import v1.models.request.sample.{SampleRawData, SampleRequest}
 
 trait MockSampleRequestParser extends MockFactory {
 
-  val mockRequestDataParser: SampleRequestDataParser = mock[SampleRequestDataParser]
+  val mockRequestDataParser: SampleRequestParser = mock[SampleRequestParser]
 
   object MockSampleRequestDataParser {
     def parse(data: SampleRawData): CallHandler[Either[ErrorWrapper, SampleRequest]] = {
