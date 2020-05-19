@@ -36,5 +36,9 @@ class ControllerBaseSpec extends UnitSpec
     HeaderNames.AUTHORIZATION -> "Bearer Token"
   )
 
+  lazy val fakeDeleteRequest: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withHeaders(
+    HeaderNames.AUTHORIZATION -> "Bearer Token"
+  )
+
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 }
