@@ -48,14 +48,6 @@ class DeleteSavingsValidatorSpec extends UnitSpec {
       }
     }
 
-    "return RuleTaxYearNotSupportedError error" when {
-      "an out of range tax year is supplied" in {
-        validator.validate(
-          DeleteSavingsRawData(validNino, "2016-17")) shouldBe
-          List(RuleTaxYearNotSupportedError)
-      }
-    }
-
     "return multiple errors" when {
       "request supplied has multiple errors" in {
         validator.validate(DeleteSavingsRawData("A12344A", "20178")) shouldBe

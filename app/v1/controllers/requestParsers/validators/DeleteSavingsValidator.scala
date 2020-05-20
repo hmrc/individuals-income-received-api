@@ -22,7 +22,7 @@ import v1.models.request.savings.delete.DeleteSavingsRawData
 
 class DeleteSavingsValidator extends Validator[DeleteSavingsRawData] {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
+  private val validationSet = List(parameterFormatValidation)
 
   override def validate(data: DeleteSavingsRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,12 +32,6 @@ class DeleteSavingsValidator extends Validator[DeleteSavingsRawData] {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
-    )
-  }
-
-  private def parameterRuleValidation: DeleteSavingsRawData => List[List[MtdError]] = { data =>
-    List(
-      MtdTaxYearValidation.validate(data.taxYear, RuleTaxYearNotSupportedError)
     )
   }
 }

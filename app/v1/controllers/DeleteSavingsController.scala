@@ -76,8 +76,8 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | RuleTaxYearRangeInvalidError |
-           TaxYearFormatError | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError |
+           RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
