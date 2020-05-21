@@ -20,10 +20,10 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.models.domain.SampleResponse
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.SampleRequestData
+import v1.models.request.sample.SampleRequest
+import v1.models.response.SampleResponse
 import v1.services.SampleService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,9 +34,9 @@ trait MockSampleService extends MockFactory {
 
   object MockSampleService {
 
-    def doServiceThing(requestData: SampleRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SampleResponse]]]] = {
+    def doServiceThing(requestData: SampleRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[SampleResponse]]]] = {
       (mockSampleService
-        .doServiceThing(_: SampleRequestData)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .doServiceThing(_: SampleRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
     }
   }

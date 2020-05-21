@@ -1,1 +1,2 @@
 POST       /:nino/:taxYear/sample-endpoint                  v1.controllers.SampleController.handleRequest(nino: String, taxYear: String)
+DELETE     /savings/:nino/:taxYear                          v1.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)

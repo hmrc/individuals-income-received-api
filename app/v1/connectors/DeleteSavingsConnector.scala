@@ -20,24 +20,25 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.connectors.httpparsers.StandardDesHttpParser._
-import v1.models.des.DesSampleResponse
-import v1.models.domain.EmptyJsonBody
-import v1.models.request.sample.SampleRequest
+import v1.models.request.savings.delete.DeleteSavingsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SampleConnector @Inject()(val http: HttpClient,
-                                val appConfig: AppConfig) extends BaseDesConnector {
+class DeleteSavingsConnector @Inject()(val http: HttpClient,
+                                       val appConfig: AppConfig) extends BaseDesConnector {
 
-  def doConnectorThing(request: SampleRequest)(
+  def deleteSaving(request: DeleteSavingsRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[DesSampleResponse]] = {
+    ec: ExecutionContext): Future[DesOutcome[Unit]] = {
 
-    post(
-      body = EmptyJsonBody,
-      DesUri[DesSampleResponse](s"income-tax/nino/${request.nino}/taxYear/${request.desTaxYear}/someService")
+    import v1.connectors.httpparsers.StandardDesHttpParser._
+
+    val nino = request.nino.nino
+    val taxYear = request.taxYear.value
+
+    delete(
+      uri = DesUri[Unit](s"some-placeholder/savings/$nino/$taxYear")
     )
   }
 }

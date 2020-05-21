@@ -19,22 +19,21 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, SampleConnector}
-import v1.models.des.DesSampleResponse
-import v1.models.request.sample.SampleRequest
+import v1.connectors.{DeleteSavingsConnector, DesOutcome}
+import v1.models.request.savings.delete.DeleteSavingsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockSampleConnector extends MockFactory {
+trait MockDeleteSavingsConnector extends MockFactory {
 
-  val mockSampleConnector: SampleConnector = mock[SampleConnector]
+  val mockDeleteSavingsConnector: DeleteSavingsConnector = mock[DeleteSavingsConnector]
 
-  object MockSampleConnector {
+  object MockDeleteSavingsConnector {
 
-    def doConnectorThing(requestData: SampleRequest): CallHandler[Future[DesOutcome[DesSampleResponse]]] = {
-      (mockSampleConnector
-        .doConnectorThing(_: SampleRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+    def deleteSaving(request: DeleteSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (mockDeleteSavingsConnector
+        .deleteSaving(_: DeleteSavingsRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(request, *, *)
     }
   }
 

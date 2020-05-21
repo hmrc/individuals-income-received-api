@@ -14,25 +14,8 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.models.request.savings.delete
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.SampleValidator
-import v1.models.errors.MtdError
-import v1.models.request.sample.SampleRawData
+import v1.models.request.RawData
 
-class MockSampleValidator extends MockFactory {
-
-  val mockValidator: SampleValidator = mock[SampleValidator]
-
-  object MockSampleValidator {
-
-    def validate(data: SampleRawData): CallHandler1[SampleRawData, List[MtdError]] = {
-      (mockValidator
-        .validate(_: SampleRawData))
-        .expects(data)
-    }
-  }
-
-}
+case class DeleteSavingsRawData(nino: String, taxYear: String) extends RawData

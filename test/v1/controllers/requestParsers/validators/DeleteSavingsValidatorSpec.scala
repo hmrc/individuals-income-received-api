@@ -16,56 +16,41 @@
 
 package v1.controllers.requestParsers.validators
 
-import play.api.libs.json.Json
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.request.sample
-import v1.models.request.sample.SampleRawData
+import v1.models.request.savings.delete.DeleteSavingsRawData
 
-class SampleValidatorSpec extends UnitSpec {
+class DeleteSavingsValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
-  private val requestBodyJson = Json.parse(
-    """{
-      |  "data" : "someData"
-      |}
-    """.stripMargin)
 
-  val validator = new SampleValidator()
+  val validator = new DeleteSavingsValidator()
 
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in {
-        validator.validate(sample.SampleRawData(validNino, validTaxYear, requestBodyJson)) shouldBe Nil
+        validator.validate(DeleteSavingsRawData(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(sample.SampleRawData("A12344A", validTaxYear, requestBodyJson)) shouldBe
+        validator.validate(DeleteSavingsRawData("A12344A", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in {
-        validator.validate(sample.SampleRawData(validNino, "20178", requestBodyJson)) shouldBe
+        validator.validate(DeleteSavingsRawData(validNino, "20178")) shouldBe
           List(TaxYearFormatError)
-      }
-    }
-
-    "return RuleTaxYearNotSupportedError error" when {
-      "an out of range tax year is supplied" in {
-        validator.validate(
-          sample.SampleRawData(validNino, "2016-17", requestBodyJson)) shouldBe
-          List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-        validator.validate(sample.SampleRawData("A12344A", "20178", requestBodyJson)) shouldBe
+        validator.validate(DeleteSavingsRawData("A12344A", "20178")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }

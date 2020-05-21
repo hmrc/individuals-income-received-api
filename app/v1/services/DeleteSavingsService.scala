@@ -21,33 +21,33 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.SampleConnector
+import v1.connectors.DeleteSavingsConnector
 import v1.controllers.EndpointLogContext
-import v1.models.errors.{DownstreamError, ErrorWrapper, NotFoundError}
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.sample.SampleRequest
-import v1.models.response.SampleResponse
+import v1.models.request.savings.delete.DeleteSavingsRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SampleService @Inject()(sampleConnector: SampleConnector) extends DesResponseMappingSupport with Logging {
+class DeleteSavingsService @Inject()(connector: DeleteSavingsConnector) extends DesResponseMappingSupport with Logging {
 
-  def doServiceThing(request: SampleRequest)(
+  def deleteSaving(request: DeleteSavingsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[SampleResponse]]] = {
+    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(sampleConnector.doConnectorThing(request)).leftMap(mapDesErrors(desErrorMap))
-    } yield desResponseWrapper.map(des => SampleResponse(des.responseData)) // *If* need to convert to Mtd
+      desResponseWrapper <- EitherT(connector.deleteSaving(request)).leftMap(mapDesErrors(desErrorMap))
+    } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap =
+  private def desErrorMap: Map[String, MtdError] =
     Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "NOT_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError

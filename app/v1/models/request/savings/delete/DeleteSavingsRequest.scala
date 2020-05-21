@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request.savings.delete
 
 import uk.gov.hmrc.domain.Nino
-import v1.models.domain.SampleRequestBody
+import v1.models.domain.DesTaxYear
 
-case class SampleRequestData(nino: Nino, desTaxYear: DesTaxYear, body: SampleRequestBody)
+case class DeleteSavingsRequest(nino: Nino, taxYear: DesTaxYear)

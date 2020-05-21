@@ -21,15 +21,16 @@ import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockSampleRequestDataParser
+import v1.mocks.requestParsers.MockSampleRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockSampleService}
 import v1.models.audit.{AuditError, AuditEvent, SampleAuditDetail, SampleAuditResponse}
-import v1.models.domain.{SampleHateoasData, SampleRequestBody, SampleResponse}
+import v1.models.domain.{DesTaxYear, SampleRequestBody}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.{DesTaxYear, SampleRawData, SampleRequestData}
+import v1.models.request.sample.{SampleRawData, SampleRequest}
+import v1.models.response.{SampleHateoasData, SampleResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,7 +40,7 @@ class SampleControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockSampleService
-    with MockSampleRequestDataParser
+    with MockSampleRequestParser
     with MockHateoasFactory
     with MockAuditService {
 
@@ -86,7 +87,7 @@ class SampleControllerSpec
   private val requestBody = SampleRequestBody("someData")
 
   private val rawData     = SampleRawData(nino, taxYear, requestBodyJson)
-  private val requestData = SampleRequestData(Nino(nino), DesTaxYear.fromMtd(taxYear), requestBody)
+  private val requestData = SampleRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), requestBody)
   val testHateoasLink = Link(href = "/foo/bar", method = GET, rel = "test-relationship")
 
   "handleRequest" should {
@@ -151,7 +152,7 @@ class SampleControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeExceededError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

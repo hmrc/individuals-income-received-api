@@ -18,57 +18,57 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockSampleConnector
-import v1.models.des.DesSampleResponse
-import v1.models.domain.{DesTaxYear, SampleRequestBody}
+import v1.mocks.connectors.MockDeleteSavingsConnector
+import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.sample.SampleRequest
-import v1.models.response.SampleResponse
+import v1.models.request.savings.delete.DeleteSavingsRequest
 
 import scala.concurrent.Future
 
-class SampleServiceSpec extends ServiceSpec {
+class DeleteSavingsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA123456A"
-  private val taxYear = "2017-18"
-  private val correlationId = "X-123"
+  private val nino = "AA112233A"
+  private val taxYear = "2019"
+  private val correlationId = "X-corr"
 
-  private val requestBody = SampleRequestBody("someData")
+  private val deleteSavingsRequest = DeleteSavingsRequest(
+    nino = Nino(nino),
+    taxYear = DesTaxYear(taxYear)
+  )
 
-  private val requestData = SampleRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), requestBody)
-
-  trait Test extends MockSampleConnector {
+  trait Test extends MockDeleteSavingsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service = new SampleService(
-      sampleConnector = mockSampleConnector
+    val service: DeleteSavingsService = new DeleteSavingsService(
+      connector = mockDeleteSavingsConnector
     )
   }
 
-  "service" when {
-    "service call successsful" must {
-      "return mapped result" in new Test {
-        MockSampleConnector.doConnectorThing(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, DesSampleResponse("result")))))
+  "DeleteSavingsService" when {
+    "deleteSaving" must {
+      "return correct result for a success" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        await(service.doServiceThing(requestData)) shouldBe Right(ResponseWrapper(correlationId, SampleResponse("result")))
+        MockDeleteSavingsConnector.deleteSaving(deleteSavingsRequest)
+          .returns(Future.successful(outcome))
+
+        await(service.deleteSaving(deleteSavingsRequest)) shouldBe outcome
       }
-    }
 
-    "unsuccessful" must {
       "map errors according to spec" when {
 
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockSampleConnector.doConnectorThing(requestData)
+            MockDeleteSavingsConnector.deleteSaving(deleteSavingsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.doServiceThing(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.deleteSaving(deleteSavingsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("NOT_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
