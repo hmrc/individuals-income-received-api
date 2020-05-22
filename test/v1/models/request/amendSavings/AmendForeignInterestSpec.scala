@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveSavings
+package v1.models.request.amendSavings
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveSavingsFixture
+import v1.models.request.savings.amend.AmendForeignInterest
+import v1.fixtures.AmendSavingsFixture._
 
-class ForeignInterestSpec extends UnitSpec {
+class AmendForeignInterestSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -48,7 +49,7 @@ class ForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val desResponseInvalid: JsValue = Json.parse(
+  val mtdResponseInvalid: JsValue = Json.parse(
     """
       |{
       |    "amountBeforeTax": "ABC",
@@ -61,7 +62,7 @@ class ForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val minimalDesResponse: JsValue = Json.parse(
+  val minimalMtdResponse: JsValue = Json.parse(
     """
       |{
       |    "countryCode": "GER",
@@ -70,30 +71,29 @@ class ForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
-  "ForeignInterest" when {
+  "AmendForeignInterest" when {
     "read from valid JSON" should {
-      "produce the expected ForeignInterest object" in {
-        desResponse.as[ForeignInterest] shouldBe RetrieveSavingsFixture.fullForeignInterestsModel
+      "convert valid MTD JSON into AmendForeignInterest model with all fields" in {
+        mtdResponse.as[AmendForeignInterest] shouldBe fullAmendForeignInterestModel
       }
     }
 
     "read from a JSON with only mandatory fields" should {
-      "produce a ForeignInterest object with only mandatory fields" in {
-        minimalDesResponse.as[ForeignInterest] shouldBe RetrieveSavingsFixture.minimalForeignInterestsModel
+      "convert MTD JSON with only mandatory fields to the expected AmendForeignInterest model" in {
+        minimalMtdResponse.as[AmendForeignInterest] shouldBe minimalAmendForeignInterestModel
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        desResponseInvalid.validate[ForeignInterest] shouldBe a[JsError]
+        mtdResponseInvalid.validate[AmendForeignInterest] shouldBe a[JsError]
       }
     }
 
-    "written to JSON" should {
-      "produce the expected JSON object" in {
-        Json.toJson(RetrieveSavingsFixture.fullForeignInterestsModel) shouldBe mtdResponse
+    "written to DES JSON" should {
+      "convert a AmendForeignInterest model into valid DES JSON" in {
+        Json.toJson(fullAmendForeignInterestModel) shouldBe desResponse
       }
     }
   }
 }
-

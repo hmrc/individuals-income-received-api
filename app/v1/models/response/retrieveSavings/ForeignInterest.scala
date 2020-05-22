@@ -27,7 +27,7 @@ case class ForeignInterest(amountBeforeTax: Option[BigDecimal],
                            foreignTaxCreditRelief: Boolean
                           )
 
-object ForeignInterest{
+object ForeignInterest {
 
   implicit val reads: Reads[ForeignInterest]=(
     (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
