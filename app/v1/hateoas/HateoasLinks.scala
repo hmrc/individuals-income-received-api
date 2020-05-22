@@ -27,7 +27,27 @@ trait HateoasLinks {
   private def sampleUri(appConfig: AppConfig, nino: String): String =
     s"/${appConfig.apiGatewayContext}/$nino/sample-endpoint"
 
+  private def retrieveSavingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
+
+  private def deleteSavingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
+
   //API resource links
   def sampleLink(appConfig: AppConfig, nino: String): Link =
     Link(href = sampleUri(appConfig, nino), method = GET, rel = SAMPLE_ENDPOINT_REL)
+
+  def retrieveSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = retrieveSavingsUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def deleteSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = deleteSavingsUri(appConfig, nino, taxYear),
+      method = DELETE,
+      rel = DELETE_SAVINGS_INCOME
+    )
 }

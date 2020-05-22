@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.hateoas
+package v1.models.request.retrieveSavings
 
-object RelType {
-  val SAMPLE_ENDPOINT_REL = "sample-rel"
-  val DELETE_SAVINGS_INCOME = "delete-savings-income"
+import uk.gov.hmrc.domain.Nino
+import v1.models.domain.DesTaxYear
 
-  val SELF = "self"
-}
+case class RetrieveSavingsRequest(nino: Nino, taxYear: DesTaxYear)
