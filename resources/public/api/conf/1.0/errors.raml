@@ -80,3 +80,25 @@ traits:
                 description: Tax year range invalid. A tax year range of one year is required.
                 value:
                   code: RULE_TAX_YEAR_RANGE_INVALID
+  formatCountryCode:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatCountryCode:
+                description: The provided country code is not valid
+                value:
+                  code: FORMAT_COUNTRY_CODE
+  formatValue:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatValue:
+                description: One or more values have been added with the incorrect format
+                value:
+                  code: FORMAT_VALUE
