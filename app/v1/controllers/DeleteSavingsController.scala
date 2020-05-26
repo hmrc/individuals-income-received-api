@@ -25,7 +25,7 @@ import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.controllers.requestParsers.DeleteSavingsRequestParser
 import v1.models.errors._
-import v1.models.request.savings.delete.DeleteSavingsRawData
+import v1.models.request.DeleteSavingsRawData
 import v1.services.{AuditService, DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}

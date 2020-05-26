@@ -21,7 +21,8 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.delete.DeleteSavingsRequest
+import v1.models.request
+import v1.models.request.DeleteSavingsRequest
 
 import scala.concurrent.Future
 
@@ -30,7 +31,7 @@ class DeleteSavingsConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2019"
 
-  val deleteSavingsRequest: DeleteSavingsRequest = DeleteSavingsRequest(
+  val deleteSavingsRequest: DeleteSavingsRequest = request.DeleteSavingsRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear)
   )

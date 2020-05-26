@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.DeleteSavingsRequestParser
 import v1.models.errors.ErrorWrapper
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
 
 trait MockDeleteSavingsRequestParser extends MockFactory {
 

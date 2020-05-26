@@ -25,7 +25,8 @@ import v1.mocks.services.{MockDeleteSavingsService, MockEnrolmentsAuthService, M
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request
+import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -61,7 +62,7 @@ class DeleteSavingsControllerSpec
     taxYear = taxYear
   )
 
-  val requestData: DeleteSavingsRequest = DeleteSavingsRequest(
+  val requestData: DeleteSavingsRequest = request.DeleteSavingsRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear)
   )

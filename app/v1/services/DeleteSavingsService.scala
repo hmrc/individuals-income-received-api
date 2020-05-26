@@ -25,7 +25,7 @@ import v1.connectors.DeleteSavingsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.delete.DeleteSavingsRequest
+import v1.models.request.DeleteSavingsRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}

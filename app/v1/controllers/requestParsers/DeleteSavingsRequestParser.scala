@@ -20,11 +20,12 @@ import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteSavingsValidator
 import v1.models.domain.DesTaxYear
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request
+import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
 
 class DeleteSavingsRequestParser @Inject()(val validator: DeleteSavingsValidator)
   extends RequestParser[DeleteSavingsRawData, DeleteSavingsRequest] {
 
   override protected def requestFor(data: DeleteSavingsRawData): DeleteSavingsRequest =
-    DeleteSavingsRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
+    request.DeleteSavingsRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
 }

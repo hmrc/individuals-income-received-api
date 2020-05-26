@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockDeleteSavingsValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
 
 class DeleteSavingsRequestParserSpec extends UnitSpec {
 

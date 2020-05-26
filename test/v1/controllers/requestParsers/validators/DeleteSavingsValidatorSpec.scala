@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.request.savings.delete.DeleteSavingsRawData
+import v1.models.request.DeleteSavingsRawData
 
 class DeleteSavingsValidatorSpec extends UnitSpec {
 
