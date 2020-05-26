@@ -13,17 +13,35 @@ Single errors will be returned in the following format:<br>
 }`
 
 Where possible, multiple errors will be returned with `INVALID_REQUEST` in the following format:<br>
-`{
-    "code": "INVALID_REQUEST",
-    "message": "Invalid request",
-    "errors": [
-        {
-            "code": "RULE_FIELD_NAME",
-            "message": "The provided FieldName is not allowed"
-        },
-        {
-            "code": "FORMAT_FIELD_NAME",
-            "message": "The provided FieldName is invalid"
-        }
-    ]
-}`
+  `{
+      "code": "INVALID_REQUEST",
+      "message": "Invalid request",
+      "errors": [
+          {
+              "code": "RULE_FIELD_NAME",
+              "message": "The provided FieldName is not allowed"
+          },
+          {
+              "code": "FORMAT_FIELD_NAME",
+              "message": "The provided FieldName is invalid"
+          }
+      ]
+  }`
+  
+Where `FORMAT_VALUE` errors are returned, `message` will describe the expected format and `paths` will show which fields are invalid, in the following format:<br>
+  `{
+      "code": "INVALID_REQUEST",
+      "message": "Invalid request",
+      "errors": [
+          {
+             "code": "FORMAT_VALUE",
+             "message": "The field should be a positive value greater than 0 and no greater than 99999999999.99",
+             "paths": ["/objectName/fieldName1", "/objectName/fieldName2"]
+          },
+          {
+             "code": "FORMAT_VALUE",
+             "message": "The field should be between 0 and 99999999999.99",
+             "paths": ["/objectName/fieldName3", "/objectName/fieldName4"]
+          }
+      ]
+  }`
