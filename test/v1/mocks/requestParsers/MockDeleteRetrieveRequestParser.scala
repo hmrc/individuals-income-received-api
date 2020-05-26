@@ -20,15 +20,16 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.DeleteSavingsRequestParser
 import v1.models.errors.ErrorWrapper
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
-trait MockDeleteSavingsRequestParser extends MockFactory {
+
+trait MockDeleteRetrieveRequestParser extends MockFactory {
 
   val mockDeleteSavingsRequestParser: DeleteSavingsRequestParser = mock[DeleteSavingsRequestParser]
 
   object MockDeleteSavingsRequestDataParser {
-    def parse(data: DeleteSavingsRawData): CallHandler[Either[ErrorWrapper, DeleteSavingsRequest]] = {
-      (mockDeleteSavingsRequestParser.parseRequest(_: DeleteSavingsRawData)).expects(data)
+    def parse(data: DeleteRetrieveRawData): CallHandler[Either[ErrorWrapper, DeleteRetrieveRequest]] = {
+      (mockDeleteSavingsRequestParser.parseRequest(_: DeleteRetrieveRawData)).expects(data)
     }
   }
 

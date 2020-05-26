@@ -22,7 +22,7 @@ import v1.mocks.connectors.MockDeleteSavingsConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.delete.DeleteSavingsRequest
+import v1.models.request.savings.DeleteRetrieveRequest
 
 import scala.concurrent.Future
 
@@ -32,7 +32,7 @@ class DeleteSavingsServiceSpec extends ServiceSpec {
   private val taxYear = "2019"
   private val correlationId = "X-corr"
 
-  private val deleteSavingsRequest = DeleteSavingsRequest(
+  private val deleteSavingsRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear)
   )

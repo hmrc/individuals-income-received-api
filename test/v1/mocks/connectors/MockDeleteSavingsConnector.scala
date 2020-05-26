@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DeleteSavingsConnector, DesOutcome}
-import v1.models.request.savings.delete.DeleteSavingsRequest
+import v1.models.request.savings.DeleteRetrieveRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,9 +30,9 @@ trait MockDeleteSavingsConnector extends MockFactory {
 
   object MockDeleteSavingsConnector {
 
-    def deleteSaving(request: DeleteSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def deleteSaving(request: DeleteRetrieveRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockDeleteSavingsConnector
-        .deleteSaving(_: DeleteSavingsRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .deleteSaving(_: DeleteRetrieveRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
     }
   }

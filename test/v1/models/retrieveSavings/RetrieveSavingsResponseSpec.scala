@@ -317,36 +317,36 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
   "RetrieveSavingsResponse" when {
     "read from valid JSON" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce the expected RetrieveSavingsResponse model" in {
         desResponse.as[RetrieveSavingsResponse] shouldBe retrieveSavingsResponseModel
       }
     }
 
     "read from valid JSON with no securities" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with securities as None" in {
         desResponseNoSecurities.as[RetrieveSavingsResponse] shouldBe responseModelNoSecurities
       }
     }
     "read from valid JSON with empty securities" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with securities as None" in {
         desResponseEmptySecurities.as[RetrieveSavingsResponse] shouldBe  responseModelNoSecurities
       }
     }
 
     "read from valid JSON with empty ForeignInterest" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with foreignInterest as None" in {
         desResponseEmptyForeignInterest.as[RetrieveSavingsResponse] shouldBe  responseModelNoForeignInterest
       }
     }
 
     "read from valid JSON with no foreignInterest" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with foreignInterest as None" in {
         desResponseNoForeignInterest.as[RetrieveSavingsResponse] shouldBe responseModelNoForeignInterest
       }
     }
 
     "read from valid JSON with only mandatory fields in ForeignInterest" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with foreignInterest having only mandatory fields" in {
         desResponseMinimalForeignInterest.as[RetrieveSavingsResponse] shouldBe responseModelMinimalForeignInterest
       }
     }
@@ -358,19 +358,19 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with securities and foreignInterest as None" in {
         desResponseEmpty.as[RetrieveSavingsResponse] shouldBe minimalRetrieveSavingsResponseModel
       }
     }
 
     "read from a JSON containing only mandatory fields" should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with securities and foreignInterest having only mandatory fields" in {
         desMinimalFieldsRetrieveSavingsResponse.as[RetrieveSavingsResponse] shouldBe responseModelWithMinimalFields
       }
     }
 
     "read from a JSON with multiple foreignInterest items " should {
-      "produce the expected RetrieveSavingsResponse object" in {
+      "produce a model with multiple foreignInterest items" in {
         desResponseWithMultipleForeignInterest.as[RetrieveSavingsResponse] shouldBe responseModelMultipleForeignInterest
       }
     }
@@ -382,37 +382,37 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     }
 
     "written to JSON (no securities)" should {
-      "produce the expected JSON" in {
+      "produce JSON with no securities" in {
         Json.toJson(responseModelNoSecurities) shouldBe mtdResponseNoSecurities
       }
     }
 
     "written to JSON (mandatory fields in foreignInterest)" should {
-      "produce the expected JSON" in {
+      "produce JSON with mandatory fields in foreignInterest" in {
         Json.toJson(responseModelMinimalForeignInterest) shouldBe mtdResponseMinimalForeignInterest
       }
     }
 
     "written to JSON (only mandatory fields)" should {
-      "produce the expected JSON" in {
+      "produce JSON with only mandatory fields" in {
         Json.toJson(responseModelWithMinimalFields) shouldBe mtdMinimalFieldsRetrieveSavingsResponse
       }
     }
 
     "written to JSON (multiple foreignInterest items)" should {
-      "produce the expected JSON" in {
+      "produce JSON with multiple foreignInterest items" in {
         Json.toJson(responseModelMultipleForeignInterest) shouldBe mtdResponseWithMultipleForeignInterest
       }
     }
 
     "written to JSON (no securities and foreignInterest)" should {
-      "produce the expected JSON" in {
+      "produce JSON with no securities and foreignInterest" in {
         Json.toJson(minimalRetrieveSavingsResponseModel) shouldBe mtdResponseEmpty
       }
     }
 
     "written to JSON (no foreignInterest)" should {
-      "produce the expected JSON" in {
+      "produce JSON with no foreignInterest" in {
         Json.toJson(responseModelNoForeignInterest) shouldBe mtdResponseNoForeignInterest
       }
     }

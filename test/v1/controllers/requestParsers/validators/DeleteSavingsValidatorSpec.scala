@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.request.savings.delete.DeleteSavingsRawData
+import v1.models.request.savings.DeleteRetrieveRawData
 
 class DeleteSavingsValidatorSpec extends UnitSpec {
 
@@ -30,27 +30,27 @@ class DeleteSavingsValidatorSpec extends UnitSpec {
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in {
-        validator.validate(DeleteSavingsRawData(validNino, validTaxYear)) shouldBe Nil
+        validator.validate(DeleteRetrieveRawData(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(DeleteSavingsRawData("A12344A", validTaxYear)) shouldBe
+        validator.validate(DeleteRetrieveRawData("A12344A", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in {
-        validator.validate(DeleteSavingsRawData(validNino, "20178")) shouldBe
+        validator.validate(DeleteRetrieveRawData(validNino, "20178")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-        validator.validate(DeleteSavingsRawData("A12344A", "20178")) shouldBe
+        validator.validate(DeleteRetrieveRawData("A12344A", "20178")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }

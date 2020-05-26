@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.delete
+package v1.models.request.savings
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import v1.models.request.RawData
 
-case class DeleteSavingsRequest(nino: Nino, taxYear: DesTaxYear)
+case class DeleteRetrieveRawData(nino: String, taxYear: String) extends RawData
