@@ -1,0 +1,14 @@
+{
+  "links": [
+    {
+      "href":"/individuals/income-received/savings/AA123456A/2020",
+      "rel":"self",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/savings/AA123456A/2020",
+      "rel":"delete-savings-income",
+      "method":"GET"
+    }
+  ]
+}

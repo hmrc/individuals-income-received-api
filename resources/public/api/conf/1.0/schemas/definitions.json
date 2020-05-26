@@ -25,7 +25,8 @@
             "enum": [
               "GET",
               "POST",
-              "DELETE"
+              "DELETE",
+              "PUT"
             ]
           }
         },
@@ -41,6 +42,78 @@
       "type": "string",
       "pattern": "^[A-Za-z0-9]{15}$",
       "example": "123456879012345"
+    }
+  },
+
+  "securitiesItems": {
+    "type": "object",
+    "description": "The container that holds the key value for securities",
+    "properties": {
+      "taxTakenOff": {
+        "type": "number",
+        "description": "The amount of tax deducted from Gilt Edge interest. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+        "example": "5000.99"
+      },
+      "grossAmount": {
+        "type": "number",
+        "description": "The gross amount of Gilt Edge interest including tax deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+        "example": "5000.99"
+      },
+      "netAmount": {
+        "type": "number",
+        "description": "The amount of Gilt Edge interest after tax has been deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+        "example": "5000.99"
+      }
+    }
+  },
+
+  "foreignInterestItems": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "description": "Financial details about foreign interest income",
+      "properties":{
+        "foreignInterest": {
+          "type": "object",
+          "description": "The container that holds the key value for foreign interest",
+          "properties": {
+            "amountBeforeTax": {
+              "type": "number",
+              "description": "The total amount of income, in UK pounds, before any foreign tax has been deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "example": "5000.99"
+            },
+            "countryCode": {
+              "type": "String",
+              "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
+              "example": "FRA"
+            },
+            "taxTakenOff": {
+              "type": "number",
+              "description":"The total amount of foreign tax taken off your income. The value must be greater than 0 and up to 99999999999.99." ,
+              "example": "5000.99"
+            },
+            "specialWithholdingTax": {
+              "type": "number",
+              "description": "The total amount of income (in UK pounds) before deducting any Special Withholding Tax (SWT). The value must be between 1 and 99999999999.99 up to 2 decimal places.",
+              "example": "5000.99"
+            },
+            "taxableAmount": {
+              "type": "number",
+              "description": "The total taxable amount on dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places." ,
+              "example": "5000.99"
+            },
+            "foreignTaxCreditRelief": {
+              "type": "Boolean",
+              "description": "A boolean indicating whether foreign tax credit relief has been claimed. The value must be true or false",
+              "example": false
+            }
+          },
+          "required": [
+            "countryCode",
+            "foreignTaxCreditRelief"
+          ]
+        }
+      }
     }
   }
 }

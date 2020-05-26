@@ -1,0 +1,19 @@
+{
+  "securitiesItems": {
+    "taxTakenOff": 5000.99,
+    "grossAmount": 5000.99,
+    "netAmount": 5000.99
+  },
+  "foreignInterestItems": [
+    {
+      "foreignInterest": {
+        "amountBeforeTax": 5000.99,
+        "countryCode": "FRA",
+        "taxTakenOff": 5000.99,
+        "specialWithholdingTax": 5000.99,
+        "taxableAmount": 5000.99,
+        "foreignTaxCreditRelief": false
+      }
+    }
+  ]
+}
