@@ -18,12 +18,12 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockDeleteSavingsValidator
+import v1.mocks.validators.MockDeleteRetrieveValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
 
-class DeleteSavingsRequestParserSpec extends UnitSpec {
+class DeleteRetrieveRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
   val taxYear: String = "2017-18"
@@ -33,8 +33,8 @@ class DeleteSavingsRequestParserSpec extends UnitSpec {
     taxYear = taxYear
   )
 
-  trait Test extends MockDeleteSavingsValidator {
-    lazy val parser: DeleteSavingsRequestParser = new DeleteSavingsRequestParser(
+  trait Test extends MockDeleteRetrieveValidator {
+    lazy val parser: DeleteRetrieveRequestParser = new DeleteRetrieveRequestParser(
       validator = mockDeleteSavingsValidator
     )
   }

@@ -20,7 +20,7 @@ import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
 import v1.models.request.DeleteSavingsRawData
 
-class DeleteSavingsValidator extends Validator[DeleteSavingsRawData] {
+class DeleteRetrieveValidator extends Validator[DeleteSavingsRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 

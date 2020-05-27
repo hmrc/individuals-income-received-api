@@ -16,16 +16,15 @@
 
 package v1.controllers
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockDeleteSavingsRequestParser
+import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockDeleteSavingsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request
 import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,22 +35,7 @@ class DeleteSavingsControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteSavingsService
-    with MockDeleteSavingsRequestParser {
-
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new DeleteSavingsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteSavingsRequestParser,
-      service = mockDeleteSavingsService,
-      cc = cc
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-  }
+    with MockDeleteRetrieveRequestParser {
 
   val nino: String = "AA123456A"
   val taxYear: String = "2017-18"
@@ -62,16 +46,31 @@ class DeleteSavingsControllerSpec
     taxYear = taxYear
   )
 
-  val requestData: DeleteSavingsRequest = request.DeleteSavingsRequest(
+  val requestData: DeleteSavingsRequest = DeleteSavingsRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
+
+  trait Test {
+    val hc = HeaderCarrier()
+
+    val controller = new DeleteSavingsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockDeleteRetrieveRequestParser,
+      service = mockDeleteSavingsService,
+      cc = cc
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+  }
 
   "DeleteSavingsController" should {
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteSavingsRequestDataParser
+        MockDeleteRetrieveRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -92,7 +91,7 @@ class DeleteSavingsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteSavingsRequestDataParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -118,7 +117,7 @@ class DeleteSavingsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteSavingsRequestDataParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 

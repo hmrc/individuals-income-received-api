@@ -18,13 +18,13 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.DeleteSavingsValidator
+import v1.controllers.requestParsers.validators.DeleteRetrieveValidator
 import v1.models.errors.MtdError
 import v1.models.request.DeleteSavingsRawData
 
-class MockDeleteSavingsValidator extends MockFactory {
+class MockDeleteRetrieveValidator extends MockFactory {
 
-  val mockDeleteSavingsValidator: DeleteSavingsValidator = mock[DeleteSavingsValidator]
+  val mockDeleteSavingsValidator: DeleteRetrieveValidator = mock[DeleteRetrieveValidator]
 
   object MockDeleteSavingsValidator {
 
