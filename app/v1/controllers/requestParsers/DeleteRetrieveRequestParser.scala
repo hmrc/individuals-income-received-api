@@ -21,11 +21,11 @@ import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteRetrieveValidator
 import v1.models.domain.DesTaxYear
 import v1.models.request
-import v1.models.request.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
 class DeleteRetrieveRequestParser @Inject()(val validator: DeleteRetrieveValidator)
-  extends RequestParser[DeleteSavingsRawData, DeleteSavingsRequest] {
+  extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {
 
-  override protected def requestFor(data: DeleteSavingsRawData): DeleteSavingsRequest =
-    request.DeleteSavingsRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
+  override protected def requestFor(data: DeleteRetrieveRawData): DeleteRetrieveRequest =
+    request.DeleteRetrieveRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
 }

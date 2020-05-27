@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DeleteSavingsConnector, DesOutcome}
-import v1.models.request.DeleteSavingsRequest
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.DeleteRetrieveRequest
+import v1.services.DeleteRetrieveService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteSavingsConnector extends MockFactory {
+trait MockDeleteRetrieveService extends MockFactory {
 
-  val mockDeleteSavingsConnector: DeleteSavingsConnector = mock[DeleteSavingsConnector]
+  val mockDeleteRetrieveService: DeleteRetrieveService = mock[DeleteRetrieveService]
 
-  object MockDeleteSavingsConnector {
+  object MockDeleteRetrieveService {
 
-    def deleteSaving(request: DeleteSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (mockDeleteSavingsConnector
-        .deleteSaving(_: DeleteSavingsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+    def delete(requestData: DeleteRetrieveRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (mockDeleteRetrieveService
+        .delete(_: DeleteRetrieveRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
     }
   }
 

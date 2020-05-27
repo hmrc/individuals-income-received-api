@@ -25,8 +25,8 @@ import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.models.errors._
-import v1.models.request.DeleteSavingsRawData
-import v1.services.{AuditService, DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.request.DeleteRetrieveRawData
+import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
                                         val lookupService: MtdIdLookupService,
                                         requestParser: DeleteRetrieveRequestParser,
-                                        service: DeleteSavingsService,
+                                        service: DeleteRetrieveService,
                                         cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
@@ -47,7 +47,7 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
   def deleteSaving(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawData: DeleteSavingsRawData = DeleteSavingsRawData(
+      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
         nino = nino,
         taxYear = taxYear
       )
@@ -55,7 +55,7 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.deleteSaving(parsedRequest))
+          serviceResponse <- EitherT(service.delete(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

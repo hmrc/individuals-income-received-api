@@ -20,17 +20,17 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.DeleteRetrieveValidator
 import v1.models.errors.MtdError
-import v1.models.request.DeleteSavingsRawData
+import v1.models.request.DeleteRetrieveRawData
 
 class MockDeleteRetrieveValidator extends MockFactory {
 
-  val mockDeleteSavingsValidator: DeleteRetrieveValidator = mock[DeleteRetrieveValidator]
+  val mockDeleteRetrieveValidator: DeleteRetrieveValidator = mock[DeleteRetrieveValidator]
 
-  object MockDeleteSavingsValidator {
+  object MockDeleteRetrieveValidator {
 
-    def validate(data: DeleteSavingsRawData): CallHandler1[DeleteSavingsRawData, List[MtdError]] = {
-      (mockDeleteSavingsValidator
-        .validate(_: DeleteSavingsRawData))
+    def validate(data: DeleteRetrieveRawData): CallHandler1[DeleteRetrieveRawData, List[MtdError]] = {
+      (mockDeleteRetrieveValidator
+        .validate(_: DeleteRetrieveRawData))
         .expects(data)
     }
   }
