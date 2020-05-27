@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import com.neovisionaries.i18n.CountryCode
+import v1.models.errors.{CountryCodeFormatError, MtdError}
 
-case class AmendSavingsRequestBody(securities: Option[AmendSecuritiesItems], foreignInterest: Option[Seq[AmendForeignInterest]])
+object CountryCodeValidation {
 
-object AmendSavingsRequestBody {
-
-  implicit val reads: Reads[AmendSavingsRequestBody]= Json.reads[AmendSavingsRequestBody]
-  implicit val writes: OWrites[AmendSavingsRequestBody] = Json.writes[AmendSavingsRequestBody]
+  def validate(data: String): List[MtdError] = CountryCode.getByAlpha3Code(data) match {
+    case _: CountryCode => NoValidationErrors
+    case _ => List(CountryCodeFormatError)
+  }
 }

@@ -30,21 +30,21 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2019"
 
-  val foreignIntrest: AmendForeignInterest = AmendForeignInterest(
+  val foreignInterest: AmendForeignInterest = AmendForeignInterest(
     amountBeforeTax = None,
     countryCode = "FRA",
     taxTakenOff = None,
     specialWithholdingTax = None,
-    taxableAmount = None,
+    taxableAmount = 233.11,
     foreignTaxCreditRelief = false
   )
 
-  val amendSavingsRequestBody: AmendSavingsRequestBody = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignIntrest)))
+  val amendSavingsRequestBody: AmendSavingsRequestBody = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
 
   val amendSavingsRequest: AmendSavingsRequest = AmendSavingsRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear),
-    amendSavingsRequestBody = amendSavingsRequestBody
+    body = amendSavingsRequestBody
   )
 
   class Test extends MockHttpClient with MockAppConfig {
