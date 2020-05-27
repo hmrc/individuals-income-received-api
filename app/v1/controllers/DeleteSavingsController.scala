@@ -23,10 +23,12 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
+import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
-import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -51,6 +53,8 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
         nino = nino,
         taxYear = taxYear
       )
+
+      implicit val desUri: DesUri[Unit] = DesUri[Unit](s"some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}")
 
       val result =
         for {

@@ -22,7 +22,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.DeleteRetrieveConnector
+import v1.connectors.{DeleteRetrieveConnector, DesUri}
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -34,25 +34,27 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extends DesResponseMappingSupport with Logging {
 
-  def delete(request: DeleteRetrieveRequest, uri: String)(
+  def delete(request: DeleteRetrieveRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    logContext: EndpointLogContext,
+    desUri: DesUri[Unit]): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.delete(request, uri)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  def retrieve[Resp: Reads](request: DeleteRetrieveRequest, uri: String)(
+  def retrieve[Resp: Reads](request: DeleteRetrieveRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
+    logContext: EndpointLogContext,
+    desUri: DesUri[Resp]): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request, uri)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

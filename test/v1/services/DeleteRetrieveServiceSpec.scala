@@ -18,6 +18,7 @@ package v1.services
 
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.domain.Nino
+import v1.connectors.DesUri
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockDeleteRetrieveConnector
 import v1.models.domain.DesTaxYear
@@ -38,14 +39,17 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
     taxYear = DesTaxYear(taxYear)
   )
 
-  private case class Data(field: String)
-
-  private object Data {
-    implicit val reads: Format[Data] = Json.format[Data]
-  }
-
   trait Test extends MockDeleteRetrieveConnector {
+
+    case class Data(field: String)
+
+    object Data {
+      implicit val reads: Format[Data] = Json.format[Data]
+    }
+
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+    implicit val deleteDesUri: DesUri[Unit] = DesUri[Unit](s"some-placeholder/savings/$nino/$taxYear")
+    implicit val retrieveDesUri: DesUri[Data] = DesUri[Data](s"some-placeholder/savings/$nino/$taxYear")
 
     val service: DeleteRetrieveService = new DeleteRetrieveService(
       connector = mockDeleteRetrieveConnector
@@ -103,7 +107,7 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
             MockDeleteRetrieveConnector.retrieve[Data](deleteRetrieveRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.retrieve(deleteRetrieveRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.retrieve[Data](deleteRetrieveRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(
