@@ -54,7 +54,7 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
     desUri: DesUri[Resp]): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieve[Resp](request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
