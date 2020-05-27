@@ -21,14 +21,15 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockDeleteSavingsValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
-class DeleteSavingsRequestParserSpec extends UnitSpec {
+
+class DeleteRetrieveRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
   val taxYear: String = "2017-18"
 
-  val deleteSavingsRawData: DeleteSavingsRawData = DeleteSavingsRawData(
+  val deleteSavingsRawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
@@ -45,7 +46,7 @@ class DeleteSavingsRequestParserSpec extends UnitSpec {
         MockDeleteSavingsValidator.validate(deleteSavingsRawData).returns(Nil)
 
         parser.parseRequest(deleteSavingsRawData) shouldBe
-          Right(DeleteSavingsRequest(Nino(nino), DesTaxYear("2018")))
+          Right(DeleteRetrieveRequest(Nino(nino), DesTaxYear("2018")))
       }
     }
 

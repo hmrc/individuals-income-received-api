@@ -20,12 +20,13 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockDeleteSavingsRequestParser
+import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockDeleteSavingsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.delete.{DeleteSavingsRawData, DeleteSavingsRequest}
+import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,7 +36,7 @@ class DeleteSavingsControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteSavingsService
-    with MockDeleteSavingsRequestParser {
+    with MockDeleteRetrieveRequestParser {
 
   trait Test {
     val hc = HeaderCarrier()
@@ -56,12 +57,12 @@ class DeleteSavingsControllerSpec
   val taxYear: String = "2017-18"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteSavingsRawData = DeleteSavingsRawData(
+  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteSavingsRequest = DeleteSavingsRequest(
+  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear)
   )

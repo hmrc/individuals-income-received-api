@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.delete.DeleteSavingsRequest
+import v1.models.request.savings.DeleteRetrieveRequest
 import v1.services.DeleteSavingsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,9 +33,9 @@ trait MockDeleteSavingsService extends MockFactory {
 
   object MockDeleteSavingsService {
 
-    def deleteSaving(requestData: DeleteSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def deleteSaving(requestData: DeleteRetrieveRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockDeleteSavingsService
-        .deleteSaving(_: DeleteSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .deleteSaving(_: DeleteRetrieveRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
     }
   }

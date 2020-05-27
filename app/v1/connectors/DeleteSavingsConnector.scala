@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.savings.delete.DeleteSavingsRequest
+import v1.models.request.savings.DeleteRetrieveRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteSavingsConnector @Inject()(val http: HttpClient,
                                        val appConfig: AppConfig) extends BaseDesConnector {
 
-  def deleteSaving(request: DeleteSavingsRequest)(
+  def deleteSaving(request: DeleteRetrieveRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[Unit]] = {
 

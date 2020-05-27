@@ -18,17 +18,17 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
-import v1.models.request.savings.delete.DeleteSavingsRawData
+import v1.models.request.savings.DeleteRetrieveRawData
 
-class DeleteSavingsValidator extends Validator[DeleteSavingsRawData] {
+class DeleteSavingsValidator extends Validator[DeleteRetrieveRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
-  override def validate(data: DeleteSavingsRawData): List[MtdError] = {
+  override def validate(data: DeleteRetrieveRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: DeleteSavingsRawData => List[List[MtdError]] = (data: DeleteSavingsRawData) => {
+  private def parameterFormatValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)

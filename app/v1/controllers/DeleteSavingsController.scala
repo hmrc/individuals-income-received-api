@@ -25,7 +25,7 @@ import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.controllers.requestParsers.DeleteSavingsRequestParser
 import v1.models.errors._
-import v1.models.request.savings.delete.DeleteSavingsRawData
+import v1.models.request.savings.DeleteRetrieveRawData
 import v1.services.{AuditService, DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,7 +47,7 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
   def deleteSaving(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawData: DeleteSavingsRawData = DeleteSavingsRawData(
+      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
         nino = nino,
         taxYear = taxYear
       )
