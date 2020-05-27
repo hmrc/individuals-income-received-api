@@ -34,25 +34,25 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extends DesResponseMappingSupport with Logging {
 
-  def delete(request: DeleteRetrieveRequest)(
+  def delete(request: DeleteRetrieveRequest, uri: String)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.delete(request, uri)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  def retrieve[Resp: Reads](request: DeleteRetrieveRequest)(
+  def retrieve[Resp: Reads](request: DeleteRetrieveRequest, uri: String)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieve(request, uri)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

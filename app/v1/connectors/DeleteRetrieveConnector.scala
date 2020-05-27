@@ -29,21 +29,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteRetrieveConnector @Inject()(val http: HttpClient,
                                         val appConfig: AppConfig) extends BaseDesConnector {
 
-  def delete(request: DeleteRetrieveRequest)(
+  def delete(request: DeleteRetrieveRequest, desUri: String)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[Unit]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear.value
-
     delete(
-      uri = DesUri[Unit](s"some-placeholder/savings/$nino/$taxYear")
+      uri = DesUri[Unit](desUri)
     )
   }
 
-  def retrieve[Resp: Reads](request: DeleteRetrieveRequest)(
+  def retrieve[Resp: Reads](request: DeleteRetrieveRequest, desUri: String)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[Resp]] = {
 
@@ -53,7 +50,7 @@ class DeleteRetrieveConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear.value
 
     get(
-      uri = DesUri[Resp](s"some-placeholder/savings/$nino/$taxYear")
+      uri = DesUri[Resp](desUri)
     )
   }
 }
