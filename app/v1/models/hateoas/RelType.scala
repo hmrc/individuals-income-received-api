@@ -18,6 +18,7 @@ package v1.models.hateoas
 
 object RelType {
   val SAMPLE_ENDPOINT_REL = "sample-rel"
+  val DELETE_SAVINGS_INCOME = "delete-savings-income"
 
   val SELF = "self"
 }
