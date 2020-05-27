@@ -141,6 +141,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 2321.22,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -160,6 +161,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 2321.22,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -173,6 +175,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 2321.22,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -186,6 +189,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 2321.22,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -281,6 +285,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
   "AmendSavingsRequestBody" when {
     "read from valid MTD JSON" should {
       "convert valid MTD JSON into AmendSavingsRequestBody model with all fields" in {

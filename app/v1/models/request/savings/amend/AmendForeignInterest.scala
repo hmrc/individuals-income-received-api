@@ -23,7 +23,7 @@ case class AmendForeignInterest(amountBeforeTax: Option[BigDecimal],
                                 countryCode: String,
                                 taxTakenOff: Option[BigDecimal],
                                 specialWithholdingTax: Option[BigDecimal],
-                                taxableAmount: Option[BigDecimal],
+                                taxableAmount: BigDecimal,
                                 foreignTaxCreditRelief: Boolean
                                )
 object AmendForeignInterest {
@@ -35,7 +35,7 @@ object AmendForeignInterest {
       (JsPath \ "countryCode").write[String] and
       (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").writeNullable[BigDecimal] and
-      (JsPath \ "taxableAmount").writeNullable[BigDecimal] and
+      (JsPath \ "taxableAmount").write[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").write[Boolean]
     ) (unlift(AmendForeignInterest.unapply))
 

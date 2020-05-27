@@ -110,6 +110,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -157,6 +158,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -232,6 +234,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -281,6 +284,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]

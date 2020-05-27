@@ -22,13 +22,13 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveSavingsResponse(securities: Option[SecuritiesItems], foreignInterest: Option[Seq[ForeignInterest]])
+case class RetrieveSavingsResponse(securities: Option[Securities], foreignInterest: Option[Seq[ForeignInterest]])
 
 object RetrieveSavingsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveSavingsResponse] = (
-    (JsPath \ "securities").readNullable[SecuritiesItems].map(_.flatMap {
-    case SecuritiesItems(None, None, None) => None
+    (JsPath \ "securities").readNullable[Securities].map(_.flatMap {
+    case Securities(None, None, None) => None
     case securitiesItems => Some(securitiesItems)
   }) and
       (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterest]].map(_.flatMap {
