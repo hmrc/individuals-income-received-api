@@ -20,10 +20,14 @@ import javax.inject.{Inject, Singleton}
 import v1.models.request.DeleteRetrieveRequest
 
 @Singleton
-class UriBuilder @Inject()() {
+class UriBuilder {
 
-  def buildDesUri(request: DeleteRetrieveRequest): String = {
-    ""
+  def buildDesUri(request: DeleteRetrieveRequest, baseUri: String): String = {
+
+    val nino = request.nino.nino
+    val taxYear = request.taxYear.value
+
+    s"$baseUri/$nino/$taxYear"
   }
 
 }
