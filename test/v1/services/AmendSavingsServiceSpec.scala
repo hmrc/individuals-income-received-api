@@ -18,47 +18,52 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.fixtures.RetrieveSavingsFixture
-import v1.mocks.connectors.MockRetrieveSavingsConnector
+import v1.mocks.connectors.MockAmendSavingsConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.DeleteRetrieveRequest
-import v1.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRequest, AmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
-class RetrieveSavingsServiceSpec extends ServiceSpec {
+class AmendSavingsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019"
   private val correlationId = "X-corr"
 
-  private val retrieveSavingsRequest = DeleteRetrieveRequest(
-    nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear)
+  val foreignInterest: AmendForeignInterest = AmendForeignInterest(
+    amountBeforeTax = None,
+    countryCode = "FRA",
+    taxTakenOff = None,
+    specialWithholdingTax = None,
+    taxableAmount = 233.11,
+    foreignTaxCreditRelief = false
   )
 
-  trait Test extends MockRetrieveSavingsConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveSavingsController", "retrieveSaving")
+  private val amendSavingsRequest = AmendSavingsRequest(
+    nino = Nino(nino),
+    taxYear = DesTaxYear(taxYear),
+    body = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+  )
 
-    val service: RetrieveSavingsService = new RetrieveSavingsService(
-      connector = mockRetrieveSavingsConnector
+  trait Test extends MockAmendSavingsConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    val service: AmendSavingsService = new AmendSavingsService(
+      connector = mockAmendSavingsConnector
     )
   }
 
-  "RetrieveSavingsService" when {
-    "retrieveSaving" must {
+  "AmendSavingsService" when {
+    "amendSaving" must {
       "return correct result for a success" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        val connectorResponse: RetrieveSavingsResponse = RetrieveSavingsFixture.retrieveSavingsResponseModel
-
-        val outcome = Right(ResponseWrapper(correlationId, (connectorResponse)))
-
-        MockRetrieveSavingsConnector.retrieveSaving(retrieveSavingsRequest)
+        MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
           .returns(Future.successful(outcome))
 
-        await(service.retrieveSaving(retrieveSavingsRequest)) shouldBe outcome
+        await(service.amendSaving(amendSavingsRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -66,15 +71,16 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockRetrieveSavingsConnector.retrieveSaving(retrieveSavingsRequest)
+            MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.retrieveSaving(retrieveSavingsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendSaving(amendSavingsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(
           ("FORMAT_NINO", NinoFormatError),
           ("FORMAT_TAX_YEAR", TaxYearFormatError),
+          ("RULE_TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("NOT_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)

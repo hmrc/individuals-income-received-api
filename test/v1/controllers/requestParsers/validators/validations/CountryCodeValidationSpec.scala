@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, OWrites, Reads}
-import v1.models.response.retrieveSavings.{ForeignInterest, SecuritiesItems}
+import support.UnitSpec
+import v1.models.errors.CountryCodeFormatError
 
-case class AmendSavingsIncomeBody(securities: Option[SecuritiesItems], foreignInterest: Seq[ForeignInterest])
+class CountryCodeValidationSpec extends UnitSpec {
+  "CountryCodeValidation" when {
+    "validate" must {
+      "return an empty list for a valid country code" in {
+        CountryCodeValidation.validate("GBR") shouldBe NoValidationErrors
+      }
 
-object AmendSavingsIncomeBody {
-
-  implicit val reads: Reads[AmendSavingsIncomeBody]= Json.reads[AmendSavingsIncomeBody]
-  implicit val writes: OWrites[AmendSavingsIncomeBody] = Json.writes[AmendSavingsIncomeBody]
+      "return a CountryCodeFormatError for an invalid country code" in {
+        CountryCodeValidation.validate("notACountryCode") shouldBe List(CountryCodeFormatError)
+      }
+    }
+  }
 }

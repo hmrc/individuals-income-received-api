@@ -35,7 +35,7 @@ object AmendSavingsFixture {
       countryCode = "GER",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
-      taxableAmount = Some(2321.22),
+      taxableAmount = 2321.22,
       foreignTaxCreditRelief = true
     )
 
@@ -45,11 +45,11 @@ object AmendSavingsFixture {
       countryCode = "FRA",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
-      taxableAmount = Some(2321.22),
+      taxableAmount = 2321.22,
       foreignTaxCreditRelief = true
     )
 
-  val minimalAmendForeignInterestModel: AmendForeignInterest =  AmendForeignInterest(None,"GER",None,None,None,true)
+  val minimalAmendForeignInterestModel: AmendForeignInterest =  AmendForeignInterest(None,"GER",None,None,2321.22,foreignTaxCreditRelief = true)
 
   val amendSavingsRequestModel: AmendSavingsRequestBody =
     AmendSavingsRequestBody(

@@ -28,7 +28,8 @@ object AppDependencies {
     "org.typelevel" %% "cats-core"         % "2.1.0",
     compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.4.4" cross CrossVersion.full),
     "com.github.ghik" % "silencer-lib" % "1.4.4" % Provided cross CrossVersion.full,
-    "com.chuusai"   %% "shapeless"         % "2.3.3"
+    "com.chuusai"   %% "shapeless"         % "2.3.3",
+    "com.neovisionaries" % "nv-i18n" % "1.27"
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(

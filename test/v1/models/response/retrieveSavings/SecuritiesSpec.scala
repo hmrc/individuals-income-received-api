@@ -20,7 +20,7 @@ import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.RetrieveSavingsFixture
 
-class SecuritiesItemsSpec extends UnitSpec {
+class SecuritiesSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -57,19 +57,19 @@ class SecuritiesItemsSpec extends UnitSpec {
   "SecuritiesItems" when {
     "read from valid JSON" should {
       "produce the expected SecuritiesItems object" in {
-        desResponse.as[SecuritiesItems] shouldBe RetrieveSavingsFixture.fullSecuritiesItemsModel
+        desResponse.as[Securities] shouldBe RetrieveSavingsFixture.fullSecuritiesItemsModel
       }
     }
 
     "read from empty JSON" should {
       "produce an empty SecuritiesItems object" in {
-        desResponseEmpty.as[SecuritiesItems] shouldBe RetrieveSavingsFixture.minimalSecuritiesItemsModel
+        desResponseEmpty.as[Securities] shouldBe RetrieveSavingsFixture.minimalSecuritiesItemsModel
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        desResponseInvalid.validate[SecuritiesItems] shouldBe a[JsError]
+        desResponseInvalid.validate[Securities] shouldBe a[JsError]
       }
     }
 

@@ -22,52 +22,6 @@ import v1.fixtures.RetrieveSavingsFixture._
 
 class RetrieveSavingsResponseSpec extends UnitSpec {
 
-  val desResponse: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      },
-      |   "foreignInterest": [
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponse: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      },
-      |   "foreignInterest": [
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
   val desResponseNoSecurities: JsValue = Json.parse(
     """
       |{
@@ -110,6 +64,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -157,6 +112,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -232,6 +188,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -281,6 +238,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "GER",
+      |         "taxableAmount": 100,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -318,7 +276,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   "RetrieveSavingsResponse" when {
     "read from valid JSON" should {
       "produce the expected RetrieveSavingsResponse model" in {
-        desResponse.as[RetrieveSavingsResponse] shouldBe retrieveSavingsResponseModel
+        desRetrieveSavingsResponse.as[RetrieveSavingsResponse] shouldBe retrieveSavingsResponseModel
       }
     }
 
@@ -377,7 +335,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JSON" in {
-        Json.toJson(retrieveSavingsResponseModel) shouldBe mtdResponse
+        Json.toJson(retrieveSavingsResponseModel) shouldBe mtdRetrieveSavingsResponse
       }
     }
 

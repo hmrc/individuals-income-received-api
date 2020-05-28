@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.mvc.AnyContentAsJson
-
-case class AmendSavingsIncomeRawData(nino: String, taxYear: String, body: AnyContentAsJson)
+protected[validators] trait ValueFormatErrorMessages {
+  val ZERO_MINIMUM_INCLUSIVE = "The value must be between 0 and 99999999999.99 up to 2 decimal places"
+}

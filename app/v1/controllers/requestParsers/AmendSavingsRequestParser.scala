@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.controllers.requestParsers
 
+import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.AmendSavingsValidator
 import v1.models.domain.DesTaxYear
+import v1.models.request.savings.amend.{AmendSavingsRequestBody, AmendSavingsRawData, AmendSavingsRequest}
 
-case class AmendSavingsIncomeRequest(nino: Nino, taxYear: DesTaxYear, amendSavingsIncomeBody: AmendSavingsIncomeBody)
+class AmendSavingsRequestParser @Inject()(val validator: AmendSavingsValidator)
+  extends RequestParser[AmendSavingsRawData, AmendSavingsRequest] {
+
+  override protected def requestFor(data: AmendSavingsRawData): AmendSavingsRequest =
+    AmendSavingsRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.json.as[AmendSavingsRequestBody])
+}

@@ -19,4 +19,4 @@ package v1.models.request.savings.amend
 import uk.gov.hmrc.domain.Nino
 import v1.models.domain.DesTaxYear
 
-case class AmendSavingsRequest(nino: Nino, taxYear: DesTaxYear, amendSavingsRequestBody: AmendSavingsRequestBody)
+case class AmendSavingsRequest(nino: Nino, taxYear: DesTaxYear, body: AmendSavingsRequestBody)
