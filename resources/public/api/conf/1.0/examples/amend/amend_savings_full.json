@@ -5,7 +5,7 @@
     "grossAmount": 1455.0,
     "netAmount": 123.22
   },
-  "foreignInterestItems": [
+  "foreignInterest": [
     {
       "amountBeforeTax": 1232.22,
       "countryCode": "GER",

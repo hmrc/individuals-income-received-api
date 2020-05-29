@@ -64,7 +64,7 @@
         }
       }
     },
-    "foreignInterestItems": {
+    "foreignInterest": {
       "type": "array",
       "items": {
         "type": "object",
