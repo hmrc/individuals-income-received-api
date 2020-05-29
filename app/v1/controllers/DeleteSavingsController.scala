@@ -23,17 +23,17 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
-import v1.controllers.requestParsers.DeleteSavingsRequestParser
+import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
 import v1.models.errors._
 import v1.models.request.savings.DeleteRetrieveRawData
-import v1.services.{AuditService, DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
                                         val lookupService: MtdIdLookupService,
-                                        requestParser: DeleteSavingsRequestParser,
+                                        requestParser: DeleteRetrieveSavingsRequestParser,
                                         service: DeleteSavingsService,
                                         cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {

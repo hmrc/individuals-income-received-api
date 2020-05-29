@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.mocks.validators
 
-import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import org.scalamock.handlers.CallHandler1
+import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.DeleteRetrieveSavingsValidator
+import v1.models.errors.MtdError
 import v1.models.request.savings.DeleteRetrieveRawData
 
-class DeleteSavingsValidator extends Validator[DeleteRetrieveRawData] {
+class MockDeleteRetrieveSavingsValidator extends MockFactory {
 
-  private val validationSet = List(parameterFormatValidation)
+  val mockDeleteRetrieveSavingsValidator: DeleteRetrieveSavingsValidator = mock[DeleteRetrieveSavingsValidator]
 
-  override def validate(data: DeleteRetrieveRawData): List[MtdError] = {
-    run(validationSet, data).distinct
+  object MockDeleteRetrieveSavingsValidator {
+
+    def validate(data: DeleteRetrieveRawData): CallHandler1[DeleteRetrieveRawData, List[MtdError]] = {
+      (mockDeleteRetrieveSavingsValidator
+        .validate(_: DeleteRetrieveRawData))
+        .expects(data)
+    }
   }
 
-  private def parameterFormatValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
-    List(
-      NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear)
-    )
-  }
 }

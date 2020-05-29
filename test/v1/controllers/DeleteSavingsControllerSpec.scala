@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -44,7 +44,7 @@ class DeleteSavingsControllerSpec
     val controller = new DeleteSavingsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteSavingsRequestParser,
+      requestParser = mockDeleteRetrieveSavingsRequestParser,
       service = mockDeleteSavingsService,
       cc = cc
     )
@@ -71,7 +71,7 @@ class DeleteSavingsControllerSpec
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteSavingsRequestDataParser
+        MockDeleteRetrieveSavingsRequestDataParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -92,7 +92,7 @@ class DeleteSavingsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteSavingsRequestDataParser
+            MockDeleteRetrieveSavingsRequestDataParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -118,7 +118,7 @@ class DeleteSavingsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteSavingsRequestDataParser
+            MockDeleteRetrieveSavingsRequestDataParser
               .parse(rawData)
               .returns(Right(requestData))
 
