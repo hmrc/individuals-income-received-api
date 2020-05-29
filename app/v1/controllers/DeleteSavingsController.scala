@@ -26,7 +26,7 @@ import utils.Logging
 import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
 import v1.models.errors._
 import v1.models.request.savings.DeleteRetrieveRawData
-import v1.services.{AuditService, DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
