@@ -1,5 +1,5 @@
 {
-  "securitiesItems": {
+  "securities": {
     "taxTakenOff": 100.0,
     "grossAmount": 1455.0,
     "netAmount": 123.22
