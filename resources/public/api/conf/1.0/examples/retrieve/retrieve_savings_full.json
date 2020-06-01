@@ -1,11 +1,10 @@
 {
-  "securitiesItems": {
+  "securities":  {
     "taxTakenOff": 100.0,
     "grossAmount": 1455.0,
     "netAmount": 123.22
   },
-  "foreignInterestItems": [
-    {
+  "foreignInterest": [{
       "amountBeforeTax": 1232.22,
       "countryCode": "GER",
       "taxTakenOff": 22.22,
@@ -14,7 +13,12 @@
       "foreignTaxCreditRelief": true
     }
   ],
-  "links": [
+  "links":[
+    {
+      "href":"/individuals/income-received/savings/{nino}/{taxYear}",
+      "rel":"amend-savings-income",
+      "method":"PUT"
+    },
     {
       "href":"/individuals/income-received/savings/{nino}/{taxYear}",
       "rel":"self",
