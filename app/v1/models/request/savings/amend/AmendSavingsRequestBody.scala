@@ -18,7 +18,7 @@ package v1.models.request.savings.amend
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
-case class AmendSavingsRequestBody(securities: Option[AmendSecuritiesItems], foreignInterest: Option[Seq[AmendForeignInterest]])
+case class AmendSavingsRequestBody(securities: Option[AmendSecurities], foreignInterest: Option[Seq[AmendForeignInterest]])
 
 object AmendSavingsRequestBody {
 

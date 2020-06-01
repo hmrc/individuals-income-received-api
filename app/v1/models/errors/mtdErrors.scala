@@ -24,6 +24,10 @@ object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
 }
 
+object MtdErrorWithCustomMessage {
+  def unapply(arg: MtdError): Option[String] = Some(arg.code)
+}
+
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The format of the supplied tax year field is not valid")
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided country code is not valid")
