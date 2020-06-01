@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, OWrites, Reads}
-
-case class AmendSavingsRequestBody(securities: Option[AmendSecuritiesItems], foreignInterest: Option[Seq[AmendForeignInterest]])
-
-object AmendSavingsRequestBody {
-
-  implicit val reads: Reads[AmendSavingsRequestBody]= Json.reads[AmendSavingsRequestBody]
-  implicit val writes: OWrites[AmendSavingsRequestBody] = Json.writes[AmendSavingsRequestBody]
+protected[validators] trait ValueFormatErrorMessages {
+  val ZERO_MINIMUM_INCLUSIVE = "The value must be between 0 and 99999999999.99 up to 2 decimal places"
 }

@@ -41,7 +41,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
     }
 
     "return an error " when {
-      "when a required field is missing" in {
+      "required field is missing" in {
 
         // fieldTwo is missing
         val json = Json.parse("""{ "fieldOne" : "Something" }""")
@@ -50,7 +50,13 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         validationResult shouldBe List(someError)
       }
 
-    }
+      "empty body is submitted" in {
 
+        val json = Json.parse("""{}""")
+
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json, someError)
+        validationResult shouldBe List(someError)
+      }
+    }
   }
 }

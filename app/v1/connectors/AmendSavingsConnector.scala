@@ -37,7 +37,7 @@ class AmendSavingsConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear.value
 
     put(
-      uri = DesUri[Unit](s"some-placeholder/$nino/$taxYear"), body = request.amendSavingsRequestBody
+      uri = DesUri[Unit](s"some-placeholder/$nino/$taxYear"), body = request.body
     )
   }
 }

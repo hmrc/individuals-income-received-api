@@ -65,6 +65,7 @@ class ForeignInterestSpec extends UnitSpec {
     """
       |{
       |    "countryCode": "GER",
+      |    "taxableAmount": 100,
       |    "foreignTaxCreditRelief": true
       |}
     """.stripMargin

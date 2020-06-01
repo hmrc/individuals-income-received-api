@@ -37,14 +37,14 @@ class AmendSavingsServiceSpec extends ServiceSpec {
     countryCode = "FRA",
     taxTakenOff = None,
     specialWithholdingTax = None,
-    taxableAmount = None,
+    taxableAmount = 233.11,
     foreignTaxCreditRelief = false
   )
 
   private val amendSavingsRequest = AmendSavingsRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear),
-    amendSavingsRequestBody = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+    body = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
   )
 
   trait Test extends MockAmendSavingsConnector {
@@ -78,12 +78,12 @@ class AmendSavingsServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          ("FORMAT_NINO" -> NinoFormatError),
-          ("FORMAT_TAX_YEAR" -> TaxYearFormatError),
-          ("RULE_TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError),
-          ("NOT_FOUND" -> NotFoundError),
-          ("SERVER_ERROR" -> DownstreamError),
-          ("SERVICE_UNAVAILABLE" -> DownstreamError)
+          ("FORMAT_NINO", NinoFormatError),
+          ("FORMAT_TAX_YEAR", TaxYearFormatError),
+          ("RULE_TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+          ("NOT_FOUND", NotFoundError),
+          ("SERVER_ERROR", DownstreamError),
+          ("SERVICE_UNAVAILABLE", DownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))
