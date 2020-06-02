@@ -4,7 +4,7 @@
   "description": "Trigger a Business Source Adjustable Summary (BSAS)",
   "type": "object",
   "properties": {
-    "securities": {"$ref": "definitions.json#/definitions/securities"},
-    "foreignInterest": {"$ref": "definitions.json#/definitions/foreignInterest"}
+    "securities": {"$ref": "../definitions.json#/definitions/securities"},
+    "foreignInterest": {"$ref": "../definitions.json#/definitions/foreignInterest"}
   }
 }
