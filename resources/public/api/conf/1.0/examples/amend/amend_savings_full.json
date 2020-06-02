@@ -9,7 +9,7 @@
       "amountBeforeTax": 1232.22,
       "countryCode": "GER",
       "taxTakenOff": 22.22,
-      "specialWitholdingTax": 22.22,
+      "specialWithholdingTax": 22.22,
       "taxableAmount": 2321.22,
       "foreignTaxCreditRelief": true
     },
@@ -17,7 +17,7 @@
       "amountBeforeTax": 1232.22,
       "countryCode": "GER",
       "taxTakenOff": 22.22,
-      "specialWitholdingTax": 22.22,
+      "specialWithholdingTax": 22.22,
       "taxableAmount": 2321.22,
       "foreignTaxCreditRelief": true
     }
