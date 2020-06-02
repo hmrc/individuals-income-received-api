@@ -16,9 +16,80 @@
 
 package v1.fixtures
 
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveSavings.{ForeignInterest, RetrieveSavingsResponse, Securities}
 
 object RetrieveSavingsFixture {
+
+  val desRetrieveSavingsResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "securities":
+      |      {
+      |         "taxTakenOff": 100.0,
+      |         "grossAmount": 1455.0,
+      |         "netAmount": 123.22
+      |      },
+      |   "foreignInterest": [
+      |      {
+      |         "amountBeforeTax": 1232.22,
+      |         "countryCode": "GER",
+      |         "taxTakenOff": 22.22,
+      |         "specialWithholdingTax": 22.22,
+      |         "taxableAmount": 2321.22,
+      |         "foreignTaxCreditRelief": true
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  val mtdRetrieveSavingsResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "securities":
+      |      {
+      |         "taxTakenOff": 100.0,
+      |         "grossAmount": 1455.0,
+      |         "netAmount": 123.22
+      |      },
+      |   "foreignInterest": [
+      |      {
+      |         "amountBeforeTax": 1232.22,
+      |         "countryCode": "GER",
+      |         "taxTakenOff": 22.22,
+      |         "specialWithholdingTax": 22.22,
+      |         "taxableAmount": 2321.22,
+      |         "foreignTaxCreditRelief": true
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdRetrieveSavingsResponse.as[JsObject] ++ Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "method":"PUT",
+       |         "rel":"amend-savings-income"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "method":"GET",
+       |         "rel":"self"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "method":"DELETE",
+       |         "rel":"delete-savings-income"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  ).as[JsObject]
 
   val fullSecuritiesItemsModel: Securities =
     Securities(

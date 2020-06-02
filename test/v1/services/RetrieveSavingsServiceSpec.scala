@@ -40,7 +40,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
   )
 
   trait Test extends MockRetrieveSavingsConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveSavingsController", "retrieveSaving")
 
     val service: RetrieveSavingsService = new RetrieveSavingsService(
       connector = mockRetrieveSavingsConnector

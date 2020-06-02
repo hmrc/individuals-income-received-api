@@ -68,7 +68,7 @@ class SecuritiesSpec extends UnitSpec {
     }
 
     "read from invalid JSON" should {
-      "produce a produce a JsError" in {
+      "produce a JsError" in {
         desResponseInvalid.validate[Securities] shouldBe a[JsError]
       }
     }

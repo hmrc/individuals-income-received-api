@@ -28,6 +28,7 @@ object AmendSavingsResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: AmendSavingsHateoasData): Seq[Link] = {
       import data._
       Seq(
+        amendSavings(appConfig, nino, taxYear),
         retrieveSavings(appConfig, nino, taxYear),
         deleteSavings(appConfig, nino, taxYear)
       )
