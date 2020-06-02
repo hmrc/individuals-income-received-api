@@ -19,6 +19,7 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
+import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
@@ -41,14 +42,15 @@ class AuthISpec extends IntegrationBaseSpec {
     """.stripMargin
 
     def setupStubs(): StubMapping
+    def uri: String = s"/savings/$nino/$taxYear"
+
+    def desUri: String = s"/some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
 
     def request(): WSRequest = {
       setupStubs()
-      buildRequest(s"/$nino/$taxYear/sample-endpoint")
+      buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
-
-    def desUri: String = s"/income-tax/nino/$nino/taxYear/${DesTaxYear.fromMtd(taxYear)}/someService"
 
     val desResponse: JsValue = Json.parse(
       """
@@ -58,7 +60,7 @@ class AuthISpec extends IntegrationBaseSpec {
     """.stripMargin)
   }
 
-  "Calling the sample endpoint" when {
+  "Calling the endpoint" when {
 
     "the NINO cannot be converted to a MTD ID" should {
 
@@ -70,23 +72,24 @@ class AuthISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.internalServerError(nino)
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().delete)
         response.status shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
 
     "an MTD ID is successfully retrieve from the NINO and the user is authorised" should {
 
-      "return 201" in new Test {
+      "return success status" in new Test {
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.POST, desUri, Status.OK, desResponse)
+          DesStub.onSuccess(DesStub.DELETE, desUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
-        response.status shouldBe Status.CREATED
+        val response: WSResponse = await(request().delete)
+        response.status shouldBe NO_CONTENT
+        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -101,7 +104,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedNotLoggedIn()
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().delete)
         response.status shouldBe Status.FORBIDDEN
       }
     }
@@ -117,7 +120,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedOther()
         }
 
-        val response: WSResponse = await(request().post(Json.parse(requestJson)))
+        val response: WSResponse = await(request().delete)
         response.status shouldBe Status.FORBIDDEN
       }
     }
