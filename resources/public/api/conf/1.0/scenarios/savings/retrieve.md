@@ -8,12 +8,12 @@
     </thead>
     <tbody>
         <tr>
-                    <td><p>N/A - DEFAULT</p></td>
-                    <td><p>Simulate success response.</p></td>
+            <td><p>N/A - DEFAULT</p></td>
+            <td><p>Simulate success response.</p></td>
         </tr>
         <tr>
-                    <td><p>NOT_FOUND</p></td>
-                    <td><p>Simulate the scenario where no data is found.</p></td>
+            <td><p>NOT_FOUND</p></td>
+            <td><p>Simulate the scenario where no data is found.</p></td>
         </tr>
     </tbody>
 </table>
