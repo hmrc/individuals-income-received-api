@@ -27,13 +27,7 @@ trait HateoasLinks {
   private def sampleUri(appConfig: AppConfig, nino: String): String =
     s"/${appConfig.apiGatewayContext}/$nino/sample-endpoint"
 
-  private def amendSavingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
-    s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
-
-  private def retrieveSavingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
-    s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
-
-  private def deleteSavingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+  private def savingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
 
   //API resource links
@@ -42,21 +36,21 @@ trait HateoasLinks {
 
   def amendSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = amendSavingsUri(appConfig, nino, taxYear),
+      href = savingsUri(appConfig, nino, taxYear),
       method = PUT,
       rel = AMEND_SAVINGS_INCOME
     )
 
   def retrieveSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = retrieveSavingsUri(appConfig, nino, taxYear),
+      href = savingsUri(appConfig, nino, taxYear),
       method = GET,
       rel = SELF
     )
 
   def deleteSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = deleteSavingsUri(appConfig, nino, taxYear),
+      href = savingsUri(appConfig, nino, taxYear),
       method = DELETE,
       rel = DELETE_SAVINGS_INCOME
     )

@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package v1.connectors
+package v1.mocks.services
 
-import config.AppConfig
-import javax.inject.Inject
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.savings.amend.AmendSavingsRequest
+import v1.services.AmendSavingsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendSavingsConnector @Inject()(val http: HttpClient,
-                                      val appConfig: AppConfig) extends BaseDesConnector {
+trait MockAmendSavingsService extends MockFactory {
 
-  def amendSavings(request: AmendSavingsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[Unit]] = {
+  val mockAmendSavingsService: AmendSavingsService = mock[AmendSavingsService]
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+  object MockAmendSavingsService {
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear.value
-
-    put(
-      uri = DesUri[Unit](s"some-placeholder/savings/$nino/$taxYear"), body = request.body
-    )
+    def amendSaving(requestData: AmendSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (mockAmendSavingsService
+        .amendSaving(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
+    }
   }
+
 }

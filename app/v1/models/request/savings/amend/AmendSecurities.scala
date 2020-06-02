@@ -19,19 +19,18 @@ package v1.models.request.savings.amend
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class AmendSecuritiesItems(taxTakenOff: Option[BigDecimal],
-                                grossAmount: Option[BigDecimal],
-                                netAmount: Option[BigDecimal]
-                               )
+case class AmendSecurities(taxTakenOff: Option[BigDecimal],
+                           grossAmount: Option[BigDecimal],
+                           netAmount: Option[BigDecimal])
 
-object AmendSecuritiesItems {
+object AmendSecurities {
 
-  implicit val reads: Reads[AmendSecuritiesItems] = Json.reads[AmendSecuritiesItems]
+  implicit val reads: Reads[AmendSecurities] = Json.reads[AmendSecurities]
 
-  implicit val writes: OWrites[AmendSecuritiesItems] = (
+  implicit val writes: OWrites[AmendSecurities] = (
     (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "grossAmount").writeNullable[BigDecimal] and
       (JsPath \ "netAmount").writeNullable[BigDecimal]
-    ) (unlift(AmendSecuritiesItems.unapply))
+    ) (unlift(AmendSecurities.unapply))
 
 }

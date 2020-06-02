@@ -18,10 +18,10 @@ package v1.models.request.amendSavings
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.savings.amend.AmendSecuritiesItems
+import v1.models.request.savings.amend.AmendSecurities
 import v1.fixtures.AmendSavingsFixture._
 
-class AmendSecuritiesItemsSpec extends UnitSpec {
+class AmendSecuritiesSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -58,19 +58,19 @@ class AmendSecuritiesItemsSpec extends UnitSpec {
   "AmendSecuritiesItems" when {
     "read from valid JSON" should {
       "convert valid MTD JSON into AmendSecuritiesItems model with all fields" in {
-        mtdResponse.as[AmendSecuritiesItems] shouldBe fullAmendSecuritiesItemsModel
+        mtdResponse.as[AmendSecurities] shouldBe fullAmendSecuritiesItemsModel
       }
     }
 
     "read from empty JSON" should {
       "convert empty MTD JSON into an empty AmendSecuritiesItems object" in {
-        mtdResponseEmpty.as[AmendSecuritiesItems] shouldBe minimalAmendSecuritiesItemsModel
+        mtdResponseEmpty.as[AmendSecurities] shouldBe minimalAmendSecuritiesItemsModel
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        mtdResponseInvalid.validate[AmendSecuritiesItems] shouldBe a[JsError]
+        mtdResponseInvalid.validate[AmendSecurities] shouldBe a[JsError]
       }
     }
 
