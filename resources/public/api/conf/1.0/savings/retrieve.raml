@@ -1,13 +1,12 @@
 is:
   - headers.acceptJson
-  - headers.contentTypeJson
   - headers.testScenarioHeader
   - errors.formatNino
   - errors.formatTaxYear
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Retrieve savings income [test only]
+displayName: Retrieve Savings Income [test only]
 description: This endpoint allows a developer to retrieve savings income for securities or foreign interest. A National Insurance number and tax year must be provided.
 (annotations.sandboxData): !include ../scenarios/savings/retrieve.md
 (annotations.scope): "read:self-assessment"
@@ -21,4 +20,4 @@ responses:
     body:
       application/json:
         type: !include ../schemas/retrieve_response.json
-        example: !include ../examples/retrieve/retrieve_savings_full.json
+        example: !include ../examples/savings/retrieve_savings_full.json
