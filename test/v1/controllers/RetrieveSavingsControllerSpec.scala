@@ -20,37 +20,30 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.RetrieveSavingsFixture
+import v1.hateoas.HateoasLinks
+import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockDeleteSavingsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSavingsService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
+import v1.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF}
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeleteSavingsControllerSpec
-  extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
-    with MockDeleteSavingsService
-    with MockDeleteRetrieveRequestParser {
-
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new DeleteSavingsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveSavingsRequestParser,
-      service = mockDeleteSavingsService,
-      cc = cc
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-  }
+class RetrieveSavingsControllerSpec extends ControllerBaseSpec
+  with MockEnrolmentsAuthService
+  with MockMtdIdLookupService
+  with MockRetrieveSavingsService
+  with MockHateoasFactory
+  with MockDeleteRetrieveRequestParser
+  with HateoasLinks {
 
   val nino: String = "AA123456A"
   val taxYear: String = "2017-18"
@@ -66,22 +59,72 @@ class DeleteSavingsControllerSpec
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
 
-  "DeleteSavingsController" should {
-    "return NO_content" when {
+  val amendSavingsLink: Link =
+    Link(
+      href = s"/individuals/income-received/savings/$nino/$taxYear",
+      method = PUT,
+      rel = AMEND_SAVINGS_INCOME
+    )
+
+  val retrieveSavingsLink: Link =
+    Link(
+      href = s"/individuals/income-received/savings/$nino/$taxYear",
+      method = GET,
+      rel = SELF
+    )
+
+  val deleteSavingsLink: Link =
+    Link(
+      href = s"/individuals/income-received/savings/$nino/$taxYear",
+      method = DELETE,
+      rel = DELETE_SAVINGS_INCOME
+    )
+
+  private val retrieveSavingsResponse = RetrieveSavingsFixture.retrieveSavingsResponseModel
+  private val mtdResponse = RetrieveSavingsFixture.mtdResponseWithHateoas(nino, taxYear)
+
+  trait Test {
+    val hc = HeaderCarrier()
+
+    val controller = new RetrieveSavingsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockDeleteRetrieveSavingsRequestParser,
+      service = mockRetrieveSavingsService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+  }
+
+  "RetrieveSavingsController" should {
+    "return OK" when {
       "happy path" in new Test {
 
         MockDeleteRetrieveSavingsRequestDataParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteSavingsService
-          .deleteSaving(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+        MockRetrieveSavingsService
+          .retrieveSaving(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSavingsResponse))))
 
-        val result: Future[Result] = controller.deleteSaving(nino, taxYear)(fakeDeleteRequest)
+        MockHateoasFactory
+          .wrap(retrieveSavingsResponse, RetrieveSavingsHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveSavingsResponse,
+            Seq(
+              amendSavingsLink,
+              retrieveSavingsLink,
+              deleteSavingsLink
+            )
+          ))
 
-        status(result) shouldBe NO_CONTENT
-        contentAsString(result) shouldBe ""
+        val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -95,7 +138,7 @@ class DeleteSavingsControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.deleteSaving(nino, taxYear)(fakeDeleteRequest)
+            val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -121,11 +164,11 @@ class DeleteSavingsControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteSavingsService
-              .deleteSaving(requestData)
+            MockRetrieveSavingsService
+              .retrieveSaving(requestData)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.deleteSaving(nino, taxYear)(fakeDeleteRequest)
+            val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

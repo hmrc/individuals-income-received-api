@@ -4,7 +4,7 @@
   "description": "This endpoint allows a developer to retrieve savings income for securities or foreign interest. A National Insurance number and tax year must be provided.",
   "type": "object",
   "properties": {
-    "securitiesItems": {
+    "securities": {
       "description": "The container that holds the key value for securities.",
       "type": "object",
       "properties": {
@@ -34,7 +34,7 @@
         }
       }
     },
-    "foreignInterestItems": {
+    "foreignInterest": {
       "description": "Financial details about foreign interest income.",
       "type": "array",
       "items": {

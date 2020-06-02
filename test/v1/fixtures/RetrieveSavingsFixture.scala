@@ -16,18 +16,89 @@
 
 package v1.fixtures
 
-import v1.models.response.retrieveSavings.{ForeignInterest, RetrieveSavingsResponse, SecuritiesItems}
+import play.api.libs.json.{JsObject, JsValue, Json}
+import v1.models.response.retrieveSavings.{ForeignInterest, RetrieveSavingsResponse, Securities}
 
 object RetrieveSavingsFixture {
 
-  val fullSecuritiesItemsModel: SecuritiesItems =
-    SecuritiesItems(
+  val desRetrieveSavingsResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "securities":
+      |      {
+      |         "taxTakenOff": 100.0,
+      |         "grossAmount": 1455.0,
+      |         "netAmount": 123.22
+      |      },
+      |   "foreignInterest": [
+      |      {
+      |         "amountBeforeTax": 1232.22,
+      |         "countryCode": "GER",
+      |         "taxTakenOff": 22.22,
+      |         "specialWithholdingTax": 22.22,
+      |         "taxableAmount": 2321.22,
+      |         "foreignTaxCreditRelief": true
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  val mtdRetrieveSavingsResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "securities":
+      |      {
+      |         "taxTakenOff": 100.0,
+      |         "grossAmount": 1455.0,
+      |         "netAmount": 123.22
+      |      },
+      |   "foreignInterest": [
+      |      {
+      |         "amountBeforeTax": 1232.22,
+      |         "countryCode": "GER",
+      |         "taxTakenOff": 22.22,
+      |         "specialWithholdingTax": 22.22,
+      |         "taxableAmount": 2321.22,
+      |         "foreignTaxCreditRelief": true
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdRetrieveSavingsResponse.as[JsObject] ++ Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "method":"PUT",
+       |         "rel":"amend-savings-income"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "method":"GET",
+       |         "rel":"self"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "method":"DELETE",
+       |         "rel":"delete-savings-income"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  ).as[JsObject]
+
+  val fullSecuritiesItemsModel: Securities =
+    Securities(
       taxTakenOff = Some(100.0),
       grossAmount = Some(1455.0),
       netAmount = Some(123.22)
     )
 
-  val minimalSecuritiesItemsModel: SecuritiesItems =  SecuritiesItems(None,None,None)
+  val minimalSecuritiesItemsModel: Securities =  Securities(None,None,None)
 
   val fullForeignInterestsModel: ForeignInterest =
     ForeignInterest(
@@ -35,7 +106,7 @@ object RetrieveSavingsFixture {
       countryCode = "GER",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
-      taxableAmount = Some(2321.22),
+      taxableAmount = 2321.22,
       foreignTaxCreditRelief = true
     )
 
@@ -45,11 +116,18 @@ object RetrieveSavingsFixture {
       countryCode = "FRA",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
-      taxableAmount = Some(2321.22),
+      taxableAmount = 2321.22,
       foreignTaxCreditRelief = true
     )
 
-  val minimalForeignInterestsModel: ForeignInterest =  ForeignInterest(None,"GER",None,None,None,true)
+  val minimalForeignInterestsModel: ForeignInterest =  ForeignInterest(
+    amountBeforeTax = None,
+    countryCode = "GER",
+    taxTakenOff = None,
+    specialWithholdingTax = None,
+    taxableAmount = 100,
+    foreignTaxCreditRelief = true
+  )
 
   val retrieveSavingsResponseModel: RetrieveSavingsResponse =
     RetrieveSavingsResponse(

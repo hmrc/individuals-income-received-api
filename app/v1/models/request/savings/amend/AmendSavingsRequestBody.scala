@@ -16,6 +16,12 @@
 
 package v1.models.request.savings.amend
 
-import play.api.mvc.AnyContentAsJson
+import play.api.libs.json.{Json, OWrites, Reads}
 
-case class AmendSavingsIncomeRawData(nino: String, taxYear: String, body: AnyContentAsJson)
+case class AmendSavingsRequestBody(securities: Option[AmendSecuritiesItems], foreignInterest: Option[Seq[AmendForeignInterest]])
+
+object AmendSavingsRequestBody {
+
+  implicit val reads: Reads[AmendSavingsRequestBody]= Json.reads[AmendSavingsRequestBody]
+  implicit val writes: OWrites[AmendSavingsRequestBody] = Json.writes[AmendSavingsRequestBody]
+}

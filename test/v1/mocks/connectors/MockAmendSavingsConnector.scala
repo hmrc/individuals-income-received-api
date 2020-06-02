@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package v1.mocks.connectors
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.connectors.{AmendSavingsConnector, DesOutcome}
+import v1.models.request.savings.amend.AmendSavingsRequest
 
+import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteRetrieveRequestParser extends MockFactory {
+trait MockAmendSavingsConnector extends MockFactory {
 
-  val mockDeleteRetrieveSavingsRequestParser: DeleteRetrieveSavingsRequestParser = mock[DeleteRetrieveSavingsRequestParser]
+  val mockAmendSavingsConnector: AmendSavingsConnector = mock[AmendSavingsConnector]
 
-  object MockDeleteRetrieveSavingsRequestDataParser {
-    def parse(data: DeleteRetrieveRawData): CallHandler[Either[ErrorWrapper, DeleteRetrieveRequest]] = {
-      (mockDeleteRetrieveSavingsRequestParser.parseRequest(_: DeleteRetrieveRawData)).expects(data)
+  object MockAmendSavingsConnector {
+
+    def amendSaving(request: AmendSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (mockAmendSavingsConnector
+        .amendSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(request, *, *)
     }
   }
-
 }

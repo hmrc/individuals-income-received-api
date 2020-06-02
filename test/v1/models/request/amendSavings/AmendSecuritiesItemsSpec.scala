@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveSavings
+package v1.models.request.amendSavings
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveSavingsFixture
+import v1.models.request.savings.amend.AmendSecuritiesItems
+import v1.fixtures.AmendSavingsFixture._
 
-class SecuritiesItemsSpec extends UnitSpec {
+class AmendSecuritiesItemsSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -42,7 +43,7 @@ class SecuritiesItemsSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val desResponseInvalid: JsValue = Json.parse(
+  val mtdResponseInvalid: JsValue = Json.parse(
     """
       |{
       |   "taxTakenOff": "abc",
@@ -52,30 +53,30 @@ class SecuritiesItemsSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val desResponseEmpty: JsValue = Json.parse("""{}""")
+  val mtdResponseEmpty: JsValue = Json.parse("""{}""")
 
-  "SecuritiesItems" when {
+  "AmendSecuritiesItems" when {
     "read from valid JSON" should {
-      "produce the expected SecuritiesItems object" in {
-        desResponse.as[SecuritiesItems] shouldBe RetrieveSavingsFixture.fullSecuritiesItemsModel
+      "convert valid MTD JSON into AmendSecuritiesItems model with all fields" in {
+        mtdResponse.as[AmendSecuritiesItems] shouldBe fullAmendSecuritiesItemsModel
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty SecuritiesItems object" in {
-        desResponseEmpty.as[SecuritiesItems] shouldBe RetrieveSavingsFixture.minimalSecuritiesItemsModel
+      "convert empty MTD JSON into an empty AmendSecuritiesItems object" in {
+        mtdResponseEmpty.as[AmendSecuritiesItems] shouldBe minimalAmendSecuritiesItemsModel
       }
     }
 
     "read from invalid JSON" should {
-      "produce a produce a JsError" in {
-        desResponseInvalid.validate[SecuritiesItems] shouldBe a[JsError]
+      "produce a JsError" in {
+        mtdResponseInvalid.validate[AmendSecuritiesItems] shouldBe a[JsError]
       }
     }
 
-    "written to JSON" should {
-      "produce the expected JSON object" in {
-        Json.toJson(RetrieveSavingsFixture.fullSecuritiesItemsModel) shouldBe mtdResponse
+    "written to DES JSON" should {
+      "convert a AmendSecuritiesItems model into valid DES JSON" in {
+        Json.toJson(fullAmendSecuritiesItemsModel) shouldBe desResponse
       }
     }
   }

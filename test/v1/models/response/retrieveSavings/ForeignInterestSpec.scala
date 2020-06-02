@@ -65,6 +65,7 @@ class ForeignInterestSpec extends UnitSpec {
     """
       |{
       |    "countryCode": "GER",
+      |    "taxableAmount": 100,
       |    "foreignTaxCreditRelief": true
       |}
     """.stripMargin
@@ -78,7 +79,7 @@ class ForeignInterestSpec extends UnitSpec {
     }
 
     "read from a JSON with only mandatory fields" should {
-      "produce an empty ForeignInterest object" in {
+      "produce a ForeignInterest object with only mandatory fields" in {
         minimalDesResponse.as[ForeignInterest] shouldBe RetrieveSavingsFixture.minimalForeignInterestsModel
       }
     }

@@ -18,14 +18,16 @@ package v1.models.errors
 
 import play.api.libs.json.{Json, Writes}
 
-case class MtdError(code: String, message: String)
+case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
 
 object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
 }
 
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
-object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
+object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The format of the supplied tax year field is not valid")
+object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided country code is not valid")
+object ValueFormatError extends MtdError("FORMAT_VALUE", "")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
@@ -55,8 +57,8 @@ object UnauthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The
 object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is missing or not authorized")
 
 // Accept header Errors
-object  InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
+object InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
 
-object  UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested resource could not be found")
+object UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested resource could not be found")
 
 object InvalidBodyTypeError extends MtdError("INVALID_BODY_TYPE", "Expecting text/json or application/json body")

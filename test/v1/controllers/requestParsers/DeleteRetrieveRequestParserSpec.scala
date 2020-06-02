@@ -18,7 +18,7 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockDeleteSavingsValidator
+import v1.mocks.validators.MockDeleteRetrieveSavingsValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -29,41 +29,41 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
   val nino: String = "AA123456B"
   val taxYear: String = "2017-18"
 
-  val deleteSavingsRawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val deleteRetrieveSavingsRawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  trait Test extends MockDeleteSavingsValidator {
-    lazy val parser: DeleteSavingsRequestParser = new DeleteSavingsRequestParser(
-      validator = mockDeleteSavingsValidator
+  trait Test extends MockDeleteRetrieveSavingsValidator {
+    lazy val parser: DeleteRetrieveSavingsRequestParser = new DeleteRetrieveSavingsRequestParser(
+      validator = mockDeleteRetrieveSavingsValidator
     )
   }
 
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockDeleteSavingsValidator.validate(deleteSavingsRawData).returns(Nil)
+        MockDeleteRetrieveSavingsValidator.validate(deleteRetrieveSavingsRawData).returns(Nil)
 
-        parser.parseRequest(deleteSavingsRawData) shouldBe
+        parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
           Right(DeleteRetrieveRequest(Nino(nino), DesTaxYear("2018")))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockDeleteSavingsValidator.validate(deleteSavingsRawData)
+        MockDeleteRetrieveSavingsValidator.validate(deleteRetrieveSavingsRawData)
           .returns(List(NinoFormatError))
 
-        parser.parseRequest(deleteSavingsRawData) shouldBe
+        parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
           Left(ErrorWrapper(None, NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test {
-        MockDeleteSavingsValidator.validate(deleteSavingsRawData)
+        MockDeleteRetrieveSavingsValidator.validate(deleteRetrieveSavingsRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(deleteSavingsRawData) shouldBe
+        parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
           Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
     }

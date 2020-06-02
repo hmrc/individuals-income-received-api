@@ -20,12 +20,12 @@ import support.UnitSpec
 import v1.models.errors._
 import v1.models.request.savings.DeleteRetrieveRawData
 
-class DeleteSavingsValidatorSpec extends UnitSpec {
+class DeleteRetrieveSavingsValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
 
-  val validator = new DeleteSavingsValidator()
+  val validator = new DeleteRetrieveSavingsValidator()
 
   "running a validation" should {
     "return no errors" when {

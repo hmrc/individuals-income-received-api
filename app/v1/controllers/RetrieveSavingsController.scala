@@ -24,27 +24,30 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
+import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.savings.DeleteRetrieveRawData
-import v1.services.{DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
+import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSavingsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
-                                        val lookupService: MtdIdLookupService,
-                                        requestParser: DeleteRetrieveSavingsRequestParser,
-                                        service: DeleteSavingsService,
-                                        cc: ControllerComponents)(implicit ec: ExecutionContext)
+class RetrieveSavingsController @Inject()(val authService: EnrolmentsAuthService,
+                                          val lookupService: MtdIdLookupService,
+                                          requestParser: DeleteRetrieveSavingsRequestParser,
+                                          service: RetrieveSavingsService,
+                                          hateoasFactory: HateoasFactory,
+                                          cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "DeleteSavingsController",
-      endpointName = "deleteSaving"
+      controllerName = "RetrieveSavingsController",
+      endpointName = "retrieveSaving"
     )
 
-  def deleteSaving(nino: String, taxYear: String): Action[AnyContent] =
+  def retrieveSaving(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
       val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
@@ -55,13 +58,17 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.deleteSaving(parsedRequest))
+          serviceResponse <- EitherT(service.retrieveSaving(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrap(serviceResponse.responseData, RetrieveSavingsHateoasData(nino, taxYear))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          NoContent
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
@@ -83,3 +90,4 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
     }
   }
 }
+

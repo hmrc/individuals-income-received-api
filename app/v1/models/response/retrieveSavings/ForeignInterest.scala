@@ -23,21 +23,18 @@ case class ForeignInterest(amountBeforeTax: Option[BigDecimal],
                            countryCode: String,
                            taxTakenOff: Option[BigDecimal],
                            specialWithholdingTax: Option[BigDecimal],
-                           taxableAmount: Option[BigDecimal],
-                           foreignTaxCreditRelief: Boolean
-                          )
+                           taxableAmount: BigDecimal,
+                           foreignTaxCreditRelief: Boolean)
 
-object ForeignInterest{
-
-  implicit val reads: Reads[ForeignInterest]=(
+object ForeignInterest {
+  implicit val reads: Reads[ForeignInterest] = (
     (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
       (JsPath \ "countryCode").read[String] and
       (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
-      (JsPath \ "taxableAmount").readNullable[BigDecimal] and
+      (JsPath \ "taxableAmount").read[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").read[Boolean]
     ) (ForeignInterest.apply _)
 
   implicit val writes: OWrites[ForeignInterest] = Json.writes[ForeignInterest]
-
 }

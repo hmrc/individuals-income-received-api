@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package v1.controllers.requestParsers
 
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
-import v1.models.errors.ErrorWrapper
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.DeleteRetrieveSavingsValidator
+import v1.models.domain.DesTaxYear
 import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
+class DeleteRetrieveSavingsRequestParser @Inject()(val validator: DeleteRetrieveSavingsValidator)
+  extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {
 
-trait MockDeleteRetrieveRequestParser extends MockFactory {
-
-  val mockDeleteRetrieveSavingsRequestParser: DeleteRetrieveSavingsRequestParser = mock[DeleteRetrieveSavingsRequestParser]
-
-  object MockDeleteRetrieveSavingsRequestDataParser {
-    def parse(data: DeleteRetrieveRawData): CallHandler[Either[ErrorWrapper, DeleteRetrieveRequest]] = {
-      (mockDeleteRetrieveSavingsRequestParser.parseRequest(_: DeleteRetrieveRawData)).expects(data)
-    }
-  }
-
+  override protected def requestFor(data: DeleteRetrieveRawData): DeleteRetrieveRequest =
+    DeleteRetrieveRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
 }

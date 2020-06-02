@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.hateoas
+package v1.models.request.savings.amend
 
-object RelType {
-  val SAMPLE_ENDPOINT_REL = "sample-rel"
-  val AMEND_SAVINGS_INCOME = "amend-savings-income"
-  val DELETE_SAVINGS_INCOME = "delete-savings-income"
+import play.api.mvc.AnyContentAsJson
+import v1.models.request.RawData
 
-  val SELF = "self"
-}
+case class AmendSavingsRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

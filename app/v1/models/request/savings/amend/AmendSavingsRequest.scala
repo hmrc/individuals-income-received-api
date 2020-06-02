@@ -16,13 +16,7 @@
 
 package v1.models.request.savings.amend
 
-import play.api.libs.json.{Json, OWrites, Reads}
-import v1.models.response.retrieveSavings.{ForeignInterest, SecuritiesItems}
+import uk.gov.hmrc.domain.Nino
+import v1.models.domain.DesTaxYear
 
-case class AmendSavingsIncomeBody(securities: Option[SecuritiesItems], foreignInterest: Seq[ForeignInterest])
-
-object AmendSavingsIncomeBody {
-
-  implicit val reads: Reads[AmendSavingsIncomeBody]= Json.reads[AmendSavingsIncomeBody]
-  implicit val writes: OWrites[AmendSavingsIncomeBody] = Json.writes[AmendSavingsIncomeBody]
-}
+case class AmendSavingsRequest(nino: Nino, taxYear: DesTaxYear, body: AmendSavingsRequestBody)

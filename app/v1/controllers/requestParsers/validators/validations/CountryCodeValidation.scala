@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package v1.models.hateoas
+package v1.controllers.requestParsers.validators.validations
 
-object RelType {
-  val SAMPLE_ENDPOINT_REL = "sample-rel"
-  val AMEND_SAVINGS_INCOME = "amend-savings-income"
-  val DELETE_SAVINGS_INCOME = "delete-savings-income"
+import com.neovisionaries.i18n.CountryCode
+import v1.models.errors.{CountryCodeFormatError, MtdError}
 
-  val SELF = "self"
+object CountryCodeValidation {
+
+  def validate(data: String): List[MtdError] = CountryCode.getByAlpha3Code(data) match {
+    case _: CountryCode => NoValidationErrors
+    case _ => List(CountryCodeFormatError)
+  }
 }

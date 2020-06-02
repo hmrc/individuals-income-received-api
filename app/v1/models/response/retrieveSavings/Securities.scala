@@ -19,19 +19,16 @@ package v1.models.response.retrieveSavings
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SecuritiesItems(taxTakenOff: Option[BigDecimal],
-                           grossAmount: Option[BigDecimal],
-                           netAmount: Option[BigDecimal]
-                          )
+case class Securities(taxTakenOff: Option[BigDecimal],
+                      grossAmount: Option[BigDecimal],
+                      netAmount: Option[BigDecimal])
 
-object SecuritiesItems{
-
-  implicit val reads: Reads[SecuritiesItems]=(
+object Securities {
+  implicit val reads: Reads[Securities] = (
     (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
       (JsPath \ "grossAmount").readNullable[BigDecimal] and
       (JsPath \ "netAmount").readNullable[BigDecimal]
-    ) (SecuritiesItems.apply _)
+    ) (Securities.apply _)
 
-  implicit val writes: OWrites[SecuritiesItems] = Json.writes[SecuritiesItems]
-
+  implicit val writes: OWrites[Securities] = Json.writes[Securities]
 }
