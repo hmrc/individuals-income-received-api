@@ -86,7 +86,7 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """.stripMargin
   )
 
-  private val invalidValueRequestBodyJson: JsValue = Json.parse(
+  private val invalidForeignInterestRequestBodyJson: JsValue = Json.parse(
     """
       |{
       | "foreignInterest": [
@@ -96,6 +96,19 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       |       "foreignTaxCreditRelief": true
       |    }
       | ]
+      |}
+    """.stripMargin
+  )
+
+
+  private val invalidSecuritiesRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "securities": {
+      |      "taxTakenOff": 100.11,
+      |      "grossAmount": 100.12,
+      |      "netAmount": -100.13
+      |   }
       |}
     """.stripMargin
   )
@@ -134,7 +147,8 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
   private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidValueRawRequestBody = AnyContentAsJson(invalidValueRequestBodyJson)
+  private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
+  private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   val validator = new AmendSavingsValidator()
@@ -179,17 +193,25 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       }
     }
 
-    "return ValueFormatError error" when {
-      "one field fails value validation" in {
-        validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidValueRawRequestBody)) shouldBe
+    "return ValueFormatError error (single failure)" when {
+      "one field fails value validation (foreign interest)" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidForeignInterestRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
             paths = Some(Seq("/foreignInterest/0/taxableAmount"))
           ))
       }
+
+      "one field fails value validation (securities)" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidSecuritiesRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ZERO_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/securities/netAmount"))
+          ))
+      }
     }
 
-    "return ValueFormatError error" when {
+    "return ValueFormatError error (multiple failures)" when {
       "multiple fields fail value validation" in {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
