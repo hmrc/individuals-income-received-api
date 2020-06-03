@@ -80,7 +80,6 @@ class AmendSavingsServiceSpec extends ServiceSpec {
         val input = Seq(
           ("FORMAT_NINO", NinoFormatError),
           ("FORMAT_TAX_YEAR", TaxYearFormatError),
-          ("RULE_TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("NOT_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
