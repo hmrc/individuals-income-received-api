@@ -23,10 +23,12 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
+import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
-import v1.services.{DeleteSavingsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
                                         val lookupService: MtdIdLookupService,
                                         requestParser: DeleteRetrieveRequestParser,
-                                        service: DeleteSavingsService,
+                                        service: DeleteRetrieveService,
                                         cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
@@ -52,10 +54,14 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
         taxYear = taxYear
       )
 
+      implicit val desUri: DesUri[Unit] = DesUri[Unit](
+        s"some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
+      )
+
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.deleteSaving(parsedRequest))
+          serviceResponse <- EitherT(service.delete(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

@@ -38,7 +38,6 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
     val desResponse: JsValue = RetrieveSavingsFixture.desRetrieveSavingsResponse
     val mtdResponse: JsValue = RetrieveSavingsFixture.mtdResponseWithHateoas(nino, taxYear)
 
-
     def uri: String = s"/savings/$nino/$taxYear"
 
     def desUri: String = s"/some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"

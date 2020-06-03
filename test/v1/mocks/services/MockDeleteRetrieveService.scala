@@ -18,25 +18,33 @@ package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.connectors.DesUri
 import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.DeleteRetrieveRequest
-import v1.services.DeleteSavingsService
+import v1.services.DeleteRetrieveService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteSavingsService extends MockFactory {
+trait MockDeleteRetrieveService extends MockFactory {
 
-  val mockDeleteSavingsService: DeleteSavingsService = mock[DeleteSavingsService]
+  val mockDeleteRetrieveService: DeleteRetrieveService = mock[DeleteRetrieveService]
 
-  object MockDeleteSavingsService {
+  object MockDeleteRetrieveService {
 
-    def deleteSaving(requestData: DeleteRetrieveRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockDeleteSavingsService
-        .deleteSaving(_: DeleteRetrieveRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+    def delete(requestData: DeleteRetrieveRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (mockDeleteRetrieveService
+        .delete(_: DeleteRetrieveRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DesUri[Unit]))
+        .expects(requestData, *, *, *, *)
+    }
+
+    def retrieve[Resp: Reads](requestData: DeleteRetrieveRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
+      (mockDeleteRetrieveService
+        .retrieve[Resp](_: DeleteRetrieveRequest)(_: Reads[Resp], _: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DesUri[Resp]))
+        .expects(requestData, *, *, *, *, *)
     }
   }
 

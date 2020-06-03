@@ -21,7 +21,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockDeleteSavingsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -34,23 +34,8 @@ class DeleteSavingsControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteSavingsService
+    with MockDeleteRetrieveService
     with MockDeleteRetrieveRequestParser {
-
-  trait Test {
-    val hc = HeaderCarrier()
-
-    val controller = new DeleteSavingsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteSavingsService,
-      cc = cc
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-  }
 
   val nino: String = "AA123456A"
   val taxYear: String = "2017-18"
@@ -66,6 +51,21 @@ class DeleteSavingsControllerSpec
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
 
+  trait Test {
+    val hc = HeaderCarrier()
+
+    val controller = new DeleteSavingsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockDeleteRetrieveRequestParser,
+      service = mockDeleteRetrieveService,
+      cc = cc
+    )
+
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+  }
+
   "DeleteSavingsController" should {
     "return NO_content" when {
       "happy path" in new Test {
@@ -74,8 +74,8 @@ class DeleteSavingsControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteSavingsService
-          .deleteSaving(requestData)
+        MockDeleteRetrieveService
+          .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteSaving(nino, taxYear)(fakeDeleteRequest)
@@ -121,8 +121,8 @@ class DeleteSavingsControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteSavingsService
-              .deleteSaving(requestData)
+            MockDeleteRetrieveService
+              .delete(requestData)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
             val result: Future[Result] = controller.deleteSaving(nino, taxYear)(fakeDeleteRequest)

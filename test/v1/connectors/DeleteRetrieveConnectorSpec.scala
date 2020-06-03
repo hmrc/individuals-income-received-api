@@ -17,29 +17,28 @@
 package v1.connectors
 
 import mocks.MockAppConfig
+import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.domain.Nino
-import v1.fixtures.RetrieveSavingsFixture
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.DeleteRetrieveRequest
-import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 
 import scala.concurrent.Future
 
-class RetrieveSavingsConnectorSpec extends ConnectorSpec {
+class DeleteRetrieveConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
   val taxYear: String = "2019"
 
-  val retrieveSavingsRequest: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  val deleteRetrieveRequest: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear)
   )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveSavingsConnector = new RetrieveSavingsConnector(
+    val connector: DeleteRetrieveConnector = new DeleteRetrieveConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -54,21 +53,44 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "RetrieveSavingsConnector" when {
-    "retrieveSaving" must {
-      "return a 200 status for a success scenario" in new Test {
-        val connectorResponse: RetrieveSavingsResponse = RetrieveSavingsFixture.retrieveSavingsResponseModel
+  "DeleteRetrieveConnector" when {
+    "delete" must {
+      "return a 204 status for a success scenario" in new Test {
 
-        val outcome = Right(ResponseWrapper(correlationId, connectorResponse))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+        implicit val desUri: DesUri[Unit] = DesUri[Unit](s"some-placeholder/savings/$nino/$taxYear")
+
+        MockedHttpClient
+          .delete(
+            url = s"$baseUrl/some-placeholder/savings/$nino/$taxYear",
+            requiredHeaders = desRequestHeaders: _*
+          )
+          .returns(Future.successful(outcome))
+
+        await(connector.delete(deleteRetrieveRequest)) shouldBe outcome
+      }
+    }
+
+    "retrieve" must {
+      "return a 200 status for a success scenario" in new Test {
+
+        case class Data(field: String)
+
+        object Data {
+          implicit val reads: Reads[Data] = Json.reads[Data]
+        }
+
+        val outcome = Right(ResponseWrapper(correlationId, Data("value")))
+        implicit val desUri: DesUri[Data] = DesUri[Data](s"some-placeholder/savings/$nino/$taxYear")
 
         MockedHttpClient
           .get(
             url = s"$baseUrl/some-placeholder/savings/$nino/$taxYear",
-            requiredHeaders = desRequestHeaders :_*
+            requiredHeaders = desRequestHeaders: _*
           )
-            .returns(Future.successful(outcome))
+          .returns(Future.successful(outcome))
 
-        await(connector.retrieveSaving(retrieveSavingsRequest)) shouldBe outcome
+        await(connector.retrieve[Data](deleteRetrieveRequest)) shouldBe outcome
       }
     }
   }
