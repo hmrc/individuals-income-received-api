@@ -18,7 +18,7 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockDeleteRetrieveSavingsValidator
+import v1.mocks.validators.MockDeleteRetrieveValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -34,16 +34,16 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
     taxYear = taxYear
   )
 
-  trait Test extends MockDeleteRetrieveSavingsValidator {
-    lazy val parser: DeleteRetrieveSavingsRequestParser = new DeleteRetrieveSavingsRequestParser(
-      validator = mockDeleteRetrieveSavingsValidator
+  trait Test extends MockDeleteRetrieveValidator {
+    lazy val parser: DeleteRetrieveRequestParser = new DeleteRetrieveRequestParser(
+      validator = mockDeleteRetrieveValidator
     )
   }
 
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockDeleteRetrieveSavingsValidator.validate(deleteRetrieveSavingsRawData).returns(Nil)
+        MockDeleteRetrieveValidator.validate(deleteRetrieveSavingsRawData).returns(Nil)
 
         parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
           Right(DeleteRetrieveRequest(Nino(nino), DesTaxYear("2018")))
@@ -52,7 +52,7 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockDeleteRetrieveSavingsValidator.validate(deleteRetrieveSavingsRawData)
+        MockDeleteRetrieveValidator.validate(deleteRetrieveSavingsRawData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
@@ -60,7 +60,7 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur" in new Test {
-        MockDeleteRetrieveSavingsValidator.validate(deleteRetrieveSavingsRawData)
+        MockDeleteRetrieveValidator.validate(deleteRetrieveSavingsRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe

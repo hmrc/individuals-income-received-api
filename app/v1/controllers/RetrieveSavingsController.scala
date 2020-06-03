@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
-import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
+import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.savings.DeleteRetrieveRawData
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveSavingsController @Inject()(val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
-                                          requestParser: DeleteRetrieveSavingsRequestParser,
+                                          requestParser: DeleteRetrieveRequestParser,
                                           service: RetrieveSavingsService,
                                           hateoasFactory: HateoasFactory,
                                           cc: ControllerComponents)(implicit ec: ExecutionContext)

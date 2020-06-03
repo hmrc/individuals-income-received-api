@@ -43,7 +43,7 @@ class DeleteSavingsControllerSpec
     val controller = new DeleteSavingsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveSavingsRequestParser,
+      requestParser = mockDeleteRetrieveRequestParser,
       service = mockDeleteSavingsService,
       cc = cc
     )
@@ -70,7 +70,7 @@ class DeleteSavingsControllerSpec
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveSavingsRequestParser
+        MockDeleteRetrieveRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -91,7 +91,7 @@ class DeleteSavingsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveSavingsRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -117,7 +117,7 @@ class DeleteSavingsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveSavingsRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 

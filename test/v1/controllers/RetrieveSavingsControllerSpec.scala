@@ -89,7 +89,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     val controller = new RetrieveSavingsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveSavingsRequestParser,
+      requestParser = mockDeleteRetrieveRequestParser,
       service = mockRetrieveSavingsService,
       hateoasFactory = mockHateoasFactory,
       cc = cc
@@ -103,7 +103,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveSavingsRequestParser
+        MockDeleteRetrieveRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -134,7 +134,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveSavingsRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -160,7 +160,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveSavingsRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 

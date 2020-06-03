@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package v1.mocks.validators
+package v1.controllers.requestParsers.validators
 
-import org.scalamock.handlers.CallHandler1
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.DeleteRetrieveSavingsValidator
+import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.savings.DeleteRetrieveRawData
 
-class MockDeleteRetrieveSavingsValidator extends MockFactory {
+class DeleteRetrieveValidator extends Validator[DeleteRetrieveRawData] {
 
-  val mockDeleteRetrieveSavingsValidator: DeleteRetrieveSavingsValidator = mock[DeleteRetrieveSavingsValidator]
+  private val validationSet = List(parameterFormatValidation)
 
-  object MockDeleteRetrieveSavingsValidator {
-
-    def validate(data: DeleteRetrieveRawData): CallHandler1[DeleteRetrieveRawData, List[MtdError]] = {
-      (mockDeleteRetrieveSavingsValidator
-        .validate(_: DeleteRetrieveRawData))
-        .expects(data)
-    }
+  override def validate(data: DeleteRetrieveRawData): List[MtdError] = {
+    run(validationSet, data).distinct
   }
 
+  private def parameterFormatValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
+    List(
+      NinoValidation.validate(data.nino),
+      TaxYearValidation.validate(data.taxYear)
+    )
+  }
 }
