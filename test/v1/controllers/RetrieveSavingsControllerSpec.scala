@@ -31,7 +31,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

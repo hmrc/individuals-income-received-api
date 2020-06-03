@@ -22,7 +22,7 @@ import v1.mocks.connectors.MockDeleteSavingsConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.DeleteRetrieveRequest
+import v1.models.request.DeleteRetrieveRequest
 
 import scala.concurrent.Future
 

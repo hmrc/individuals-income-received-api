@@ -25,7 +25,7 @@ import v1.connectors.RetrieveSavingsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.DeleteRetrieveRequest
+import v1.models.request.DeleteRetrieveRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 import v1.support.DesResponseMappingSupport
 

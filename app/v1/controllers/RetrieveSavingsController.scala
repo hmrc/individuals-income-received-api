@@ -26,7 +26,7 @@ import utils.Logging
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
-import v1.models.request.savings.DeleteRetrieveRawData
+import v1.models.request.DeleteRetrieveRawData
 import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSavingsService}
 

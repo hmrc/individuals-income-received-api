@@ -22,7 +22,7 @@ import v1.fixtures.RetrieveSavingsFixture
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.DeleteRetrieveRequest
+import v1.models.request.DeleteRetrieveRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 
 import scala.concurrent.Future
@@ -59,7 +59,7 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
       "return a 200 status for a success scenario" in new Test {
         val connectorResponse: RetrieveSavingsResponse = RetrieveSavingsFixture.retrieveSavingsResponseModel
 
-        val outcome = Right(ResponseWrapper(correlationId, (connectorResponse)))
+        val outcome = Right(ResponseWrapper(correlationId, connectorResponse))
 
         MockedHttpClient
           .get(

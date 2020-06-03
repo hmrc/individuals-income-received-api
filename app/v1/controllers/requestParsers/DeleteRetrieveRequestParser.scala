@@ -20,7 +20,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteRetrieveValidator
 import v1.models.domain.DesTaxYear
-import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
 class DeleteRetrieveRequestParser @Inject()(val validator: DeleteRetrieveValidator)
   extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {

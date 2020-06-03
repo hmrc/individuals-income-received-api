@@ -23,7 +23,7 @@ import v1.mocks.connectors.MockRetrieveSavingsConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.DeleteRetrieveRequest
+import v1.models.request.DeleteRetrieveRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 
 import scala.concurrent.Future
@@ -53,7 +53,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
 
         val connectorResponse: RetrieveSavingsResponse = RetrieveSavingsFixture.retrieveSavingsResponseModel
 
-        val outcome = Right(ResponseWrapper(correlationId, (connectorResponse)))
+        val outcome = Right(ResponseWrapper(correlationId, connectorResponse))
 
         MockRetrieveSavingsConnector.retrieveSaving(retrieveSavingsRequest)
           .returns(Future.successful(outcome))

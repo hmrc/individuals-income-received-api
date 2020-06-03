@@ -25,7 +25,7 @@ import v1.mocks.services.{MockDeleteSavingsService, MockEnrolmentsAuthService, M
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
