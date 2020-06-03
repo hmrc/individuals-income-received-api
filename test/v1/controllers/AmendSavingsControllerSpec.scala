@@ -74,7 +74,7 @@ class AmendSavingsControllerSpec
       |        "amountBeforeTax": 101.11,
       |        "countryCode": "FRA",
       |        "taxTakenOff": 102.22,
-      |        "specialWitholdingTax": 103.33,
+      |        "specialWithholdingTax": 103.33,
       |        "taxableAmount": 104.44,
       |        "foreignTaxCreditRelief": true
       |      },
@@ -82,7 +82,7 @@ class AmendSavingsControllerSpec
       |        "amountBeforeTax": 201.11,
       |        "countryCode": "DEU",
       |        "taxTakenOff": 202.22,
-      |        "specialWitholdingTax": 203.33,
+      |        "specialWithholdingTax": 203.33,
       |        "taxableAmount": 204.44,
       |        "foreignTaxCreditRelief": true
       |      }
