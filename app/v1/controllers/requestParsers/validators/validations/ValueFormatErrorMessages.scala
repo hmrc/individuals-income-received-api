@@ -17,5 +17,5 @@
 package v1.controllers.requestParsers.validators.validations
 
 protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The field should be a positive value greater than 0 and no greater than 99999999999.99"
+  val ZERO_MINIMUM_INCLUSIVE = "The field should be between 0 and 99999999999.99"
 }
