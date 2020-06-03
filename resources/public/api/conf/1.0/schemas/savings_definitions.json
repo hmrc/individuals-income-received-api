@@ -1,48 +1,5 @@
 {
   "definitions": {
-    "hateoasLinks": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "A list of endpoint links that indicate possible actions related to the current resource",
-        "properties": {
-          "href": {
-            "description": "The relative url of the endpoint",
-            "type": "string",
-            "example": "/sample-context/AA123456A"
-          },
-          "rel": {
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
-            "type": "string",
-            "enum": [
-              "self",
-              "sample-rel"
-            ]
-          },
-          "method": {
-            "description": "The HTTP method type for the endpoint",
-            "type": "string",
-            "enum": [
-              "GET",
-              "POST",
-              "DELETE",
-              "PUT"
-            ]
-          }
-        },
-        "required": [
-          "href",
-          "rel",
-          "method"
-        ]
-      }
-    },
-    "uid": {
-      "description": "A unique identifier",
-      "type": "string",
-      "pattern": "^[A-Za-z0-9]{15}$",
-      "example": "123456879012345"
-    },
     "securities": {
       "type": "object",
       "description": "The container that holds the key value for securities",
@@ -103,10 +60,43 @@
         },
         "required": [
           "countryCode",
+          "taxableAmount",
           "foreignTaxCreditRelief"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/savings/AA123456A/2019-20"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "amend-savings-income", "delete-savings-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
         ]
       }
     }
   }
-
 }

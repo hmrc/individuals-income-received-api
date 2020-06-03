@@ -10,24 +10,24 @@ is:
   - errors.incorrectOrEmptyBody
   - errors.formatCountryCode
   - errors.formatValue
-displayName: Amend savings income [test only]
+displayName: Amend Savings Income [test only]
 description: This endpoint allows a developer to provide or amend savings income for securities or foreign interest. A National Insurance number and tax year must be provided.
-(annotations.sandboxData): !include ../scenarios/savings/amend_savings.md
+(annotations.sandboxData): !include ../scenarios/savings/amend.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../schemas/amend_savings_request.json
+      type: !include ../schemas/savings_amend_request.json
       examples:
         full_amendment:
           description: Full Savings Amendment
-          value: !include ../examples/amend/amend_savings_full.json
+          value: !include ../examples/savings/amend_savings_full.json
 responses:
   200:
     body:
       application/json:
-        type: !include ../schemas/amend_savings_response.json
-        example: !include ../examples/amend/amend_savings_response.json
+        type: !include ../schemas/savings_amend_response.json
+        example: !include ../examples/savings/amend_savings_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

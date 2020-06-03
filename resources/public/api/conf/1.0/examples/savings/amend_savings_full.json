@@ -1,0 +1,25 @@
+{
+  "securities": {
+    "taxTakenOff": 100.12,
+    "grossAmount": 1455.23,
+    "netAmount": 1355.11
+  },
+  "foreignInterest": [
+    {
+      "amountBeforeTax": 1232.67,
+      "countryCode": "DEU",
+      "taxTakenOff": 12.45,
+      "specialWithholdingTax": 14.78,
+      "taxableAmount": 1032.67,
+      "foreignTaxCreditRelief": true
+    },
+    {
+      "amountBeforeTax": 2232.37,
+      "countryCode": "FRA",
+      "taxTakenOff": 22.29,
+      "specialWithholdingTax": 22.06,
+      "taxableAmount": 1321.24,
+      "foreignTaxCreditRelief": true
+    }
+  ]
+}
