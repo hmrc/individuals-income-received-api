@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.hateoas
 
-protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The field should be a positive value greater than 0 and no greater than 99999999999.99"
+import config.AppConfig
+import play.api.libs.json.{JsValue, Json}
+
+trait AmendHateoasBody extends HateoasLinks {
+
+  def amendSavingsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+
+    val links = Seq(
+      amendSavings(appConfig, nino, taxYear),
+      retrieveSavings(appConfig, nino, taxYear),
+      deleteSavings(appConfig, nino, taxYear)
+    )
+
+    Json.obj("links" -> links)
+  }
 }

@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecuritiesItems}
+import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
 
 class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
 
@@ -55,7 +55,7 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
     ))
   }
 
-  private def validateSecurity(securities: AmendSecuritiesItems): List[MtdError] = {
+  private def validateSecurity(securities: AmendSecurities): List[MtdError] = {
     List(
       DecimalValueValidation.validateOptional(
         amount = securities.taxTakenOff,

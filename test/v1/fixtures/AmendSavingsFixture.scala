@@ -16,18 +16,18 @@
 
 package v1.fixtures
 
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSecuritiesItems, AmendSavingsRequestBody}
+import v1.models.request.savings.amend.{AmendForeignInterest, AmendSecurities, AmendSavingsRequestBody}
 
 object AmendSavingsFixture {
 
-  val fullAmendSecuritiesItemsModel: AmendSecuritiesItems =
-    AmendSecuritiesItems(
+  val fullAmendSecuritiesItemsModel: AmendSecurities =
+    AmendSecurities(
       taxTakenOff = Some(100.0),
       grossAmount = Some(1455.0),
       netAmount = Some(123.22)
     )
 
-  val minimalAmendSecuritiesItemsModel: AmendSecuritiesItems =  AmendSecuritiesItems(None,None,None)
+  val minimalAmendSecuritiesItemsModel: AmendSecurities =  AmendSecurities(None,None,None)
 
   val fullAmendForeignInterestModel: AmendForeignInterest =
     AmendForeignInterest(
