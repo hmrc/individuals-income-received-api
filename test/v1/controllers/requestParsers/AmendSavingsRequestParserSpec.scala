@@ -163,7 +163,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
 
         private val allInvalidValueErrors = List(
           ValueFormatError.copy(
-            message = "The field should be a positive value greater than 0 and no greater than 99999999999.99",
+            message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/securities/taxTakenOff",
               "/securities/grossAmount",
