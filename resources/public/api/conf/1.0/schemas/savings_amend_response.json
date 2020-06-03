@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": 	"Amend Savings Income Response",
+  "description":"Amend Savings Income Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "savings_definitions.json#/definitions/links"}
+  }
+}

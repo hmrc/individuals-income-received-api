@@ -1,9 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve Savings Income Request",
-  "description": "Retrieve Savings Income Request",
-  "type": "object",
-  "properties": {
+  "definitions": {
     "securities": {
       "type": "object",
       "description": "The container that holds the key value for securities",

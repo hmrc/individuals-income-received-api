@@ -17,7 +17,7 @@ description: This endpoint allows a developer to provide or amend savings income
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../schemas/savings/amend_savings_request.json
+      type: !include ../schemas/savings_amend_request.json
       examples:
         full_amendment:
           description: Full Savings Amendment
@@ -26,7 +26,7 @@ responses:
   200:
     body:
       application/json:
-        type: !include ../schemas/savings/amend_savings_response.json
+        type: !include ../schemas/savings_amend_response.json
         example: !include ../examples/savings/amend_savings_response.json
     headers:
       X-CorrelationId:
