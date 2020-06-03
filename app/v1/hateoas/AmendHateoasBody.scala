@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.request.sample
+package v1.hateoas
 
-import play.api.libs.json.JsValue
-import v1.models.request.RawData
+import config.AppConfig
+import play.api.libs.json.{JsValue, Json}
 
-case class SampleRawData(nino: String, taxYear: String, body: JsValue) extends RawData
+trait AmendHateoasBody extends HateoasLinks {
+
+  def amendSavingsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+
+    val links = Seq(
+      amendSavings(appConfig, nino, taxYear),
+      retrieveSavings(appConfig, nino, taxYear),
+      deleteSavings(appConfig, nino, taxYear)
+    )
+
+    Json.obj("links" -> links)
+  }
+}

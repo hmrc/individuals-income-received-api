@@ -35,6 +35,7 @@ uses:
        description: Resources relating to an individuals insurance policies income
     /{nino}:
       uriParameters:
+
         nino:
           description: National Insurance number, in the format AA999999A.
           type: string
@@ -50,7 +51,7 @@ uses:
   /savings:
     (annotations.group):
        name: Savings Income
-       description: Resources relating to an individuals savings income
+       description: Resources relating to an individual's savings income
     /{nino}:
       uriParameters:
         nino:

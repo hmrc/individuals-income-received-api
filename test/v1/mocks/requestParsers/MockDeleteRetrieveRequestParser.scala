@@ -22,12 +22,11 @@ import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
 import v1.models.errors.ErrorWrapper
 import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
-
 trait MockDeleteRetrieveRequestParser extends MockFactory {
 
   val mockDeleteRetrieveSavingsRequestParser: DeleteRetrieveSavingsRequestParser = mock[DeleteRetrieveSavingsRequestParser]
 
-  object MockDeleteRetrieveSavingsRequestDataParser {
+  object MockDeleteRetrieveSavingsRequestParser {
     def parse(data: DeleteRetrieveRawData): CallHandler[Either[ErrorWrapper, DeleteRetrieveRequest]] = {
       (mockDeleteRetrieveSavingsRequestParser.parseRequest(_: DeleteRetrieveRawData)).expects(data)
     }

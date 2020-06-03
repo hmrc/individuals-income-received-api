@@ -82,12 +82,12 @@
           },
           "taxTakenOff": {
             "type": "number",
-            "description": "The total amount of foreign tax taken off your income. The value must be greater than 0 and up to 99999999999.99.",
+            "description": "The total amount of foreign tax taken off your income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
             "example": "5000.99"
           },
           "specialWithholdingTax": {
             "type": "number",
-            "description": "The total amount of income (in UK pounds) before deducting any Special Withholding Tax (SWT). The value must be between 1 and 99999999999.99 up to 2 decimal places.",
+            "description": "The total amount of income (in UK pounds) before deducting any Special Withholding Tax (SWT). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
             "example": "5000.99"
           },
           "taxableAmount": {

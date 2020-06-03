@@ -66,7 +66,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/$nino/$taxYear",
+            url = s"$baseUrl/some-placeholder/savings/$nino/$taxYear",
             body = amendSavingsRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))

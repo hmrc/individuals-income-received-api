@@ -17,5 +17,5 @@
 package v1.controllers.requestParsers.validators.validations
 
 protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The value must be between 0 and 99999999999.99 up to 2 decimal places"
+  val ZERO_MINIMUM_INCLUSIVE = "The field should be between 0 and 99999999999.99"
 }

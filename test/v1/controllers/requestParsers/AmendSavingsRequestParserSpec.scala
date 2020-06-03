@@ -23,7 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendSavingsValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors.{BadRequestError, CountryCodeFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecuritiesItems}
+import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
 
 class AmendSavingsRequestParserSpec extends UnitSpec{
 
@@ -63,7 +63,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
   private val validRequestBodyModel = AmendSavingsRequestBody(
-    securities = Some(AmendSecuritiesItems(
+    securities = Some(AmendSecurities(
       taxTakenOff = Some(100.11),
       grossAmount = Some(100.12),
       netAmount = Some(100.13)
@@ -163,7 +163,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
 
         private val allInvalidValueErrors = List(
           ValueFormatError.copy(
-            message = "The value must be between 0 and 99999999999.99 up to 2 decimal places",
+            message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/securities/taxTakenOff",
               "/securities/grossAmount",
