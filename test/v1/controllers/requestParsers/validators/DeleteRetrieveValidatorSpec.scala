@@ -18,14 +18,14 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.request.savings.DeleteRetrieveRawData
+import v1.models.request.DeleteRetrieveRawData
 
-class DeleteRetrieveSavingsValidatorSpec extends UnitSpec {
+class DeleteRetrieveValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
 
-  val validator = new DeleteRetrieveSavingsValidator()
+  val validator = new DeleteRetrieveValidator()
 
   "running a validation" should {
     "return no errors" when {

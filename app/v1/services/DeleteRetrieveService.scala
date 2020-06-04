@@ -19,27 +19,42 @@ package v1.services
 import cats.data.EitherT
 import cats.implicits._
 import javax.inject.{Inject, Singleton}
+import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.DeleteSavingsConnector
+import v1.connectors.{DeleteRetrieveConnector, DesUri}
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.DeleteRetrieveRequest
+import v1.models.request.DeleteRetrieveRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteSavingsService @Inject()(connector: DeleteSavingsConnector) extends DesResponseMappingSupport with Logging {
+class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extends DesResponseMappingSupport with Logging {
 
-  def deleteSaving(request: DeleteRetrieveRequest)(
+  def delete(request: DeleteRetrieveRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    logContext: EndpointLogContext,
+    desUri: DesUri[Unit]): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.deleteSaving(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDesErrors(desErrorMap))
+    } yield desResponseWrapper
+
+    result.value
+  }
+
+  def retrieve[Resp: Reads](request: DeleteRetrieveRequest)(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    logContext: EndpointLogContext,
+    desUri: DesUri[Resp]): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
+
+    val result = for {
+      desResponseWrapper <- EitherT(connector.retrieve[Resp](request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
@@ -47,7 +62,8 @@ class DeleteSavingsService @Inject()(connector: DeleteSavingsConnector) extends 
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_NINO" -> NinoFormatError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "NOT_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError

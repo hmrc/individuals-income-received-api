@@ -23,20 +23,22 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
-import v1.controllers.requestParsers.DeleteRetrieveSavingsRequestParser
+import v1.connectors.DesUri
+import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.request.savings.DeleteRetrieveRawData
-import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveSavingsService}
+import v1.models.request.DeleteRetrieveRawData
+import v1.models.response.retrieveSavings.{RetrieveSavingsHateoasData, RetrieveSavingsResponse}
+import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveSavingsController @Inject()(val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
-                                          requestParser: DeleteRetrieveSavingsRequestParser,
-                                          service: RetrieveSavingsService,
+                                          requestParser: DeleteRetrieveRequestParser,
+                                          service: DeleteRetrieveService,
                                           hateoasFactory: HateoasFactory,
                                           cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
@@ -55,10 +57,14 @@ class RetrieveSavingsController @Inject()(val authService: EnrolmentsAuthService
         taxYear = taxYear
       )
 
+      implicit val desUri: DesUri[RetrieveSavingsResponse] = DesUri[RetrieveSavingsResponse](
+        s"some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
+      )
+
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieveSaving(parsedRequest))
+          serviceResponse <- EitherT(service.retrieve[RetrieveSavingsResponse](parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveSavingsHateoasData(nino, taxYear))

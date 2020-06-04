@@ -24,15 +24,15 @@ import v1.fixtures.RetrieveSavingsFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveSavingsService}
+import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
+import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1.models.response.retrieveSavings.{RetrieveSavingsHateoasData, RetrieveSavingsResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,7 +40,7 @@ import scala.concurrent.Future
 class RetrieveSavingsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
-  with MockRetrieveSavingsService
+  with MockDeleteRetrieveService
   with MockHateoasFactory
   with MockDeleteRetrieveRequestParser
   with HateoasLinks {
@@ -89,8 +89,8 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     val controller = new RetrieveSavingsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveSavingsRequestParser,
-      service = mockRetrieveSavingsService,
+      requestParser = mockDeleteRetrieveRequestParser,
+      service = mockDeleteRetrieveService,
       hateoasFactory = mockHateoasFactory,
       cc = cc
     )
@@ -103,12 +103,12 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveSavingsRequestParser
+        MockDeleteRetrieveRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockRetrieveSavingsService
-          .retrieveSaving(requestData)
+        MockDeleteRetrieveService
+          .retrieve[RetrieveSavingsResponse](requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSavingsResponse))))
 
         MockHateoasFactory
@@ -134,7 +134,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveSavingsRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -160,12 +160,12 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveSavingsRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockRetrieveSavingsService
-              .retrieveSaving(requestData)
+            MockDeleteRetrieveService
+              .retrieve[RetrieveSavingsResponse](requestData)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
             val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)

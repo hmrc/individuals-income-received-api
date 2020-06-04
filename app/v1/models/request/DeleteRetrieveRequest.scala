@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers
+package v1.models.request
 
-import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.DeleteRetrieveSavingsValidator
 import v1.models.domain.DesTaxYear
-import v1.models.request.savings.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
-class DeleteRetrieveSavingsRequestParser @Inject()(val validator: DeleteRetrieveSavingsValidator)
-  extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {
-
-  override protected def requestFor(data: DeleteRetrieveRawData): DeleteRetrieveRequest =
-    DeleteRetrieveRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear))
-}
+case class DeleteRetrieveRequest(nino: Nino, taxYear: DesTaxYear)

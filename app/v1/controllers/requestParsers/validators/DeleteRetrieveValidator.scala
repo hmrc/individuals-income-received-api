@@ -18,9 +18,9 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
-import v1.models.request.savings.DeleteRetrieveRawData
+import v1.models.request.DeleteRetrieveRawData
 
-class DeleteRetrieveSavingsValidator extends Validator[DeleteRetrieveRawData] {
+class DeleteRetrieveValidator extends Validator[DeleteRetrieveRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 

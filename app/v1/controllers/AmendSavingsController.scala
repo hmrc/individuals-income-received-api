@@ -80,10 +80,10 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
+           RuleTaxYearRangeInvalidError | RuleIncorrectOrEmptyBodyError |
            MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(CountryCodeFormatError.code) |
-           RuleIncorrectOrEmptyBodyError => BadRequest(Json.toJson(errorWrapper))
+           MtdErrorWithCustomMessage(CountryCodeFormatError.code)
+      => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

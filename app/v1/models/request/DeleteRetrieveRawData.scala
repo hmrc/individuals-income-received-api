@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings
-
-import v1.models.request.RawData
+package v1.models.request
 
 case class DeleteRetrieveRawData(nino: String, taxYear: String) extends RawData

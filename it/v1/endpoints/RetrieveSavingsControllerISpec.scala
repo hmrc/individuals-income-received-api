@@ -38,7 +38,6 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
     val desResponse: JsValue = RetrieveSavingsFixture.desRetrieveSavingsResponse
     val mtdResponse: JsValue = RetrieveSavingsFixture.mtdResponseWithHateoas(nino, taxYear)
 
-
     def uri: String = s"/savings/$nino/$taxYear"
 
     def desUri: String = s"/some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
@@ -127,8 +126,8 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
             """.stripMargin
 
         val input = Seq(
-          (BAD_REQUEST, "FORMAT_NINO", BAD_REQUEST, NinoFormatError),
-          (BAD_REQUEST, "FORMAT_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
