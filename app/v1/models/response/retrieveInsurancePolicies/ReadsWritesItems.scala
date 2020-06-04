@@ -36,4 +36,22 @@ object ReadsWritesItems extends JsonUtils {
         .removeField(fieldName = "deficiencyRelief")
     ))
   }
+
+  val voidedIsaWrites: Writes[Seq[InsurancePoliciesItem]] = (o: Seq[InsurancePoliciesItem]) => {
+    lazy val writtenItems = o.map(Json.toJson(_)(InsurancePoliciesItem.writes
+      .removeField(fieldName = "deficiencyRelief")
+    ))
+
+    if (o.isEmpty) JsObject.empty else Json.toJson(writtenItems)
+  }
+
+  val foreignWrites: Writes[Seq[InsurancePoliciesItem]] = (o: Seq[InsurancePoliciesItem]) => {
+    lazy val writtenItems = o.map(Json.toJson(_)(InsurancePoliciesItem.writes
+      .removeField(fieldName = "event")
+      .removeField(fieldName = "yearsHeldSinceLastGain")
+      .removeField(fieldName = "deficiencyRelief")
+    ))
+
+    if (o.isEmpty) JsObject.empty else Json.toJson(writtenItems)
+  }
 }
