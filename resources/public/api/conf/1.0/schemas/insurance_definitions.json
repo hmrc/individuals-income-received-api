@@ -1,0 +1,179 @@
+{
+  "definitions": {
+    "commonPolicyObject": {
+      "type": "object",
+      "description": "The container that holds the key value for securities",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
+          "example": "INPOLY123A"
+        },
+        "event": {
+          "type": "string",
+          "description": "Details of each individual policy event. Must be between 1 and 75 characters in length.",
+          "example": "Policy matured"
+        },
+        "gainAmount": {
+          "type": "number",
+          "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0.01,
+          "maximum:": 99999999999.99
+        },
+        "taxPaid": {
+          "type": "number",
+          "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "yearsHeld": {
+          "type": "number",
+          "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
+          "example": "10",
+          "multipleOf": 1,
+          "minimum": 0,
+          "maximum:": 99
+        },
+        "yearsHeldSinceLastGain": {
+          "type": "number",
+          "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
+          "example": "5",
+          "multipleOf": 1,
+          "minimum": 0,
+          "maximum:": 99
+        },
+        "deficiencyRelief": {
+          "type": "number",
+          "description": "The amount of available relief. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": ["customerReference"]
+    },
+    "voidedIsaObject": {
+      "type": "object",
+      "description": "The container that holds the key value for securities",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
+          "example": "INPOLY123A"
+        },
+        "event": {
+          "type": "string",
+          "description": "Details of each individual policy event. Must be between 1 and 75 characters in length.",
+          "example": "Policy matured"
+        },
+        "gainAmount": {
+          "type": "number",
+          "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0.01,
+          "maximum:": 99999999999.99
+        },
+        "taxPaid": {
+          "type": "number",
+          "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "yearsHeld": {
+          "type": "number",
+          "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
+          "example": "10",
+          "multipleOf": 1,
+          "minimum": 0,
+          "maximum:": 99
+        },
+        "yearsHeldSinceLastGain": {
+          "type": "number",
+          "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
+          "example": "5",
+          "multipleOf": 1,
+          "minimum": 0,
+          "maximum:": 99
+        }
+      },
+      "required": ["customerReference"]
+    },
+    "foreignObject": {
+      "type": "object",
+      "description": "The container that holds the key value for securities",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
+          "example": "INPOLY123A"
+        },
+        "gainAmount": {
+          "type": "number",
+          "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0.01,
+          "maximum:": 99999999999.99
+        },
+        "taxPaid": {
+          "type": "number",
+          "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "yearsHeld": {
+          "type": "number",
+          "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
+          "example": "10",
+          "multipleOf": 1,
+          "minimum": 0,
+          "maximum:": 99
+        }
+      },
+      "required": ["customerReference"]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/insurance-policies/AA123456A/2019-20"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "amend-insurance-policies-income", "delete-insurance-policies-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

@@ -80,17 +80,6 @@ traits:
                 description: Tax year range invalid. A tax year range of one year is required.
                 value:
                   code: RULE_TAX_YEAR_RANGE_INVALID
-  formatCountryCode:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatCountryCode:
-                description: The provided country code is not valid
-                value:
-                  code: FORMAT_COUNTRY_CODE
   formatValue:
     responses:
       400:
@@ -102,3 +91,36 @@ traits:
                 description: One or more values have been added with the incorrect format
                 value:
                   code: FORMAT_VALUE
+  formatSavingsCountryCode:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatSavingsCountryCode:
+                description: The provided country code is not valid
+                value:
+                  code: FORMAT_COUNTRY_CODE
+  formatInsurancePolicyCustomerRef:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatInsurancePolicyCustomerRef:
+                description: The format of customerReference is not valid
+                value:
+                  code: FORMAT_CUSTOMER_REF
+  formatInsurancePolicyEvent:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatInsurancePolicyEvent:
+                description: The format of policy event is invalid
+                value:
+                  code: FORMAT_EVENT
