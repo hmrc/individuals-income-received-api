@@ -1,147 +1,102 @@
 {
   "definitions": {
+
+    "customerReference": {
+      "type": "string",
+      "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
+      "example": "INPOLY123A"
+    },
+    "event": {
+      "type": "string",
+      "description": "Details of each individual policy event. Must be between 1 and 75 characters in length.",
+      "example": "Policy matured"
+    },
+    "gainAmount": {
+      "type": "number",
+      "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0.01,
+      "maximum:": 99999999999.99
+    },
+    "taxPaid": {
+      "type": "number",
+      "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum:": 99999999999.99
+    },
+    "yearsHeld": {
+      "type": "number",
+      "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
+      "example": "10",
+      "multipleOf": 1,
+      "minimum": 0,
+      "maximum:": 99
+    },
+    "yearsHeldSinceLastGain": {
+      "type": "number",
+      "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
+      "example": "5",
+      "multipleOf": 1,
+      "minimum": 0,
+      "maximum:": 99
+    },
+    "deficiencyRelief": {
+      "type": "number",
+      "description": "The amount of available relief. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum:": 99999999999.99
+    },
+
     "commonPolicyObject": {
       "type": "object",
       "description": "The container that holds the key value for securities",
       "properties": {
-        "customerReference": {
-          "type": "string",
-          "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
-          "example": "INPOLY123A"
-        },
-        "event": {
-          "type": "string",
-          "description": "Details of each individual policy event. Must be between 1 and 75 characters in length.",
-          "example": "Policy matured"
-        },
-        "gainAmount": {
-          "type": "number",
-          "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0.01,
-          "maximum:": 99999999999.99
-        },
-        "taxPaid": {
-          "type": "number",
-          "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0,
-          "maximum:": 99999999999.99
-        },
-        "yearsHeld": {
-          "type": "number",
-          "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
-          "example": "10",
-          "multipleOf": 1,
-          "minimum": 0,
-          "maximum:": 99
-        },
-        "yearsHeldSinceLastGain": {
-          "type": "number",
-          "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
-          "example": "5",
-          "multipleOf": 1,
-          "minimum": 0,
-          "maximum:": 99
-        },
-        "deficiencyRelief": {
-          "type": "number",
-          "description": "The amount of available relief. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0,
-          "maximum:": 99999999999.99
-        }
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "event": {"$ref": "#/definitions/event"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaid": {"$ref": "#/definitions/taxPaid"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"},
+        "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"},
+        "deficiencyRelief": {"$ref": "#/definitions/deficiencyRelief"}
       },
-      "required": ["customerReference"]
+      "required": [
+        "customerReference"
+      ]
     },
     "voidedIsaObject": {
       "type": "object",
       "description": "The container that holds the key value for securities",
       "properties": {
-        "customerReference": {
-          "type": "string",
-          "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
-          "example": "INPOLY123A"
-        },
-        "event": {
-          "type": "string",
-          "description": "Details of each individual policy event. Must be between 1 and 75 characters in length.",
-          "example": "Policy matured"
-        },
-        "gainAmount": {
-          "type": "number",
-          "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0.01,
-          "maximum:": 99999999999.99
-        },
-        "taxPaid": {
-          "type": "number",
-          "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0,
-          "maximum:": 99999999999.99
-        },
-        "yearsHeld": {
-          "type": "number",
-          "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
-          "example": "10",
-          "multipleOf": 1,
-          "minimum": 0,
-          "maximum:": 99
-        },
-        "yearsHeldSinceLastGain": {
-          "type": "number",
-          "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
-          "example": "5",
-          "multipleOf": 1,
-          "minimum": 0,
-          "maximum:": 99
-        }
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "event": {"$ref": "#/definitions/event"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaid": {"$ref": "#/definitions/taxPaid"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"},
+        "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"}
       },
-      "required": ["customerReference"]
+      "required": [
+        "customerReference"
+      ]
     },
     "foreignObject": {
       "type": "object",
       "description": "The container that holds the key value for securities",
       "properties": {
-        "customerReference": {
-          "type": "string",
-          "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
-          "example": "INPOLY123A"
-        },
-        "gainAmount": {
-          "type": "number",
-          "description": "The amount of the gain. The value must be between 0.01 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0.01,
-          "maximum:": 99999999999.99
-        },
-        "taxPaid": {
-          "type": "number",
-          "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0,
-          "maximum:": 99999999999.99
-        },
-        "yearsHeld": {
-          "type": "number",
-          "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
-          "example": "10",
-          "multipleOf": 1,
-          "minimum": 0,
-          "maximum:": 99
-        }
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaid": {"$ref": "#/definitions/taxPaid"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"}
       },
-      "required": ["customerReference"]
+      "required": [
+        "customerReference"
+      ]
     },
+
     "links": {
       "type": "array",
       "items": {
@@ -157,14 +112,18 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "amend-insurance-policies-income", "delete-insurance-policies-income"
+              "self",
+              "amend-insurance-policies-income",
+              "delete-insurance-policies-income"
             ]
           },
           "method": {
             "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
-              "PUT", "GET", "DELETE"
+              "PUT",
+              "GET",
+              "DELETE"
             ]
           }
         },
