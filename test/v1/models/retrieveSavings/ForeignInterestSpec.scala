@@ -19,7 +19,6 @@ package v1.models.response.retrieveSavings
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.RetrieveSavingsFixture
-import v1.models.response.retrieveSavings.ForeignInterest
 
 class ForeignInterestSpec extends UnitSpec {
 
