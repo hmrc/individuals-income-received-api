@@ -247,6 +247,14 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
       )
 
+      val nonsenseRequestBody: JsValue = Json.parse(
+        """
+          |{
+          |  "field": "value"
+          |}
+        """.stripMargin
+      )
+
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
         paths = Some(Seq(
         "/foreignInterest/0/countryCode",
@@ -326,6 +334,7 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "2017-18", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError),
+          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError))
 
         input.foreach(args => (validationErrorTest _).tupled(args))
