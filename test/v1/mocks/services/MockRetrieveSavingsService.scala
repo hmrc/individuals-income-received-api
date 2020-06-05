@@ -23,7 +23,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.savings.DeleteRetrieveRequest
-import v1.models.response.savings.retrieveSavings.RetrieveSavingsResponse
+import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 import v1.services.RetrieveSavingsService
 
 import scala.concurrent.{ExecutionContext, Future}

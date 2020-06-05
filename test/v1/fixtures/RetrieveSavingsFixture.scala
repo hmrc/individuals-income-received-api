@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import v1.models.response.savings.retrieveSavings.{ForeignInterest, RetrieveSavingsResponse, SecuritiesItems}
+import v1.models.response.retrieveSavings.{ForeignInterest, RetrieveSavingsResponse, SecuritiesItems}
 
 object RetrieveSavingsFixture {
 
