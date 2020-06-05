@@ -24,7 +24,7 @@ import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.savings.DeleteRetrieveRequest
-import v1.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.models.response.savings.retrieveSavings.RetrieveSavingsResponse
 
 import scala.concurrent.Future
 

@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, RetrieveSavingsConnector}
 import v1.models.request.savings.DeleteRetrieveRequest
-import v1.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.models.response.savings.retrieveSavings.RetrieveSavingsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

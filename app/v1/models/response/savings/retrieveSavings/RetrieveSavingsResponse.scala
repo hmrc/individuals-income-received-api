@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveSavings
+package v1.models.response.savings.retrieveSavings
 
 import config.AppConfig
 import play.api.libs.functional.syntax._

@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package v1.models.response.amendSavings
+package v1.models.response.policies.amendInsurancePolicies
 
 import config.AppConfig
+import play.api.libs.json.{Json, OWrites}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class AmendSavingsResponse()
+case class AmendPoliciesResponse(responseData: String)
 
-object AmendSavingsResponse extends HateoasLinks {
+object AmendPoliciesResponse extends HateoasLinks {
 
-  implicit object AmendSavingsLinksFactory extends HateoasLinksFactory[AmendSavingsResponse, AmendSavingsHateoasData] {
-    override def links(appConfig: AppConfig, data: AmendSavingsHateoasData): Seq[Link] = {
+  implicit object AmendPoliciesLinksFactory extends HateoasLinksFactory[AmendPoliciesResponse, AmendPoliciesHateoasData] {
+    override def links(appConfig: AppConfig, data: AmendPoliciesHateoasData): Seq[Link] = {
       import data._
-      Seq(
-        retrieveSavings(appConfig, nino, taxYear),
-        deleteSavings(appConfig, nino, taxYear)
-      )
+      Seq(sampleLink(appConfig, nino))
     }
   }
 
 }
 
-case class AmendSavingsHateoasData(nino: String, taxYear: String) extends HateoasData
-
+case class AmendPoliciesHateoasData(nino: String, taxYear: String) extends HateoasData
