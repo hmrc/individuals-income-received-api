@@ -1,3 +1,5 @@
 PUT        /savings/:nino/:taxYear                          v1.controllers.AmendSavingsController.amendSaving(nino: String, taxYear: String)
 DELETE     /savings/:nino/:taxYear                          v1.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
 GET        /savings/:nino/:taxYear                          v1.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
+
+DELETE     /insurance-policies/:nino/:taxYear               v1.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
