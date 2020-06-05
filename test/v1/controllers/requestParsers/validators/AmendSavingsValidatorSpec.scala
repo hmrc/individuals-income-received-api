@@ -60,6 +60,8 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
 
+  private val nonsenseRequestBodyJson: JsValue = Json.parse("""{"field": "value"}""")
+
   private val nonValidRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -145,6 +147,7 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
   private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
   private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
@@ -177,6 +180,12 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     "return RuleIncorrectOrEmptyBodyError error" when {
       "an empty JSON body is submitted" in {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError)
+      }
+
+
+      "a non-empty JSON body is submitted without any expected fields" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
