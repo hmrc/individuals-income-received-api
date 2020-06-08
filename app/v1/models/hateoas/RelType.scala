@@ -19,6 +19,8 @@ package v1.models.hateoas
 object RelType {
   val AMEND_SAVINGS_INCOME = "amend-savings-income"
   val DELETE_SAVINGS_INCOME = "delete-savings-income"
+  val AMEND_INSURANCE_POLICIES_INCOME = "amend-insurance-policies-income"
+  val DELETE_INSURANCE_POLICIES_INCOME = "delete-insurance-policies-income"
 
   val SELF = "self"
 }

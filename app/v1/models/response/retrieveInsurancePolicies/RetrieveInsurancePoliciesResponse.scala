@@ -16,8 +16,11 @@
 
 package v1.models.response.retrieveInsurancePolicies
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 import v1.models.response.retrieveInsurancePolicies.ReadsWritesItems._
 
 case class RetrieveInsurancePoliciesResponse(lifeInsurance: Option[Seq[InsurancePoliciesItem]],
@@ -26,7 +29,7 @@ case class RetrieveInsurancePoliciesResponse(lifeInsurance: Option[Seq[Insurance
                                              voidedIsa: Option[Seq[InsurancePoliciesItem]],
                                              foreign: Option[Seq[InsurancePoliciesItem]])
 
-object RetrieveInsurancePoliciesResponse {
+object RetrieveInsurancePoliciesResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveInsurancePoliciesResponse] = (
     (JsPath \ "lifeInsurance").readNullable[Seq[InsurancePoliciesItem]] and
@@ -37,4 +40,18 @@ object RetrieveInsurancePoliciesResponse {
     ) (RetrieveInsurancePoliciesResponse.apply _)
 
   implicit val writes: OWrites[RetrieveInsurancePoliciesResponse] = Json.writes[RetrieveInsurancePoliciesResponse]
+
+  implicit object RetrieveInsurancePoliciesLinksFactory extends HateoasLinksFactory[RetrieveInsurancePoliciesResponse, RetrieveInsurancePoliciesHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveInsurancePoliciesHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        amendInsurancePolicies(appConfig, nino, taxYear),
+        retrieveInsurancePolicies(appConfig, nino, taxYear),
+        deleteInsurancePolicies(appConfig, nino, taxYear)
+      )
+    }
+  }
+
 }
+
+case class RetrieveInsurancePoliciesHateoasData(nino: String, taxYear: String) extends HateoasData

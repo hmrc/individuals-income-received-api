@@ -26,6 +26,9 @@ trait HateoasLinks {
   private def savingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
 
+  private def insurancePoliciesUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/insurance-policies/$nino/$taxYear"
+
   //API resource links
   def amendSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
@@ -46,5 +49,26 @@ trait HateoasLinks {
       href = savingsUri(appConfig, nino, taxYear),
       method = DELETE,
       rel = DELETE_SAVINGS_INCOME
+    )
+
+  def amendInsurancePolicies(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = insurancePoliciesUri(appConfig, nino, taxYear),
+      method = PUT,
+      rel = AMEND_INSURANCE_POLICIES_INCOME
+    )
+
+  def retrieveInsurancePolicies(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = insurancePoliciesUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def deleteInsurancePolicies(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = insurancePoliciesUri(appConfig, nino, taxYear),
+      method = DELETE,
+      rel = DELETE_INSURANCE_POLICIES_INCOME
     )
 }
