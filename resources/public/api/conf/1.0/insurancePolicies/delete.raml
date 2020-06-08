@@ -7,7 +7,7 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: Delete Insurance Policies Income [test only]
-description: "This endpoint allows the developer to delete insurance policies financial income for less common types of income.<br><br>• Life Insurance Policies<br>• Life Annuity Contracts<br>• Capital Redemption Policies<br>• Voided ISAs<br>• Foreign Policies"
+description: "This endpoint allows a developer to delete insurance policies and financial income for less common types of income: Life Insurance Policies, Life Annuity Contracts, Capital Redemption Policies, Voided ISAs, Foreign Policies. A National Insurance number and tax year must be provided."
 (annotations.sandboxData): !include ../scenarios/insurancePolicies/delete.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

@@ -7,10 +7,10 @@ We use standard HTTP status codes to show whether an API request succeeded or no
 Errors specific to each API are shown in the Endpoints section, under Response. See our [reference guide](https://developer.service.hmrc.gov.uk/api-documentation/docs/reference-guide#errors) for more on errors.
 
 Single errors will be returned in the following format:<br>
-`{
-    "code": "FORMAT_FIELD_NAME",
-    "message": "The provided FieldName is invalid"
-}`
+  `{
+      "code": "FORMAT_FIELD_NAME",
+      "message": "The provided FieldName is invalid"
+  }`
 
 Where possible, multiple errors will be returned with `INVALID_REQUEST` in the following format:<br>
   `{
@@ -28,20 +28,31 @@ Where possible, multiple errors will be returned with `INVALID_REQUEST` in the f
       ]
   }`
   
-Where `FORMAT_VALUE` errors are returned, `message` will describe the expected format and `paths` will show which fields are invalid, in the following format:<br>
+Where it is possible for the same error to be returned multiple times, `message` will describe the expected format and `paths` will show the fields which are invalid.<br>
+<br>
+Where arrays are submitted a number indicates the object in the array sequence, for example, `/arrayName/1/fieldName`
+
+An example with single error:  
+   `{
+      "code": "FORMAT_STRING_NAME",
+      "message": "The provided field is not valid",
+      "paths": [ "/arrayName/0/fieldName" ]
+   }`
+
+An example with multiple errors:
   `{
       "code": "INVALID_REQUEST",
       "message": "Invalid request",
       "errors": [
-          {
-              "code": "FORMAT_VALUE",
-              "message": "The field should be a positive value greater than 0 and no greater than 99999999999.99",
-              "paths": ["/objectName/fieldName1", "/objectName/fieldName2"]
-          },
-          {
-              "code": "FORMAT_VALUE",
-              "message": "The field should be between 0 and 99999999999.99",
-              "paths": ["/objectName/fieldName3", "/objectName/fieldName4"]
-          }
+          {
+             "code": "FORMAT_VALUE",
+             "message": "The field should be between 0 and 99999999999.99",
+             "paths": [ "/objectName/fieldName1", "/arrayName/0/fieldName2" ]
+          },
+          {
+             "code": "FORMAT_STRING_NAME",
+             "message": "The provided field is not valid",
+             "paths": [ "/arrayName/0/fieldName3", "/arrayName/1/fieldName3" ]
+          }
       ]
-  }`
+   }`

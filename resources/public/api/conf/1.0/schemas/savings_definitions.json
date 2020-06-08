@@ -7,17 +7,26 @@
         "taxTakenOff": {
           "type": "number",
           "description": "The amount of tax deducted from Gilt Edge interest. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99"
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
         },
         "grossAmount": {
           "type": "number",
           "description": "The gross amount of Gilt Edge interest including tax deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99"
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
         },
         "netAmount": {
           "type": "number",
           "description": "The amount of Gilt Edge interest after tax has been deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99"
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
         }
       }
     },
@@ -30,7 +39,10 @@
           "amountBeforeTax": {
             "type": "number",
             "description": "The total amount of income, in UK pounds, before any foreign tax has been deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-            "example": "5000.99"
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
           },
           "countryCode": {
             "type": "string",
@@ -40,17 +52,26 @@
           "taxTakenOff": {
             "type": "number",
             "description": "The total amount of foreign tax taken off your income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-            "example": "5000.99"
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
           },
           "specialWithholdingTax": {
             "type": "number",
             "description": "The total amount of income (in UK pounds) before deducting any Special Withholding Tax (SWT). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-            "example": "5000.99"
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
           },
           "taxableAmount": {
             "type": "number",
             "description": "The total taxable amount on dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-            "example": "5000.99"
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
           },
           "foreignTaxCreditRelief": {
             "type": "boolean",

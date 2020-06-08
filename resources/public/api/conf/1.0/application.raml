@@ -35,7 +35,6 @@ uses:
        description: Resources relating to an individual's insurance policies income
     /{nino}:
       uriParameters:
-
         nino:
           description: National Insurance number, in the format AA999999A.
           type: string
@@ -45,9 +44,9 @@ uses:
           taxYear:
             description: 'The tax year the data applies to.<br>The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid.'
             example: "2017-18"
-        #get: !include insurancePolicies/retrieve.raml
+        put: !include insurancePolicies/amend.raml
+        get: !include insurancePolicies/retrieve.raml
         delete: !include insurancePolicies/delete.raml
-        #put: !include insurancePolicies/amend.raml
   /savings:
     (annotations.group):
        name: Savings Income
@@ -63,6 +62,6 @@ uses:
           taxYear:
             description: 'The tax year the data applies to.<br>The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid.'
             example: "2017-18"
+        put: !include savings/amend.raml
         get: !include savings/retrieve.raml
         delete: !include savings/delete.raml
-        put: !include savings/amend.raml

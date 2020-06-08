@@ -1,0 +1,19 @@
+{
+   "links":[
+      {
+         "href":"/individuals/income-received/insurance-policies/{nino}/{taxYear}",
+         "rel":"amend-insurance-policies-income",
+         "method":"PUT"
+      },
+      {
+         "href":"/individuals/income-received/insurance-policies/{nino}/{taxYear}",
+         "rel":"self",
+         "method":"GET"
+      },
+      {
+         "href":"/individuals/income-received/insurance-policies/{nino}/{taxYear}",
+         "rel":"delete-insurance-policies-income",
+         "method":"DELETE"
+      }
+   ]
+}
