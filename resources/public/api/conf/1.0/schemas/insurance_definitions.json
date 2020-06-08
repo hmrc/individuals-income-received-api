@@ -29,7 +29,7 @@
     },
     "yearsHeld": {
       "type": "number",
-      "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
+      "description": "The number of years the policy has been held. The value must be between 1 and 99 no decimals.",
       "example": "10",
       "multipleOf": 1,
       "minimum": 0,
@@ -37,7 +37,7 @@
     },
     "yearsHeldSinceLastGain": {
       "type": "number",
-      "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
+      "description": "The number of years the policy has been held since the last gain. The value must be between 1 and 99 no decimals.",
       "example": "5",
       "multipleOf": 1,
       "minimum": 0,
