@@ -1,0 +1,287 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package v1.controllers.requestParsers.validators
+
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.AnyContentAsJson
+import support.UnitSpec
+import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
+import v1.models.errors._
+import v1.models.request.insurancePolicies.amend.AmendRawData
+
+class AmendInsuranceValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
+
+  private val validNino = "AA123456A"
+  private val validTaxYear = "2018-19"
+
+  private val validRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "lifeInsurance":[ {
+      |         "customerReference":"INPOLY123A",
+      |         "event":"Death of spouse",
+      |         "gainAmount":1.23,
+      |         "taxPaid":1.23,
+      |         "yearsHeld":2,
+      |         "yearsHeldSinceLastGain":1,
+      |         "deficiencyRelief":1.23
+      |      }
+      |   ],
+      |   "capitalRedemption":[ {
+      |         "customerReference":"INPOLY123A",
+      |         "event":"Death of spouse",
+      |         "gainAmount":1.23,
+      |         "taxPaid":1.23,
+      |         "yearsHeld":2,
+      |         "yearsHeldSinceLastGain":1,
+      |         "deficiencyRelief":1.23
+      |      }
+      |   ],
+      |   "lifeAnnuity":[ {
+      |         "customerReference":"INPOLY123A",
+      |         "event":"Death of spouse",
+      |         "gainAmount":1.23,
+      |         "taxPaid":1.23,
+      |         "yearsHeld":2,
+      |         "yearsHeldSinceLastGain":1,
+      |         "deficiencyRelief":1.23
+      |      }
+      |   ],
+      |   "voidedIsa":[ {
+      |         "customerReference":"INPOLY123A",
+      |         "event":"Death of spouse",
+      |         "gainAmount":1.23,
+      |         "taxPaid":1.23,
+      |         "yearsHeld":2,
+      |         "yearsHeldSinceLastGain":1
+      |      }
+      |   ],
+      |   "foreign":[ {
+      |         "customerReference":"INPOLY123A",
+      |         "gainAmount":1.23,
+      |         "taxPaid":1.23,
+      |         "yearsHeld":2
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
+
+  private val nonsenseRequestBodyJson: JsValue = Json.parse("""{"field": "value"}""")
+
+  private val nonValidRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      | "lifeInsurance": {
+      |     "customerReference":"INPOLY123A",
+      |      "event":"Death of spouse",
+      |      "gainAmount":1.23,
+      |      "taxPaid":1.23,
+      |      "yearsHeld":2,
+      |      "yearsHeldSinceLastGain":1,
+      |      "deficiencyRelief":1.23
+      |   }
+      |}
+    """.stripMargin
+  )
+
+  private val invalidCountryCodeRequestBodyJson: JsValue = Json.parse(  //Needs work
+    """
+      |{
+      | "foreignInterest": [
+      |    {
+      |       "countryCode": "England",
+      |       "taxableAmount": 200.11,
+      |       "foreignTaxCreditRelief": true
+      |    }
+      | ]
+      |}
+    """.stripMargin
+  )
+
+  private val invalidForeignInterestRequestBodyJson: JsValue = Json.parse(      //Needs changing
+    """
+      |{
+      | "foreignInterest": [
+      |    {
+      |       "countryCode": "GBR",
+      |       "taxableAmount": 200.111,
+      |       "foreignTaxCreditRelief": true
+      |    }
+      | ]
+      |}
+    """.stripMargin
+  )
+
+
+  private val invalidSecuritiesRequestBodyJson: JsValue = Json.parse( //Needs changing
+    """
+      |{
+      |   "securities": {
+      |      "taxTakenOff": 100.11,
+      |      "grossAmount": 100.12,
+      |      "netAmount": -100.13
+      |   }
+      |}
+    """.stripMargin
+  )
+
+  private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "securities": {
+      |      "taxTakenOff": 100.111,
+      |      "grossAmount": -100.12,
+      |      "netAmount": 999999999991.99
+      |   },
+      |   "foreignInterest": [
+      |       {
+      |          "amountBeforeTax": -200.11,
+      |          "countryCode": "SkegVegas",
+      |          "taxTakenOff": 200.121,
+      |          "specialWithholdingTax": 999999999991.13,
+      |          "taxableAmount": -200.14,
+      |          "foreignTaxCreditRelief": false
+      |       },
+      |       {
+      |          "amountBeforeTax": -300.11,
+      |          "countryCode": "SunSeaAndSand",
+      |          "taxTakenOff": -300.100,
+      |          "specialWithholdingTax": -300.134,
+      |          "taxableAmount": -300.14,
+      |          "foreignTaxCreditRelief": true
+      |       }
+      |    ]
+      |}
+    """.stripMargin
+  )
+
+  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
+  private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
+  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+
+  val validator = new AmendInsuranceValidator()
+
+  "running a validation" should {
+    "return no errors" when {
+      "a valid request is supplied" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
+      }
+    }
+
+    "return NinoFormatError error" when {
+      "an invalid nino is supplied" in {
+        validator.validate(AmendRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
+          List(NinoFormatError)
+      }
+    }
+
+    "return TaxYearFormatError error" when {
+      "an invalid tax year is supplied" in {
+        validator.validate(AmendRawData(validNino, "20178", validRawRequestBody)) shouldBe
+          List(TaxYearFormatError)
+      }
+    }
+
+    "return RuleIncorrectOrEmptyBodyError error" when {
+      "an empty JSON body is submitted" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError)
+      }
+
+
+      "a non-empty JSON body is submitted without any expected fields" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError)
+      }
+
+      "the submitted request body is not in the correct format" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError)
+      }
+    }
+
+    "return CountryCodeFormatError error" when {
+      "an incorrectly formatted country code is submitted" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
+          List(CountryCodeFormatError.copy(paths = Some(List("/foreignInterest/0/countryCode"))))
+      }
+    }
+
+    "return ValueFormatError error (single failure)" when {
+      "one field fails value validation (foreign interest)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidForeignInterestRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ZERO_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/foreignInterest/0/taxableAmount"))
+          ))
+      }
+
+      "one field fails value validation (securities)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidSecuritiesRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ZERO_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/securities/netAmount"))
+          ))
+      }
+    }
+
+    "return ValueFormatError error (multiple failures)" when {
+      "multiple fields fail value validation" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(List(
+                "/securities/taxTakenOff",
+                "/securities/grossAmount",
+                "/securities/netAmount",
+                "/foreignInterest/0/amountBeforeTax",
+                "/foreignInterest/0/taxTakenOff",
+                "/foreignInterest/0/specialWithholdingTax",
+                "/foreignInterest/0/taxableAmount",
+                "/foreignInterest/1/amountBeforeTax",
+                "/foreignInterest/1/taxTakenOff",
+                "/foreignInterest/1/specialWithholdingTax",
+                "/foreignInterest/1/taxableAmount"
+              ))
+            ),
+            CountryCodeFormatError.copy(
+              paths = Some(List(
+                "/foreignInterest/0/countryCode",
+                "/foreignInterest/1/countryCode"
+              ))
+            )
+          )
+      }
+    }
+
+    "return multiple errors" when {
+      "request supplied has multiple errors (path parameters)" in {
+        validator.validate(AmendRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
+          List(NinoFormatError, TaxYearFormatError)
+      }
+    }
+  }
+}
