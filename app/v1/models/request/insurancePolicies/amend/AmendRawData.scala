@@ -17,5 +17,6 @@
 package v1.models.request.insurancePolicies.amend
 
 import play.api.mvc.AnyContentAsJson
+import v1.models.request.RawData
 
-case class AmendRawData(nino: String, taxYear: String, body: AnyContentAsJson)
+case class AmendRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
