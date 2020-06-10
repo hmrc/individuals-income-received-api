@@ -29,6 +29,24 @@ uses:
   headers: headers.raml
 
 '/individuals/income-received':
+  /foreign:
+    (annotations.group):
+       name: Foreign Income
+       description: Resources relating to an individual's foreign income
+    /{nino}:
+      uriParameters:
+        nino:
+          description: National Insurance number, in the format AA999999A.
+          type: string
+          example: TC663795B
+      /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: 'The tax year the data applies to.<br>The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid.'
+            example: "2017-18"
+        put: !include foreign/amend.raml
+        get: !include foreign/retrieve.raml
+        delete: !include foreign/delete.raml
   /insurance-policies:
     (annotations.group):
        name: Insurance Policies Income

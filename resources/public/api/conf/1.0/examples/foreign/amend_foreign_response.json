@@ -1,0 +1,19 @@
+{
+   "links":[
+      {
+         "href":"/individuals/income-received/foreign/{nino}/{taxYear}",
+         "rel":"amend-foreign-income",
+         "method":"PUT"
+      },
+      {
+         "href":"/individuals/income-received/foreign/{nino}/{taxYear}",
+         "rel":"self",
+         "method":"GET"
+      },
+      {
+         "href":"/individuals/income-received/foreign/{nino}/{taxYear}",
+         "rel":"delete-foreign-income",
+         "method":"DELETE"
+      }
+   ]
+}
