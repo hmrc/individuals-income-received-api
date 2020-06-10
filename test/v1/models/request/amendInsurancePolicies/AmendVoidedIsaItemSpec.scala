@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveInsurancePolicies
+package v1.models.request.amendInsurancePolicies
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class CommonInsurancePoliciesItemSpec extends UnitSpec {
+class AmendVoidedIsaItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -27,35 +27,33 @@ class CommonInsurancePoliciesItemSpec extends UnitSpec {
       |   "customerReference": "INPOLY123A",
       |   "event": "Death of spouse",
       |   "gainAmount": 1.23,
-      |   "taxPaid": true,
+      |   "taxPaidAmount": 101.11,
       |   "yearsHeld": 2,
-      |   "yearsHeldSinceLastGain": 1,
-      |   "deficiencyRelief": 1.23
+      |   "yearsHeldSinceLastGain": 1
       |}
     """.stripMargin
   )
 
-  private val model = CommonInsurancePoliciesItem(
+  private val model = AmendVoidedIsaItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
-    taxPaid = true,
+    taxPaidAmount = Some(101.11),
     yearsHeld = Some(2),
-    yearsHeldSinceLastGain = Some(1),
-    deficiencyRelief = Some(1.23)
+    yearsHeldSinceLastGain = Some(1)
   )
 
-  "InsurancePoliciesItem" when {
+  "VoidedIsaItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[CommonInsurancePoliciesItem] shouldBe model
+        json.as[AmendVoidedIsaItem] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[CommonInsurancePoliciesItem] shouldBe a[JsError]
+        invalidJson.validate[AmendVoidedIsaItem] shouldBe a[JsError]
       }
     }
 

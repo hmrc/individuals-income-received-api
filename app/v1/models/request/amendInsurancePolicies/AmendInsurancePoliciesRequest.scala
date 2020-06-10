@@ -14,14 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.models.request.amendInsurancePolicies
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import uk.gov.hmrc.domain.Nino
+import v1.models.domain.DesTaxYear
 
-case class AmendSavingsRequestBody(securities: Option[AmendSecurities], foreignInterest: Option[Seq[AmendForeignInterest]])
-
-object AmendSavingsRequestBody {
-
-  implicit val reads: Reads[AmendSavingsRequestBody]= Json.reads[AmendSavingsRequestBody]
-  implicit val writes: OWrites[AmendSavingsRequestBody] = Json.writes[AmendSavingsRequestBody]
-}
+case class AmendInsurancePoliciesRequest(nino: Nino, taxYear: DesTaxYear, body: AmendInsurancePoliciesRequestBody)

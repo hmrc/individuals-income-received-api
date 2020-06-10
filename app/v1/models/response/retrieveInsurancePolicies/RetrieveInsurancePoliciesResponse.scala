@@ -19,6 +19,7 @@ package v1.models.response.retrieveInsurancePolicies
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
@@ -28,14 +29,15 @@ case class RetrieveInsurancePoliciesResponse(lifeInsurance: Option[Seq[CommonIns
                                              voidedIsa: Option[Seq[VoidedIsaItem]],
                                              foreign: Option[Seq[ForeignItem]])
 
-object RetrieveInsurancePoliciesResponse extends HateoasLinks {
+object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
+  val empty: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(None, None, None, None, None)
 
   implicit val reads: Reads[RetrieveInsurancePoliciesResponse] = (
-    (JsPath \ "lifeInsurance").readNullable[Seq[CommonInsurancePoliciesItem]] and
-      (JsPath \ "capitalRedemption").readNullable[Seq[CommonInsurancePoliciesItem]] and
-      (JsPath \ "lifeAnnuity").readNullable[Seq[CommonInsurancePoliciesItem]] and
-      (JsPath \ "voidedIsa").readNullable[Seq[VoidedIsaItem]] and
-      (JsPath \ "foreign").readNullable[Seq[ForeignItem]]
+    (JsPath \ "lifeInsurance").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
+      (JsPath \ "capitalRedemption").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
+      (JsPath \ "lifeAnnuity").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
+      (JsPath \ "voidedIsa").readNullable[Seq[VoidedIsaItem]].mapEmptySeqToNone and
+      (JsPath \ "foreign").readNullable[Seq[ForeignItem]].mapEmptySeqToNone
     ) (RetrieveInsurancePoliciesResponse.apply _)
 
   implicit val writes: OWrites[RetrieveInsurancePoliciesResponse] = Json.writes[RetrieveInsurancePoliciesResponse]

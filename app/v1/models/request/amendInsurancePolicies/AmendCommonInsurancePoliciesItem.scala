@@ -14,31 +14,29 @@
  * limitations under the License.
  */
 
-package v1.models.request.insurancePolicies.amend
+package v1.models.request.amendInsurancePolicies
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class LifeAnnuity(customerReference: String,
-                       event: Option[String],
-                       gainAmount: Option[BigDecimal],
-                       taxPaid: Option[BigDecimal],
-                       yearsHeld: Option[Int],
-                       yearsHeldSinceLastGain: Option[Int],
-                       deficiencyRelief: Option[BigDecimal])
+case class AmendCommonInsurancePoliciesItem(customerReference: String,
+                                            event: Option[String],
+                                            gainAmount: Option[BigDecimal],
+                                            taxPaid: Boolean,
+                                            yearsHeld: Option[Int],
+                                            yearsHeldSinceLastGain: Option[Int],
+                                            deficiencyRelief: Option[BigDecimal])
 
-object LifeAnnuity {
+object AmendCommonInsurancePoliciesItem {
+  implicit val reads: Reads[AmendCommonInsurancePoliciesItem] = Json.reads[AmendCommonInsurancePoliciesItem]
 
-  implicit val reads: Reads[LifeAnnuity] = Json.reads[LifeAnnuity]
-
-  implicit val writes: OWrites[LifeAnnuity] = (
+  implicit val writes: OWrites[AmendCommonInsurancePoliciesItem] = (
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "event").writeNullable[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
-      (JsPath \ "taxPaid").writeNullable[BigDecimal] and
+      (JsPath \ "taxPaid").write[Boolean] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int] and
       (JsPath \ "deficiencyRelief").writeNullable[BigDecimal]
-    ) (unlift(LifeAnnuity.unapply))
-
+    ) (unlift(AmendCommonInsurancePoliciesItem.unapply))
 }

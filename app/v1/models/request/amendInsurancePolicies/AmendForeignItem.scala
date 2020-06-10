@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package v1.models.request.insurancePolicies.amend
+package v1.models.request.amendInsurancePolicies
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Foreign(customerReference: String,
-                   gainAmount: Option[BigDecimal],
-                   taxPaid: Option[BigDecimal],
-                   yearsHeld: Option[Int])
+case class AmendForeignItem(customerReference: String,
+                            gainAmount: Option[BigDecimal],
+                            taxPaidAmount: Option[BigDecimal],
+                            yearsHeld: Option[Int])
 
-object Foreign {
+object AmendForeignItem {
+  implicit val reads: Reads[AmendForeignItem] = Json.reads[AmendForeignItem]
 
-  implicit val reads: Reads[Foreign] = Json.reads[Foreign]
-
-  implicit val writes: OWrites[Foreign] = (
+  implicit val writes: OWrites[AmendForeignItem] = (
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
-      (JsPath \ "taxPaid").writeNullable[BigDecimal] and
+      (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int]
-    ) (unlift(Foreign.unapply))
-
+    ) (unlift(AmendForeignItem.unapply))
 }

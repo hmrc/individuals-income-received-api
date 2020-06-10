@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
@@ -30,7 +30,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2019"
 
-  val foreignInterest: AmendForeignInterest = AmendForeignInterest(
+  val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
     amountBeforeTax = None,
     countryCode = "FRA",
     taxTakenOff = None,

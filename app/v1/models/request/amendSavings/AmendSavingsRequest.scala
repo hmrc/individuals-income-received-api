@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.models.request.amendSavings
 
 import uk.gov.hmrc.domain.Nino
 import v1.models.domain.DesTaxYear

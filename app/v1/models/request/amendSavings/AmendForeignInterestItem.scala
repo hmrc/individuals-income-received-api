@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package v1.models.request.savings.amend
+package v1.models.request.amendSavings
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class AmendForeignInterest(amountBeforeTax: Option[BigDecimal],
-                                countryCode: String,
-                                taxTakenOff: Option[BigDecimal],
-                                specialWithholdingTax: Option[BigDecimal],
-                                taxableAmount: BigDecimal,
-                                foreignTaxCreditRelief: Boolean
-                               )
-object AmendForeignInterest {
+case class AmendForeignInterestItem(amountBeforeTax: Option[BigDecimal],
+                                    countryCode: String,
+                                    taxTakenOff: Option[BigDecimal],
+                                    specialWithholdingTax: Option[BigDecimal],
+                                    taxableAmount: BigDecimal,
+                                    foreignTaxCreditRelief: Boolean)
 
-  implicit val reads: Reads[AmendForeignInterest] = Json.reads[AmendForeignInterest]
+object AmendForeignInterestItem {
+  implicit val reads: Reads[AmendForeignInterestItem] = Json.reads[AmendForeignInterestItem]
 
-  implicit val writes: Writes[AmendForeignInterest] = (
+  implicit val writes: Writes[AmendForeignInterestItem] = (
     (JsPath \ "amountBeforeTax").writeNullable[BigDecimal] and
       (JsPath \ "countryCode").write[String] and
       (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").writeNullable[BigDecimal] and
       (JsPath \ "taxableAmount").write[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").write[Boolean]
-    ) (unlift(AmendForeignInterest.unapply))
-
+    ) (unlift(AmendForeignInterestItem.unapply))
 }

@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-package v1.models.request.insurancePolicies.amend
+package v1.models.request.amendInsurancePolicies
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class CapitalRedemption(customerReference: String,
-                             event: Option[String],
-                             gainAmount: Option[BigDecimal],
-                             taxPaid: Option[BigDecimal],
-                             yearsHeld: Option[Int],
-                             yearsHeldSinceLastGain: Option[Int],
-                             deficiencyRelief: Option[BigDecimal])
+case class AmendVoidedIsaItem(customerReference: String,
+                              event: Option[String],
+                              gainAmount: Option[BigDecimal],
+                              taxPaidAmount: Option[BigDecimal],
+                              yearsHeld: Option[Int],
+                              yearsHeldSinceLastGain: Option[Int])
 
+object AmendVoidedIsaItem {
+  implicit val reads: Reads[AmendVoidedIsaItem] = Json.reads[AmendVoidedIsaItem]
 
-object CapitalRedemption {
-
-  implicit val reads: Reads[CapitalRedemption] = Json.reads[CapitalRedemption]
-
-  implicit val writes: OWrites[CapitalRedemption] = (
+  implicit val writes: OWrites[AmendVoidedIsaItem] = (
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "event").writeNullable[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
-      (JsPath \ "taxPaid").writeNullable[BigDecimal] and
+      (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
-      (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int] and
-      (JsPath \ "deficiencyRelief").writeNullable[BigDecimal]
-    ) (unlift(CapitalRedemption.unapply))
-
+      (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int]
+    ) (unlift(AmendVoidedIsaItem.unapply))
 }

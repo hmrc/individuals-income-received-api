@@ -18,10 +18,8 @@ package v1.models.request.amendSavings
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.savings.amend.AmendForeignInterest
-import v1.fixtures.AmendSavingsFixture._
 
-class AmendForeignInterestSpec extends UnitSpec {
+class AmendForeignInterestItemSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -36,6 +34,16 @@ class AmendForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
+  val model: AmendForeignInterestItem =
+    AmendForeignInterestItem(
+      amountBeforeTax = Some(1232.22),
+      countryCode = "GER",
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(22.22),
+      taxableAmount = 2321.22,
+      foreignTaxCreditRelief = true
+    )
+
   val mtdResponse: JsValue = Json.parse(
     """
       |{
@@ -49,7 +57,7 @@ class AmendForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val mtdResponseInvalid: JsValue = Json.parse(
+  val desResponseInvalid: JsValue = Json.parse(
     """
       |{
       |    "amountBeforeTax": "ABC",
@@ -62,39 +70,63 @@ class AmendForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val minimalMtdResponse: JsValue = Json.parse(
+  val minimumDesResponse: JsValue = Json.parse(
     """
       |{
       |    "countryCode": "GER",
-      |    "taxableAmount": 2321.22,
+      |    "taxableAmount": 100,
       |    "foreignTaxCreditRelief": true
       |}
     """.stripMargin
   )
 
-  "AmendForeignInterest" when {
+  val minimumModel: AmendForeignInterestItem =  AmendForeignInterestItem(
+    amountBeforeTax = None,
+    countryCode = "GER",
+    taxTakenOff = None,
+    specialWithholdingTax = None,
+    taxableAmount = 100,
+    foreignTaxCreditRelief = true
+  )
+
+  val minimumMtdResponse: JsValue = Json.parse(
+    """
+      |{
+      |    "countryCode": "GER",
+      |    "taxableAmount": 100,
+      |    "foreignTaxCreditRelief": true
+      |}
+    """.stripMargin
+  )
+
+  "ForeignInterest" when {
     "read from valid JSON" should {
-      "convert valid MTD JSON into AmendForeignInterest model with all fields" in {
-        mtdResponse.as[AmendForeignInterest] shouldBe fullAmendForeignInterestModel
+      "produce the expected ForeignInterest object" in {
+        desResponse.as[AmendForeignInterestItem] shouldBe model
       }
     }
 
     "read from a JSON with only mandatory fields" should {
-      "convert MTD JSON with only mandatory fields to the expected AmendForeignInterest model" in {
-        minimalMtdResponse.as[AmendForeignInterest] shouldBe minimalAmendForeignInterestModel
+      "produce the expected ForeignInterest object" in {
+        minimumDesResponse.as[AmendForeignInterestItem] shouldBe minimumModel
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        mtdResponseInvalid.validate[AmendForeignInterest] shouldBe a[JsError]
+        desResponseInvalid.validate[AmendForeignInterestItem] shouldBe a[JsError]
       }
     }
 
-    "written to DES JSON" should {
-      "convert a AmendForeignInterest model into valid DES JSON" in {
-        Json.toJson(fullAmendForeignInterestModel) shouldBe desResponse
+    "written to JSON" should {
+      "produce the expected JSON object" in {
+        Json.toJson(model) shouldBe mtdResponse
+      }
+
+      "not write empty fields" in {
+        Json.toJson(minimumModel) shouldBe minimumMtdResponse
       }
     }
   }
 }
+

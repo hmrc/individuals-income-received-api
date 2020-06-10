@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.fixtures.insurancePolicies
+package v1.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignItem, RetrieveInsurancePoliciesResponse, VoidedIsaItem}
 
-object RetrieveInsurancePoliciesFixture {
+object RetrieveInsurancePoliciesControllerFixture {
 
    val fullRetrieveInsurancePoliciesResponse: JsValue = Json.parse(
     """
@@ -102,58 +102,4 @@ object RetrieveInsurancePoliciesFixture {
        |}
     """.stripMargin
   ).as[JsObject]
-
-  private val itemModel1: CommonInsurancePoliciesItem = CommonInsurancePoliciesItem(
-    customerReference = "INPOLY123A",
-    event = Some("Death of spouse"),
-    gainAmount = Some(1.23),
-    taxPaid = true,
-    yearsHeld = Some(2),
-    yearsHeldSinceLastGain = Some(1),
-    deficiencyRelief = Some(1.23)
-  )
-
-  private val itemModel2: CommonInsurancePoliciesItem = CommonInsurancePoliciesItem(
-    customerReference = "INPOLY123B",
-    event = Some("Death of spouse"),
-    gainAmount = Some(1.24),
-    taxPaid = true,
-    yearsHeld = Some(3),
-    yearsHeldSinceLastGain = Some(2),
-    deficiencyRelief = Some(1.23)
-  )
-
-  private val itemModel3: CommonInsurancePoliciesItem = CommonInsurancePoliciesItem(
-    customerReference = "INPOLY123C",
-    event = Some("Death of spouse"),
-    gainAmount = Some(1.25),
-    taxPaid = true,
-    yearsHeld = Some(4),
-    yearsHeldSinceLastGain = Some(3),
-    deficiencyRelief = Some(1.23)
-  )
-
-  private val itemModel4: VoidedIsaItem = VoidedIsaItem(
-    customerReference = "INPOLY123D",
-    event = Some("Death of spouse"),
-    gainAmount = Some(1.26),
-    taxPaidAmount = Some(1.36),
-    yearsHeld = Some(5),
-    yearsHeldSinceLastGain = Some(4)
-  )
-
-  private val itemModel5: ForeignItem = ForeignItem(
-    customerReference = "INPOLY123E",
-    gainAmount = Some(1.27),
-    taxPaidAmount = Some(1.37),
-    yearsHeld = Some(6)
-  )
-
-  val retrieveInsurancePoliciesResponseModel: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(
-    lifeInsurance = Some(Seq(itemModel1)),
-    capitalRedemption = Some(Seq(itemModel2)),
-    lifeAnnuity = Some(Seq(itemModel3)),
-    voidedIsa = Some(Seq(itemModel4)),
-    foreign = Some(Seq(itemModel5))
-  )
 }

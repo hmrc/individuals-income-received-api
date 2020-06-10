@@ -16,10 +16,8 @@
 
 package v1.models.request.amendSavings
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.savings.amend.AmendSecurities
-import v1.fixtures.AmendSavingsFixture._
 
 class AmendSecuritiesSpec extends UnitSpec {
 
@@ -33,6 +31,13 @@ class AmendSecuritiesSpec extends UnitSpec {
     """.stripMargin
   )
 
+  val model: AmendSecurities =
+    AmendSecurities(
+      taxTakenOff = Some(100.0),
+      grossAmount = Some(1455.0),
+      netAmount = Some(123.22)
+    )
+
   val mtdResponse: JsValue = Json.parse(
     """
       |{
@@ -43,7 +48,7 @@ class AmendSecuritiesSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val mtdResponseInvalid: JsValue = Json.parse(
+  val desResponseInvalid: JsValue = Json.parse(
     """
       |{
       |   "taxTakenOff": "abc",
@@ -53,30 +58,29 @@ class AmendSecuritiesSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val mtdResponseEmpty: JsValue = Json.parse("""{}""")
-
-  "AmendSecuritiesItems" when {
+  "SecuritiesItems" when {
     "read from valid JSON" should {
-      "convert valid MTD JSON into AmendSecuritiesItems model with all fields" in {
-        mtdResponse.as[AmendSecurities] shouldBe fullAmendSecuritiesItemsModel
+      "produce the expected SecuritiesItems object" in {
+        desResponse.as[AmendSecurities] shouldBe model
       }
     }
 
     "read from empty JSON" should {
-      "convert empty MTD JSON into an empty AmendSecuritiesItems object" in {
-        mtdResponseEmpty.as[AmendSecurities] shouldBe minimalAmendSecuritiesItemsModel
+      "produce an empty SecuritiesItems object" in {
+        val emptyJson = JsObject.empty
+        emptyJson.as[AmendSecurities] shouldBe AmendSecurities.empty
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        mtdResponseInvalid.validate[AmendSecurities] shouldBe a[JsError]
+        desResponseInvalid.validate[AmendSecurities] shouldBe a[JsError]
       }
     }
 
-    "written to DES JSON" should {
-      "convert a AmendSecuritiesItems model into valid DES JSON" in {
-        Json.toJson(fullAmendSecuritiesItemsModel) shouldBe desResponse
+    "written to JSON" should {
+      "produce the expected JSON object" in {
+        Json.toJson(model) shouldBe mtdResponse
       }
     }
   }

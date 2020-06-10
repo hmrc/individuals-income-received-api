@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.insurancePolicies.amend
+package v1.models.request.amendSavings
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import play.api.mvc.AnyContentAsJson
+import v1.models.request.RawData
 
-case class AmendRequest(nino: Nino, taxYear: DesTaxYear, body: AmendRequestBody)
+case class AmendSavingsRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

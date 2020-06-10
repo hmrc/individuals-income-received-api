@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.insurancePolicies
+package v1.models.request.amendInsurancePolicies
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import play.api.mvc.AnyContentAsJson
 import v1.models.request.RawData
 
-case class DeleteRawData(nino: String, taxYear: String) extends RawData
-case class DeleteRequest(nino: Nino, taxYear: DesTaxYear)
+case class AmendInsurancePoliciesRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

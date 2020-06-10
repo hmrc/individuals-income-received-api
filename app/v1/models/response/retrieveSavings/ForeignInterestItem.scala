@@ -19,22 +19,22 @@ package v1.models.response.retrieveSavings
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class ForeignInterest(amountBeforeTax: Option[BigDecimal],
-                           countryCode: String,
-                           taxTakenOff: Option[BigDecimal],
-                           specialWithholdingTax: Option[BigDecimal],
-                           taxableAmount: BigDecimal,
-                           foreignTaxCreditRelief: Boolean)
+case class ForeignInterestItem(amountBeforeTax: Option[BigDecimal],
+                               countryCode: String,
+                               taxTakenOff: Option[BigDecimal],
+                               specialWithholdingTax: Option[BigDecimal],
+                               taxableAmount: BigDecimal,
+                               foreignTaxCreditRelief: Boolean)
 
-object ForeignInterest {
-  implicit val reads: Reads[ForeignInterest] = (
+object ForeignInterestItem {
+  implicit val reads: Reads[ForeignInterestItem] = (
     (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
       (JsPath \ "countryCode").read[String] and
       (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
       (JsPath \ "taxableAmount").read[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").read[Boolean]
-    ) (ForeignInterest.apply _)
+    ) (ForeignInterestItem.apply _)
 
-  implicit val writes: OWrites[ForeignInterest] = Json.writes[ForeignInterest]
+  implicit val writes: OWrites[ForeignInterestItem] = Json.writes[ForeignInterestItem]
 }

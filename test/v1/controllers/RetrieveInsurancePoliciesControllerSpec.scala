@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.insurancePolicies.RetrieveInsurancePoliciesFixture
+import v1.fixtures.RetrieveInsurancePoliciesControllerFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
@@ -32,7 +32,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_INSURANCE_POLICIES_INCOME, DELETE_INSURANCE_POLICIES_INCOME, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveInsurancePolicies.{RetrieveInsurancePoliciesHateoasData, RetrieveInsurancePoliciesResponse}
+import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignItem, RetrieveInsurancePoliciesHateoasData, RetrieveInsurancePoliciesResponse, VoidedIsaItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -80,8 +80,61 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
       rel = DELETE_INSURANCE_POLICIES_INCOME
     )
 
-  private val retrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesFixture.retrieveInsurancePoliciesResponseModel
-  private val mtdResponse = RetrieveInsurancePoliciesFixture.mtdResponseWithHateoas(nino, taxYear)
+  private val lifeInsuranceItemModel = CommonInsurancePoliciesItem(
+    customerReference = "INPOLY123A",
+    event = Some("Death of spouse"),
+    gainAmount = Some(1.23),
+    taxPaid = true,
+    yearsHeld = Some(2),
+    yearsHeldSinceLastGain = Some(1),
+    deficiencyRelief = Some(1.23)
+  )
+
+  private val capitalRedemptionItemModel = CommonInsurancePoliciesItem(
+    customerReference = "INPOLY123B",
+    event = Some("Death of spouse"),
+    gainAmount = Some(1.24),
+    taxPaid = true,
+    yearsHeld = Some(3),
+    yearsHeldSinceLastGain = Some(2),
+    deficiencyRelief = Some(1.23)
+  )
+
+  private val lifeAnnuityItemModel = CommonInsurancePoliciesItem(
+    customerReference = "INPOLY123C",
+    event = Some("Death of spouse"),
+    gainAmount = Some(1.25),
+    taxPaid = true,
+    yearsHeld = Some(4),
+    yearsHeldSinceLastGain = Some(3),
+    deficiencyRelief = Some(1.23)
+  )
+
+  private val voidedIsaItemModel = VoidedIsaItem(
+    customerReference = "INPOLY123D",
+    event = Some("Death of spouse"),
+    gainAmount = Some(1.26),
+    taxPaidAmount = Some(1.36),
+    yearsHeld = Some(5),
+    yearsHeldSinceLastGain = Some(4)
+  )
+
+  private val foreignItemModel = ForeignItem(
+    customerReference = "INPOLY123E",
+    gainAmount = Some(1.27),
+    taxPaidAmount = Some(1.37),
+    yearsHeld = Some(6)
+  )
+
+  private val retrieveInsurancePoliciesResponseModel = RetrieveInsurancePoliciesResponse(
+    lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
+    capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
+    lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),
+    voidedIsa = Some(Seq(voidedIsaItemModel)),
+    foreign = Some(Seq(foreignItemModel))
+  )
+
+  private val mtdResponse = RetrieveInsurancePoliciesControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -109,11 +162,11 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
 
         MockDeleteRetrieveService
           .retrieve[RetrieveInsurancePoliciesResponse](requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveInsurancePoliciesResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveInsurancePoliciesResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveInsurancePoliciesResponse, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveInsurancePoliciesResponse,
+          .wrap(retrieveInsurancePoliciesResponseModel, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveInsurancePoliciesResponseModel,
             Seq(
               amendInsurancePoliciesLink,
               retrieveInsurancePoliciesLink,

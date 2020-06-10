@@ -18,9 +18,8 @@ package v1.models.response.retrieveSavings
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveSavingsFixture
 
-class ForeignInterestSpec extends UnitSpec {
+class ForeignInterestItemSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -34,6 +33,16 @@ class ForeignInterestSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
+  val model: ForeignInterestItem =
+    ForeignInterestItem(
+      amountBeforeTax = Some(1232.22),
+      countryCode = "GER",
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(22.22),
+      taxableAmount = 2321.22,
+      foreignTaxCreditRelief = true
+    )
 
   val mtdResponse: JsValue = Json.parse(
     """
@@ -61,7 +70,26 @@ class ForeignInterestSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val minimalDesResponse: JsValue = Json.parse(
+  val minimumDesResponse: JsValue = Json.parse(
+    """
+      |{
+      |    "countryCode": "GER",
+      |    "taxableAmount": 100,
+      |    "foreignTaxCreditRelief": true
+      |}
+    """.stripMargin
+  )
+
+  val minimumModel: ForeignInterestItem = ForeignInterestItem(
+    amountBeforeTax = None,
+    countryCode = "GER",
+    taxTakenOff = None,
+    specialWithholdingTax = None,
+    taxableAmount = 100,
+    foreignTaxCreditRelief = true
+  )
+
+  val minimumMtdResponse: JsValue = Json.parse(
     """
       |{
       |    "countryCode": "GER",
@@ -74,27 +102,30 @@ class ForeignInterestSpec extends UnitSpec {
   "ForeignInterest" when {
     "read from valid JSON" should {
       "produce the expected ForeignInterest object" in {
-        desResponse.as[ForeignInterest] shouldBe RetrieveSavingsFixture.fullForeignInterestsModel
+        desResponse.as[ForeignInterestItem] shouldBe model
       }
     }
 
     "read from a JSON with only mandatory fields" should {
-      "produce a ForeignInterest object with only mandatory fields" in {
-        minimalDesResponse.as[ForeignInterest] shouldBe RetrieveSavingsFixture.minimalForeignInterestsModel
+      "produce the expected ForeignInterest object" in {
+        minimumDesResponse.as[ForeignInterestItem] shouldBe minimumModel
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        desResponseInvalid.validate[ForeignInterest] shouldBe a[JsError]
+        desResponseInvalid.validate[ForeignInterestItem] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "produce the expected JSON object" in {
-        Json.toJson(RetrieveSavingsFixture.fullForeignInterestsModel) shouldBe mtdResponse
+        Json.toJson(model) shouldBe mtdResponse
+      }
+
+      "not write empty fields" in {
+        Json.toJson(minimumModel) shouldBe minimumMtdResponse
       }
     }
   }
 }
-

@@ -23,7 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendSavingsValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors.{BadRequestError, CountryCodeFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
 
 class AmendSavingsRequestParserSpec extends UnitSpec{
 
@@ -69,7 +69,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
       netAmount = Some(100.13)
     )),
     foreignInterest = Some(Seq(
-      AmendForeignInterest(
+      AmendForeignInterestItem(
         amountBeforeTax = Some(200.11),
         countryCode = "GBR",
         taxTakenOff = Some(200.12),
@@ -77,7 +77,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
         taxableAmount = 200.14,
         foreignTaxCreditRelief = false
       ),
-      AmendForeignInterest(
+      AmendForeignInterestItem(
         amountBeforeTax = Some(300.11),
         countryCode = "GBR",
         taxTakenOff = Some(300.12),

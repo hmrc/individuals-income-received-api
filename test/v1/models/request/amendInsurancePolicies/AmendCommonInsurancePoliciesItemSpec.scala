@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveInsurancePolicies
+package v1.models.request.amendInsurancePolicies
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class CommonInsurancePoliciesItemSpec extends UnitSpec {
+class AmendCommonInsurancePoliciesItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -35,7 +35,7 @@ class CommonInsurancePoliciesItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = CommonInsurancePoliciesItem(
+  private val model = AmendCommonInsurancePoliciesItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
@@ -48,14 +48,14 @@ class CommonInsurancePoliciesItemSpec extends UnitSpec {
   "InsurancePoliciesItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[CommonInsurancePoliciesItem] shouldBe model
+        json.as[AmendCommonInsurancePoliciesItem] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[CommonInsurancePoliciesItem] shouldBe a[JsError]
+        invalidJson.validate[AmendCommonInsurancePoliciesItem] shouldBe a[JsError]
       }
     }
 

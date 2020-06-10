@@ -14,69 +14,69 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveInsurancePolicies
+package v1.models.request.amendInsurancePolicies
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
+class AmendInsurancePoliciesRequestBodySpec extends UnitSpec {
 
   private val json = Json.parse(
     """
-       |{
-       |   "lifeInsurance":[
-       |      {
-       |         "customerReference": "INPOLY123A",
-       |         "event": "Death of spouse",
-       |         "gainAmount": 1.23,
-       |         "taxPaid": true,
-       |         "yearsHeld": 2,
-       |         "yearsHeldSinceLastGain": 1,
-       |         "deficiencyRelief": 1.23
-       |      }
-       |   ],
-       |   "capitalRedemption":[
-       |      {
-       |         "customerReference": "INPOLY123B",
-       |         "gainAmount": 1.24,
-       |         "taxPaid": true,
-       |         "yearsHeld": 3,
-       |         "yearsHeldSinceLastGain": 2,
-       |         "deficiencyRelief": 1.23
-       |      }
-       |   ],
-       |   "lifeAnnuity":[
-       |      {
-       |         "customerReference": "INPOLY123C",
-       |         "gainAmount": 1.25,
-       |         "taxPaid": true,
-       |         "yearsHeld": 4,
-       |         "yearsHeldSinceLastGain": 3,
-       |         "deficiencyRelief": 1.23
-       |      }
-       |   ],
-       |   "voidedIsa":[
-       |      {
-       |         "customerReference": "INPOLY123D",
-       |         "gainAmount": 1.26,
-       |         "taxPaidAmount": 1.36,
-       |         "yearsHeld": 5,
-       |         "yearsHeldSinceLastGain": 4
-       |      }
-       |   ],
-       |   "foreign":[
-       |      {
-       |         "customerReference": "INPOLY123E",
-       |         "gainAmount": 1.27,
-       |         "taxPaidAmount": 1.37,
-       |         "yearsHeld": 6
-       |      }
-       |   ]
-       |}
+      |{
+      |   "lifeInsurance":[
+      |      {
+      |         "customerReference": "INPOLY123A",
+      |         "event": "Death of spouse",
+      |         "gainAmount": 1.23,
+      |         "taxPaid": true,
+      |         "yearsHeld": 2,
+      |         "yearsHeldSinceLastGain": 1,
+      |         "deficiencyRelief": 1.23
+      |      }
+      |   ],
+      |   "capitalRedemption":[
+      |      {
+      |         "customerReference": "INPOLY123B",
+      |         "gainAmount": 1.24,
+      |         "taxPaid": true,
+      |         "yearsHeld": 3,
+      |         "yearsHeldSinceLastGain": 2,
+      |         "deficiencyRelief": 1.23
+      |      }
+      |   ],
+      |   "lifeAnnuity":[
+      |      {
+      |         "customerReference": "INPOLY123C",
+      |         "gainAmount": 1.25,
+      |         "taxPaid": true,
+      |         "yearsHeld": 4,
+      |         "yearsHeldSinceLastGain": 3,
+      |         "deficiencyRelief": 1.23
+      |      }
+      |   ],
+      |   "voidedIsa":[
+      |      {
+      |         "customerReference": "INPOLY123D",
+      |         "gainAmount": 1.26,
+      |         "taxPaidAmount": 1.36,
+      |         "yearsHeld": 5,
+      |         "yearsHeldSinceLastGain": 4
+      |      }
+      |   ],
+      |   "foreign":[
+      |      {
+      |         "customerReference": "INPOLY123E",
+      |         "gainAmount": 1.27,
+      |         "taxPaidAmount": 1.37,
+      |         "yearsHeld": 6
+      |      }
+      |   ]
+      |}
     """.stripMargin
   )
 
-  private val lifeInsuranceItemModel = CommonInsurancePoliciesItem(
+  private val lifeInsuranceItemModel = AmendCommonInsurancePoliciesItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
@@ -86,7 +86,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     deficiencyRelief = Some(1.23)
   )
 
-  private val capitalRedemptionItemModel = CommonInsurancePoliciesItem(
+  private val capitalRedemptionItemModel = AmendCommonInsurancePoliciesItem(
     customerReference = "INPOLY123B",
     event = None,
     gainAmount = Some(1.24),
@@ -96,7 +96,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     deficiencyRelief = Some(1.23)
   )
 
-  private val lifeAnnuityItemModel = CommonInsurancePoliciesItem(
+  private val lifeAnnuityItemModel = AmendCommonInsurancePoliciesItem(
     customerReference = "INPOLY123C",
     event = None,
     gainAmount = Some(1.25),
@@ -106,7 +106,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     deficiencyRelief = Some(1.23)
   )
 
-  private val voidedIsaItemModel = VoidedIsaItem(
+  private val voidedIsaItemModel = AmendVoidedIsaItem(
     customerReference = "INPOLY123D",
     event = None,
     gainAmount = Some(1.26),
@@ -115,14 +115,14 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     yearsHeldSinceLastGain = Some(4)
   )
 
-  private val foreignItemModel = ForeignItem(
+  private val foreignItemModel = AmendForeignItem(
     customerReference = "INPOLY123E",
     gainAmount = Some(1.27),
     taxPaidAmount = Some(1.37),
     yearsHeld = Some(6)
   )
 
-  private val responseModel = RetrieveInsurancePoliciesResponse(
+  private val responseModel = AmendInsurancePoliciesRequestBody(
     lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
     capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
     lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),
@@ -133,7 +133,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
   "InsurancePoliciesItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[RetrieveInsurancePoliciesResponse] shouldBe responseModel
+        json.as[AmendInsurancePoliciesRequestBody] shouldBe responseModel
       }
     }
 
@@ -151,14 +151,14 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        invalidJson.validate[RetrieveInsurancePoliciesResponse] shouldBe a[JsError]
+        invalidJson.validate[AmendInsurancePoliciesRequestBody] shouldBe a[JsError]
       }
     }
 
     "read from empty JSON" should {
       "produce an empty RetrieveInsurancePoliciesResponse Object" in {
         val emptyJson = JsObject.empty
-        emptyJson.as[RetrieveInsurancePoliciesResponse] shouldBe RetrieveInsurancePoliciesResponse.empty
+        emptyJson.as[AmendInsurancePoliciesRequestBody] shouldBe AmendInsurancePoliciesRequestBody.empty
       }
     }
 

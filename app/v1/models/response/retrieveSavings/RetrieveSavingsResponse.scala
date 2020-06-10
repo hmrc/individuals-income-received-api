@@ -19,22 +19,21 @@ package v1.models.response.retrieveSavings
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveSavingsResponse(securities: Option[Securities], foreignInterest: Option[Seq[ForeignInterest]])
+case class RetrieveSavingsResponse(securities: Option[Securities], foreignInterest: Option[Seq[ForeignInterestItem]])
 
-object RetrieveSavingsResponse extends HateoasLinks {
+object RetrieveSavingsResponse extends HateoasLinks with JsonUtils {
+  val empty: RetrieveSavingsResponse = RetrieveSavingsResponse(None, None)
 
   implicit val reads: Reads[RetrieveSavingsResponse] = (
     (JsPath \ "securities").readNullable[Securities].map(_.flatMap {
-      case Securities(None, None, None) => None
-      case securitiesItems => Some(securitiesItems)
+      case Securities.empty => None
+      case securities => Some(securities)
     }) and
-      (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterest]].map(_.flatMap {
-        case Nil => None
-        case foreignInterest => Some(foreignInterest)
-      })
+      (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterestItem]].mapEmptySeqToNone
     ) (RetrieveSavingsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSavingsResponse] = Json.writes[RetrieveSavingsResponse]
