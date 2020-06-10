@@ -20,13 +20,13 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockAmendInsuranceValidator
+import v1.mocks.validators.MockAmendInsurancePoliciesValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.insurancePolicies.amend.{AmendRawData, AmendRequest}
 import v1.models.request.savings.amend._
 
-class AmendInsuranceRequestParserSpec extends UnitSpec{
+class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
   val nino: String = "AA123456B"  //Needs formatting
   val taxYear: String = "2017-18"
@@ -123,16 +123,16 @@ class AmendInsuranceRequestParserSpec extends UnitSpec{
     body = validRawRequestBody
   )
 
-  trait Test extends MockAmendInsuranceValidator {
-    lazy val parser: AmendInsuranceRequestParser = new AmendInsuranceRequestParser(
-      validator = mockAmendInsuranceValidator
+  trait Test extends MockAmendInsurancePoliciesValidator {
+    lazy val parser: AmendInsurancePoliciesRequestParser = new AmendInsurancePoliciesRequestParser(
+      validator = mockAmendInsurancePoliciesValidator
     )
   }
 
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockAmendInsuranceValidator.validate(amendRawData).returns(Nil)
+        MockAmendInsurancePoliciesValidator.validate(amendRawData).returns(Nil)
 
         parser.parseRequest(amendRawData) shouldBe
           Right(AmendRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), validRequestBodyModel))
@@ -141,7 +141,7 @@ class AmendInsuranceRequestParserSpec extends UnitSpec{
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendInsuranceValidator.validate(amendRawData.copy(nino = "notANino"))   // Needs changing
+        MockAmendInsurancePoliciesValidator.validate(amendRawData.copy(nino = "notANino"))   // Needs changing
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendRawData.copy(nino = "notANino")) shouldBe
@@ -149,7 +149,7 @@ class AmendInsuranceRequestParserSpec extends UnitSpec{
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendInsuranceValidator.validate(amendRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendInsurancePoliciesValidator.validate(amendRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -194,7 +194,7 @@ class AmendInsuranceRequestParserSpec extends UnitSpec{
           )
         )
 
-        MockAmendInsuranceValidator.validate(amendRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendInsurancePoliciesValidator.validate(amendRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe

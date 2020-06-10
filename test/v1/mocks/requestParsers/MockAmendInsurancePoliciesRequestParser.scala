@@ -18,17 +18,17 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.AmendInsuranceRequestParser
+import v1.controllers.requestParsers.AmendInsurancePoliciesRequestParser
 import v1.models.errors.ErrorWrapper
 import v1.models.request.insurancePolicies.amend.{AmendRawData, AmendRequest}
 
-trait MockAmendInsuranceRequestParser extends MockFactory {
+trait MockAmendInsurancePoliciesRequestParser extends MockFactory {
 
-  val mockAmendInsuranceRequestParser: AmendInsuranceRequestParser = mock[AmendInsuranceRequestParser]
+  val mockAmendInsurancePoliciesRequestParser: AmendInsurancePoliciesRequestParser = mock[AmendInsurancePoliciesRequestParser]
 
   object MockAmendSavingsRequestParser {
     def parse(data: AmendRawData): CallHandler[Either[ErrorWrapper, AmendRequest]] = {
-      (mockAmendInsuranceRequestParser.parseRequest(_: AmendRawData)).expects(data)
+      (mockAmendInsurancePoliciesRequestParser.parseRequest(_: AmendRawData)).expects(data)
     }
   }
 

@@ -23,7 +23,7 @@ import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMess
 import v1.models.errors._
 import v1.models.request.insurancePolicies.amend.AmendRawData
 
-class AmendInsuranceValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
+class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
@@ -181,7 +181,7 @@ class AmendInsuranceValidatorSpec extends UnitSpec with ValueFormatErrorMessages
   private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
-  val validator = new AmendInsuranceValidator()
+  val validator = new AmendInsurancePoliciesValidator()
 
   "running a validation" should {
     "return no errors" when {

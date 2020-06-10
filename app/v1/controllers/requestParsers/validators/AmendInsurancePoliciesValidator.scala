@@ -21,7 +21,7 @@ import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.insurancePolicies.amend.AmendRawData
 import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
 
-class AmendInsuranceValidator extends Validator[AmendRawData] with ValueFormatErrorMessages {
+class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
 

@@ -18,18 +18,18 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.AmendInsuranceValidator
+import v1.controllers.requestParsers.validators.AmendInsurancePoliciesValidator
 import v1.models.errors.MtdError
 import v1.models.request.insurancePolicies.amend.AmendRawData
 
-class MockAmendInsuranceValidator extends MockFactory {
+class MockAmendInsurancePoliciesValidator extends MockFactory {
 
-  val mockAmendInsuranceValidator: AmendInsuranceValidator = mock[AmendInsuranceValidator]
+  val mockAmendInsurancePoliciesValidator: AmendInsurancePoliciesValidator = mock[AmendInsurancePoliciesValidator]
 
-  object MockAmendInsuranceValidator {
+  object MockAmendInsurancePoliciesValidator {
 
     def validate(data: AmendRawData): CallHandler1[AmendRawData, List[MtdError]] = {
-      (mockAmendInsuranceValidator
+      (mockAmendInsurancePoliciesValidator
         .validate(_: AmendRawData))
         .expects(data)
     }
