@@ -16,11 +16,18 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{CustomerRefFormatError, MtdError}
+import v1.models.errors.{EventFormatError, MtdError}
 
-object CustomerRefValidation {
+object EventValidation {
 
-  def validate(customerRef: String): List[MtdError] = {
-    if (customerRef.length >= 1 && customerRef.length <= 25) NoValidationErrors else List(CustomerRefFormatError)
+  def validateOptional(event: Option[String], path: String): List[MtdError] = event match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value,path)
+  }
+
+  def validate(event: String, path: String): List[MtdError] = {
+    if (event.length >= 1 && event.length <= 75) NoValidationErrors else List(
+      EventFormatError.copy(paths = Some(Seq(path)))
+    )
   }
 }

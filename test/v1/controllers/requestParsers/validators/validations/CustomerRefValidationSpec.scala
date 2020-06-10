@@ -16,11 +16,24 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{CustomerRefFormatError, MtdError}
+import support.UnitSpec
+import v1.models.errors.CustomerRefFormatError
 
-object CustomerRefValidation {
+class CustomerRefValidationSpec extends UnitSpec {
 
-  def validate(customerRef: String): List[MtdError] = {
-    if (customerRef.length >= 1 && customerRef.length <= 25) NoValidationErrors else List(CustomerRefFormatError)
+  "CustomerRefValidation" when {
+    "validate" must {
+      "return an empty list for a valid a valid customerRef" in {
+        CustomerRefValidation.validate(
+          customerRef = "INPOLY123A"
+        ) shouldBe (NoValidationErrors)
+      }
+
+      "return a CustomerRefFormatError for an invalid event" in {
+        CustomerRefValidation.validate(
+          customerRef = "This ref is more than 25 characters",
+        ) shouldBe List(CustomerRefFormatError)
+      }
+    }
   }
 }

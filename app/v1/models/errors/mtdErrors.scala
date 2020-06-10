@@ -32,6 +32,8 @@ object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is inv
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The format of the supplied tax year field is not valid")
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provided country code is not valid")
 object ValueFormatError extends MtdError("FORMAT_VALUE", "")
+object CustomerRefFormatError extends MtdError("FORMAT_CUSTOMER_REF", "The provided customer reference is invalid")
+object EventFormatError extends MtdError("FORMAT_EVENT", "The provided policy event is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError

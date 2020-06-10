@@ -31,51 +31,97 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   private val validRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      |   "lifeInsurance":[ {
-      |         "customerReference":"INPOLY123A",
-      |         "event":"Death of spouse",
-      |         "gainAmount":1.23,
-      |         "taxPaid":1.23,
-      |         "yearsHeld":2,
-      |         "yearsHeldSinceLastGain":1,
-      |         "deficiencyRelief":1.23
-      |      }
+      |   "lifeInsurance":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
       |   ],
-      |   "capitalRedemption":[ {
-      |         "customerReference":"INPOLY123A",
-      |         "event":"Death of spouse",
-      |         "gainAmount":1.23,
-      |         "taxPaid":1.23,
-      |         "yearsHeld":2,
-      |         "yearsHeldSinceLastGain":1,
-      |         "deficiencyRelief":1.23
-      |      }
+      |   "capitalRedemption":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
       |   ],
-      |   "lifeAnnuity":[ {
-      |         "customerReference":"INPOLY123A",
-      |         "event":"Death of spouse",
-      |         "gainAmount":1.23,
-      |         "taxPaid":1.23,
-      |         "yearsHeld":2,
-      |         "yearsHeldSinceLastGain":1,
-      |         "deficiencyRelief":1.23
-      |      }
+      |   "lifeAnnuity":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
       |   ],
-      |   "voidedIsa":[ {
-      |         "customerReference":"INPOLY123A",
-      |         "event":"Death of spouse",
-      |         "gainAmount":1.23,
-      |         "taxPaid":1.23,
-      |         "yearsHeld":2,
-      |         "yearsHeldSinceLastGain":1
-      |      }
+      |   "voidedIsa":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12
+      |       }
       |   ],
-      |   "foreign":[ {
-      |         "customerReference":"INPOLY123A",
-      |         "gainAmount":1.23,
-      |         "taxPaid":1.23,
-      |         "yearsHeld":2
-      |      }
+      |   "foreign":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15
+      |       }
       |   ]
       |}
     """.stripMargin
@@ -88,56 +134,139 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   private val nonValidRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      | "lifeInsurance": {
-      |     "customerReference":"INPOLY123A",
-      |      "event":"Death of spouse",
-      |      "gainAmount":1.23,
-      |      "taxPaid":1.23,
-      |      "yearsHeld":2,
-      |      "yearsHeldSinceLastGain":1,
-      |      "deficiencyRelief":1.23
-      |   }
+      |   "lifeInsurance":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": "no",
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ]
       |}
     """.stripMargin
   )
 
-  private val invalidCountryCodeRequestBodyJson: JsValue = Json.parse(  //Needs work
+  private val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      | "foreignInterest": [
-      |    {
-      |       "countryCode": "England",
-      |       "taxableAmount": 200.11,
-      |       "foreignTaxCreditRelief": true
-      |    }
-      | ]
+      |   "capitalRedemption":[
+      |       {
+      |           "customerReference": "This ref is more than 25 characters",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ]
       |}
     """.stripMargin
   )
 
-  private val invalidForeignInterestRequestBodyJson: JsValue = Json.parse(      //Needs changing
+  private val invalidEventRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      | "foreignInterest": [
-      |    {
-      |       "countryCode": "GBR",
-      |       "taxableAmount": 200.111,
-      |       "foreignTaxCreditRelief": true
-      |    }
-      | ]
+      |   "lifeAnnuity":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ]
       |}
     """.stripMargin
   )
 
-
-  private val invalidSecuritiesRequestBodyJson: JsValue = Json.parse( //Needs changing
+  private val invalidLifeInsuranceRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      |   "securities": {
-      |      "taxTakenOff": 100.11,
-      |      "grossAmount": 100.12,
-      |      "netAmount": -100.13
-      |   }
+      |   "lifeInsurance":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.999,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val invalidCapitalRedemptionRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "capitalRedemption":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.999
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val invalidLifeAnnuityRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "lifeAnnuity":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.999,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val invalidVoidedIsaRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "voidedIsa":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 300
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val invalidForeignRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "foreign":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 150
+      |       }
+      |   ]
       |}
     """.stripMargin
   )
@@ -145,29 +274,98 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      |   "securities": {
-      |      "taxTakenOff": 100.111,
-      |      "grossAmount": -100.12,
-      |      "netAmount": 999999999991.99
-      |   },
-      |   "foreignInterest": [
+      |   "lifeInsurance":[
       |       {
-      |          "amountBeforeTax": -200.11,
-      |          "countryCode": "SkegVegas",
-      |          "taxTakenOff": 200.121,
-      |          "specialWithholdingTax": 999999999991.13,
-      |          "taxableAmount": -200.14,
-      |          "foreignTaxCreditRelief": false
+      |           "customerReference": "This ref is more than 25 characters",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.999,
+      |           "taxPaid": 5000.999,
+      |           "yearsHeld": -15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.999
       |       },
       |       {
-      |          "amountBeforeTax": -300.11,
-      |          "countryCode": "SunSeaAndSand",
-      |          "taxTakenOff": -300.100,
-      |          "specialWithholdingTax": -300.134,
-      |          "taxableAmount": -300.14,
-      |          "foreignTaxCreditRelief": true
+      |           "customerReference": "INPOLY123A",
+      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
       |       }
-      |    ]
+      |   ],
+      |   "capitalRedemption":[
+      |       {
+      |           "customerReference": "This ref is more than 25 characters",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 3000.999,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": -15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.999,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 120,
+      |           "deficiencyRelief": 5000.999
+      |       }
+      |   ],
+      |   "lifeAnnuity":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.999,
+      |           "yearsHeld": -15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.999
+      |       },
+      |       {
+      |           "customerReference": "This ref is more than 25 characters",
+      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "gainAmount": 5000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ],
+      |   "voidedIsa":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": -15,
+      |           "yearsHeldSinceLastGain": 120
+      |       },
+      |       {
+      |           "customerReference": "This ref is more than 25 characters",
+      |           "event": "Death of spouse",
+      |           "gainAmount": 5000.999,
+      |           "taxPaid": 5000.999,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12
+      |       }
+      |   ],
+      |   "foreign":[
+      |       {
+      |           "customerReference": "This ref is more than 25 characters",
+      |           "gainAmount": 5000.99,
+      |           "taxPaid": 5000.999,
+      |           "yearsHeld": 15
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "gainAmount": 2000.999,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": -15
+      |       }
+      |   ]
       |}
     """.stripMargin
   )
@@ -176,9 +374,13 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
-  private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
+  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
+  private val invalidEventRawRequestBody = AnyContentAsJson(invalidEventRequestBodyJson)
+  private val invalidLifeInsuranceRawRequestBody = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
+  private val invalidCapitalRedemptionRawRequestBody = AnyContentAsJson(invalidCapitalRedemptionRequestBodyJson)
+  private val invalidLifeAnnuityRawRequestBody = AnyContentAsJson(invalidLifeAnnuityRequestBodyJson)
+  private val invalidVoidedIsaRawRequestBody = AnyContentAsJson(invalidVoidedIsaRequestBodyJson)
+  private val invalidForeignRawRequestBody = AnyContentAsJson(invalidForeignRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   val validator = new AmendInsurancePoliciesValidator()
@@ -222,27 +424,58 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       }
     }
 
-    "return CountryCodeFormatError error" when {
-      "an incorrectly formatted country code is submitted" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
-          List(CountryCodeFormatError.copy(paths = Some(List("/foreignInterest/0/countryCode"))))
+    "return CustomerRefFormatError error" when {
+      "an incorrectly formatted customer reference is submitted" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
+          List(CustomerRefFormatError.copy(paths = Some(List("/capitalRedemption/0/customerReference"))))
+      }
+    }
+
+    "return EventFormatError error" when {
+      "an incorrectly formatted event is submitted" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidEventRawRequestBody)) shouldBe
+          List(EventFormatError.copy(paths = Some(List("/lifeAnnuity/0/event"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
-      "one field fails value validation (foreign interest)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidForeignInterestRawRequestBody)) shouldBe
+      "one field fails value validation (life insurance)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidLifeInsuranceRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/foreignInterest/0/taxableAmount"))
+            paths = Some(Seq("/lifeInsurance/0/taxPaid"))
           ))
       }
 
-      "one field fails value validation (securities)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidSecuritiesRawRequestBody)) shouldBe
+      "one field fails value validation (capital redemption)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidCapitalRedemptionRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/securities/netAmount"))
+            message = DECIMAL_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/capitalRedemption/0/deficiencyRelief"))
+          ))
+      }
+
+      "one field fails value validation (life annuity)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidLifeAnnuityRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = DECIMAL_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/lifeAnnuity/0/gainAmount"))
+          ))
+      }
+
+      "one field fails value validation (voidedIsa)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidVoidedIsaRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ONE_MINIMUM_INTEGER_INCLUSIVE,
+            paths = Some(Seq("/voidedIsa/0/yearsHeldSinceLastGain"))
+          ))
+      }
+
+      "one field fails value validation (foreign)" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidForeignRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ONE_MINIMUM_INTEGER_INCLUSIVE,
+            paths = Some(Seq("/foreign/0/yearsHeld"))
           ))
       }
     }
@@ -251,26 +484,53 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       "multiple fields fail value validation" in {
         validator.validate(AmendRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            CustomerRefFormatError.copy(
+              paths = Some(List(
+                "/lifeInsurance/0/customerReference",
+                "/capitalRedemption/0/customerReference",
+                "/lifeAnnuity/1/customerReference",
+                "/voidedIsa/1/customerReference",
+                "/foreign/0/customerReference"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = ONE_MINIMUM_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/lifeInsurance/0/yearsHeld",
+                "/capitalRedemption/0/yearsHeld",
+                "/capitalRedemption/1/yearsHeldSinceLastGain",
+                "/lifeAnnuity/0/yearsHeld",
+                "/voidedIsa/0/yearsHeld",
+                "/voidedIsa/0/yearsHeldSinceLastGain",
+                "/foreign/1/yearsHeld"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = DECIMAL_MINIMUM_INCLUSIVE,
+              paths = Some(List(
+                "/lifeInsurance/0/gainAmount",
+                "/lifeInsurance/0/deficiencyRelief",
+                "/capitalRedemption/0/gainAmount",
+                "/capitalRedemption/1/deficiencyRelief",
+                "/lifeAnnuity/0/deficiencyRelief",
+                "/foreign/1/gainAmount"
+              ))
+            ),
+            EventFormatError.copy(
+              paths = Some(List(
+                "/lifeInsurance/1/event",
+                "/lifeAnnuity/1/event"
+              ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
-                "/securities/taxTakenOff",
-                "/securities/grossAmount",
-                "/securities/netAmount",
-                "/foreignInterest/0/amountBeforeTax",
-                "/foreignInterest/0/taxTakenOff",
-                "/foreignInterest/0/specialWithholdingTax",
-                "/foreignInterest/0/taxableAmount",
-                "/foreignInterest/1/amountBeforeTax",
-                "/foreignInterest/1/taxTakenOff",
-                "/foreignInterest/1/specialWithholdingTax",
-                "/foreignInterest/1/taxableAmount"
-              ))
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(List(
-                "/foreignInterest/0/countryCode",
-                "/foreignInterest/1/countryCode"
+                "/lifeInsurance/0/taxPaid",
+                "/capitalRedemption/1/taxPaid",
+                "/lifeAnnuity/0/taxPaid",
+                "/voidedIsa/1/gainAmount",
+                "/voidedIsa/1/taxPaid",
+                "/foreign/0/taxPaid"
               ))
             )
           )

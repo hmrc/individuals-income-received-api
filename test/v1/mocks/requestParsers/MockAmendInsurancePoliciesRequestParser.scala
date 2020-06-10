@@ -26,7 +26,7 @@ trait MockAmendInsurancePoliciesRequestParser extends MockFactory {
 
   val mockAmendInsurancePoliciesRequestParser: AmendInsurancePoliciesRequestParser = mock[AmendInsurancePoliciesRequestParser]
 
-  object MockAmendSavingsRequestParser {
+  object MockAmendInsurancePoliciesRequestParser {
     def parse(data: AmendRawData): CallHandler[Either[ErrorWrapper, AmendRequest]] = {
       (mockAmendInsurancePoliciesRequestParser.parseRequest(_: AmendRawData)).expects(data)
     }

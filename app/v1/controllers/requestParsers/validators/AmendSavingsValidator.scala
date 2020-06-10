@@ -46,12 +46,12 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
     val requestBodyData = data.body.json.as[AmendSavingsRequestBody]
 
     List(flattenErrors(
-        List(
-          requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
-          requestBodyData.foreignInterest.map(_.zipWithIndex.flatMap {
-              case (data, index) => validateForeignInterest(data, index)
-            }).getOrElse(NoValidationErrors).toList
-        )
+      List(
+        requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
+        requestBodyData.foreignInterest.map(_.zipWithIndex.flatMap {
+          case (data, index) => validateForeignInterest(data, index)
+        }).getOrElse(NoValidationErrors).toList
+      )
     ))
   }
 
@@ -59,7 +59,7 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
     List(
       DecimalValueValidation.validateOptional(
         amount = securities.taxTakenOff,
-        path = "/securities/taxTakenOff",
+        path = "/securities/taxTakenOff"
       ),
       DecimalValueValidation.validateOptional(
         amount = securities.grossAmount,
@@ -108,3 +108,4 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
     }.toList
   }
 }
+
