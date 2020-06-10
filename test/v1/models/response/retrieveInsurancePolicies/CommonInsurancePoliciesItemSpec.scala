@@ -19,27 +19,27 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
-class InsurancePoliciesItemSpec extends UnitSpec {
+class CommonInsurancePoliciesItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
-      |   "customerReference":"INPOLY123A",
-      |   "event":"Death of spouse",
-      |   "gainAmount":1.23,
-      |   "taxPaid":1.23,
-      |   "yearsHeld":2,
-      |   "yearsHeldSinceLastGain":1,
-      |   "deficiencyRelief":1.23
+      |   "customerReference": "INPOLY123A",
+      |   "event": "Death of spouse",
+      |   "gainAmount": 1.23,
+      |   "taxPaid": true,
+      |   "yearsHeld": 2,
+      |   "yearsHeldSinceLastGain": 1,
+      |   "deficiencyRelief": 1.23
       |}
     """.stripMargin
   )
 
-  private val model = InsurancePoliciesItem(
+  private val model = CommonInsurancePoliciesItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
-    taxPaid = Some(1.23),
+    taxPaid = true,
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1),
     deficiencyRelief = Some(1.23)
@@ -48,14 +48,14 @@ class InsurancePoliciesItemSpec extends UnitSpec {
   "InsurancePoliciesItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[InsurancePoliciesItem] shouldBe model
+        json.as[CommonInsurancePoliciesItem] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = Json.parse("""{}""")
-        invalidJson.validate[InsurancePoliciesItem] shouldBe a[JsError]
+        invalidJson.validate[CommonInsurancePoliciesItem] shouldBe a[JsError]
       }
     }
 

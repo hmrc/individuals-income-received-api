@@ -17,7 +17,7 @@
 package v1.fixtures.insurancePolicies
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v1.models.response.retrieveInsurancePolicies.{InsurancePoliciesItem, RetrieveInsurancePoliciesResponse}
+import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignItem, RetrieveInsurancePoliciesResponse, VoidedIsaItem}
 
 object RetrieveInsurancePoliciesFixture {
 
@@ -29,7 +29,7 @@ object RetrieveInsurancePoliciesFixture {
       |         "customerReference": "INPOLY123A",
       |         "event": "Death of spouse",
       |         "gainAmount": 1.23,
-      |         "taxPaid": 1.33,
+      |         "taxPaid": true,
       |         "yearsHeld": 2,
       |         "yearsHeldSinceLastGain": 1,
       |         "deficiencyRelief": 1.23
@@ -40,7 +40,7 @@ object RetrieveInsurancePoliciesFixture {
       |         "customerReference": "INPOLY123B",
       |         "event": "Death of spouse",
       |         "gainAmount": 1.24,
-      |         "taxPaid": 1.34,
+      |         "taxPaid": true,
       |         "yearsHeld": 3,
       |         "yearsHeldSinceLastGain": 2,
       |         "deficiencyRelief": 1.23
@@ -51,7 +51,7 @@ object RetrieveInsurancePoliciesFixture {
       |         "customerReference": "INPOLY123C",
       |         "event": "Death of spouse",
       |         "gainAmount": 1.25,
-      |         "taxPaid": 1.35,
+      |         "taxPaid": true,
       |         "yearsHeld": 4,
       |         "yearsHeldSinceLastGain": 3,
       |         "deficiencyRelief": 1.23
@@ -62,7 +62,7 @@ object RetrieveInsurancePoliciesFixture {
       |         "customerReference": "INPOLY123D",
       |         "event": "Death of spouse",
       |         "gainAmount": 1.26,
-      |         "taxPaid": 1.36,
+      |         "taxPaidAmount": 1.36,
       |         "yearsHeld": 5,
       |         "yearsHeldSinceLastGain": 4
       |      }
@@ -71,7 +71,7 @@ object RetrieveInsurancePoliciesFixture {
       |      {
       |         "customerReference": "INPOLY123E",
       |         "gainAmount": 1.27,
-      |         "taxPaid": 1.37,
+      |         "taxPaidAmount": 1.37,
       |         "yearsHeld": 6
       |      }
       |   ]
@@ -103,54 +103,50 @@ object RetrieveInsurancePoliciesFixture {
     """.stripMargin
   ).as[JsObject]
 
-  val itemModel1: InsurancePoliciesItem = InsurancePoliciesItem(
+  private val itemModel1: CommonInsurancePoliciesItem = CommonInsurancePoliciesItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
-    taxPaid = Some(1.33),
+    taxPaid = true,
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1),
     deficiencyRelief = Some(1.23)
   )
 
-  val itemModel2: InsurancePoliciesItem = InsurancePoliciesItem(
+  private val itemModel2: CommonInsurancePoliciesItem = CommonInsurancePoliciesItem(
     customerReference = "INPOLY123B",
     event = Some("Death of spouse"),
     gainAmount = Some(1.24),
-    taxPaid = Some(1.34),
+    taxPaid = true,
     yearsHeld = Some(3),
     yearsHeldSinceLastGain = Some(2),
     deficiencyRelief = Some(1.23)
   )
 
-  val itemModel3: InsurancePoliciesItem = InsurancePoliciesItem(
+  private val itemModel3: CommonInsurancePoliciesItem = CommonInsurancePoliciesItem(
     customerReference = "INPOLY123C",
     event = Some("Death of spouse"),
     gainAmount = Some(1.25),
-    taxPaid = Some(1.35),
+    taxPaid = true,
     yearsHeld = Some(4),
     yearsHeldSinceLastGain = Some(3),
     deficiencyRelief = Some(1.23)
   )
 
-  val itemModel4: InsurancePoliciesItem = InsurancePoliciesItem(
+  private val itemModel4: VoidedIsaItem = VoidedIsaItem(
     customerReference = "INPOLY123D",
     event = Some("Death of spouse"),
     gainAmount = Some(1.26),
-    taxPaid = Some(1.36),
+    taxPaidAmount = Some(1.36),
     yearsHeld = Some(5),
-    yearsHeldSinceLastGain = Some(4),
-    deficiencyRelief = None
+    yearsHeldSinceLastGain = Some(4)
   )
 
-  val itemModel5: InsurancePoliciesItem = InsurancePoliciesItem(
+  private val itemModel5: ForeignItem = ForeignItem(
     customerReference = "INPOLY123E",
-    event = None,
     gainAmount = Some(1.27),
-    taxPaid = Some(1.37),
-    yearsHeld = Some(6),
-    yearsHeldSinceLastGain = None,
-    deficiencyRelief = None
+    taxPaidAmount = Some(1.37),
+    yearsHeld = Some(6)
   )
 
   val retrieveInsurancePoliciesResponseModel: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(

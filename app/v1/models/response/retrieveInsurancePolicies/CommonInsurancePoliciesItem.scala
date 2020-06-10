@@ -19,24 +19,24 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class InsurancePoliciesItem(customerReference: String,
-                                 event: Option[String],
-                                 gainAmount: Option[BigDecimal],
-                                 taxPaid: Option[BigDecimal],
-                                 yearsHeld: Option[Int],
-                                 yearsHeldSinceLastGain: Option[Int],
-                                 deficiencyRelief: Option[BigDecimal])
+case class CommonInsurancePoliciesItem(customerReference: String,
+                                       event: Option[String],
+                                       gainAmount: Option[BigDecimal],
+                                       taxPaid: Boolean,
+                                       yearsHeld: Option[Int],
+                                       yearsHeldSinceLastGain: Option[Int],
+                                       deficiencyRelief: Option[BigDecimal])
 
-object InsurancePoliciesItem {
-  implicit val reads: Reads[InsurancePoliciesItem] = (
+object CommonInsurancePoliciesItem {
+  implicit val reads: Reads[CommonInsurancePoliciesItem] = (
     (JsPath \ "customerReference").read[String] and
       (JsPath \ "event").readNullable[String] and
       (JsPath \ "gainAmount").readNullable[BigDecimal] and
-      (JsPath \ "taxPaid").readNullable[BigDecimal] and
+      (JsPath \ "taxPaid").read[Boolean] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int] and
       (JsPath \ "deficiencyRelief").readNullable[BigDecimal]
-    )(InsurancePoliciesItem.apply _)
+    ) (CommonInsurancePoliciesItem.apply _)
 
-  implicit val writes: OWrites[InsurancePoliciesItem] = Json.writes[InsurancePoliciesItem]
+  implicit val writes: OWrites[CommonInsurancePoliciesItem] = Json.writes[CommonInsurancePoliciesItem]
 }

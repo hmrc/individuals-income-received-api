@@ -49,31 +49,31 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   val taxYear: String = "2017-18"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  private val rawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  private val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
 
-  val amendInsurancePoliciesLink: Link =
+  private val amendInsurancePoliciesLink: Link =
     Link(
       href = s"/individuals/income-received/insurance-policies/$nino/$taxYear",
       method = PUT,
       rel = AMEND_INSURANCE_POLICIES_INCOME
     )
 
-  val retrieveInsurancePoliciesLink: Link =
+  private val retrieveInsurancePoliciesLink: Link =
     Link(
       href = s"/individuals/income-received/insurance-policies/$nino/$taxYear",
       method = GET,
       rel = SELF
     )
 
-  val deleteInsurancePoliciesLink: Link =
+  private val deleteInsurancePoliciesLink: Link =
     Link(
       href = s"/individuals/income-received/insurance-policies/$nino/$taxYear",
       method = DELETE,
