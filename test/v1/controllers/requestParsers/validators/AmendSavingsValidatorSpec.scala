@@ -88,6 +88,20 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """.stripMargin
   )
 
+  private val invalidCountryCodeRuleRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      | "foreignInterest": [
+      |    {
+      |       "countryCode": "FRE",
+      |       "taxableAmount": 200.11,
+      |       "foreignTaxCreditRelief": true
+      |    }
+      | ]
+      |}
+    """.stripMargin
+  )
+
   private val invalidForeignInterestRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -150,6 +164,7 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
   private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
   private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
   private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
@@ -199,6 +214,13 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       "an incorrectly formatted country code is submitted" in {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
           List(CountryCodeFormatError.copy(paths = Some(List("/foreignInterest/0/countryCode"))))
+      }
+    }
+
+    "return CountryCodeRuleError error" when {
+      "an invalid country code is submitted" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidCountryCodeRuleRawRequestBody)) shouldBe
+          List(CountryCodeRuleError.copy(paths = Some(List("/foreignInterest/0/countryCode"))))
       }
     }
 

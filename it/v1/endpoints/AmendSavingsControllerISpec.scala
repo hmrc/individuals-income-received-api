@@ -147,6 +147,14 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
             |          "specialWithholdingTax": -300.134,
             |          "taxableAmount": -300.14,
             |          "foreignTaxCreditRelief": true
+            |       },
+            |       {
+            |          "amountBeforeTax": -300.11,
+            |          "countryCode": "FRE",
+            |          "taxTakenOff": -300.100,
+            |          "specialWithholdingTax": -300.134,
+            |          "taxableAmount": -300.14,
+            |          "foreignTaxCreditRelief": true
             |       }
             |    ]
             |}
@@ -154,6 +162,11 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          CountryCodeRuleError.copy(
+            paths = Some(List(
+              "/foreignInterest/2/countryCode"
+            ))
+          ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
@@ -167,7 +180,11 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
               "/foreignInterest/1/amountBeforeTax",
               "/foreignInterest/1/taxTakenOff",
               "/foreignInterest/1/specialWithholdingTax",
-              "/foreignInterest/1/taxableAmount"
+              "/foreignInterest/1/taxableAmount",
+              "/foreignInterest/2/amountBeforeTax",
+              "/foreignInterest/2/taxTakenOff",
+              "/foreignInterest/2/specialWithholdingTax",
+              "/foreignInterest/2/taxableAmount"
             ))
           ),
           CountryCodeFormatError.copy(
@@ -247,6 +264,25 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
       )
 
+      val ruleCountryCodeRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |  "foreignInterest": [
+          |     {
+          |        "countryCode": "FRE",
+          |        "taxableAmount": 104.44,
+          |        "foreignTaxCreditRelief": true
+          |      },
+          |      {
+          |        "countryCode": "ENL",
+          |        "taxableAmount": 204.44,
+          |        "foreignTaxCreditRelief": true
+          |      }
+          |   ]
+          |}
+        """.stripMargin
+      )
+
       val nonsenseRequestBody: JsValue = Json.parse(
         """
           |{
@@ -259,6 +295,13 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
         paths = Some(Seq(
         "/foreignInterest/0/countryCode",
         "/foreignInterest/1/countryCode"
+        ))
+      )
+
+      val countryCodeRuleError: MtdError = CountryCodeRuleError.copy(
+        paths = Some(Seq(
+          "/foreignInterest/0/countryCode",
+          "/foreignInterest/1/countryCode"
         ))
       )
 
@@ -334,6 +377,7 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "2017-18", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError),
+          ("AA123456A", "2017-18", ruleCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeRuleError),
           ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
           ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError))
 

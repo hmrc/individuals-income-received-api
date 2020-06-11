@@ -157,7 +157,7 @@ class AmendSavingsControllerSpec
     """.stripMargin
   )
 
-  "DeleteSavingsController" should {
+  "AmendSavingsController" should {
     "return NO_content" when {
       "happy path" in new Test {
 
@@ -201,6 +201,7 @@ class AmendSavingsControllerSpec
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
+          (CountryCodeRuleError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST)
         )
 
