@@ -82,7 +82,8 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
       case BadRequestError | NinoFormatError | TaxYearFormatError |
            RuleTaxYearRangeInvalidError | RuleIncorrectOrEmptyBodyError |
            MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(CountryCodeFormatError.code)
+           MtdErrorWithCustomMessage(CountryCodeFormatError.code) |
+           MtdErrorWithCustomMessage(CountryCodeRuleError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
