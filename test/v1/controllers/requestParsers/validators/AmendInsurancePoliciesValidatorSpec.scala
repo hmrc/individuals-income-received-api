@@ -466,7 +466,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       "one field fails value validation (voidedIsa)" in {
         validator.validate(AmendRawData(validNino, validTaxYear, invalidVoidedIsaRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
-            message = ONE_MINIMUM_INTEGER_INCLUSIVE,
+            message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
             paths = Some(Seq("/voidedIsa/0/yearsHeldSinceLastGain"))
           ))
       }
@@ -474,7 +474,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       "one field fails value validation (foreign)" in {
         validator.validate(AmendRawData(validNino, validTaxYear, invalidForeignRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
-            message = ONE_MINIMUM_INTEGER_INCLUSIVE,
+            message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
             paths = Some(Seq("/foreign/0/yearsHeld"))
           ))
       }
@@ -494,18 +494,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
               ))
             ),
             ValueFormatError.copy(
-              message = ONE_MINIMUM_INTEGER_INCLUSIVE,
-              paths = Some(List(
-                "/lifeInsurance/0/yearsHeld",
-                "/capitalRedemption/0/yearsHeld",
-                "/capitalRedemption/1/yearsHeldSinceLastGain",
-                "/lifeAnnuity/0/yearsHeld",
-                "/voidedIsa/0/yearsHeld",
-                "/voidedIsa/0/yearsHeldSinceLastGain",
-                "/foreign/1/yearsHeld"
-              ))
-            ),
-            ValueFormatError.copy(
               message = DECIMAL_MINIMUM_INCLUSIVE,
               paths = Some(List(
                 "/lifeInsurance/0/gainAmount",
@@ -520,6 +508,18 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
               paths = Some(List(
                 "/lifeInsurance/1/event",
                 "/lifeAnnuity/1/event"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/lifeInsurance/0/yearsHeld",
+                "/capitalRedemption/0/yearsHeld",
+                "/capitalRedemption/1/yearsHeldSinceLastGain",
+                "/lifeAnnuity/0/yearsHeld",
+                "/voidedIsa/0/yearsHeld",
+                "/voidedIsa/0/yearsHeldSinceLastGain",
+                "/foreign/1/yearsHeld"
               ))
             ),
             ValueFormatError.copy(

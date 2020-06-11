@@ -338,18 +338,6 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             ))
           ),
           ValueFormatError.copy(
-            message = "The field should be between 1 and 99",
-            paths = Some(List(
-              "/lifeInsurance/0/yearsHeld",
-              "/capitalRedemption/0/yearsHeld",
-              "/capitalRedemption/1/yearsHeldSinceLastGain",
-              "/lifeAnnuity/0/yearsHeld",
-              "/voidedIsa/0/yearsHeld",
-              "/voidedIsa/0/yearsHeldSinceLastGain",
-              "/foreign/1/yearsHeld"
-            ))
-          ),
-          ValueFormatError.copy(
             message = "The field should be between 0.01 and 99999999999.99",
             paths = Some(List(
               "/lifeInsurance/0/gainAmount",
@@ -364,6 +352,18 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             paths = Some(List(
               "/lifeInsurance/1/event",
               "/lifeAnnuity/1/event"
+            ))
+          ),
+          ValueFormatError.copy(
+            message = "The field should be between 0 and 99",
+            paths = Some(List(
+              "/lifeInsurance/0/yearsHeld",
+              "/capitalRedemption/0/yearsHeld",
+              "/capitalRedemption/1/yearsHeldSinceLastGain",
+              "/lifeAnnuity/0/yearsHeld",
+              "/voidedIsa/0/yearsHeld",
+              "/voidedIsa/0/yearsHeldSinceLastGain",
+              "/foreign/1/yearsHeld"
             ))
           ),
           ValueFormatError.copy(

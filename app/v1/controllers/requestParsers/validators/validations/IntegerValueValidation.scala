@@ -21,10 +21,10 @@ import v1.models.errors.{MtdError, ValueFormatError}
 object IntegerValueValidation extends ValueFormatErrorMessages {
 
   def validateOptional(field: Option[Int],
-                       minValue: Int = 1,
+                       minValue: Int = 0,
                        maxValue: Int = 99,
                        path: String,
-                       message: String = ONE_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = field match {
+                       message: String = ZERO_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = field match {
     case None => NoValidationErrors
     case Some(value) => validate(
       field = value,
@@ -36,10 +36,10 @@ object IntegerValueValidation extends ValueFormatErrorMessages {
   }
 
   def validate(field: Int,
-               minValue: Int = 1,
+               minValue: Int = 0,
                maxValue: Int = 99,
                path: String,
-               message: String = ONE_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = {
+               message: String = ZERO_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = {
 
     if (field >= minValue && field <= maxValue) NoValidationErrors else List(
       ValueFormatError.copy(

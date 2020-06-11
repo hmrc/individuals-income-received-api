@@ -41,9 +41,9 @@ class IntegerValueValidationSpec extends UnitSpec with ValueFormatErrorMessages 
 
       "return a ValueFormatError for an invalid integer value (default validation)" in {
         IntegerValueValidation.validate(
-          field = 0,
+          field = -2,
           path = "/path"
-        ) shouldBe List(ValueFormatError.copy(message = ONE_MINIMUM_INTEGER_INCLUSIVE, paths = Some(Seq("/path"))))
+        ) shouldBe List(ValueFormatError.copy(message = ZERO_MINIMUM_INTEGER_INCLUSIVE, paths = Some(Seq("/path"))))
       }
 
       "return a ValueFormatError for an invalid integer value (custom validation)" in {
@@ -76,7 +76,7 @@ class IntegerValueValidationSpec extends UnitSpec with ValueFormatErrorMessages 
         IntegerValueValidation.validateOptional(
           field = Some(-10),
           path = "/path"
-        ) shouldBe List(ValueFormatError.copy(message = ONE_MINIMUM_INTEGER_INCLUSIVE, paths = Some(Seq("/path"))))
+        ) shouldBe List(ValueFormatError.copy(message = ZERO_MINIMUM_INTEGER_INCLUSIVE, paths = Some(Seq("/path"))))
       }
     }
   }
