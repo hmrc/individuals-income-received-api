@@ -16,8 +16,24 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The field should be between 0 and 99999999999.99"
-  val ZERO_MINIMUM_INTEGER_INCLUSIVE = "The field should be between 0 and 99"
-  val DECIMAL_MINIMUM_INCLUSIVE = "The field should be between 0.01 and 99999999999.99"
+import support.UnitSpec
+import v1.models.errors.CustomerRefFormatError
+
+class CustomerRefValidationSpec extends UnitSpec {
+
+  "CustomerRefValidation" when {
+    "validate" must {
+      "return an empty list for a valid a valid customerRef" in {
+        CustomerRefValidation.validate(
+          customerRef = "INPOLY123A"
+        ) shouldBe (NoValidationErrors)
+      }
+
+      "return a CustomerRefFormatError for an invalid event" in {
+        CustomerRefValidation.validate(
+          customerRef = "This ref is more than 25 characters",
+        ) shouldBe List(CustomerRefFormatError)
+      }
+    }
+  }
 }
