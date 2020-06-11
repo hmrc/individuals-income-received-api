@@ -2,7 +2,7 @@
   "definitions": {
     "foreignEarnings": {
       "type": "object",
-      "description": "The container that holds the key value for securities",
+      "description": "The container that holds the key value for foreign earnings",
       "properties": {
         "customerReference": {
           "type": "string",
@@ -23,7 +23,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "description": "Financial details about foreign interest income",
+        "description": "Financial details about unremittable foreign income",
         "properties": {
           "countryCode": {
             "type": "string",
