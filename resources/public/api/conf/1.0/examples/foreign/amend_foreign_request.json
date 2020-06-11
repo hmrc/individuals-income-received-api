@@ -1,0 +1,18 @@
+{
+  "foreignEarnings":{
+    "customerReference":"FOREIGNINCME123A",
+    "earningsNotTaxableUK":1999.99
+  },
+  "unremittableForeignIncome":[
+    {
+      "countryCode":"FRA",
+      "amountInForeignCurrency":1999.99,
+      "amountTaxPaid":1999.99
+    },
+    {
+      "countryCode":"IND",
+      "amountInForeignCurrency":2999.99,
+      "amountTaxPaid":2999.99
+    }
+  ]
+}

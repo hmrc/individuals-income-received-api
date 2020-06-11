@@ -1,0 +1,89 @@
+{
+  "definitions": {
+    "foreignEarnings": {
+      "type": "object",
+      "description": "The container that holds the key value for foreign earnings",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "A reference the user supplies to identify the foreign income. Must be between 1 and 25 characters in length.",
+          "example": "FOREIGNINCME123A"
+        },
+        "earningsNotTaxableUK": {
+          "type": "number",
+          "description": "Received income in a foreign country that you could not bring to the UK because of exchange controls. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      }
+    },
+    "unremittableForeignIncome": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about unremittable foreign income",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
+            "example": "FRA"
+          },
+          "amountInForeignCurrency": {
+            "type": "number",
+            "description": "The total amount of foreign currency. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "amountTaxPaid": {
+            "type": "number",
+            "description": "The amount of tax paid on foreign income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          }
+        },
+        "required": [
+          "countryCode"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/foreign/AA123456A/2019-20"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "amend-foreign-income", "delete-foreign-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

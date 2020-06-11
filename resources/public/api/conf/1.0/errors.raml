@@ -11,7 +11,7 @@ traits:
           application/json:
             type: types.errorResponse
             example:
-              description: The matching resource is not found.
+              description: The matching resource is not found
               value:
                 code: MATCHING_RESOURCE_NOT_FOUND
   clientOrAgentNotAuthorised:
@@ -66,7 +66,7 @@ traits:
             type: types.errorResponse
             examples:
               rule_TaxYearNotSupported:
-                description: The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value.
+                description: The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearRangeInvalid:
@@ -77,7 +77,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleTaxYearRangeInvalid:
-                description: Tax year range invalid. A tax year range of one year is required.
+                description: Tax year range invalid. A tax year range of one year is required
                 value:
                   code: RULE_TAX_YEAR_RANGE_INVALID
   formatValue:
@@ -91,36 +91,47 @@ traits:
                 description: One or more values have been added with the incorrect format
                 value:
                   code: FORMAT_VALUE
-  formatSavingsCountryCode:
+  formatCountryCode:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              formatSavingsCountryCode:
-                description: The provided country code is not valid
+              formatCountryCode:
+                description: The format of the supplied country code is not valid
                 value:
                   code: FORMAT_COUNTRY_CODE
-  formatInsurancePolicyCustomerRef:
+  ruleCountryCode:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              formatInsurancePolicyCustomerRef:
-                description: The format of customerReference is not valid
+              ruleCountryCode:
+                description: Not a valid ISO 3166-1 alpha-3 country code
+                value:
+                  code: RULE_COUNTRY_CODE
+  formatCustomerRef:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatCustomerRef:
+                description: The format of the supplied customer reference is not valid
                 value:
                   code: FORMAT_CUSTOMER_REF
-  formatInsurancePolicyEvent:
+  formatEvent:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              formatInsurancePolicyEvent:
+              formatEvent:
                 description: The format of policy event is invalid
                 value:
                   code: FORMAT_EVENT
