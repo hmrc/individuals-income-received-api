@@ -5,7 +5,7 @@
   "type": "object",
   "properties": {
     "foreignEarnings": {"$ref": "foreign_definitions.json#/definitions/foreignEarnings"},
-    "foreignInterest": {"$ref": "foreign_definitions.json#/definitions/unremittableForeignIncome"}
+    "unremittableForeignIncome": {"$ref": "foreign_definitions.json#/definitions/unremittableForeignIncome"}
   }
 }
 

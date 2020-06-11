@@ -4,8 +4,8 @@
   "description": "Retrieve Foreign Income Request",
   "type": "object",
   "properties": {
-    "securities": {"$ref": "foreign_definitions.json#/definitions/foreignEarnings"},
-    "foreignInterest": {"$ref": "foreign_definitions.json#/definitions/unremittableForeignIncome"},
+    "foreignEarnings": {"$ref": "foreign_definitions.json#/definitions/foreignEarnings"},
+    "unremittableForeignIncome": {"$ref": "foreign_definitions.json#/definitions/unremittableForeignIncome"},
     "links": {"$ref": "foreign_definitions.json#/definitions/links"}
   }
 }
