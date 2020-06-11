@@ -16,10 +16,10 @@
 
 package utils
 
-import play.api.libs.json.{JsValue, Json, OWrites, Reads}
+import play.api.libs.json.{JsArray, JsNull, JsString, JsValue, Json, OWrites, Reads, __}
 import support.UnitSpec
 
-class JsonUtilsSpec extends UnitSpec {
+class JsonUtilsSpec extends UnitSpec with JsonUtils {
 
   case class TestClass(field1: String, field2: Option[String])
 
@@ -67,6 +67,22 @@ class JsonUtilsSpec extends UnitSpec {
 
       "do nothing if the specified field does not exist" in {
         fullJson.as[TestClass](TestClass.wrongReads) shouldBe testData
+      }
+    }
+
+    "mapEmptySeqToNone" must {
+      val reads = __.readNullable[Seq[String]].mapEmptySeqToNone
+
+      "map non-empty sequence to Some(non-empty sequence)" in {
+        JsArray(Seq(JsString("value0"), JsString("value1"))).as(reads) shouldBe Some(Seq("value0", "value1"))
+      }
+
+      "map empty sequence to None" in {
+        JsArray.empty.as(reads) shouldBe None
+      }
+
+      "map None to None" in {
+        JsNull.as(reads) shouldBe None
       }
     }
   }
