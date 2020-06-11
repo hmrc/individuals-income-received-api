@@ -17,12 +17,13 @@
 package v1.controllers.requestParsers.validators.validations
 
 import com.neovisionaries.i18n.CountryCode
-import v1.models.errors.{CountryCodeFormatError, MtdError}
+import v1.models.errors.{CountryCodeFormatError, CountryCodeRuleError, MtdError}
 
 object CountryCodeValidation {
 
-  def validate(data: String): List[MtdError] = CountryCode.getByAlpha3Code(data) match {
-    case _: CountryCode => NoValidationErrors
+  def validate(data: String): List[MtdError] = (CountryCode.getByAlpha3Code(data),data) match {
+    case (_: CountryCode,_) => NoValidationErrors
+    case (_, code) if code.length == 3 => List(CountryCodeRuleError)
     case _ => List(CountryCodeFormatError)
   }
 }

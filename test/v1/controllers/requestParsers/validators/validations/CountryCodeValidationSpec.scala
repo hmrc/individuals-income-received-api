@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.CountryCodeFormatError
+import v1.models.errors.{CountryCodeFormatError, CountryCodeRuleError}
 
 class CountryCodeValidationSpec extends UnitSpec {
   "CountryCodeValidation" when {
@@ -28,6 +28,14 @@ class CountryCodeValidationSpec extends UnitSpec {
 
       "return a CountryCodeFormatError for an invalid country code" in {
         CountryCodeValidation.validate("notACountryCode") shouldBe List(CountryCodeFormatError)
+      }
+
+      "return a CountryCodeFormatError for an invalid format country code" in {
+        CountryCodeValidation.validate("FRANCE") shouldBe List(CountryCodeFormatError)
+      }
+
+      "return a CountryCodeFormatError for an invalid rule country code" in {
+        CountryCodeValidation.validate("FRE") shouldBe List(CountryCodeRuleError)
       }
     }
   }
