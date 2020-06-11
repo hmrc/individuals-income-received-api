@@ -36,4 +36,18 @@ trait JsonUtils {
       Json.fromJson(a.validate(transformer).get)(reads)
     }
   }
+
+  /**
+    * Extension methods for reads of a optional sequence
+    */
+  implicit class OptSeqReadsOps[A](reads: Reads[Option[Seq[A]]]) {
+    /**
+      * Returns a Reads that maps the sequence to itself unless it is empty
+      */
+    def mapEmptySeqToNone: Reads[Option[Seq[A]]] =
+      reads.map {
+        case Some(Nil) => None
+        case other => other
+      }
+  }
 }
