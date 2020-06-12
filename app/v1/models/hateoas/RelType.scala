@@ -21,6 +21,8 @@ object RelType {
   val DELETE_SAVINGS_INCOME = "delete-savings-income"
   val AMEND_INSURANCE_POLICIES_INCOME = "amend-insurance-policies-income"
   val DELETE_INSURANCE_POLICIES_INCOME = "delete-insurance-policies-income"
+  val AMEND_FOREIGN_INCOME = "amend-foreign-income"
+  val DELETE_FOREIGN_INCOME = "delete-foreign-income"
 
   val SELF = "self"
 }
