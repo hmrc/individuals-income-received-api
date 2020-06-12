@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{AmendForeignConnector, DesOutcome}
-import v1.models.request.savings.amend.AmendSavingsRequest
+import v1.models.request.amendForeign.AmendForeignRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,9 +30,9 @@ trait MockAmendForeignConnector extends MockFactory {
 
   object MockAmendForeignConnector {
 
-    def amendForeign(request: AmendSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendForeign(request: AmendForeignRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendForeignConnector
-        .amendForeign(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .amendForeign(_: AmendForeignRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(request, *, *)
     }
   }

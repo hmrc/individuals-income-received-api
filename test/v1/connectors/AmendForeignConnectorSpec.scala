@@ -21,35 +21,47 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.amendForeign.{AmendForeignRequest, AmendForeignRequestBody, ForeignEarnings, UnremittableForeignIncomeItem}
 
 import scala.concurrent.Future
 
 class AmendForeignConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
-  val taxYear: String = "2019"
+  private val nino: String = "AA111111A"
+  private val taxYear: String = "2019"
 
-  val foreignInterest: AmendForeignInterest = AmendForeignInterest(
-    amountBeforeTax = None,
-    countryCode = "FRA",
-    taxTakenOff = None,
-    specialWithholdingTax = None,
-    taxableAmount = 233.11,
-    foreignTaxCreditRelief = false
+  private val foreignEarningsModel = ForeignEarnings(
+    customerReference = Some("ref"),
+    earningsNotTaxableUK = Some(111.11)
   )
 
-  val amendSavingsRequestBody: AmendSavingsRequestBody = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+  private val unremittableForeignIncomeModel = Seq(
+    UnremittableForeignIncomeItem(
+      countryCode = "DEU",
+      amountInForeignCurrency = Some(222.22),
+      amountTaxPaid = Some(333.33)
+    ),
+    UnremittableForeignIncomeItem(
+      countryCode = "FRA",
+      amountInForeignCurrency = Some(444.44),
+      amountTaxPaid = Some(555.55)
+    )
+  )
 
-  val amendSavingsRequest: AmendSavingsRequest = AmendSavingsRequest(
+  private val amendForeignRequestBody = AmendForeignRequestBody(
+    foreignEarnings = Some(foreignEarningsModel),
+    unremittableForeignIncome = Some(unremittableForeignIncomeModel)
+  )
+
+  val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear),
-    body = amendSavingsRequestBody
+    body = amendForeignRequestBody
   )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: AmendSavingsConnector = new AmendSavingsConnector(
+    val connector: AmendForeignConnector = new AmendForeignConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -59,19 +71,19 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "AmendSavingsConnector" when {
-    "amendSaving" must {
-      "return a 200 status for a success scenario" in new Test {
+  "AmendForeignConnector" when {
+    "amendForeign" must {
+      "return a 204 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/savings/$nino/$taxYear",
-            body = amendSavingsRequestBody,
+            url = s"$baseUrl/some-placeholder/foreign/$nino/$taxYear",
+            body = amendForeignRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
 
-        await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome
+        await(connector.amendForeign(amendForeignRequest)) shouldBe outcome
       }
     }
   }

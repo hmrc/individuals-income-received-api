@@ -25,7 +25,7 @@ import v1.connectors.AmendForeignConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.AmendSavingsRequest
+import v1.models.request.amendForeign.AmendForeignRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendForeignService @Inject()(connector: AmendForeignConnector) extends DesResponseMappingSupport with Logging {
 
-  def amendForeign(request: AmendSavingsRequest)(
+  def amendForeign(request: AmendForeignRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {

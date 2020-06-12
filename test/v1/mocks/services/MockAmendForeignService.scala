@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.AmendSavingsRequest
+import v1.models.request.amendForeign.AmendForeignRequest
 import v1.services.AmendForeignService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,9 +33,9 @@ trait MockAmendForeignService extends MockFactory {
 
   object MockAmendForeignService {
 
-    def amendForeign(requestData: AmendSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def amendForeign(requestData: AmendForeignRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendForeignService
-        .amendForeign(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .amendForeign(_: AmendForeignRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
     }
   }

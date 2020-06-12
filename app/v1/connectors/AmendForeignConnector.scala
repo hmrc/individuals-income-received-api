@@ -20,14 +20,14 @@ import config.AppConfig
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.savings.amend.AmendSavingsRequest
+import v1.models.request.amendForeign.AmendForeignRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendForeignConnector @Inject()(val http: HttpClient,
                                       val appConfig: AppConfig) extends BaseDesConnector {
 
-  def amendForeign(request: AmendSavingsRequest)(
+  def amendForeign(request: AmendForeignRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[Unit]] = {
 

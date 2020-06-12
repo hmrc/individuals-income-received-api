@@ -18,11 +18,11 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockAmendSavingsConnector
+import v1.mocks.connectors.{MockAmendForeignConnector, MockAmendSavingsConnector}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.amendForeign.{AmendForeignRequest, AmendForeignRequestBody, ForeignEarnings, UnremittableForeignIncomeItem}
 
 import scala.concurrent.Future
 
@@ -32,26 +32,40 @@ class AmendForeignServiceSpec extends ServiceSpec {
   private val taxYear = "2019"
   private val correlationId = "X-corr"
 
-  val foreignInterest: AmendForeignInterest = AmendForeignInterest(
-    amountBeforeTax = None,
-    countryCode = "FRA",
-    taxTakenOff = None,
-    specialWithholdingTax = None,
-    taxableAmount = 233.11,
-    foreignTaxCreditRelief = false
+  private val foreignEarningsModel = ForeignEarnings(
+    customerReference = Some("ref"),
+    earningsNotTaxableUK = Some(111.11)
   )
 
-  private val amendSavingsRequest = AmendSavingsRequest(
+  private val unremittableForeignIncomeModel = Seq(
+    UnremittableForeignIncomeItem(
+      countryCode = "DEU",
+      amountInForeignCurrency = Some(222.22),
+      amountTaxPaid = Some(333.33)
+    ),
+    UnremittableForeignIncomeItem(
+      countryCode = "FRA",
+      amountInForeignCurrency = Some(444.44),
+      amountTaxPaid = Some(555.55)
+    )
+  )
+
+  private val amendForeignRequestBody = AmendForeignRequestBody(
+    foreignEarnings = Some(foreignEarningsModel),
+    unremittableForeignIncome = Some(unremittableForeignIncomeModel)
+  )
+
+  val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear),
-    body = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+    body = amendForeignRequestBody
   )
 
-  trait Test extends MockAmendSavingsConnector {
+  trait Test extends MockAmendForeignConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: AmendSavingsService = new AmendSavingsService(
-      connector = mockAmendSavingsConnector
+    val service: AmendForeignService = new AmendForeignService(
+      connector = mockAmendForeignConnector
     )
   }
 
@@ -60,10 +74,10 @@ class AmendForeignServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
+        MockAmendForeignConnector.amendForeign(amendForeignRequest)
           .returns(Future.successful(outcome))
 
-        await(service.amendSaving(amendSavingsRequest)) shouldBe outcome
+        await(service.amendForeign(amendForeignRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -71,10 +85,10 @@ class AmendForeignServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
+            MockAmendForeignConnector.amendForeign(amendForeignRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendSaving(amendSavingsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(
