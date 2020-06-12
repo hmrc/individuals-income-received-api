@@ -6,3 +6,4 @@ DELETE     /insurance-policies/:nino/:taxYear               v1.controllers.Delet
 GET        /insurance-policies/:nino/:taxYear               v1.controllers.RetrieveInsurancePoliciesController.retrieveInsurancePolicies(nino: String, taxYear: String)
 
 DELETE     /foreign/:nino/:taxYear                          v1.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
+GET        /foreign/:nino/:taxYear                          v1.controllers.RetrieveForeignController.retrieveForeign(nino: String, taxYear: String)
