@@ -374,7 +374,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
               "/lifeAnnuity/0/taxPaid",
               "/voidedIsa/1/gainAmount",
               "/voidedIsa/1/taxPaid",
-              "/foreign/0/taxPaid",
+              "/foreign/0/taxPaid"
             ))
           )
         )
