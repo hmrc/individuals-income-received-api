@@ -23,15 +23,15 @@ class CustomerRefValidationSpec extends UnitSpec {
 
   "CustomerRefValidation" when {
     "validate" must {
-      "return an empty list for a valid a valid customerRef" in {
+      "return an empty list for a valid customerRef" in {
         CustomerRefValidation.validate(
           customerRef = "INPOLY123A"
         ) shouldBe (NoValidationErrors)
       }
 
-      "return a CustomerRefFormatError for an invalid event" in {
+      "return a CustomerRefFormatError for an invalid customerRef" in {
         CustomerRefValidation.validate(
-          customerRef = "This ref is more than 25 characters",
+          customerRef = "This ref is more than 25 characters"
         ) shouldBe List(CustomerRefFormatError)
       }
     }
