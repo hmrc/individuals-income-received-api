@@ -63,8 +63,7 @@ class AmendForeignValidator extends Validator[AmendForeignRawData] with ValueFor
       )},
       DecimalValueValidation.validateOptional(
         amount = foreignEarnings.earningsNotTaxableUK,
-        path = s"/foreignEarnings/earningsNotTaxableUK",
-        message = ZERO_MINIMUM_INCLUSIVE)
+        path = s"/foreignEarnings/earningsNotTaxableUK")
     ).flatten
   }
 
@@ -75,12 +74,10 @@ class AmendForeignValidator extends Validator[AmendForeignRawData] with ValueFor
       ),
       DecimalValueValidation.validateOptional(
         amount = unremittableForeignIncome.amountInForeignCurrency,
-        path = s"/unremittableForeignIncome/$arrayIndex/amountInForeignCurrency",
-        message = ZERO_MINIMUM_INCLUSIVE),
+        path = s"/unremittableForeignIncome/$arrayIndex/amountInForeignCurrency"),
       DecimalValueValidation.validateOptional(
         amount = unremittableForeignIncome.amountTaxPaid,
-        path = s"/unremittableForeignIncome/$arrayIndex/amountTaxPaid",
-        message = ZERO_MINIMUM_INCLUSIVE)
+        path = s"/unremittableForeignIncome/$arrayIndex/amountTaxPaid")
     ).flatten
   }
 
