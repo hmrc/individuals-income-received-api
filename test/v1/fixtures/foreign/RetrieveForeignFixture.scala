@@ -16,8 +16,8 @@
 
 package v1.fixtures.foreign
 
-import play.api.libs.json.{JsValue, Json}
-import v1.models.response.retrieveForeign.{ForeignEarnings, UnremittableForeignIncome}
+import play.api.libs.json.{JsObject, JsValue, Json}
+import v1.models.response.retrieveForeign.{ForeignEarnings, RetrieveForeignResponse, UnremittableForeignIncome}
 
 object RetrieveForeignFixture {
 
@@ -77,5 +77,57 @@ object RetrieveForeignFixture {
       |    "countryCode": "IND"
       |}
     """.stripMargin
+  )
+
+  val fullRetrieveForeignResponseJson: JsValue = Json.parse(
+    """
+      |{
+      |   "foreignEarnings": {
+      |     "customerReference": "FOREIGNINCME123A",
+      |     "earningsNotTaxableUK": 1999.99
+      |   },
+      |   "unremittableForeignIncome": [
+      |     {
+      |       "countryCode": "FRA",
+      |       "amountInForeignCurrency": 1999.99,
+      |       "amountTaxPaid": 1999.99
+      |     },
+      |     {
+      |       "countryCode": "IND",
+      |       "amountInForeignCurrency": 2999.99,
+      |       "amountTaxPaid": 2999.99
+      |     }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveForeignResponseJson.as[JsObject] ++ Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+       |         "method":"PUT",
+       |         "rel":"amend-foreign-income"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+       |         "method":"GET",
+       |         "rel":"self"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+       |         "method":"DELETE",
+       |         "rel":"delete-foreign-income"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  ).as[JsObject]
+
+  val fullRetrieveResponseBodyModel: RetrieveForeignResponse = RetrieveForeignResponse(
+    Some(fullForeignEarningsModel),
+    Some(Seq(fullUnremittableForeignIncomeModel1, fullUnremittableForeignIncomeModel2))
   )
 }

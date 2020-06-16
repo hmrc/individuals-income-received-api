@@ -23,7 +23,7 @@ class EventValidationSpec extends UnitSpec {
 
   "EventValidation" when {
     "validate" must {
-      "return an empty list for a valid a valid event" in {
+      "return an empty list for a valid event" in {
         EventValidation.validate(
           event = "Death of spouse",
           path = "/path"

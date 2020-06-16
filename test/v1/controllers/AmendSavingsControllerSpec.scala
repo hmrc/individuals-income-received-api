@@ -158,7 +158,7 @@ class AmendSavingsControllerSpec
   )
 
   "AmendSavingsController" should {
-    "return NO_content" when {
+    "return OK" when {
       "happy path" in new Test {
 
         MockAmendSavingsRequestParser
