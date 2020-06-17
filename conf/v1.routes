@@ -5,5 +5,6 @@ GET        /savings/:nino/:taxYear                          v1.controllers.Retri
 DELETE     /insurance-policies/:nino/:taxYear               v1.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
 GET        /insurance-policies/:nino/:taxYear               v1.controllers.RetrieveInsurancePoliciesController.retrieveInsurancePolicies(nino: String, taxYear: String)
 
+PUT        /foreign/:nino/:taxYear                          v1.controllers.AmendForeignController.amendForeign(nino: String, taxYear: String)
 DELETE     /foreign/:nino/:taxYear                          v1.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
 GET        /foreign/:nino/:taxYear                          v1.controllers.RetrieveForeignController.retrieveForeign(nino: String, taxYear: String)
