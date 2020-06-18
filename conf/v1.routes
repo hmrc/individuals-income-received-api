@@ -9,3 +9,5 @@ PUT        /insurance-policies/:nino/:taxYear               v1.controllers.Amend
 PUT        /foreign/:nino/:taxYear                          v1.controllers.AmendForeignController.amendForeign(nino: String, taxYear: String)
 DELETE     /foreign/:nino/:taxYear                          v1.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
 GET        /foreign/:nino/:taxYear                          v1.controllers.RetrieveForeignController.retrieveForeign(nino: String, taxYear: String)
+
+DELETE     /pensions/:nino/:taxYear                          v1.controllers.DeletePensionsController.deletePensions(nino: String, taxYear: String)
