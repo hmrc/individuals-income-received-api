@@ -32,7 +32,12 @@ trait HateoasLinks {
   private def foreignUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/foreign/$nino/$taxYear"
 
+  private def pensionsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/pensions/$nino/$taxYear"
+
   //API resource links
+
+  //Savings Income
   def amendSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = savingsUri(appConfig, nino, taxYear),
@@ -54,6 +59,7 @@ trait HateoasLinks {
       rel = DELETE_SAVINGS_INCOME
     )
 
+  //Insurance Policies Income
   def amendInsurancePolicies(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = insurancePoliciesUri(appConfig, nino, taxYear),
@@ -75,6 +81,7 @@ trait HateoasLinks {
       rel = DELETE_INSURANCE_POLICIES_INCOME
     )
 
+  //Foreign Income
   def amendForeign(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = foreignUri(appConfig, nino, taxYear),
@@ -94,5 +101,27 @@ trait HateoasLinks {
       href = foreignUri(appConfig, nino, taxYear),
       method = DELETE,
       rel = DELETE_FOREIGN_INCOME
+    )
+
+  //Pensions Income
+  def amendPensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = pensionsUri(appConfig, nino, taxYear),
+      method = PUT,
+      rel = AMEND_PENSIONS_INCOME
+    )
+
+  def retrievePensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = pensionsUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def deletePensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = pensionsUri(appConfig, nino, taxYear),
+      method = DELETE,
+      rel = DELETE_PENSIONS_INCOME
     )
 }
