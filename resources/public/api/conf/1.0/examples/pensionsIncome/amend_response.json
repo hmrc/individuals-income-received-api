@@ -2,12 +2,12 @@
   "links":[
     {
       "href":"/individuals/income-received/pensions/{nino}/{taxYear}",
-      "rel":"amend-pensions-income",
+      "rel":"self",
       "method":"PUT"
     },
     {
       "href":"/individuals/income-received/pensions/{nino}/{taxYear}",
-      "rel":"self",
+      "rel":"retrieve-pensions-income",
       "method":"GET"
     },
     {

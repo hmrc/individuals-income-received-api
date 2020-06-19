@@ -130,8 +130,9 @@
             "type": "string",
             "enum": [
               "self",
-              "amend-pensions-income",
-              "delete-pensions-income"
+              "retrieve-pensions-income",
+              "delete-pensions-income",
+              "amend-pensions-income"
             ]
           },
           "method": {
