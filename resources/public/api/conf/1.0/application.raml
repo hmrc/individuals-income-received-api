@@ -85,7 +85,7 @@ uses:
         delete: !include savings/delete.raml
   /pensions:
     (annotations.group):
-       name: Pensions Income
+       name: Savings Income
        description: Resources relating to an individual's pensions income
     /{nino}:
       uriParameters:
@@ -98,4 +98,5 @@ uses:
           taxYear:
             description: 'The tax year the data applies to.<br>The start year and end year must not span two tax years. No gaps are allowed, for example, 2018-20 is not valid.'
             example: "2017-18"
+        put: !include pensionsIncome/amend.raml
         delete: !include pensions/delete.raml

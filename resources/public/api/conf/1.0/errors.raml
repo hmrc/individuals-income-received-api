@@ -135,3 +135,47 @@ traits:
                 description: The format of policy event is invalid
                 value:
                   code: FORMAT_EVENT
+  formatQOPsRef:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatEvent:
+                description: The format of QOPS reference number is not valid.
+                value:
+                  code: FORMAT_QOPS_REF
+  formatDoubleTaxationArticle:
+      responses:
+        400:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                formatEvent:
+                  description: The format of double taxation article is not valid.
+                  value:
+                    code: FORMAT_DOUBLE_TAXATION_ARTICLE
+  formatDoubleTaxationTreaty:
+        responses:
+          400:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  formatEvent:
+                    description: The format of double taxation treaty is not valid.
+                    value:
+                      code: FORMAT_DOUBLE_TAXATION_TREATY
+  formatSF74Ref:
+        responses:
+          400:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  formatEvent:
+                    description: The format of SF74 reference is not valid.
+                    value:
+                      code: FORMAT_SF74_REF

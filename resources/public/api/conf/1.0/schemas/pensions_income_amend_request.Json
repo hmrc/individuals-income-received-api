@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Amend Pensions Income Response",
+  "description": "Amend Pensions Income Response",
+  "type": "object",
+  "properties": {
+    "foreignPensions": {"$ref": "pensions_income_definitions.json#/definitions/foreignPensions"},
+    "overseasPensionContributions": {"$ref": "pensions_income_definitions.json#/definitions/overseasPensionContributions"}
+  }
+}
