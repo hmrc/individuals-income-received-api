@@ -6,9 +6,9 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Delete Insurance Policies Income [test only]
-description: "This endpoint allows a developer to delete insurance policies and financial income for less common types of income: Life Insurance Policies, Life Annuity Contracts, Capital Redemption Policies, Voided ISAs, Foreign Policies. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../scenarios/insurancePolicies/delete.md
+displayName: Delete Pensions Income [test only]
+description: "This endpoint allows the developer to delete previously populated foreign pensions and overseas pension contributions."
+(annotations.sandboxData): !include ../../scenarios/pensions/delete.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:

@@ -4,6 +4,6 @@
   "description":"Amend Pensions Income Response",
   "type": "object",
   "properties": {
-    "links": {"$ref": "pensions_income_definitions.json#/definitions/links"}
+    "links": {"$ref": "pensions_definitions.json#/definitions/links"}
   }
 }

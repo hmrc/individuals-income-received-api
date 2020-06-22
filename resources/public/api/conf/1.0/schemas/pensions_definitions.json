@@ -65,7 +65,8 @@
           "customerReference": {
             "type": "string",
             "description": "A reference the user supplies to identify the record.",
-            "example": "PENSIONINCOME245"
+            "example": "PENSIONINCOME245",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
           },
           "exemptEmployersPensionContribs": {
             "type": "number",
@@ -78,7 +79,8 @@
           "migrantMemReliefQopsRefNo": {
             "type": "string",
             "description": "The qualifying overseas pension scheme reference number for migrant member relief.",
-            "example": "QOPS000000"
+            "example": "QOPS000000",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
           },
           "dblTaxationRelief": {
             "type": "number",
@@ -96,17 +98,20 @@
           "dblTaxationArticle": {
             "type": "string",
             "description": "The taxation article reference number.",
-            "example": "AB3211-1"
+            "example": "AB3211-1",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
           },
           "dblTaxationTreaty": {
             "type": "string",
             "description": "The name of the treaty that has the right to collect tax.",
-            "example": "MUNICH"
+            "example": "MUNICH",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
           },
           "sf74reference": {
             "type": "string",
             "description": "The SF74 reference number for transitional corresponding relief claims.",
-            "example": "SF74-123456"
+            "example": "SF74-123456",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
           }
         },
         "required": [
@@ -130,9 +135,8 @@
             "type": "string",
             "enum": [
               "self",
-              "retrieve-pensions-income",
-              "delete-pensions-income",
-              "amend-pensions-income"
+              "amend-pensions-income",
+              "delete-pensions-income"
             ]
           },
           "method": {
