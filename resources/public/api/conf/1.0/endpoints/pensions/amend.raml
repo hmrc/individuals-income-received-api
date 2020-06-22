@@ -1,0 +1,40 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.ruleTaxYearRangeInvalid
+  - errors.formatCountryCode
+  - errors.ruleCountryCode
+  - errors.formatValue
+  - errors.formatCustomerRef
+  - errors.formatQOPsRef
+  - errors.formatDoubleTaxationArticle
+  - errors.formatDoubleTaxationTreaty
+  - errors.formatSF74Ref
+  - errors.incorrectOrEmptyBody
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+displayName: Amend Pensions Income [test only]
+description: This endpoint allows the developer to amend foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided.
+(annotations.sandboxData): !include ../../scenarios/pensions/amend.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+   application/json:
+      type: !include ../../schemas/pensions_amend_request.Json
+      examples:
+        full_amendment:
+          description: Full Pensions Income Amendment
+          value: !include ../../examples/pensions/amend_request.json
+responses:
+  200:
+    body:
+      application/json:
+        type: !include ../../schemas/pensions_amend_response.json
+        example: !include ../../examples/pensions/amend_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.

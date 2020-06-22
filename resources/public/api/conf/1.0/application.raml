@@ -61,6 +61,8 @@ uses:
        description: Resources relating to an individual's pensions income
     /{nino}:
       /{taxYear}:
+        put: !include endpoints/pensions/amend.raml
+        get: !include endpoints/pensions/retrieve.raml
         delete: !include endpoints/pensions/delete.raml
   /other:
     (annotations.group):
