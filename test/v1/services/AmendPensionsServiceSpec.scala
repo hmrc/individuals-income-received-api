@@ -51,7 +51,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
     )
   )
 
-  val overseasPensionContributionsModel = Seq(
+  private val overseasPensionContributionsModel = Seq(
     AmendOverseasPensionContributionsItem(
       customerReference = Some("PENSIONINCOME555"),
       exemptEmployersPensionContribs = 300.33,
@@ -74,7 +74,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
     )
   )
 
-  private val amendPensionsRequest = AmendPensionsRequest(
+  val amendPensionsRequest = AmendPensionsRequest(
       nino = Nino(nino),
       taxYear = DesTaxYear(taxYear),
       body = AmendPensionsRequestBody(

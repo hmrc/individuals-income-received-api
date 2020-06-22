@@ -50,7 +50,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
     )
   )
 
-  val overseasPensionContributionsModel = Seq(
+  private val overseasPensionContributionsModel = Seq(
     AmendOverseasPensionContributionsItem(
       customerReference = Some("PENSIONINCOME555"),
       exemptEmployersPensionContribs = 300.33,
@@ -73,7 +73,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
     )
   )
 
-  val amendPensionsRequestBody: AmendPensionsRequestBody = AmendPensionsRequestBody(
+  private val amendPensionsRequestBody: AmendPensionsRequestBody = AmendPensionsRequestBody(
     foreignPensions = Some(foreignPensionsModel),
     overseasPensionContributions = Some(overseasPensionContributionsModel)
   )
