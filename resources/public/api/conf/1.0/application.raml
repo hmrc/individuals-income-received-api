@@ -64,6 +64,15 @@ uses:
         put: !include endpoints/pensions/amend.raml
         get: !include endpoints/pensions/retrieve.raml
         delete: !include endpoints/pensions/delete.raml
+  /other:
+    (annotations.group):
+       name: Other Income
+       description: Resources relating to an individual's other income
+    /{nino}:
+      /{taxYear}:
+        put: !include endpoints/other/amend.raml
+        get: !include endpoints/other/retrieve.raml
+        delete: !include endpoints/other/delete.raml
   /savings:
     (annotations.group):
        name: Savings Income
