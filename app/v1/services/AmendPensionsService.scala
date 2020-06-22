@@ -51,7 +51,7 @@ class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends 
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "NOT_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }
 
