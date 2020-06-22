@@ -51,6 +51,6 @@ class AmendForeignService @Inject()(connector: AmendForeignConnector) extends De
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "NOT_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }

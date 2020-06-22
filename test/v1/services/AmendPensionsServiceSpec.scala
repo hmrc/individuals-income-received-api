@@ -18,12 +18,11 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.fixtures.pensions.AmendPensionsFixture._
 import v1.mocks.connectors.MockAmendPensionsConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendPensions.{AmendPensionsRequest, AmendPensionsRequestBody}
+import v1.models.request.amendPensions._
 
 import scala.concurrent.Future
 
@@ -33,12 +32,54 @@ class AmendPensionsServiceSpec extends ServiceSpec {
   private val taxYear = "2019"
   private val correlationId = "X-corr"
 
+  private val foreignPensionsModel = Seq(
+    AmendForeignPensionsItem(
+      countryCode = "DEU",
+      amountBeforeTax = Some(100.23),
+      taxTakenOff = Some(1.23),
+      specialWithholdingTax = Some(2.23),
+      foreignTaxCreditRelief = false,
+      taxableAmount = 3.23
+    ),
+    AmendForeignPensionsItem(
+      countryCode = "FRA",
+      amountBeforeTax = Some(200.23),
+      taxTakenOff = Some(3.21),
+      specialWithholdingTax = Some(4.32),
+      foreignTaxCreditRelief = true,
+      taxableAmount = 5.55
+    )
+  )
+
+  val overseasPensionContributionsModel = Seq(
+    AmendOverseasPensionContributionsItem(
+      customerReference = Some("PENSIONINCOME555"),
+      exemptEmployersPensionContribs = 300.33,
+      migrantMemReliefQopsRefNo = Some("QOPS000001"),
+      dblTaxationRelief = Some(1.23),
+      dblTaxationCountryCode = Some("ENG"),
+      dblTaxationArticle = Some("AB1123-1"),
+      dblTaxationTreaty = Some("Treaty"),
+      sf74reference = Some("SF74-654321")
+    ),
+    AmendOverseasPensionContributionsItem(
+      customerReference = Some("PENSIONINCOME245"),
+      exemptEmployersPensionContribs = 200.23,
+      migrantMemReliefQopsRefNo = Some("QOPS000000"),
+      dblTaxationRelief = Some(4.23),
+      dblTaxationCountryCode = Some("FRA"),
+      dblTaxationArticle = Some("AB3211-1"),
+      dblTaxationTreaty = Some("Treaty"),
+      sf74reference = Some("SF74-123456")
+    )
+  )
+
   private val amendPensionsRequest = AmendPensionsRequest(
       nino = Nino(nino),
       taxYear = DesTaxYear(taxYear),
       body = AmendPensionsRequestBody(
-        foreignPensions = Some(Seq(foreignPensionsModel)),
-        overseasPensionContributions = Some(Seq(overseasPensionContributionsModel))
+        foreignPensions = Some(foreignPensionsModel),
+        overseasPensionContributions = Some(overseasPensionContributionsModel)
       )
   )
 
