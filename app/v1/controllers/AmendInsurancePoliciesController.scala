@@ -27,7 +27,7 @@ import utils.Logging
 import v1.controllers.requestParsers.AmendInsurancePoliciesRequestParser
 import v1.hateoas.AmendHateoasBody
 import v1.models.errors._
-import v1.models.request.insurancePolicies.amend.AmendRawData
+import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
 import v1.services.{AmendInsurancePoliciesService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,7 +49,7 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
   def amendInsurancePolicies(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
 
-      val rawData: AmendRawData = AmendRawData(
+      val rawData: AmendInsurancePoliciesRawData = AmendInsurancePoliciesRawData(
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body)

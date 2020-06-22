@@ -19,7 +19,6 @@ package v1.models.request.amendSavings
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
-import v1.models.response.retrieveSavings.{ForeignInterestItem, RetrieveSavingsResponse, Securities}
 
 case class AmendSavingsRequestBody(securities: Option[AmendSecurities], foreignInterest: Option[Seq[AmendForeignInterestItem]])
 

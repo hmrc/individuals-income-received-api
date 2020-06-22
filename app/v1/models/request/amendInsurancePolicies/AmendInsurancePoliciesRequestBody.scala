@@ -19,7 +19,6 @@ package v1.models.request.amendInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
-import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignPoliciesItem, RetrieveInsurancePoliciesResponse, VoidedIsaPoliciesItem}
 
 case class AmendInsurancePoliciesRequestBody(lifeInsurance: Option[Seq[AmendCommonInsurancePoliciesItem]],
                                              capitalRedemption: Option[Seq[AmendCommonInsurancePoliciesItem]],
