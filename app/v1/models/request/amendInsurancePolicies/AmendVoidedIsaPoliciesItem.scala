@@ -19,22 +19,22 @@ package v1.models.request.amendInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendVoidedIsaItem(customerReference: String,
-                              event: Option[String],
-                              gainAmount: Option[BigDecimal],
-                              taxPaidAmount: Option[BigDecimal],
-                              yearsHeld: Option[Int],
-                              yearsHeldSinceLastGain: Option[Int])
+case class AmendVoidedIsaPoliciesItem(customerReference: String,
+                                      event: Option[String],
+                                      gainAmount: Option[BigDecimal],
+                                      taxPaidAmount: Option[BigDecimal],
+                                      yearsHeld: Option[Int],
+                                      yearsHeldSinceLastGain: Option[Int])
 
-object AmendVoidedIsaItem {
-  implicit val reads: Reads[AmendVoidedIsaItem] = Json.reads[AmendVoidedIsaItem]
+object AmendVoidedIsaPoliciesItem {
+  implicit val reads: Reads[AmendVoidedIsaPoliciesItem] = Json.reads[AmendVoidedIsaPoliciesItem]
 
-  implicit val writes: OWrites[AmendVoidedIsaItem] = (
+  implicit val writes: OWrites[AmendVoidedIsaPoliciesItem] = (
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "event").writeNullable[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
       (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int]
-    ) (unlift(AmendVoidedIsaItem.unapply))
+    ) (unlift(AmendVoidedIsaPoliciesItem.unapply))
 }

@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignItem, AmendInsurancePoliciesRequestBody, AmendInsurancePoliciesRequest, AmendVoidedIsaItem}
+import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRequestBody, AmendInsurancePoliciesRequest, AmendVoidedIsaPoliciesItem}
 
 import scala.concurrent.Future
 
@@ -30,7 +30,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2019"
 
-  val voidedIsaModel = AmendVoidedIsaItem(
+  val voidedIsaModel = AmendVoidedIsaPoliciesItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(2000.99),
@@ -59,7 +59,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
     deficiencyRelief = Some(5000.99)
   )
 
-  val foreignModel = AmendForeignItem(
+  val foreignModel = AmendForeignPoliciesItem(
     customerReference = "INPOLY123A",
     gainAmount = Some(2000.99),
     taxPaidAmount = Some(5000.99),

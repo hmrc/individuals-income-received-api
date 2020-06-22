@@ -19,24 +19,24 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class VoidedIsaItem(customerReference: String,
-                         event: Option[String],
-                         gainAmount: Option[BigDecimal],
-                         taxPaidAmount: Option[BigDecimal],
-                         yearsHeld: Option[Int],
-                         yearsHeldSinceLastGain: Option[Int])
+case class VoidedIsaPoliciesItem(customerReference: String,
+                                 event: Option[String],
+                                 gainAmount: Option[BigDecimal],
+                                 taxPaidAmount: Option[BigDecimal],
+                                 yearsHeld: Option[Int],
+                                 yearsHeldSinceLastGain: Option[Int])
 
-object VoidedIsaItem {
-  implicit val reads: Reads[VoidedIsaItem] = (
+object VoidedIsaPoliciesItem {
+  implicit val reads: Reads[VoidedIsaPoliciesItem] = (
     (JsPath \ "customerReference").read[String] and
       (JsPath \ "event").readNullable[String] and
       (JsPath \ "gainAmount").readNullable[BigDecimal] and
       (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int]
-    ) (VoidedIsaItem.apply _)
+    ) (VoidedIsaPoliciesItem.apply _)
 
-  implicit val writes: OWrites[VoidedIsaItem] = Json.writes[VoidedIsaItem]
+  implicit val writes: OWrites[VoidedIsaPoliciesItem] = Json.writes[VoidedIsaPoliciesItem]
 }
 
 

@@ -19,20 +19,20 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class ForeignItem(customerReference: String,
-                       gainAmount: Option[BigDecimal],
-                       taxPaidAmount: Option[BigDecimal],
-                       yearsHeld: Option[Int])
+case class ForeignPoliciesItem(customerReference: String,
+                               gainAmount: Option[BigDecimal],
+                               taxPaidAmount: Option[BigDecimal],
+                               yearsHeld: Option[Int])
 
-object ForeignItem {
-  implicit val reads: Reads[ForeignItem] = (
+object ForeignPoliciesItem {
+  implicit val reads: Reads[ForeignPoliciesItem] = (
     (JsPath \ "customerReference").read[String] and
       (JsPath \ "gainAmount").readNullable[BigDecimal] and
       (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int]
-    ) (ForeignItem.apply _)
+    ) (ForeignPoliciesItem.apply _)
 
-  implicit val writes: OWrites[ForeignItem] = Json.writes[ForeignItem]
+  implicit val writes: OWrites[ForeignPoliciesItem] = Json.writes[ForeignPoliciesItem]
 }
 
 

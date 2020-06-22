@@ -19,7 +19,7 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class VoidedIsaItemSpec extends UnitSpec {
+class VoidedIsaPoliciesItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -34,7 +34,7 @@ class VoidedIsaItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = VoidedIsaItem(
+  private val model = VoidedIsaPoliciesItem(
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
@@ -46,14 +46,14 @@ class VoidedIsaItemSpec extends UnitSpec {
   "VoidedIsaItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[VoidedIsaItem] shouldBe model
+        json.as[VoidedIsaPoliciesItem] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[VoidedIsaItem] shouldBe a[JsError]
+        invalidJson.validate[VoidedIsaPoliciesItem] shouldBe a[JsError]
       }
     }
 

@@ -19,7 +19,7 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class ForeignItemSpec extends UnitSpec {
+class ForeignPoliciesItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -32,7 +32,7 @@ class ForeignItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = ForeignItem(
+  private val model = ForeignPoliciesItem(
     customerReference = "INPOLY123A",
     gainAmount = Some(1.23),
     taxPaidAmount = Some(102.22),
@@ -42,14 +42,14 @@ class ForeignItemSpec extends UnitSpec {
   "ForeignItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[ForeignItem] shouldBe model
+        json.as[ForeignPoliciesItem] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[ForeignItem] shouldBe a[JsError]
+        invalidJson.validate[ForeignPoliciesItem] shouldBe a[JsError]
       }
     }
 

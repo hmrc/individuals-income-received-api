@@ -106,7 +106,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     deficiencyRelief = Some(1.23)
   )
 
-  private val voidedIsaItemModel = VoidedIsaItem(
+  private val voidedIsaItemModel = VoidedIsaPoliciesItem(
     customerReference = "INPOLY123D",
     event = None,
     gainAmount = Some(1.26),
@@ -115,7 +115,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     yearsHeldSinceLastGain = Some(4)
   )
 
-  private val foreignItemModel = ForeignItem(
+  private val foreignItemModel = ForeignPoliciesItem(
     customerReference = "INPOLY123E",
     gainAmount = Some(1.27),
     taxPaidAmount = Some(1.37),

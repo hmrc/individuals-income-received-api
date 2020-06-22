@@ -32,7 +32,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_INSURANCE_POLICIES_INCOME, DELETE_INSURANCE_POLICIES_INCOME, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignItem, RetrieveInsurancePoliciesHateoasData, RetrieveInsurancePoliciesResponse, VoidedIsaItem}
+import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignPoliciesItem, RetrieveInsurancePoliciesHateoasData, RetrieveInsurancePoliciesResponse, VoidedIsaPoliciesItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -110,7 +110,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
     deficiencyRelief = Some(1.23)
   )
 
-  private val voidedIsaItemModel = VoidedIsaItem(
+  private val voidedIsaItemModel = VoidedIsaPoliciesItem(
     customerReference = "INPOLY123D",
     event = Some("Death of spouse"),
     gainAmount = Some(1.26),
@@ -119,7 +119,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
     yearsHeldSinceLastGain = Some(4)
   )
 
-  private val foreignItemModel = ForeignItem(
+  private val foreignItemModel = ForeignPoliciesItem(
     customerReference = "INPOLY123E",
     gainAmount = Some(1.27),
     taxPaidAmount = Some(1.37),

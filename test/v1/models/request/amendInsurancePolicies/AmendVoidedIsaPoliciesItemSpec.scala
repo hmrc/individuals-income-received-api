@@ -19,37 +19,41 @@ package v1.models.request.amendInsurancePolicies
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendForeignItemSpec extends UnitSpec {
+class AmendVoidedIsaPoliciesItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
       |   "customerReference": "INPOLY123A",
+      |   "event": "Death of spouse",
       |   "gainAmount": 1.23,
-      |   "taxPaidAmount": 102.22,
-      |   "yearsHeld": 2
+      |   "taxPaidAmount": 101.11,
+      |   "yearsHeld": 2,
+      |   "yearsHeldSinceLastGain": 1
       |}
     """.stripMargin
   )
 
-  private val model = AmendForeignItem(
+  private val model = AmendVoidedIsaPoliciesItem(
     customerReference = "INPOLY123A",
+    event = Some("Death of spouse"),
     gainAmount = Some(1.23),
-    taxPaidAmount = Some(102.22),
-    yearsHeld = Some(2)
+    taxPaidAmount = Some(101.11),
+    yearsHeld = Some(2),
+    yearsHeldSinceLastGain = Some(1)
   )
 
-  "ForeignItem" when {
+  "VoidedIsaItem" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        json.as[AmendForeignItem] shouldBe model
+        json.as[AmendVoidedIsaPoliciesItem] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendForeignItem] shouldBe a[JsError]
+        invalidJson.validate[AmendVoidedIsaPoliciesItem] shouldBe a[JsError]
       }
     }
 

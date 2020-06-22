@@ -19,18 +19,18 @@ package v1.models.request.amendInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendForeignItem(customerReference: String,
-                            gainAmount: Option[BigDecimal],
-                            taxPaidAmount: Option[BigDecimal],
-                            yearsHeld: Option[Int])
+case class AmendForeignPoliciesItem(customerReference: String,
+                                    gainAmount: Option[BigDecimal],
+                                    taxPaidAmount: Option[BigDecimal],
+                                    yearsHeld: Option[Int])
 
-object AmendForeignItem {
-  implicit val reads: Reads[AmendForeignItem] = Json.reads[AmendForeignItem]
+object AmendForeignPoliciesItem {
+  implicit val reads: Reads[AmendForeignPoliciesItem] = Json.reads[AmendForeignPoliciesItem]
 
-  implicit val writes: OWrites[AmendForeignItem] = (
+  implicit val writes: OWrites[AmendForeignPoliciesItem] = (
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
       (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int]
-    ) (unlift(AmendForeignItem.unapply))
+    ) (unlift(AmendForeignPoliciesItem.unapply))
 }

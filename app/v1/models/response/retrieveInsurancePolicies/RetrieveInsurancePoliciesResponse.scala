@@ -26,8 +26,8 @@ import v1.models.hateoas.{HateoasData, Link}
 case class RetrieveInsurancePoliciesResponse(lifeInsurance: Option[Seq[CommonInsurancePoliciesItem]],
                                              capitalRedemption: Option[Seq[CommonInsurancePoliciesItem]],
                                              lifeAnnuity: Option[Seq[CommonInsurancePoliciesItem]],
-                                             voidedIsa: Option[Seq[VoidedIsaItem]],
-                                             foreign: Option[Seq[ForeignItem]])
+                                             voidedIsa: Option[Seq[VoidedIsaPoliciesItem]],
+                                             foreign: Option[Seq[ForeignPoliciesItem]])
 
 object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
   val empty: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(None, None, None, None, None)
@@ -36,8 +36,8 @@ object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
     (JsPath \ "lifeInsurance").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "capitalRedemption").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "lifeAnnuity").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
-      (JsPath \ "voidedIsa").readNullable[Seq[VoidedIsaItem]].mapEmptySeqToNone and
-      (JsPath \ "foreign").readNullable[Seq[ForeignItem]].mapEmptySeqToNone
+      (JsPath \ "voidedIsa").readNullable[Seq[VoidedIsaPoliciesItem]].mapEmptySeqToNone and
+      (JsPath \ "foreign").readNullable[Seq[ForeignPoliciesItem]].mapEmptySeqToNone
     ) (RetrieveInsurancePoliciesResponse.apply _)
 
   implicit val writes: OWrites[RetrieveInsurancePoliciesResponse] = Json.writes[RetrieveInsurancePoliciesResponse]

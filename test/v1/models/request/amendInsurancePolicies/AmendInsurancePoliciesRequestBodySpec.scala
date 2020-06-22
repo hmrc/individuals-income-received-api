@@ -106,7 +106,7 @@ class AmendInsurancePoliciesRequestBodySpec extends UnitSpec {
     deficiencyRelief = Some(1.23)
   )
 
-  private val voidedIsaItemModel = AmendVoidedIsaItem(
+  private val voidedIsaItemModel = AmendVoidedIsaPoliciesItem(
     customerReference = "INPOLY123D",
     event = None,
     gainAmount = Some(1.26),
@@ -115,7 +115,7 @@ class AmendInsurancePoliciesRequestBodySpec extends UnitSpec {
     yearsHeldSinceLastGain = Some(4)
   )
 
-  private val foreignItemModel = AmendForeignItem(
+  private val foreignItemModel = AmendForeignPoliciesItem(
     customerReference = "INPOLY123E",
     gainAmount = Some(1.27),
     taxPaidAmount = Some(1.37),
