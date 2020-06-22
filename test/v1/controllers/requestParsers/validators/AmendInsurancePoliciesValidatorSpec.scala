@@ -149,13 +149,85 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     """.stripMargin
   )
 
-  private val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
-    """
+  private val invalidCustomerRefARequestBodyJson: JsValue = Json.parse(
+    s"""
       |{
       |   "capitalRedemption":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "${"a"*91}",
       |           "event": "Death of spouse",
+      |           "gainAmount": 2000.99,
+      |           "taxPaid": 5000.99,
+      |           "yearsHeld": 15,
+      |           "yearsHeldSinceLastGain": 12,
+      |           "deficiencyRelief": 5000.99
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val invalidCustomerRefBRequestBodyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |   "capitalRedemption":[
+       |       {
+       |           "customerReference": "",
+       |           "event": "Death of spouse",
+       |           "gainAmount": 2000.99,
+       |           "taxPaid": 5000.99,
+       |           "yearsHeld": 15,
+       |           "yearsHeldSinceLastGain": 12,
+       |           "deficiencyRelief": 5000.99
+       |       }
+       |   ]
+       |}
+    """.stripMargin
+  )
+
+  private val validCustomerRefARequestBodyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |   "capitalRedemption":[
+       |       {
+       |           "customerReference": "${"a"*90}",
+       |           "event": "Death of spouse",
+       |           "gainAmount": 2000.99,
+       |           "taxPaid": 5000.99,
+       |           "yearsHeld": 15,
+       |           "yearsHeldSinceLastGain": 12,
+       |           "deficiencyRelief": 5000.99
+       |       }
+       |   ]
+       |}
+    """.stripMargin
+  )
+
+  private val validCustomerRefBRequestBodyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |   "capitalRedemption":[
+       |       {
+       |           "customerReference": "a",
+       |           "event": "Death of spouse",
+       |           "gainAmount": 2000.99,
+       |           "taxPaid": 5000.99,
+       |           "yearsHeld": 15,
+       |           "yearsHeldSinceLastGain": 12,
+       |           "deficiencyRelief": 5000.99
+       |       }
+       |   ]
+       |}
+    """.stripMargin
+  )
+
+  private val validEventRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |   "lifeAnnuity":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "event": "This event string is 76 characters long --------------------------------- 76",
       |           "gainAmount": 2000.99,
       |           "taxPaid": 5000.99,
       |           "yearsHeld": 15,
@@ -173,7 +245,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |   "lifeAnnuity":[
       |       {
       |           "customerReference": "INPOLY123A",
-      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "event": "This event string is over 90 characters long ------------------------------------------------------------------------------------------------",
       |           "gainAmount": 2000.99,
       |           "taxPaid": 5000.99,
       |           "yearsHeld": 15,
@@ -272,11 +344,11 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   )
 
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-    """
+    s"""
       |{
       |   "lifeInsurance":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "${"This ref is more than 90 characters"*5}",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.999,
       |           "taxPaid": 5000.999,
@@ -286,7 +358,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
-      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "event": "${"This event string is over 90 characters long" * 10}",
       |           "gainAmount": 2000.99,
       |           "taxPaid": 5000.99,
       |           "yearsHeld": 15,
@@ -296,7 +368,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |   ],
       |   "capitalRedemption":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "${"This ref is more than 90 characters"*5}",
       |           "event": "Death of spouse",
       |           "gainAmount": 3000.999,
       |           "taxPaid": 5000.99,
@@ -325,8 +397,8 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "deficiencyRelief": 5000.999
       |       },
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
-      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "customerReference": "${"This ref is more than 90 characters"*5}",
+      |           "event": "${"This event string is over 90 characters long" * 10}",
       |           "gainAmount": 5000.99,
       |           "taxPaid": 5000.99,
       |           "yearsHeld": 15,
@@ -344,7 +416,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "yearsHeldSinceLastGain": 120
       |       },
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "${"This ref is more than 90 characters"*5}",
       |           "event": "Death of spouse",
       |           "gainAmount": 5000.999,
       |           "taxPaid": 5000.999,
@@ -354,7 +426,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |   ],
       |   "foreign":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "${"This ref is more than 90 characters"*5}",
       |           "gainAmount": 5000.99,
       |           "taxPaid": 5000.999,
       |           "yearsHeld": 15
@@ -371,10 +443,14 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   )
 
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val validCustomerRefARawRequestBody = AnyContentAsJson(validCustomerRefARequestBodyJson)
+  private val validCustomerRefBRawRequestBody = AnyContentAsJson(validCustomerRefBRequestBodyJson)
+  private val validEventRawRequestBody = AnyContentAsJson(validEventRequestBodyJson)
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
+  private val invalidCustomerRefARawRequestBody = AnyContentAsJson(invalidCustomerRefARequestBodyJson)
+  private val invalidCustomerRefBRawRequestBody = AnyContentAsJson(invalidCustomerRefBRequestBodyJson)
   private val invalidEventRawRequestBody = AnyContentAsJson(invalidEventRequestBodyJson)
   private val invalidLifeInsuranceRawRequestBody = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
   private val invalidCapitalRedemptionRawRequestBody = AnyContentAsJson(invalidCapitalRedemptionRequestBodyJson)
@@ -389,6 +465,18 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     "return no errors" when {
       "a valid request is supplied" in {
         validator.validate(AmendRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
+      }
+
+      "a valid customer ref (max) is supplied" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, validCustomerRefARawRequestBody)) shouldBe Nil
+      }
+
+      "a valid customer ref (min) is supplied" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, validCustomerRefBRawRequestBody)) shouldBe Nil
+      }
+
+      "a valid event under 90 chars is supplied" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, validEventRawRequestBody)) shouldBe Nil
       }
     }
 
@@ -425,8 +513,13 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     }
 
     "return CustomerRefFormatError error" when {
-      "an incorrectly formatted customer reference is submitted" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
+      "an incorrectly formatted customer reference (max) is submitted" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidCustomerRefARawRequestBody)) shouldBe
+          List(CustomerRefFormatError.copy(paths = Some(List("/capitalRedemption/0/customerReference"))))
+      }
+
+      "an incorrectly formatted customer reference (min) is submitted" in {
+        validator.validate(AmendRawData(validNino, validTaxYear, invalidCustomerRefBRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/capitalRedemption/0/customerReference"))))
       }
     }
@@ -501,6 +594,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/capitalRedemption/0/gainAmount",
                 "/capitalRedemption/1/deficiencyRelief",
                 "/lifeAnnuity/0/deficiencyRelief",
+                "/voidedIsa/1/gainAmount",
                 "/foreign/1/gainAmount"
               ))
             ),
@@ -528,7 +622,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/lifeInsurance/0/taxPaid",
                 "/capitalRedemption/1/taxPaid",
                 "/lifeAnnuity/0/taxPaid",
-                "/voidedIsa/1/gainAmount",
                 "/voidedIsa/1/taxPaid",
                 "/foreign/0/taxPaid"
               ))

@@ -19,8 +19,8 @@ package v1.models.request.insurancePolicies.amend
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Foreign(customerReference: String,
-                   gainAmount: Option[BigDecimal],
+case class Foreign(customerReference: Option[String],
+                   gainAmount: BigDecimal,
                    taxPaid: Option[BigDecimal],
                    yearsHeld: Option[Int])
 
@@ -29,8 +29,8 @@ object Foreign {
   implicit val reads: Reads[Foreign] = Json.reads[Foreign]
 
   implicit val writes: OWrites[Foreign] = (
-    (JsPath \ "customerReference").write[String] and
-      (JsPath \ "gainAmount").writeNullable[BigDecimal] and
+    (JsPath \ "customerReference").writeNullable[String] and
+      (JsPath \ "gainAmount").write[BigDecimal] and
       (JsPath \ "taxPaid").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int]
     ) (unlift(Foreign.unapply))

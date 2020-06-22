@@ -22,9 +22,9 @@ import v1.models.request.insurancePolicies.amend.{CapitalRedemption, Foreign, Li
 object AmendInsurancePoliciesFixture {
 
   val fullVoidedIsaModel = VoidedIsa(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12)
@@ -44,9 +44,9 @@ object AmendInsurancePoliciesFixture {
   )
 
   val minVoidedIsaModel = VoidedIsa(
-    customerReference = "INPOLY123A",
+    customerReference = None,
     event = None,
-    gainAmount = None,
+    gainAmount = 1.0,
     taxPaid = None,
     yearsHeld = None,
     yearsHeldSinceLastGain = None
@@ -55,16 +55,16 @@ object AmendInsurancePoliciesFixture {
   val minVoidedIsaJson: JsValue = Json.parse(
     """
       |{
-      |    "customerReference": "INPOLY123A"
+      |    "gainAmount": 1
       |}
     """.stripMargin
   )
 
 
   val fullLifeInsuranceModel = LifeInsurance(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -86,9 +86,9 @@ object AmendInsurancePoliciesFixture {
   )
 
   val minLifeInsuranceModel = LifeInsurance(
-    customerReference = "INPOLY123A",
+    customerReference = None,
     event = None,
-    gainAmount = None,
+    gainAmount = 1.0,
     taxPaid = None,
     yearsHeld = None,
     yearsHeldSinceLastGain = None,
@@ -98,15 +98,15 @@ object AmendInsurancePoliciesFixture {
   val minLifeInsuranceJson: JsValue = Json.parse(
     """
       |{
-      |    "customerReference": "INPOLY123A"
+      |    "gainAmount": 1
       |}
     """.stripMargin
   )
 
   val fullLifeAnnuityModel = LifeAnnuity(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -128,9 +128,9 @@ object AmendInsurancePoliciesFixture {
   )
 
   val minLifeAnnuityModel = LifeAnnuity(
-    customerReference = "INPOLY123A",
+    customerReference = None,
     event = None,
-    gainAmount = None,
+    gainAmount = 1.0,
     taxPaid = None,
     yearsHeld = None,
     yearsHeldSinceLastGain = None,
@@ -140,14 +140,14 @@ object AmendInsurancePoliciesFixture {
   val minLifeAnnuityJson: JsValue = Json.parse(
     """
       |{
-      |    "customerReference": "INPOLY123A"
+      |    "gainAmount": 1
       |}
     """.stripMargin
   )
 
   val fullForeignModel = Foreign(
-    customerReference = "INPOLY123A",
-    gainAmount = Some(2000.99),
+    customerReference = Some("INPOLY123A"),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15)
   )
@@ -164,8 +164,8 @@ object AmendInsurancePoliciesFixture {
   )
 
   val minForeignModel = Foreign(
-    customerReference = "INPOLY123A",
-    gainAmount = None,
+    customerReference = None,
+    gainAmount = 1.0,
     taxPaid = None,
     yearsHeld = None
   )
@@ -173,15 +173,15 @@ object AmendInsurancePoliciesFixture {
   val minForeignJson: JsValue = Json.parse(
     """
       |{
-      |    "customerReference": "INPOLY123A"
+      |    "gainAmount": 1
       |}
     """.stripMargin
   )
 
   val fullCapitalRedemptionModel = CapitalRedemption(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -203,9 +203,9 @@ object AmendInsurancePoliciesFixture {
   )
 
   val minCapitalRedemptionModel = CapitalRedemption(
-    customerReference = "INPOLY123A",
+    customerReference = None,
     event = None,
-    gainAmount = None,
+    gainAmount = 1.0,
     taxPaid = None,
     yearsHeld = None,
     yearsHeldSinceLastGain = None,
@@ -215,7 +215,7 @@ object AmendInsurancePoliciesFixture {
   val minCapitalRedemptionJson: JsValue = Json.parse(
     """
       |{
-      |    "customerReference": "INPOLY123A"
+      |    "gainAmount": 1
       |}
     """.stripMargin
   )

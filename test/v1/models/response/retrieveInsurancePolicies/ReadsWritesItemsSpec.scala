@@ -42,9 +42,9 @@ class ReadsWritesItemsSpec extends UnitSpec {
       "not read omitted fields" in {
 
         val model = InsurancePoliciesItem(
-          customerReference = "INPOLY123A",
+          customerReference = Some("INPOLY123A"),
           event = Some("Death of spouse"),
-          gainAmount = Some(1.23),
+          gainAmount = 1.23,
           taxPaid = Some(1.23),
           yearsHeld = Some(2),
           yearsHeldSinceLastGain = Some(1),
@@ -71,9 +71,9 @@ class ReadsWritesItemsSpec extends UnitSpec {
       "not read omitted fields" in {
 
         val model = InsurancePoliciesItem(
-          customerReference = "INPOLY123A",
+          customerReference = Some("INPOLY123A"),
           event = None,
-          gainAmount = Some(1.23),
+          gainAmount = 1.23,
           taxPaid = Some(1.23),
           yearsHeld = Some(2),
           yearsHeldSinceLastGain = None,

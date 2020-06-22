@@ -18,10 +18,14 @@ package v1.controllers.requestParsers.validators.validations
 
 import v1.models.errors.{CustomerRefFormatError, MtdError}
 
-object CustomerRefValidation {
+object CustomerRefInsuranceValidation {
 
-  def validate(customerRef: String): List[MtdError] = {
-    if (customerRef.length >= 1 && customerRef.length <= 25) NoValidationErrors else List(CustomerRefFormatError)
+  def validateOptional(customerRef: Option[String]): List[MtdError] = customerRef.fold(NoValidationErrors: List[MtdError]) { ref =>
+    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) {
+        NoValidationErrors
+      } else {
+      List(CustomerRefFormatError)
+    }
   }
 
 }

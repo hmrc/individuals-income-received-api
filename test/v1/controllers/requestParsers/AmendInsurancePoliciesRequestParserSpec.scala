@@ -132,9 +132,9 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
   private val fullLifeInsuranceModel = LifeInsurance(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -142,9 +142,9 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
   )
 
   private val fullCapitalRedemptionModel = CapitalRedemption(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -152,9 +152,9 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
   )
 
   private val fullLifeAnnuityModel = LifeAnnuity(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -162,17 +162,17 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
   )
 
   private val fullVoidedIsaModel = VoidedIsa(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12)
   )
 
   private  val fullForeignModel = Foreign(
-    customerReference = "INPOLY123A",
-    gainAmount = Some(2000.99),
+    customerReference = Some("INPOLY123A"),
+    gainAmount = 2000.99,
     taxPaid = Some(5000.99),
     yearsHeld = Some(15)
   )

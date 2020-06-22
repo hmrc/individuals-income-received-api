@@ -104,9 +104,9 @@ object RetrieveInsurancePoliciesFixture {
   ).as[JsObject]
 
   val itemModel1: InsurancePoliciesItem = InsurancePoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.23),
+    gainAmount = 1.23,
     taxPaid = Some(1.33),
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1),
@@ -114,9 +114,9 @@ object RetrieveInsurancePoliciesFixture {
   )
 
   val itemModel2: InsurancePoliciesItem = InsurancePoliciesItem(
-    customerReference = "INPOLY123B",
+    customerReference = Some("INPOLY123B"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.24),
+    gainAmount = 1.24,
     taxPaid = Some(1.34),
     yearsHeld = Some(3),
     yearsHeldSinceLastGain = Some(2),
@@ -124,9 +124,9 @@ object RetrieveInsurancePoliciesFixture {
   )
 
   val itemModel3: InsurancePoliciesItem = InsurancePoliciesItem(
-    customerReference = "INPOLY123C",
+    customerReference = Some("INPOLY123C"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.25),
+    gainAmount = 1.25,
     taxPaid = Some(1.35),
     yearsHeld = Some(4),
     yearsHeldSinceLastGain = Some(3),
@@ -134,9 +134,9 @@ object RetrieveInsurancePoliciesFixture {
   )
 
   val itemModel4: InsurancePoliciesItem = InsurancePoliciesItem(
-    customerReference = "INPOLY123D",
+    customerReference = Some("INPOLY123D"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.26),
+    gainAmount = 1.26,
     taxPaid = Some(1.36),
     yearsHeld = Some(5),
     yearsHeldSinceLastGain = Some(4),
@@ -144,9 +144,9 @@ object RetrieveInsurancePoliciesFixture {
   )
 
   val itemModel5: InsurancePoliciesItem = InsurancePoliciesItem(
-    customerReference = "INPOLY123E",
+    customerReference = Some("INPOLY123E"),
     event = None,
-    gainAmount = Some(1.27),
+    gainAmount = 1.27,
     taxPaid = Some(1.37),
     yearsHeld = Some(6),
     yearsHeldSinceLastGain = None,

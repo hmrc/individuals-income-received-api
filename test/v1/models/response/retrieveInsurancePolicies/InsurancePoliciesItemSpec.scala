@@ -36,9 +36,9 @@ class InsurancePoliciesItemSpec extends UnitSpec {
   )
 
   private val model = InsurancePoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.23),
+    gainAmount = 1.23,
     taxPaid = Some(1.23),
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1),

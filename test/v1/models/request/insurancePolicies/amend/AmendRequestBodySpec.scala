@@ -142,27 +142,27 @@ class AmendRequestBodySpec extends UnitSpec {
       |{
       |   "lifeInsurance":[
       |      {
-      |          "customerReference": "INPOLY123A"
+      |          "gainAmount": 1
       |      }
       |   ],
       |   "capitalRedemption":[
       |      {
-      |         "customerReference":"INPOLY123A"
+      |         "gainAmount":1
       |      }
       |   ],
       |   "lifeAnnuity":[
       |       {
-      |           "customerReference": "INPOLY123A"
+      |           "gainAmount": 1
       |       }
       |   ],
       |   "voidedIsa":[
       |       {
-      |           "customerReference": "INPOLY123A"
+      |           "gainAmount": 1
       |       }
       |   ],
       |   "foreign":[
       |       {
-      |           "customerReference": "INPOLY123A"
+      |           "gainAmount": 1
       |       }
       |   ]
       |}

@@ -19,9 +19,9 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class InsurancePoliciesItem(customerReference: String,
+case class InsurancePoliciesItem(customerReference: Option[String],
                                  event: Option[String],
-                                 gainAmount: Option[BigDecimal],
+                                 gainAmount: BigDecimal,
                                  taxPaid: Option[BigDecimal],
                                  yearsHeld: Option[Int],
                                  yearsHeldSinceLastGain: Option[Int],
@@ -29,9 +29,9 @@ case class InsurancePoliciesItem(customerReference: String,
 
 object InsurancePoliciesItem {
   implicit val reads: Reads[InsurancePoliciesItem] = (
-    (JsPath \ "customerReference").read[String] and
+    (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "event").readNullable[String] and
-      (JsPath \ "gainAmount").readNullable[BigDecimal] and
+      (JsPath \ "gainAmount").read[BigDecimal] and
       (JsPath \ "taxPaid").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int] and

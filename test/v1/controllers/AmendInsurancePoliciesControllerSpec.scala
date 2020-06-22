@@ -168,18 +168,18 @@ class AmendInsurancePoliciesControllerSpec
 
   val lifeInsurance: Seq[LifeInsurance] = Seq(
     LifeInsurance(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
     LifeInsurance(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
@@ -189,18 +189,18 @@ class AmendInsurancePoliciesControllerSpec
 
   val capitalRedemption: Seq[CapitalRedemption] = Seq(
     CapitalRedemption(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
     CapitalRedemption(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
@@ -210,18 +210,18 @@ class AmendInsurancePoliciesControllerSpec
 
   val lifeAnnuity: Seq[LifeAnnuity] = Seq(
     LifeAnnuity(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
     LifeAnnuity(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
@@ -230,17 +230,17 @@ class AmendInsurancePoliciesControllerSpec
   )
   val voidedIsa: Seq[VoidedIsa] = Seq(
     VoidedIsa(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
     ),
     VoidedIsa(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
@@ -249,14 +249,14 @@ class AmendInsurancePoliciesControllerSpec
 
   val foreign: Seq[Foreign] = Seq(
     Foreign(
-      customerReference = "INPOLY123A",
-      gainAmount = Some(2000.99),
+      customerReference = Some("INPOLY123A"),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15)
     ),
     Foreign(
-      customerReference = "INPOLY123A",
-      gainAmount = Some(2000.99),
+      customerReference = Some("INPOLY123A"),
+      gainAmount = 2000.99,
       taxPaid = Some(5000.99),
       yearsHeld = Some(15)
     )

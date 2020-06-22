@@ -19,9 +19,9 @@ package v1.models.request.insurancePolicies.amend
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class CapitalRedemption(customerReference: String,
+case class CapitalRedemption(customerReference: Option[String],
                              event: Option[String],
-                             gainAmount: Option[BigDecimal],
+                             gainAmount: BigDecimal,
                              taxPaid: Option[BigDecimal],
                              yearsHeld: Option[Int],
                              yearsHeldSinceLastGain: Option[Int],
@@ -33,9 +33,9 @@ object CapitalRedemption {
   implicit val reads: Reads[CapitalRedemption] = Json.reads[CapitalRedemption]
 
   implicit val writes: OWrites[CapitalRedemption] = (
-    (JsPath \ "customerReference").write[String] and
+    (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "event").writeNullable[String] and
-      (JsPath \ "gainAmount").writeNullable[BigDecimal] and
+      (JsPath \ "gainAmount").write[BigDecimal] and
       (JsPath \ "taxPaid").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int] and

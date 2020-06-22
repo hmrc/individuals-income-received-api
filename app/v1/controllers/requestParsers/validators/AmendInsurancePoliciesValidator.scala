@@ -68,14 +68,14 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
 
   private def validateLifeInsurance(lifeInsurance: LifeInsurance, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(lifeInsurance.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(lifeInsurance.customerReference).map(
         _.copy(paths = Some(Seq(s"/lifeInsurance/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = lifeInsurance.event,
         path = s"/lifeInsurance/$arrayIndex/event"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = lifeInsurance.gainAmount,
         minValue = 0.01,
         path = s"/lifeInsurance/$arrayIndex/gainAmount",
@@ -104,14 +104,14 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
 
   private def validateCapitalRedemption(capitalRedemption: CapitalRedemption, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(capitalRedemption.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(capitalRedemption.customerReference).map(
         _.copy(paths = Some(Seq(s"/capitalRedemption/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = capitalRedemption.event,
         path = s"/capitalRedemption/$arrayIndex/event"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = capitalRedemption.gainAmount,
         minValue = 0.01,
         path = s"/capitalRedemption/$arrayIndex/gainAmount",
@@ -140,14 +140,14 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
 
   private def validateLifeAnnuity(lifeAnnuity: LifeAnnuity, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(lifeAnnuity.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(lifeAnnuity.customerReference).map(
         _.copy(paths = Some(Seq(s"/lifeAnnuity/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = lifeAnnuity.event,
         path = s"/lifeAnnuity/$arrayIndex/event"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = lifeAnnuity.gainAmount,
         minValue = 0.01,
         path = s"/lifeAnnuity/$arrayIndex/gainAmount",
@@ -176,16 +176,18 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
 
   private def validateVoidedIsa(voidedIsa: VoidedIsa, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(voidedIsa.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(voidedIsa.customerReference).map(
         _.copy(paths = Some(Seq(s"/voidedIsa/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = voidedIsa.event,
         path = s"/voidedIsa/$arrayIndex/event"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = voidedIsa.gainAmount,
-        path = s"/voidedIsa/$arrayIndex/gainAmount"
+        path = s"/voidedIsa/$arrayIndex/gainAmount",
+        minValue = 0.01,
+        message = DECIMAL_MINIMUM_INCLUSIVE
       ),
       DecimalValueValidation.validateOptional(
         amount = voidedIsa.taxPaid,
@@ -204,10 +206,10 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
 
   private def validateForeign(foreign: Foreign, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(foreign.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(foreign.customerReference).map(
         _.copy(paths = Some(Seq(s"/foreign/$arrayIndex/customerReference")))
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = foreign.gainAmount,
         minValue = 0.01,
         path = s"/foreign/$arrayIndex/gainAmount",
