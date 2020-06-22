@@ -14,39 +14,43 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrievePensions
+package v1.models.response.retrieveOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class ForeignPensionsItemSpec extends UnitSpec {
+class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
-      |   "countryCode": "DEU",
-      |   "amountBeforeTax": 100.23,
-      |   "taxTakenOff": 1.23,
-      |   "specialWithholdingTax": 2.23,
+      |   "countryCode": "FRA",
+      |   "amountBeforeTax": 1999.99,
+      |   "taxTakenOff": 2.23,
+      |   "specialWithholdingTax": 3.23,
       |   "foreignTaxCreditRelief": false,
-      |   "taxableAmount": 3.23
+      |   "taxableAmount": 4.23,
+      |   "residentialFinancialCostAmount": 2999.99,
+      |   "broughtFwdResidentialFinancialCostAmount": 1999.99
       |}
     """.stripMargin
   )
 
-  private val model = ForeignPensionsItem(
-    countryCode = "DEU",
-    amountBeforeTax = Some(100.23),
-    taxTakenOff = Some(1.23),
-    specialWithholdingTax = Some(2.23),
+  private val model = AllOtherIncomeReceivedWhilstAbroadItem(
+    countryCode = "FRA",
+    amountBeforeTax = Some(1999.99),
+    taxTakenOff = Some(2.23),
+    specialWithholdingTax = Some(3.23),
     foreignTaxCreditRelief = false,
-    taxableAmount = 3.23
+    taxableAmount = 4.23,
+    residentialFinancialCostAmount = Some(2999.99),
+    broughtFwdResidentialFinancialCostAmount = Some(1999.99)
   )
 
-  "ForeignPensionsItem" when {
+  "AllOtherIncomeReceivedWhilstAbroadItem" when {
     "read from valid JSON" should {
-      "produce the expected ForeignPensionsItem object" in {
-        json.as[ForeignPensionsItem] shouldBe model
+      "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object" in {
+        json.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe model
       }
     }
 
@@ -54,7 +58,7 @@ class ForeignPensionsItemSpec extends UnitSpec {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
 
-        invalidJson.validate[ForeignPensionsItem] shouldBe a[JsError]
+        invalidJson.validate[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe a[JsError]
       }
     }
 
