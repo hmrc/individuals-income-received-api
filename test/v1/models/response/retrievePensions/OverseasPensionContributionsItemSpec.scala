@@ -55,7 +55,7 @@ class OverseasPensionContributionsItemSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected OverseasPensionContributionsItem object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
 
         invalidJson.validate[OverseasPensionContributionsItem] shouldBe a[JsError]
