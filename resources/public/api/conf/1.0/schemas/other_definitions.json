@@ -8,7 +8,7 @@
         "properties": {
           "grossAmount": {
             "type": "number",
-            "description": "The amount of post-cessation or other business receipts (business receipts taxed as income of an earlier year). The value must be between 0 and 99999999999.99 up to 2 decimal places. For example: 5000.99",
+            "description": "The amount of post-cessation or other business receipts (business receipts taxed as income of an earlier year). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
             "example": "1999.99",
             "multipleOf": 0.01,
             "minimum": 0,
@@ -16,7 +16,7 @@
           },
           "taxYear": {
             "type": "string",
-            "description": "The tax year where business receipts needed taxing as income. Date in the format YYYY-YY, for example 2019-20 for the 19/20 tax year.",
+            "description": "The tax year where business receipts needed taxing as income. Date in the format YYYY-YY.",
             "example": "2019-20"
           }
         },
