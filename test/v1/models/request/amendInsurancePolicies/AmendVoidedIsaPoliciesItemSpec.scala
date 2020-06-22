@@ -27,7 +27,7 @@ class AmendVoidedIsaPoliciesItemSpec extends UnitSpec {
       |   "customerReference": "INPOLY123A",
       |   "event": "Death of spouse",
       |   "gainAmount": 1.23,
-      |   "taxPaidAmount": 101.11,
+      |   "taxAmountPaid": 101.11,
       |   "yearsHeld": 2,
       |   "yearsHeldSinceLastGain": 1
       |}
@@ -38,7 +38,7 @@ class AmendVoidedIsaPoliciesItemSpec extends UnitSpec {
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(1.23),
-    taxPaidAmount = Some(101.11),
+    taxAmountPaid = Some(101.11),
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1)
   )

@@ -21,14 +21,14 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class ForeignPoliciesItem(customerReference: String,
                                gainAmount: Option[BigDecimal],
-                               taxPaidAmount: Option[BigDecimal],
+                               taxAmountPaid: Option[BigDecimal],
                                yearsHeld: Option[Int])
 
 object ForeignPoliciesItem {
   implicit val reads: Reads[ForeignPoliciesItem] = (
     (JsPath \ "customerReference").read[String] and
       (JsPath \ "gainAmount").readNullable[BigDecimal] and
-      (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
+      (JsPath \ "taxAmountPaid").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int]
     ) (ForeignPoliciesItem.apply _)
 

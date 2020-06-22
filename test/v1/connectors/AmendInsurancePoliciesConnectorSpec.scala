@@ -34,7 +34,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
     customerReference = "INPOLY123A",
     event = Some("Death of spouse"),
     gainAmount = Some(2000.99),
-    taxPaidAmount = Some(5000.99),
+    taxAmountPaid = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12)
   )
@@ -62,7 +62,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   val foreignModel = AmendForeignPoliciesItem(
     customerReference = "INPOLY123A",
     gainAmount = Some(2000.99),
-    taxPaidAmount = Some(5000.99),
+    taxAmountPaid = Some(5000.99),
     yearsHeld = Some(15)
   )
 

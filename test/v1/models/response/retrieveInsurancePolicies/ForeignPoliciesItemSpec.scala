@@ -26,7 +26,7 @@ class ForeignPoliciesItemSpec extends UnitSpec {
       |{
       |   "customerReference": "INPOLY123A",
       |   "gainAmount": 1.23,
-      |   "taxPaidAmount": 102.22,
+      |   "taxAmountPaid": 102.22,
       |   "yearsHeld": 2
       |}
     """.stripMargin
@@ -35,7 +35,7 @@ class ForeignPoliciesItemSpec extends UnitSpec {
   private val model = ForeignPoliciesItem(
     customerReference = "INPOLY123A",
     gainAmount = Some(1.23),
-    taxPaidAmount = Some(102.22),
+    taxAmountPaid = Some(102.22),
     yearsHeld = Some(2)
   )
 

@@ -62,7 +62,7 @@ object RetrieveInsurancePoliciesControllerFixture {
       |         "customerReference": "INPOLY123D",
       |         "event": "Death of spouse",
       |         "gainAmount": 1.26,
-      |         "taxPaidAmount": 1.36,
+      |         "taxAmountPaid": 1.36,
       |         "yearsHeld": 5,
       |         "yearsHeldSinceLastGain": 4
       |      }
@@ -71,7 +71,7 @@ object RetrieveInsurancePoliciesControllerFixture {
       |      {
       |         "customerReference": "INPOLY123E",
       |         "gainAmount": 1.27,
-      |         "taxPaidAmount": 1.37,
+      |         "taxAmountPaid": 1.37,
       |         "yearsHeld": 6
       |      }
       |   ]
