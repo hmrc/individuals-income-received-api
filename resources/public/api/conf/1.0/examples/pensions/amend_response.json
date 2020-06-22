@@ -1,0 +1,19 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/pensions/{nino}/{taxYear}",
+      "rel":"amend-pensions-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/pensions/{nino}/{taxYear}",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/pensions/{nino}/{taxYear}",
+      "rel":"delete-pensions-income",
+      "method":"DELETE"
+    }
+  ]
+}
