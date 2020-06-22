@@ -31,7 +31,6 @@ import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesIte
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-
 class AmendInsurancePoliciesControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
@@ -69,7 +68,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -78,7 +77,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -89,7 +88,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -98,7 +97,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -109,7 +108,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -118,7 +117,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -129,7 +128,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       },
@@ -137,7 +136,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -146,13 +145,13 @@ class AmendInsurancePoliciesControllerSpec
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15
       |       }
       |   ]

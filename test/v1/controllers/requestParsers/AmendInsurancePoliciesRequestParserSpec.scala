@@ -38,7 +38,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -47,7 +47,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -58,7 +58,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -67,7 +67,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -78,7 +78,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -87,7 +87,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -98,7 +98,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       },
@@ -106,7 +106,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -115,13 +115,13 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxAmountPaid": 5000.99,
       |           "yearsHeld": 15
       |       }
       |   ]

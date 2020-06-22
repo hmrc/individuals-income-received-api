@@ -48,13 +48,13 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
     List(flattenErrors(
       List(
         requestBodyData.lifeInsurance.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCommonItem(data, index)
+          case (data, index) => validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.capitalRedemption.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCommonItem(data, index)
+          case (data, index) => validateCommonItem(data, itemName = "capitalRedemption", arrayIndex = index)
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.lifeAnnuity.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCommonItem(data, index)
+          case (data, index) => validateCommonItem(data, itemName = "lifeAnnuity", arrayIndex = index)
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.voidedIsa.map(_.zipWithIndex.flatMap {
           case (data, index) => validateVoidedIsa(data, index)
@@ -66,33 +66,33 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
     ))
   }
 
-  private def validateCommonItem(commonItem: AmendCommonInsurancePoliciesItem, arrayIndex: Int): List[MtdError] = {
+  private def validateCommonItem(commonItem: AmendCommonInsurancePoliciesItem, itemName: String, arrayIndex: Int): List[MtdError] = {
     List(
       CustomerRefValidation.validate(commonItem.customerReference).map(
-        _.copy(paths = Some(Seq(s"/lifeInsurance/$arrayIndex/customerReference")))
+        _.copy(paths = Some(Seq(s"/$itemName/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = commonItem.event,
-        path = s"/lifeInsurance/$arrayIndex/event"
+        path = s"/$itemName/$arrayIndex/event"
       ),
       DecimalValueValidation.validateOptional(
         amount = commonItem.gainAmount,
         minValue = 0.01,
-        path = s"/lifeInsurance/$arrayIndex/gainAmount",
+        path = s"/$itemName/$arrayIndex/gainAmount",
         message = DECIMAL_MINIMUM_INCLUSIVE
       ),
       IntegerValueValidation.validateOptional(
         field = commonItem.yearsHeld,
-        path = s"/lifeInsurance/$arrayIndex/yearsHeld"
+        path = s"/$itemName/$arrayIndex/yearsHeld"
       ),
       IntegerValueValidation.validateOptional(
         field = commonItem.yearsHeldSinceLastGain,
-        path = s"/lifeInsurance/$arrayIndex/yearsHeldSinceLastGain"
+        path = s"/$itemName/$arrayIndex/yearsHeldSinceLastGain"
       ),
       DecimalValueValidation.validateOptional(
         amount = commonItem.deficiencyRelief,
         minValue = 0.01,
-        path = s"/lifeInsurance/$arrayIndex/deficiencyRelief",
+        path = s"/$itemName/$arrayIndex/deficiencyRelief",
         message = DECIMAL_MINIMUM_INCLUSIVE
       )
     ).flatten
