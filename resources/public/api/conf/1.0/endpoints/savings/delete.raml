@@ -6,9 +6,9 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Delete Pensions Income [test only]
-description: "This endpoint allows the developer to delete previously populated foreign pensions and overseas pension contributions."
-(annotations.sandboxData): !include ../scenarios/pensions/delete.md
+displayName: Delete Savings Income [test only]
+description: This endpoint allows a developer to delete savings income for securities or foreign interest. A National Insurance number and tax year must be provided.
+(annotations.sandboxData): !include ../../scenarios/savings/delete.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:
