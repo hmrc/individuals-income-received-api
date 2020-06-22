@@ -21,25 +21,25 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendForeignConnector
+import v1.connectors.AmendPensionsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendForeign.AmendForeignRequest
+import v1.models.request.amendPensions.AmendPensionsRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendForeignService @Inject()(connector: AmendForeignConnector) extends DesResponseMappingSupport with Logging {
+class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends DesResponseMappingSupport with Logging {
 
-  def amendForeign(request: AmendForeignRequest)(
+  def amendPensions(request: AmendPensionsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendForeign(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendPensions(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
@@ -54,3 +54,5 @@ class AmendForeignService @Inject()(connector: AmendForeignConnector) extends De
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }
+
+
