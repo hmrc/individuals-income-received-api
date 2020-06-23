@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.errors._
-import v1.models.request.insurancePolicies.amend.AmendRawData
+import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
 
 class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
@@ -36,7 +36,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -45,7 +45,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -56,7 +56,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -65,7 +65,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -76,7 +76,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -85,7 +85,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -96,7 +96,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       },
@@ -104,7 +104,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -113,13 +113,13 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       }
       |   ]
@@ -139,7 +139,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": "no",
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -157,7 +157,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "This ref is more than 25 characters",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -175,7 +175,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "This event string is 76 characters long --------------------------------- 76",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -192,8 +192,8 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       {
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
-      |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.999,
+      |           "gainAmount": -2000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -211,7 +211,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.999
@@ -229,7 +229,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.999,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -247,7 +247,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 300
       |       }
@@ -263,7 +263,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 150
       |       }
       |   ]
@@ -279,7 +279,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "This ref is more than 25 characters",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.999,
-      |           "taxPaid": 5000.999,
+      |           "taxPaid": true,
       |           "yearsHeld": -15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.999
@@ -288,7 +288,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "This event string is 76 characters long --------------------------------- 76",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -299,7 +299,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "This ref is more than 25 characters",
       |           "event": "Death of spouse",
       |           "gainAmount": 3000.999,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": -15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -308,7 +308,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.999,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 120,
       |           "deficiencyRelief": 5000.999
@@ -319,7 +319,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.999,
+      |           "taxPaid": true,
       |           "yearsHeld": -15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.999
@@ -328,7 +328,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "This ref is more than 25 characters",
       |           "event": "This event string is 76 characters long --------------------------------- 76",
       |           "gainAmount": 5000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -339,7 +339,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": -15,
       |           "yearsHeldSinceLastGain": 120
       |       },
@@ -347,7 +347,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "customerReference": "This ref is more than 25 characters",
       |           "event": "Death of spouse",
       |           "gainAmount": 5000.999,
-      |           "taxPaid": 5000.999,
+      |           "taxPaidAmount": 5000.999,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -356,13 +356,13 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       {
       |           "customerReference": "This ref is more than 25 characters",
       |           "gainAmount": 5000.99,
-      |           "taxPaid": 5000.999,
+      |           "taxPaidAmount": 5000.999,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.999,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": -15
       |       }
       |   ]
@@ -388,67 +388,67 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(AmendRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in {
-        validator.validate(AmendRawData(validNino, "20178", validRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, "20178", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleIncorrectOrEmptyBodyError error" when {
       "an empty JSON body is submitted" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
 
       "a non-empty JSON body is submitted without any expected fields" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
       "the submitted request body is not in the correct format" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
     }
 
     "return CustomerRefFormatError error" when {
       "an incorrectly formatted customer reference is submitted" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/capitalRedemption/0/customerReference"))))
       }
     }
 
     "return EventFormatError error" when {
       "an incorrectly formatted event is submitted" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidEventRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidEventRawRequestBody)) shouldBe
           List(EventFormatError.copy(paths = Some(List("/lifeAnnuity/0/event"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (life insurance)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidLifeInsuranceRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidLifeInsuranceRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/lifeInsurance/0/taxPaid"))
+            message = DECIMAL_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/lifeInsurance/0/gainAmount"))
           ))
       }
 
       "one field fails value validation (capital redemption)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidCapitalRedemptionRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidCapitalRedemptionRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = DECIMAL_MINIMUM_INCLUSIVE,
             paths = Some(Seq("/capitalRedemption/0/deficiencyRelief"))
@@ -456,7 +456,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       }
 
       "one field fails value validation (life annuity)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidLifeAnnuityRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidLifeAnnuityRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = DECIMAL_MINIMUM_INCLUSIVE,
             paths = Some(Seq("/lifeAnnuity/0/gainAmount"))
@@ -464,7 +464,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       }
 
       "one field fails value validation (voidedIsa)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidVoidedIsaRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidVoidedIsaRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
             paths = Some(Seq("/voidedIsa/0/yearsHeldSinceLastGain"))
@@ -472,7 +472,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       }
 
       "one field fails value validation (foreign)" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, invalidForeignRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidForeignRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
             paths = Some(Seq("/foreign/0/yearsHeld"))
@@ -482,8 +482,14 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
 
     "return ValueFormatError error (multiple failures)" when {
       "multiple fields fail value validation" in {
-        validator.validate(AmendRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            EventFormatError.copy(
+              paths = Some(List(
+                "/lifeInsurance/1/event",
+                "/lifeAnnuity/1/event"
+              ))
+            ),
             CustomerRefFormatError.copy(
               paths = Some(List(
                 "/lifeInsurance/0/customerReference",
@@ -504,12 +510,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/foreign/1/gainAmount"
               ))
             ),
-            EventFormatError.copy(
-              paths = Some(List(
-                "/lifeInsurance/1/event",
-                "/lifeAnnuity/1/event"
-              ))
-            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
               paths = Some(List(
@@ -525,12 +525,9 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
-                "/lifeInsurance/0/taxPaid",
-                "/capitalRedemption/1/taxPaid",
-                "/lifeAnnuity/0/taxPaid",
                 "/voidedIsa/1/gainAmount",
-                "/voidedIsa/1/taxPaid",
-                "/foreign/0/taxPaid"
+                "/voidedIsa/1/taxPaidAmount",
+                "/foreign/0/taxPaidAmount"
               ))
             )
           )
@@ -539,7 +536,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
 
     "return multiple errors" when {
       "request supplied has multiple errors (path parameters)" in {
-        validator.validate(AmendRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
+        validator.validate(AmendInsurancePoliciesRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }

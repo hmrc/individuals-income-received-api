@@ -42,7 +42,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaid": true,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12,
         |           "deficiencyRelief": 5000.99
@@ -51,7 +51,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaid": true,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12,
         |           "deficiencyRelief": 5000.99
@@ -62,7 +62,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaid": true,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12,
         |           "deficiencyRelief": 5000.99
@@ -71,7 +71,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaid": true,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12,
         |           "deficiencyRelief": 5000.99
@@ -82,7 +82,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaid": true,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12,
         |           "deficiencyRelief": 5000.99
@@ -91,7 +91,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaid": true,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12,
         |           "deficiencyRelief": 5000.99
@@ -102,7 +102,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12
         |       },
@@ -110,7 +110,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12
         |       }
@@ -119,18 +119,18 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |       {
         |           "customerReference": "INPOLY123A",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15
         |       },
         |       {
         |           "customerReference": "INPOLY123A",
         |           "gainAmount": 2000.99,
-        |           "taxPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15
         |       }
         |   ]
         |}
-    """.stripMargin
+      """.stripMargin
     )
 
     val hateoasResponse: JsValue = Json.parse(
@@ -154,7 +154,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
          |      }
          |   ]
          |}
-         |""".stripMargin
+        """.stripMargin
     )
 
     def uri: String = s"/insurance-policies/$nino/$taxYear"
@@ -199,7 +199,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "This ref is more than 25 characters",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.999,
-            |           "taxPaid": 5000.999,
+            |           "taxPaid": true,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.999
@@ -208,7 +208,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "INPOLY123A",
             |           "event": "This event string is 76 characters long --------------------------------- 76",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.99,
+            |           "taxPaid": true,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.99
@@ -219,7 +219,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "This ref is more than 25 characters",
             |           "event": "Death of spouse",
             |           "gainAmount": 3000.999,
-            |           "taxPaid": 5000.99,
+            |           "taxPaid": true,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.99
@@ -228,7 +228,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.999,
+            |           "taxPaid": true,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 120,
             |           "deficiencyRelief": 5000.999
@@ -239,7 +239,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.999,
+            |           "taxPaid": true,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.999
@@ -248,7 +248,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "This ref is more than 25 characters",
             |           "event": "This event string is 76 characters long --------------------------------- 76",
             |           "gainAmount": 5000.99,
-            |           "taxPaid": 5000.99,
+            |           "taxPaid": true,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.99
@@ -259,7 +259,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.99,
+            |           "taxPaidAmount": 5000.99,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 120
             |       },
@@ -267,7 +267,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "This ref is more than 25 characters",
             |           "event": "Death of spouse",
             |           "gainAmount": 5000.999,
-            |           "taxPaid": 5000.999,
+            |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12
             |       }
@@ -276,13 +276,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |       {
             |           "customerReference": "This ref is more than 25 characters",
             |           "gainAmount": 5000.99,
-            |           "taxPaid": 5000.999,
+            |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15
             |       },
             |       {
             |           "customerReference": "INPOLY123A",
             |           "gainAmount": 2000.999,
-            |           "taxPaid": 5000.99,
+            |           "taxPaidAmount": 5000.99,
             |           "yearsHeld": -15
             |       }
             |   ]
@@ -291,6 +291,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueErrors: List[MtdError] = List(
+          EventFormatError.copy(
+            paths = Some(List(
+              "/lifeInsurance/1/event",
+              "/lifeAnnuity/1/event"
+            ))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/lifeInsurance/0/customerReference",
@@ -311,12 +317,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/foreign/1/gainAmount"
             ))
           ),
-          EventFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/1/event",
-              "/lifeAnnuity/1/event"
-            ))
-          ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99",
             paths = Some(List(
@@ -332,16 +332,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
-              "/lifeInsurance/0/taxPaid",
-              "/capitalRedemption/1/taxPaid",
-              "/lifeAnnuity/0/taxPaid",
               "/voidedIsa/1/gainAmount",
-              "/voidedIsa/1/taxPaid",
-              "/foreign/0/taxPaid",
+              "/voidedIsa/1/taxPaidAmount",
+              "/foreign/0/taxPaidAmount",
             ))
           )
         )
-
 
         val wrappedErrors: ErrorWrapper = ErrorWrapper(
           correlationId = Some(correlationId),
@@ -371,7 +367,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -380,7 +376,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -391,7 +387,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -400,7 +396,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -411,7 +407,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -420,7 +416,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -431,7 +427,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       },
@@ -439,7 +435,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       }
@@ -448,18 +444,18 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       }
           |   ]
           |}
-    """.stripMargin
+        """.stripMargin
       )
 
       val nonsenseRequestBody: JsValue = Json.parse(
@@ -478,7 +474,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": -2000.99,
-          |           "taxPaid": 5000.999,
+          |           "taxPaid": true,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120,
           |           "deficiencyRelief": 5000.999
@@ -487,7 +483,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.999,
-          |           "taxPaid": -5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120,
           |           "deficiencyRelief": 5000.999
@@ -498,7 +494,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.999,
+          |           "taxPaid": true,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120,
           |           "deficiencyRelief": 5000.990
@@ -507,7 +503,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.990,
-          |           "taxPaid": -5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": -15,
           |           "yearsHeldSinceLastGain": -12,
           |           "deficiencyRelief": -5000.99
@@ -518,7 +514,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": -2000.99,
-          |           "taxPaid": -5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120,
           |           "deficiencyRelief": 5000.999
@@ -527,7 +523,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.999,
-          |           "taxPaid": 5000.999,
+          |           "taxPaid": true,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120,
           |           "deficiencyRelief": 5000.999
@@ -538,7 +534,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.999,
-          |           "taxPaid": 5000.999,
+          |           "taxPaidAmount": 5000.999,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120
           |       },
@@ -546,7 +542,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.999,
+          |           "taxPaidAmount": 5000.999,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120
           |       }
@@ -555,13 +551,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.909,
-          |           "taxPaid": 5000.909,
+          |           "taxPaidAmount": 5000.909,
           |           "yearsHeld": 150
           |       },
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": -2000.99,
-          |           "taxPaid": -5000.99,
+          |           "taxPaidAmount": -5000.99,
           |           "yearsHeld": 150
           |       }
           |   ]
@@ -573,17 +569,11 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         ValueFormatError.copy(
           message = "The field should be between 0 and 99999999999.99",
           paths = Some(List(
-            "/lifeInsurance/0/taxPaid",
-            "/lifeInsurance/1/taxPaid",
-            "/capitalRedemption/0/taxPaid",
-            "/capitalRedemption/1/taxPaid",
-            "/lifeAnnuity/0/taxPaid",
-            "/lifeAnnuity/1/taxPaid",
             "/voidedIsa/0/gainAmount",
-            "/voidedIsa/0/taxPaid",
-            "/voidedIsa/1/taxPaid",
-            "/foreign/0/taxPaid",
-            "/foreign/1/taxPaid"
+            "/voidedIsa/0/taxPaidAmount",
+            "/voidedIsa/1/taxPaidAmount",
+            "/foreign/0/taxPaidAmount",
+            "/foreign/1/taxPaidAmount"
           ))
         ),
         ValueFormatError.copy(
@@ -635,7 +625,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -644,7 +634,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -655,7 +645,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -664,7 +654,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -675,7 +665,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -684,7 +674,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -695,7 +685,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       },
@@ -703,7 +693,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       }
@@ -712,13 +702,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "This ref is more than 25 characters",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
           |           "customerReference": "This ref is more than 25 characters",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       }
           |   ]
@@ -753,7 +743,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -762,7 +752,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -773,7 +763,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -782,7 +772,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -793,7 +783,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -802,7 +792,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaid": true,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12,
           |           "deficiencyRelief": 5000.99
@@ -813,7 +803,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       },
@@ -821,7 +811,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       }
@@ -830,13 +820,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       }
           |   ]

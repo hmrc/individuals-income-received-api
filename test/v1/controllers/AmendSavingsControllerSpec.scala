@@ -26,7 +26,7 @@ import v1.mocks.services.{MockAmendSavingsService, MockEnrolmentsAuthService, Mo
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -103,8 +103,8 @@ class AmendSavingsControllerSpec
     netAmount = Some(300.33)
   )
 
-  val foreignInterests: Seq[AmendForeignInterest] = Seq(
-    AmendForeignInterest(
+  val foreignInterests: Seq[AmendForeignInterestItem] = Seq(
+    AmendForeignInterestItem(
       amountBeforeTax = Some(101.11),
       countryCode = "FRA",
       taxTakenOff = Some(102.22),
@@ -112,7 +112,7 @@ class AmendSavingsControllerSpec
       taxableAmount = 104.44,
       foreignTaxCreditRelief = false
     ),
-    AmendForeignInterest(
+    AmendForeignInterestItem(
       amountBeforeTax = Some(201.11),
       countryCode = "GER",
       taxTakenOff = Some(202.22),

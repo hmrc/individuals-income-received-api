@@ -16,26 +16,9 @@
 
 package utils
 
-import play.api.libs.json.{JsPath, JsValue, Json, OWrites, Reads}
+import play.api.libs.json.Reads
 
 trait JsonUtils {
-
-  // based on code from: http://kailuowang.blogspot.com/2013/11/addremove-fields-to-plays-default-case.html
-  implicit class OWritesOps[A](writes: OWrites[A]) {
-
-    def removeField(fieldName: String): OWrites[A] = OWrites { a: A =>
-      val transformer = (JsPath \ fieldName).json.prune
-      Json.toJson(a)(writes).validate(transformer).get
-    }
-  }
-
-  implicit class ReadsOps[A](reads: Reads[A]){
-
-    def removeField(fieldName: String): Reads[A] = Reads { a: JsValue =>
-      val transformer = (JsPath \ fieldName).json.prune
-      Json.fromJson(a.validate(transformer).get)(reads)
-    }
-  }
 
   /**
     * Extension methods for reads of a optional sequence

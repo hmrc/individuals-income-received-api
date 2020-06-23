@@ -27,7 +27,7 @@ import utils.Logging
 import v1.controllers.requestParsers.AmendSavingsRequestParser
 import v1.hateoas.AmendHateoasBody
 import v1.models.errors._
-import v1.models.request.savings.amend.AmendSavingsRawData
+import v1.models.request.amendSavings.AmendSavingsRawData
 import v1.services.{AmendSavingsService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}

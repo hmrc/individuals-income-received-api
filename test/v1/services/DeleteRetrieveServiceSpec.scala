@@ -41,7 +41,7 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
 
   trait Test extends MockDeleteRetrieveConnector {
 
-    case class Data(field: String)
+    case class Data(field: Option[String])
 
     object Data {
       implicit val reads: Format[Data] = Json.format[Data]
@@ -92,12 +92,21 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
 
     "retrieve" must {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, Data("value")))
+        val outcome = Right(ResponseWrapper(correlationId, Data(Some("value"))))
 
         MockDeleteRetrieveConnector.retrieve[Data](deleteRetrieveRequest)
           .returns(Future.successful(outcome))
 
         await(service.retrieve[Data](deleteRetrieveRequest)) shouldBe outcome
+      }
+
+      "return a NotFoundError for an empty response" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, Data(None)))
+
+        MockDeleteRetrieveConnector.retrieve[Data](deleteRetrieveRequest)
+          .returns(Future.successful(outcome))
+
+        await(service.retrieve[Data](deleteRetrieveRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), NotFoundError))
       }
 
       "map errors according to spec" when {
