@@ -16,18 +16,12 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{CustomerRefFormatError, MtdError}
+import v1.models.errors.{MtdError, SF74RefFormatError}
 
-object CustomerRefValidation {
+object SF74RefValidation {
 
-  private val regex = "^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$"
-
-  def validateOptional(customerRef: Option[String]): List[MtdError] = customerRef match {
-    case None => NoValidationErrors
-    case Some(value) => validate(value)
-  }
-
-  def validate(customerRef: String): List[MtdError] = {
-    if(customerRef.matches(regex)) NoValidationErrors else List(CustomerRefFormatError)
+  def validateOptional(sf74Ref: Option[String], path: String): List[MtdError] = sf74Ref.fold(NoValidationErrors: List[MtdError]) { ref =>
+    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
+      SF74RefFormatError.copy(paths = Some(Seq(path))))
   }
 }

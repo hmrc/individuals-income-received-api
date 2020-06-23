@@ -154,7 +154,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |{
       |   "capitalRedemption":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
       |           "taxPaid": true,
@@ -276,7 +276,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |{
       |   "lifeInsurance":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.999,
       |           "taxPaid": true,
@@ -296,7 +296,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |   ],
       |   "capitalRedemption":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |           "event": "Death of spouse",
       |           "gainAmount": 3000.999,
       |           "taxPaid": true,
@@ -325,7 +325,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "deficiencyRelief": 5000.999
       |       },
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |           "event": "This event string is 76 characters long --------------------------------- 76",
       |           "gainAmount": 5000.99,
       |           "taxPaid": true,
@@ -344,7 +344,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |           "yearsHeldSinceLastGain": 120
       |       },
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |           "event": "Death of spouse",
       |           "gainAmount": 5000.999,
       |           "taxPaidAmount": 5000.999,
@@ -354,7 +354,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |   ],
       |   "foreign":[
       |       {
-      |           "customerReference": "This ref is more than 25 characters",
+      |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |           "gainAmount": 5000.99,
       |           "taxPaidAmount": 5000.999,
       |           "yearsHeld": 15

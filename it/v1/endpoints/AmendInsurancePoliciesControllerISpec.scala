@@ -196,7 +196,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             {
             |   "lifeInsurance":[
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.999,
             |           "taxPaid": true,
@@ -216,7 +216,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |   ],
             |   "capitalRedemption":[
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 3000.999,
             |           "taxPaid": true,
@@ -245,7 +245,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "deficiencyRelief": 5000.999
             |       },
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "This event string is 76 characters long --------------------------------- 76",
             |           "gainAmount": 5000.99,
             |           "taxPaid": true,
@@ -264,7 +264,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "yearsHeldSinceLastGain": 120
             |       },
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 5000.999,
             |           "taxPaidAmount": 5000.999,
@@ -274,7 +274,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |   ],
             |   "foreign":[
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "gainAmount": 5000.99,
             |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15
@@ -334,7 +334,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             paths = Some(List(
               "/voidedIsa/1/gainAmount",
               "/voidedIsa/1/taxPaidAmount",
-              "/foreign/0/taxPaidAmount",
+              "/foreign/0/taxPaidAmount"
             ))
           )
         )
@@ -622,7 +622,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |{
           |   "lifeInsurance":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -631,7 +631,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "deficiencyRelief": 5000.99
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -642,7 +642,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "capitalRedemption":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -651,7 +651,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "deficiencyRelief": 5000.99
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -662,7 +662,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "lifeAnnuity":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -671,7 +671,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "deficiencyRelief": 5000.99
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -682,7 +682,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "voidedIsa":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
@@ -690,7 +690,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "yearsHeldSinceLastGain": 12
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
@@ -700,13 +700,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "foreign":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15

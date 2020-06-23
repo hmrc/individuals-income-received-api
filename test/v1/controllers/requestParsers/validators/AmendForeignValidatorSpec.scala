@@ -60,7 +60,7 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """
       |{
       |   "foreignEarnings": {
-      |     "customerReference":"FOREIGNINCME123AAAAAAAAAAAAA",
+      |     "customerReference":"This customer ref string is 91 characters long ------------------------------------------91",
       |     "earningsNotTaxableUK":"99999999999.9999999"
       |   },
       |   "unremittableForeignIncome": [
@@ -133,7 +133,7 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """
       |{
       |   "foreignEarnings": {
-      |     "customerReference":"FOREIGNINCME123AAAAAAAAAAAAA",
+      |     "customerReference":"This customer ref string is 91 characters long ------------------------------------------91",
       |     "earningsNotTaxableUK":"99999999999.99"
       |   },
       |   "unremittableForeignIncome": [
@@ -344,9 +344,12 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
               )),
               message = ZERO_MINIMUM_INCLUSIVE
             ),
-              CountryCodeFormatError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))),
-            CustomerRefFormatError.copy(paths = Some(List("/foreignEarnings/customerReference")))
+            CustomerRefFormatError.copy(
+              paths = Some(List("/foreignEarnings/customerReference"))
+            ),
+            CountryCodeFormatError.copy(
+              paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+            )
           )
       }
     }
