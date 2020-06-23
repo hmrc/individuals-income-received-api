@@ -14,39 +14,31 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrievePensions
+package v1.models.response.retrieveOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class ForeignPensionsItemSpec extends UnitSpec {
+class BusinessReceiptsItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
-      |   "countryCode": "DEU",
-      |   "amountBeforeTax": 100.23,
-      |   "taxTakenOff": 1.23,
-      |   "specialWithholdingTax": 2.23,
-      |   "foreignTaxCreditRelief": false,
-      |   "taxableAmount": 3.23
+      |   "grossAmount": 5000.99,
+      |   "taxYear": "2018-19"
       |}
     """.stripMargin
   )
 
-  private val model = ForeignPensionsItem(
-    countryCode = "DEU",
-    amountBeforeTax = Some(100.23),
-    taxTakenOff = Some(1.23),
-    specialWithholdingTax = Some(2.23),
-    foreignTaxCreditRelief = false,
-    taxableAmount = 3.23
+  private val model = BusinessReceiptsItem(
+    grossAmount = 5000.99,
+    taxYear = "2018-19"
   )
 
-  "ForeignPensionsItem" when {
+  "BusinessReceiptsItem" when {
     "read from valid JSON" should {
-      "produce the expected ForeignPensionsItem object" in {
-        json.as[ForeignPensionsItem] shouldBe model
+      "produce the expected BusinessReceiptsItem object" in {
+        json.as[BusinessReceiptsItem] shouldBe model
       }
     }
 
@@ -54,7 +46,7 @@ class ForeignPensionsItemSpec extends UnitSpec {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
 
-        invalidJson.validate[ForeignPensionsItem] shouldBe a[JsError]
+        invalidJson.validate[BusinessReceiptsItem] shouldBe a[JsError]
       }
     }
 
