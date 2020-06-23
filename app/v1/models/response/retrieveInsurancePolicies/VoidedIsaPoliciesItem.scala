@@ -22,7 +22,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class VoidedIsaPoliciesItem(customerReference: String,
                                  event: Option[String],
                                  gainAmount: Option[BigDecimal],
-                                 taxAmountPaid: Option[BigDecimal],
+                                 taxPaidAmount: Option[BigDecimal],
                                  yearsHeld: Option[Int],
                                  yearsHeldSinceLastGain: Option[Int])
 
@@ -31,7 +31,7 @@ object VoidedIsaPoliciesItem {
     (JsPath \ "customerReference").read[String] and
       (JsPath \ "event").readNullable[String] and
       (JsPath \ "gainAmount").readNullable[BigDecimal] and
-      (JsPath \ "taxAmountPaid").readNullable[BigDecimal] and
+      (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int]
     ) (VoidedIsaPoliciesItem.apply _)

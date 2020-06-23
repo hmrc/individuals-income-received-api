@@ -59,7 +59,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
        |      {
        |         "customerReference": "INPOLY123D",
        |         "gainAmount": 1.26,
-       |         "taxAmountPaid": 1.36,
+       |         "taxPaidAmount": 1.36,
        |         "yearsHeld": 5,
        |         "yearsHeldSinceLastGain": 4
        |      }
@@ -68,7 +68,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
        |      {
        |         "customerReference": "INPOLY123E",
        |         "gainAmount": 1.27,
-       |         "taxAmountPaid": 1.37,
+       |         "taxPaidAmount": 1.37,
        |         "yearsHeld": 6
        |      }
        |   ]
@@ -110,7 +110,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     customerReference = "INPOLY123D",
     event = None,
     gainAmount = Some(1.26),
-    taxAmountPaid = Some(1.36),
+    taxPaidAmount = Some(1.36),
     yearsHeld = Some(5),
     yearsHeldSinceLastGain = Some(4)
   )
@@ -118,7 +118,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
   private val foreignItemModel = ForeignPoliciesItem(
     customerReference = "INPOLY123E",
     gainAmount = Some(1.27),
-    taxAmountPaid = Some(1.37),
+    taxPaidAmount = Some(1.37),
     yearsHeld = Some(6)
   )
 

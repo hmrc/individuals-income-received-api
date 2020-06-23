@@ -21,7 +21,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class AmendForeignPoliciesItem(customerReference: String,
                                     gainAmount: Option[BigDecimal],
-                                    taxAmountPaid: Option[BigDecimal],
+                                    taxPaidAmount: Option[BigDecimal],
                                     yearsHeld: Option[Int])
 
 object AmendForeignPoliciesItem {
@@ -30,7 +30,7 @@ object AmendForeignPoliciesItem {
   implicit val writes: OWrites[AmendForeignPoliciesItem] = (
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
-      (JsPath \ "taxAmountPaid").writeNullable[BigDecimal] and
+      (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int]
     ) (unlift(AmendForeignPoliciesItem.unapply))
 }

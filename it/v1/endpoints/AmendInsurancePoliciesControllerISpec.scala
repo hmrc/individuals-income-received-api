@@ -102,7 +102,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxAmountPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12
         |       },
@@ -110,7 +110,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |           "customerReference": "INPOLY123A",
         |           "event": "Death of spouse",
         |           "gainAmount": 2000.99,
-        |           "taxAmountPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15,
         |           "yearsHeldSinceLastGain": 12
         |       }
@@ -119,13 +119,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         |       {
         |           "customerReference": "INPOLY123A",
         |           "gainAmount": 2000.99,
-        |           "taxAmountPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15
         |       },
         |       {
         |           "customerReference": "INPOLY123A",
         |           "gainAmount": 2000.99,
-        |           "taxAmountPaid": 5000.99,
+        |           "taxPaidAmount": 5000.99,
         |           "yearsHeld": 15
         |       }
         |   ]
@@ -259,7 +259,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxAmountPaid": 5000.99,
+            |           "taxPaidAmount": 5000.99,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 120
             |       },
@@ -267,7 +267,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "customerReference": "This ref is more than 25 characters",
             |           "event": "Death of spouse",
             |           "gainAmount": 5000.999,
-            |           "taxAmountPaid": 5000.999,
+            |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12
             |       }
@@ -276,13 +276,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |       {
             |           "customerReference": "This ref is more than 25 characters",
             |           "gainAmount": 5000.99,
-            |           "taxAmountPaid": 5000.999,
+            |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15
             |       },
             |       {
             |           "customerReference": "INPOLY123A",
             |           "gainAmount": 2000.999,
-            |           "taxAmountPaid": 5000.99,
+            |           "taxPaidAmount": 5000.99,
             |           "yearsHeld": -15
             |       }
             |   ]
@@ -291,6 +291,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueErrors: List[MtdError] = List(
+          EventFormatError.copy(
+            paths = Some(List(
+              "/lifeInsurance/1/event",
+              "/lifeAnnuity/1/event"
+            ))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/lifeInsurance/0/customerReference",
@@ -311,12 +317,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/foreign/1/gainAmount"
             ))
           ),
-          EventFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/1/event",
-              "/lifeAnnuity/1/event"
-            ))
-          ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99",
             paths = Some(List(
@@ -333,8 +333,8 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/voidedIsa/1/gainAmount",
-              "/voidedIsa/1/taxAmountPaid",
-              "/foreign/0/taxAmountPaid",
+              "/voidedIsa/1/taxPaidAmount",
+              "/foreign/0/taxPaidAmount",
             ))
           )
         )
@@ -427,7 +427,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       },
@@ -435,7 +435,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       }
@@ -444,13 +444,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       }
           |   ]
@@ -534,7 +534,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.999,
-          |           "taxAmountPaid": 5000.999,
+          |           "taxPaidAmount": 5000.999,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120
           |       },
@@ -542,7 +542,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.999,
+          |           "taxPaidAmount": 5000.999,
           |           "yearsHeld": 150,
           |           "yearsHeldSinceLastGain": 120
           |       }
@@ -551,13 +551,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.909,
-          |           "taxAmountPaid": 5000.909,
+          |           "taxPaidAmount": 5000.909,
           |           "yearsHeld": 150
           |       },
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": -2000.99,
-          |           "taxAmountPaid": -5000.99,
+          |           "taxPaidAmount": -5000.99,
           |           "yearsHeld": 150
           |       }
           |   ]
@@ -570,10 +570,10 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           message = "The field should be between 0 and 99999999999.99",
           paths = Some(List(
             "/voidedIsa/0/gainAmount",
-            "/voidedIsa/0/taxAmountPaid",
-            "/voidedIsa/1/taxAmountPaid",
-            "/foreign/0/taxAmountPaid",
-            "/foreign/1/taxAmountPaid"
+            "/voidedIsa/0/taxPaidAmount",
+            "/voidedIsa/1/taxPaidAmount",
+            "/foreign/0/taxPaidAmount",
+            "/foreign/1/taxPaidAmount"
           ))
         ),
         ValueFormatError.copy(
@@ -685,7 +685,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       },
@@ -693,7 +693,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "This ref is more than 25 characters",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       }
@@ -702,13 +702,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "This ref is more than 25 characters",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
           |           "customerReference": "This ref is more than 25 characters",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       }
           |   ]
@@ -803,7 +803,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       },
@@ -811,7 +811,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "customerReference": "INPOLY123A",
           |           "event": "",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15,
           |           "yearsHeldSinceLastGain": 12
           |       }
@@ -820,13 +820,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
           |           "customerReference": "INPOLY123A",
           |           "gainAmount": 2000.99,
-          |           "taxAmountPaid": 5000.99,
+          |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       }
           |   ]

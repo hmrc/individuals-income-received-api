@@ -114,7 +114,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
     customerReference = "INPOLY123D",
     event = Some("Death of spouse"),
     gainAmount = Some(1.26),
-    taxAmountPaid = Some(1.36),
+    taxPaidAmount = Some(1.36),
     yearsHeld = Some(5),
     yearsHeldSinceLastGain = Some(4)
   )
@@ -122,7 +122,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   private val foreignItemModel = ForeignPoliciesItem(
     customerReference = "INPOLY123E",
     gainAmount = Some(1.27),
-    taxAmountPaid = Some(1.37),
+    taxPaidAmount = Some(1.37),
     yearsHeld = Some(6)
   )
 

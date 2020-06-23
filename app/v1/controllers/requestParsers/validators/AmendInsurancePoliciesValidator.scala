@@ -112,8 +112,8 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
         path = s"/voidedIsa/$arrayIndex/gainAmount"
       ),
       DecimalValueValidation.validateOptional(
-        amount = voidedIsa.taxAmountPaid,
-        path = s"/voidedIsa/$arrayIndex/taxAmountPaid"
+        amount = voidedIsa.taxPaidAmount,
+        path = s"/voidedIsa/$arrayIndex/taxPaidAmount"
       ),
       IntegerValueValidation.validateOptional(
         field = voidedIsa.yearsHeld,
@@ -138,8 +138,8 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
         message = DECIMAL_MINIMUM_INCLUSIVE
       ),
       DecimalValueValidation.validateOptional(
-        amount = foreign.taxAmountPaid,
-        path = s"/foreign/$arrayIndex/taxAmountPaid"
+        amount = foreign.taxPaidAmount,
+        path = s"/foreign/$arrayIndex/taxPaidAmount"
       ),
       IntegerValueValidation.validateOptional(
         field = foreign.yearsHeld,

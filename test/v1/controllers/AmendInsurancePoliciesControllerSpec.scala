@@ -128,7 +128,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxAmountPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       },
@@ -136,7 +136,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxAmountPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -145,13 +145,13 @@ class AmendInsurancePoliciesControllerSpec
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxAmountPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxAmountPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       }
       |   ]
@@ -232,7 +232,7 @@ class AmendInsurancePoliciesControllerSpec
       customerReference = "INPOLY123A",
       event = Some("Death of spouse"),
       gainAmount = Some(2000.99),
-      taxAmountPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
     ),
@@ -240,7 +240,7 @@ class AmendInsurancePoliciesControllerSpec
       customerReference = "INPOLY123A",
       event = Some("Death of spouse"),
       gainAmount = Some(2000.99),
-      taxAmountPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
     )
@@ -250,13 +250,13 @@ class AmendInsurancePoliciesControllerSpec
     AmendForeignPoliciesItem(
       customerReference = "INPOLY123A",
       gainAmount = Some(2000.99),
-      taxAmountPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15)
     ),
     AmendForeignPoliciesItem(
       customerReference = "INPOLY123A",
       gainAmount = Some(2000.99),
-      taxAmountPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15)
     )
   )

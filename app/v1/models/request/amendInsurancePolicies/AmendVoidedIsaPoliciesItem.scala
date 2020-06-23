@@ -22,7 +22,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class AmendVoidedIsaPoliciesItem(customerReference: String,
                                       event: Option[String],
                                       gainAmount: Option[BigDecimal],
-                                      taxAmountPaid: Option[BigDecimal],
+                                      taxPaidAmount: Option[BigDecimal],
                                       yearsHeld: Option[Int],
                                       yearsHeldSinceLastGain: Option[Int])
 
@@ -33,7 +33,7 @@ object AmendVoidedIsaPoliciesItem {
     (JsPath \ "customerReference").write[String] and
       (JsPath \ "event").writeNullable[String] and
       (JsPath \ "gainAmount").writeNullable[BigDecimal] and
-      (JsPath \ "taxAmountPaid").writeNullable[BigDecimal] and
+      (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int]
     ) (unlift(AmendVoidedIsaPoliciesItem.unapply))
