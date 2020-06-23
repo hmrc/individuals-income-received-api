@@ -291,12 +291,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueErrors: List[MtdError] = List(
-          EventFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/1/event",
-              "/lifeAnnuity/1/event"
-            ))
-          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/lifeInsurance/0/customerReference",
@@ -315,6 +309,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/capitalRedemption/1/deficiencyRelief",
               "/lifeAnnuity/0/deficiencyRelief",
               "/foreign/1/gainAmount"
+            ))
+          ),
+          EventFormatError.copy(
+            paths = Some(List(
+              "/lifeInsurance/1/event",
+              "/lifeAnnuity/1/event"
             ))
           ),
           ValueFormatError.copy(
