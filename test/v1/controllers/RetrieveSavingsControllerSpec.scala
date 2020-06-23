@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveSavingsFixture
+import v1.fixtures.RetrieveSavingsControllerFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
@@ -32,7 +32,7 @@ import v1.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, S
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveSavings.{RetrieveSavingsHateoasData, RetrieveSavingsResponse}
+import v1.models.response.retrieveSavings.{ForeignInterestItem, RetrieveSavingsHateoasData, RetrieveSavingsResponse, Securities}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -80,8 +80,27 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
       rel = DELETE_SAVINGS_INCOME
     )
 
-  private val retrieveSavingsResponse = RetrieveSavingsFixture.retrieveSavingsResponseModel
-  private val mtdResponse = RetrieveSavingsFixture.mtdResponseWithHateoas(nino, taxYear)
+  private val fullSecuritiesItemsModel = Securities(
+      taxTakenOff = Some(100.0),
+      grossAmount = Some(1455.0),
+      netAmount = Some(123.22)
+    )
+
+  private val fullForeignInterestsModel = ForeignInterestItem(
+      amountBeforeTax = Some(1232.22),
+      countryCode = "GER",
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(22.22),
+      taxableAmount = 2321.22,
+      foreignTaxCreditRelief = true
+    )
+
+  private val retrieveSavingsResponseModel = RetrieveSavingsResponse(
+      securities = Some(fullSecuritiesItemsModel),
+      foreignInterest = Some(Seq(fullForeignInterestsModel))
+    )
+
+  private val mtdResponse = RetrieveSavingsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -109,11 +128,11 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
 
         MockDeleteRetrieveService
           .retrieve[RetrieveSavingsResponse](requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSavingsResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSavingsResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveSavingsResponse, RetrieveSavingsHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveSavingsResponse,
+          .wrap(retrieveSavingsResponseModel, RetrieveSavingsHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveSavingsResponseModel,
             Seq(
               amendSavingsLink,
               retrieveSavingsLink,

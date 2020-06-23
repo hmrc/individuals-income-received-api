@@ -18,43 +18,43 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.insurancePolicies.amend._
+import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequestBody, AmendVoidedIsaPoliciesItem}
 
-class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with ValueFormatErrorMessages {
+class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendRawData): List[MtdError] = {
+  override def validate(data: AmendInsurancePoliciesRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: AmendRawData => List[List[MtdError]] = (data: AmendRawData) => {
+  private def parameterFormatValidation: AmendInsurancePoliciesRawData => List[List[MtdError]] = (data: AmendInsurancePoliciesRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def bodyFormatValidator: AmendRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: AmendInsurancePoliciesRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendInsurancePoliciesRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
     )
   }
 
-  private def bodyValueValidator: AmendRawData => List[List[MtdError]] = { data =>
+  private def bodyValueValidator: AmendInsurancePoliciesRawData => List[List[MtdError]] = { data =>
 
-    val requestBodyData = data.body.json.as[AmendRequestBody]
+    val requestBodyData = data.body.json.as[AmendInsurancePoliciesRequestBody]
 
     List(flattenErrors(
       List(
         requestBodyData.lifeInsurance.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateLifeInsurance(data, index)
+          case (data, index) => validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.capitalRedemption.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCapitalRedemption(data, index)
+          case (data, index) => validateCommonItem(data, itemName = "capitalRedemption", arrayIndex = index)
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.lifeAnnuity.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateLifeAnnuity(data, index)
+          case (data, index) => validateCommonItem(data, itemName = "lifeAnnuity", arrayIndex = index)
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.voidedIsa.map(_.zipWithIndex.flatMap {
           case (data, index) => validateVoidedIsa(data, index)
@@ -66,115 +66,39 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
     ))
   }
 
-  private def validateLifeInsurance(lifeInsurance: LifeInsurance, arrayIndex: Int): List[MtdError] = {
+  private def validateCommonItem(commonItem: AmendCommonInsurancePoliciesItem, itemName: String, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefInsuranceValidation.validateOptional(lifeInsurance.customerReference).map(
-        _.copy(paths = Some(Seq(s"/lifeInsurance/$arrayIndex/customerReference")))
+      CustomerRefInsuranceValidation.validateOptional(commonItem.customerReference).map(
+        _.copy(paths = Some(Seq(s"/$itemName/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
-        event = lifeInsurance.event,
-        path = s"/lifeInsurance/$arrayIndex/event"
+        event = commonItem.event,
+        path = s"/$itemName/$arrayIndex/event"
       ),
       DecimalValueValidation.validate(
-        amount = lifeInsurance.gainAmount,
+        amount = commonItem.gainAmount,
         minValue = 0.01,
-        path = s"/lifeInsurance/$arrayIndex/gainAmount",
+        path = s"/$itemName/$arrayIndex/gainAmount",
         message = DECIMAL_MINIMUM_INCLUSIVE
       ),
-      DecimalValueValidation.validateOptional(
-        amount = lifeInsurance.taxPaid,
-        path = s"/lifeInsurance/$arrayIndex/taxPaid"
+      IntegerValueValidation.validateOptional(
+        field = commonItem.yearsHeld,
+        path = s"/$itemName/$arrayIndex/yearsHeld"
       ),
       IntegerValueValidation.validateOptional(
-        field = lifeInsurance.yearsHeld,
-        path = s"/lifeInsurance/$arrayIndex/yearsHeld"
-      ),
-      IntegerValueValidation.validateOptional(
-        field = lifeInsurance.yearsHeldSinceLastGain,
-        path = s"/lifeInsurance/$arrayIndex/yearsHeldSinceLastGain"
+        field = commonItem.yearsHeldSinceLastGain,
+        path = s"/$itemName/$arrayIndex/yearsHeldSinceLastGain"
       ),
       DecimalValueValidation.validateOptional(
-        amount = lifeInsurance.deficiencyRelief,
+        amount = commonItem.deficiencyRelief,
         minValue = 0.01,
-        path = s"/lifeInsurance/$arrayIndex/deficiencyRelief",
+        path = s"/$itemName/$arrayIndex/deficiencyRelief",
         message = DECIMAL_MINIMUM_INCLUSIVE
       )
     ).flatten
   }
 
-  private def validateCapitalRedemption(capitalRedemption: CapitalRedemption, arrayIndex: Int): List[MtdError] = {
-    List(
-      CustomerRefInsuranceValidation.validateOptional(capitalRedemption.customerReference).map(
-        _.copy(paths = Some(Seq(s"/capitalRedemption/$arrayIndex/customerReference")))
-      ),
-      EventValidation.validateOptional(
-        event = capitalRedemption.event,
-        path = s"/capitalRedemption/$arrayIndex/event"
-      ),
-      DecimalValueValidation.validate(
-        amount = capitalRedemption.gainAmount,
-        minValue = 0.01,
-        path = s"/capitalRedemption/$arrayIndex/gainAmount",
-        message = DECIMAL_MINIMUM_INCLUSIVE
-      ),
-      DecimalValueValidation.validateOptional(
-        amount = capitalRedemption.taxPaid,
-        path = s"/capitalRedemption/$arrayIndex/taxPaid"
-      ),
-      IntegerValueValidation.validateOptional(
-        field = capitalRedemption.yearsHeld,
-        path = s"/capitalRedemption/$arrayIndex/yearsHeld"
-      ),
-      IntegerValueValidation.validateOptional(
-        field = capitalRedemption.yearsHeldSinceLastGain,
-        path = s"/capitalRedemption/$arrayIndex/yearsHeldSinceLastGain"
-      ),
-      DecimalValueValidation.validateOptional(
-        amount = capitalRedemption.deficiencyRelief,
-        minValue = 0.01,
-        path = s"/capitalRedemption/$arrayIndex/deficiencyRelief",
-        message = DECIMAL_MINIMUM_INCLUSIVE
-      )
-    ).flatten
-  }
-
-  private def validateLifeAnnuity(lifeAnnuity: LifeAnnuity, arrayIndex: Int): List[MtdError] = {
-    List(
-      CustomerRefInsuranceValidation.validateOptional(lifeAnnuity.customerReference).map(
-        _.copy(paths = Some(Seq(s"/lifeAnnuity/$arrayIndex/customerReference")))
-      ),
-      EventValidation.validateOptional(
-        event = lifeAnnuity.event,
-        path = s"/lifeAnnuity/$arrayIndex/event"
-      ),
-      DecimalValueValidation.validate(
-        amount = lifeAnnuity.gainAmount,
-        minValue = 0.01,
-        path = s"/lifeAnnuity/$arrayIndex/gainAmount",
-        message = DECIMAL_MINIMUM_INCLUSIVE
-      ),
-      DecimalValueValidation.validateOptional(
-        amount = lifeAnnuity.taxPaid,
-        path = s"/lifeAnnuity/$arrayIndex/taxPaid"
-      ),
-      IntegerValueValidation.validateOptional(
-        field = lifeAnnuity.yearsHeld,
-        path = s"/lifeAnnuity/$arrayIndex/yearsHeld"
-      ),
-      IntegerValueValidation.validateOptional(
-        field = lifeAnnuity.yearsHeldSinceLastGain,
-        path = s"/lifeAnnuity/$arrayIndex/yearsHeldSinceLastGain"
-      ),
-      DecimalValueValidation.validateOptional(
-        amount = lifeAnnuity.deficiencyRelief,
-        minValue = 0.01,
-        path = s"/lifeAnnuity/$arrayIndex/deficiencyRelief",
-        message = DECIMAL_MINIMUM_INCLUSIVE
-      )
-    ).flatten
-  }
-
-  private def validateVoidedIsa(voidedIsa: VoidedIsa, arrayIndex: Int): List[MtdError] = {
+  private def validateVoidedIsa(voidedIsa: AmendVoidedIsaPoliciesItem, arrayIndex: Int): List[MtdError] = {
     List(
       CustomerRefInsuranceValidation.validateOptional(voidedIsa.customerReference).map(
         _.copy(paths = Some(Seq(s"/voidedIsa/$arrayIndex/customerReference")))
@@ -190,8 +114,8 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
         message = DECIMAL_MINIMUM_INCLUSIVE
       ),
       DecimalValueValidation.validateOptional(
-        amount = voidedIsa.taxPaid,
-        path = s"/voidedIsa/$arrayIndex/taxPaid"
+        amount = voidedIsa.taxPaidAmount,
+        path = s"/voidedIsa/$arrayIndex/taxPaidAmount"
       ),
       IntegerValueValidation.validateOptional(
         field = voidedIsa.yearsHeld,
@@ -204,7 +128,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
     ).flatten
   }
 
-  private def validateForeign(foreign: Foreign, arrayIndex: Int): List[MtdError] = {
+  private def validateForeign(foreign: AmendForeignPoliciesItem, arrayIndex: Int): List[MtdError] = {
     List(
       CustomerRefInsuranceValidation.validateOptional(foreign.customerReference).map(
         _.copy(paths = Some(Seq(s"/foreign/$arrayIndex/customerReference")))
@@ -216,8 +140,8 @@ class AmendInsurancePoliciesValidator extends Validator[AmendRawData] with Value
         message = DECIMAL_MINIMUM_INCLUSIVE
       ),
       DecimalValueValidation.validateOptional(
-        amount = foreign.taxPaid,
-        path = s"/foreign/$arrayIndex/taxPaid"
+        amount = foreign.taxPaidAmount,
+        path = s"/foreign/$arrayIndex/taxPaidAmount"
       ),
       IntegerValueValidation.validateOptional(
         field = foreign.yearsHeld,

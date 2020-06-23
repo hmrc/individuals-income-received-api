@@ -18,12 +18,11 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.fixtures.insurancePolicies.AmendInsurancePoliciesFixture._
 import v1.mocks.connectors.MockAmendInsurancePoliciesConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.insurancePolicies.amend.{AmendRequest, AmendRequestBody}
+import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRequestBody, AmendInsurancePoliciesRequest, AmendVoidedIsaPoliciesItem}
 
 import scala.concurrent.Future
 
@@ -33,15 +32,64 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
   private val taxYear = "2019"
   private val correlationId = "X-corr"
 
-  private val amendInsurancePolsRequest = AmendRequest(
-      nino = Nino(nino),
-      taxYear = DesTaxYear(taxYear),
-      body = AmendRequestBody(
-        lifeInsurance = Some(Seq(fullLifeInsuranceModel)),
-        capitalRedemption = Some(Seq(fullCapitalRedemptionModel)),
-        lifeAnnuity = Some(Seq(fullLifeAnnuityModel)),
-        voidedIsa = Some(Seq(fullVoidedIsaModel)),
-        foreign = Some(Seq(fullForeignModel)))
+  val voidedIsaModel = AmendVoidedIsaPoliciesItem(
+    customerReference = Some("INPOLY123A"),
+    event = Some("Death of spouse"),
+    gainAmount = 2000.99,
+    taxPaidAmount = Some(5000.99),
+    yearsHeld = Some(15),
+    yearsHeldSinceLastGain = Some(12)
+  )
+
+  val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
+    customerReference = Some("INPOLY123A"),
+    event = Some("Death of spouse"),
+    gainAmount = 2000.99,
+    taxPaid = true,
+    yearsHeld = Some(15),
+    yearsHeldSinceLastGain = Some(12),
+    deficiencyRelief = Some(5000.99)
+  )
+
+  val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
+    customerReference = Some("INPOLY123A"),
+    event = Some("Death of spouse"),
+    gainAmount = 2000.99,
+    taxPaid = true,
+    yearsHeld = Some(15),
+    yearsHeldSinceLastGain = Some(12),
+    deficiencyRelief = Some(5000.99)
+  )
+
+  val foreignModel = AmendForeignPoliciesItem(
+    customerReference = Some("INPOLY123A"),
+    gainAmount = 2000.99,
+    taxPaidAmount = Some(5000.99),
+    yearsHeld = Some(15)
+  )
+
+  val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
+    customerReference = Some("INPOLY123A"),
+    event = Some("Death of spouse"),
+    gainAmount = 2000.99,
+    taxPaid = true,
+    yearsHeld = Some(15),
+    yearsHeldSinceLastGain = Some(12),
+    deficiencyRelief = Some(5000.99)
+  )
+
+  private val amendInsurancePoliciesRequestBody = AmendInsurancePoliciesRequestBody(
+    lifeInsurance = Some(Seq(lifeInsuranceModel)),
+    capitalRedemption = Some(Seq(capitalRedemptionModel)),
+    lifeAnnuity = Some(Seq(lifeAnnuityModel)),
+    voidedIsa = Some(Seq(voidedIsaModel)),
+    foreign = Some(Seq(foreignModel))
+  )
+
+  private val amendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
+    nino = Nino(nino),
+    taxYear = DesTaxYear(taxYear),
+    body = amendInsurancePoliciesRequestBody
   )
 
   trait Test extends MockAmendInsurancePoliciesConnector {
@@ -57,10 +105,10 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePolsRequest)
+        MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePoliciesRequest)
           .returns(Future.successful(outcome))
 
-        await(service.amendInsurancePolicies(amendInsurancePolsRequest)) shouldBe outcome
+        await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -68,10 +116,10 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePolsRequest)
+            MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePoliciesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendInsurancePolicies(amendInsurancePolsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(

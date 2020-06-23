@@ -16,122 +16,118 @@
 
 package v1.models.response.retrieveInsurancePolicies
 
-import play.api.libs.json.{JsError, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
 class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
-       |{
-       |   "lifeInsurance":[
-       |      {
-       |         "customerReference":"INPOLY123A",
-       |         "event":"Death of spouse",
-       |         "gainAmount":1.23,
-       |         "taxPaid":1.33,
-       |         "yearsHeld":2,
-       |         "yearsHeldSinceLastGain":1,
-       |         "deficiencyRelief":1.23
-       |      }
-       |   ],
-       |   "capitalRedemption":[
-       |      {
-       |         "customerReference":"INPOLY123B",
-       |         "gainAmount":1.24,
-       |         "taxPaid":1.34,
-       |         "yearsHeld":3,
-       |         "yearsHeldSinceLastGain":2,
-       |         "deficiencyRelief":1.23
-       |      }
-       |   ],
-       |   "lifeAnnuity":[
-       |      {
-       |         "customerReference":"INPOLY123C",
-       |         "gainAmount":1.25,
-       |         "taxPaid":1.35,
-       |         "yearsHeld":4,
-       |         "yearsHeldSinceLastGain":3,
-       |         "deficiencyRelief":1.23
-       |      }
-       |   ],
-       |   "voidedIsa":[
-       |      {
-       |         "customerReference":"INPOLY123D",
-       |         "gainAmount":1.26,
-       |         "taxPaid":1.36,
-       |         "yearsHeld":5,
-       |         "yearsHeldSinceLastGain":4
-       |      }
-       |   ],
-       |   "foreign":[
-       |      {
-       |         "customerReference":"INPOLY123E",
-       |         "gainAmount":1.27,
-       |         "taxPaid":1.37,
-       |         "yearsHeld":6
-       |      }
-       |   ]
-       |}
+      |{
+      |   "lifeInsurance":[
+      |      {
+      |         "customerReference": "INPOLY123A",
+      |         "event": "Death of spouse",
+      |         "gainAmount": 1.23,
+      |         "taxPaid": true,
+      |         "yearsHeld": 2,
+      |         "yearsHeldSinceLastGain": 1,
+      |         "deficiencyRelief": 1.23
+      |      }
+      |   ],
+      |   "capitalRedemption":[
+      |      {
+      |         "customerReference": "INPOLY123B",
+      |         "gainAmount": 1.24,
+      |         "taxPaid": true,
+      |         "yearsHeld": 3,
+      |         "yearsHeldSinceLastGain": 2,
+      |         "deficiencyRelief": 1.23
+      |      }
+      |   ],
+      |   "lifeAnnuity":[
+      |      {
+      |         "customerReference": "INPOLY123C",
+      |         "gainAmount": 1.25,
+      |         "taxPaid": true,
+      |         "yearsHeld": 4,
+      |         "yearsHeldSinceLastGain": 3,
+      |         "deficiencyRelief": 1.23
+      |      }
+      |   ],
+      |   "voidedIsa":[
+      |      {
+      |         "customerReference": "INPOLY123D",
+      |         "gainAmount": 1.26,
+      |         "taxPaidAmount": 1.36,
+      |         "yearsHeld": 5,
+      |         "yearsHeldSinceLastGain": 4
+      |      }
+      |   ],
+      |   "foreign":[
+      |      {
+      |         "customerReference": "INPOLY123E",
+      |         "gainAmount": 1.27,
+      |         "taxPaidAmount": 1.37,
+      |         "yearsHeld": 6
+      |      }
+      |   ]
+      |}
     """.stripMargin
   )
 
-  private val itemModel1 = InsurancePoliciesItem(
+  private val lifeInsuranceItemModel = CommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 1.23,
-    taxPaid = Some(1.33),
+    taxPaid = true,
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1),
     deficiencyRelief = Some(1.23)
   )
 
-  private val itemModel2 = InsurancePoliciesItem(
+  private val capitalRedemptionItemModel = CommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123B"),
     event = None,
     gainAmount = 1.24,
-    taxPaid = Some(1.34),
+    taxPaid = true,
     yearsHeld = Some(3),
     yearsHeldSinceLastGain = Some(2),
     deficiencyRelief = Some(1.23)
   )
 
-  private val itemModel3 = InsurancePoliciesItem(
+  private val lifeAnnuityItemModel = CommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123C"),
     event = None,
     gainAmount = 1.25,
-    taxPaid = Some(1.35),
+    taxPaid = true,
     yearsHeld = Some(4),
     yearsHeldSinceLastGain = Some(3),
     deficiencyRelief = Some(1.23)
   )
 
-  private val itemModel4 = InsurancePoliciesItem(
+  private val voidedIsaItemModel = VoidedIsaPoliciesItem(
     customerReference = Some("INPOLY123D"),
     event = None,
     gainAmount = 1.26,
-    taxPaid = Some(1.36),
+    taxPaidAmount = Some(1.36),
     yearsHeld = Some(5),
-    yearsHeldSinceLastGain = Some(4),
-    deficiencyRelief = None
+    yearsHeldSinceLastGain = Some(4)
   )
 
-  private val itemModel5 = InsurancePoliciesItem(
+  private val foreignItemModel = ForeignPoliciesItem(
     customerReference = Some("INPOLY123E"),
-    event = None,
     gainAmount = 1.27,
-    taxPaid = Some(1.37),
-    yearsHeld = Some(6),
-    yearsHeldSinceLastGain = None,
-    deficiencyRelief = None
+    taxPaidAmount = Some(1.37),
+    yearsHeld = Some(6)
   )
 
   private val responseModel = RetrieveInsurancePoliciesResponse(
-    lifeInsurance = Some(Seq(itemModel1)),
-    capitalRedemption = Some(Seq(itemModel2)),
-    lifeAnnuity = Some(Seq(itemModel3)),
-    voidedIsa = Some(Seq(itemModel4)),
-    foreign = Some(Seq(itemModel5))
+    lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
+    capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
+    lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),
+    voidedIsa = Some(Seq(voidedIsaItemModel)),
+    foreign = Some(Seq(foreignItemModel))
   )
 
   "InsurancePoliciesItem" when {
@@ -156,6 +152,13 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
         )
 
         invalidJson.validate[RetrieveInsurancePoliciesResponse] shouldBe a[JsError]
+      }
+    }
+
+    "read from empty JSON" should {
+      "produce an empty RetrieveInsurancePoliciesResponse Object" in {
+        val emptyJson = JsObject.empty
+        emptyJson.as[RetrieveInsurancePoliciesResponse] shouldBe RetrieveInsurancePoliciesResponse.empty
       }
     }
 

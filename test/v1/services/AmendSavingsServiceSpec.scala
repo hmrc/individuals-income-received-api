@@ -22,7 +22,7 @@ import v1.mocks.connectors.MockAmendSavingsConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.savings.amend.{AmendForeignInterest, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
@@ -32,7 +32,7 @@ class AmendSavingsServiceSpec extends ServiceSpec {
   private val taxYear = "2019"
   private val correlationId = "X-corr"
 
-  val foreignInterest: AmendForeignInterest = AmendForeignInterest(
+  val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
     amountBeforeTax = None,
     countryCode = "FRA",
     taxTakenOff = None,

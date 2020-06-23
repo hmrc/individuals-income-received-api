@@ -1,70 +1,70 @@
 {
-  "lifeInsurance":[
+  "lifeInsurance": [
     {
-      "customerReference":"INPOLY123A",
-      "event":"Policy matured",
-      "gainAmount":1000.23,
-      "taxPaid":100.23,
-      "yearsHeld":10,
-      "yearsHeldSinceLastGain":1,
-      "deficiencyRelief":100.23
+      "customerReference": "INPOLY123A",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaid": true,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1,
+      "deficiencyRelief": 100.23
     }
   ],
-  "capitalRedemption":[
+  "capitalRedemption": [
     {
-      "customerReference":"INPOLY123B",
-      "event":"Policy matured",
-      "gainAmount":1000.23,
-      "taxPaid":100.23,
-      "yearsHeld":10,
-      "yearsHeldSinceLastGain":1,
-      "deficiencyRelief":100.23
+      "customerReference": "INPOLY123B",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaid": true,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1,
+      "deficiencyRelief": 100.23
     }
   ],
-  "lifeAnnuity":[
+  "lifeAnnuity": [
     {
-      "customerReference":"INPOLY123C",
-      "event":"Policy matured",
-      "gainAmount":1000.23,
-      "taxPaid":100.23,
-      "yearsHeld":10,
-      "yearsHeldSinceLastGain":1,
-      "deficiencyRelief":100.23
+      "customerReference": "INPOLY123C",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaid": true,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1,
+      "deficiencyRelief": 100.23
     }
   ],
-  "voidedIsa":[
+  "voidedIsa": [
     {
-      "customerReference":"INPOLY123D",
-      "event":"Policy matured",
-      "gainAmount":1000.23,
-      "taxPaid":100.23,
-      "yearsHeld":10,
-      "yearsHeldSinceLastGain":1
+      "customerReference": "INPOLY123D",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaidAmount": 100.23,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1
     }
   ],
-  "foreign":[
+  "foreign": [
     {
-      "customerReference":"INPOLY123E",
-      "gainAmount":1000.23,
-      "taxPaid":100.23,
-      "yearsHeld":10
+      "customerReference": "INPOLY123E",
+      "gainAmount": 1000.23,
+      "taxPaidAmount": 100.23,
+      "yearsHeld": 10
     }
   ],
-  "links":[
+  "links": [
     {
-      "href":"/individuals/income-received/insurance-policies/{nino}/{taxYear}",
-      "rel":"amend-insurance-policies-income",
-      "method":"PUT"
+      "href": "/individuals/income-received/insurance-policies/{nino}/{taxYear}",
+      "rel": "amend-insurance-policies-income",
+      "method": "PUT"
     },
     {
-      "href":"/individuals/income-received/insurance-policies/{nino}/{taxYear}",
-      "rel":"self",
-      "method":"GET"
+      "href": "/individuals/income-received/insurance-policies/{nino}/{taxYear}",
+      "rel": "self",
+      "method": "GET"
     },
     {
-      "href":"/individuals/income-received/insurance-policies/{nino}/{taxYear}",
-      "rel":"delete-insurance-policies-income",
-      "method":"DELETE"
+      "href": "/individuals/income-received/insurance-policies/{nino}/{taxYear}",
+      "rel": "delete-insurance-policies-income",
+      "method": "DELETE"
     }
   ]
 }

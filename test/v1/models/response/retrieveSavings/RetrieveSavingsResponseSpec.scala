@@ -16,111 +16,12 @@
 
 package v1.models.response.retrieveSavings
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveSavingsFixture._
 
 class RetrieveSavingsResponseSpec extends UnitSpec {
 
-  val desResponseNoSecurities: JsValue = Json.parse(
-    """
-      |{
-      |   "foreignInterest": [
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val desResponseNoForeignInterest: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      }
-      |}
-    """.stripMargin
-  )
-
-  val desResponseMinimalForeignInterest: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      },
-      |   "foreignInterest": [
-      |      {
-      |         "countryCode": "GER",
-      |         "taxableAmount": 100,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-
-  val desResponseEmptySecurities: JsValue = Json.parse(
-    """
-      |{
-      |   "securities": {  },
-      |
-      |   "foreignInterest": [
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val desResponseEmptyForeignInterest: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      },
-      |   "foreignInterest": [ ]
-      |}
-    """.stripMargin
-  )
-
-  val desMinimalFieldsRetrieveSavingsResponse: JsValue = Json.parse(
-    """
-      |{
-      |   "foreignInterest": [
-      |      {
-      |         "countryCode": "GER",
-      |         "taxableAmount": 100,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val desResponseWithMultipleForeignInterest: JsValue = Json.parse(
+  private val desResponse: JsValue = Json.parse(
     """
       |{
       |   "securities":
@@ -137,21 +38,36 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |         "specialWithholdingTax": 22.22,
       |         "taxableAmount": 2321.22,
       |         "foreignTaxCreditRelief": true
-      |      },
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "FRA",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
       |      }
       |   ]
       |}
     """.stripMargin
   )
 
-  val mtdResponseWithMultipleForeignInterest: JsValue = Json.parse(
+  private val securitiesModel: Securities =
+    Securities(
+      taxTakenOff = Some(100.0),
+      grossAmount = Some(1455.0),
+      netAmount = Some(123.22)
+    )
+
+  private val foreignInterestsItemModel: ForeignInterestItem =
+    ForeignInterestItem(
+      amountBeforeTax = Some(1232.22),
+      countryCode = "GER",
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(22.22),
+      taxableAmount = 2321.22,
+      foreignTaxCreditRelief = true
+    )
+
+  private val model: RetrieveSavingsResponse =
+    RetrieveSavingsResponse(
+      securities = Some(securitiesModel),
+      foreignInterest = Some(Seq(foreignInterestsItemModel))
+    )
+
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |   "securities":
@@ -168,89 +84,13 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |         "specialWithholdingTax": 22.22,
       |         "taxableAmount": 2321.22,
       |         "foreignTaxCreditRelief": true
-      |      },
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "FRA",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
       |      }
       |   ]
       |}
     """.stripMargin
   )
 
-  val mtdMinimalFieldsRetrieveSavingsResponse: JsValue = Json.parse(
-    """
-      |{
-      |   "foreignInterest": [
-      |      {
-      |         "countryCode": "GER",
-      |         "taxableAmount": 100,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponseNoSecurities: JsValue = Json.parse(
-    """
-      |{
-      |   "foreignInterest": [
-      |      {
-      |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
-      |         "taxTakenOff": 22.22,
-      |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponseNoForeignInterest: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      }
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponseMinimalForeignInterest: JsValue = Json.parse(
-    """
-      |{
-      |   "securities":
-      |      {
-      |         "taxTakenOff": 100.0,
-      |         "grossAmount": 1455.0,
-      |         "netAmount": 123.22
-      |      },
-      |   "foreignInterest": [
-      |      {
-      |         "countryCode": "GER",
-      |         "taxableAmount": 100,
-      |         "foreignTaxCreditRelief": true
-      |      }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val desResponseEmpty: JsValue = Json.parse("""{}""")
-
-  val mtdResponseEmpty: JsValue = Json.parse("""{}""")
-
-  val desResponseInvalid: JsValue = Json.parse(
+  private val desResponseInvalid: JsValue = Json.parse(
     """
       |{
       |   "securities":
@@ -273,39 +113,19 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
+  val emptyObjectsJson: JsValue = Json.parse(
+    """
+      |{
+      |   "securities": {},
+      |   "foreignInterest": []
+      |}
+    """.stripMargin
+  )
+
   "RetrieveSavingsResponse" when {
     "read from valid JSON" should {
       "produce the expected RetrieveSavingsResponse model" in {
-        desRetrieveSavingsResponse.as[RetrieveSavingsResponse] shouldBe retrieveSavingsResponseModel
-      }
-    }
-
-    "read from valid JSON with no securities" should {
-      "produce a model with securities as None" in {
-        desResponseNoSecurities.as[RetrieveSavingsResponse] shouldBe responseModelNoSecurities
-      }
-    }
-    "read from valid JSON with empty securities" should {
-      "produce a model with securities as None" in {
-        desResponseEmptySecurities.as[RetrieveSavingsResponse] shouldBe  responseModelNoSecurities
-      }
-    }
-
-    "read from valid JSON with empty ForeignInterest" should {
-      "produce a model with foreignInterest as None" in {
-        desResponseEmptyForeignInterest.as[RetrieveSavingsResponse] shouldBe  responseModelNoForeignInterest
-      }
-    }
-
-    "read from valid JSON with no foreignInterest" should {
-      "produce a model with foreignInterest as None" in {
-        desResponseNoForeignInterest.as[RetrieveSavingsResponse] shouldBe responseModelNoForeignInterest
-      }
-    }
-
-    "read from valid JSON with only mandatory fields in ForeignInterest" should {
-      "produce a model with foreignInterest having only mandatory fields" in {
-        desResponseMinimalForeignInterest.as[RetrieveSavingsResponse] shouldBe responseModelMinimalForeignInterest
+        desResponse.as[RetrieveSavingsResponse] shouldBe model
       }
     }
 
@@ -317,61 +137,25 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
     "read from empty JSON" should {
       "produce a model with securities and foreignInterest as None" in {
-        desResponseEmpty.as[RetrieveSavingsResponse] shouldBe minimalRetrieveSavingsResponseModel
+        JsObject.empty.as[RetrieveSavingsResponse] shouldBe RetrieveSavingsResponse.empty
       }
     }
 
-    "read from a JSON containing only mandatory fields" should {
-      "produce a model with securities and foreignInterest having only mandatory fields" in {
-        desMinimalFieldsRetrieveSavingsResponse.as[RetrieveSavingsResponse] shouldBe responseModelWithMinimalFields
-      }
-    }
-
-    "read from a JSON with multiple foreignInterest items " should {
-      "produce a model with multiple foreignInterest items" in {
-        desResponseWithMultipleForeignInterest.as[RetrieveSavingsResponse] shouldBe responseModelMultipleForeignInterest
+    "read from JSON with empty securities and foreignInterest fields" should {
+      "produce an empty AmendSavingsRequestBody object" in {
+        emptyObjectsJson.as[RetrieveSavingsResponse] shouldBe RetrieveSavingsResponse.empty
       }
     }
 
     "written to JSON" should {
       "produce the expected JSON" in {
-        Json.toJson(retrieveSavingsResponseModel) shouldBe mtdRetrieveSavingsResponse
-      }
-    }
-
-    "written to JSON (no securities)" should {
-      "produce JSON with no securities" in {
-        Json.toJson(responseModelNoSecurities) shouldBe mtdResponseNoSecurities
-      }
-    }
-
-    "written to JSON (mandatory fields in foreignInterest)" should {
-      "produce JSON with mandatory fields in foreignInterest" in {
-        Json.toJson(responseModelMinimalForeignInterest) shouldBe mtdResponseMinimalForeignInterest
-      }
-    }
-
-    "written to JSON (only mandatory fields)" should {
-      "produce JSON with only mandatory fields" in {
-        Json.toJson(responseModelWithMinimalFields) shouldBe mtdMinimalFieldsRetrieveSavingsResponse
-      }
-    }
-
-    "written to JSON (multiple foreignInterest items)" should {
-      "produce JSON with multiple foreignInterest items" in {
-        Json.toJson(responseModelMultipleForeignInterest) shouldBe mtdResponseWithMultipleForeignInterest
+        Json.toJson(model) shouldBe mtdJson
       }
     }
 
     "written to JSON (no securities and foreignInterest)" should {
       "produce JSON with no securities and foreignInterest" in {
-        Json.toJson(minimalRetrieveSavingsResponseModel) shouldBe mtdResponseEmpty
-      }
-    }
-
-    "written to JSON (no foreignInterest)" should {
-      "produce JSON with no foreignInterest" in {
-        Json.toJson(responseModelNoForeignInterest) shouldBe mtdResponseNoForeignInterest
+        Json.toJson(RetrieveSavingsResponse.empty) shouldBe JsObject.empty
       }
     }
   }

@@ -26,11 +26,10 @@ import v1.mocks.services.{MockAmendInsurancePoliciesService, MockEnrolmentsAuthS
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.insurancePolicies.amend._
+import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody, AmendVoidedIsaPoliciesItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 
 class AmendInsurancePoliciesControllerSpec
   extends ControllerBaseSpec
@@ -69,7 +68,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -78,7 +77,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -89,7 +88,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -98,7 +97,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -109,7 +108,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -118,7 +117,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -129,7 +128,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       },
@@ -137,7 +136,7 @@ class AmendInsurancePoliciesControllerSpec
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -146,13 +145,13 @@ class AmendInsurancePoliciesControllerSpec
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       }
       |   ]
@@ -160,109 +159,109 @@ class AmendInsurancePoliciesControllerSpec
     """.stripMargin
   )
 
-  val rawData: AmendRawData = AmendRawData(
+  val rawData: AmendInsurancePoliciesRawData = AmendInsurancePoliciesRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
-  val lifeInsurance: Seq[LifeInsurance] = Seq(
-    LifeInsurance(
+  val lifeInsurance: Seq[AmendCommonInsurancePoliciesItem] = Seq(
+    AmendCommonInsurancePoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
-    LifeInsurance(
+    AmendCommonInsurancePoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     )
   )
 
-  val capitalRedemption: Seq[CapitalRedemption] = Seq(
-    CapitalRedemption(
+  val capitalRedemption: Seq[AmendCommonInsurancePoliciesItem] = Seq(
+    AmendCommonInsurancePoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
-    CapitalRedemption(
+    AmendCommonInsurancePoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     )
   )
 
-  val lifeAnnuity: Seq[LifeAnnuity] = Seq(
-    LifeAnnuity(
+  val lifeAnnuity: Seq[AmendCommonInsurancePoliciesItem] = Seq(
+    AmendCommonInsurancePoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
-    LifeAnnuity(
+    AmendCommonInsurancePoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     )
   )
-  val voidedIsa: Seq[VoidedIsa] = Seq(
-    VoidedIsa(
+  val voidedIsa: Seq[AmendVoidedIsaPoliciesItem] = Seq(
+    AmendVoidedIsaPoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
     ),
-    VoidedIsa(
+    AmendVoidedIsaPoliciesItem(
       customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
     )
   )
 
-  val foreign: Seq[Foreign] = Seq(
-    Foreign(
+  val foreign: Seq[AmendForeignPoliciesItem] = Seq(
+    AmendForeignPoliciesItem(
       customerReference = Some("INPOLY123A"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15)
     ),
-    Foreign(
+    AmendForeignPoliciesItem(
       customerReference = Some("INPOLY123A"),
       gainAmount = 2000.99,
-      taxPaid = Some(5000.99),
+      taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15)
     )
   )
 
-  val amendInsurancePoliciesRequestBody: AmendRequestBody = AmendRequestBody(
+  val amendInsurancePoliciesRequestBody: AmendInsurancePoliciesRequestBody = AmendInsurancePoliciesRequestBody(
     lifeInsurance = Some(lifeInsurance),
     capitalRedemption = Some(capitalRedemption),
     lifeAnnuity = Some(lifeAnnuity),
@@ -270,7 +269,7 @@ class AmendInsurancePoliciesControllerSpec
     foreign = Some(foreign)
   )
 
-  val requestData: AmendRequest = AmendRequest(
+  val requestData: AmendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear),
     body = amendInsurancePoliciesRequestBody
