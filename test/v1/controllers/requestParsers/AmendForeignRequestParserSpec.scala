@@ -111,7 +111,7 @@ class AmendForeignRequestParserSpec extends UnitSpec {
           """
             |{
             |   "foreignEarnings": {
-            |     "customerReference":"FOREIGNIfffrfrfrfNCME123A",
+            |     "customerReference":"This customer ref string is 91 characters long ------------------------------------------91",
             |     "earningsNotTaxableUK":"999999994444999.99"
             |   },
             |   "unremittableForeignIncome": [
@@ -128,11 +128,6 @@ class AmendForeignRequestParserSpec extends UnitSpec {
         private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
         private val allInvalidValueErrors = List(
-          CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/foreignEarnings/customerReference"
-            ))
-          ),
           CountryCodeRuleError.copy(
             paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
           ),
@@ -146,8 +141,12 @@ class AmendForeignRequestParserSpec extends UnitSpec {
             )),
             message = "The field should be between 0 and 99999999999.99"
           ),
+          CustomerRefFormatError.copy(
+            paths = Some(List("/foreignEarnings/customerReference"))
+          ),
           CountryCodeFormatError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/0/countryCode")))
+            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+          )
         )
 
         MockAmendForeignValidator.validate(amendForeignRawData.copy(body = allInvalidValueRawRequestBody))

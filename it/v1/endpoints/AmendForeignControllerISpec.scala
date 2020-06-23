@@ -119,7 +119,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
           """
             |{
             |   "foreignEarnings": {
-            |      "customerReference": "This ref is more than 25 characters",
+            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |      "earningsNotTaxableUK": 999999999991.99
             |   },
             |   "unremittableForeignIncome": [
@@ -140,29 +140,23 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
 
         val allInvalidValueRequestError: List[MtdError] = List(
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/unremittableForeignIncome/1/countryCode"
-            ))
+            paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
           ),
           ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/foreignEarnings/earningsNotTaxableUK",
               "/unremittableForeignIncome/0/amountInForeignCurrency",
               "/unremittableForeignIncome/0/amountTaxPaid",
               "/unremittableForeignIncome/1/amountInForeignCurrency",
               "/unremittableForeignIncome/1/amountTaxPaid"
-            ))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/unremittableForeignIncome/0/countryCode"
-            ))
+            )),
+            message = "The field should be between 0 and 99999999999.99"
           ),
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/foreignEarnings/customerReference"
-            ))
+            paths = Some(List("/foreignEarnings/customerReference"))
+          ),
+          CountryCodeFormatError.copy(
+            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
           )
         )
 
@@ -259,7 +253,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
         """
           |{
           |   "foreignEarnings": {
-          |      "customerReference": "This ref is more than 25 characters",
+          |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
           |      "earningsNotTaxableUK": 1999.99
           |   }
           |}

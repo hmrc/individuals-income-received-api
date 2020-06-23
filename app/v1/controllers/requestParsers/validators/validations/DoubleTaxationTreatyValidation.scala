@@ -16,18 +16,12 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{CustomerRefFormatError, MtdError}
+import v1.models.errors.{DoubleTaxationTreatyFormatError, MtdError}
 
-object CustomerRefValidation {
+object DoubleTaxationTreatyValidation {
 
-  private val regex = "^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$"
-
-  def validateOptional(customerRef: Option[String]): List[MtdError] = customerRef match {
-    case None => NoValidationErrors
-    case Some(value) => validate(value)
-  }
-
-  def validate(customerRef: String): List[MtdError] = {
-    if(customerRef.matches(regex)) NoValidationErrors else List(CustomerRefFormatError)
+  def validateOptional(dblTaxationTreaty: Option[String], path: String): List[MtdError] = dblTaxationTreaty.fold(NoValidationErrors: List[MtdError]) { data =>
+    if (data.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
+      DoubleTaxationTreatyFormatError.copy(paths = Some(Seq(path))))
   }
 }
