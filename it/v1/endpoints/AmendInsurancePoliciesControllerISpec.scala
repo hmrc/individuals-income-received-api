@@ -192,11 +192,11 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       "all field value validations fail on the request body" in new Test {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-          """
+          s"""
             {
             |   "lifeInsurance":[
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "${"This ref is more than 90 characters"*10}",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.999,
             |           "taxPaid": true,
@@ -206,7 +206,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |       },
             |       {
             |           "customerReference": "INPOLY123A",
-            |           "event": "This event string is 76 characters long --------------------------------- 76",
+            |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 2000.99,
             |           "taxPaid": true,
             |           "yearsHeld": 15,
@@ -216,7 +216,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |   ],
             |   "capitalRedemption":[
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "${"This ref is more than 90 characters"*10}",
             |           "event": "Death of spouse",
             |           "gainAmount": 3000.999,
             |           "taxPaid": true,
@@ -245,8 +245,8 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "deficiencyRelief": 5000.999
             |       },
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
-            |           "event": "This event string is 76 characters long --------------------------------- 76",
+            |           "customerReference": "${"This ref is more than 90 characters"*10}",
+            |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 5000.99,
             |           "taxPaid": true,
             |           "yearsHeld": 15,
@@ -264,7 +264,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |           "yearsHeldSinceLastGain": 120
             |       },
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "${"This ref is more than 90 characters"*10}",
             |           "event": "Death of spouse",
             |           "gainAmount": 5000.999,
             |           "taxPaidAmount": 5000.999,
@@ -274,7 +274,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             |   ],
             |   "foreign":[
             |       {
-            |           "customerReference": "This ref is more than 25 characters",
+            |           "customerReference": "${"This ref is more than 90 characters"*10}",
             |           "gainAmount": 5000.99,
             |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15
@@ -308,6 +308,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/capitalRedemption/0/gainAmount",
               "/capitalRedemption/1/deficiencyRelief",
               "/lifeAnnuity/0/deficiencyRelief",
+              "/voidedIsa/1/gainAmount",
               "/foreign/1/gainAmount"
             ))
           ),
@@ -332,7 +333,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
-              "/voidedIsa/1/gainAmount",
               "/voidedIsa/1/taxPaidAmount",
               "/foreign/0/taxPaidAmount",
             ))
@@ -569,7 +569,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         ValueFormatError.copy(
           message = "The field should be between 0 and 99999999999.99",
           paths = Some(List(
-            "/voidedIsa/0/gainAmount",
             "/voidedIsa/0/taxPaidAmount",
             "/voidedIsa/1/taxPaidAmount",
             "/foreign/0/taxPaidAmount",
@@ -588,6 +587,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             "/lifeAnnuity/0/deficiencyRelief",
             "/lifeAnnuity/1/gainAmount",
             "/lifeAnnuity/1/deficiencyRelief",
+            "/voidedIsa/0/gainAmount",
             "/foreign/0/gainAmount",
             "/foreign/1/gainAmount"
           ))
@@ -618,11 +618,11 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       )
 
       val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
-        """
+        s"""
           |{
           |   "lifeInsurance":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -631,7 +631,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "deficiencyRelief": 5000.99
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -642,7 +642,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "capitalRedemption":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -651,7 +651,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "deficiencyRelief": 5000.99
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -662,7 +662,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "lifeAnnuity":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -671,7 +671,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "deficiencyRelief": 5000.99
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaid": true,
@@ -682,7 +682,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "voidedIsa":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
@@ -690,7 +690,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |           "yearsHeldSinceLastGain": 12
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "event": "Death of spouse",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
@@ -700,13 +700,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           |   ],
           |   "foreign":[
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
           |       },
           |       {
-          |           "customerReference": "This ref is more than 25 characters",
+          |           "customerReference": "${"This ref is more than 90 characters"*10}",
           |           "gainAmount": 2000.99,
           |           "taxPaidAmount": 5000.99,
           |           "yearsHeld": 15
