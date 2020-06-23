@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.errors._
-import v1.models.request.savings.amend.AmendSavingsRawData
+import v1.models.request.amendSavings.AmendSavingsRawData
 
 class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 

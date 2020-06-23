@@ -20,11 +20,11 @@ import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendInsurancePoliciesValidator
 import v1.models.domain.DesTaxYear
-import v1.models.request.insurancePolicies.amend.{AmendRawData, AmendRequest, AmendRequestBody}
+import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody}
 
 class AmendInsurancePoliciesRequestParser @Inject()(val validator: AmendInsurancePoliciesValidator)
-  extends RequestParser[AmendRawData, AmendRequest] {
+  extends RequestParser[AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest] {
 
-  override protected def requestFor(data: AmendRawData): AmendRequest =
-    AmendRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.json.as[AmendRequestBody])
+  override protected def requestFor(data: AmendInsurancePoliciesRawData): AmendInsurancePoliciesRequest =
+    AmendInsurancePoliciesRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.json.as[AmendInsurancePoliciesRequestBody])
 }

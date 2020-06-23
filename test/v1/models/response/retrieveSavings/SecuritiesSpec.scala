@@ -16,9 +16,8 @@
 
 package v1.models.response.retrieveSavings
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveSavingsFixture
 
 class SecuritiesSpec extends UnitSpec {
 
@@ -31,6 +30,13 @@ class SecuritiesSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
+  val model: Securities =
+    Securities(
+      taxTakenOff = Some(100.0),
+      grossAmount = Some(1455.0),
+      netAmount = Some(123.22)
+    )
 
   val mtdResponse: JsValue = Json.parse(
     """
@@ -52,18 +58,17 @@ class SecuritiesSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val desResponseEmpty: JsValue = Json.parse("""{}""")
-
   "SecuritiesItems" when {
     "read from valid JSON" should {
       "produce the expected SecuritiesItems object" in {
-        desResponse.as[Securities] shouldBe RetrieveSavingsFixture.fullSecuritiesItemsModel
+        desResponse.as[Securities] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce an empty SecuritiesItems object" in {
-        desResponseEmpty.as[Securities] shouldBe RetrieveSavingsFixture.minimalSecuritiesItemsModel
+        val emptyJson = JsObject.empty
+        emptyJson.as[Securities] shouldBe Securities.empty
       }
     }
 
@@ -75,7 +80,7 @@ class SecuritiesSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JSON object" in {
-        Json.toJson(RetrieveSavingsFixture.fullSecuritiesItemsModel) shouldBe mtdResponse
+        Json.toJson(model) shouldBe mtdResponse
       }
     }
   }

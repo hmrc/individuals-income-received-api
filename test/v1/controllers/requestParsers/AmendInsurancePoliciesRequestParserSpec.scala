@@ -23,7 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendInsurancePoliciesValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.request.insurancePolicies.amend._
+import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody, AmendVoidedIsaPoliciesItem}
 
 class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
@@ -38,7 +38,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -47,7 +47,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -58,7 +58,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -67,7 +67,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -78,7 +78,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -87,7 +87,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaid": true,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12,
       |           "deficiencyRelief": 5000.99
@@ -98,7 +98,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       },
@@ -106,7 +106,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |           "customerReference": "INPOLY123A",
       |           "event": "Death of spouse",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15,
       |           "yearsHeldSinceLastGain": 12
       |       }
@@ -115,13 +115,13 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
       |           "gainAmount": 2000.99,
-      |           "taxPaid": 5000.99,
+      |           "taxPaidAmount": 5000.99,
       |           "yearsHeld": 15
       |       }
       |   ]
@@ -131,64 +131,120 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
-  private val fullLifeInsuranceModel = LifeInsurance(
-    customerReference = "INPOLY123A",
-    event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
-    taxPaid = Some(5000.99),
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12),
-    deficiencyRelief = Some(5000.99)
-  )
-
-  private val fullCapitalRedemptionModel = CapitalRedemption(
-    customerReference = "INPOLY123A",
-    event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
-    taxPaid = Some(5000.99),
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12),
-    deficiencyRelief = Some(5000.99)
-  )
-
-  private val fullLifeAnnuityModel = LifeAnnuity(
-    customerReference = "INPOLY123A",
-    event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
-    taxPaid = Some(5000.99),
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12),
-    deficiencyRelief = Some(5000.99)
-  )
-
-  private val fullVoidedIsaModel = VoidedIsa(
-    customerReference = "INPOLY123A",
-    event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
-    taxPaid = Some(5000.99),
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12)
-  )
-
-  private  val fullForeignModel = Foreign(
-    customerReference = "INPOLY123A",
-    gainAmount = Some(2000.99),
-    taxPaid = Some(5000.99),
-    yearsHeld = Some(15)
-  )
-
-  private val validRequestBodyModel = AmendRequestBody(
-    lifeInsurance = Some(Seq(fullLifeInsuranceModel, fullLifeInsuranceModel)),
-    capitalRedemption = Some(Seq(fullCapitalRedemptionModel, fullCapitalRedemptionModel)),
-    lifeAnnuity = Some(Seq(fullLifeAnnuityModel, fullLifeAnnuityModel)),
-    voidedIsa = Some(Seq(fullVoidedIsaModel, fullVoidedIsaModel)),
-    foreign = Some(Seq(fullForeignModel, fullForeignModel))
-  )
-
-  private val amendInsurancePoliciesRawData = AmendRawData(
+  val rawData: AmendInsurancePoliciesRawData = AmendInsurancePoliciesRawData(
     nino = nino,
     taxYear = taxYear,
     body = validRawRequestBody
+  )
+
+  val lifeInsurance: Seq[AmendCommonInsurancePoliciesItem] = Seq(
+    AmendCommonInsurancePoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    ),
+    AmendCommonInsurancePoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    )
+  )
+
+  val capitalRedemption: Seq[AmendCommonInsurancePoliciesItem] = Seq(
+    AmendCommonInsurancePoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    ),
+    AmendCommonInsurancePoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    )
+  )
+
+  val lifeAnnuity: Seq[AmendCommonInsurancePoliciesItem] = Seq(
+    AmendCommonInsurancePoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    ),
+    AmendCommonInsurancePoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    )
+  )
+  val voidedIsa: Seq[AmendVoidedIsaPoliciesItem] = Seq(
+    AmendVoidedIsaPoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaidAmount = Some(5000.99),
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12)
+    ),
+    AmendVoidedIsaPoliciesItem(
+      customerReference = "INPOLY123A",
+      event = Some("Death of spouse"),
+      gainAmount = Some(2000.99),
+      taxPaidAmount = Some(5000.99),
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12)
+    )
+  )
+
+  val foreign: Seq[AmendForeignPoliciesItem] = Seq(
+    AmendForeignPoliciesItem(
+      customerReference = "INPOLY123A",
+      gainAmount = Some(2000.99),
+      taxPaidAmount = Some(5000.99),
+      yearsHeld = Some(15)
+    ),
+    AmendForeignPoliciesItem(
+      customerReference = "INPOLY123A",
+      gainAmount = Some(2000.99),
+      taxPaidAmount = Some(5000.99),
+      yearsHeld = Some(15)
+    )
+  )
+
+  val amendInsurancePoliciesRequestBody: AmendInsurancePoliciesRequestBody = AmendInsurancePoliciesRequestBody(
+    lifeInsurance = Some(lifeInsurance),
+    capitalRedemption = Some(capitalRedemption),
+    lifeAnnuity = Some(lifeAnnuity),
+    voidedIsa = Some(voidedIsa),
+    foreign = Some(foreign)
+  )
+
+  val requestData: AmendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
+    nino = Nino(nino),
+    taxYear = DesTaxYear.fromMtd(taxYear),
+    body = amendInsurancePoliciesRequestBody
   )
 
   trait Test extends MockAmendInsurancePoliciesValidator {
@@ -200,27 +256,26 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockAmendInsurancePoliciesValidator.validate(amendInsurancePoliciesRawData).returns(Nil)
+        MockAmendInsurancePoliciesValidator.validate(rawData).returns(Nil)
 
-        parser.parseRequest(amendInsurancePoliciesRawData) shouldBe
-          Right(AmendRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), validRequestBodyModel))
+        parser.parseRequest(rawData) shouldBe Right(requestData)
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendInsurancePoliciesValidator.validate(amendInsurancePoliciesRawData.copy(nino = "notANino"))
+        MockAmendInsurancePoliciesValidator.validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
-        parser.parseRequest(amendInsurancePoliciesRawData.copy(nino = "notANino")) shouldBe
+        parser.parseRequest(rawData.copy(nino = "notANino")) shouldBe
           Left(ErrorWrapper(None, NinoFormatError, None))
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendInsurancePoliciesValidator.validate(amendInsurancePoliciesRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendInsurancePoliciesValidator.validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(amendInsurancePoliciesRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
+        parser.parseRequest(rawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
           Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
 
@@ -379,10 +434,10 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
           )
         )
 
-        MockAmendInsurancePoliciesValidator.validate(amendInsurancePoliciesRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendInsurancePoliciesValidator.validate(rawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
-        parser.parseRequest(amendInsurancePoliciesRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
+        parser.parseRequest(rawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
           Left(ErrorWrapper(None, BadRequestError, Some(allInvalidValueErrors)))
       }
     }

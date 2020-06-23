@@ -16,74 +16,24 @@
 
 package utils
 
-import play.api.libs.json.{JsArray, JsNull, JsString, JsValue, Json, OWrites, Reads, __}
+import play.api.libs.json._
 import support.UnitSpec
 
 class JsonUtilsSpec extends UnitSpec with JsonUtils {
 
-  case class TestClass(field1: String, field2: Option[String])
+  "mapEmptySeqToNone" must {
+    val reads = __.readNullable[Seq[String]].mapEmptySeqToNone
 
-  object TestClass extends JsonUtils {
-    implicit val reads: Reads[TestClass] = Json.reads[TestClass].removeField("field2")
-    implicit val wrongReads: Reads[TestClass] = Json.reads[TestClass].removeField("field3")
-    implicit val writes: OWrites[TestClass] = Json.writes[TestClass].removeField("field2")
-    implicit val wrongWrites: OWrites[TestClass] = Json.writes[TestClass].removeField("field3")
-  }
-
-  private val testData: TestClass = TestClass("value1", Some("value2"))
-
-  private val removedFieldJson: JsValue = Json.parse(
-    """
-      |{
-      |   "field1": "value1"
-      |}
-    """.stripMargin
-  )
-
-  private val fullJson: JsValue = Json.parse(
-    """
-      |{
-      |   "field1": "value1",
-      |   "field2": "value2"
-      |}
-    """.stripMargin
-  )
-
-  "JsonUtils" when {
-    "removeField (writes)" should {
-      "remove that field if it is present" in {
-        Json.toJson(testData)(TestClass.writes) shouldBe removedFieldJson
-      }
-
-      "do nothing if the specified field does not exist" in {
-        Json.toJson(testData)(TestClass.wrongWrites) shouldBe fullJson
-      }
+    "map non-empty sequence to Some(non-empty sequence)" in {
+      JsArray(Seq(JsString("value0"), JsString("value1"))).as(reads) shouldBe Some(Seq("value0", "value1"))
     }
 
-    "removeField (reads)" should {
-      "remove that field if it is present" in {
-        fullJson.as[TestClass](TestClass.reads) shouldBe TestClass("value1", None)
-      }
-
-      "do nothing if the specified field does not exist" in {
-        fullJson.as[TestClass](TestClass.wrongReads) shouldBe testData
-      }
+    "map empty sequence to None" in {
+      JsArray.empty.as(reads) shouldBe None
     }
 
-    "mapEmptySeqToNone" must {
-      val reads = __.readNullable[Seq[String]].mapEmptySeqToNone
-
-      "map non-empty sequence to Some(non-empty sequence)" in {
-        JsArray(Seq(JsString("value0"), JsString("value1"))).as(reads) shouldBe Some(Seq("value0", "value1"))
-      }
-
-      "map empty sequence to None" in {
-        JsArray.empty.as(reads) shouldBe None
-      }
-
-      "map None to None" in {
-        JsNull.as(reads) shouldBe None
-      }
+    "map None to None" in {
+      JsNull.as(reads) shouldBe None
     }
   }
 }

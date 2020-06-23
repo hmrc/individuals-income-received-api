@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.insurancePolicies.amend.AmendRequest
+import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
 import v1.services.AmendInsurancePoliciesService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,9 +33,9 @@ trait MockAmendInsurancePoliciesService extends MockFactory {
 
   object MockAmendInsurancePoliciesService {
 
-    def amendInsurancePolicies(requestData: AmendRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def amendInsurancePolicies(requestData: AmendInsurancePoliciesRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendInsurancePoliciesService
-        .amendInsurancePolicies(_: AmendRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .amendInsurancePolicies(_: AmendInsurancePoliciesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
     }
   }

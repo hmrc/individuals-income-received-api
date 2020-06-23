@@ -19,7 +19,7 @@ package v1.services
 import cats.data.EitherT
 import cats.implicits._
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.Reads
+import play.api.libs.json.Format
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.{DeleteRetrieveConnector, DesUri}
@@ -47,7 +47,7 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
     result.value
   }
 
-  def retrieve[Resp: Reads](request: DeleteRetrieveRequest)(
+  def retrieve[Resp: Format](request: DeleteRetrieveRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext,
@@ -55,7 +55,8 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve[Resp](request)).leftMap(mapDesErrors(desErrorMap))
-    } yield desResponseWrapper
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveResponse(desResponseWrapper))
+    } yield mtdResponseWrapper
 
     result.value
   }
