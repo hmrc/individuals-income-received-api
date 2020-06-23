@@ -37,7 +37,7 @@
       "customerReference": "INPOLY123D",
       "event": "Policy matured",
       "gainAmount": 1000.23,
-      "taxAmountPaid": 100.23,
+      "taxPaidAmount": 100.23,
       "yearsHeld": 10,
       "yearsHeldSinceLastGain": 1
     }
@@ -46,7 +46,7 @@
     {
       "customerReference": "INPOLY123E",
       "gainAmount": 1000.23,
-      "taxAmountPaid": 100.23,
+      "taxPaidAmount": 100.23,
       "yearsHeld": 10
     }
   ]
