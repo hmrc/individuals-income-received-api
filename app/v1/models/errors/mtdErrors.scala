@@ -34,7 +34,7 @@ object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The provi
 object CountryCodeRuleError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 object ValueFormatError extends MtdError("FORMAT_VALUE", "")
 object CustomerRefFormatError extends MtdError("FORMAT_CUSTOMER_REF", "The provided customer reference is invalid")
-object EventFormatError extends MtdError("FORMAT_EVENT", "The format of policy event is not valid")
+object EventFormatError extends MtdError("FORMAT_EVENT", "The provided policy event is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
