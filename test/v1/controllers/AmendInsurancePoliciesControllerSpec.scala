@@ -344,7 +344,9 @@ class AmendInsurancePoliciesControllerSpec
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CustomerRefFormatError, BAD_REQUEST),
           (EventFormatError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST)
+          (ValueFormatError, BAD_REQUEST),
+          (MissingFieldError, BAD_REQUEST),
+          (WrongFieldTypeError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

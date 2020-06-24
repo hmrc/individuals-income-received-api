@@ -102,6 +102,49 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
     """.stripMargin
   )
 
+  private val missingMandatoryFieldJson: JsValue = Json.parse(
+    """
+      |{
+      |   "foreignDividend": [
+      |      {
+      |        "amountBeforeTax": 1232.22,
+      |        "taxTakenOff": 22.22,
+      |        "specialWithholdingTax": 27.35
+      |      },
+      |      {
+      |        "amountBeforeTax": 1350.55,
+      |        "taxTakenOff": 25.27,
+      |        "specialWithholdingTax": 30.59
+      |      }
+      |   ],
+      |   "dividendIncomeReceivedWhilstAbroad": [
+      |      {
+      |        "amountBeforeTax": 1232.22,
+      |        "taxTakenOff": 22.22,
+      |        "specialWithholdingTax": 27.35
+      |      },
+      |      {
+      |        "amountBeforeTax": 1350.55,
+      |        "taxTakenOff": 25.27,
+      |        "specialWithholdingTax": 30.59
+      |       }
+      |   ],
+      |   "stockDividend": {
+      |      "customerReference": "my divs"
+      |   },
+      |   "redeemableShares": {
+      |      "customerReference": "my shares"
+      |   },
+      |   "bonusIssuesOfSecurities": {
+      |      "customerReference": "my secs"
+      |   },
+      |   "closeCompanyLoansWrittenOff": {
+      |      "customerReference": "write off"
+      |   }
+      |}
+    """.stripMargin
+  )
+
   private val invalidCountryCodeRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -288,6 +331,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
   private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
   private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
   private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
@@ -333,10 +377,39 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
+    }
 
+    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(WrongFieldTypeError.copy(paths = Some(Seq("/stockDividend/grossAmount"))))
+      }
+    }
+
+    "return MissingFieldError error" when {
+      "mandatory fields are not provided" in {
+
+        val paths = Seq(
+          "/foreignDividend/0/countryCode",
+          "/dividendIncomeReceivedWhilstAbroad/1/foreignTaxCreditRelief",
+          "/foreignDividend/0/foreignTaxCreditRelief",
+          "/dividendIncomeReceivedWhilstAbroad/1/countryCode",
+          "/foreignDividend/1/foreignTaxCreditRelief",
+          "/dividendIncomeReceivedWhilstAbroad/0/countryCode",
+          "/stockDividend/grossAmount",
+          "/closeCompanyLoansWrittenOff/grossAmount",
+          "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
+          "/bonusIssuesOfSecurities/grossAmount",
+          "/redeemableShares/grossAmount",
+          "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
+          "/dividendIncomeReceivedWhilstAbroad/0/foreignTaxCreditRelief",
+          "/foreignDividend/1/countryCode",
+          "/foreignDividend/1/taxableAmount",
+          "/foreignDividend/0/taxableAmount"
+        )
+
+        validator.validate(AmendDividendsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+          List(MissingFieldError.copy(paths = Some(paths)))
       }
     }
 

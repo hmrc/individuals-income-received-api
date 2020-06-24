@@ -45,7 +45,7 @@ class AmendDividendsValidator extends Validator[AmendDividendsRawData] with Valu
 
     val requestBodyData = data.body.json.as[AmendDividendsRequestBody]
 
-    List(flattenErrors(
+    List(Validator.flattenErrors(
       List(
         requestBodyData.foreignDividend.map(_.zipWithIndex.flatMap {
           case (data, index) => validateForeignDividend(data, index)
@@ -119,17 +119,5 @@ class AmendDividendsValidator extends Validator[AmendDividendsRawData] with Valu
         path = s"/$fieldName/grossAmount"
       )
     ).flatten
-  }
-
-  private def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
-    errors.flatten.groupBy(_.message).map {case (_, errors) =>
-
-      val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
-
-      errors.fold(baseError)(
-        (error1, error2) =>
-          error1.copy(paths = Some(error1.paths.getOrElse(Seq.empty[String]) ++ error2.paths.getOrElse(Seq.empty[String])))
-      )
-    }.toList
   }
 }

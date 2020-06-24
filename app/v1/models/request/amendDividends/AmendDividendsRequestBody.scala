@@ -25,8 +25,7 @@ case class AmendDividendsRequestBody(foreignDividend: Option[Seq[AmendForeignDiv
                                      stockDividend: Option[AmendCommonDividends],
                                      redeemableShares: Option[AmendCommonDividends],
                                      bonusIssuesOfSecurities: Option[AmendCommonDividends],
-                                     closeCompanyLoansWrittenOff: Option[AmendCommonDividends]
-                                     )
+                                     closeCompanyLoansWrittenOff: Option[AmendCommonDividends])
 
 object AmendDividendsRequestBody extends JsonUtils {
   val empty: AmendDividendsRequestBody = AmendDividendsRequestBody(None, None, None, None, None, None)

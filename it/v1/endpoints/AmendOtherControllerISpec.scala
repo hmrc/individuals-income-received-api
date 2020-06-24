@@ -556,6 +556,28 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
          """.stripMargin
       )
 
+      val nonValidRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |   "overseasIncomeAndGains": {
+          |      "gainAmount": "no"
+          |   }
+          |}
+        """.stripMargin
+      )
+
+      val missingFieldRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |   "businessReceipts": [
+          |     {
+          |      "grossAmount": 100.11
+          |     }
+          |   ]
+          |}
+        """.stripMargin
+      )
+
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
         paths = Some(Seq(
           "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
@@ -597,6 +619,14 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
         ))
       )
 
+      val nonValidRequestBodyErrors: MtdError = WrongFieldTypeError.copy(
+        paths = Some(Seq("/overseasIncomeAndGains/gainAmount"))
+      )
+
+      val missingFieldRequestBodyErrors: MtdError = MissingFieldError.copy(
+        paths = Some(Seq("/businessReceipts/0/taxYear"))
+      )
+
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
@@ -624,7 +654,10 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2017-18", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError),
           ("AA123456A", "2017-18", ruleCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeRuleError),
           ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError))
+          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError),
+          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors),
+          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors)
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

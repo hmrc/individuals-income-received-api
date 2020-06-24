@@ -86,20 +86,20 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val nonValidRequestBodyJson: JsValue = Json.parse(
     """
       |{
-      |   "foriegnEarnings": {
+      |   "foreignEarnings": {
       |     "customerReference":"FOREIGNINCME123A",
       |     "earningsNotTaxableUK":"99999999999.99"
       |   },
-      |   "random": [
+      |   "unremittableForeignIncome": [
       |     {
       |       "countryCode":"FRA",
       |       "amountInForeignCurrency":"0",
-      |       "amountTaxPaid":"0"
+      |       "amountTaxPaid":true
       |     },
       |     {
       |       "countryCode":"GBR",
       |       "amountInForeignCurrency":"99999999999.99",
-      |       "amountTaxPaid":"99999999999.99"
+      |       "amountTaxPaid":false
       |     },
       |     {
       |       "countryCode":"ESP",
@@ -109,6 +109,19 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       |   ]
       |}
       |""".stripMargin
+  )
+
+  private val missingMandatoryFieldJson: JsValue = Json.parse(
+    """
+      |{
+      |  "unremittableForeignIncome" : [
+      |    {
+      |      "amountInForeignCurrency":"0",
+      |      "amountTaxPaid": 100
+      |    }
+      |  ]
+      |}
+    """.stripMargin
   )
 
   private val invalidEarningsNotTaxableUKRequestBodyJson: JsValue = Json.parse(
@@ -223,6 +236,7 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
   private val invalidEarningsNotTaxableUKRequestBody = AnyContentAsJson(invalidEarningsNotTaxableUKRequestBodyJson)
   private val invalidCustomerReferenceRequestBody = AnyContentAsJson(invalidCustomerReferenceRequestBodyJson)
   private val invalidCountryCodeRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
@@ -265,10 +279,24 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
+    }
 
+    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(WrongFieldTypeError.copy(paths = Some(Seq(
+            "/unremittableForeignIncome/0/amountTaxPaid",
+            "/unremittableForeignIncome/1/amountTaxPaid"
+          ))))
+      }
+    }
+
+    "return MissingFieldError error" when {
+      "the submitted request body has missing mandatory fields" in {
+        validator.validate(AmendForeignRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+          List(MissingFieldError.copy(paths = Some(Seq(
+            "/unremittableForeignIncome/0/countryCode"
+          ))))
       }
     }
 

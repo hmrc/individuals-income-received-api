@@ -697,6 +697,39 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
       )
 
+      val nonValidRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |   "foreignPensions": [
+          |      {
+          |         "countryCode": "DEU",
+          |         "amountBeforeTax": 100.23,
+          |         "taxTakenOff": "no",
+          |         "specialWithholdingTax": 2.23,
+          |         "foreignTaxCreditRelief": false,
+          |         "taxableAmount": 3.23
+          |      }
+          |   ]
+          |}
+        """.stripMargin
+      )
+
+      val missingFieldRequestBodyJson : JsValue = Json.parse(
+        """
+          |{
+          |   "foreignPensions": [
+          |     {
+          |       "countryCode": "DEU",
+          |       "amountBeforeTax": 100.23,
+          |       "taxTakenOff": 1.23,
+          |       "specialWithholdingTax": 2.23,
+          |       "foreignTaxCreditRelief": false
+          |     }
+          |   ]
+          |}
+        """.stripMargin
+      )
+
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
         paths = Some(Seq(
           "/foreignPensions/0/countryCode",
@@ -764,6 +797,14 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
         ))
       )
 
+      val nonValidRequestBodyErrors: MtdError = WrongFieldTypeError.copy(
+        paths = Some(Seq("/foreignPensions/0/taxTakenOff"))
+      )
+
+      val missingFieldRequestBodyErrors: MtdError = MissingFieldError.copy(
+        paths = Some(Seq("/foreignPensions/0/taxableAmount"))
+      )
+
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
@@ -796,7 +837,10 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2017-18", invalidDoubleTaxationArticleRequestBodyJson, BAD_REQUEST, dblTaxationArticleError),
           ("AA123456A", "2017-18", invalidDoubleTaxationTreatyRequestBodyJson, BAD_REQUEST, dblTaxationTreatyError),
           ("AA123456A", "2017-18", invalidSF74RefRequestBodyJson, BAD_REQUEST, sf74RefError),
-          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError))
+          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError),
+          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors),
+          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors)
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

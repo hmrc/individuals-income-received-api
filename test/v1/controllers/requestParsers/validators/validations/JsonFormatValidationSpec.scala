@@ -16,17 +16,18 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 import support.UnitSpec
-import v1.models.errors.MtdError
+import v1.models.errors.{MissingFieldError, MtdError, WrongFieldTypeError}
 import v1.models.utils.JsonErrorValidators
 
 class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
   case class TestDataObject(fieldOne: String, fieldTwo: String)
+  case class TestDataWrapper(arrayField: Seq[TestDataObject])
 
-  implicit val testDataObjectReads: Reads[TestDataObject] = Json.reads[TestDataObject]
-  implicit val testDataObjectWrites: OWrites[TestDataObject] = Json.writes[TestDataObject]
+  implicit val testDataObjectFormat: OFormat[TestDataObject] = Json.format[TestDataObject]
+  implicit val testDataWrapperFormat: OFormat[TestDataWrapper] = Json.format[TestDataWrapper]
 
   val someError = MtdError("SOME_CODE", "some message")
 
@@ -48,7 +49,32 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         val json = Json.parse("""{ "fieldOne" : "Something" }""")
 
         val validationResult = JsonFormatValidation.validate[TestDataObject](json, someError)
-        validationResult shouldBe List(someError)
+        validationResult shouldBe List(MissingFieldError.copy(paths = Some(Seq("/fieldTwo"))))
+      }
+
+      "required field is missing in array object" in {
+
+        // both fields are missing
+        val json = Json.parse("""{ "arrayField" : [{}]}""")
+
+        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json, someError)
+        validationResult shouldBe List(MissingFieldError.copy(paths = Some(Seq("/arrayField/0/fieldTwo", "/arrayField/0/fieldOne"))))
+      }
+
+      "required field is missing in multiple array objects" in {
+
+        // both fields are missing
+        val json = Json.parse("""{ "arrayField" : [{}, {}]}""")
+
+        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json, someError)
+        validationResult shouldBe List(MissingFieldError.copy(paths =
+          Some(Seq(
+            "/arrayField/0/fieldTwo",
+            "/arrayField/0/fieldOne",
+            "/arrayField/1/fieldTwo",
+            "/arrayField/1/fieldOne"
+          ))
+        ))
       }
 
       "empty body is submitted" in {
@@ -64,7 +90,15 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         val json = Json.parse("""{"field": "value"}""")
 
         val validationResult = JsonFormatValidation.validate[TestDataObject](json, someError)
-        validationResult shouldBe List(someError)
+        validationResult shouldBe List(MissingFieldError.copy(paths = Some(Seq("/fieldTwo", "/fieldOne"))))
+      }
+
+      "a field is supplied with the wrong data type" in {
+
+        val json = Json.parse("""{"fieldOne": true, "fieldTwo": "value"}""")
+
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json, someError)
+        validationResult shouldBe List(WrongFieldTypeError.copy(paths = Some(Seq("/fieldOne"))))
       }
     }
   }

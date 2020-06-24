@@ -84,6 +84,8 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
            MtdErrorWithCustomMessage(ValueFormatError.code) |
            MtdErrorWithCustomMessage(CustomerRefFormatError.code) |
            MtdErrorWithCustomMessage(EventFormatError.code) |
+           MtdErrorWithCustomMessage(MissingFieldError.code) |
+           MtdErrorWithCustomMessage(WrongFieldTypeError.code) |
            RuleIncorrectOrEmptyBodyError
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))

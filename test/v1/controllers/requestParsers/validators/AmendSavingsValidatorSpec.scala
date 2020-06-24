@@ -74,6 +74,26 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """.stripMargin
   )
 
+  private val missingMandatoryFieldJson: JsValue = Json.parse(
+    """
+      |{
+      |   "foreignInterest": [
+      |       {
+      |          "amountBeforeTax": 200.11
+      |       },
+      |       {
+      |          "amountBeforeTax": 300.11,
+      |          "countryCode": "GBR",
+      |          "taxTakenOff": 300.12,
+      |          "specialWithholdingTax": 300.13,
+      |          "taxableAmount": 300.14,
+      |          "foreignTaxCreditRelief": true
+      |       }
+      |    ]
+      |}
+    """.stripMargin
+  )
+
   private val invalidCountryCodeRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -163,6 +183,7 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
   private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
   private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
   private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
@@ -203,10 +224,23 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
+    }
 
+    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(WrongFieldTypeError.copy(paths = Some(Seq("/securities/taxTakenOff"))))
+      }
+    }
+
+    "return MissingFieldError error" when {
+      "the submitted request body has missing mandatory fields" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+          List(MissingFieldError.copy(paths = Some(Seq(
+            "/foreignInterest/0/taxableAmount",
+            "/foreignInterest/0/foreignTaxCreditRelief",
+            "/foreignInterest/0/countryCode"
+          ))))
       }
     }
 

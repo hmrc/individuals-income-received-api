@@ -56,6 +56,9 @@ object RuleTaxYearNotSupportedError extends
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
+object MissingFieldError extends MtdError("FORMAT_MISSING_FIELD", "A mandatory field is missing from the request body")
+object WrongFieldTypeError extends MtdError("FORMAT_FIELD_TYPE", "A supplied field in the request body has the incorrect type")
+
 object RuleTaxYearRangeInvalidError
   extends MtdError(code = "RULE_TAX_YEAR_RANGE_INVALID", message = "Tax year range invalid. A tax year range of one year is required")
 

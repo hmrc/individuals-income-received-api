@@ -88,7 +88,9 @@ class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
            MtdErrorWithCustomMessage(QOPSRefFormatError.code) |
            MtdErrorWithCustomMessage(DoubleTaxationArticleFormatError.code) |
            MtdErrorWithCustomMessage(DoubleTaxationTreatyFormatError.code) |
-           MtdErrorWithCustomMessage(SF74RefFormatError.code)
+           MtdErrorWithCustomMessage(SF74RefFormatError.code) |
+           MtdErrorWithCustomMessage(MissingFieldError.code) |
+           MtdErrorWithCustomMessage(WrongFieldTypeError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

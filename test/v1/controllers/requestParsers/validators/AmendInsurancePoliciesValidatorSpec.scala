@@ -149,6 +149,26 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     """.stripMargin
   )
 
+  private val missingMandatoryFieldJson: JsValue = Json.parse(
+    """
+      |{
+      |   "foreign":[
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "gainAmount": 2000.99,
+      |           "taxPaidAmount": 5000.99,
+      |           "yearsHeld": 15
+      |       },
+      |       {
+      |           "customerReference": "INPOLY123A",
+      |           "taxPaidAmount": 5000.99,
+      |           "yearsHeld": 15
+      |       }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
   private val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
     s"""
       |{
@@ -374,6 +394,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
   private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
   private val invalidEventRawRequestBody = AnyContentAsJson(invalidEventRequestBodyJson)
   private val invalidLifeInsuranceRawRequestBody = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
@@ -417,10 +438,18 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
+    }
 
+    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(WrongFieldTypeError.copy(paths = Some(Seq("/lifeInsurance/0/gainAmount"))))
+      }
+    }
+    "return MissingFieldError error" when {
+      "the submitted request body has missing mandatory fields" in {
+        validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+          List(MissingFieldError.copy(paths = Some(Seq("/foreign/1/gainAmount"))))
       }
     }
 

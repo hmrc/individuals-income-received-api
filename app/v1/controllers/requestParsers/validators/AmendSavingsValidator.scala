@@ -45,7 +45,7 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
 
     val requestBodyData = data.body.json.as[AmendSavingsRequestBody]
 
-    List(flattenErrors(
+    List(Validator.flattenErrors(
       List(
         requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
         requestBodyData.foreignInterest.map(_.zipWithIndex.flatMap {
@@ -94,18 +94,6 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
         path = s"/foreignInterest/$arrayIndex/taxableAmount"
       )
     ).flatten
-  }
-
-  private def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
-    errors.flatten.groupBy(_.message).map {case (_, errors) =>
-
-      val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
-
-      errors.fold(baseError)(
-        (error1, error2) =>
-          error1.copy(paths = Some(error1.paths.getOrElse(Seq.empty[String]) ++ error2.paths.getOrElse(Seq.empty[String])))
-      )
-    }.toList
   }
 }
 

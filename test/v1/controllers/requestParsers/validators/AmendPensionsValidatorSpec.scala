@@ -96,6 +96,14 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
     """.stripMargin
   )
 
+  private val missingMandatoryFieldJson: JsValue = Json.parse(
+    """
+      |{
+      |   "foreignPensions": [{"amountBeforeTax": 100.23}]
+      |}
+    """.stripMargin
+  )
+
   private val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -314,6 +322,7 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
   private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
   private val invalidQOPSRefRawRequestBody = AnyContentAsJson(invalidQOPSRefRequestBodyJson)
   private val invalidSF74RefRawRequestBody = AnyContentAsJson(invalidSF74RefRequestBodyJson)
@@ -359,10 +368,23 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
+    }
 
+    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(WrongFieldTypeError.copy(paths = Some(Seq("/foreignPensions/0/taxTakenOff"))))
+      }
+    }
+
+    "return MissingFieldError error" when {
+      "the submitted request body has missing mandatory fields" in {
+        validator.validate(AmendPensionsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+          List(MissingFieldError.copy(paths = Some(Seq(
+            "/foreignPensions/0/taxableAmount",
+            "/foreignPensions/0/foreignTaxCreditRelief",
+            "/foreignPensions/0/countryCode"
+          ))))
       }
     }
 
