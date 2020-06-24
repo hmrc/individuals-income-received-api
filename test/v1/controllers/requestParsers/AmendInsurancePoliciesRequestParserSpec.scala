@@ -139,18 +139,18 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
   val lifeInsurance: Seq[AmendCommonInsurancePoliciesItem] = Seq(
     AmendCommonInsurancePoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
     AmendCommonInsurancePoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
@@ -160,18 +160,18 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
   val capitalRedemption: Seq[AmendCommonInsurancePoliciesItem] = Seq(
     AmendCommonInsurancePoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
     AmendCommonInsurancePoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
@@ -181,18 +181,18 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
   val lifeAnnuity: Seq[AmendCommonInsurancePoliciesItem] = Seq(
     AmendCommonInsurancePoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
       deficiencyRelief = Some(5000.99)
     ),
     AmendCommonInsurancePoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaid = true,
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12),
@@ -201,17 +201,17 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
   )
   val voidedIsa: Seq[AmendVoidedIsaPoliciesItem] = Seq(
     AmendVoidedIsaPoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
     ),
     AmendVoidedIsaPoliciesItem(
-      customerReference = "INPOLY123A",
+      customerReference = Some("INPOLY123A"),
       event = Some("Death of spouse"),
-      gainAmount = Some(2000.99),
+      gainAmount = 2000.99,
       taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15),
       yearsHeldSinceLastGain = Some(12)
@@ -220,14 +220,14 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 
   val foreign: Seq[AmendForeignPoliciesItem] = Seq(
     AmendForeignPoliciesItem(
-      customerReference = "INPOLY123A",
-      gainAmount = Some(2000.99),
+      customerReference = Some("INPOLY123A"),
+      gainAmount = 2000.99,
       taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15)
     ),
     AmendForeignPoliciesItem(
-      customerReference = "INPOLY123A",
-      gainAmount = Some(2000.99),
+      customerReference = Some("INPOLY123A"),
+      gainAmount = 2000.99,
       taxPaidAmount = Some(5000.99),
       yearsHeld = Some(15)
     )
@@ -282,7 +282,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       "multiple field value validation errors occur" in new Test {
 
         private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-          """
+          s"""
             {
             |   "lifeInsurance":[
             |       {
@@ -296,7 +296,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |       },
             |       {
             |           "customerReference": "INPOLY123A",
-            |           "event": "This event string is 76 characters long --------------------------------- 76",
+            |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 2000.99,
             |           "taxPaid": 5000.99,
             |           "yearsHeld": 15,
@@ -336,7 +336,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |       },
             |       {
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-            |           "event": "This event string is 76 characters long --------------------------------- 76",
+            |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 5000.99,
             |           "taxPaid": 5000.99,
             |           "yearsHeld": 15,

@@ -35,9 +35,9 @@ class VoidedIsaPoliciesItemSpec extends UnitSpec {
   )
 
   private val model = VoidedIsaPoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.23),
+    gainAmount = 1.23,
     taxPaidAmount = Some(101.11),
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1)

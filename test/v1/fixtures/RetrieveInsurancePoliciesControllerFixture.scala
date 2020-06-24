@@ -20,7 +20,7 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 
 object RetrieveInsurancePoliciesControllerFixture {
 
-   val fullRetrieveInsurancePoliciesResponse: JsValue = Json.parse(
+  val fullRetrieveInsurancePoliciesResponse: JsValue = Json.parse(
     """
       |{
       |   "lifeInsurance": [

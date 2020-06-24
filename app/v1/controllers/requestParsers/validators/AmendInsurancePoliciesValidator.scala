@@ -68,14 +68,14 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
 
   private def validateCommonItem(commonItem: AmendCommonInsurancePoliciesItem, itemName: String, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(commonItem.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(commonItem.customerReference).map(
         _.copy(paths = Some(Seq(s"/$itemName/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = commonItem.event,
         path = s"/$itemName/$arrayIndex/event"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = commonItem.gainAmount,
         minValue = 0.01,
         path = s"/$itemName/$arrayIndex/gainAmount",
@@ -100,16 +100,18 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
 
   private def validateVoidedIsa(voidedIsa: AmendVoidedIsaPoliciesItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(voidedIsa.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(voidedIsa.customerReference).map(
         _.copy(paths = Some(Seq(s"/voidedIsa/$arrayIndex/customerReference")))
       ),
       EventValidation.validateOptional(
         event = voidedIsa.event,
         path = s"/voidedIsa/$arrayIndex/event"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = voidedIsa.gainAmount,
-        path = s"/voidedIsa/$arrayIndex/gainAmount"
+        path = s"/voidedIsa/$arrayIndex/gainAmount",
+        minValue = 0.01,
+        message = DECIMAL_MINIMUM_INCLUSIVE
       ),
       DecimalValueValidation.validateOptional(
         amount = voidedIsa.taxPaidAmount,
@@ -128,10 +130,10 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
 
   private def validateForeign(foreign: AmendForeignPoliciesItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validate(foreign.customerReference).map(
+      CustomerRefInsuranceValidation.validateOptional(foreign.customerReference).map(
         _.copy(paths = Some(Seq(s"/foreign/$arrayIndex/customerReference")))
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = foreign.gainAmount,
         minValue = 0.01,
         path = s"/foreign/$arrayIndex/gainAmount",

@@ -150,7 +150,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   )
 
   private val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
-    """
+    s"""
       |{
       |   "capitalRedemption":[
       |       {
@@ -168,12 +168,12 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   )
 
   private val invalidEventRequestBodyJson: JsValue = Json.parse(
-    """
+    s"""
       |{
       |   "lifeAnnuity":[
       |       {
       |           "customerReference": "INPOLY123A",
-      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "event": "${"a"*91} ",
       |           "gainAmount": 2000.99,
       |           "taxPaid": true,
       |           "yearsHeld": 15,
@@ -272,7 +272,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
   )
 
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-    """
+    s"""
       |{
       |   "lifeInsurance":[
       |       {
@@ -286,7 +286,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       },
       |       {
       |           "customerReference": "INPOLY123A",
-      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
       |           "gainAmount": 2000.99,
       |           "taxPaid": true,
       |           "yearsHeld": 15,
@@ -326,7 +326,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       |       },
       |       {
       |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-      |           "event": "This event string is 76 characters long --------------------------------- 76",
+      |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
       |           "gainAmount": 5000.99,
       |           "taxPaid": true,
       |           "yearsHeld": 15,
@@ -501,6 +501,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/capitalRedemption/0/gainAmount",
                 "/capitalRedemption/1/deficiencyRelief",
                 "/lifeAnnuity/0/deficiencyRelief",
+                "/voidedIsa/1/gainAmount",
                 "/foreign/1/gainAmount"
               ))
             ),
@@ -525,7 +526,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
-                "/voidedIsa/1/gainAmount",
                 "/voidedIsa/1/taxPaidAmount",
                 "/foreign/0/taxPaidAmount"
               ))

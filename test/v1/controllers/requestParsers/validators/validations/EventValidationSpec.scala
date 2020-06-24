@@ -32,7 +32,7 @@ class EventValidationSpec extends UnitSpec {
 
       "return a EventFormatError for an invalid event" in {
         EventValidation.validate(
-          event = "This event string is 76 characters long --------------------------------- 76",
+          event = s"${"This event string is over 90 characters long"*10}",
           path = "/path"
         ) shouldBe List(EventFormatError.copy(paths = Some(Seq("/path"))))
       }
@@ -55,7 +55,7 @@ class EventValidationSpec extends UnitSpec {
 
       "validate correctly for some invalid event" in {
         EventValidation.validateOptional(
-          event = Some("This event string is 76 characters long --------------------------------- 76"),
+          event = Some(s"${"This event string is over 90 characters long"*10}"),
           path = "/path"
         ) shouldBe List(EventFormatError.copy(paths = Some(Seq("/path"))))
       }

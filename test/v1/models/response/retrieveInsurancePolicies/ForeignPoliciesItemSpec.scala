@@ -33,8 +33,8 @@ class ForeignPoliciesItemSpec extends UnitSpec {
   )
 
   private val model = ForeignPoliciesItem(
-    customerReference = "INPOLY123A",
-    gainAmount = Some(1.23),
+    customerReference = Some("INPOLY123A"),
+    gainAmount = 1.23,
     taxPaidAmount = Some(102.22),
     yearsHeld = Some(2)
   )

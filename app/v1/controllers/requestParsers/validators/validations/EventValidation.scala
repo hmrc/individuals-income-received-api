@@ -26,8 +26,10 @@ object EventValidation {
   }
 
   def validate(event: String, path: String): List[MtdError] = {
-    if (event.length >= 1 && event.length <= 75) NoValidationErrors else List(
-      EventFormatError.copy(paths = Some(Seq(path)))
-    )
+    if (event.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) {
+      NoValidationErrors
+    } else {
+      List(EventFormatError.copy(paths = Some(Seq(path))))
+    }
   }
 }

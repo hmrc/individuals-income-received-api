@@ -31,18 +31,18 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   val taxYear: String = "2019"
 
   val voidedIsaModel = AmendVoidedIsaPoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaidAmount = Some(5000.99),
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12)
   )
 
   val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = true,
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -50,9 +50,9 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   )
 
   val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = true,
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),
@@ -60,16 +60,16 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   )
 
   val foreignModel = AmendForeignPoliciesItem(
-    customerReference = "INPOLY123A",
-    gainAmount = Some(2000.99),
+    customerReference = Some("INPOLY123A"),
+    gainAmount = 2000.99,
     taxPaidAmount = Some(5000.99),
     yearsHeld = Some(15)
   )
 
   val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(2000.99),
+    gainAmount = 2000.99,
     taxPaid = true,
     yearsHeld = Some(15),
     yearsHeldSinceLastGain = Some(12),

@@ -81,9 +81,9 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
     )
 
   private val lifeInsuranceItemModel = CommonInsurancePoliciesItem(
-    customerReference = "INPOLY123A",
+    customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.23),
+    gainAmount = 1.23,
     taxPaid = true,
     yearsHeld = Some(2),
     yearsHeldSinceLastGain = Some(1),
@@ -91,9 +91,9 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   )
 
   private val capitalRedemptionItemModel = CommonInsurancePoliciesItem(
-    customerReference = "INPOLY123B",
+    customerReference = Some("INPOLY123B"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.24),
+    gainAmount = 1.24,
     taxPaid = true,
     yearsHeld = Some(3),
     yearsHeldSinceLastGain = Some(2),
@@ -101,9 +101,9 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   )
 
   private val lifeAnnuityItemModel = CommonInsurancePoliciesItem(
-    customerReference = "INPOLY123C",
+    customerReference = Some("INPOLY123C"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.25),
+    gainAmount = 1.25,
     taxPaid = true,
     yearsHeld = Some(4),
     yearsHeldSinceLastGain = Some(3),
@@ -111,17 +111,17 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   )
 
   private val voidedIsaItemModel = VoidedIsaPoliciesItem(
-    customerReference = "INPOLY123D",
+    customerReference = Some("INPOLY123D"),
     event = Some("Death of spouse"),
-    gainAmount = Some(1.26),
+    gainAmount = 1.26,
     taxPaidAmount = Some(1.36),
     yearsHeld = Some(5),
     yearsHeldSinceLastGain = Some(4)
   )
 
   private val foreignItemModel = ForeignPoliciesItem(
-    customerReference = "INPOLY123E",
-    gainAmount = Some(1.27),
+    customerReference = Some("INPOLY123E"),
+    gainAmount = 1.27,
     taxPaidAmount = Some(1.37),
     yearsHeld = Some(6)
   )

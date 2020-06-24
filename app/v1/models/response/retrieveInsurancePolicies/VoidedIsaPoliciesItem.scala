@@ -19,18 +19,18 @@ package v1.models.response.retrieveInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class VoidedIsaPoliciesItem(customerReference: String,
+case class VoidedIsaPoliciesItem(customerReference: Option[String],
                                  event: Option[String],
-                                 gainAmount: Option[BigDecimal],
+                                 gainAmount: BigDecimal,
                                  taxPaidAmount: Option[BigDecimal],
                                  yearsHeld: Option[Int],
                                  yearsHeldSinceLastGain: Option[Int])
 
 object VoidedIsaPoliciesItem {
   implicit val reads: Reads[VoidedIsaPoliciesItem] = (
-    (JsPath \ "customerReference").read[String] and
+    (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "event").readNullable[String] and
-      (JsPath \ "gainAmount").readNullable[BigDecimal] and
+      (JsPath \ "gainAmount").read[BigDecimal] and
       (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int]

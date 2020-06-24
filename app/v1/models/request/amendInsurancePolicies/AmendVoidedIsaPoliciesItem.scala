@@ -19,9 +19,9 @@ package v1.models.request.amendInsurancePolicies
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendVoidedIsaPoliciesItem(customerReference: String,
+case class AmendVoidedIsaPoliciesItem(customerReference: Option[String],
                                       event: Option[String],
-                                      gainAmount: Option[BigDecimal],
+                                      gainAmount: BigDecimal,
                                       taxPaidAmount: Option[BigDecimal],
                                       yearsHeld: Option[Int],
                                       yearsHeldSinceLastGain: Option[Int])
@@ -30,9 +30,9 @@ object AmendVoidedIsaPoliciesItem {
   implicit val reads: Reads[AmendVoidedIsaPoliciesItem] = Json.reads[AmendVoidedIsaPoliciesItem]
 
   implicit val writes: OWrites[AmendVoidedIsaPoliciesItem] = (
-    (JsPath \ "customerReference").write[String] and
+    (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "event").writeNullable[String] and
-      (JsPath \ "gainAmount").writeNullable[BigDecimal] and
+      (JsPath \ "gainAmount").write[BigDecimal] and
       (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int]
