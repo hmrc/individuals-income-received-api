@@ -3,12 +3,12 @@
 
     "customerReference": {
       "type": "string",
-      "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 25 characters in length.",
+      "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 90 characters in length.",
       "example": "INPOLY123A"
     },
     "event": {
       "type": "string",
-      "description": "Details of each individual policy event. Must be between 1 and 75 characters in length.",
+      "description": "Details of each individual policy event. Must be between 1 and 90 characters in length.",
       "example": "Policy matured"
     },
     "gainAmount": {
@@ -78,7 +78,7 @@
         "deficiencyRelief": {"$ref": "#/definitions/deficiencyRelief"}
       },
       "required": [
-        "customerReference",
+        "gainAmount",
         "taxPaid"
       ]
     },
@@ -94,7 +94,7 @@
         "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"}
       },
       "required": [
-        "customerReference"
+        "gainAmount"
       ]
     },
     "foreignObject": {
@@ -107,7 +107,7 @@
         "yearsHeld": {"$ref": "#/definitions/yearsHeld"}
       },
       "required": [
-        "customerReference"
+        "gainAmount"
       ]
     },
 

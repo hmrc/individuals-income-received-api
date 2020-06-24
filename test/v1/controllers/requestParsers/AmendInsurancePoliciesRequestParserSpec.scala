@@ -286,7 +286,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             {
             |   "lifeInsurance":[
             |       {
-            |           "customerReference": "${"This ref is more than 90 characters"*10}",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.999,
             |           "taxPaid": 5000.999,
@@ -306,7 +306,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |   ],
             |   "capitalRedemption":[
             |       {
-            |           "customerReference": "${"This ref is more than 90 characters"*10}",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 3000.999,
             |           "taxPaid": 5000.99,
@@ -335,7 +335,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "deficiencyRelief": 5000.999
             |       },
             |       {
-            |           "customerReference": "${"This ref is more than 90 characters"*10}",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 5000.99,
             |           "taxPaid": 5000.99,
@@ -354,7 +354,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "yearsHeldSinceLastGain": 120
             |       },
             |       {
-            |           "customerReference": "${"This ref is more than 90 characters"*10}",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 5000.999,
             |           "taxPaid": 5000.999,
@@ -364,7 +364,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |   ],
             |   "foreign":[
             |       {
-            |           "customerReference": "${"This ref is more than 90 characters"*10}",
+            |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "gainAmount": 5000.99,
             |           "taxPaid": 5000.999,
             |           "yearsHeld": 15

@@ -20,8 +20,15 @@ import v1.models.errors.{CustomerRefFormatError, MtdError}
 
 object CustomerRefValidation {
 
+  private val regex = "^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$"
+
+  def validateOptional(customerRef: Option[String]): List[MtdError] = customerRef match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value)
+  }
+
   def validate(customerRef: String): List[MtdError] = {
-    if (customerRef.length >= 1 && customerRef.length <= 25) NoValidationErrors else List(CustomerRefFormatError)
+    if(customerRef.matches(regex)) NoValidationErrors else List(CustomerRefFormatError)
   }
 
 }

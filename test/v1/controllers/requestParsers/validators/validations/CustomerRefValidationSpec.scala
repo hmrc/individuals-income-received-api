@@ -31,7 +31,27 @@ class CustomerRefValidationSpec extends UnitSpec {
 
       "return a CustomerRefFormatError for an invalid customerRef" in {
         CustomerRefValidation.validate(
-          customerRef = "This ref is more than 25 characters"
+          customerRef = "This customer ref string is 91 characters long ------------------------------------------91"
+        ) shouldBe List(CustomerRefFormatError)
+      }
+    }
+
+    "validateOptional" must {
+      "return an empty list for a value of 'None'" in {
+        CustomerRefValidation.validateOptional(
+          customerRef = None
+        ) shouldBe (NoValidationErrors)
+      }
+
+      "validate correctly for some valid customerRef" in {
+        CustomerRefValidation.validateOptional(
+          customerRef = Some("PENSIONINCOME245")
+        ) shouldBe (NoValidationErrors)
+      }
+
+      "validate correctly for some invalid customerRef" in {
+        CustomerRefValidation.validateOptional(
+          customerRef = Some("This customer ref string is 91 characters long ------------------------------------------91")
         ) shouldBe List(CustomerRefFormatError)
       }
     }

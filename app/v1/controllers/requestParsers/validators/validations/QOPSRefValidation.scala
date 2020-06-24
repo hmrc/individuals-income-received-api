@@ -16,19 +16,12 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import com.neovisionaries.i18n.CountryCode
-import v1.models.errors.{CountryCodeFormatError, CountryCodeRuleError, MtdError}
+import v1.models.errors.{MtdError, QOPSRefFormatError}
 
-object CountryCodeValidation {
+object QOPSRefValidation {
 
-  def validateOptional(data: Option[String]): List[MtdError] = data match {
-    case None => NoValidationErrors
-    case Some(value) => validate(value)
-  }
-
-  def validate(data: String): List[MtdError] = (CountryCode.getByAlpha3Code(data),data) match {
-    case (_: CountryCode,_) => NoValidationErrors
-    case (_, code) if code.length == 3 => List(CountryCodeRuleError)
-    case _ => List(CountryCodeFormatError)
+  def validateOptional(qopsRef: Option[String], path: String): List[MtdError] = qopsRef.fold(NoValidationErrors: List[MtdError]) { ref =>
+    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
+      QOPSRefFormatError.copy(paths = Some(Seq(path))))
   }
 }

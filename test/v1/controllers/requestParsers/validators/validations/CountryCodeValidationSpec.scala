@@ -38,5 +38,23 @@ class CountryCodeValidationSpec extends UnitSpec {
         CountryCodeValidation.validate("FRE") shouldBe List(CountryCodeRuleError)
       }
     }
+
+    "validateOptional" must {
+      "return an empty list for a value of 'None'" in {
+        CountryCodeValidation.validateOptional(None) shouldBe (NoValidationErrors)
+      }
+
+      "validate correctly for some valid country code" in {
+        CountryCodeValidation.validateOptional(Some("FRA")) shouldBe (NoValidationErrors)
+      }
+
+      "validate correctly for some invalid format country code" in {
+        CountryCodeValidation.validateOptional(Some("FRANCE")) shouldBe List(CountryCodeFormatError)
+      }
+
+      "validate correctly for some invalid rule country code" in {
+        CountryCodeValidation.validateOptional(Some("SBT")) shouldBe List(CountryCodeRuleError)
+      }
+    }
   }
 }
