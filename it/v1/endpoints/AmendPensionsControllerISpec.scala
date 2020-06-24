@@ -264,6 +264,134 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe BAD_REQUEST
         response.json shouldBe Json.toJson(wrappedErrors)
       }
+
+      "complex error scenario" in new Test {
+
+        val iirPensionsIncomeAmendErrorsRequest: JsValue = Json.parse(
+          """
+            |{
+            |   "foreignPensions":[
+            |      {
+            |         "countryCode":"ABCD",
+            |         "amountBeforeTax":100.23,
+            |         "taxTakenOff":1.23,
+            |         "specialWithholdingTax":2.23,
+            |         "foreignTaxCreditRelief":false,
+            |         "taxableAmount":3.23
+            |      },
+            |      {
+            |         "countryCode":"ABC",
+            |         "amountBeforeTax":100.23,
+            |         "taxTakenOff":1.23,
+            |         "specialWithholdingTax":2.23,
+            |         "foreignTaxCreditRelief":false,
+            |         "taxableAmount":3.239
+            |      }
+            |   ],
+            |   "overseasPensionContributions":[
+            |      {
+            |         "customerReference":"PENSIONINCOME245",
+            |         "exemptEmployersPensionContribs":200.23,
+            |         "migrantMemReliefQopsRefNo":"QOPS000000",
+            |         "dblTaxationRelief":4.239,
+            |         "dblTaxationCountryCode":"ABC",
+            |         "dblTaxationArticle":"AB3211-1",
+            |         "dblTaxationTreaty":"Treaty",
+            |         "sf74reference":"SF74-123456"
+            |      },
+            |      {
+            |         "customerReference":"PENSIONINCOME246#!",
+            |         "exemptEmployersPensionContribs":200.23,
+            |         "migrantMemReliefQopsRefNo":"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901",
+            |         "dblTaxationRelief":4.23,
+            |         "dblTaxationCountryCode":"ABCD",
+            |         "dblTaxationArticle":"AB3211-1#!",
+            |         "dblTaxationTreaty":"Treaty#!",
+            |         "sf74reference":"SF74-123456#!"
+            |      }
+            |   ]
+            |}
+            |""".stripMargin)
+
+        val iirPensionsIncomeAmendErrorsResponse: JsValue = Json.parse(
+          """
+            |{
+            |   "code":"INVALID_REQUEST",
+            |   "message":"Invalid request",
+            |   "errors": [
+            |        {
+            |            "code": "FORMAT_CUSTOMER_REF",
+            |            "message": "The provided customer reference is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/customerReference"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_QOPS_REF",
+            |            "message": "The provided QOPS reference number is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_SF74_REF",
+            |            "message": "The provided SF74 reference is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/sf74reference"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_DOUBLE_TAXATION_TREATY",
+            |            "message": "The provided double taxation treaty is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/dblTaxationTreaty"
+            |            ]
+            |        },
+            |        {
+            |            "code": "RULE_COUNTRY_CODE",
+            |            "message": "The country code is not a valid ISO 3166-1 alpha-3 country code",
+            |            "paths": [
+            |                "/foreignPensions/1/countryCode",
+            |                "/overseasPensionContributions/0/dblTaxationCountryCode"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_DOUBLE_TAXATION_ARTICLE",
+            |            "message": "The provided double taxation article is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/dblTaxationArticle"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_COUNTRY_CODE",
+            |            "message": "The format of the country code is invalid",
+            |            "paths": [
+            |                "/foreignPensions/0/countryCode",
+            |                "/overseasPensionContributions/1/dblTaxationCountryCode"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_VALUE",
+            |            "message": "The field should be between 0 and 99999999999.99",
+            |            "paths": [
+            |                "/foreignPensions/1/taxableAmount",
+            |                "/overseasPensionContributions/0/dblTaxationRelief"
+            |            ]
+            |        }
+            |    ]
+            |}
+            |""".stripMargin)
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+        }
+
+        val response: WSResponse = await(request().put(iirPensionsIncomeAmendErrorsRequest))
+        response.status shouldBe BAD_REQUEST
+        response.json shouldBe iirPensionsIncomeAmendErrorsResponse
+      }
     }
 
     "return error according to spec" when {
