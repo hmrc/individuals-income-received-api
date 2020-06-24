@@ -136,7 +136,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
 
     "read from valid JSON with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
       "produce an empty RetrieveOtherResponse object" in {
-        val responseEmptyChargeableForeignBenefitsAndGiftsJson = Json.parse(
+        val json = Json.parse(
           """
             |{
             |   "businessReceipts": [ ],
@@ -146,7 +146,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        responseEmptyChargeableForeignBenefitsAndGiftsJson.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        json.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
       }
     }
 

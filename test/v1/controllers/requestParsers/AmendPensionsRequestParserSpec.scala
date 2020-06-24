@@ -169,7 +169,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
 
         private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
-            {
+            |{
             |   "foreignPensions": [
             |      {
             |         "countryCode": "SBT",
