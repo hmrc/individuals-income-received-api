@@ -18,66 +18,44 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockAmendForeignConnector
+import v1.fixtures.other.AmendOtherServiceConnectorFixture.requestBodyModel
+import v1.mocks.connectors.MockAmendOtherConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendForeign.{AmendForeignRequest, AmendForeignRequestBody, ForeignEarnings, UnremittableForeignIncomeItem}
+import v1.models.request.amendOther.AmendOtherRequest
 
 import scala.concurrent.Future
 
-class AmendForeignServiceSpec extends ServiceSpec {
+class AmendOtherServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019"
-  private val correlationId = "X-corr"
+  private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  private val foreignEarningsModel = ForeignEarnings(
-    customerReference = Some("ref"),
-    earningsNotTaxableUK = Some(111.11)
-  )
-
-  private val unremittableForeignIncomeModel = Seq(
-    UnremittableForeignIncomeItem(
-      countryCode = "DEU",
-      amountInForeignCurrency = Some(222.22),
-      amountTaxPaid = Some(333.33)
-    ),
-    UnremittableForeignIncomeItem(
-      countryCode = "FRA",
-      amountInForeignCurrency = Some(444.44),
-      amountTaxPaid = Some(555.55)
-    )
-  )
-
-  private val amendForeignRequestBody = AmendForeignRequestBody(
-    foreignEarnings = Some(foreignEarningsModel),
-    unremittableForeignIncome = Some(unremittableForeignIncomeModel)
-  )
-
-  val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(
+  val amendOtherRequest: AmendOtherRequest = AmendOtherRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear),
-    body = amendForeignRequestBody
+    body = requestBodyModel
   )
 
-  trait Test extends MockAmendForeignConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+  trait Test extends MockAmendOtherConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "amend")
 
-    val service: AmendForeignService = new AmendForeignService(
-      connector = mockAmendForeignConnector
+    val service: AmendOtherService = new AmendOtherService(
+      connector = mockAmendOtherConnector
     )
   }
 
-  "AmendForeignService" when {
-    "amendForeign" must {
+  "AmendOtherService" when {
+    "amend" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendForeignConnector.amendForeign(amendForeignRequest)
+        MockAmendOtherConnector.amendOther(amendOtherRequest)
           .returns(Future.successful(outcome))
 
-        await(service.amendForeign(amendForeignRequest)) shouldBe outcome
+        await(service.amend(amendOtherRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -85,10 +63,10 @@ class AmendForeignServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendForeignConnector.amendForeign(amendForeignRequest)
+            MockAmendOtherConnector.amendOther(amendOtherRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amend(amendOtherRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(
