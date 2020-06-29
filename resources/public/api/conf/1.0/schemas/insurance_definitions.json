@@ -57,7 +57,7 @@
       "maximum:": 99999999999.99
     },
 
-    "commonPolicyObject": {
+    "lifeInsurance": {
       "type": "object",
       "description": "Financial details about life insurance income.",
       "properties": {

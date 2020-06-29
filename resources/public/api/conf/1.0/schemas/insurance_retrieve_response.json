@@ -7,7 +7,7 @@
     "lifeInsurance": {
       "type": "array",
       "description": "Financial details about life insurance income",
-      "items": {"$ref": "insurance_definitions.json#/definitions/commonPolicyObject"}
+      "items": {"$ref": "insurance_definitions.json#/definitions/lifeInsurance"}
     },
     "capitalRedemption": {
       "type": "array",
