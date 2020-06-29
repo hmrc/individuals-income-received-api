@@ -38,6 +38,9 @@ trait HateoasLinks {
   private def otherUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/other/$nino/$taxYear"
 
+  private def otherEmploymentUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/employments/other/$nino/$taxYear"
+
   //API resource links
 
   //Savings Income
@@ -148,5 +151,27 @@ trait HateoasLinks {
       href = otherUri(appConfig, nino, taxYear),
       method = DELETE,
       rel = DELETE_OTHER_INCOME
+    )
+
+  //Other Employment Income
+  def amendOtherEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherEmploymentUri(appConfig, nino, taxYear),
+      method = PUT,
+      rel = AMEND_OTHER_EMPLOYMENT_INCOME
+    )
+
+  def retrieveOtherEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherEmploymentUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def deleteOtherEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherEmploymentUri(appConfig, nino, taxYear),
+      method = DELETE,
+      rel = DELETE_OTHER_EMPLOYMENT_INCOME
     )
 }
