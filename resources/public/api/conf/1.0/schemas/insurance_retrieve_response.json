@@ -12,12 +12,12 @@
     "capitalRedemption": {
       "type": "array",
       "description": "Financial details about life capital redemption income",
-      "items": {"$ref": "insurance_definitions.json#/definitions/commonPolicyObject"}
+      "items": {"$ref": "insurance_definitions.json#/definitions/capitalRedemption"}
     },
     "lifeAnnuity": {
       "type": "array",
       "description": "Financial details about life annuity income",
-      "items": {"$ref": "insurance_definitions.json#/definitions/commonPolicyObject"}
+      "items": {"$ref": "insurance_definitions.json#/definitions/lifeAnnuity"}
     },
     "voidedIsa": {
       "type": "array",
