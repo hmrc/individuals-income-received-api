@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveOther
+package v1.models.request.amendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class RetrieveOtherResponseSpec extends UnitSpec {
+class AmendOtherRequestBodySpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -73,19 +73,19 @@ class RetrieveOtherResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val businessReceiptsItemModel = Seq(
-    BusinessReceiptsItem(
+  private val businessReceiptsModel = Seq(
+    AmendBusinessReceiptsItem(
       grossAmount = 5000.99,
       taxYear = "2018-19"
     ),
-    BusinessReceiptsItem(
+    AmendBusinessReceiptsItem(
       grossAmount = 6000.99,
       taxYear = "2019-20"
     )
   )
 
-  private val allOtherIncomeReceivedWhilstAbroadItemModel = Seq(
-    AllOtherIncomeReceivedWhilstAbroadItem(
+  private val allOtherIncomeReceivedWhilstAbroadModel = Seq(
+    AmendAllOtherIncomeReceivedWhilstAbroadItem(
       countryCode = "FRA",
       amountBeforeTax = Some(1999.99),
       taxTakenOff = Some(2.23),
@@ -95,7 +95,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
       residentialFinancialCostAmount = Some(2999.99),
       broughtFwdResidentialFinancialCostAmount = Some(1999.99)
     ),
-    AllOtherIncomeReceivedWhilstAbroadItem(
+    AmendAllOtherIncomeReceivedWhilstAbroadItem(
       countryCode = "IND",
       amountBeforeTax = Some(2999.99),
       taxTakenOff = Some(3.23),
@@ -107,9 +107,9 @@ class RetrieveOtherResponseSpec extends UnitSpec {
     )
   )
 
-  private val overseasIncomeAndGainsModel = OverseasIncomeAndGains(gainAmount = 3000.99)
+  private val overseasIncomeAndGainsModel = AmendOverseasIncomeAndGains(gainAmount = 3000.99)
 
-  private val chargeableForeignBenefitsAndGiftsModel = ChargeableForeignBenefitsAndGifts(
+  private val chargeableForeignBenefitsAndGiftsModel = AmendChargeableForeignBenefitsAndGifts(
     transactionBenefit = Some(1999.99),
     protectedForeignIncomeSourceBenefit = Some(2999.99),
     protectedForeignIncomeOnwardGift = Some(3999.99),
@@ -117,25 +117,25 @@ class RetrieveOtherResponseSpec extends UnitSpec {
     onwardGiftReceivedAsASettler = Some(5999.99)
   )
 
-  private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
+  private val omittedForeignIncomeModel = AmendOmittedForeignIncome(amount = 4000.99)
 
-  private val responseModel = RetrieveOtherResponse(
-    Some(businessReceiptsItemModel),
-    Some(allOtherIncomeReceivedWhilstAbroadItemModel),
+  private val requestBodyModel = AmendOtherRequestBody(
+    Some(businessReceiptsModel),
+    Some(allOtherIncomeReceivedWhilstAbroadModel),
     Some(overseasIncomeAndGainsModel),
     Some(chargeableForeignBenefitsAndGiftsModel),
     Some(omittedForeignIncomeModel)
   )
 
-  "RetrieveOtherResponse" when {
+  "AmendOtherRequestBody" when {
     "read from valid JSON" should {
-      "produce the expected RetrieveOtherResponse object" in {
-        json.as[RetrieveOtherResponse] shouldBe responseModel
+      "produce the expected AmendOtherRequestBody object" in {
+        json.as[AmendOtherRequestBody] shouldBe requestBodyModel
       }
     }
 
     "read from valid JSON with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
-      "produce an empty RetrieveOtherResponse object" in {
+      "produce an empty AmendOtherRequestBody object" in {
         val json = Json.parse(
           """
             |{
@@ -146,15 +146,15 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        json.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        json.as[AmendOtherRequestBody] shouldBe AmendOtherRequestBody.empty
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty RetrieveOtherResponse object" in {
+      "produce an empty AmendOtherRequestBody object" in {
         val emptyJson = JsObject.empty
 
-        emptyJson.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        emptyJson.as[AmendOtherRequestBody] shouldBe AmendOtherRequestBody.empty
       }
     }
 
@@ -173,13 +173,13 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        invalidJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
+        invalidJson.validate[AmendOtherRequestBody] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(responseModel) shouldBe json
+        Json.toJson(requestBodyModel) shouldBe json
       }
     }
   }

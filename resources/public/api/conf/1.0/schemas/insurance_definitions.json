@@ -4,12 +4,14 @@
     "customerReference": {
       "type": "string",
       "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 90 characters in length.",
-      "example": "INPOLY123A"
+      "example": "INPOLY123A",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
     },
     "event": {
       "type": "string",
       "description": "Details of each individual policy event. Must be between 1 and 90 characters in length.",
-      "example": "Policy matured"
+      "example": "Policy matured",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
     },
     "gainAmount": {
       "type": "number",
