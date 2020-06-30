@@ -24,7 +24,7 @@ case class AmendSharesAwardedOrReceivedItem(employerName: String,
                                             employerRef: Option[String],
                                             schemePlanType: String,
                                             dateSharesCeasedToBeSubjectToPlan: String,
-                                            noOfShareSecuritiesAwarded: BigDecimal,
+                                            noOfShareSecuritiesAwarded: BigInt,
                                             classOfShareAwarded: String,
                                             dateSharesAwarded: String,
                                             sharesSubjectToRestrictions: Boolean,
@@ -44,7 +44,7 @@ object AmendSharesAwardedOrReceivedItem {
       (JsPath \ "employerRef").writeNullable[String] and
       (JsPath \ "schemePlanType").write[String] and
       (JsPath \ "dateSharesCeasedToBeSubjectToPlan").write[String] and
-      (JsPath \ "noOfShareSecuritiesAwarded").write[BigDecimal] and
+      (JsPath \ "noOfShareSecuritiesAwarded").write[BigInt] and
       (JsPath \ "classOfShareAwarded").write[String] and
       (JsPath \ "dateSharesAwarded").write[String] and
       (JsPath \ "sharesSubjectToRestrictions").write[Boolean] and

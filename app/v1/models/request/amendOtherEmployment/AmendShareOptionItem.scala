@@ -25,7 +25,7 @@ case class AmendShareOptionItem(employerName: String,
                                 dateOfEvent: String,
                                 optionNotExercisedButConsiderationReceived: Boolean,
                                 amountOfConsiderationReceived: BigDecimal,
-                                noOfSharesAcquired: BigDecimal,
+                                noOfSharesAcquired: BigInt,
                                 classOfSharesAcquired: String,
                                 exercisePrice: BigDecimal,
                                 amountPaidForOption: BigDecimal,
@@ -46,7 +46,7 @@ object AmendShareOptionItem {
       (JsPath \ "dateOfEvent").write[String] and
       (JsPath \ "optionNotExercisedButConsiderationReceived").write[Boolean] and
       (JsPath \ "amountOfConsiderationReceived").write[BigDecimal] and
-      (JsPath \ "noOfSharesAcquired").write[BigDecimal] and
+      (JsPath \ "noOfSharesAcquired").write[BigInt] and
       (JsPath \ "classOfSharesAcquired").write[String] and
       (JsPath \ "exercisePrice").write[BigDecimal] and
       (JsPath \ "amountPaidForOption").write[BigDecimal] and
