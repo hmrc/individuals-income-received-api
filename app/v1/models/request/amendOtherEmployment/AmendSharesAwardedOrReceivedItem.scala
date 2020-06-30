@@ -54,6 +54,5 @@ object AmendSharesAwardedOrReceivedItem {
       (JsPath \ "amountPaidForSharesOnAward").write[BigDecimal] and
       (JsPath \ "marketValueAfterRestrictionsLifted").write[BigDecimal] and
       (JsPath \ "taxableAmount").write[BigDecimal]
-
     )(unlift(AmendSharesAwardedOrReceivedItem.unapply))
 }
