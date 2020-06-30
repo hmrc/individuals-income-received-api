@@ -1,0 +1,19 @@
+{
+   "links":[
+      {
+         "href":"/individuals/income-received/employment/other/{nino}/{taxYear}",
+         "rel":"amend-other-employment-income",
+         "method":"PUT"
+      },
+      {
+         "href":"/individuals/income-received/employment/other/{nino}/{taxYear}",
+         "rel":"self",
+         "method":"GET"
+      },
+      {
+         "href":"/individuals/income-received/employment/other/{nino}/{taxYear}",
+         "rel":"delete-other-employment-income",
+         "method":"DELETE"
+      }
+   ]
+}
