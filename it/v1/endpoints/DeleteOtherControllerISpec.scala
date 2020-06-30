@@ -47,7 +47,7 @@ class DeleteOtherControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the 'delete other income' endpoint" should {
+  "Calling the 'delete other employment' endpoint" should {
     "return a 204 status code" when {
       "any valid request is made" in new Test {
 
