@@ -26,7 +26,7 @@ import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class DeleteOtherControllerISpec extends IntegrationBaseSpec {
+class DeleteOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -34,9 +34,9 @@ class DeleteOtherControllerISpec extends IntegrationBaseSpec {
     val taxYear: String = "2017-18"
     val correlationId: String = "X-123"
 
-    def uri: String = s"/other/$nino/$taxYear"
+    def uri: String = s"/employments/other/$nino/$taxYear"
 
-    def desUri: String = s"/some-placeholder/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
+    def desUri: String = s"/some-placeholder/employments/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
 
     def setupStubs(): StubMapping
 
@@ -47,7 +47,7 @@ class DeleteOtherControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the 'delete other employment' endpoint" should {
+  "Calling the 'delete other income' endpoint" should {
     "return a 204 status code" when {
       "any valid request is made" in new Test {
 
