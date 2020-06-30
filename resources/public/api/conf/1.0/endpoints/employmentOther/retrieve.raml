@@ -7,8 +7,8 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: Retrieve Other Employment Income [test only]
-description: ""
-(annotations.sandboxData): !include ../../scenarios/employmentOther/retrieve.md
+description: "This endpoint allows the developer to retrieve other employment income: Share options, Shares awarded or received, Disability and Foreign service."
+(annotations.sandboxData): !include ../../scenarios/common.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:

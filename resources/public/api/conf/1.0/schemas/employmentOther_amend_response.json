@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": 	"Amend Other Employment Income Response",
+  "description":"Amend Other Employment Income Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "employmentOther_definitions.json#/definitions/links"}
+  }
+}
