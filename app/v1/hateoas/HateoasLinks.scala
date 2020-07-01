@@ -174,4 +174,27 @@ trait HateoasLinks {
       method = DELETE,
       rel = DELETE_OTHER_EMPLOYMENT_INCOME
     )
+
+  //Dividend Income
+  def amendDividend(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherEmploymentUri(appConfig, nino, taxYear),
+      method = PUT,
+      rel = AMEND_DIVIDEND_INCOME
+    )
+
+  def retrieveDividend(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherEmploymentUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def deleteDividend(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherEmploymentUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = DELETE_DIVIDEND_INCOME
+    )
+
 }
