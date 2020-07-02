@@ -178,7 +178,7 @@ trait HateoasLinks {
       rel = DELETE_OTHER_EMPLOYMENT_INCOME
     )
 
-  //Dividend Income
+  //Dividends Income
   def amendDividends(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = dividendsUri(appConfig, nino, taxYear),
