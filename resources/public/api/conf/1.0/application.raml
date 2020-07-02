@@ -37,6 +37,13 @@ uses:
     taxYear:
       description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
       example: "2020-21"
+  /dividends:
+    (annotations.group):
+       name: Dividends Income
+       description: Resources relating to an individual's dividends income
+    /{nino}:
+      /{taxYear}:
+        delete: !include endpoints/dividends/delete.raml
   /employments:
     (annotations.group):
        name: Other Employment Income
