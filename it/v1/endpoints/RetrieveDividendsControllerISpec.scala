@@ -22,12 +22,12 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.fixtures.RetrieveSavingsControllerFixture
+import v1.fixtures.dividends.RetrieveDividendsControllerFixture
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
+class RetrieveDividendsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -35,34 +35,12 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
     val taxYear: String = "2017-18"
     val correlationId: String = "X-123"
 
-    val desResponse: JsValue = Json.parse(
-      """
-        |{
-        |   "securities":
-        |      {
-        |         "taxTakenOff": 100.0,
-        |         "grossAmount": 1455.0,
-        |         "netAmount": 123.22
-        |      },
-        |   "foreignInterest": [
-        |      {
-        |         "amountBeforeTax": 1232.22,
-        |         "countryCode": "DEU",
-        |         "taxTakenOff": 22.22,
-        |         "specialWithholdingTax": 22.22,
-        |         "taxableAmount": 2321.22,
-        |         "foreignTaxCreditRelief": true
-        |      }
-        |   ]
-        |}
-    """.stripMargin
-    )
+    val desResponse: JsValue = RetrieveDividendsControllerFixture.fullRetrieveDividendsResponse
+    val mtdResponse: JsValue = RetrieveDividendsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
-    val mtdResponse: JsValue = RetrieveSavingsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+    def uri: String = s"/dividends/$nino/$taxYear"
 
-    def uri: String = s"/savings/$nino/$taxYear"
-
-    def desUri: String = s"/some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
+    def desUri: String = s"/some-placeholder/dividends/$nino/${DesTaxYear.fromMtd(taxYear)}"
 
     def setupStubs(): StubMapping
 
@@ -73,7 +51,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the 'retrieve savings' endpoint" should {
+  "Calling the 'retrieve dividends' endpoint" should {
     "return a 200 status code" when {
       "any valid request is made" in new Test {
 

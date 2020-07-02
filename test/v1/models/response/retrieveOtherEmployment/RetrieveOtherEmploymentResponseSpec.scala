@@ -28,7 +28,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
       |   "shareOption": [
       |      {
       |         "employerName": "Company Ltd",
-      |         "employerRef" : "AB1321/123",
+      |         "employerRef" : "123/AB456",
       |         "schemePlanType": "EMI",
       |         "dateOfOptionGrant": "2019-11-20",
       |         "dateOfEvent": "2019-12-22",
@@ -45,7 +45,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
       |      },
       |      {
       |         "employerName": "Corp Ltd",
-      |         "employerRef" : "AB1321/345",
+      |         "employerRef" : "124/AB456",
       |         "schemePlanType": "CSOP",
       |         "dateOfOptionGrant": "2019-09-10",
       |         "dateOfEvent": "2019-07-29",
@@ -64,7 +64,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
       |   "sharesAwardedOrReceived": [
       |      {
       |         "employerName": "Company Ltd",
-      |         "employerRef" : "AB1321/123",
+      |         "employerRef" : "123/AB456",
       |         "schemePlanType": "SIP",
       |         "dateSharesCeasedToBeSubjectToPlan": "2019-11-10",
       |         "noOfShareSecuritiesAwarded": 11,
@@ -80,7 +80,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
       |      },
       |      {
       |         "employerName": "Corp Ltd",
-      |         "employerRef" : "AB1326/789",
+      |         "employerRef" : "124/AB456",
       |         "schemePlanType": "Other",
       |         "dateSharesCeasedToBeSubjectToPlan": "2019-10-25",
       |         "noOfShareSecuritiesAwarded": 15,
@@ -110,7 +110,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
   private val shareOptionItemModel = Seq(
     ShareOptionItem(
       employerName = "Company Ltd",
-      employerRef = Some("AB1321/123"),
+      employerRef = Some("123/AB456"),
       schemePlanType = ShareOptionSchemeType.EMI,
       dateOfOptionGrant = "2019-11-20",
       dateOfEvent = "2019-12-22",
@@ -127,7 +127,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
     ),
     ShareOptionItem(
       employerName = "Corp Ltd",
-      employerRef = Some("AB1321/345"),
+      employerRef = Some("124/AB456"),
       schemePlanType = ShareOptionSchemeType.CSOP,
       dateOfOptionGrant = "2019-09-10",
       dateOfEvent = "2019-07-29",
@@ -147,7 +147,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
   private val sharesAwardedOrReceivedItemModel = Seq(
     SharesAwardedOrReceivedItem(
       employerName = "Company Ltd",
-      employerRef = Some("AB1321/123"),
+      employerRef = Some("123/AB456"),
       schemePlanType = SharesAwardedOrReceivedSchemeType.SIP,
       dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
       noOfShareSecuritiesAwarded = 11,
@@ -163,7 +163,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
     ),
     SharesAwardedOrReceivedItem(
       employerName = "Corp Ltd",
-      employerRef = Some("AB1326/789"),
+      employerRef = Some("124/AB456"),
       schemePlanType = SharesAwardedOrReceivedSchemeType.Other,
       dateSharesCeasedToBeSubjectToPlan = "2019-10-25",
       noOfShareSecuritiesAwarded = 15,

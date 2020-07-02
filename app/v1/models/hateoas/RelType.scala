@@ -27,8 +27,8 @@ object RelType {
   val DELETE_PENSIONS_INCOME = "delete-pensions-income"
   val AMEND_OTHER_INCOME = "amend-other-income"
   val DELETE_OTHER_INCOME = "delete-other-income"
-  val AMEND_OTHER_EMPLOYMENT_INCOME = "amend-employments-other-income"
-  val DELETE_OTHER_EMPLOYMENT_INCOME = "delete-employments-other-income"
+  val AMEND_OTHER_EMPLOYMENT_INCOME = "amend-other-employment-income"
+  val DELETE_OTHER_EMPLOYMENT_INCOME = "delete-other-employment-income"
   val AMEND_DIVIDENDS_INCOME = "amend-dividends-income"
   val DELETE_DIVIDENDS_INCOME = "delete-dividends-income"
 

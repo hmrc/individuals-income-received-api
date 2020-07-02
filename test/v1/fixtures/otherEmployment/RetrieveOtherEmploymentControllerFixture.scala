@@ -26,7 +26,7 @@ object RetrieveOtherEmploymentControllerFixture {
       | "shareOption":[
       |   {
       |      "employerName": "Company Ltd",
-      |      "employerRef" : "AB1321/123",
+      |      "employerRef" : "123/AB456",
       |      "schemePlanType": "EMI",
       |      "dateOfOptionGrant": "2019-11-20",
       |      "dateOfEvent": "2019-12-22",
@@ -45,7 +45,7 @@ object RetrieveOtherEmploymentControllerFixture {
       | "sharesAwardedOrReceived":[
       |   {
       |     "employerName": "Company Ltd",
-      |     "employerRef" : "AB1321/123",
+      |     "employerRef" : "123/AB456",
       |     "schemePlanType": "SIP",
       |     "dateSharesCeasedToBeSubjectToPlan": "2019-11-10",
       |     "noOfShareSecuritiesAwarded": 11,
@@ -79,7 +79,7 @@ object RetrieveOtherEmploymentControllerFixture {
        |      {
        |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-employments-other-income"
+       |         "rel":"amend-other-employment-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
@@ -89,7 +89,7 @@ object RetrieveOtherEmploymentControllerFixture {
        |      {
        |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
        |         "method":"DELETE",
-       |         "rel":"delete-employments-other-income"
+       |         "rel":"delete-other-employment-income"
        |      }
        |   ]
        |}

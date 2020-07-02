@@ -40,7 +40,7 @@ class AmendForeignServiceSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendForeignService object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[AmendForeignService] shouldBe a[JsError]
       }

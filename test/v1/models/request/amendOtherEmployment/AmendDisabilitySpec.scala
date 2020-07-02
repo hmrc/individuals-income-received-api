@@ -40,7 +40,7 @@ class AmendDisabilitySpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendDisability object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[AmendDisability] shouldBe a[JsError]
       }

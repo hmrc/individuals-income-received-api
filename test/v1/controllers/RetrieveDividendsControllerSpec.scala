@@ -16,11 +16,11 @@
 
 package v1.controllers
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveSavingsControllerFixture
+import v1.fixtures.dividends.RetrieveDividendsControllerFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
@@ -28,16 +28,16 @@ import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, 
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF}
+import v1.models.hateoas.RelType.{AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveSavings.{ForeignInterestItem, RetrieveSavingsHateoasData, RetrieveSavingsResponse, Securities}
+import v1.models.response.retrieveDividends._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveSavingsControllerSpec extends ControllerBaseSpec
+class RetrieveDividendsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
   with MockDeleteRetrieveService
@@ -59,53 +59,88 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
 
-  val amendSavingsLink: Link =
+  val amendDividendsLink: Link =
     Link(
-      href = s"/individuals/income-received/savings/$nino/$taxYear",
+      href = s"/individuals/income-received/dividends/$nino/$taxYear",
       method = PUT,
-      rel = AMEND_SAVINGS_INCOME
+      rel = AMEND_DIVIDENDS_INCOME
     )
 
-  val retrieveSavingsLink: Link =
+  val retrieveDividendsLink: Link =
     Link(
-      href = s"/individuals/income-received/savings/$nino/$taxYear",
+      href = s"/individuals/income-received/dividends/$nino/$taxYear",
       method = GET,
       rel = SELF
     )
 
-  val deleteSavingsLink: Link =
+  val deleteDividendsLink: Link =
     Link(
-      href = s"/individuals/income-received/savings/$nino/$taxYear",
+      href = s"/individuals/income-received/dividends/$nino/$taxYear",
       method = DELETE,
-      rel = DELETE_SAVINGS_INCOME
+      rel = DELETE_DIVIDENDS_INCOME
     )
 
-  private val fullSecuritiesItemsModel = Securities(
-      taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
-      netAmount = Some(123.22)
-    )
-
-  private val fullForeignInterestsModel = ForeignInterestItem(
-      amountBeforeTax = Some(1232.22),
+  private val foreignDividendItemModel = Seq(
+    ForeignDividendItem(
       countryCode = "DEU",
+      amountBeforeTax = Some(1232.22),
       taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(22.22),
-      taxableAmount = 2321.22,
-      foreignTaxCreditRelief = true
+      specialWithholdingTax = Some(27.35),
+      foreignTaxCreditRelief = true,
+      taxableAmount = 2321.22
+    ),
+    ForeignDividendItem(
+      countryCode = "FRA",
+      amountBeforeTax = Some(1350.55),
+      taxTakenOff = Some(25.27),
+      specialWithholdingTax = Some(30.59),
+      foreignTaxCreditRelief = false,
+      taxableAmount = 2500.99
     )
+  )
 
-  private val retrieveSavingsResponseModel = RetrieveSavingsResponse(
-      securities = Some(fullSecuritiesItemsModel),
-      foreignInterest = Some(Seq(fullForeignInterestsModel))
+  private val dividendIncomeReceivedWhilstAbroadItemModel = Seq(
+    DividendIncomeReceivedWhilstAbroadItem(
+      countryCode = "DEU",
+      amountBeforeTax = Some(1232.22),
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(27.35),
+      foreignTaxCreditRelief = true,
+      taxableAmount = 2321.22
+    ),
+    DividendIncomeReceivedWhilstAbroadItem(
+      countryCode = "FRA",
+      amountBeforeTax = Some(1350.55),
+      taxTakenOff = Some(25.27),
+      specialWithholdingTax = Some(30.59),
+      foreignTaxCreditRelief = false,
+      taxableAmount = 2500.99
     )
+  )
 
-  private val mtdResponse = RetrieveSavingsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+  private val stockDividendModel = StockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+
+  private val redeemableSharesModel = RedeemableShares(customerReference = Some ("my shares"), grossAmount = 12345.75)
+
+  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some ("my secs"), grossAmount = 12500.89)
+
+  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 13700.55)
+
+  private val retrieveDividendsResponseModel = RetrieveDividendsResponse(
+    Some(foreignDividendItemModel),
+    Some(dividendIncomeReceivedWhilstAbroadItemModel),
+    Some(stockDividendModel),
+    Some(redeemableSharesModel),
+    Some(bonusIssuesOfSecuritiesModel),
+    Some(closeCompanyLoansWrittenOffModel)
+  )
+
+  private val mtdResponse = RetrieveDividendsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
     val hc = HeaderCarrier()
 
-    val controller = new RetrieveSavingsController(
+    val controller = new RetrieveDividendsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteRetrieveRequestParser,
@@ -118,7 +153,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
-  "RetrieveSavingsController" should {
+  "RetrieveDividendsController" should {
     "return OK" when {
       "happy path" in new Test {
 
@@ -127,23 +162,23 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveSavingsResponse](requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSavingsResponseModel))))
+          .retrieve[RetrieveDividendsResponse](requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveDividendsResponseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveSavingsResponseModel, RetrieveSavingsHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveSavingsResponseModel,
+          .wrap(retrieveDividendsResponseModel, RetrieveDividendsHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveDividendsResponseModel,
             Seq(
-              amendSavingsLink,
-              retrieveSavingsLink,
-              deleteSavingsLink
+              amendDividendsLink,
+              retrieveDividendsLink,
+              deleteDividendsLink
             )
           ))
 
-        val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
+        contentAsJson(result) shouldBe mtdResponse.as[JsObject] ++ mtdResponse.as[JsObject]
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -157,7 +192,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -184,10 +219,10 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveSavingsResponse](requestData)
+              .retrieve[RetrieveDividendsResponse](requestData)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
