@@ -40,7 +40,7 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/other/$nino/$taxYear"
 
-    def desUri: String = s"/some-placeholder/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
+    def desUri: String = s"/some-placeholder/employments/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
 
     def setupStubs(): StubMapping
 
