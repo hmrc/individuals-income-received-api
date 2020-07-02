@@ -58,8 +58,8 @@ class RetrieveOtherEmploymentController @Inject()(val authService: EnrolmentsAut
       )
 
       implicit val desUri: DesUri[RetrieveOtherEmploymentResponse] = DesUri[RetrieveOtherEmploymentResponse](
-        s"some-placeholder/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
-      ) //TODO fix
+        s"some-placeholder/employments/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
+      )
 
       val result =
         for {
