@@ -33,8 +33,7 @@ case class AmendSharesAwardedOrReceivedItem(employerName: String,
                                             unrestrictedMarketValueOfSharesOnAward: BigDecimal,
                                             amountPaidForSharesOnAward: BigDecimal,
                                             marketValueAfterRestrictionsLifted: BigDecimal,
-                                            taxableAmount: BigDecimal
-                                            )
+                                            taxableAmount: BigDecimal)
 
 object AmendSharesAwardedOrReceivedItem {
   implicit val reads: Reads[AmendSharesAwardedOrReceivedItem] = Json.reads[AmendSharesAwardedOrReceivedItem]

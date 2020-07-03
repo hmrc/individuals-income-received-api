@@ -32,8 +32,7 @@ case class AmendShareOptionItem(employerName: String,
                                 marketValueOfSharesOnExcise: BigDecimal,
                                 profitOnOptionExercised: BigDecimal,
                                 employersNicPaid: BigDecimal,
-                                taxableAmount: BigDecimal
-                                )
+                                taxableAmount: BigDecimal)
 
 object AmendShareOptionItem {
   implicit val reads: Reads[AmendShareOptionItem] = Json.reads[AmendShareOptionItem]
