@@ -24,7 +24,7 @@ class AmendDividendIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
-      |     "countryCode": "GER",
+      |     "countryCode": "DEU",
       |     "amountBeforeTax": 1232.22,
       |     "taxTakenOff": 22.22,
       |     "specialWithholdingTax": 22.22,
@@ -35,7 +35,7 @@ class AmendDividendIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
   )
 
   private val model = AmendDividendIncomeReceivedWhilstAbroadItem(
-    countryCode = "GER",
+    countryCode = "DEU",
     amountBeforeTax = Some(1232.22),
     taxTakenOff = Some(22.22),
     specialWithholdingTax = Some(22.22),

@@ -26,7 +26,7 @@ class AmendDividendsIncomeRequestBodySpec extends UnitSpec {
       |{
       |    "foreignDividend": [
       |      {
-      |        "countryCode": "GER",
+      |        "countryCode": "DEU",
       |        "amountBeforeTax": 1232.22,
       |        "taxTakenOff": 22.22,
       |        "specialWithholdingTax": 22.22,
@@ -36,7 +36,7 @@ class AmendDividendsIncomeRequestBodySpec extends UnitSpec {
       |    ],
       |    "dividendIncomeReceivedWhilstAbroad": [
       |      {
-      |        "countryCode": "GER",
+      |        "countryCode": "DEU",
       |        "amountBeforeTax": 1232.22,
       |        "taxTakenOff": 22.22,
       |        "specialWithholdingTax": 22.22,
@@ -67,7 +67,7 @@ class AmendDividendsIncomeRequestBodySpec extends UnitSpec {
 
   private val foreignDividendModel = Seq(
     AmendForeignDividendItem(
-      countryCode = "GER",
+      countryCode = "DEU",
       amountBeforeTax = Some(1232.22),
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
@@ -78,7 +78,7 @@ class AmendDividendsIncomeRequestBodySpec extends UnitSpec {
 
   private val dividendIncomeReceivedWhilstAbroadModel = Seq(
     AmendDividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "GER",
+      countryCode = "DEU",
       amountBeforeTax = Some(1232.22),
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
