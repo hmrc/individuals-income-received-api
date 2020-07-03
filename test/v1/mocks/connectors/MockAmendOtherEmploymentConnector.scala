@@ -14,29 +14,26 @@
  * limitations under the License.
  */
 
-package v1.mocks.services
+package v1.mocks.connectors
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
-import v1.models.errors.ErrorWrapper
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendOther.AmendOtherRequest
-import v1.services.AmendOtherService
+import v1.connectors.{AmendOtherEmploymentConnector, DesOutcome}
+import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAmendOtherService extends MockFactory {
+trait MockAmendOtherEmploymentConnector extends MockFactory {
 
-  val mockAmendOtherService : AmendOtherService = mock[AmendOtherService]
+  val mockAmendOtherEmploymentConnector: AmendOtherEmploymentConnector = mock[AmendOtherEmploymentConnector]
 
-  object MockAmendOtherService {
-    def amend(requestData: AmendOtherRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockAmendOtherService
-        .amend(_: AmendOtherRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+  object MockAmendOtherEmploymentConnector{
+
+    def amendOtherEmployment(request: AmendOtherEmploymentRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (mockAmendOtherEmploymentConnector
+        .amendOtherEmployment(_: AmendOtherEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(request, *, *)
     }
   }
-
 }
