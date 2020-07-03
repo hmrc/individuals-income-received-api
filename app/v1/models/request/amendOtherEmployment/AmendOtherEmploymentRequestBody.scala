@@ -22,9 +22,8 @@ import utils.JsonUtils
 
 case class AmendOtherEmploymentRequestBody(shareOption: Option[Seq[AmendShareOptionItem]],
                                            sharesAwardedOrReceived: Option[Seq[AmendSharesAwardedOrReceivedItem]],
-                                           disability: Option[AmendDisability],
-                                           foreignService: Option[AmendForeignService]
-                                           )
+                                           disability: Option[AmendCommonOtherEmployment],
+                                           foreignService: Option[AmendCommonOtherEmployment])
 
 object AmendOtherEmploymentRequestBody extends JsonUtils {
   val empty: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(None, None, None, None)
@@ -32,14 +31,14 @@ object AmendOtherEmploymentRequestBody extends JsonUtils {
   implicit val reads: Reads[AmendOtherEmploymentRequestBody] = (
   (JsPath \ "shareOption").readNullable[Seq[AmendShareOptionItem]].mapEmptySeqToNone and
     (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[AmendSharesAwardedOrReceivedItem]].mapEmptySeqToNone and
-    (JsPath \ "disability").readNullable[AmendDisability] and
-    (JsPath \ "foreignService").readNullable[AmendForeignService]
+    (JsPath \ "disability").readNullable[AmendCommonOtherEmployment] and
+    (JsPath \ "foreignService").readNullable[AmendCommonOtherEmployment]
   ) (AmendOtherEmploymentRequestBody.apply _)
 
   implicit val writes: OWrites[AmendOtherEmploymentRequestBody] = (
     (JsPath \ "shareOption").writeNullable[Seq[AmendShareOptionItem]] and
       (JsPath \ "sharesAwardedOrReceived").writeNullable[Seq[AmendSharesAwardedOrReceivedItem]] and
-      (JsPath \ "disability").writeNullable[AmendDisability] and
-      (JsPath \ "foreignService").writeNullable[AmendForeignService]
+      (JsPath \ "disability").writeNullable[AmendCommonOtherEmployment] and
+      (JsPath \ "foreignService").writeNullable[AmendCommonOtherEmployment]
     ) (unlift(AmendOtherEmploymentRequestBody.unapply))
 }
