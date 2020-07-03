@@ -17,5 +17,8 @@ GET        /pensions/:nino/:taxYear                         v1.controllers.Retri
 PUT        /other/:nino/:taxYear                            v1.controllers.AmendOtherController.amendOther(nino: String, taxYear: String)
 DELETE     /other/:nino/:taxYear                            v1.controllers.DeleteOtherController.deleteOther(nino: String, taxYear: String)
 GET        /other/:nino/:taxYear                            v1.controllers.RetrieveOtherController.retrieveOther(nino: String, taxYear: String)
+
 DELETE     /employments/other/:nino/:taxYear                v1.controllers.DeleteOtherEmploymentController.deleteOtherEmployment(nino: String, taxYear: String)
 GET        /employments/other/:nino/:taxYear                v1.controllers.RetrieveOtherEmploymentController.retrieveOther(nino: String, taxYear: String)
+
+DELETE     /dividends/:nino/:taxYear                        v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
