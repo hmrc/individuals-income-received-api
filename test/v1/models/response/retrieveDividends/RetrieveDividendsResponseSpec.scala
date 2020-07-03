@@ -26,7 +26,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       |{
       |    "foreignDividend": [
       |      {
-      |        "countryCode": "GER",
+      |        "countryCode": "DEU",
       |        "amountBeforeTax": 1232.22,
       |        "taxTakenOff": 22.22,
       |        "specialWithholdingTax": 22.22,
@@ -36,7 +36,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       |    ],
       |    "dividendIncomeReceivedWhilstAbroad": [
       |      {
-      |        "countryCode": "GER",
+      |        "countryCode": "DEU",
       |        "amountBeforeTax": 1232.22,
       |        "taxTakenOff": 22.22,
       |        "specialWithholdingTax": 22.22,
@@ -66,7 +66,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
 
   private val foreignDividendModel = Seq(
     ForeignDividendItem(
-      countryCode = "GER",
+      countryCode = "DEU",
       amountBeforeTax = Some(1232.22),
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
@@ -77,7 +77,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
 
   private val dividendIncomeReceivedWhilstAbroadModel = Seq(
     DividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "GER",
+      countryCode = "DEU",
       amountBeforeTax = Some(1232.22),
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),

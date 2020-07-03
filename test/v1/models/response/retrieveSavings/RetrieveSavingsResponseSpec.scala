@@ -33,7 +33,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
+      |         "countryCode": "DEU",
       |         "taxTakenOff": 22.22,
       |         "specialWithholdingTax": 22.22,
       |         "taxableAmount": 2321.22,
@@ -54,7 +54,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val foreignInterestsItemModel: ForeignInterestItem =
     ForeignInterestItem(
       amountBeforeTax = Some(1232.22),
-      countryCode = "GER",
+      countryCode = "DEU",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
       taxableAmount = 2321.22,
@@ -79,7 +79,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
+      |         "countryCode": "DEU",
       |         "taxTakenOff": 22.22,
       |         "specialWithholdingTax": 22.22,
       |         "taxableAmount": 2321.22,
@@ -102,7 +102,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "amountBeforeTax": 1232.22,
-      |         "countryCode": "GER",
+      |         "countryCode": "DEU",
       |         "taxTakenOff": 22.22,
       |         "specialWithholdingTax": 22.22,
       |         "taxableAmount": 2321.22,
