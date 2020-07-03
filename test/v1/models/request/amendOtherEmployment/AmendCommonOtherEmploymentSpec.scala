@@ -40,7 +40,7 @@ class AmendCommonOtherEmploymentSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendDisability object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[AmendCommonOtherEmployment] shouldBe a[JsError]
       }

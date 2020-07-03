@@ -19,7 +19,7 @@ package v1.models.request.amendDividends
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendCommonDividendSpec extends UnitSpec {
+class AmendCommonDividendsSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -52,7 +52,7 @@ class AmendCommonDividendSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendCommonDividends object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[AmendCommonDividends] shouldBe a[JsError]
       }
