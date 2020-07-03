@@ -19,7 +19,7 @@ package v1.models.request.amendOtherEmployment
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendDisabilitySpec extends UnitSpec {
+class AmendCommonOtherEmploymentSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -30,19 +30,19 @@ class AmendDisabilitySpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = AmendDisability(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val model = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
 
   "AmendDisability" when {
     "read from valid JSON" should {
       "produce the expected AmendDisability object" in {
-        json.as[AmendDisability] shouldBe model
+        json.as[AmendCommonOtherEmployment] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce the expected AmendDisability object" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendDisability] shouldBe a[JsError]
+        invalidJson.validate[AmendCommonOtherEmployment] shouldBe a[JsError]
       }
     }
 

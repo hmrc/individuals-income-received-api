@@ -116,9 +116,9 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
     )
   )
 
-  private val disability = AmendDisability(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val disability = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
 
-  private val foreignService = AmendForeignService(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val foreignService = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
 
   private val requestBodyModel = AmendOtherEmploymentRequestBody(
     Some(shareOptionModel),
