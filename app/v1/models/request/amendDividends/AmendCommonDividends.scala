@@ -19,13 +19,13 @@ package v1.models.request.amendDividends
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendStockDividend(customerReference: Option[String], grossAmount: BigDecimal)
+case class AmendCommonDividends(customerReference: Option[String], grossAmount: BigDecimal)
 
-object AmendStockDividend {
-  implicit val reads: Reads[AmendStockDividend] = Json.reads[AmendStockDividend]
+object AmendCommonDividends {
+  implicit val reads: Reads[AmendCommonDividends] = Json.reads[AmendCommonDividends]
 
-  implicit val writes: OWrites[AmendStockDividend] = (
+  implicit val writes: OWrites[AmendCommonDividends] = (
     (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "grossAmount").write[BigDecimal]
-    ) (unlift(AmendStockDividend.unapply))
+    ) (unlift(AmendCommonDividends.unapply))
 }

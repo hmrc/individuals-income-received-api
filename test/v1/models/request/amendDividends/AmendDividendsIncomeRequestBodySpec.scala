@@ -88,13 +88,13 @@ class AmendDividendsIncomeRequestBodySpec extends UnitSpec {
 
   )
 
-  private val stockDividend = AmendStockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val stockDividend = AmendCommonDividends(customerReference = Some ("my divs"), grossAmount = 12321.22)
 
-  private val redeemableShares = AmendRedeemableShares(customerReference = Some ("my shares"), grossAmount = 12321.22)
+  private val redeemableShares = AmendCommonDividends(customerReference = Some ("my shares"), grossAmount = 12321.22)
 
-  private val bonusIssuesOfSecurities = AmendBonusIssuesOfSecurities(customerReference = Some ("my secs"), grossAmount = 12321.22)
+  private val bonusIssuesOfSecurities = AmendCommonDividends(customerReference = Some ("my secs"), grossAmount = 12321.22)
 
-  private val closeCompanyLoansWrittenOff = AmendCloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 12321.22)
+  private val closeCompanyLoansWrittenOff = AmendCommonDividends(customerReference = Some ("write off"), grossAmount = 12321.22)
 
 
   private val requestBodyModel = AmendDividendsRequestBody(

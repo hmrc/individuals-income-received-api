@@ -22,11 +22,11 @@ import utils.JsonUtils
 
 case class AmendDividendsRequestBody(foreignDividend: Option[Seq[AmendForeignDividendItem]],
                                      dividendIncomeReceivedWhilstAbroad: Option[Seq[AmendDividendIncomeReceivedWhilstAbroadItem]],
-                                     stockDividend: Option[AmendStockDividend],
-                                     redeemableShares: Option[AmendRedeemableShares],
-                                     bonusIssuesOfSecurities: Option[AmendBonusIssuesOfSecurities],
-                                     closeCompanyLoansWrittenOff: Option[AmendCloseCompanyLoansWrittenOff],
-                                    )
+                                     stockDividend: Option[AmendCommonDividends],
+                                     redeemableShares: Option[AmendCommonDividends],
+                                     bonusIssuesOfSecurities: Option[AmendCommonDividends],
+                                     closeCompanyLoansWrittenOff: Option[AmendCommonDividends]
+                                     )
 
 object AmendDividendsRequestBody extends JsonUtils {
   val empty: AmendDividendsRequestBody = AmendDividendsRequestBody(None, None, None, None, None, None)
@@ -34,18 +34,18 @@ object AmendDividendsRequestBody extends JsonUtils {
   implicit val reads: Reads[AmendDividendsRequestBody] = (
     (JsPath \ "foreignDividend").readNullable[Seq[AmendForeignDividendItem]].mapEmptySeqToNone and
       (JsPath \ "dividendIncomeReceivedWhilstAbroad").readNullable[Seq[AmendDividendIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
-      (JsPath \ "stockDividend").readNullable[AmendStockDividend] and
-      (JsPath \ "redeemableShares").readNullable[AmendRedeemableShares] and
-      (JsPath \ "bonusIssuesOfSecurities").readNullable[AmendBonusIssuesOfSecurities] and
-      (JsPath \ "closeCompanyLoansWrittenOff").readNullable[AmendCloseCompanyLoansWrittenOff]
+      (JsPath \ "stockDividend").readNullable[AmendCommonDividends] and
+      (JsPath \ "redeemableShares").readNullable[AmendCommonDividends] and
+      (JsPath \ "bonusIssuesOfSecurities").readNullable[AmendCommonDividends] and
+      (JsPath \ "closeCompanyLoansWrittenOff").readNullable[AmendCommonDividends]
     ) (AmendDividendsRequestBody.apply _)
 
   implicit val writes: OWrites[AmendDividendsRequestBody] = (
     (JsPath \ "foreignDividend").writeNullable[Seq[AmendForeignDividendItem]] and
       (JsPath \ "dividendIncomeReceivedWhilstAbroad").writeNullable[Seq[AmendDividendIncomeReceivedWhilstAbroadItem]] and
-      (JsPath \ "stockDividend").writeNullable[AmendStockDividend] and
-      (JsPath \ "redeemableShares").writeNullable[AmendRedeemableShares] and
-      (JsPath \ "bonusIssuesOfSecurities").writeNullable[AmendBonusIssuesOfSecurities] and
-      (JsPath \ "closeCompanyLoansWrittenOff").writeNullable[AmendCloseCompanyLoansWrittenOff]
+      (JsPath \ "stockDividend").writeNullable[AmendCommonDividends] and
+      (JsPath \ "redeemableShares").writeNullable[AmendCommonDividends] and
+      (JsPath \ "bonusIssuesOfSecurities").writeNullable[AmendCommonDividends] and
+      (JsPath \ "closeCompanyLoansWrittenOff").writeNullable[AmendCommonDividends]
     ) (unlift(AmendDividendsRequestBody.unapply))
 }

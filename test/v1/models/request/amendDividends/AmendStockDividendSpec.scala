@@ -27,22 +27,34 @@ class AmendStockDividendSpec extends UnitSpec {
       | "customerReference": "my divs",
       | "grossAmount": 12321.22
       |}
+      |{
+      | "customerReference": "my shares",
+      | "grossAmount": 12321.22
+      |}
+      |{
+      | "customerReference": "my secs",
+      | "grossAmount": 12321.22
+      |}
+      |{
+      | "customerReference": "write off",
+      | "grossAmount": 12321.22
+      |}
     """.stripMargin
   )
 
-  private val model = AmendStockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val model = AmendCommonDividends(customerReference = Some ("my divs"), grossAmount = 12321.22)
 
-  "AmendStockDividend" when {
+  "AmendCommonDividends" when {
     "read from valid JSON" should {
-      "produce the expected AmendStockDividend object" in {
-        json.as[AmendStockDividend] shouldBe model
+      "produce the expected AmendCommonDividends object" in {
+        json.as[AmendCommonDividends] shouldBe model
       }
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendStockDividend object" in {
+      "produce the expected AmendCommonDividends object" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendStockDividend] shouldBe a[JsError]
+        invalidJson.validate[AmendCommonDividends] shouldBe a[JsError]
       }
     }
 
