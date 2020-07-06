@@ -54,5 +54,3 @@ class AmendDividendsService @Inject()(connector: AmendDividendsConnector) extend
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }
-
-
