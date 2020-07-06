@@ -20,15 +20,15 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.amendForeign.AmendForeignRequest
+import v1.models.request.amendDividends.AmendDividendsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendForeignConnector @Inject()(val http: HttpClient,
-                                      val appConfig: AppConfig) extends BaseDesConnector {
+class AmendDividendsConnector @Inject()(val http: HttpClient,
+                                        val appConfig: AppConfig) extends BaseDesConnector {
 
-  def amendForeign(request: AmendForeignRequest)(
+  def amendDividends(request: AmendDividendsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[Unit]] = {
 
@@ -38,7 +38,7 @@ class AmendForeignConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear.value
 
     put(
-      uri = DesUri[Unit](s"some-placeholder/foreign/$nino/$taxYear"), body = request.body
+      uri = DesUri[Unit](s"some-placeholder/dividends/$nino/$taxYear"), body = request.body
     )
   }
 }

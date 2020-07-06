@@ -17,13 +17,14 @@
 package v1.connectors
 
 import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.amendOther.AmendOtherRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendOtherConnector @Inject()(val http: HttpClient,
                                     val appConfig: AppConfig) extends BaseDesConnector {
 

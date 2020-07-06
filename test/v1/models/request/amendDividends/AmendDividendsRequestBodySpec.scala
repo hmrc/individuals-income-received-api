@@ -19,7 +19,7 @@ package v1.models.request.amendDividends
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendDividendsIncomeRequestBodySpec extends UnitSpec {
+class AmendDividendsRequestBodySpec extends UnitSpec {
 
   private val json = Json.parse(
     """

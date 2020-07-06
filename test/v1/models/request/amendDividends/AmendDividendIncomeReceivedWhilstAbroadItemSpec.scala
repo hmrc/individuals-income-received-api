@@ -14,40 +14,47 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendForeign
+package v1.models.request.amendDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class UnremittableForeignIncomeItemSpec extends UnitSpec {
+class AmendDividendIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
-      |  "countryCode": "GBR",
-      |  "amountInForeignCurrency": 222.22,
-      |  "amountTaxPaid": 333.33
+      |     "countryCode": "DEU",
+      |     "amountBeforeTax": 1232.22,
+      |     "taxTakenOff": 22.22,
+      |     "specialWithholdingTax": 22.22,
+      |     "foreignTaxCreditRelief": true,
+      |     "taxableAmount": 2321.22
       |}
     """.stripMargin
   )
 
-  private val model = UnremittableForeignIncomeItem(
-    countryCode = "GBR",
-    amountInForeignCurrency = Some(222.22),
-    amountTaxPaid = Some(333.33)
+  private val model = AmendDividendIncomeReceivedWhilstAbroadItem(
+    countryCode = "DEU",
+    amountBeforeTax = Some(1232.22),
+    taxTakenOff = Some(22.22),
+    specialWithholdingTax = Some(22.22),
+    foreignTaxCreditRelief = true,
+    taxableAmount = 2321.22
   )
 
-  "UnremittableForeignIncomeItem" when {
+  "AmendDividendIncomeReceivedWhilstAbroadItem" when {
     "read from valid JSON" should {
-      "produce the expected UnremittableForeignIncomeItem object" in {
-        json.as[UnremittableForeignIncomeItem] shouldBe model
+      "produce the expected AmendDividendIncomeReceivedWhilstAbroadItem object" in {
+        json.as[AmendDividendIncomeReceivedWhilstAbroadItem] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[UnremittableForeignIncomeItem] shouldBe a[JsError]
+
+        invalidJson.validate[AmendDividendIncomeReceivedWhilstAbroadItem] shouldBe a[JsError]
       }
     }
 
