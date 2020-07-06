@@ -22,3 +22,4 @@ DELETE     /employments/other/:nino/:taxYear                v1.controllers.Delet
 GET        /employments/other/:nino/:taxYear                v1.controllers.RetrieveOtherEmploymentController.retrieveOther(nino: String, taxYear: String)
 
 DELETE     /dividends/:nino/:taxYear                        v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
+GET        /dividends/:nino/:taxYear                        v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
