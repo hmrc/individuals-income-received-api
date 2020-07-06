@@ -1,0 +1,9 @@
+{
+   "links":[
+      {
+         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "rel":"amend-dividends-income",
+         "method":"PUT"
+      }
+   ]
+}

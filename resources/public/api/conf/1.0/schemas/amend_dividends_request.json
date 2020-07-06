@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Amend Dividends Income Request",
+  "description": "Amend Dividends Income Request",
+  "type": "object",
+  "properties": {
+    "foreignDividend": {
+      "type": "array",
+      "description": "Financial details about foreign dividend income.",
+      "items": {"$ref": "amend_dividends_definitions.json#/definitions/foreignDividend"}
+    },
+    "dividendIncomeReceivedWhilstAbroad": {
+      "type": "array",
+      "description": "Financial details about foreign dividend income received whilst abroad.",
+      "items": {"$ref": "amend_dividends_definitions.json#/definitions/dividendIncomeReceivedWhilstAbroad"}
+    },
+    "stockDividend": {
+      "type": "object",
+      "description": "Object that holds the key value for stock dividends income.",
+      "items": {"$ref": "amend_dividends_definitions.json#/definitions/stockDividend"}
+    },
+    "redeemableShares": {
+      "type": "object",
+      "description": "Object that holds the key value for redeemable shares income.",
+      "items": {"$ref": "amend_dividends_definitions.json#/definitions/redeemableShares"}
+    },
+    "bonusIssuesOfSecurities": {
+      "type": "object",
+      "description": "Object that holds the key value for bonus issues of securities income.",
+      "items": {"$ref": "amend_dividends_definitions.json#/definitions/bonusIssuesOfSecurities"}
+    },
+    "closeCompanyLoansWrittenOff": {
+      "type": "object",
+      "description": "Container that holds the key value for closed company loans written off income.",
+      "items": {"$ref": "amend_dividends_definitions.json#/definitions/closeCompanyLoansWrittenOff"}
+    }
+  }
+}
