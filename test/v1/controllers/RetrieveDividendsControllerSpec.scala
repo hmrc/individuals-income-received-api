@@ -118,13 +118,25 @@ class RetrieveDividendsControllerSpec extends ControllerBaseSpec
     )
   )
 
-  private val stockDividendModel = StockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val stockDividendModel = StockDividend(
+    customerReference = Some("my divs"),
+    grossAmount = 12321.22
+  )
 
-  private val redeemableSharesModel = RedeemableShares(customerReference = Some ("my shares"), grossAmount = 12345.75)
+  private val redeemableSharesModel = RedeemableShares(
+    customerReference = Some("my shares"),
+    grossAmount = 12345.75
+  )
 
-  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some ("my secs"), grossAmount = 12500.89)
+  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(
+    customerReference = Some("my secs"),
+    grossAmount = 12500.89
+  )
 
-  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 13700.55)
+  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(
+    customerReference = Some("write off"),
+    grossAmount = 13700.55
+  )
 
   private val retrieveDividendsResponseModel = RetrieveDividendsResponse(
     Some(foreignDividendItemModel),
