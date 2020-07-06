@@ -68,13 +68,25 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
     )
   )
 
-  private val stockDividendModel = AmendCommonDividends(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val stockDividendModel = AmendCommonDividends(
+    customerReference = Some("my divs"),
+    grossAmount = 12321.22
+  )
 
-  private val redeemableSharesModel = AmendCommonDividends(customerReference = Some ("my shares"), grossAmount = 12345.75)
+  private val redeemableSharesModel = AmendCommonDividends(
+    customerReference = Some("my shares"),
+    grossAmount = 12345.75
+  )
 
-  private val bonusIssuesOfSecuritiesModel = AmendCommonDividends(customerReference = Some ("my secs"), grossAmount = 12500.89)
+  private val bonusIssuesOfSecuritiesModel = AmendCommonDividends(
+    customerReference = Some("my secs"),
+    grossAmount = 12500.89
+  )
 
-  private val closeCompanyLoansWrittenOffModel = AmendCommonDividends(customerReference = Some ("write off"), grossAmount = 13700.55)
+  private val closeCompanyLoansWrittenOffModel = AmendCommonDividends(
+    customerReference = Some("write off"),
+    grossAmount = 13700.55
+  )
 
   private val amendDividendsRequestBody: AmendDividendsRequestBody = AmendDividendsRequestBody(
     Some(foreignDividendModel),

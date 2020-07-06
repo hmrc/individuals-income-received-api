@@ -28,7 +28,7 @@ trait MockAmendDividendsConnector extends MockFactory {
 
   val mockAmendDividendsConnector: AmendDividendsConnector = mock[AmendDividendsConnector]
 
-  object MockAmendDividendsConnector{
+  object MockAmendDividendsConnector {
 
     def amendDividends(request: AmendDividendsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendDividendsConnector
@@ -36,4 +36,5 @@ trait MockAmendDividendsConnector extends MockFactory {
         .expects(request, *, *)
     }
   }
+
 }
