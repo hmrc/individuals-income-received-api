@@ -14,25 +14,9 @@
       "description": "Financial details about foreign dividend income received whilst abroad.",
       "items": {"$ref": "amend_dividends_definitions.json#/definitions/dividendIncomeReceivedWhilstAbroad"}
     },
-    "stockDividend": {
-      "type": "object",
-      "description": "Object that holds the key value for stock dividends income.",
-      "items": {"$ref": "amend_dividends_definitions.json#/definitions/stockDividend"}
-    },
-    "redeemableShares": {
-      "type": "object",
-      "description": "Object that holds the key value for redeemable shares income.",
-      "items": {"$ref": "amend_dividends_definitions.json#/definitions/redeemableShares"}
-    },
-    "bonusIssuesOfSecurities": {
-      "type": "object",
-      "description": "Object that holds the key value for bonus issues of securities income.",
-      "items": {"$ref": "amend_dividends_definitions.json#/definitions/bonusIssuesOfSecurities"}
-    },
-    "closeCompanyLoansWrittenOff": {
-      "type": "object",
-      "description": "Container that holds the key value for closed company loans written off income.",
-      "items": {"$ref": "amend_dividends_definitions.json#/definitions/closeCompanyLoansWrittenOff"}
-    }
+    "stockDividend": {"$ref": "amend_dividends_definitions.json#/definitions/stockDividend"},
+    "redeemableShares": {"$ref": "amend_dividends_definitions.json#/definitions/redeemableShares"},
+    "bonusIssuesOfSecurities": {"$ref": "amend_dividends_definitions.json#/definitions/bonusIssuesOfSecurities"},
+    "closeCompanyLoansWrittenOff": {"$ref": "amend_dividends_definitions.json#/definitions/closeCompanyLoansWrittenOff"}
   }
 }

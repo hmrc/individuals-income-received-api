@@ -31,8 +31,7 @@
       "description": "The total taxable amount on dividends.\n\nThe value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "5000.99"
     },
-
-    "customerReferenceStockDividends": {
+    "customerReferenceStockDividend": {
       "type": "string",
       "description": "A reference the user supplies to identify the stock dividends income.",
       "example": "Stock dividend income",
@@ -65,10 +64,7 @@
       "maximum:": 99999999999.99
     },
     "foreignDividend": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "Financial details about foreign dividend income.",
+      "type": "object",
         "properties": {
           "countryCode": {"$ref": "#/definitions/countryCode"},
           "amountBeforeTax": {"$ref": "#/definitions/amountBeforeTax"},
@@ -82,13 +78,9 @@
           "foreignTaxCreditRelief",
           "taxableAmount"
         ]
-      }
     },
     "dividendIncomeReceivedWhilstAbroad": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "description": "Financial details about foreign dividend income received whilst abroad.",
+      "type": "object",
         "properties": {
           "countryCode": {"$ref": "#/definitions/countryCode"},
           "amountBeforeTax": {"$ref": "#/definitions/amountBeforeTax"},
@@ -102,13 +94,12 @@
           "foreignTaxCreditRelief",
           "taxableAmount"
         ]
-      }
     },
     "stockDividend": {
       "type": "object",
       "description": "Object that holds the key value for stock dividends income.",
       "properties": {
-        "customerReference": {"$ref": "#/definitions/customerReferenceStockDividends"},
+        "customerReference": {"$ref": "#/definitions/customerReferenceStockDividend"},
         "grossAmount": {"$ref": "#/definitions/grossAmount"}
       },
       "required": [
@@ -119,7 +110,7 @@
       "type": "object",
       "description": "Object that holds the key value for redeemable shares income.",
       "properties": {
-        "customerReference": {"$ref": "#/definitions/customerReferenceStockDividends"},
+        "customerReference": {"$ref": "#/definitions/customerReferenceRedeemableShares"},
         "grossAmount": {"$ref": "#/definitions/grossAmount"}
       },
       "required": [
@@ -130,7 +121,7 @@
       "type": "object",
       "description": "Object that holds the key value for bonus issues of securities income.",
       "properties": {
-        "customerReference": {"$ref": "#/definitions/customerReferenceStockDividends"},
+        "customerReference": {"$ref": "#/definitions/customerReferenceBonusIssuesOfSecurities"},
         "grossAmount": {"$ref": "#/definitions/grossAmount"}
       },
       "required": [
@@ -141,7 +132,7 @@
       "type": "object",
       "description": "Container that holds the key value for closed company loans written off income.",
       "properties": {
-        "customerReference": {"$ref": "#/definitions/customerReferenceStockDividends"},
+        "customerReference": {"$ref": "#/definitions/customerReferenceCloseCompanyLoansWrittenOff"},
         "grossAmount": {"$ref": "#/definitions/grossAmount"}
       },
       "required": [
