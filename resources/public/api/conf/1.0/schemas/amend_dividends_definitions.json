@@ -13,7 +13,7 @@
     },
     "taxTakenOff": {
       "type": "number",
-      "description": "The total amount of foreign tax taken off your income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "description": "The total amount of foreign tax taken off income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1999.99"
     },
     "specialWithholdingTax": {
@@ -23,7 +23,7 @@
     },
     "foreignTaxCreditRelief": {
       "type": "boolean",
-      "description": "Boolean indicating total Foreign Tax Credit Relief (FTCR) claimed.",
+      "description": "Boolean indicating whether Foreign Tax Credit Relief (FTCR) has been claimed.",
       "example": "false"
     },
     "taxableAmount": {
@@ -52,12 +52,12 @@
     "customerReferenceCloseCompanyLoansWrittenOff": {
       "type": "string",
       "description": "A reference the user supplies to identify the close company loans written off income.",
-      "example": "Write off",
+      "example": "Written off",
       "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
     },
     "grossAmount": {
       "type": "number",
-      "description": "The gross amount of the dividends.",
+      "description": "The gross amount of the dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "5000.99",
       "multipleOf": 0.01,
       "minimum": 0,
@@ -130,7 +130,7 @@
     },
     "closeCompanyLoansWrittenOff": {
       "type": "object",
-      "description": "Container that holds the key value for closed company loans written off income.",
+      "description": "Container that holds the key value for close company loans written off income.",
       "properties": {
         "customerReference": {"$ref": "#/definitions/customerReferenceCloseCompanyLoansWrittenOff"},
         "grossAmount": {"$ref": "#/definitions/grossAmount"}

@@ -32,7 +32,7 @@
     "grossAmount":5000.99
   },
   "closeCompanyLoansWrittenOff": {
-    "customerReference":"Write off",
+    "customerReference":"Written off",
     "grossAmount":5000.99
   }
 }
