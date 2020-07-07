@@ -69,7 +69,7 @@ class AmendShareOptionItemSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendShareOptionItem object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[AmendShareOptionItem] shouldBe a[JsError]
       }

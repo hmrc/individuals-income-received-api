@@ -25,7 +25,7 @@ class ForeignInterestItemSpec extends UnitSpec {
     """
       |{
       |    "amountBeforeTax": 1232.22,
-      |    "countryCode": "GER",
+      |    "countryCode": "DEU",
       |    "taxTakenOff": 22.22,
       |    "specialWithholdingTax": 22.22,
       |    "taxableAmount": 2321.22,
@@ -37,7 +37,7 @@ class ForeignInterestItemSpec extends UnitSpec {
   val model: ForeignInterestItem =
     ForeignInterestItem(
       amountBeforeTax = Some(1232.22),
-      countryCode = "GER",
+      countryCode = "DEU",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
       taxableAmount = 2321.22,
@@ -48,7 +48,7 @@ class ForeignInterestItemSpec extends UnitSpec {
     """
       |{
       |    "amountBeforeTax": 1232.22,
-      |    "countryCode": "GER",
+      |    "countryCode": "DEU",
       |    "taxTakenOff": 22.22,
       |    "specialWithholdingTax": 22.22,
       |    "taxableAmount": 2321.22,
@@ -61,7 +61,7 @@ class ForeignInterestItemSpec extends UnitSpec {
     """
       |{
       |    "amountBeforeTax": "ABC",
-      |    "countryCode": "GER",
+      |    "countryCode": "DEU",
       |    "taxTakenOff": 22.22,
       |    "specialWithholdingTax": 22.22,
       |    "taxableAmount": 2321.22,
@@ -73,7 +73,7 @@ class ForeignInterestItemSpec extends UnitSpec {
   val minimumDesResponse: JsValue = Json.parse(
     """
       |{
-      |    "countryCode": "GER",
+      |    "countryCode": "DEU",
       |    "taxableAmount": 100,
       |    "foreignTaxCreditRelief": true
       |}
@@ -82,7 +82,7 @@ class ForeignInterestItemSpec extends UnitSpec {
 
   val minimumModel: ForeignInterestItem = ForeignInterestItem(
     amountBeforeTax = None,
-    countryCode = "GER",
+    countryCode = "DEU",
     taxTakenOff = None,
     specialWithholdingTax = None,
     taxableAmount = 100,
@@ -92,7 +92,7 @@ class ForeignInterestItemSpec extends UnitSpec {
   val minimumMtdResponse: JsValue = Json.parse(
     """
       |{
-      |    "countryCode": "GER",
+      |    "countryCode": "DEU",
       |    "taxableAmount": 100,
       |    "foreignTaxCreditRelief": true
       |}

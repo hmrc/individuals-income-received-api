@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendOtherEmployment
+package v1.models.request.amendDividends
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.mvc.AnyContentAsJson
+import v1.models.request.RawData
 
-case class AmendForeignService(customerReference: Option[String], amountDeducted: BigDecimal)
-
-object AmendForeignService {
-  implicit val reads: Reads[AmendForeignService] = Json.reads[AmendForeignService]
-
-  implicit val writes: OWrites[AmendForeignService] = (
-    (JsPath \ "customerReference").writeNullable[String] and
-      (JsPath \ "amountDeducted").write[BigDecimal]
-    ) (unlift(AmendForeignService.unapply))
-}
+case class AmendDividendsRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

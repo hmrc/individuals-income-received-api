@@ -45,7 +45,7 @@ class UnremittableForeignIncomeItemSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected UnremittableForeignIncomeItem object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[UnremittableForeignIncomeItem] shouldBe a[JsError]
       }

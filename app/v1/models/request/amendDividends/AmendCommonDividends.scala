@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendOtherEmployment
+package v1.models.request.amendDividends
+
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendDisability(customerReference: Option[String], amountDeducted: BigDecimal)
+case class AmendCommonDividends(customerReference: Option[String], grossAmount: BigDecimal)
 
-object AmendDisability {
-  implicit val reads: Reads[AmendDisability] = Json.reads[AmendDisability]
+object AmendCommonDividends {
+  implicit val reads: Reads[AmendCommonDividends] = Json.reads[AmendCommonDividends]
 
-  implicit val writes: OWrites[AmendDisability] = (
+  implicit val writes: OWrites[AmendCommonDividends] = (
     (JsPath \ "customerReference").writeNullable[String] and
-      (JsPath \ "amountDeducted").write[BigDecimal]
-    ) (unlift(AmendDisability.unapply))
+      (JsPath \ "grossAmount").write[BigDecimal]
+    ) (unlift(AmendCommonDividends.unapply))
 }

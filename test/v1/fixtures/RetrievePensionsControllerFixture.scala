@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.fixtures.pensions
+package v1.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 

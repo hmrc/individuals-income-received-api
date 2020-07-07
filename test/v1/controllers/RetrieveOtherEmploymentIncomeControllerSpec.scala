@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.otherEmployment.RetrieveOtherEmploymentControllerFixture._
+import v1.fixtures.RetrieveOtherEmploymentControllerFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
@@ -61,7 +61,7 @@ class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
 
   private val shareOption = ShareOptionItem(
     employerName = "Company Ltd",
-    employerRef = Some("AB1321/123"),
+    employerRef = Some("123/AB456"),
     schemePlanType = ShareOptionSchemeType.EMI,
     dateOfOptionGrant = "2019-11-20",
     dateOfEvent = "2019-12-22",
@@ -79,7 +79,7 @@ class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
 
   private val sharesAwardedOrReceived = SharesAwardedOrReceivedItem(
     employerName = "Company Ltd",
-    employerRef = Some("AB1321/123"),
+    employerRef = Some("123/AB456"),
     schemePlanType = SharesAwardedOrReceivedSchemeType.SIP,
     dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
     noOfShareSecuritiesAwarded = 11,

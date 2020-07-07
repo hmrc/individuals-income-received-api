@@ -47,7 +47,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
         |   "foreignInterest": [
         |      {
         |         "amountBeforeTax": 1232.22,
-        |         "countryCode": "GER",
+        |         "countryCode": "DEU",
         |         "taxTakenOff": 22.22,
         |         "specialWithholdingTax": 22.22,
         |         "taxableAmount": 2321.22,

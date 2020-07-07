@@ -88,7 +88,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
 
   private val fullForeignInterestsModel = ForeignInterestItem(
       amountBeforeTax = Some(1232.22),
-      countryCode = "GER",
+      countryCode = "DEU",
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
       taxableAmount = 2321.22,

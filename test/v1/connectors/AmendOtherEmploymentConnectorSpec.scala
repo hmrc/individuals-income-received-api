@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendOtherEmployment.{AmendDisability, AmendForeignService, AmendOtherEmploymentRequest, AmendOtherEmploymentRequestBody, AmendShareOptionItem, AmendSharesAwardedOrReceivedItem}
+import v1.models.request.amendOtherEmployment.{AmendCommonOtherEmployment, AmendOtherEmploymentRequest, AmendOtherEmploymentRequestBody, AmendShareOptionItem, AmendSharesAwardedOrReceivedItem}
 
 import scala.concurrent.Future
 
@@ -102,12 +102,12 @@ class AmendOtherEmploymentConnectorSpec extends ConnectorSpec {
     )
   )
 
-  private val disabilityModel = AmendDisability(
+  private val disabilityModel = AmendCommonOtherEmployment(
     customerReference = Some("customer reference"),
     amountDeducted = 1223.22
   )
 
-  private val foreignServiceModel = AmendForeignService(
+  private val foreignServiceModel = AmendCommonOtherEmployment(
     customerReference = Some("cust ref"),
     amountDeducted = 1234.50
   )

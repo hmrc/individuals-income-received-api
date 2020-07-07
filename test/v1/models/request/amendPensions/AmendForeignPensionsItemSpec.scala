@@ -51,7 +51,7 @@ class AmendForeignPensionsItemSpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendForeignPensionsItem object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
         invalidJson.validate[AmendForeignPensionsItem] shouldBe a[JsError]
       }

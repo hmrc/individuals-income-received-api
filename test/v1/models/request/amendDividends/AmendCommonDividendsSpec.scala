@@ -14,35 +14,47 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendOtherEmployment
+package v1.models.request.amendDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendDisabilitySpec extends UnitSpec {
+class AmendCommonDividendsSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
-      | "customerReference": "cust ref",
-      | "amountDeducted": 1223.22
+      | "customerReference": "my divs",
+      | "grossAmount": 12321.22
+      |}
+      |{
+      | "customerReference": "my shares",
+      | "grossAmount": 12321.22
+      |}
+      |{
+      | "customerReference": "my secs",
+      | "grossAmount": 12321.22
+      |}
+      |{
+      | "customerReference": "write off",
+      | "grossAmount": 12321.22
       |}
     """.stripMargin
   )
 
-  private val model = AmendDisability(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val model = AmendCommonDividends(customerReference = Some ("my divs"), grossAmount = 12321.22)
 
-  "AmendDisability" when {
+  "AmendCommonDividends" when {
     "read from valid JSON" should {
-      "produce the expected AmendDisability object" in {
-        json.as[AmendDisability] shouldBe model
+      "produce the expected AmendCommonDividends object" in {
+        json.as[AmendCommonDividends] shouldBe model
       }
     }
 
     "read from empty JSON" should {
-      "produce the expected AmendDisability object" in {
+      "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendDisability] shouldBe a[JsError]
+        invalidJson.validate[AmendCommonDividends] shouldBe a[JsError]
       }
     }
 
