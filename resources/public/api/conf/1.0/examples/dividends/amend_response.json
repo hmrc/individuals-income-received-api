@@ -1,0 +1,19 @@
+{
+   "links":[
+      {
+         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "rel":"amend-dividends-income",
+         "method":"PUT"
+      },
+      {
+         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "rel":"self",
+         "method":"GET"
+      },
+      {
+         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "rel":"delete-dividends-income",
+         "method":"DELETE"
+      }
+   ]
+}

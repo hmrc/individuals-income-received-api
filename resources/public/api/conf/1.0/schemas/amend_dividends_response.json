@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": 	"Amend Dividends Income Response",
+  "description":"Amend Dividends Income Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "amend_dividends_definitions.json#/definitions/links"}
+  }
+}
