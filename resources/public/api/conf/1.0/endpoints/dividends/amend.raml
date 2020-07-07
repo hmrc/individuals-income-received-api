@@ -19,7 +19,7 @@ description: "This endpoint allows the developer to amend dividends income: fore
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../../schemas/amend_dividends_request.json
+      type: !include ../../schemas/dividends_amend_request.json
       examples:
         full_amendment:
           description: Full Dividend Income Amendment
@@ -28,7 +28,7 @@ responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/amend_dividends_response.json
+        type: !include ../../schemas/dividends_amend_response.json
         example: !include ../../examples/dividends/amend_response.json
     headers:
       X-CorrelationId:
