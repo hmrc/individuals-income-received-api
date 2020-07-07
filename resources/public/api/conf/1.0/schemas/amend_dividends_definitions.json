@@ -3,22 +3,22 @@
 
     "countryCode": {
       "type": "string",
-      "description": "A three-letter code that represents a country name.\n\nThe value must in a ISO 3166-1 Alpha-3 format.",
+      "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
       "example": "FRA"
     },
     "amountBeforeTax": {
       "type": "number",
-      "description": "The total amount of income (in UK pounds) before taking off any foreign tax.\n\nThe value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "description": "The total amount of income (in UK pounds) before taking off any foreign tax. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1999.99"
     },
     "taxTakenOff": {
       "type": "number",
-      "description": "The total amount of foreign tax taken off your income.\n\nThe value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "description": "The total amount of foreign tax taken off your income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1999.99"
     },
     "specialWithholdingTax": {
       "type": "number",
-      "description": "The total amount of income (in UK pounds) before taking off any Special Withholding Tax (SWT).\n\nThe value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "description": "The total amount of income (in UK pounds) before taking off any Special Withholding Tax (SWT). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "5000.99"
     },
     "foreignTaxCreditRelief": {
@@ -28,7 +28,7 @@
     },
     "taxableAmount": {
       "type": "number",
-      "description": "The total taxable amount on dividends.\n\nThe value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "description": "The total taxable amount on dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "5000.99"
     },
     "customerReferenceStockDividend": {
@@ -139,7 +139,6 @@
         "grossAmount"
       ]
     },
-
     "links": {
       "type": "array",
       "items": {
@@ -155,15 +154,14 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self",
-              "amend-dividends-income"
+              "self", "amend-dividends-income", "delete-dividends-income"
             ]
           },
           "method": {
             "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
-              "PUT"
+              "PUT", "GET", "DELETE"
             ]
           }
         },

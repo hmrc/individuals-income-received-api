@@ -6,6 +6,12 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
+  - errors.formatValue
+  - errors.formatCountryCode
+  - errors.ruleCountryCode
+  - errors.formatCustomerRef
+  - errors.incorrectOrEmptyBody
+
 displayName: Amend Dividends Income [test only]
 description: "This endpoint allows the developer to amend dividends income: foreign dividend, dividend income received whilst abroad, stock dividend, redeemable shares, bonus issues of securities and close company loans written off. A National Insurance number and tax year must be provided."
 (annotations.sandboxData): !include ../../scenarios/common.md
@@ -19,8 +25,12 @@ body:
           description: Full Dividend Income Amendment
           value: !include ../../examples/dividends/amend_request.json
 responses:
-  204:
+  200:
+    body:
+      application/json:
+        type: !include ../../schemas/amend_dividends_response.json
+        example: !include ../../examples/dividends/amend_response.json
     headers:
       X-CorrelationId:
-        example: a1e8057e-fbbc-47a8-a8b4-78d9f015c253
+        example: c75f40a6-a3df-4429-a697-471eeec46435
         description: Unique ID for operation tracking <br> String, 36 characters.
