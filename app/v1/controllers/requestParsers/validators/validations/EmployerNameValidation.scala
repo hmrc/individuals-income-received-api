@@ -20,6 +20,6 @@ import v1.models.errors.{EmployerNameFormatError, MtdError}
 
 object EmployerNameValidation {
   def validate(employerName: String): List[MtdError] = {
-    if(employerName.length() < 105) NoValidationErrors else List(EmployerNameFormatError)
+    if(employerName.length() <= 105) NoValidationErrors else List(EmployerNameFormatError)
   }
 }

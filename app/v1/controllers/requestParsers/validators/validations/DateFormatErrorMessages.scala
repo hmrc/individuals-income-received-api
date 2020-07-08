@@ -16,16 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{SchemePlanTypeFormatError, MtdError}
-
-object SchemePlanTypeValidation {
-
-  val schemeEnumsShareOptions: List[String] = List("EMI","CSOP","SAYE", "Other")
-  val schemeEnumsShareAwarded: List[String] = List("SIP", "Other")
-
-  def validate(schemePlanType: String, awarded: Boolean): List[MtdError] = {
-    if(!awarded && schemeEnumsShareOptions.contains(schemePlanType)) {NoValidationErrors}
-    else if(awarded && schemeEnumsShareAwarded.contains(schemePlanType)) {NoValidationErrors}
-    else {List(SchemePlanTypeFormatError)}
-  }
+protected[validators] trait DateFormatErrorMessages {
+  val ISO_DATE_FORMAT = "The field should be in the format YYYY-MM-DD"
 }

@@ -54,8 +54,8 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
         requestBodyData.sharesAwardedOrReceived.map(_.zipWithIndex.flatMap {
           case (data, index) => validateSharesAwardedOrReceivedItem(data, index)
         }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.disability.map(validateDisability).getOrElse(NoValidationErrors),
-        requestBodyData.foreignService.map(validateForeignService).getOrElse(NoValidationErrors)
+        requestBodyData.disability.map{ data => validateCommonOtherEmployment(data, fieldName = "disability")}.getOrElse(NoValidationErrors),
+        requestBodyData.foreignService.map{ data => validateCommonOtherEmployment(data, fieldName = "foreignService")}.getOrElse(NoValidationErrors),
       )
     ))
   }
@@ -71,15 +71,21 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
       SchemePlanTypeValidation.validate(shareOptionItem.schemePlanType, false).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/schemePlanType")))
       ),
-      DateFormatValidation.validate(shareOptionItem.dateOfOptionGrant).map(
-        _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/dateOfOptionGrant")))
+      DateFormatValidation.validate(
+        date = shareOptionItem.dateOfOptionGrant,
+        path = s"/shareOption/$arrayIndex/dateOfOptionGrant"
       ),
-      DateFormatValidation.validate(shareOptionItem.dateOfEvent).map(
-        _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/dateOfEvent")))
+      DateFormatValidation.validate(
+        date = shareOptionItem.dateOfEvent,
+        path = s"/shareOption/$arrayIndex/dateOfEvent"
       ),
       DecimalValueValidation.validate(
         amount = shareOptionItem.amountOfConsiderationReceived,
         path = s"/shareOption/$arrayIndex/amountOfConsiderationReceived"
+      ),
+      BigIntegerValueValidation.validate(
+        field = shareOptionItem.noOfSharesAcquired,
+        path = s"/shareOption/$arrayIndex/noOfSharesAcquired"
       ),
       ClassOfSharesValidation.validate(shareOptionItem.classOfSharesAcquired, true).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/classOfSharesAcquired")))
@@ -122,14 +128,20 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
       SchemePlanTypeValidation.validate(sharesAwardedOrReceivedItem.schemePlanType, true).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/schemePlanType")))
       ),
-      DateFormatValidation.validate(sharesAwardedOrReceivedItem.dateSharesCeasedToBeSubjectToPlan).map(
-        _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/dateSharesCeasedToBeSubjectToPlan")))
+      DateFormatValidation.validate(
+        date = sharesAwardedOrReceivedItem.dateSharesCeasedToBeSubjectToPlan,
+        path = s"/sharesAwardedOrReceived/$arrayIndex/dateSharesCeasedToBeSubjectToPlan"
+      ),
+      BigIntegerValueValidation.validate(
+        field = sharesAwardedOrReceivedItem.noOfShareSecuritiesAwarded,
+        path = s"/sharesAwardedOrReceived/$arrayIndex/noOfShareSecuritiesAwarded"
       ),
       ClassOfSharesValidation.validate(sharesAwardedOrReceivedItem.classOfShareAwarded, false).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/classOfShareAwarded")))
       ),
-      DateFormatValidation.validate(sharesAwardedOrReceivedItem.dateSharesAwarded).map(
-        _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/dateSharesAwarded")))
+      DateFormatValidation.validate(
+        date = sharesAwardedOrReceivedItem.dateSharesAwarded,
+        path = s"/sharesAwardedOrReceived/$arrayIndex/dateSharesAwarded"
       ),
       DecimalValueValidation.validate(
         amount = sharesAwardedOrReceivedItem.actualMarketValueOfSharesOnAward,
@@ -154,29 +166,18 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
     ).flatten
   }
 
-  private def validateDisability(disability: AmendCommonOtherEmployment): List[MtdError] = {
+  private def validateCommonOtherEmployment(disability: AmendCommonOtherEmployment, fieldName: String): List[MtdError] = {
     List(
       CustomerRefValidation.validateOptional(disability.customerReference).map(
-        _.copy(paths = Some(Seq(s"/disability/customerReference")))
+        _.copy(paths = Some(Seq(s"/$fieldName/customerReference")))
       ),
       DecimalValueValidation.validate(
         amount = disability.amountDeducted,
-        path = s"/disability/amountDeducted"
+        path = s"/$fieldName/amountDeducted"
       )
     ).flatten
   }
 
-  private def validateForeignService(foreignService: AmendCommonOtherEmployment): List[MtdError] = {
-    List(
-      CustomerRefValidation.validateOptional(foreignService.customerReference).map(
-        _.copy(paths = Some(Seq(s"/foreignService/customerReference")))
-      ),
-      DecimalValueValidation.validate(
-        amount = foreignService.amountDeducted,
-        path = s"/foreignService/amountDeducted"
-      )
-    ).flatten
-  }
 
   private def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
     errors.flatten.groupBy(_.message).map {case (_, errors) =>

@@ -17,6 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
+import v1.controllers.requestParsers.validators.validations.DateFormatValidation.ISO_DATE_FORMAT
 import v1.models.errors.DateFormatError
 
 class DateFormatValidationSpec extends UnitSpec {
@@ -25,14 +26,16 @@ class DateFormatValidationSpec extends UnitSpec {
     "validate" must {
       "return an empty list for a valid date" in {
         DateFormatValidation.validate(
-          date = "2017-04-20"
+          date = "2019-04-20",
+          path = "/path"
         ) shouldBe (NoValidationErrors)
       }
 
       "return a DateFormatError for an invalid date" in {
         DateFormatValidation.validate(
-          date = "Invalid Date"
-        ) shouldBe List(DateFormatError)
+          date = "20-04-2017",
+          path = "/path",
+        ) shouldBe List(DateFormatError.copy(message =  ISO_DATE_FORMAT, paths = Some(Seq("/path"))))
       }
     }
   }

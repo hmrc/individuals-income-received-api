@@ -268,7 +268,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             |        "dateOfEvent": "19-11-20",
             |        "optionNotExercisedButConsiderationReceived": false,
             |        "amountOfConsiderationReceived": -23122.22,
-            |        "noOfSharesAcquired": 100,
+            |        "noOfSharesAcquired": -100,
             |        "classOfSharesAcquired": "This ClassOfShares Acquired string is 91 characters long ---------------------------------91",
             |        "exercisePrice": 12.222,
             |        "amountPaidForOption": -123.22,
@@ -285,7 +285,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             |        "dateOfEvent": "20-9-12",
             |        "optionNotExercisedButConsiderationReceived": false,
             |        "amountOfConsiderationReceived": 5000.999,
-            |        "noOfSharesAcquired": 200,
+            |        "noOfSharesAcquired": -200,
             |        "classOfSharesAcquired": "",
             |        "exercisePrice": -1000.99,
             |        "amountPaidForOption": 5000.999,
@@ -301,7 +301,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             |        "employerRef" : "InvalidReference",
             |        "schemePlanType": "NotAScheme",
             |        "dateSharesCeasedToBeSubjectToPlan": "19-11-10",
-            |        "noOfShareSecuritiesAwarded": 11,
+            |        "noOfShareSecuritiesAwarded": -11,
             |        "classOfShareAwarded": "This ClassOfShares Acquired string is 91 characters long ---------------------------------91",
             |        "dateSharesAwarded" : "19-11-20",
             |        "sharesSubjectToRestrictions": false,
@@ -317,7 +317,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             |        "employerRef" : "InvalidReference",
             |        "schemePlanType": "NotAScheme",
             |        "dateSharesCeasedToBeSubjectToPlan": "20-9-12",
-            |        "noOfShareSecuritiesAwarded": 299,
+            |        "noOfShareSecuritiesAwarded": -299,
             |        "classOfShareAwarded": "",
             |        "dateSharesAwarded" : "20-09-12",
             |        "sharesSubjectToRestrictions": false,
@@ -358,6 +358,15 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
               "/shareOption/1/schemePlanType",
               "/sharesAwardedOrReceived/0/schemePlanType",
               "/sharesAwardedOrReceived/1/schemePlanType",
+            ))
+          ),
+          ValueFormatError.copy(
+            message = "The value must be 0 or more.",
+            paths = Some(List(
+              "/shareOption/0/noOfSharesAcquired",
+              "/shareOption/1/noOfSharesAcquired",
+              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
             ))
           ),
           DateFormatError.copy(

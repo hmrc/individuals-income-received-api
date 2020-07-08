@@ -19,6 +19,8 @@ package v1.controllers.requestParsers.validators
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import v1.controllers.requestParsers.validators.validations.BigIntegerValueValidation.ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE
+import v1.controllers.requestParsers.validators.validations.DateFormatValidation.ISO_DATE_FORMAT
 import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
@@ -207,7 +209,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |""".stripMargin
   )
 
-  private val invalidDateRefJson: JsValue = Json.parse(
+  private val invalidDateJson: JsValue = Json.parse(
     """
       |{
       |  "shareOption": [
@@ -216,7 +218,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "employerRef" : "123/AB456",
       |        "schemePlanType": "EMI",
       |        "dateOfOptionGrant": "19-11-20",
-      |        "dateOfEvent": "19-11-20",
+      |        "dateOfEvent": "2019-11-20",
       |        "optionNotExercisedButConsiderationReceived": true,
       |        "amountOfConsiderationReceived": 23122.22,
       |        "noOfSharesAcquired": 1,
@@ -233,7 +235,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |""".stripMargin
   )
 
-  private val invalidClassOfSharesRefJson: JsValue = Json.parse(
+  private val invalidClassOfSharesAcquiredJson: JsValue = Json.parse(
     """
       |{
       |  "shareOption": [
@@ -246,7 +248,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "optionNotExercisedButConsiderationReceived": true,
       |        "amountOfConsiderationReceived": 23122.22,
       |        "noOfSharesAcquired": 1,
-      |        "classOfSharesAcquired": "This ClassOfShares Awarded string is 91 characters long ---------------------------------91",
+      |        "classOfSharesAcquired": "This ClassOfShares Acquired string is 91 characters long ---------------------------------91",
       |        "exercisePrice": 12.22,
       |        "amountPaidForOption": 123.22,
       |        "marketValueOfSharesOnExcise": 1232.22,
@@ -255,6 +257,43 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "taxableAmount" : 2132.22
       |      }
       |   ]
+      |}
+      |""".stripMargin
+  )
+
+  private val invalidClassOfSharesAwardedJson: JsValue = Json.parse(
+    """
+      |{
+      |  "sharesAwardedOrReceived": [
+      |      {
+      |        "employerName": "Company Ltd",
+      |        "employerRef" : "123/AB456",
+      |        "schemePlanType": "SIP",
+      |        "dateSharesCeasedToBeSubjectToPlan": "2019-11-10",
+      |        "noOfShareSecuritiesAwarded": 11,
+      |        "classOfShareAwarded": "This ClassOfShares Awarded string is 91 characters long ---------------------------------91",
+      |        "dateSharesAwarded" : "2019-11-20",
+      |        "sharesSubjectToRestrictions": true,
+      |        "electionEnteredIgnoreRestrictions": false,
+      |        "actualMarketValueOfSharesOnAward": 2123.22,
+      |        "unrestrictedMarketValueOfSharesOnAward": 123.22,
+      |        "amountPaidForSharesOnAward": 123.22,
+      |        "marketValueAfterRestrictionsLifted": 1232.22,
+      |        "taxableAmount": 12321.22
+      |      }
+      |   ]
+      |}
+      |""".stripMargin
+  )
+
+  private val invalidCustomerRefJson: JsValue = Json.parse(
+    """
+      |{
+      |  "disability":
+      |    {
+      |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+      |      "amountDeducted": 5000.99
+      |    }
       |}
       |""".stripMargin
   )
@@ -346,7 +385,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "dateOfEvent": "19-11-20",
       |        "optionNotExercisedButConsiderationReceived": false,
       |        "amountOfConsiderationReceived": -23122.22,
-      |        "noOfSharesAcquired": 100,
+      |        "noOfSharesAcquired": -100,
       |        "classOfSharesAcquired": "This ClassOfShares Acquired string is 91 characters long ---------------------------------91",
       |        "exercisePrice": 12.222,
       |        "amountPaidForOption": -123.22,
@@ -363,7 +402,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "dateOfEvent": "20-9-12",
       |        "optionNotExercisedButConsiderationReceived": false,
       |        "amountOfConsiderationReceived": 5000.999,
-      |        "noOfSharesAcquired": 200,
+      |        "noOfSharesAcquired": -200,
       |        "classOfSharesAcquired": "",
       |        "exercisePrice": -1000.99,
       |        "amountPaidForOption": 5000.999,
@@ -379,7 +418,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "employerRef" : "InvalidReference",
       |        "schemePlanType": "NotAScheme",
       |        "dateSharesCeasedToBeSubjectToPlan": "19-11-10",
-      |        "noOfShareSecuritiesAwarded": 11,
+      |        "noOfShareSecuritiesAwarded": -11,
       |        "classOfShareAwarded": "This ClassOfShares Acquired string is 91 characters long ---------------------------------91",
       |        "dateSharesAwarded" : "19-11-20",
       |        "sharesSubjectToRestrictions": false,
@@ -395,7 +434,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |        "employerRef" : "InvalidReference",
       |        "schemePlanType": "NotAScheme",
       |        "dateSharesCeasedToBeSubjectToPlan": "20-9-12",
-      |        "noOfShareSecuritiesAwarded": 299,
+      |        "noOfShareSecuritiesAwarded": -299,
       |        "classOfShareAwarded": "",
       |        "dateSharesAwarded" : "20-09-12",
       |        "sharesSubjectToRestrictions": false,
@@ -429,8 +468,10 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
   private val invalidEmployerNameRawRequestBody = AnyContentAsJson(invalidEmployerNameJson)
   private val invalidEmployerRefRawRequestBody = AnyContentAsJson(invalidEmployerRefJson)
   private val invalidSchemePlanRawRequestBody = AnyContentAsJson(invalidSchemePlanTypeJson)
-  private val invalidDateRawRequestBody = AnyContentAsJson(invalidDateRefJson)
-  private val invalidClassOfSharesRawRequestBody = AnyContentAsJson(invalidClassOfSharesRefJson)
+  private val invalidDateRawRequestBody = AnyContentAsJson(invalidDateJson)
+  private val invalidClassOfSharesAcquiredRawRequestBody = AnyContentAsJson(invalidClassOfSharesAcquiredJson)
+  private val invalidClassOfSharesAwardedRawRequestBody = AnyContentAsJson(invalidClassOfSharesAwardedJson)
+  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefJson)
 
   private val invalidShareOptionRawRequestBody = AnyContentAsJson(invalidShareOptionJson)
   private val invalidSharesAwardedOrReceivedRawRequestBody = AnyContentAsJson(invalidSharesAwardedOrReceivedJson)
@@ -504,16 +545,30 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
     "return DateFormatError error" when {
       "an incorrectly formatted date is submitted" in {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDateRawRequestBody)) shouldBe
-          List(DateFormatError.copy(paths = Some(List(
-            "/shareOption/0/dateOfOptionGrant",
-            "/shareOption/0/dateOfEvent"))))
+          List(DateFormatError.copy(
+            message = ISO_DATE_FORMAT,
+            paths = Some(List("/shareOption/0/dateOfOptionGrant"))))
       }
     }
 
-    "return ClassOfSharesFormatError error" when {
+    "return ClassOfSharesAcquiredFormatError error" when {
       "an incorrectly formatted class of shares type is submitted" in {
-        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesRawRequestBody)) shouldBe
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesAcquiredRawRequestBody)) shouldBe
           List(ClassOfSharesAcquiredFormatError.copy(paths = Some(List("/shareOption/0/classOfSharesAcquired"))))
+      }
+    }
+
+    "return ClassOfSharesAwardedFormatError error" when {
+      "an incorrectly formatted class of shares type is submitted" in {
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesAwardedRawRequestBody)) shouldBe
+          List(ClassOfSharesAwardedFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/classOfShareAwarded"))))
+      }
+    }
+
+    "return CustomerRefFormatError error" when {
+      "an incorrectly formatted class of shares type is submitted" in {
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
+          List(CustomerRefFormatError.copy(paths = Some(List("/disability/customerReference"))))
       }
     }
 
@@ -561,15 +616,47 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
                 "/foreignService/customerReference"
               ))
             ),
+            ClassOfSharesAcquiredFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/classOfSharesAcquired",
+                "/shareOption/1/classOfSharesAcquired"
+              ))
+            ),
+            EmployerRefFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/employerRef",
+                "/shareOption/1/employerRef",
+                "/sharesAwardedOrReceived/0/employerRef",
+                "/sharesAwardedOrReceived/1/employerRef"
+              ))
+            ),
+            EmployerNameFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/employerName",
+                "/shareOption/1/employerName",
+                "/sharesAwardedOrReceived/0/employerName",
+                "/sharesAwardedOrReceived/1/employerName"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+              ))
+            ),
             SchemePlanTypeFormatError.copy(
               paths = Some(List(
                 "/shareOption/0/schemePlanType",
                 "/shareOption/1/schemePlanType",
                 "/sharesAwardedOrReceived/0/schemePlanType",
-                "/sharesAwardedOrReceived/1/schemePlanType",
+                "/sharesAwardedOrReceived/1/schemePlanType"
               ))
             ),
             DateFormatError.copy(
+              message = ISO_DATE_FORMAT,
               paths = Some(List(
                 "/shareOption/0/dateOfOptionGrant",
                 "/shareOption/0/dateOfEvent",
@@ -578,29 +665,13 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
                 "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
                 "/sharesAwardedOrReceived/0/dateSharesAwarded",
                 "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-                "/sharesAwardedOrReceived/1/dateSharesAwarded",
+                "/sharesAwardedOrReceived/1/dateSharesAwarded"
               ))
             ),
             ClassOfSharesAwardedFormatError.copy(
               paths = Some(List(
                 "/sharesAwardedOrReceived/0/classOfShareAwarded",
-                "/sharesAwardedOrReceived/1/classOfShareAwarded",
-              ))
-            ),
-            EmployerNameFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/employerName",
-                "/shareOption/1/employerName",
-                "/sharesAwardedOrReceived/0/employerName",
-                "/sharesAwardedOrReceived/1/employerName",
-              ))
-            ),
-            EmployerRefFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/employerRef",
-                "/shareOption/1/employerRef",
-                "/sharesAwardedOrReceived/0/employerRef",
-                "/sharesAwardedOrReceived/1/employerRef",
+                "/sharesAwardedOrReceived/1/classOfShareAwarded"
               ))
             ),
             ValueFormatError.copy(
@@ -634,12 +705,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
 
                 "/disability/amountDeducted",
                 "/foreignService/amountDeducted"
-              ))
-            ),
-            ClassOfSharesAcquiredFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/classOfSharesAcquired",
-                "/shareOption/1/classOfSharesAcquired",
               ))
             )
           )
