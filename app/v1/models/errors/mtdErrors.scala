@@ -39,6 +39,12 @@ object QOPSRefFormatError extends MtdError("FORMAT_QOPS_REF", "The provided QOPS
 object DoubleTaxationArticleFormatError extends MtdError("FORMAT_DOUBLE_TAXATION_ARTICLE", "The provided double taxation article is invalid")
 object DoubleTaxationTreatyFormatError extends MtdError("FORMAT_DOUBLE_TAXATION_TREATY", "The provided double taxation treaty is invalid")
 object SF74RefFormatError extends MtdError("FORMAT_SF74_REF", "The provided SF74 reference is invalid")
+object EmployerNameFormatError extends MtdError("FORMAT_EMPLOYER_NAME", "The format of the employer name is not valid.")
+object EmployerRefFormatError extends MtdError("FORMAT_EMPLOYER_REF", "The format of the Employer Reference number is not valid.")
+object DateFormatError extends MtdError("FORMAT_DATE","The supplied date format is not valid.")
+object ClassOfSharesAwardedFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_AWARDED","The format of class of shares awarded is not valid.")
+object ClassOfSharesAcquiredFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_ACQUIRED","The format of class of shares acquired is not valid.")
+object SchemePlanTypeFormatError extends MtdError("FORMAT_SCHEME_PLAN_TYPE","The format or value of scheme plan type is not valid.")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
