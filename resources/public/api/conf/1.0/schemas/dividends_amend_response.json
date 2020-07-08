@@ -4,6 +4,6 @@
   "description":"Amend Dividends Income Response",
   "type": "object",
   "properties": {
-    "links": {"$ref": "amend_dividends_definitions.json#/definitions/links"}
+    "links": {"$ref": "dividends_definitions.json#/definitions/links"}
   }
 }

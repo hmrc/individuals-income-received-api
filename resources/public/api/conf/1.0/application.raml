@@ -45,6 +45,7 @@ uses:
       /{taxYear}:
         delete: !include endpoints/dividends/delete.raml
         put: !include endpoints/dividends/amend.raml
+        get: !include endpoints/dividends/retrieve.raml
   /employments:
     (annotations.group):
        name: Other Employment Income
