@@ -197,14 +197,14 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
       )
     )
 
-  val disability: AmendDisability =
-    AmendDisability(
+  val disability: AmendCommonOtherEmployment =
+    AmendCommonOtherEmployment(
       customerReference = Some("OTHEREmp123A"),
       amountDeducted = 5000.99
     )
 
-  val foreignService: AmendForeignService =
-    AmendForeignService(
+  val foreignService: AmendCommonOtherEmployment =
+    AmendCommonOtherEmployment(
       customerReference = Some("OTHEREmp999A"),
       amountDeducted = 7000.99
     )

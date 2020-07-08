@@ -154,7 +154,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
     ).flatten
   }
 
-  private def validateDisability(disability: AmendDisability): List[MtdError] = {
+  private def validateDisability(disability: AmendCommonOtherEmployment): List[MtdError] = {
     List(
       CustomerRefValidation.validateOptional(disability.customerReference).map(
         _.copy(paths = Some(Seq(s"/disability/customerReference")))
@@ -166,7 +166,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
     ).flatten
   }
 
-  private def validateForeignService(foreignService: AmendForeignService): List[MtdError] = {
+  private def validateForeignService(foreignService: AmendCommonOtherEmployment): List[MtdError] = {
     List(
       CustomerRefValidation.validateOptional(foreignService.customerReference).map(
         _.copy(paths = Some(Seq(s"/foreignService/customerReference")))
