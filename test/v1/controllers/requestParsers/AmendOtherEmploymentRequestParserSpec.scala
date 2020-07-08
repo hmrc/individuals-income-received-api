@@ -361,7 +361,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             ))
           ),
           ValueFormatError.copy(
-            message = "The value must be 0 or more.",
+            message = "The value must be 0 or more",
             paths = Some(List(
               "/shareOption/0/noOfSharesAcquired",
               "/shareOption/1/noOfSharesAcquired",

@@ -39,7 +39,7 @@ object QOPSRefFormatError extends MtdError("FORMAT_QOPS_REF", "The provided QOPS
 object DoubleTaxationArticleFormatError extends MtdError("FORMAT_DOUBLE_TAXATION_ARTICLE", "The provided double taxation article is invalid")
 object DoubleTaxationTreatyFormatError extends MtdError("FORMAT_DOUBLE_TAXATION_TREATY", "The provided double taxation treaty is invalid")
 object SF74RefFormatError extends MtdError("FORMAT_SF74_REF", "The provided SF74 reference is invalid")
-object EmployerNameFormatError extends MtdError("FORMAT_EMPLOYER_NAME", "The provide employer name is invalid")
+object EmployerNameFormatError extends MtdError("FORMAT_EMPLOYER_NAME", "The provided employer name is invalid")
 object EmployerRefFormatError extends MtdError("FORMAT_EMPLOYER_REF", "The provided employer reference number is invalid")
 object DateFormatError extends MtdError("FORMAT_DATE","")
 object ClassOfSharesAwardedFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_AWARDED","The provided class of shares awarded is invalid")

@@ -19,14 +19,16 @@ package v1.controllers.requestParsers.validators
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.validations.BigIntegerValueValidation.ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE
-import v1.controllers.requestParsers.validators.validations.DateFormatValidation.ISO_DATE_FORMAT
-import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
+
+import v1.controllers.requestParsers.validators.validations.{DateFormatErrorMessages, ValueFormatErrorMessages}
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 
 
-class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
+class AmendOtherEmploymentValidatorSpec extends UnitSpec
+  with ValueFormatErrorMessages
+  with DateFormatErrorMessages {
+
   private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
 
