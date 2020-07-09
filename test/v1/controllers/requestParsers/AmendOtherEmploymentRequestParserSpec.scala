@@ -352,24 +352,30 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
               "/foreignService/customerReference"
             ))
           ),
+          ClassOfSharesAcquiredFormatError.copy(
+            paths = Some(List(
+              "/shareOption/0/classOfSharesAcquired",
+              "/shareOption/1/classOfSharesAcquired"
+            ))
+          ),
+          EmployerRefFormatError.copy(
+            paths = Some(List(
+              "/shareOption/0/employerRef",
+              "/shareOption/1/employerRef",
+              "/sharesAwardedOrReceived/0/employerRef",
+              "/sharesAwardedOrReceived/1/employerRef"
+            ))
+          ),
           SchemePlanTypeFormatError.copy(
             paths = Some(List(
               "/shareOption/0/schemePlanType",
               "/shareOption/1/schemePlanType",
               "/sharesAwardedOrReceived/0/schemePlanType",
-              "/sharesAwardedOrReceived/1/schemePlanType",
-            ))
-          ),
-          ValueFormatError.copy(
-            message = "The value must be 0 or more",
-            paths = Some(List(
-              "/shareOption/0/noOfSharesAcquired",
-              "/shareOption/1/noOfSharesAcquired",
-              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+              "/sharesAwardedOrReceived/1/schemePlanType"
             ))
           ),
           DateFormatError.copy(
+            message = "The field should be in the format YYYY-MM-DD",
             paths = Some(List(
               "/shareOption/0/dateOfOptionGrant",
               "/shareOption/0/dateOfEvent",
@@ -378,13 +384,16 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
               "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
               "/sharesAwardedOrReceived/0/dateSharesAwarded",
               "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-              "/sharesAwardedOrReceived/1/dateSharesAwarded",
+              "/sharesAwardedOrReceived/1/dateSharesAwarded"
             ))
           ),
-          ClassOfSharesAwardedFormatError.copy(
+          ValueFormatError.copy(
+            message = "The field should be 0 or more",
             paths = Some(List(
-              "/sharesAwardedOrReceived/0/classOfShareAwarded",
-              "/sharesAwardedOrReceived/1/classOfShareAwarded",
+              "/shareOption/0/noOfSharesAcquired",
+              "/shareOption/1/noOfSharesAcquired",
+              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
             ))
           ),
           EmployerNameFormatError.copy(
@@ -392,15 +401,13 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
               "/shareOption/0/employerName",
               "/shareOption/1/employerName",
               "/sharesAwardedOrReceived/0/employerName",
-              "/sharesAwardedOrReceived/1/employerName",
+              "/sharesAwardedOrReceived/1/employerName"
             ))
           ),
-          EmployerRefFormatError.copy(
+          ClassOfSharesAwardedFormatError.copy(
             paths = Some(List(
-              "/shareOption/0/employerRef",
-              "/shareOption/1/employerRef",
-              "/sharesAwardedOrReceived/0/employerRef",
-              "/sharesAwardedOrReceived/1/employerRef",
+              "/sharesAwardedOrReceived/0/classOfShareAwarded",
+              "/sharesAwardedOrReceived/1/classOfShareAwarded"
             ))
           ),
           ValueFormatError.copy(
@@ -434,12 +441,6 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
 
               "/disability/amountDeducted",
               "/foreignService/amountDeducted"
-            ))
-          ),
-          ClassOfSharesAcquiredFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/classOfSharesAcquired",
-              "/shareOption/1/classOfSharesAcquired",
             ))
           )
         )

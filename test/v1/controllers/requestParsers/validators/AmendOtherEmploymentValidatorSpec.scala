@@ -632,23 +632,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/sharesAwardedOrReceived/1/employerRef"
               ))
             ),
-            EmployerNameFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/employerName",
-                "/shareOption/1/employerName",
-                "/sharesAwardedOrReceived/0/employerName",
-                "/sharesAwardedOrReceived/1/employerName"
-              ))
-            ),
-            ValueFormatError.copy(
-              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
-              paths = Some(List(
-                "/shareOption/0/noOfSharesAcquired",
-                "/shareOption/1/noOfSharesAcquired",
-                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-              ))
-            ),
             SchemePlanTypeFormatError.copy(
               paths = Some(List(
                 "/shareOption/0/schemePlanType",
@@ -670,10 +653,27 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/sharesAwardedOrReceived/1/dateSharesAwarded"
               ))
             ),
+            EmployerNameFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/employerName",
+                "/shareOption/1/employerName",
+                "/sharesAwardedOrReceived/0/employerName",
+                "/sharesAwardedOrReceived/1/employerName"
+              ))
+            ),
             ClassOfSharesAwardedFormatError.copy(
               paths = Some(List(
                 "/sharesAwardedOrReceived/0/classOfShareAwarded",
                 "/sharesAwardedOrReceived/1/classOfShareAwarded"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
               ))
             ),
             ValueFormatError.copy(

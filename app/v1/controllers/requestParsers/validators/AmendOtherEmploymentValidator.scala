@@ -166,13 +166,13 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
     ).flatten
   }
 
-  private def validateCommonOtherEmployment(disability: AmendCommonOtherEmployment, fieldName: String): List[MtdError] = {
+  private def validateCommonOtherEmployment(commonOtherEmployment: AmendCommonOtherEmployment, fieldName: String): List[MtdError] = {
     List(
-      CustomerRefValidation.validateOptional(disability.customerReference).map(
+      CustomerRefValidation.validateOptional(commonOtherEmployment.customerReference).map(
         _.copy(paths = Some(Seq(s"/$fieldName/customerReference")))
       ),
       DecimalValueValidation.validate(
-        amount = disability.amountDeducted,
+        amount = commonOtherEmployment.amountDeducted,
         path = s"/$fieldName/amountDeducted"
       )
     ).flatten
