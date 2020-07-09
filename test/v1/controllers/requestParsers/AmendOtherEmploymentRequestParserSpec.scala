@@ -387,15 +387,6 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
               "/sharesAwardedOrReceived/1/dateSharesAwarded"
             ))
           ),
-          ValueFormatError.copy(
-            message = "The field should be 0 or more",
-            paths = Some(List(
-              "/shareOption/0/noOfSharesAcquired",
-              "/shareOption/1/noOfSharesAcquired",
-              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            ))
-          ),
           EmployerNameFormatError.copy(
             paths = Some(List(
               "/shareOption/0/employerName",
@@ -408,6 +399,15 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             paths = Some(List(
               "/sharesAwardedOrReceived/0/classOfShareAwarded",
               "/sharesAwardedOrReceived/1/classOfShareAwarded"
+            ))
+          ),
+          ValueFormatError.copy(
+            message = "The field should be 0 or more",
+            paths = Some(List(
+              "/shareOption/0/noOfSharesAcquired",
+              "/shareOption/1/noOfSharesAcquired",
+              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
             ))
           ),
           ValueFormatError.copy(
