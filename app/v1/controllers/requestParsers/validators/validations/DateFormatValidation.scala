@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import java.time.LocalDate
 
-package object validations {
+import v1.models.errors.{DateFormatError, MtdError}
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
+import scala.util.{Failure, Success, Try}
 
+object DateFormatValidation extends DateFormatErrorMessages{
+
+  def validate(date: String, path: String, message: String = ISO_DATE_FORMAT): List[MtdError] = Try {
+    LocalDate.parse(date, dateFormat)
+  } match {
+    case Success(_) => NoValidationErrors
+    case Failure(_) => List(
+      DateFormatError.copy(
+        message = message,
+        paths = Some(Seq(path))
+      )
+    )
+  }
 }
+

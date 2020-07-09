@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import v1.models.errors.{EmployerNameFormatError, MtdError}
 
-package object validations {
-
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
-
+object EmployerNameValidation {
+  def validate(employerName: String): List[MtdError] = {
+    if(employerName.length() <= 105) NoValidationErrors else List(EmployerNameFormatError)
+  }
 }

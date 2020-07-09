@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import v1.models.errors.{ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError, MtdError}
 
-package object validations {
+object ClassOfSharesValidation {
+  private val regex = "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
-
+  def validate(classOfShares: String, acquired: Boolean): List[MtdError] = {
+    if(classOfShares.matches(regex)) {NoValidationErrors}
+    else if (!classOfShares.matches(regex) && acquired == true) {List(ClassOfSharesAcquiredFormatError)}
+    else {List(ClassOfSharesAwardedFormatError)}
+  }
 }

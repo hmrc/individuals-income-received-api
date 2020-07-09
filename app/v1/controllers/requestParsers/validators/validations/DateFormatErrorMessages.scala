@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
-
-package object validations {
-
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
-
+protected[validators] trait DateFormatErrorMessages {
+  val ISO_DATE_FORMAT = "The field should be in the format YYYY-MM-DD"
 }

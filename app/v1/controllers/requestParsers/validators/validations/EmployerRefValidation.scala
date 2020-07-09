@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import v1.models.errors.{EmployerRefFormatError, MtdError}
 
-package object validations {
+object EmployerRefValidation {
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
+  private val regex = "^[0-9]{3}\\/[^ ].{0,9}$"
 
+  def validateOptional(employerRef: Option[String]): List[MtdError] = employerRef match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value)
+  }
+
+  def validate(employerRef: String): List[MtdError] = {
+    if(employerRef.matches(regex)) NoValidationErrors else List(EmployerRefFormatError)
+  }
 }
