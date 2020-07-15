@@ -26,7 +26,6 @@ import v1.connectors.{DeleteRetrieveConnector, DesUri}
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.DeleteRetrieveRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
