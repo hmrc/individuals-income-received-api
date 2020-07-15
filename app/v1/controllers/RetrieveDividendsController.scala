@@ -63,8 +63,8 @@ class RetrieveDividendsController @Inject()(val authService: EnrolmentsAuthServi
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveDividendsResponse](parsedRequest))
+          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieve[RetrieveDividendsResponse]())
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveDividendsHateoasData(nino, taxYear))

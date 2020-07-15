@@ -63,8 +63,8 @@ class RetrieveInsurancePoliciesController @Inject()(val authService: EnrolmentsA
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveInsurancePoliciesResponse](parsedRequest))
+          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieve[RetrieveInsurancePoliciesResponse]())
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
