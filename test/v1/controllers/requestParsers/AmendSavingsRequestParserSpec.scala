@@ -22,8 +22,8 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendSavingsValidator
 import v1.models.domain.DesTaxYear
-import v1.models.errors.{BadRequestError, CountryCodeFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
+import v1.models.errors._
+import v1.models.request.amendSavings._
 
 class AmendSavingsRequestParserSpec extends UnitSpec{
 

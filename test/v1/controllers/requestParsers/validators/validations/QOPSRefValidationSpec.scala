@@ -27,14 +27,14 @@ class QOPSRefValidationSpec extends UnitSpec {
         QOPSRefValidation.validateOptional(
           qopsRef = None,
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some valid qopsRef" in {
         QOPSRefValidation.validateOptional(
           qopsRef = Some("QOPS000000"),
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid qopsRef" in {

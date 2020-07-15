@@ -19,14 +19,14 @@ package v1.controllers
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendInsurancePoliciesRequestParser
 import v1.mocks.services.{MockAmendInsurancePoliciesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody, AmendVoidedIsaPoliciesItem}
+import v1.models.request.amendInsurancePolicies._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

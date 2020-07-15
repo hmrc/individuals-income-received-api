@@ -26,7 +26,7 @@ class CustomerRefValidationSpec extends UnitSpec {
       "return an empty list for a valid customerRef" in {
         CustomerRefValidation.validate(
           customerRef = "INPOLY123A"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return a CustomerRefFormatError for an invalid customerRef" in {
@@ -40,13 +40,13 @@ class CustomerRefValidationSpec extends UnitSpec {
       "return an empty list for a value of 'None'" in {
         CustomerRefValidation.validateOptional(
           customerRef = None
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some valid customerRef" in {
         CustomerRefValidation.validateOptional(
           customerRef = Some("PENSIONINCOME245")
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid customerRef" in {

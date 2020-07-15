@@ -154,7 +154,7 @@ class RetrievePensionsControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrievePensionsResponse](requestData)
+          .retrieve[RetrievePensionsResponse]()
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrievePensionsResponseModel))))
 
         MockHateoasFactory
@@ -211,7 +211,7 @@ class RetrievePensionsControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrievePensionsResponse](requestData)
+              .retrieve[RetrievePensionsResponse]()
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
             val result: Future[Result] = controller.retrievePensions(nino, taxYear)(fakeGetRequest)

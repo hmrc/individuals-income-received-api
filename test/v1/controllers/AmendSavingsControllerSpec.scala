@@ -26,7 +26,7 @@ import v1.mocks.services.{MockAmendSavingsService, MockEnrolmentsAuthService, Mo
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody, AmendSecurities}
+import v1.models.request.amendSavings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

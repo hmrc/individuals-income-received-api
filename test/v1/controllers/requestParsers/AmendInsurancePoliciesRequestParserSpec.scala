@@ -23,7 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendInsurancePoliciesValidator
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody, AmendVoidedIsaPoliciesItem}
+import v1.models.request.amendInsurancePolicies._
 
 class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
 

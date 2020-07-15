@@ -22,7 +22,7 @@ import v1.mocks.connectors.MockAmendOtherEmploymentConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendOtherEmployment.{AmendCommonOtherEmployment, AmendOtherEmploymentRequest, AmendOtherEmploymentRequestBody, AmendShareOptionItem, AmendSharesAwardedOrReceivedItem}
+import v1.models.request.amendOtherEmployment._
 
 import scala.concurrent.Future
 

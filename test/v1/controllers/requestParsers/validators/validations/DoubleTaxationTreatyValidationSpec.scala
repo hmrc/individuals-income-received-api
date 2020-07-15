@@ -27,14 +27,14 @@ class DoubleTaxationTreatyValidationSpec extends UnitSpec {
         DoubleTaxationTreatyValidation.validateOptional(
           dblTaxationTreaty = None,
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some valid dblTaxationTreaty" in {
         DoubleTaxationTreatyValidation.validateOptional(
           dblTaxationTreaty = Some("MUNICH"),
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid dblTaxationTreaty" in {

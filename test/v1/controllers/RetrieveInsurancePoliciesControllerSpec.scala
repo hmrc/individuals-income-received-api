@@ -27,12 +27,12 @@ import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{AMEND_INSURANCE_POLICIES_INCOME, DELETE_INSURANCE_POLICIES_INCOME, SELF}
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveInsurancePolicies.{CommonInsurancePoliciesItem, ForeignPoliciesItem, RetrieveInsurancePoliciesHateoasData, RetrieveInsurancePoliciesResponse, VoidedIsaPoliciesItem}
+import v1.models.response.retrieveInsurancePolicies._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -161,7 +161,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveInsurancePoliciesResponse](requestData)
+          .retrieve[RetrieveInsurancePoliciesResponse]()
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveInsurancePoliciesResponseModel))))
 
         MockHateoasFactory
@@ -218,7 +218,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveInsurancePoliciesResponse](requestData)
+              .retrieve[RetrieveInsurancePoliciesResponse]()
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
             val result: Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)

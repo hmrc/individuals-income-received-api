@@ -27,14 +27,14 @@ class SF74RefValidationSpec extends UnitSpec {
         SF74RefValidation.validateOptional(
           sf74Ref = None,
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some valid sf74Ref" in {
         SF74RefValidation.validateOptional(
           sf74Ref = Some("SF74-123456"),
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid sf74Ref" in {

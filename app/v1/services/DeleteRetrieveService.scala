@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extends DesResponseMappingSupport with Logging {
 
-  def delete(desErrorMap: Map[String, MtdError] = desErrorMap)(implicit hc: HeaderCarrier,
+  def delete(desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit hc: HeaderCarrier,
                ec: ExecutionContext,
                logContext: EndpointLogContext,
                desUri: DesUri[Unit]): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
@@ -46,7 +46,7 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
     result.value
   }
 
-  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = desErrorMap)(implicit hc: HeaderCarrier,
+  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit hc: HeaderCarrier,
                                ec: ExecutionContext,
                                logContext: EndpointLogContext,
                                desUri: DesUri[Resp]): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
@@ -59,7 +59,7 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private def defaultDesErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_NINO" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,

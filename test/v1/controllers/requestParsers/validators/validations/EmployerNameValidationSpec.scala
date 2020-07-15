@@ -26,7 +26,7 @@ class EmployerNameValidationSpec extends UnitSpec {
       "return an empty list for a valid employer name" in {
         EmployerNameValidation.validate(
           employerName = "BPDTS Ltd"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return an EmployerNameFormatError for an invalid employerName" in {

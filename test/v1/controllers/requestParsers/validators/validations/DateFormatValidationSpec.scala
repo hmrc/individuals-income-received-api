@@ -28,7 +28,7 @@ class DateFormatValidationSpec extends UnitSpec {
         DateFormatValidation.validate(
           date = "2019-04-20",
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return a DateFormatError for an invalid date" in {
