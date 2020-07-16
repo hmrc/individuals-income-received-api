@@ -245,3 +245,14 @@ traits:
                     description: 'The format or value of scheme plan type is not valid.'
                     value:
                       code: FORMAT_SCHEME_PLAN_TYPE
+  formatEmploymentID:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatEmploymentID:
+                description: 'The format of the supplied Employment ID field is not valid.'
+                value:
+                  code: FORMAT_EMPLOYMENT_ID

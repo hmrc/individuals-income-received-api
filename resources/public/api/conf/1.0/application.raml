@@ -35,7 +35,7 @@ uses:
       type: string
       example: "TC663795B"
     taxYear:
-      description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+      description: "The tax year the data applies to, for example, 2020-21. The start year and end year must not span two tax years. No gaps are allowed, for example, 2020-22 is not valid."
       example: "2020-21"
   /dividends:
     (annotations.group):
@@ -56,6 +56,18 @@ uses:
           put: !include endpoints/employmentOther/amend.raml
           get: !include endpoints/employmentOther/retrieve.raml
           delete: !include endpoints/employmentOther/delete.raml
+    /{nino}:
+      /{taxYear}:
+        (annotations.group):
+          name: Custom Employment
+          description: Resources relating to an individual's custom employment
+        /{employmentId}:
+          uriParameters:
+            employmentId:
+              description: "The unique identifier for the employment.<p>Must conform to the regular expression</p><p>`^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`</p>"
+              type: string
+              example: "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+          delete: !include endpoints/customEmployment/delete.raml
   /foreign:
     (annotations.group):
        name: Foreign Income
