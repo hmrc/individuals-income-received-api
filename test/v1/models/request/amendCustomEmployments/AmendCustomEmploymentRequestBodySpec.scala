@@ -1,0 +1,73 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package v1.models.request.amendCustomEmployments
+
+import play.api.libs.json.{JsError, JsValue, Json}
+import support.UnitSpec
+import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequestBody
+
+class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
+
+  private val model = AmendCustomEmploymentRequestBody (
+      employerRef = Some("123/AZ12334"),
+      employerName = "AMD infotech Ltd",
+      startDate = "2019-01-01",
+      cessationDate = Some("2020-06-01"),
+      payrollId = Some("124214112412")
+    )
+
+  private val json = Json.parse(
+    """
+      |{
+      |  "employerRef": "123/AZ12334",
+      |  "employerName": "AMD infotech Ltd",
+      |  "startDate": "2019-01-01",
+      |  "cessationDate": "2020-06-01",
+      |  "payrollId": "124214112412"
+      |}
+    """.stripMargin
+  )
+
+  "read from valid JSON" should {
+    "produce the expected AmendCustomEmploymentRequestBody object" in {
+      json.as[AmendCustomEmploymentRequestBody] shouldBe model
+    }
+  }
+
+  "read from invalid JSON" should {
+    "produce a JsError" in {
+      val json: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": "123/AB56797",
+          |  "cessationDate": "2020-06-01",
+          |  "payrollId": "124214112412"
+          |}
+          """.stripMargin
+      )
+
+      json.validate[AmendCustomEmploymentRequestBody] shouldBe a[JsError]
+    }
+  }
+
+    "written to JSON" should {
+      "produce the expected JsObject" in {
+        Json.toJson(model) shouldBe json
+      }
+    }
+
+}
