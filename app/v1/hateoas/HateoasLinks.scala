@@ -44,6 +44,12 @@ trait HateoasLinks {
   private def dividendsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/dividends/$nino/$taxYear"
 
+  private def employmentUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/employments/$nino/$taxYear"
+
+  private def employmentUriWithId(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String) =
+    s"/${appConfig.apiGatewayContext}/employments/$nino/$taxYear/$employmentId"
+
   //API resource links
 
   //Savings Income
@@ -200,4 +206,47 @@ trait HateoasLinks {
       rel = DELETE_DIVIDENDS_INCOME
     )
 
+  //Employments
+  def listEmployment(appConfig: AppConfig, nino: String, taxYear: String, isSelf: Boolean): Link =
+    Link(
+      href = employmentUri(appConfig, nino, taxYear),
+      method = GET,
+      rel = if (isSelf) SELF else LIST_EMPLOYMENTS
+    )
+
+  def retrieveEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String, isSelf: Boolean): Link =
+    Link(
+      href = employmentUriWithId(appConfig, nino, taxYear, employmentId),
+      method = GET,
+      rel = if (isSelf) SELF else RETRIEVE_EMPLOYMENT
+    )
+
+  def ignoreEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = employmentUriWithId(appConfig, nino, taxYear, employmentId),
+      method = PUT,
+      rel = IGNORE_EMPLOYMENT
+    )
+
+  //Custom Employment
+  def addCustomEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = employmentUri(appConfig, nino, taxYear),
+      method = POST,
+      rel = ADD_CUSTOM_EMPLOYMENT
+    )
+
+  def amendCustomEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = employmentUriWithId(appConfig, nino, taxYear, employmentId),
+      method = PUT,
+      rel = AMEND_CUSTOM_EMPLOYMENT
+    )
+
+  def deleteCustomEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = employmentUriWithId(appConfig, nino, taxYear, employmentId),
+      method = DELETE,
+      rel = DELETE_CUSTOM_EMPLOYMENT
+    )
 }
