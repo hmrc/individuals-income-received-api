@@ -256,3 +256,58 @@ traits:
                 description: 'The format of the supplied Employment ID field is not valid.'
                 value:
                   code: FORMAT_EMPLOYMENT_ID
+  formatStartDate:
+      responses:
+        400:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                formatEmploymentID:
+                  description: 'The format of the supplied Start date field is not valid.'
+                  value:
+                    code: FORMAT_START_DATE
+  formatEndDate:
+        responses:
+          400:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  formatEmploymentID:
+                    description: 'The format of the supplied End date field is not valid.'
+                    value:
+                      code: FORMAT_END_DATE
+  formatPayrollID:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatEmploymentID:
+                      description: 'The format of the supplied Payroll ID field is not valid.'
+                      value:
+                        code: FORMAT_PAYROLL_ID
+  emptyOrIncorrectBody:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatEmploymentID:
+                      description: 'An empty or non-matching body was submitted.'
+                      value:
+                        code: RULE_EMPTY_OR_INCORRECT_BODY_SUBMITTED
+  endBeforeStartDate:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatEmploymentID:
+                      description: 'The End date is earlier than the Start date.'
+                      value:
+                        code: RULE_END_DATE_BEFORE_START_DATE
