@@ -22,6 +22,7 @@ import v1.mocks.MockHttpClient
 import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
+import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import scala.concurrent.Future
 
@@ -30,7 +31,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2021-22"
 
-  val amendCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
+  val addCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
     employerRef = Some("123/AB56797"),
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
@@ -41,8 +42,10 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
   val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear(taxYear),
-    body = amendCustomEmploymentRequestBody
+    body = addCustomEmploymentRequestBody
   )
+
+  val response = AddCustomEmploymentResponse("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -59,12 +62,12 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
   "AddCustomEmploymentConnector" when {
     ".addEmployment" should {
       "return a success upon HttpClient success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome = Right(ResponseWrapper(correlationId, response))
 
         MockedHttpClient
           .post(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom",
-            body = amendCustomEmploymentRequestBody,
+            body = addCustomEmploymentRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
 
