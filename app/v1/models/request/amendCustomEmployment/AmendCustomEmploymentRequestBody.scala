@@ -16,7 +16,7 @@
 
 package v1.models.request.amendCustomEmployment
 
-import play.api.libs.json.{Json, OFormat, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class AmendCustomEmploymentRequestBody(employerRef: Option[String],
                                             employerName: String,

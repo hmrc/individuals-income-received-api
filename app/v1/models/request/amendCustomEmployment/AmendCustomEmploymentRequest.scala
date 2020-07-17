@@ -17,6 +17,5 @@
 package v1.models.request.amendCustomEmployment
 
 import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
 
 case class AmendCustomEmploymentRequest(nino: Nino, taxYear: String, employmentId: String, body: AmendCustomEmploymentRequestBody)
