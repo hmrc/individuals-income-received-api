@@ -1,0 +1,19 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/custom",
+      "rel":"self",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/custom",
+      "rel":"add-custom-income",
+      "method":"POST"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/custom",
+      "rel":"delete-custom-income",
+      "method":"DELETE"
+    }
+  ]
+}

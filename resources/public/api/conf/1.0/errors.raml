@@ -267,7 +267,7 @@ traits:
                   description: 'The format of the supplied Start date field is not valid.'
                   value:
                     code: FORMAT_START_DATE
-  formatEndDate:
+  formatCessationDate:
         responses:
           400:
             body:
@@ -275,9 +275,9 @@ traits:
                 type: types.errorResponse
                 examples:
                   formatEmploymentID:
-                    description: 'The format of the supplied End date field is not valid.'
+                    description: 'The format of the supplied cessation date is not valid.'
                     value:
-                      code: FORMAT_END_DATE
+                      code: FORMAT_CESSATION_DATE
   formatPayrollID:
           responses:
             400:
@@ -308,6 +308,28 @@ traits:
                   type: types.errorResponse
                   examples:
                     formatEmploymentID:
-                      description: 'The End date is earlier than the Start date.'
+                      description: 'The cessation date is earlier than the start date.'
                       value:
                         code: RULE_END_DATE_BEFORE_START_DATE
+  startDateAfterTaxYeaEnd:
+            responses:
+              400:
+                body:
+                  application/json:
+                    type: types.errorResponse
+                    examples:
+                      formatEmploymentID:
+                        description: 'The employment is listed as starting after the tax year ended.'
+                        value:
+                          code: RULE_START_DATE_AFTER_TAX_YEAR_END
+  cessationDateBeforeTaxYearStart:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        formatEmploymentID:
+                          description: 'The employment is listed as ending before the tax year began.'
+                          value:
+                            code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START

@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": 	"Amend Custom Employment Response",
+  "description": "Amend Custom Employment Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "custom_employment_definitions.json#/definitions/links"}
+  }
+}
