@@ -52,9 +52,9 @@ uses:
         /{taxYear}:
           uriParameters:
             taxYear: !include pathParameters/taxYearNoMinimum.raml
-          put: !include endpoints/employmentOther/amend.raml
-          get: !include endpoints/employmentOther/retrieve.raml
-          delete: !include endpoints/employmentOther/delete.raml
+          put: !include endpoints/otherEmploymentIncome/amend.raml
+          get: !include endpoints/otherEmploymentIncome/retrieve.raml
+          delete: !include endpoints/otherEmploymentIncome/delete.raml
   /dividends:
     (annotations.group):
       name: Dividends Income
@@ -63,9 +63,9 @@ uses:
       /{taxYear}:
         uriParameters:
           taxYear: !include pathParameters/taxYearNoMinimum.raml
-        delete: !include endpoints/dividends/delete.raml
-        put: !include endpoints/dividends/amend.raml
-        get: !include endpoints/dividends/retrieve.raml
+        delete: !include endpoints/dividendsIncome/delete.raml
+        put: !include endpoints/dividendsIncome/amend.raml
+        get: !include endpoints/dividendsIncome/retrieve.raml
   /foreign:
     (annotations.group):
       name: Foreign Income
@@ -74,9 +74,9 @@ uses:
       /{taxYear}:
         uriParameters:
           taxYear: !include pathParameters/taxYearNoMinimum.raml
-        put: !include endpoints/foreign/amend.raml
-        get: !include endpoints/foreign/retrieve.raml
-        delete: !include endpoints/foreign/delete.raml
+        put: !include endpoints/foreignIncome/amend.raml
+        get: !include endpoints/foreignIncome/retrieve.raml
+        delete: !include endpoints/foreignIncome/delete.raml
   /insurance-policies:
     (annotations.group):
       name: Insurance Policies Income
@@ -85,9 +85,9 @@ uses:
       /{taxYear}:
         uriParameters:
           taxYear: !include pathParameters/taxYearNoMinimum.raml
-        put: !include endpoints/insurancePolicies/amend.raml
-        get: !include endpoints/insurancePolicies/retrieve.raml
-        delete: !include endpoints/insurancePolicies/delete.raml
+        put: !include endpoints/insurancePoliciesIncome/amend.raml
+        get: !include endpoints/insurancePoliciesIncome/retrieve.raml
+        delete: !include endpoints/insurancePoliciesIncome/delete.raml
   /pensions:
     (annotations.group):
       name: Pensions Income
@@ -96,9 +96,9 @@ uses:
       /{taxYear}:
         uriParameters:
           taxYear: !include pathParameters/taxYearNoMinimum.raml
-        put: !include endpoints/pensions/amend.raml
-        get: !include endpoints/pensions/retrieve.raml
-        delete: !include endpoints/pensions/delete.raml
+        put: !include endpoints/pensionsIncome/amend.raml
+        get: !include endpoints/pensionsIncome/retrieve.raml
+        delete: !include endpoints/pensionsIncome/delete.raml
   /other:
     (annotations.group):
       name: Other Income
@@ -107,9 +107,9 @@ uses:
       /{taxYear}:
         uriParameters:
           taxYear: !include pathParameters/taxYearNoMinimum.raml
-        put: !include endpoints/other/amend.raml
-        get: !include endpoints/other/retrieve.raml
-        delete: !include endpoints/other/delete.raml
+        put: !include endpoints/otherIncome/amend.raml
+        get: !include endpoints/otherIncome/retrieve.raml
+        delete: !include endpoints/otherIncome/delete.raml
   /savings:
     (annotations.group):
       name: Savings Income
@@ -118,6 +118,6 @@ uses:
       /{taxYear}:
         uriParameters:
           taxYear: !include pathParameters/taxYearNoMinimum.raml
-        put: !include endpoints/savings/amend.raml
-        get: !include endpoints/savings/retrieve.raml
-        delete: !include endpoints/savings/delete.raml
+        put: !include endpoints/savingsIncome/amend.raml
+        get: !include endpoints/savingsIncome/retrieve.raml
+        delete: !include endpoints/savingsIncome/delete.raml
