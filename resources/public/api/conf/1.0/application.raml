@@ -34,15 +34,16 @@ uses:
       description: "National Insurance number, in the format AA999999A."
       type: string
       example: "TC663795B"
-    taxYear:
-      description: "The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. No gaps are allowed, for example, 2021-23 is not valid."
-      example: "2021-22"
   /dividends:
     (annotations.group):
        name: Dividends Income
        description: Resources relating to an individual's dividends income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+            example: "2020-21"
         delete: !include endpoints/dividends/delete.raml
         put: !include endpoints/dividends/amend.raml
         get: !include endpoints/dividends/retrieve.raml
@@ -53,11 +54,19 @@ uses:
     /other:
       /{nino}:
         /{taxYear}:
+          uriParameters:
+            taxYear:
+              description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+              example: "2020-21"
           put: !include endpoints/employmentOther/amend.raml
           get: !include endpoints/employmentOther/retrieve.raml
           delete: !include endpoints/employmentOther/delete.raml
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2021-22. The tax year must have ended. The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid. (The minimum tax year in Sandbox is 2019-20.)"
+            example: "2021-22"
         (annotations.group):
           name: Custom Employment
           description: Resources relating to an individual's custom employment
@@ -74,6 +83,10 @@ uses:
        description: Resources relating to an individual's foreign income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+            example: "2020-21"
         put: !include endpoints/foreign/amend.raml
         get: !include endpoints/foreign/retrieve.raml
         delete: !include endpoints/foreign/delete.raml
@@ -83,6 +96,10 @@ uses:
        description: Resources relating to an individual's insurance policies income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+            example: "2020-21"
         put: !include endpoints/insurancePolicies/amend.raml
         get: !include endpoints/insurancePolicies/retrieve.raml
         delete: !include endpoints/insurancePolicies/delete.raml
@@ -92,6 +109,10 @@ uses:
        description: Resources relating to an individual's pensions income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+            example: "2020-21"
         put: !include endpoints/pensions/amend.raml
         get: !include endpoints/pensions/retrieve.raml
         delete: !include endpoints/pensions/delete.raml
@@ -101,6 +122,10 @@ uses:
        description: Resources relating to an individual's other income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+            example: "2020-21"
         put: !include endpoints/other/amend.raml
         get: !include endpoints/other/retrieve.raml
         delete: !include endpoints/other/delete.raml
@@ -110,6 +135,10 @@ uses:
        description: Resources relating to an individual's savings income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear:
+            description: "The tax year the data applies to, for example, 2019-20. The start year and end year must not span two tax years. No gaps are allowed, for example, 2019-21 is not valid."
+            example: "2020-21"
         put: !include endpoints/savings/amend.raml
         get: !include endpoints/savings/retrieve.raml
         delete: !include endpoints/savings/delete.raml
