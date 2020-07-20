@@ -27,27 +27,27 @@ class SchemePlanTypeValidationSpec extends UnitSpec {
         SchemePlanTypeValidation.validate(
           schemePlanType = "EMI",
           awarded = false
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
 
         SchemePlanTypeValidation.validate(
           schemePlanType = "CSOP",
           awarded = false
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
 
         SchemePlanTypeValidation.validate(
           schemePlanType = "SAYE",
           awarded = false
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
 
         SchemePlanTypeValidation.validate(
           schemePlanType = "SIP",
           awarded = true
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
 
         SchemePlanTypeValidation.validate(
           schemePlanType = "Other",
           awarded = true
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return a SchemePlanTypeFormatError for a invalid scheme plan type" in {

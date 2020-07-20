@@ -20,7 +20,7 @@ import v1.models.request.amendOther._
 
 object AmendOtherServiceConnectorFixture {
 
-  val businessReceiptsModel = Seq(
+  val businessReceiptsModel: Seq[AmendBusinessReceiptsItem] = Seq(
     AmendBusinessReceiptsItem(
       grossAmount = 5000.99,
       taxYear = "2018-19"
@@ -31,7 +31,7 @@ object AmendOtherServiceConnectorFixture {
     )
   )
 
-  val allOtherIncomeReceivedWhilstAbroadModel = Seq(
+  val allOtherIncomeReceivedWhilstAbroadModel: Seq[AmendAllOtherIncomeReceivedWhilstAbroadItem] = Seq(
     AmendAllOtherIncomeReceivedWhilstAbroadItem(
       countryCode = "FRA",
       amountBeforeTax = Some(1999.99),

@@ -26,7 +26,7 @@ class EmployerRefValidationSpec extends UnitSpec {
       "return an empty list for a valid customerRef" in {
         EmployerRefValidation.validate(
           employerRef = "123/AB456"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return an EmployerRefFormatError for an invalid  employerRef" in {
@@ -40,13 +40,13 @@ class EmployerRefValidationSpec extends UnitSpec {
       "return an empty list for a value of 'None'" in {
         EmployerRefValidation.validateOptional(
           employerRef = None
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return an empty list for a valid customerRef" in {
         EmployerRefValidation.validateOptional(
           employerRef = Some("123/AB456")
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return an EmployerRefFormatError for an invalid  employerRef" in {

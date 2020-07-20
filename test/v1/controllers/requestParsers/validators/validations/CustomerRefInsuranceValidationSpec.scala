@@ -26,26 +26,26 @@ class CustomerRefInsuranceValidationSpec extends UnitSpec {
       "return an empty list for a valid customerRef" in {
         CustomerRefInsuranceValidation.validateOptional(
           customerRef = Some("INPOLY123A")
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return an empty list for no customerRef" in {
         CustomerRefInsuranceValidation.validateOptional(
           customerRef = None
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return an empty list for a valid 90 char customerRef" in {
         CustomerRefInsuranceValidation.validateOptional(
           customerRef = Some("a" * 90)
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
 
       "return an empty list for a valid 1 char customerRef" in {
         CustomerRefInsuranceValidation.validateOptional(
           customerRef = Some("1")
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
 

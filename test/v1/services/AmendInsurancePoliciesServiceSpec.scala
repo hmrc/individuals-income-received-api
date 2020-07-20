@@ -22,7 +22,7 @@ import v1.mocks.connectors.MockAmendInsurancePoliciesConnector
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRequestBody, AmendInsurancePoliciesRequest, AmendVoidedIsaPoliciesItem}
+import v1.models.request.amendInsurancePolicies._
 
 import scala.concurrent.Future
 

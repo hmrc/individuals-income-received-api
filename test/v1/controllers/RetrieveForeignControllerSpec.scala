@@ -108,7 +108,7 @@ class RetrieveForeignControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveForeignResponse](requestData)
+          .retrieve[RetrieveForeignResponse]()
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignResponse))))
 
         MockHateoasFactory
@@ -165,7 +165,7 @@ class RetrieveForeignControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveForeignResponse](requestData)
+              .retrieve[RetrieveForeignResponse]()
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
             val result: Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)

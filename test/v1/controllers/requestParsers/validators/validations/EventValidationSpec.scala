@@ -27,7 +27,7 @@ class EventValidationSpec extends UnitSpec {
         EventValidation.validate(
           event = "Death of spouse",
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "return a EventFormatError for an invalid event" in {
@@ -43,14 +43,14 @@ class EventValidationSpec extends UnitSpec {
         EventValidation.validateOptional(
           event = None,
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some valid event" in {
         EventValidation.validateOptional(
           event = Some("Death of spouse"),
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid event" in {

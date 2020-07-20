@@ -27,14 +27,14 @@ class DoubleTaxationArticleValidationSpec extends UnitSpec {
         DoubleTaxationArticleValidation.validateOptional(
           dblTaxationArticle = None,
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some valid dblTaxationArticle" in {
         DoubleTaxationArticleValidation.validateOptional(
           dblTaxationArticle = Some("AB3211-1"),
           path = "/path"
-        ) shouldBe (NoValidationErrors)
+        ) shouldBe NoValidationErrors
       }
 
       "validate correctly for some invalid dblTaxationArticle" in {
