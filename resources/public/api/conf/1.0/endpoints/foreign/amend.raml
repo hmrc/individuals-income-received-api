@@ -23,13 +23,13 @@ body:
       examples:
         full_amendment:
           description: Full Foreign Income Amendment
-          value: !include ../../examples/foreign/amend_foreign_request.json
+          value: !include ../../examples/foreignIncome/amend_foreign_request.json
 responses:
   200:
     body:
       application/json:
         type: !include ../../schemas/foreign_amend_response.json
-        example: !include ../../examples/foreign/amend_foreign_response.json
+        example: !include ../../examples/foreignIncome/amend_foreign_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

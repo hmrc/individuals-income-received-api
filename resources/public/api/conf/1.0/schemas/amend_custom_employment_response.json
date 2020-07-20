@@ -4,6 +4,6 @@
   "description": "Amend Custom Employment Response",
   "type": "object",
   "properties": {
-    "links": {"$ref": "custom_employment_definitions.json#/definitions/links"}
+    "links": {"$ref": "custom_employment_definitions.json#/definitions/linksForAddAmend"}
   }
 }

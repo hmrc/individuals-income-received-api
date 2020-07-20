@@ -30,88 +30,94 @@ uses:
 
 '/individuals/income-received':
   uriParameters:
-    nino:
-      description: "National Insurance number, in the format AA999999A."
-      type: string
-      example: "TC663795B"
-    taxYear:
-      description: "The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. No gaps are allowed, for example, 2021-23 is not valid."
-      example: "2021-22"
-  /dividends:
-    (annotations.group):
-       name: Dividends Income
-       description: Resources relating to an individual's dividends income
-    /{nino}:
-      /{taxYear}:
-        delete: !include endpoints/dividends/delete.raml
-        put: !include endpoints/dividends/amend.raml
-        get: !include endpoints/dividends/retrieve.raml
+    nino: !include pathParameters/nino.raml
+    employmentId: !include pathParameters/employmentId.raml
   /employments:
     (annotations.group):
-       name: Other Employment Income
-       description: Resources relating to an individual's other employment income
+      name: Employments
+      description: Resources relating to an individual's employments
+    /{nino}:
+      /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
+        post: !include endpoints/employments/add.raml
+        /{employmentId}:
+          delete: !include endpoints/employments/delete.raml
+          put: !include endpoints/employments/amend.raml
     /other:
+      (annotations.group):
+        name: Other Employment Income
+        description: Resources relating to an individual's other employment income
       /{nino}:
         /{taxYear}:
+          uriParameters:
+            taxYear: !include pathParameters/taxYearNoMinimum.raml
           put: !include endpoints/employmentOther/amend.raml
           get: !include endpoints/employmentOther/retrieve.raml
           delete: !include endpoints/employmentOther/delete.raml
+  /dividends:
+    (annotations.group):
+      name: Dividends Income
+      description: Resources relating to an individual's dividends income
     /{nino}:
       /{taxYear}:
-        (annotations.group):
-          name: Custom Employment
-          description: Resources relating to an individual's custom employment
-        /{employmentId}:
-          uriParameters:
-            employmentId:
-              description: "The unique identifier for the employment.<p>Must conform to the regular expression</p><p>`^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`</p>"
-              type: string
-              example: "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-          delete: !include endpoints/customEmployment/delete.raml
-          post: !include endpoints/customEmployment/add.raml
-          put: !include endpoints/customEmployment/amend.raml
+        uriParameters:
+          taxYear: !include pathParameters/taxYearNoMinimum.raml
+        delete: !include endpoints/dividends/delete.raml
+        put: !include endpoints/dividends/amend.raml
+        get: !include endpoints/dividends/retrieve.raml
   /foreign:
     (annotations.group):
-       name: Foreign Income
-       description: Resources relating to an individual's foreign income
+      name: Foreign Income
+      description: Resources relating to an individual's foreign income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearNoMinimum.raml
         put: !include endpoints/foreign/amend.raml
         get: !include endpoints/foreign/retrieve.raml
         delete: !include endpoints/foreign/delete.raml
   /insurance-policies:
     (annotations.group):
-       name: Insurance Policies Income
-       description: Resources relating to an individual's insurance policies income
+      name: Insurance Policies Income
+      description: Resources relating to an individual's insurance policies income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearNoMinimum.raml
         put: !include endpoints/insurancePolicies/amend.raml
         get: !include endpoints/insurancePolicies/retrieve.raml
         delete: !include endpoints/insurancePolicies/delete.raml
   /pensions:
     (annotations.group):
-       name: Pensions Income
-       description: Resources relating to an individual's pensions income
+      name: Pensions Income
+      description: Resources relating to an individual's pensions income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearNoMinimum.raml
         put: !include endpoints/pensions/amend.raml
         get: !include endpoints/pensions/retrieve.raml
         delete: !include endpoints/pensions/delete.raml
   /other:
     (annotations.group):
-       name: Other Income
-       description: Resources relating to an individual's other income
+      name: Other Income
+      description: Resources relating to an individual's other income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearNoMinimum.raml
         put: !include endpoints/other/amend.raml
         get: !include endpoints/other/retrieve.raml
         delete: !include endpoints/other/delete.raml
   /savings:
     (annotations.group):
-       name: Savings Income
-       description: Resources relating to an individual's savings income
+      name: Savings Income
+      description: Resources relating to an individual's savings income
     /{nino}:
       /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearNoMinimum.raml
         put: !include endpoints/savings/amend.raml
         get: !include endpoints/savings/retrieve.raml
         delete: !include endpoints/savings/delete.raml

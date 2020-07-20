@@ -5,6 +5,6 @@
   "type": "object",
   "properties": {
     "employmentId" : {"$ref": "custom_employment_definitions.json#/definitions/employmentId"},
-    "links": {"$ref": "custom_employment_definitions.json#/definitions/links"}
+    "links": {"$ref": "custom_employment_definitions.json#/definitions/linksForAddAmend"}
   }
 }

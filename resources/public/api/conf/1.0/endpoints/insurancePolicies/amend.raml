@@ -22,13 +22,13 @@ body:
       examples:
         full_amendment:
           description: Full Insurance Policies Income Amendment
-          value: !include ../../examples/insurancePolicies/amend_insurance_request.json
+          value: !include ../../examples/insurancePoliciesIncome/amend_insurance_request.json
 responses:
   200:
     body:
       application/json:
         type: !include ../../schemas/insurance_amend_response.json
-        example: !include ../../examples/insurancePolicies/amend_insurance_response.json
+        example: !include ../../examples/insurancePoliciesIncome/amend_insurance_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

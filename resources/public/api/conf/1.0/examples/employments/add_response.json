@@ -1,0 +1,25 @@
+{
+  "employmentId": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+  "links":[
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}",
+      "rel":"list-employments",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}",
+      "rel":"amend-custom-employment",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}",
+      "rel":"delete-custom-employment",
+      "method":"DELETE"
+    }
+  ]
+}

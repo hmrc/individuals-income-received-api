@@ -24,13 +24,13 @@ body:
       examples:
         full_amendment:
           description: Full Dividend Income Amendment
-          value: !include ../../examples/dividends/amend_request.json
+          value: !include ../../examples/dividendsIncome/amend_request.json
 responses:
   200:
     body:
       application/json:
         type: !include ../../schemas/dividends_amend_response.json
-        example: !include ../../examples/dividends/amend_response.json
+        example: !include ../../examples/dividendsIncome/amend_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
