@@ -16,17 +16,17 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import config.FixedConfig
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import v1.models.errors.{MtdError, PayrollIdFormatError}
 
-object MtdTaxYearValidation extends FixedConfig {
+object PayrollIdValidation {
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String): List[MtdError] = {
+  def validateOptional(payrollId: Option[String]): List[MtdError] = payrollId match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value)
+  }
 
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear >= minimumTaxYear) NoValidationErrors else List(RuleTaxYearNotSupportedError)
+  def validate(payrollId: String): List[MtdError] = {
+    val regex = "^[a-zA-Z0-9]{0,74}$"
+    if (payrollId.matches(regex)) NoValidationErrors else List(PayrollIdFormatError)
   }
 }

@@ -68,14 +68,14 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
       EmployerRefValidation.validateOptional(shareOptionItem.employerRef).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/employerRef")))
       ),
-      SchemePlanTypeValidation.validate(shareOptionItem.schemePlanType, false).map(
+      SchemePlanTypeValidation.validate(shareOptionItem.schemePlanType, awarded = false).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/schemePlanType")))
       ),
-      DateFormatValidation.validate(
+      DateFormatValidation.validateWithPath(
         date = shareOptionItem.dateOfOptionGrant,
         path = s"/shareOption/$arrayIndex/dateOfOptionGrant"
       ),
-      DateFormatValidation.validate(
+      DateFormatValidation.validateWithPath(
         date = shareOptionItem.dateOfEvent,
         path = s"/shareOption/$arrayIndex/dateOfEvent"
       ),
@@ -87,7 +87,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
         field = shareOptionItem.noOfSharesAcquired,
         path = s"/shareOption/$arrayIndex/noOfSharesAcquired"
       ),
-      ClassOfSharesValidation.validate(shareOptionItem.classOfSharesAcquired, true).map(
+      ClassOfSharesValidation.validate(shareOptionItem.classOfSharesAcquired, acquired = true).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/classOfSharesAcquired")))
       ),
       DecimalValueValidation.validate(
@@ -125,10 +125,10 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
       EmployerRefValidation.validateOptional(sharesAwardedOrReceivedItem.employerRef).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/employerRef")))
       ),
-      SchemePlanTypeValidation.validate(sharesAwardedOrReceivedItem.schemePlanType, true).map(
+      SchemePlanTypeValidation.validate(sharesAwardedOrReceivedItem.schemePlanType, awarded = true).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/schemePlanType")))
       ),
-      DateFormatValidation.validate(
+      DateFormatValidation.validateWithPath(
         date = sharesAwardedOrReceivedItem.dateSharesCeasedToBeSubjectToPlan,
         path = s"/sharesAwardedOrReceived/$arrayIndex/dateSharesCeasedToBeSubjectToPlan"
       ),
@@ -136,10 +136,10 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
         field = sharesAwardedOrReceivedItem.noOfShareSecuritiesAwarded,
         path = s"/sharesAwardedOrReceived/$arrayIndex/noOfShareSecuritiesAwarded"
       ),
-      ClassOfSharesValidation.validate(sharesAwardedOrReceivedItem.classOfShareAwarded, false).map(
+      ClassOfSharesValidation.validate(sharesAwardedOrReceivedItem.classOfShareAwarded, acquired = false).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/classOfShareAwarded")))
       ),
-      DateFormatValidation.validate(
+      DateFormatValidation.validateWithPath(
         date = sharesAwardedOrReceivedItem.dateSharesAwarded,
         path = s"/sharesAwardedOrReceived/$arrayIndex/dateSharesAwarded"
       ),

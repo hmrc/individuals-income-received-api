@@ -25,14 +25,14 @@ class DateFormatValidationSpec extends UnitSpec {
   "DateFormatValidation" when {
     "validate" must {
       "return an empty list for a valid date" in {
-        DateFormatValidation.validate(
+        DateFormatValidation.validateWithPath(
           date = "2019-04-20",
           path = "/path"
         ) shouldBe NoValidationErrors
       }
 
       "return a DateFormatError for an invalid date" in {
-        DateFormatValidation.validate(
+        DateFormatValidation.validateWithPath(
           date = "20-04-2017",
           path = "/path",
         ) shouldBe List(DateFormatError.copy(message =  ISO_DATE_FORMAT, paths = Some(Seq("/path"))))

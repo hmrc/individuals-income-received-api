@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.controllers.requestParsers
 
-import config.FixedConfig
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+class AmendCustomEmploymentRequestParser {
 
-object MtdTaxYearValidation extends FixedConfig {
-
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String): List[MtdError] = {
-
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear >= minimumTaxYear) NoValidationErrors else List(RuleTaxYearNotSupportedError)
-  }
 }
