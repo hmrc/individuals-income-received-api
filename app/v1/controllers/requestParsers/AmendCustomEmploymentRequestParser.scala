@@ -16,6 +16,14 @@
 
 package v1.controllers.requestParsers
 
-class AmendCustomEmploymentRequestParser {
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.AmendCustomEmploymentValidator
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
 
+class AmendCustomEmploymentRequestParser @Inject()(val validator: AmendCustomEmploymentValidator)
+  extends RequestParser[AmendCustomEmploymentRawData, AmendCustomEmploymentRequest] {
+
+  override protected def requestFor(data: AmendCustomEmploymentRawData): AmendCustomEmploymentRequest =
+    AmendCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId, data.body.json.as[AmendCustomEmploymentRequestBody])
 }

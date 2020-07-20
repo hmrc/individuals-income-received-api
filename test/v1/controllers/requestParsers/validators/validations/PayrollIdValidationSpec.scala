@@ -28,7 +28,7 @@ class PayrollIdValidationSpec extends UnitSpec {
       }
 
       "return an EmploymentIdFormatError error for an invalid employment ID" in {
-        PayrollIdValidation.validate("") shouldBe List(PayrollIdFormatError)
+        PayrollIdValidation.validate("££££") shouldBe List(PayrollIdFormatError)
       }
     }
 
@@ -42,7 +42,7 @@ class PayrollIdValidationSpec extends UnitSpec {
       }
 
       "return an EmploymentIdFormatError error when an invalid employment ID supplied" in {
-        PayrollIdValidation.validateOptional(Some("")) shouldBe List(PayrollIdFormatError)
+        PayrollIdValidation.validateOptional(Some("£££")) shouldBe List(PayrollIdFormatError)
       }
     }
   }

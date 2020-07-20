@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators.validations
 import v1.models.errors.{EmployerNameFormatError, MtdError}
 
 object EmployerNameValidation {
-  def validate(employerName: String): List[MtdError] = {
-    if(employerName.length() <= 105) NoValidationErrors else List(EmployerNameFormatError)
+  def validate(employerName: String, maxLength: Int): List[MtdError] = {
+    if(employerName.length() <= maxLength) NoValidationErrors else List(EmployerNameFormatError)
   }
 }

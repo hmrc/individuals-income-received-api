@@ -53,7 +53,7 @@ class AmendCustomEmploymentValidator extends Validator[AmendCustomEmploymentRawD
 
     List(
       EmployerRefValidation.validateOptional(dataModel.employerRef),
-      EmployerNameValidation.validate(dataModel.employerName),
+      EmployerNameValidation.validate(dataModel.employerName, 74),
       CustomEmploymentDateValidation.validate(dataModel.startDate, dataModel.cessationDate, data.taxYear),
       PayrollIdValidation.validateOptional(dataModel.payrollId)
     )

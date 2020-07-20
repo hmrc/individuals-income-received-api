@@ -62,7 +62,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
 
   private def validateShareOption(shareOptionItem: AmendShareOptionItem, arrayIndex: Int): List[MtdError] = {
     List(
-      EmployerNameValidation.validate(shareOptionItem.employerName).map(
+      EmployerNameValidation.validate(shareOptionItem.employerName, 105).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/employerName")))
       ),
       EmployerRefValidation.validateOptional(shareOptionItem.employerRef).map(
@@ -119,7 +119,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
 
   private def validateSharesAwardedOrReceivedItem(sharesAwardedOrReceivedItem: AmendSharesAwardedOrReceivedItem, arrayIndex: Int): List[MtdError] = {
     List(
-      EmployerNameValidation.validate(sharesAwardedOrReceivedItem.employerName).map(
+      EmployerNameValidation.validate(sharesAwardedOrReceivedItem.employerName, 105).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/employerName")))
       ),
       EmployerRefValidation.validateOptional(sharesAwardedOrReceivedItem.employerRef).map(
