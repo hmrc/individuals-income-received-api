@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.{CessationDateFormatError, RuleCessationDateBeforeTaxYearStart, RuleStartDateAfterTaxYearEnd, StartDateFormatError}
+import v1.models.errors._
 
 class CustomEmploymentDateValidationSpec extends UnitSpec {
 
@@ -33,7 +33,7 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
         ) shouldBe NoValidationErrors
       }
 
-      "return an empty list when both dates are supplied and valid" in {
+      "return an empty list when both dates are supplied and are valid" in {
         CustomEmploymentDateValidation.validate(
           startDate = "2020-07-11",
           cessationDate = Some("2020-07-12"),
@@ -66,6 +66,14 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
         ) shouldBe List(StartDateFormatError)
       }
 
+      "return only a StartDateFormatError when start date format is incorrect and cessation date is not provided" in {
+        CustomEmploymentDateValidation.validate(
+          startDate = "2020-07-111",
+          cessationDate = None,
+          taxYear = "2020-21"
+        ) shouldBe List(StartDateFormatError)
+      }
+
       // mixed error scenarios
       "return multiple errors when cessation date format is invalid and start date exceeds the tax year" in {
         CustomEmploymentDateValidation.validate(
@@ -90,6 +98,22 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
           cessationDate = None,
           taxYear = "2020-21"
         ) shouldBe List(RuleStartDateAfterTaxYearEnd)
+      }
+
+      "return multiple errors when start date exceeds both tax year and cessation date" in {
+        CustomEmploymentDateValidation.validate(
+          startDate = "2022-07-11",
+          cessationDate = Some("2022-07-10"),
+          taxYear = "2020-21"
+        ) shouldBe List(RuleStartDateAfterTaxYearEnd, RuleCessationDateBeforeStartDate)
+      }
+
+      "return multiple errors when cessation date predates both tax year and start date" in {
+        CustomEmploymentDateValidation.validate(
+          startDate = "2019-07-11",
+          cessationDate = Some("2019-07-10"),
+          taxYear = "2020-21"
+        ) shouldBe List(RuleCessationDateBeforeTaxYearStart, RuleCessationDateBeforeStartDate)
       }
     }
   }
