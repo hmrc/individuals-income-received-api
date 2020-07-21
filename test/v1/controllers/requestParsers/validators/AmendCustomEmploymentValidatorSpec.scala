@@ -16,9 +16,10 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import org.scalamock.handlers.CallHandler
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -101,19 +102,21 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
   private val incorrectDatesRawBody1 = AnyContentAsJson(invalidDatesRequestJson1)
   private val incorrectDatesRawBody2 = AnyContentAsJson(invalidDatesRequestJson2)
 
-  class Test extends MockCurrentDateTime {
+  class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
+    implicit val appConfig: AppConfig = mockAppConfig
+
     val validator = new AmendCustomEmploymentValidator()
 
-    private def setupDateTime(): CallHandler[DateTime] = MockCurrentDateTime
-      .getCurrentDate
+    MockCurrentDateTime.getCurrentDate
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 
-    setupDateTime()
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2021)
   }
 
   "AmendCustomEmploymentValidator" when {
@@ -154,7 +157,7 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
           List(RuleTaxYearNotSupportedError)
       }
 
-      "return RuleTaxYearNotEndedError error for an unsupported tax year" in new Test {
+      "return RuleTaxYearNotEndedError error for a tax year which hasn't ended" in new Test {
         validator.validate(AmendCustomEmploymentRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe
           List(RuleTaxYearNotEndedError)
       }
