@@ -1,0 +1,38 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+  - errors.formatEmployerRef
+  - errors.formatEmployerName
+  - errors.formatStartDate
+  - errors.formatCessationDate
+  - errors.formatPayrollID
+  - errors.endBeforeStartDate
+  - errors.emptyOrIncorrectBody
+displayName: Add a Custom Employment [test only]
+description: "This endpoint allows the developer to add an employment missing from the list of employments for this user. This endpoint can only be used after the tax year has ended. Employments that are added via this method are not rolled over into the next tax year. A National Insurance number, tax year, employer name and start date are required."
+(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+   application/json:
+      type: !include ../../schemas/add_custom_employment_request.json
+      examples:
+        full_amendment:
+          description: Full Insurance Policies Income Amendment
+          value: !include ../../examples/employments/add_request.json
+responses:
+  200:
+    body:
+      application/json:
+        type: !include ../../schemas/add_custom_employment_response.json
+        example: !include ../../examples/employments/add_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.

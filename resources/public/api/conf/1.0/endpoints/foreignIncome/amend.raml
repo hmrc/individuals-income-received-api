@@ -6,29 +6,30 @@ is:
   - errors.formatTaxYear
   - errors.ruleTaxYearRangeInvalid
   - errors.formatCustomerRef
-  - errors.formatEvent
+  - errors.formatCountryCode
+  - errors.ruleCountryCode
   - errors.formatValue
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Amend Insurance Policies Income [test only]
-description: "This endpoint allows a developer to amend insurance policies and financial income for less common types of income: Life Insurance Policies, Life Annuity Contracts, Capital Redemption Policies, Voided ISAs and Foreign Policies. A National Insurance number and tax year must be provided."
+displayName: Amend Foreign Income [test only]
+description: "This endpoint allows the developer to amend foreign income: foreign earnings and unremittable foreign income.  A National Insurance number and tax year must be provided."
 (annotations.sandboxData): !include ../../scenarios/common.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../../schemas/insurance_amend_request.json
+      type: !include ../../schemas/foreign_amend_request.json
       examples:
         full_amendment:
-          description: Full Insurance Policies Income Amendment
-          value: !include ../../examples/insurancePolicies/amend_insurance_request.json
+          description: Full Foreign Income Amendment
+          value: !include ../../examples/foreignIncome/amend_foreign_request.json
 responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/insurance_amend_response.json
-        example: !include ../../examples/insurancePolicies/amend_insurance_response.json
+        type: !include ../../schemas/foreign_amend_response.json
+        example: !include ../../examples/foreignIncome/amend_foreign_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

@@ -198,7 +198,7 @@ traits:
                 type: types.errorResponse
                 examples:
                   formatEmployerRef:
-                    description: 'The format of the Employer Reference number is not valid.'
+                    description: 'The format of the supplied employer ref is not valid.'
                     value:
                       code: FORMAT_EMPLOYER_REF
   formatDate:
@@ -253,6 +253,83 @@ traits:
             type: types.errorResponse
             examples:
               formatEmploymentID:
-                description: 'The format of the supplied Employment ID field is not valid.'
+                description: 'The format of the supplied employment ID field is not valid.'
                 value:
                   code: FORMAT_EMPLOYMENT_ID
+  formatStartDate:
+      responses:
+        400:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                formatEmploymentID:
+                  description: 'The format of the supplied start date field is not valid.'
+                  value:
+                    code: FORMAT_START_DATE
+  formatCessationDate:
+        responses:
+          400:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  formatEmploymentID:
+                    description: 'The format of the supplied cessation date is not valid.'
+                    value:
+                      code: FORMAT_CESSATION_DATE
+  formatPayrollID:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatEmploymentID:
+                      description: 'The format of the supplied payroll ID field is not valid.'
+                      value:
+                        code: FORMAT_PAYROLL_ID
+  emptyOrIncorrectBody:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatEmploymentID:
+                      description: 'An empty or non-matching body was submitted.'
+                      value:
+                        code: RULE_EMPTY_OR_INCORRECT_BODY_SUBMITTED
+  endBeforeStartDate:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatEmploymentID:
+                      description: 'The cessation date is earlier than the start date.'
+                      value:
+                        code: RULE_END_DATE_BEFORE_START_DATE
+  startDateAfterTaxYeaEnd:
+            responses:
+              400:
+                body:
+                  application/json:
+                    type: types.errorResponse
+                    examples:
+                      formatEmploymentID:
+                        description: 'The employment is listed as starting after the tax year ended.'
+                        value:
+                          code: RULE_START_DATE_AFTER_TAX_YEAR_END
+  cessationDateBeforeTaxYearStart:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        formatEmploymentID:
+                          description: 'The employment is listed as ending before the tax year began.'
+                          value:
+                            code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START

@@ -6,8 +6,8 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Retrieve Other Income [test only]
-description: "This endpoint allows the developer to retrieve other income: business receipts, all other income received whilst abroad, overseas income and gains, chargeable foreign benefits and gifts and omitted foreign income.  A National Insurance number and tax year must be provided."
+displayName: Retrieve Pensions Income [test only]
+description: This endpoint allows the developer to retrieve previously populated foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided.
 (annotations.sandboxData): !include ../../scenarios/common.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
@@ -19,5 +19,5 @@ responses:
         description: Unique ID for operation tracking <br> String, 36 characters.
     body:
       application/json:
-        type: !include ../../schemas/other_retrieve_response.json
-        example: !include ../../examples/other/retrieve_response.json
+        type: !include ../../schemas/pensions_retrieve_response.json
+        example: !include ../../examples/pensionsIncome/retrieve_response.json
