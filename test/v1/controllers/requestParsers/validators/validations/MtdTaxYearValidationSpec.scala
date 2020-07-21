@@ -16,23 +16,34 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import support.UnitSpec
-import v1.models.errors.RuleTaxYearNotSupportedError
+import utils.CurrentDateTime
+import v1.mocks.MockCurrentDateTime
+import v1.models.errors.{RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError}
 import v1.models.utils.JsonErrorValidators
 
-class MtdTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
+class MtdTaxYearValidationSpec extends UnitSpec with JsonErrorValidators with MockCurrentDateTime {
+
+  private implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
+  private val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
   "validate" should {
     "return no errors" when {
       "a tax year after 2020-21 is supplied" in {
 
+        MockCurrentDateTime.getCurrentDate.returns(DateTime.parse("2022-04-06", dateTimeFormatter))
+
         val validTaxYear = "2021-22"
         val validationResult = MtdTaxYearValidation.validate(validTaxYear)
         validationResult.isEmpty shouldBe true
-
       }
 
       "the minimum allowed tax year is supplied" in {
+
+        MockCurrentDateTime.getCurrentDate.returns(DateTime.parse("2022-04-06", dateTimeFormatter))
+
         val validTaxYear = "2020-21"
         val validationResult = MtdTaxYearValidation.validate(validTaxYear)
         validationResult.isEmpty shouldBe true
@@ -43,11 +54,24 @@ class MtdTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
     "return the given error" when {
       "a tax year before 2020-21 is supplied" in {
 
+        MockCurrentDateTime.getCurrentDate.returns(DateTime.parse("2022-04-06", dateTimeFormatter))
+
         val invalidTaxYear = "2019-20"
         val validationResult = MtdTaxYearValidation.validate(invalidTaxYear)
         validationResult.isEmpty shouldBe false
         validationResult.length shouldBe 1
         validationResult.head shouldBe RuleTaxYearNotSupportedError
+      }
+
+      "the supplied tax year has not yet ended" in {
+
+        MockCurrentDateTime.getCurrentDate.returns(DateTime.parse("2022-04-04", dateTimeFormatter))
+
+        val invalidTaxYear = "2021-22"
+        val validationResult = MtdTaxYearValidation.validate(invalidTaxYear)
+        validationResult.isEmpty shouldBe false
+        validationResult.length shouldBe 1
+        validationResult.head shouldBe RuleTaxYearNotEndedError
       }
     }
   }

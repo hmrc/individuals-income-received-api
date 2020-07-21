@@ -61,11 +61,11 @@ object RuleTaxYearRangeInvalidError
 
 object RuleTaxYearNotEndedError extends MtdError( code = "RULE_TAX_YEAR_NOT_ENDED", "Tax year not ended")
 
-object RuleCessationDateBeforeStartDate extends MtdError("RULE_CESSATION_DATE_BEFORE_START_DATE", "The cessation date cannot be earlier than the start date")
+object RuleCessationDateBeforeStartDateError extends MtdError("RULE_CESSATION_DATE_BEFORE_START_DATE", "The cessation date cannot be earlier than the start date")
 
-object RuleStartDateAfterTaxYearEnd extends MtdError("RULE_START_DATE_AFTER_TAX_YEAR_END", "The start date cannot be later than the tax year end")
+object RuleStartDateAfterTaxYearEndError extends MtdError("RULE_START_DATE_AFTER_TAX_YEAR_END", "The start date cannot be later than the tax year end")
 
-object RuleCessationDateBeforeTaxYearStart extends MtdError("RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START", "The cessation date cannot be before the tax year starts")
+object RuleCessationDateBeforeTaxYearStartError extends MtdError("RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START", "The cessation date cannot be before the tax year starts")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

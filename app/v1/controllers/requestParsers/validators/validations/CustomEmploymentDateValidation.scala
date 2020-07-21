@@ -39,9 +39,9 @@ object CustomEmploymentDateValidation {
         val employmentCessationDate = cessationDate.map(LocalDate.parse(_, dateFormat))
 
         List(
-          Some(checkDateOrder(employmentStartDate, taxYearEndDate, RuleStartDateAfterTaxYearEnd)),
-          employmentCessationDate.map(checkDateOrder(taxYearStartDate, _, RuleCessationDateBeforeTaxYearStart)),
-          employmentCessationDate.map(checkDateOrder(employmentStartDate, _, RuleCessationDateBeforeStartDate))
+          Some(checkDateOrder(employmentStartDate, taxYearEndDate, RuleStartDateAfterTaxYearEndError)),
+          employmentCessationDate.map(checkDateOrder(taxYearStartDate, _, RuleCessationDateBeforeTaxYearStartError)),
+          employmentCessationDate.map(checkDateOrder(employmentStartDate, _, RuleCessationDateBeforeStartDateError))
         ).flatten.flatten
 
       case List(StartDateFormatError) =>
@@ -49,13 +49,13 @@ object CustomEmploymentDateValidation {
 
         List(
           Some(List(StartDateFormatError)),
-          end.map(checkDateOrder(taxYearStartDate, _, RuleCessationDateBeforeTaxYearStart))
+          end.map(checkDateOrder(taxYearStartDate, _, RuleCessationDateBeforeTaxYearStartError))
         ).flatten.flatten
 
       case List(CessationDateFormatError) =>
         val start = LocalDate.parse(startDate, dateFormat)
 
-        List(CessationDateFormatError) ++ checkDateOrder(start, taxYearEndDate, RuleStartDateAfterTaxYearEnd)
+        List(CessationDateFormatError) ++ checkDateOrder(start, taxYearEndDate, RuleStartDateAfterTaxYearEndError)
 
       case other => other
     }

@@ -80,7 +80,7 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
           startDate = "2022-07-11",
           cessationDate = Some("2022-07-121"),
           taxYear = "2020-21"
-        ) shouldBe List(CessationDateFormatError, RuleStartDateAfterTaxYearEnd)
+        ) shouldBe List(CessationDateFormatError, RuleStartDateAfterTaxYearEndError)
       }
 
       "return multiple errors when start date format is invalid and cessation date predates the tax year" in {
@@ -88,16 +88,16 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
           startDate = "2020-07-111",
           cessationDate = Some("2019-07-12"),
           taxYear = "2020-21"
-        ) shouldBe List(StartDateFormatError, RuleCessationDateBeforeTaxYearStart)
+        ) shouldBe List(StartDateFormatError, RuleCessationDateBeforeTaxYearStartError)
       }
 
       // non format error scenarios
-      "return RuleStartDateAfterTaxYearEnd when cessation date is not provided and start date exceeds the tax year" in {
+      "return RuleStartDateAfterTaxYearEndError when cessation date is not provided and start date exceeds the tax year" in {
         CustomEmploymentDateValidation.validate(
           startDate = "2022-07-11",
           cessationDate = None,
           taxYear = "2020-21"
-        ) shouldBe List(RuleStartDateAfterTaxYearEnd)
+        ) shouldBe List(RuleStartDateAfterTaxYearEndError)
       }
 
       "return multiple errors when start date exceeds both tax year and cessation date" in {
@@ -105,7 +105,7 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
           startDate = "2022-07-11",
           cessationDate = Some("2022-07-10"),
           taxYear = "2020-21"
-        ) shouldBe List(RuleStartDateAfterTaxYearEnd, RuleCessationDateBeforeStartDate)
+        ) shouldBe List(RuleStartDateAfterTaxYearEndError, RuleCessationDateBeforeStartDateError)
       }
 
       "return multiple errors when cessation date predates both tax year and start date" in {
@@ -113,7 +113,7 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
           startDate = "2019-07-11",
           cessationDate = Some("2019-07-10"),
           taxYear = "2020-21"
-        ) shouldBe List(RuleCessationDateBeforeTaxYearStart, RuleCessationDateBeforeStartDate)
+        ) shouldBe List(RuleCessationDateBeforeTaxYearStartError, RuleCessationDateBeforeStartDateError)
       }
     }
   }

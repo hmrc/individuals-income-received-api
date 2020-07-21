@@ -16,11 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
+import javax.inject.Inject
+import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
 
-class AmendCustomEmploymentValidator extends Validator[AmendCustomEmploymentRawData] {
+class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime) extends Validator[AmendCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
