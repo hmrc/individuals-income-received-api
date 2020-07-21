@@ -57,14 +57,14 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "AddCustomEmploymentConnector" when {
-    ".addEmployment" should {
+  "AmendCustomEmploymentConnector" when {
+    ".amendEmployment" should {
       "return a success upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId",
+            url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
             body = amendCustomEmploymentRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))

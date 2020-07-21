@@ -36,7 +36,7 @@ class AmendCustomEmploymentConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
-    put(request.body, DesUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"))
+    put(request.body, DesUri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"))
   }
 
 }

@@ -56,7 +56,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
   }
 
   "AmendCustomEmploymentService" when {
-    ".AmendEmployment" must {
+    ".amendEmployment" should {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
