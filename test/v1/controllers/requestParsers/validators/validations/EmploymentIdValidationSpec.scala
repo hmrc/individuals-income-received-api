@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import support.UnitSpec
+import v1.models.errors.EmploymentIdFormatError
 
-package object validations {
+class EmploymentIdValidationSpec extends UnitSpec {
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  "EmploymentIdValidation" when {
+    "validate" should {
+      "return an empty list for a valid employment ID" in {
+        EmploymentIdValidation.validate("4557ecb5-fd32-48cc-81f5-e6acd1099f3c") shouldBe NoValidationErrors
+      }
 
+      "return an EmploymentIdFormatError error for an invalid employment ID" in {
+        EmploymentIdValidation.validate("") shouldBe List(EmploymentIdFormatError)
+      }
+    }
+  }
 }

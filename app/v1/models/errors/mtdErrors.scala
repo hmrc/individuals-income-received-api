@@ -30,6 +30,7 @@ object MtdErrorWithCustomMessage {
 
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
+object EmploymentIdFormatError extends MtdError("FORMAT_EMPLOYMENT_ID", "The provided employment ID is invalid")
 object CountryCodeFormatError extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
 object CountryCodeRuleError extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 object ValueFormatError extends MtdError("FORMAT_VALUE", "")
@@ -46,10 +47,12 @@ object DateFormatError extends MtdError("FORMAT_DATE","")
 object ClassOfSharesAwardedFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_AWARDED","The provided class of shares awarded is invalid")
 object ClassOfSharesAcquiredFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_ACQUIRED","The provided class of shares acquired is invalid")
 object SchemePlanTypeFormatError extends MtdError("FORMAT_SCHEME_PLAN_TYPE","The provided scheme plan type is invalid")
+object PayrollIdFormatError extends MtdError("FORMAT_PAYROLL_ID", "The provided payroll ID is invalid")
+object StartDateFormatError extends MtdError("FORMAT_START_DATE", "The provided start date is invalid")
+object CessationDateFormatError extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
 
 // Rule Errors
-object RuleTaxYearNotSupportedError
-    extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "Tax year not supported, because it precedes the earliest allowable tax year")
+object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value")
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
@@ -57,6 +60,12 @@ object RuleTaxYearRangeInvalidError
   extends MtdError(code = "RULE_TAX_YEAR_RANGE_INVALID", message = "Tax year range invalid. A tax year range of one year is required")
 
 object RuleTaxYearNotEndedError extends MtdError( code = "RULE_TAX_YEAR_NOT_ENDED", "Tax year not ended")
+
+object RuleCessationDateBeforeStartDateError extends MtdError("RULE_CESSATION_DATE_BEFORE_START_DATE", "The cessation date cannot be earlier than the start date")
+
+object RuleStartDateAfterTaxYearEndError extends MtdError("RULE_START_DATE_AFTER_TAX_YEAR_END", "The start date cannot be later than the tax year end")
+
+object RuleCessationDateBeforeTaxYearStartError extends MtdError("RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START", "The cessation date cannot be before the tax year starts")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

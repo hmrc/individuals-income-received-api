@@ -25,13 +25,15 @@ class EmployerNameValidationSpec extends UnitSpec {
     "validate" must {
       "return an empty list for a valid employer name" in {
         EmployerNameValidation.validate(
-          employerName = "BPDTS Ltd"
+          employerName = "BPDTS Ltd",
+          105
         ) shouldBe NoValidationErrors
       }
 
       "return an EmployerNameFormatError for an invalid employerName" in {
         EmployerNameValidation.validate(
-          employerName = "This employerName string is 106 characters long--------------------------------------------------------106"
+          employerName = "This employerName string is 106 characters long--------------------------------------------------------106",
+          105
         ) shouldBe List(EmployerNameFormatError)
       }
     }

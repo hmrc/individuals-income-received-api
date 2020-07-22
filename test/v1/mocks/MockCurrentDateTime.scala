@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.mocks
 
-import java.time.format.DateTimeFormatter
+import org.joda.time.DateTime
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
+import utils.CurrentDateTime
 
-package object validations {
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+trait MockCurrentDateTime extends MockFactory {
 
+  val mockCurrentDateTime: CurrentDateTime = mock[CurrentDateTime]
+
+  object MockCurrentDateTime {
+    def getCurrentDate: CallHandler[DateTime] = (mockCurrentDateTime.getDateTime _).expects()
+  }
 }

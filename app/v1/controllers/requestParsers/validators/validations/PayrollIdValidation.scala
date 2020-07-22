@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import v1.models.errors.{MtdError, PayrollIdFormatError}
 
-package object validations {
+object PayrollIdValidation {
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  def validateOptional(payrollId: Option[String]): List[MtdError] = payrollId match {
+    case None => NoValidationErrors
+    case Some(value) => validate(value)
+  }
 
+  def validate(payrollId: String): List[MtdError] = {
+    val regex = "^[a-zA-Z0-9]{0,74}$"
+    if (payrollId.matches(regex)) NoValidationErrors else List(PayrollIdFormatError)
+  }
 }

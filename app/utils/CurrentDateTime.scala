@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package utils
 
-import java.time.format.DateTimeFormatter
+import javax.inject.{Inject, Singleton}
+import org.joda.time.{DateTime, DateTimeZone}
 
-package object validations {
+@Singleton
+class CurrentDateTime @Inject()() {
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
+  def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
 }

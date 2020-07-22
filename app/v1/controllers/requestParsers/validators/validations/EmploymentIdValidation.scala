@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.format.DateTimeFormatter
+import v1.models.errors.{EmploymentIdFormatError, MtdError}
 
-package object validations {
+object EmploymentIdValidation {
 
-  val NoValidationErrors = List()
-  val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
+  def validate(employmentId: String): List[MtdError] = {
+    val regex = "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    if (employmentId.matches(regex)) NoValidationErrors else List(EmploymentIdFormatError)
+  }
 }

@@ -24,7 +24,7 @@ import scala.util.{Failure, Success, Try}
 
 object DateFormatValidation extends DateFormatErrorMessages{
 
-  def validate(date: String, path: String, message: String = ISO_DATE_FORMAT): List[MtdError] = Try {
+  def validateWithPath(date: String, path: String, message: String = ISO_DATE_FORMAT): List[MtdError] = Try {
     LocalDate.parse(date, dateFormat)
   } match {
     case Success(_) => NoValidationErrors
@@ -34,6 +34,13 @@ object DateFormatValidation extends DateFormatErrorMessages{
         paths = Some(Seq(path))
       )
     )
+  }
+
+  def validate(date: String, error: MtdError): List[MtdError] = Try {
+    LocalDate.parse(date, dateFormat)
+  } match {
+    case Success(_) => NoValidationErrors
+    case Failure(_) => List(error)
   }
 }
 
