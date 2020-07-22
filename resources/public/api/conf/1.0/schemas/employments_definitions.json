@@ -39,7 +39,7 @@
     },
     "submittedOn": {
       "type": "string",
-      "description": "The date the custom Employment was added. It must be provided in the format YYYY-MM-DDThh:mm:ss.sssZ",
+      "description": "The date the custom Employment was added. It must be provided in the format YYYY-MM-DDThh:mm:ss.ssZ",
       "example": "2020-07-06T09:37:17Z"
     },
     "ignoreEmployment": {
