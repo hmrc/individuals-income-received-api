@@ -21,7 +21,6 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAddCustomEmploymentValidator
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.addCustomEmployment._
 

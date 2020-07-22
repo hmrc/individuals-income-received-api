@@ -19,7 +19,6 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AddCustomEmploymentValidator
-import v1.models.domain.DesTaxYear
 import v1.models.request.addCustomEmployment._
 
 class AddCustomEmploymentRequestParser @Inject()(val validator: AddCustomEmploymentValidator)
