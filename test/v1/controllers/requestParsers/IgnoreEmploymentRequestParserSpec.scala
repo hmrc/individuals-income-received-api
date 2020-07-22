@@ -47,13 +47,13 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
     body = validRawBody
   )
 
-  private val amendCustomEmploymentBodyModel = IgnoreEmploymentRequestBody(ignoreEmployment = true)
+  private val ignoreEmploymentBodyModel = IgnoreEmploymentRequestBody(ignoreEmployment = true)
 
-  private val amendCustomEmploymentRequest = IgnoreEmploymentRequest (
+  private val ignoreEmploymentRequest = IgnoreEmploymentRequest (
     nino = Nino(nino),
     taxYear = taxYear,
     employmentId = employmentId,
-    body = amendCustomEmploymentBodyModel
+    body = ignoreEmploymentBodyModel
   )
 
   trait Test extends MockIgnoreEmploymentValidator {
@@ -66,7 +66,7 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
     "return a request object" when {
       "valid request data is supplied" in new Test {
         MockIgnoreEmploymentValidator.validate(ignoreCustomEmploymentRawData).returns(Nil)
-        parser.parseRequest(ignoreCustomEmploymentRawData) shouldBe Right(amendCustomEmploymentRequest)
+        parser.parseRequest(ignoreCustomEmploymentRawData) shouldBe Right(ignoreEmploymentRequest)
       }
     }
 
