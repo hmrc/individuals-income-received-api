@@ -60,7 +60,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
 
   private val addCustomEmploymentRequest = AddCustomEmploymentRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = addCustomEmploymentRequestBody
   )
 

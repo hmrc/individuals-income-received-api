@@ -41,7 +41,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
 
   val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = addCustomEmploymentRequestBody
   )
 

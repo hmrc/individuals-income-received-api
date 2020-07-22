@@ -19,4 +19,4 @@ package v1.models.request.addCustomEmployment
 import uk.gov.hmrc.domain.Nino
 import v1.models.domain.DesTaxYear
 
-case class AddCustomEmploymentRequest(nino: Nino, taxYear: DesTaxYear, body: AddCustomEmploymentRequestBody)
+case class AddCustomEmploymentRequest(nino: Nino, taxYear: String, body: AddCustomEmploymentRequestBody)
