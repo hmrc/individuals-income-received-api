@@ -18,55 +18,46 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockAddCustomEmploymentConnector
-import v1.models.domain.DesTaxYear
+import v1.mocks.connectors.MockIgnoreEmploymentConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
-import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
+import v1.models.request.ignoreEmployment.{IgnoreEmploymentRequest, IgnoreEmploymentRequestBody}
 
 import scala.concurrent.Future
 
-class AddCustomEmploymentServiceSpec extends ServiceSpec {
+class IgnoreEmploymentServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2021-22"
   private val correlationId = "X-corr"
+  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  val addCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
-    employerRef = Some("123/AB56797"),
-    employerName = "BBC infotech Ltd",
-    startDate = "2019-01-01",
-    cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
-  )
+  val ignoreEmploymentRequestBody: IgnoreEmploymentRequestBody = IgnoreEmploymentRequestBody(ignoreEmployment = true)
 
-  val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(
+  val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
-    body = addCustomEmploymentRequestBody
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = ignoreEmploymentRequestBody
   )
 
-  val response: AddCustomEmploymentResponse = AddCustomEmploymentResponse("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
-
-
-  trait Test extends MockAddCustomEmploymentConnector{
+  trait Test extends MockIgnoreEmploymentConnector{
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: AddCustomEmploymentService = new AddCustomEmploymentService(
-      connector = mockAddCustomEmploymentConnector
+    val service: IgnoreEmploymentService = new IgnoreEmploymentService(
+      connector = mockIgnoreEmploymentConnector
     )
   }
 
-  "AddCustomEmploymentService" when {
-    ".addEmployment" must {
+  "IgnoreEmploymentService" when {
+    "ignoreEmployment" should {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, response))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAddCustomEmploymentConnector.addEmployment(request)
+        MockIgnoreEmploymentConnector.ignoreEmployment(request)
           .returns(Future.successful(outcome))
 
-        await(service.addEmployment(request)) shouldBe outcome
+        await(service.ignoreEmployment(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -74,18 +65,19 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAddCustomEmploymentConnector.addEmployment(request)
+            MockIgnoreEmploymentConnector.ignoreEmployment(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.addEmployment(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.ignoreEmployment(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NOT_SUPPORTED_TAX_YEAR", RuleTaxYearNotEndedError),
+          ("INVALID_EMPLOYMENT_ID", NotFoundError),
           ("INVALID_PAYLOAD", DownstreamError),
-          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_REQUEST_BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
+          ("NOT_HMRC_EMPLOYMENT", RuleCustomEmploymentError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

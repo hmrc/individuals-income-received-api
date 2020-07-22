@@ -21,26 +21,26 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendCustomEmploymentConnector
+import v1.connectors.IgnoreEmploymentConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
+import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentConnector)
+class IgnoreEmploymentService @Inject()(connector: IgnoreEmploymentConnector)
   extends DesResponseMappingSupport with Logging {
 
-  def amendEmployment(request: AmendCustomEmploymentRequest)(
+  def ignoreEmployment(request: IgnoreEmploymentRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendEmployment(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.ignoreEmployment(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
@@ -50,11 +50,10 @@ class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentCon
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "NOT_SUPPORTED_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "NO_DATA_FOUND" -> NotFoundError,
+      "INVALID_EMPLOYMENT_ID" -> NotFoundError,
       "INVALID_PAYLOAD" -> DownstreamError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
+      "INVALID_REQUEST_BEFORE_TAX_YEAR_END" -> RuleTaxYearNotEndedError,
+      "NOT_HMRC_EMPLOYMENT" -> RuleCustomEmploymentError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
