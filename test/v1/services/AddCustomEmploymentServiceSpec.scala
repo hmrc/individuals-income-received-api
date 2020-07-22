@@ -19,7 +19,6 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAddCustomEmploymentConnector
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
@@ -43,7 +42,7 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
 
   val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = addCustomEmploymentRequestBody
   )
 

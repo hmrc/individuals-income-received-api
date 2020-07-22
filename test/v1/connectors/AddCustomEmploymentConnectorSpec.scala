@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
@@ -41,7 +40,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
 
   val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = addCustomEmploymentRequestBody
   )
 
