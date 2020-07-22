@@ -34,7 +34,7 @@
     },
     "dateIgnored": {
       "type": "string",
-      "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ss.sssZ",
+      "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ss.ssZ",
       "example": "2020-07-06T09:37:17Z"
     },
     "submittedOn": {
