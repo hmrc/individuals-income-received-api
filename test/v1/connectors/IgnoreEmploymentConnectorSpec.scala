@@ -20,34 +20,28 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
+import v1.models.request.ignoreEmployment.{IgnoreEmploymentRequest, IgnoreEmploymentRequestBody}
 
 import scala.concurrent.Future
 
-class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
+class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
   val taxYear: String = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  val amendCustomEmploymentRequestBody: AmendCustomEmploymentRequestBody = AmendCustomEmploymentRequestBody(
-    employerRef = Some("123/AB56797"),
-    employerName = "AMD infotech Ltd",
-    startDate = "2019-01-01",
-    cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
-  )
+  val ignoreEmploymentRequestBody: IgnoreEmploymentRequestBody = IgnoreEmploymentRequestBody(ignoreEmployment = true)
 
-  val request: AmendCustomEmploymentRequest = AmendCustomEmploymentRequest(
+  val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
     taxYear = taxYear,
     employmentId = employmentId,
-    body = amendCustomEmploymentRequestBody
+    body = ignoreEmploymentRequestBody
   )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: AmendCustomEmploymentConnector = new AmendCustomEmploymentConnector(
+    val connector: IgnoreEmploymentConnector = new IgnoreEmploymentConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -57,19 +51,19 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "AmendCustomEmploymentConnector" when {
-    ".amendEmployment" should {
-      "return a success upon HttpClient success" in new Test {
+  "IgnoreEmploymentConnector" when {
+    "ignoreEmployment" should {
+      "return a 204 status upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
-            body = amendCustomEmploymentRequestBody,
+            url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore",
+            body = ignoreEmploymentRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
 
-        await(connector.amendEmployment(request)) shouldBe outcome
+        await(connector.ignoreEmployment(request)) shouldBe outcome
       }
     }
   }

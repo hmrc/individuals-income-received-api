@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class AmendCustomEmploymentServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
-  private val taxYear = "2019"
+  private val taxYear = "2021-22"
   private val correlationId = "X-corr"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
@@ -80,7 +80,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_EMPLOYMENT_ID", EmployerIdFormatError),
+          ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
           ("NOT_SUPPORTED_TAX_YEAR", RuleTaxYearNotEndedError),
           ("NO_DATA_FOUND", NotFoundError),
           ("INVALID_PAYLOAD", DownstreamError),
