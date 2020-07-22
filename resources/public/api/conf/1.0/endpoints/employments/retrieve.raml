@@ -1,0 +1,31 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.formatEmploymentId
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+displayName: Retrieve an Employment [test only]
+description: "This endpoint allows the developer to retrieve details of an employment for this user. A National Insurance number, Tax year and Employment ID are required."
+(annotations.sandboxData): !include ../../scenarios/employments/retrieve.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+responses:
+  200:
+    headers:
+      X-CorrelationId:
+        example: a1e8057e-fbbc-47a8-a8b4-78d9f015c253
+        description: Unique ID for operation tracking <br> String, 36 characters.
+    body:
+      application/json:
+        type: !include ../../schemas/employments_retrieve_response.json
+        examples:
+          example-1:
+            description: HMRC Employment
+            value: !include ../../examples/employments/retrieve_response_hmrc.json
+          example-2:
+            description: Custom Employment
+            value: !include ../../examples/employments/retrieve_response_custom.json

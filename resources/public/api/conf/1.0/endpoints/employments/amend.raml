@@ -4,19 +4,21 @@ is:
   - headers.testScenarioHeader
   - errors.formatNino
   - errors.formatTaxYear
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.startDateAfterTaxYearEnd
+  - errors.cessationDateBeforeTaxYearStart
+  - errors.cessationDateBeforeStartDate
+  - errors.ruleTaxYearNotEnded
+  - errors.formatEmploymentId
   - errors.formatEmployerRef
   - errors.formatEmployerName
   - errors.formatStartDate
   - errors.formatCessationDate
-  - errors.formatPayrollID
+  - errors.formatPayrollId
   - errors.emptyOrIncorrectBody
-  - errors.endBeforeStartDate
-  - errors.ruleTaxYearNotSupported
-  - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-  - errors.startDateAfterTaxYeaEnd
-  - errors.cessationDateBeforeTaxYearStart
 displayName: Amend a Custom Employment [test only]
 description: "This endpoint allows the developer to update a custom employment from the list of employments for this user. This endpoint can only be used after the tax year has ended. A National Insurance number, Tax year and Employment ID are required."
 (annotations.sandboxData): !include ../../scenarios/common.md
@@ -24,16 +26,13 @@ description: "This endpoint allows the developer to update a custom employment f
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../../schemas/amend_custom_employment_request.json
-      examples:
-        full_amendment:
-          description: Full Custom Employment Amendment
-          value: !include ../../examples/employments/amend_request.json
+      type: !include ../../schemas/employments_amend_custom_request.json
+      example: !include ../../examples/employments/amend_request.json
 responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/amend_custom_employment_response.json
+        type: !include ../../schemas/employments_amend_custom_response.json
         example: !include ../../examples/employments/amend_response.json
     headers:
       X-CorrelationId:

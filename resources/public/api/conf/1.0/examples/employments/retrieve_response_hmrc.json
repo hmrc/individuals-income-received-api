@@ -1,0 +1,25 @@
+{
+  "employerRef": "123/abc",
+  "employerName": "Vera Lynn",
+  "startDate": "2020-06-17",
+  "cessationDate": "2020-06-17",
+  "payrollId": "123345657",
+  "dateIgnored": "2020-06-17T10:53:38Z",
+  "links":[
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}",
+      "rel":"list-employments",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}/ignore",
+      "rel":"ignore-employment",
+      "method":"PUT"
+    }
+  ]
+}

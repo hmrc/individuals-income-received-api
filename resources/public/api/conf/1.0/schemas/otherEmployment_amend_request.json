@@ -4,10 +4,10 @@
   "description": "Amend Other Employment Income Request",
   "type": "object",
   "properties": {
-    "shareOption": {"$ref": "employmentOther_definitions.json#/definitions/shareOption"},
-    "sharesAwardedOrReceived": {"$ref": "employmentOther_definitions.json#/definitions/sharesAwardedOrReceived"},
-    "disability": {"$ref": "employmentOther_definitions.json#/definitions/disability"},
-    "foreignService": {"$ref": "employmentOther_definitions.json#/definitions/foreignService"}
+    "shareOption": {"$ref": "otherEmployment_definitions.json#/definitions/shareOption"},
+    "sharesAwardedOrReceived": {"$ref": "otherEmployment_definitions.json#/definitions/sharesAwardedOrReceived"},
+    "disability": {"$ref": "otherEmployment_definitions.json#/definitions/disability"},
+    "foreignService": {"$ref": "otherEmployment_definitions.json#/definitions/foreignService"}
   }
 }
 

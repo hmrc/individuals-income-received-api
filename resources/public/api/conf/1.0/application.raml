@@ -31,7 +31,6 @@ uses:
 '/individuals/income-received':
   uriParameters:
     nino: !include pathParameters/nino.raml
-    employmentId: !include pathParameters/employmentId.raml
   /employments:
     (annotations.group):
       name: Employments
@@ -42,8 +41,13 @@ uses:
           taxYear: !include pathParameters/taxYearMinimum2021.raml
         post: !include endpoints/employments/add.raml
         /{employmentId}:
-          delete: !include endpoints/employments/delete.raml
+          uriParameters:
+            employmentId: !include pathParameters/employmentId.raml
+          get: !include endpoints/employments/retrieve.raml
           put: !include endpoints/employments/amend.raml
+          delete: !include endpoints/employments/delete.raml
+          /ignore:
+            put: !include endpoints/employments/ignore.raml
     /other:
       (annotations.group):
         name: Other Employment Income

@@ -23,16 +23,13 @@ description: "This endpoint allows a developer to amend other employment income:
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../../schemas/employmentOther_amend_request.json
-      examples:
-        full_amendment:
-          description: Full Other Employment Income Amendment
-          value: !include ../../examples/otherEmploymentIncome/amend_request.json
+      type: !include ../../schemas/otherEmployment_amend_request.json
+      example: !include ../../examples/otherEmploymentIncome/amend_request.json
 responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/employmentOther_amend_response.json
+        type: !include ../../schemas/otherEmployment_amend_response.json
         example: !include ../../examples/otherEmploymentIncome/amend_response.json
     headers:
       X-CorrelationId:
