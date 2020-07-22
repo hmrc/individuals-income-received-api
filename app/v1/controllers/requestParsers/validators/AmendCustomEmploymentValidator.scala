@@ -62,5 +62,4 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
       PayrollIdValidation.validateOptional(dataModel.payrollId)
     )
   }
-
 }
