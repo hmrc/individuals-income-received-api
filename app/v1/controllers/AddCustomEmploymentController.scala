@@ -18,27 +18,28 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
-import v1.hateoas.AmendHateoasBody
+import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
+import v1.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
 import v1.services.{AddCustomEmploymentService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthService,
                                               val lookupService: MtdIdLookupService,
-                                              appConfig: AppConfig,
                                               requestParser: AddCustomEmploymentRequestParser,
                                               service: AddCustomEmploymentService,
+                                              hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
+  extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,12 +60,20 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.addEmployment(parsedRequest))
+          hateoasResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrap(
+                serviceResponse.responseData,
+                AddCustomEmploymentHateoasData(nino, taxYear, serviceResponse.responseData.employmentId)
+              )
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+              s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
+          )
 
-          Ok(amendOtherEmploymentHateoasBody(appConfig, nino, taxYear))
+          Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
