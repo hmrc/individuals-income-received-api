@@ -1,0 +1,39 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.formatEmploymentId
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.ruleTaxYearNotEnded
+  - errors.ruleCustomEmployment
+  - errors.emptyOrIncorrectBody
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+displayName: Ignore an Employment [test only]
+description: "This endpoint allows the developer to ignore an HMRC provided employment from among the list of employments for this user. This endpoint can only be used after the tax year has ended. A National Insurance number, Tax year and Employment ID are required."
+(annotations.sandboxData): !include ../../scenarios/employments/ignore.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+   application/json:
+      type: !include ../../schemas/employments_ignore_request.json
+      examples:
+        example-1:
+          description: Ignore Employment
+          value: !include ../../examples/employments/ignore_request_true.json
+        example-2:
+          description: Use Employment
+          value: !include ../../examples/employments/ignore_request_false.json
+responses:
+  200:
+    body:
+      application/json:
+        type: !include ../../schemas/employments_ignore_response.json
+        example: !include ../../examples/employments/ignore_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.

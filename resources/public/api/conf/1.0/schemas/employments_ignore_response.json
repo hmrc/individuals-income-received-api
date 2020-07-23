@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Employment Response",
+  "description": "Retrieve Employment Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "employments_definitions.json#/definitions/linksForIgnore"}
+  }
+}

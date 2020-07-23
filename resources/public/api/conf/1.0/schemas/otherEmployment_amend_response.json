@@ -4,6 +4,6 @@
   "description":"Amend Other Employment Income Response",
   "type": "object",
   "properties": {
-    "links": {"$ref": "employmentOther_definitions.json#/definitions/links"}
+    "links": {"$ref": "otherEmployment_definitions.json#/definitions/links"}
   }
 }

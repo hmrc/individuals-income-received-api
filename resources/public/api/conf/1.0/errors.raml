@@ -245,14 +245,14 @@ traits:
                     description: 'The format or value of scheme plan type is not valid.'
                     value:
                       code: FORMAT_SCHEME_PLAN_TYPE
-  formatEmploymentID:
+  formatEmploymentId:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              formatEmploymentID:
+              formatEmploymentId:
                 description: 'The format of the supplied employment ID field is not valid.'
                 value:
                   code: FORMAT_EMPLOYMENT_ID
@@ -263,7 +263,7 @@ traits:
             application/json:
               type: types.errorResponse
               examples:
-                formatEmploymentID:
+                formatStartDate:
                   description: 'The format of the supplied start date field is not valid.'
                   value:
                     code: FORMAT_START_DATE
@@ -274,18 +274,18 @@ traits:
               application/json:
                 type: types.errorResponse
                 examples:
-                  formatEmploymentID:
+                  formatCessationDate:
                     description: 'The format of the supplied cessation date is not valid.'
                     value:
                       code: FORMAT_CESSATION_DATE
-  formatPayrollID:
+  formatPayrollId:
           responses:
             400:
               body:
                 application/json:
                   type: types.errorResponse
                   examples:
-                    formatEmploymentID:
+                    formatPayrollId:
                       description: 'The format of the supplied payroll ID field is not valid.'
                       value:
                         code: FORMAT_PAYROLL_ID
@@ -296,29 +296,29 @@ traits:
                 application/json:
                   type: types.errorResponse
                   examples:
-                    formatEmploymentID:
+                    emptyOrIncorrectBody:
                       description: 'An empty or non-matching body was submitted.'
                       value:
                         code: RULE_EMPTY_OR_INCORRECT_BODY_SUBMITTED
-  endBeforeStartDate:
+  cessationDateBeforeStartDate:
           responses:
             400:
               body:
                 application/json:
                   type: types.errorResponse
                   examples:
-                    formatEmploymentID:
+                    cessationDateBeforeStartDate:
                       description: 'The cessation date is earlier than the start date.'
                       value:
                         code: RULE_END_DATE_BEFORE_START_DATE
-  startDateAfterTaxYeaEnd:
+  startDateAfterTaxYearEnd:
             responses:
               400:
                 body:
                   application/json:
                     type: types.errorResponse
                     examples:
-                      formatEmploymentID:
+                      startDateAfterTaxYearEnd:
                         description: 'The employment is listed as starting after the tax year ended.'
                         value:
                           code: RULE_START_DATE_AFTER_TAX_YEAR_END
@@ -329,7 +329,29 @@ traits:
                     application/json:
                       type: types.errorResponse
                       examples:
-                        formatEmploymentID:
+                        cessationDateBeforeTaxYearStart:
                           description: 'The employment is listed as ending before the tax year began.'
                           value:
                             code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START
+  ruleCustomEmployment:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        ruleCustomEmployment:
+                          description: 'The Employment ID provided is for a custom (user-provided) employment.'
+                          value:
+                            code: RULE_CUSTOM_EMPLOYMENT
+  ruleTaxYearNotEnded:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        ruleTaxYearNotEnded:
+                          description: 'The submission has been made before the tax year it relates to has ended.'
+                          value:
+                            code: RULE_TAX_YEAR_NOT_ENDED

@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.request.addCustomEmployment
+package v1.controllers.requestParsers
 
+import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.DeleteCustomEmploymentValidator
+import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
-case class AddCustomEmploymentRequest(nino: Nino, taxYear: String, body: AddCustomEmploymentRequestBody)
+class DeleteCustomEmploymentRequestParser @Inject()(val validator: DeleteCustomEmploymentValidator)
+  extends RequestParser[DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest] {
+
+  override protected def requestFor(data: DeleteCustomEmploymentRawData): DeleteCustomEmploymentRequest =
+    DeleteCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId)
+}

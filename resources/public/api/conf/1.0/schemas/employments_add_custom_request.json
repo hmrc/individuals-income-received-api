@@ -4,10 +4,11 @@
   "description": "Add Custom Employment Request",
   "type": "object",
   "properties": {
-    "employerRef": {"$ref": "custom_employment_definitions.json#/definitions/employerRef"},
-    "employerName": {"$ref": "custom_employment_definitions.json#/definitions/employerName"},
-    "startDate": {"$ref": "custom_employment_definitions.json#/definitions/startDate"},
-    "cessationDate": {"$ref": "custom_employment_definitions.json#/definitions/cessationDate"},
-    "payrollId": {"$ref": "custom_employment_definitions.json#/definitions/payrollId"}
-  }
+    "employerRef": {"$ref": "employments_definitions.json#/definitions/employerRef"},
+    "employerName": {"$ref": "employments_definitions.json#/definitions/employerName"},
+    "startDate": {"$ref": "employments_definitions.json#/definitions/startDate"},
+    "cessationDate": {"$ref": "employments_definitions.json#/definitions/cessationDate"},
+    "payrollId": {"$ref": "employments_definitions.json#/definitions/payrollId"}
+  },
+  "required": ["employerName","startDate"]
 }
