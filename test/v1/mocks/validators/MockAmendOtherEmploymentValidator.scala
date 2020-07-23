@@ -22,12 +22,12 @@ import v1.controllers.requestParsers.validators.AmendOtherEmploymentValidator
 import v1.models.errors.MtdError
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 
-
-class MockAmendOtherEmploymentValidator extends MockFactory {
+trait MockAmendOtherEmploymentValidator extends MockFactory {
 
   val mockAmendOtherEmploymentValidator: AmendOtherEmploymentValidator = mock[AmendOtherEmploymentValidator]
 
   object MockAmendOtherEmploymentValidator {
+
     def validate(data: AmendOtherEmploymentRawData): CallHandler1[AmendOtherEmploymentRawData, List[MtdError]] = {
       (mockAmendOtherEmploymentValidator
         .validate(_: AmendOtherEmploymentRawData))

@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.AmendDividendsValidator
 import v1.models.errors.MtdError
 import v1.models.request.amendDividends.AmendDividendsRawData
 
-class MockAmendDividendsValidator extends MockFactory {
+trait MockAmendDividendsValidator extends MockFactory {
 
   val mockAmendDividendsValidator: AmendDividendsValidator = mock[AmendDividendsValidator]
 

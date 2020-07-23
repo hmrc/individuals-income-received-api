@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.IgnoreEmploymentValidator
 import v1.models.errors.MtdError
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 
-class MockIgnoreEmploymentValidator extends MockFactory {
+trait MockIgnoreEmploymentValidator extends MockFactory {
 
   val mockIgnoreEmploymentValidator: IgnoreEmploymentValidator = mock[IgnoreEmploymentValidator]
 
