@@ -94,7 +94,6 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
            StartDateFormatError | CessationDateFormatError | RuleCessationDateBeforeStartDateError |
            RuleStartDateAfterTaxYearEndError | RuleCessationDateBeforeTaxYearStartError
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
