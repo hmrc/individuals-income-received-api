@@ -268,6 +268,14 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          EmployerRefFormatError.copy(
+            paths = Some(List(
+              "/shareOption/0/employerRef",
+              "/shareOption/1/employerRef",
+              "/sharesAwardedOrReceived/0/employerRef",
+              "/sharesAwardedOrReceived/1/employerRef"
+            ))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/disability/customerReference",
@@ -278,14 +286,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             paths = Some(List(
               "/shareOption/0/classOfSharesAcquired",
               "/shareOption/1/classOfSharesAcquired"
-            ))
-          ),
-          EmployerRefFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/employerRef",
-              "/shareOption/1/employerRef",
-              "/sharesAwardedOrReceived/0/employerRef",
-              "/sharesAwardedOrReceived/1/employerRef"
             ))
           ),
           SchemePlanTypeFormatError.copy(
@@ -479,6 +479,16 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |    "message":"Invalid request",
             |    "errors":[
             |        {
+            |            "code":"FORMAT_EMPLOYER_REF",
+            |            "message":"The provided employer ref is invalid",
+            |            "paths":[
+            |                "/shareOption/0/employerRef",
+            |                "/shareOption/1/employerRef",
+            |                "/sharesAwardedOrReceived/0/employerRef",
+            |                "/sharesAwardedOrReceived/1/employerRef"
+            |            ]
+            |        },
+            |        {
             |            "code":"FORMAT_CUSTOMER_REF",
             |            "message":"The provided customer reference is invalid",
             |            "paths":[
@@ -492,16 +502,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |            "paths":[
             |                "/shareOption/0/classOfSharesAcquired",
             |                "/shareOption/1/classOfSharesAcquired"
-            |            ]
-            |        },
-            |        {
-            |            "code":"FORMAT_EMPLOYER_REF",
-            |            "message":"The provided employer reference number is invalid",
-            |            "paths":[
-            |                "/shareOption/0/employerRef",
-            |                "/shareOption/1/employerRef",
-            |                "/sharesAwardedOrReceived/0/employerRef",
-            |                "/sharesAwardedOrReceived/1/employerRef"
             |            ]
             |        },
             |        {

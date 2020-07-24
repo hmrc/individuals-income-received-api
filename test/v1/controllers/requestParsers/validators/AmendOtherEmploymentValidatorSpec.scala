@@ -611,6 +611,14 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       "multiple fields fail value validation" in {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            EmployerRefFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/employerRef",
+                "/shareOption/1/employerRef",
+                "/sharesAwardedOrReceived/0/employerRef",
+                "/sharesAwardedOrReceived/1/employerRef"
+              ))
+            ),
             CustomerRefFormatError.copy(
               paths = Some(List(
                 "/disability/customerReference",
@@ -621,14 +629,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
               paths = Some(List(
                 "/shareOption/0/classOfSharesAcquired",
                 "/shareOption/1/classOfSharesAcquired"
-              ))
-            ),
-            EmployerRefFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/employerRef",
-                "/shareOption/1/employerRef",
-                "/sharesAwardedOrReceived/0/employerRef",
-                "/sharesAwardedOrReceived/1/employerRef"
               ))
             ),
             SchemePlanTypeFormatError.copy(
