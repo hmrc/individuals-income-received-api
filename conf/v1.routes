@@ -27,3 +27,4 @@ DELETE     /dividends/:nino/:taxYear                           v1.controllers.De
 GET        /dividends/:nino/:taxYear                           v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
 PUT        /employments/:nino/:taxYear/:employmentId/ignore    v1.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
+DELETE     /employments/:nino/:taxYear/:employmentId           v1.controllers.DeleteCustomEmploymentController.deleteCustomEmployment(nino: String, taxYear: String, employmentId: String)
