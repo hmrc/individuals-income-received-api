@@ -69,7 +69,7 @@ class AddCustomEmploymentControllerSpec
   }
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "X-123"
 
