@@ -41,7 +41,7 @@ object DoubleTaxationArticleFormatError extends MtdError("FORMAT_DOUBLE_TAXATION
 object DoubleTaxationTreatyFormatError extends MtdError("FORMAT_DOUBLE_TAXATION_TREATY", "The provided double taxation treaty is invalid")
 object SF74RefFormatError extends MtdError("FORMAT_SF74_REF", "The provided SF74 reference is invalid")
 object EmployerNameFormatError extends MtdError("FORMAT_EMPLOYER_NAME", "The provided employer name is invalid")
-object EmployerRefFormatError extends MtdError("FORMAT_EMPLOYER_REF", "The provided employer reference number is invalid")
+object EmployerRefFormatError extends MtdError("FORMAT_EMPLOYER_REF", "The provided employer ref is invalid")
 object DateFormatError extends MtdError("FORMAT_DATE","")
 object ClassOfSharesAwardedFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_AWARDED","The provided class of shares awarded is invalid")
 object ClassOfSharesAcquiredFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_ACQUIRED","The provided class of shares acquired is invalid")
@@ -51,7 +51,8 @@ object StartDateFormatError extends MtdError("FORMAT_START_DATE", "The provided 
 object CessationDateFormatError extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
 
 // Rule Errors
-object RuleTaxYearNotSupportedError extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value")
+object RuleTaxYearNotSupportedError extends
+  MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value")
 
 object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
 
@@ -60,11 +61,13 @@ object RuleTaxYearRangeInvalidError
 
 object RuleTaxYearNotEndedError extends MtdError( code = "RULE_TAX_YEAR_NOT_ENDED", "Tax year not ended")
 
-object RuleCessationDateBeforeStartDateError extends MtdError("RULE_CESSATION_DATE_BEFORE_START_DATE", "The cessation date cannot be earlier than the start date")
+object RuleCessationDateBeforeStartDateError extends
+  MtdError("RULE_CESSATION_DATE_BEFORE_START_DATE", "The cessation date cannot be earlier than the start date")
 
 object RuleStartDateAfterTaxYearEndError extends MtdError("RULE_START_DATE_AFTER_TAX_YEAR_END", "The start date cannot be later than the tax year end")
 
-object RuleCessationDateBeforeTaxYearStartError extends MtdError("RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START", "The cessation date cannot be before the tax year starts")
+object RuleCessationDateBeforeTaxYearStartError extends
+  MtdError("RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START", "The cessation date cannot be before the tax year starts")
 
 object RuleCustomEmploymentError extends MtdError("RULE_CUSTOM_EMPLOYMENT", "A custom employment cannot be ignored")
 
