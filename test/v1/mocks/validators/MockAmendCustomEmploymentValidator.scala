@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.AmendCustomEmploymentValidator
 import v1.models.errors.MtdError
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
 
-class MockAmendCustomEmploymentValidator extends MockFactory {
+trait MockAmendCustomEmploymentValidator extends MockFactory {
 
   val mockAmendCustomEmploymentValidator: AmendCustomEmploymentValidator = mock[AmendCustomEmploymentValidator]
 

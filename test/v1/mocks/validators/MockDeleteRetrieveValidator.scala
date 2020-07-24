@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.DeleteRetrieveValidator
 import v1.models.errors.MtdError
 import v1.models.request.DeleteRetrieveRawData
 
-class MockDeleteRetrieveValidator extends MockFactory {
+trait MockDeleteRetrieveValidator extends MockFactory {
 
   val mockDeleteRetrieveValidator: DeleteRetrieveValidator = mock[DeleteRetrieveValidator]
 

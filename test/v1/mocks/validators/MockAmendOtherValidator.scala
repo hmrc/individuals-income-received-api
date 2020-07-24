@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.AmendOtherValidator
 import v1.models.errors.MtdError
 import v1.models.request.amendOther.AmendOtherRawData
 
-class MockAmendOtherValidator extends MockFactory {
+trait MockAmendOtherValidator extends MockFactory {
 
   val mockAmendOtherValidator: AmendOtherValidator = mock[AmendOtherValidator]
 

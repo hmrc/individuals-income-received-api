@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.AmendForeignValidator
 import v1.models.errors.MtdError
 import v1.models.request.amendForeign.AmendForeignRawData
 
-class MockAmendForeignValidator extends MockFactory {
+trait MockAmendForeignValidator extends MockFactory {
 
   val mockAmendForeignValidator: AmendForeignValidator = mock[AmendForeignValidator]
 

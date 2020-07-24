@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.DeleteCustomEmploymentValidator
 import v1.models.errors.MtdError
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 
-class MockDeleteCustomEmploymentValidator extends MockFactory {
+trait MockDeleteCustomEmploymentValidator extends MockFactory {
 
   val mockDeleteCustomEmploymentValidator: DeleteCustomEmploymentValidator = mock[DeleteCustomEmploymentValidator]
 
