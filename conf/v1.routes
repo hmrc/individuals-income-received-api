@@ -2,9 +2,9 @@ PUT        /savings/:nino/:taxYear                             v1.controllers.Am
 DELETE     /savings/:nino/:taxYear                             v1.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
 GET        /savings/:nino/:taxYear                             v1.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
 
+PUT        /insurance-policies/:nino/:taxYear                  v1.controllers.AmendInsurancePoliciesController.amendInsurancePolicies(nino: String, taxYear: String)
 DELETE     /insurance-policies/:nino/:taxYear                  v1.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
 GET        /insurance-policies/:nino/:taxYear                  v1.controllers.RetrieveInsurancePoliciesController.retrieveInsurancePolicies(nino: String, taxYear: String)
-PUT        /insurance-policies/:nino/:taxYear                  v1.controllers.AmendInsurancePoliciesController.amendInsurancePolicies(nino: String, taxYear: String)
 
 PUT        /foreign/:nino/:taxYear                             v1.controllers.AmendForeignController.amendForeign(nino: String, taxYear: String)
 DELETE     /foreign/:nino/:taxYear                             v1.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
@@ -26,8 +26,8 @@ PUT        /dividends/:nino/:taxYear                           v1.controllers.Am
 DELETE     /dividends/:nino/:taxYear                           v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
 GET        /dividends/:nino/:taxYear                           v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
-POST       /employments/:nino/:taxYear                         v1.controllers.AddCustomEmploymentController.addEmployment(nino: String, taxYear: String)
 PUT        /employments/:nino/:taxYear/:employmentId           v1.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
 DELETE     /employments/:nino/:taxYear/:employmentId           v1.controllers.DeleteCustomEmploymentController.deleteCustomEmployment(nino: String, taxYear: String, employmentId: String)
+
+POST       /employments/:nino/:taxYear                         v1.controllers.AddCustomEmploymentController.addEmployment(nino: String, taxYear: String)
 PUT        /employments/:nino/:taxYear/:employmentId/ignore    v1.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
-DELETE     /employments/:nino/:taxYear/:employmentId           v1.controllers.DeleteCustomEmploymentController.deleteCustomEmployment(nino: String, taxYear: String, employmentId: String)
