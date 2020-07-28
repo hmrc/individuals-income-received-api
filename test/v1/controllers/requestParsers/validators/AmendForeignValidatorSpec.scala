@@ -279,22 +279,18 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
-    }
 
-    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq(
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
             "/unremittableForeignIncome/0/amountTaxPaid",
             "/unremittableForeignIncome/1/amountTaxPaid"
           ))))
       }
-    }
 
-    "return MissingFieldError error" when {
       "the submitted request body has missing mandatory fields" in {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(MissingFieldError.copy(paths = Some(Seq(
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
             "/unremittableForeignIncome/0/countryCode"
           ))))
       }

@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.MtdError
 import v1.models.request.amendOther._
 
 class AmendOtherValidator extends Validator[AmendOtherRawData] with ValueFormatErrorMessages {
@@ -37,7 +37,7 @@ class AmendOtherValidator extends Validator[AmendOtherRawData] with ValueFormatE
 
   private def bodyFormatValidator: AmendOtherRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendOtherRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendOtherRequestBody](data.body.json)
     )
   }
 

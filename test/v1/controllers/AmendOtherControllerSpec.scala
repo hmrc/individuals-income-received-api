@@ -254,9 +254,7 @@ class AmendOtherControllerSpec
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (CountryCodeRuleError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (MissingFieldError, BAD_REQUEST),
-          (WrongFieldTypeError, BAD_REQUEST)
+          (ValueFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

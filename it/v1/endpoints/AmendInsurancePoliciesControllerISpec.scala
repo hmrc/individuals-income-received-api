@@ -885,16 +885,17 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ))
         )
 
-      val nonValidRequestBodyErrors: MtdError =  WrongFieldTypeError.copy(
+      val nonValidRequestBodyErrors: MtdError =  RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(Seq("/lifeInsurance/0/gainAmount"))
       )
 
-      val missingFieldRequestBodyErrors: MtdError =  MissingFieldError.copy(
+      val missingFieldRequestBodyErrors: MtdError =  RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(Seq("/lifeInsurance/0/taxPaid"))
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: ErrorWrapper): Unit = {
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
+                                expectedBody: ErrorWrapper): Unit = {
           s"validation fails with ${expectedBody.error} error" in new Test {
 
             override val nino: String = requestNino
@@ -914,9 +915,9 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None) ),
+          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None) ),
+          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
           ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
           ("AA123456A", "2017-18", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), eventFormatError, None)),

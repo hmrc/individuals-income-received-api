@@ -188,9 +188,7 @@ class AmendForeignControllerSpec
           (CountryCodeFormatError, BAD_REQUEST),
           (CountryCodeRuleError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST),
-          (CustomerRefFormatError, BAD_REQUEST),
-          (MissingFieldError, BAD_REQUEST),
-          (WrongFieldTypeError, BAD_REQUEST)
+          (CustomerRefFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

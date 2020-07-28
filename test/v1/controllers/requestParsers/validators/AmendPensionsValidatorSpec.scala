@@ -363,24 +363,19 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
       "a non-empty JSON body is submitted without any expected fields" in {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
-    }
 
-    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq("/foreignPensions/0/taxTakenOff"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignPensions/0/taxTakenOff"))))
       }
-    }
 
-    "return MissingFieldError error" when {
       "the submitted request body has missing mandatory fields" in {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(MissingFieldError.copy(paths = Some(Seq(
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
             "/foreignPensions/0/taxableAmount",
             "/foreignPensions/0/foreignTaxCreditRelief",
             "/foreignPensions/0/countryCode"

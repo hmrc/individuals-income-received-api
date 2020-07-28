@@ -240,9 +240,7 @@ class AmendPensionsControllerSpec
           (QOPSRefFormatError, BAD_REQUEST),
           (DoubleTaxationArticleFormatError, BAD_REQUEST),
           (DoubleTaxationTreatyFormatError, BAD_REQUEST),
-          (SF74RefFormatError, BAD_REQUEST),
-          (MissingFieldError, BAD_REQUEST),
-          (WrongFieldTypeError, BAD_REQUEST)
+          (SF74RefFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

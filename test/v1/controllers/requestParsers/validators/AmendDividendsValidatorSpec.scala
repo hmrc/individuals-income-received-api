@@ -377,18 +377,13 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
-    }
 
-    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq("/stockDividend/grossAmount"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/stockDividend/grossAmount"))))
       }
-    }
 
-    "return MissingFieldError error" when {
       "mandatory fields are not provided" in {
-
         val paths = Seq(
           "/foreignDividend/0/countryCode",
           "/dividendIncomeReceivedWhilstAbroad/1/foreignTaxCreditRelief",
@@ -409,7 +404,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
         )
 
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(MissingFieldError.copy(paths = Some(paths)))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
       }
     }
 

@@ -79,14 +79,11 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError |
-           MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(CustomerRefFormatError.code) |
-           MtdErrorWithCustomMessage(EventFormatError.code) |
-           MtdErrorWithCustomMessage(MissingFieldError.code) |
-           MtdErrorWithCustomMessage(WrongFieldTypeError.code) |
-           RuleIncorrectOrEmptyBodyError
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(ValueFormatError.code) |
+           CustomMtdError(CustomerRefFormatError.code) |
+           CustomMtdError(EventFormatError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

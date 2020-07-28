@@ -433,23 +433,19 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
       "a non-empty JSON body is submitted without any expected fields" in {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
-    }
 
-    "return WrongFieldTypeError error" when {
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq("/lifeInsurance/0/gainAmount"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/lifeInsurance/0/gainAmount"))))
       }
-    }
-    "return MissingFieldError error" when {
+
       "the submitted request body has missing mandatory fields" in {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(MissingFieldError.copy(paths = Some(Seq("/foreign/1/gainAmount"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreign/1/gainAmount"))))
       }
     }
 

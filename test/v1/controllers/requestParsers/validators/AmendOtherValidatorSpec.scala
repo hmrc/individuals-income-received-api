@@ -330,7 +330,6 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
       "a non-empty JSON body is submitted without any expected fields" in {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
@@ -338,21 +337,12 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq("/overseasIncomeAndGains/gainAmount"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/overseasIncomeAndGains/gainAmount"))))
       }
-    }
 
-    "return WrongFieldTypeError error" when {
-      "the submitted request body is not in the correct format" in {
-        validator.validate(AmendOtherRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq("/overseasIncomeAndGains/gainAmount"))))
-      }
-    }
-
-    "return MissingFieldError error" when {
       "the submitted request body has missing mandatory fields" in {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(MissingFieldError.copy(paths = Some(Seq(
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
             "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
             "/allOtherIncomeReceivedWhilstAbroad/0/foreignTaxCreditRelief",
             "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"

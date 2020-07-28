@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.MtdError
 import v1.models.request.amendDividends._
 
 class AmendDividendsValidator extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
@@ -37,7 +37,7 @@ class AmendDividendsValidator extends Validator[AmendDividendsRawData] with Valu
 
   private def bodyFormatValidator: AmendDividendsRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendDividendsRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendDividendsRequestBody](data.body.json)
     )
   }
 

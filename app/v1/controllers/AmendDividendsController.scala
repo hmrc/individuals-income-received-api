@@ -79,14 +79,12 @@ class AmendDividendsController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleIncorrectOrEmptyBodyError |
-           MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(CountryCodeFormatError.code) |
-           MtdErrorWithCustomMessage(CountryCodeRuleError.code) |
-           MtdErrorWithCustomMessage(CustomerRefFormatError.code) |
-           MtdErrorWithCustomMessage(MissingFieldError.code) |
-           MtdErrorWithCustomMessage(WrongFieldTypeError.code)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(ValueFormatError.code) |
+           CustomMtdError(CountryCodeFormatError.code) |
+           CustomMtdError(CountryCodeRuleError.code) |
+           CustomMtdError(CustomerRefFormatError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

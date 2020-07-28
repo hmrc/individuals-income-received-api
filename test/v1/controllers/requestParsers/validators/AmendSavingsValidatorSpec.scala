@@ -219,24 +219,19 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
       "a non-empty JSON body is submitted without any expected fields" in {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
-    }
 
-    "return WrongFieldTypeError error" when {
-      "the submitted request body is not in the correct format" in {
-        validator.validate(AmendSavingsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(WrongFieldTypeError.copy(paths = Some(Seq("/securities/taxTakenOff"))))
+      "an incorrectly formatted country code is submitted" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
+          List(CountryCodeFormatError.copy(paths = Some(List("/foreignInterest/0/countryCode"))))
       }
-    }
 
-    "return MissingFieldError error" when {
       "the submitted request body has missing mandatory fields" in {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(MissingFieldError.copy(paths = Some(Seq(
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
             "/foreignInterest/0/taxableAmount",
             "/foreignInterest/0/foreignTaxCreditRelief",
             "/foreignInterest/0/countryCode"
@@ -244,10 +239,10 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       }
     }
 
-    "return CountryCodeFormatError error" when {
-      "an incorrectly formatted country code is submitted" in {
-        validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
-          List(CountryCodeFormatError.copy(paths = Some(List("/foreignInterest/0/countryCode"))))
+    "return WrongFieldTypeError error" when {
+      "the submitted request body is not in the correct format" in {
+        validator.validate(AmendSavingsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/securities/taxTakenOff"))))
       }
     }
 

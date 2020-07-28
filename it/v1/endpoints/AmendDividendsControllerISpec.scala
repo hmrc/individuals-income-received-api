@@ -668,18 +668,19 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
         ))
       )
 
-      val nonValidRequestBodyErrors: MtdError = WrongFieldTypeError.copy(paths = Some(Seq(
+      val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
         "/foreignDividend/0/taxTakenOff",
         "/foreignDividend/1/taxTakenOff"
       )))
 
-      val missingFieldRequestBodyErrors: MtdError = MissingFieldError.copy(paths = Some(Seq(
+      val missingFieldRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
         "/redeemableShares/grossAmount"
       )))
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
+                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
@@ -698,16 +699,16 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2017-18", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError),
-          ("AA123456A", "2017-18", ruleCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeRuleError),
-          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, customerRefError),
-          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError),
-          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors),
-          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors)
+          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
+          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
+          ("AA123456A", "2017-18", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
+          ("AA123456A", "2017-18", ruleCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeRuleError, None),
+          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
+          ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, customerRefError, None),
+          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError, None),
+          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors, Some("(invalid request body format)")),
+          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors, Some("(missing mandatory fields)"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
