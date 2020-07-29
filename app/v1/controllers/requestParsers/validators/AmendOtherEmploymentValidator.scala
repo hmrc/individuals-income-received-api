@@ -16,10 +16,9 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages, _}
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment._
-import v1.controllers.requestParsers.validators.validations._
 
 class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
 
@@ -38,7 +37,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
 
   private def bodyFormatValidator: AmendOtherEmploymentRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendOtherEmploymentRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendOtherEmploymentRequestBody](data.body.json)
     )
   }
 

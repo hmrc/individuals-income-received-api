@@ -19,7 +19,7 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.models.errors._
@@ -102,17 +102,24 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
       )
 
-      val nonsenseRequestBody: JsValue = Json.parse(
+      val emptyRequestBody: JsValue = JsObject.empty
+
+      val wrongFieldTypeRequestBody: JsValue = Json.parse(
         """
           |{
-          |  "field": "value"
+          |  "ignoreEmployment": "value"
           |}
         """.stripMargin
       )
 
+      val wrongFieldTypeError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(List("/ignoreEmployment"))
+      )
+
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, requestBody: JsValue,
+                                expectedStatus: Int, expectedBody: MtdError, scenario: Option[String]): Unit = {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
@@ -132,13 +139,15 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestBodyJson, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2019-20", "ABCDE12345FG", validRequestBodyJson, BAD_REQUEST, EmploymentIdFormatError),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2020-21", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotEndedError))
+          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
+          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "2019-20", "ABCDE12345FG", validRequestBodyJson, BAD_REQUEST, EmploymentIdFormatError, None),
+          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
+          ("AA123456A", "2020-21", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotEndedError, None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", emptyRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", wrongFieldTypeRequestBody, BAD_REQUEST, wrongFieldTypeError, Some("(wrong field type)"))
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

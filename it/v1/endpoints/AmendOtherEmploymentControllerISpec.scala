@@ -975,6 +975,40 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
       )
 
+      val nonValidRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |  "shareOption": [
+          |      {
+          |        "employerName": "Company Ltd",
+          |        "employerRef" : "123/AB456",
+          |        "schemePlanType": "EMI",
+          |        "dateOfOptionGrant": "2019-11-20",
+          |        "dateOfEvent": "2019-11-20",
+          |        "optionNotExercisedButConsiderationReceived": true,
+          |        "amountOfConsiderationReceived": 23122.22,
+          |        "noOfSharesAcquired": 1,
+          |        "classOfSharesAcquired": "FIRST",
+          |        "exercisePrice": 12.22,
+          |        "amountPaidForOption": 123.22,
+          |        "marketValueOfSharesOnExcise": "bip",
+          |        "profitOnOptionExercised": "bop",
+          |        "employersNicPaid": "boop",
+          |        "taxableAmount" : "beep"
+          |      }
+          |    ]
+          |}
+        """.stripMargin
+      )
+
+      val missingFieldRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |  "shareOption": [{}]
+          |}
+        """.stripMargin
+      )
+
       val invalidValuesRequestBodyJson: JsValue = Json.parse(
         """
           |{
@@ -1159,6 +1193,34 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         )
       )
 
+      val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(List(
+          "/shareOption/0/profitOnOptionExercised",
+          "/shareOption/0/taxableAmount",
+          "/shareOption/0/marketValueOfSharesOnExcise",
+          "/shareOption/0/employersNicPaid"
+        ))
+      )
+
+      val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(List(
+          "/shareOption/0/dateOfOptionGrant",
+          "/shareOption/0/taxableAmount",
+          "/shareOption/0/employerName",
+          "/shareOption/0/noOfSharesAcquired",
+          "/shareOption/0/optionNotExercisedButConsiderationReceived",
+          "/shareOption/0/schemePlanType",
+          "/shareOption/0/classOfSharesAcquired",
+          "/shareOption/0/exercisePrice",
+          "/shareOption/0/amountPaidForOption",
+          "/shareOption/0/employersNicPaid",
+          "/shareOption/0/marketValueOfSharesOnExcise",
+          "/shareOption/0/amountOfConsiderationReceived",
+          "/shareOption/0/dateOfEvent",
+          "/shareOption/0/profitOnOptionExercised"
+        ))
+      )
+
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: ErrorWrapper): Unit = {
           s"validation fails with ${expectedBody.error} error" in new Test {
@@ -1180,9 +1242,9 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None) ),
+          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None) ),
+          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
           ("AA123456A", "2017-18", invalidValuesRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2017-18", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerNameFormatError, None)),
           ("AA123456A", "2017-18", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerRefFormatError, None)),
@@ -1191,7 +1253,10 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2017-18", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAcquiredFormatError, None)),
           ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
           ("AA123456A", "2017-18", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), schemePlanTypeFormatError, None)),
-          ("AA123456A", "2017-18", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)))
+          ("AA123456A", "2017-18", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
+          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), invalidFieldType, None)),
+          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingMandatoryFieldErrors, None))
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

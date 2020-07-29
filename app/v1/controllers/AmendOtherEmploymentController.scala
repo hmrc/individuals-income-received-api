@@ -79,16 +79,16 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleIncorrectOrEmptyBodyError |
-           MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(CustomerRefFormatError.code) |
-           MtdErrorWithCustomMessage(EmployerNameFormatError.code) |
-           MtdErrorWithCustomMessage(EmployerRefFormatError.code) |
-           MtdErrorWithCustomMessage(DateFormatError.code) |
-           MtdErrorWithCustomMessage(ClassOfSharesAwardedFormatError.code) |
-           MtdErrorWithCustomMessage(ClassOfSharesAcquiredFormatError.code) |
-           MtdErrorWithCustomMessage(SchemePlanTypeFormatError.code)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
+           CustomMtdError(ValueFormatError.code) |
+           CustomMtdError(CustomerRefFormatError.code) |
+           CustomMtdError(EmployerNameFormatError.code) |
+           CustomMtdError(EmployerRefFormatError.code) |
+           CustomMtdError(DateFormatError.code) |
+           CustomMtdError(ClassOfSharesAwardedFormatError.code) |
+           CustomMtdError(ClassOfSharesAcquiredFormatError.code) |
+           CustomMtdError(SchemePlanTypeFormatError.code) |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
