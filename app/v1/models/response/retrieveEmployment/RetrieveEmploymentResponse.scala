@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveCustomEmployment
+package v1.models.response.retrieveEmployment
 
 import config.AppConfig
 import play.api.libs.functional.syntax._
@@ -22,7 +22,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveCustomEmploymentResponse(employerRef: Option[String],
+case class RetrieveEmploymentResponse(employerRef: Option[String],
                                             employerName: String,
                                             startDate: String,
                                             cessationDate: Option[String],
@@ -30,11 +30,11 @@ case class RetrieveCustomEmploymentResponse(employerRef: Option[String],
                                             dateIgnored: Option[String],
                                             submittedOn: Option[String])
 
-object RetrieveCustomEmploymentResponse extends HateoasLinks {
+object RetrieveEmploymentResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[RetrieveCustomEmploymentResponse] = Json.writes[RetrieveCustomEmploymentResponse]
+  implicit val writes: OWrites[RetrieveEmploymentResponse] = Json.writes[RetrieveEmploymentResponse]
 
-  implicit val reads: Reads[RetrieveCustomEmploymentResponse] = (
+  implicit val reads: Reads[RetrieveEmploymentResponse] = (
       (JsPath \\ "employerRef").readNullable[String] and
         (JsPath \\ "employerName").read[String] and
         (JsPath \\ "startDate").read[String] and
@@ -42,19 +42,29 @@ object RetrieveCustomEmploymentResponse extends HateoasLinks {
         (JsPath \\ "payrollId").readNullable[String] and
         (JsPath \\ "dateIgnored").readNullable[String] and
         (JsPath \\ "submittedOn").readNullable[String]
-      )(RetrieveCustomEmploymentResponse.apply _)
+      )(RetrieveEmploymentResponse.apply _)
 
-  implicit object RetrieveCustomEmploymentLinksFactory extends HateoasLinksFactory[RetrieveCustomEmploymentResponse, RetrieveCustomEmploymentHateoasData] {
-    override def links(appConfig: AppConfig, data: RetrieveCustomEmploymentHateoasData): Seq[Link] = {
+  implicit object RetrieveCustomEmploymentLinksFactory extends HateoasLinksFactory[RetrieveEmploymentResponse, RetrieveEmploymentHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveEmploymentHateoasData): Seq[Link] = {
       import data._
-      Seq(
+
+      val baseLinks = Seq(
         listEmployment(appConfig, nino, taxYear, isSelf = false),
-        retrieveEmployment(appConfig, nino, taxYear, employmentId, isSelf = true),
+        retrieveEmployment(appConfig, nino, taxYear, employmentId, isSelf = true)
+      )
+
+      val customLinks = Seq(
         amendCustomEmployment(appConfig, nino, taxYear, employmentId),
         deleteCustomEmployment(appConfig, nino, taxYear, employmentId)
       )
+
+      data.response.submittedOn match {
+        case Some(_) => baseLinks ++ customLinks
+        case None => baseLinks ++ Seq(ignoreEmployment(appConfig, nino, taxYear, employmentId))
+      }
     }
   }
 }
 
-case class RetrieveCustomEmploymentHateoasData(nino: String, taxYear: String, employmentId: String) extends HateoasData
+case class RetrieveEmploymentHateoasData(nino: String, taxYear: String,
+                                         employmentId: String, response: RetrieveEmploymentResponse) extends HateoasData

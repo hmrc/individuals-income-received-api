@@ -223,7 +223,7 @@ trait HateoasLinks {
 
   def ignoreEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
     Link(
-      href = employmentUriWithId(appConfig, nino, taxYear, employmentId),
+      href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/ignore",
       method = PUT,
       rel = IGNORE_EMPLOYMENT
     )
