@@ -24,16 +24,16 @@ import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class ListEmploymentResponse[Employment](employments: Option[Seq[Employment]],
-                                  customEmployments: Option[Seq[Employment]])
+case class ListEmploymentResponse[E](employments: Option[Seq[E]],
+                                  customEmployments: Option[Seq[E]])
 
 object ListEmploymentResponse extends HateoasLinks with JsonUtils{
 
-  implicit def writes[Employment: Writes]: OWrites[ListEmploymentResponse[Employment]] = Json.writes[ListEmploymentResponse[Employment]]
+  implicit def writes[E: Writes]: OWrites[ListEmploymentResponse[E]] = Json.writes[ListEmploymentResponse[E]]
 
-  implicit def reads[Employment: Reads]: Reads[ListEmploymentResponse[Employment]] = (
-    (JsPath \ "employments").readNullable[Seq[Employment]].mapEmptySeqToNone and
-      (JsPath \ "customerDeclaredEmployments").readNullable[Seq[Employment]].mapEmptySeqToNone
+  implicit def reads[E: Reads]: Reads[ListEmploymentResponse[E]] = (
+    (JsPath \ "employments").readNullable[Seq[E]].mapEmptySeqToNone and
+      (JsPath \ "customerDeclaredEmployments").readNullable[Seq[E]].mapEmptySeqToNone
       )((employments, customerEmployments) => ListEmploymentResponse(employments, customerEmployments))
 
   implicit object ListEmploymentLinksFactory extends HateoasListLinksFactory[ListEmploymentResponse, Employment, ListEmploymentHateoasData] {

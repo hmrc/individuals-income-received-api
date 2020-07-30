@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveCustomEmployment
+package v1.models.response.retrieveEmployment
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
-class RetrieveCustomEmploymentResponseSpec extends UnitSpec {
+class RetrieveEmploymentResponseSpec extends UnitSpec {
 
   private val hmrcEnteredJson = Json.parse(
     """
@@ -77,7 +77,7 @@ class RetrieveCustomEmploymentResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val hmrcEnteredEmployment = RetrieveCustomEmploymentResponse(
+  private val hmrcEnteredEmployment = RetrieveEmploymentResponse(
     employerRef = Some("123/abc"),
     employerName = "Vera Lynn",
     startDate = "2020-06-17",
@@ -87,7 +87,7 @@ class RetrieveCustomEmploymentResponseSpec extends UnitSpec {
     None
   )
 
-  private val customEnteredEmployment = RetrieveCustomEmploymentResponse(
+  private val customEnteredEmployment = RetrieveEmploymentResponse(
     employerRef = Some("123/abc"),
     employerName = "Vera Lynn",
     startDate = "2020-06-17",
@@ -98,15 +98,15 @@ class RetrieveCustomEmploymentResponseSpec extends UnitSpec {
   )
 
   "Reads" should {
-    "return RetrieveCustomEmploymentResponse object" when {
+    "return RetrieveEmploymentResponse object" when {
       "a valid HMRC entered employment json is supplied" in {
-        hmrcEnteredJson.as[RetrieveCustomEmploymentResponse] shouldBe hmrcEnteredEmployment
+        hmrcEnteredJson.as[RetrieveEmploymentResponse] shouldBe hmrcEnteredEmployment
       }
     }
 
-    "return RetrieveCustomEmploymentResponse object" when {
+    "return RetrieveEmploymentResponse object" when {
       "a valid customer entered employment json is supplied" in {
-        customEnteredJson.as[RetrieveCustomEmploymentResponse] shouldBe customEnteredEmployment
+        customEnteredJson.as[RetrieveEmploymentResponse] shouldBe customEnteredEmployment
       }
     }
   }
@@ -127,7 +127,7 @@ class RetrieveCustomEmploymentResponseSpec extends UnitSpec {
           |}
           """.stripMargin
       )
-      invalidJson.validate[RetrieveCustomEmploymentResponse] shouldBe a[JsError]
+      invalidJson.validate[RetrieveEmploymentResponse] shouldBe a[JsError]
     }
   }
 
