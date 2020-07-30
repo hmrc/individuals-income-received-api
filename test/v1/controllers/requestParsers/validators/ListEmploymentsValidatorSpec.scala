@@ -24,13 +24,12 @@ import support.UnitSpec
 import utils.CurrentDateTime
 import v1.mocks.MockCurrentDateTime
 import v1.models.errors._
-import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
+import v1.models.request.listEmployments.ListEmploymentsRawData
 
-class DeleteCustomEmploymentValidatorSpec extends UnitSpec {
+class ListEmploymentsValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2021-22"
-  private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  private val validTaxYear = "2020-21"
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
@@ -39,7 +38,7 @@ class DeleteCustomEmploymentValidatorSpec extends UnitSpec {
 
     implicit val appConfig: AppConfig = mockAppConfig
 
-    val validator = new DeleteCustomEmploymentValidator()
+    val validator = new ListEmploymentsValidator()
 
     MockCurrentDateTime.getCurrentDate
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
@@ -52,49 +51,42 @@ class DeleteCustomEmploymentValidatorSpec extends UnitSpec {
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData(validNino, validTaxYear, validEmploymentId)) shouldBe Nil
+        validator.validate(ListEmploymentsRawData(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData("A12344A", validTaxYear, validEmploymentId)) shouldBe
+        validator.validate(ListEmploymentsRawData("A12344A", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData(validNino, "20178", validEmploymentId)) shouldBe
+        validator.validate(ListEmploymentsRawData(validNino, "20178")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
       "a tax year that is not supported is supplied" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData(validNino, "2018-19", validEmploymentId)) shouldBe
+        validator.validate(ListEmploymentsRawData(validNino, "2018-19")) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
       "an out of range tax year is supplied" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData(validNino, "2020-22", validEmploymentId)) shouldBe
+        validator.validate(ListEmploymentsRawData(validNino, "2020-22")) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
 
     "return NinoFormatError and TaxYearFormatError errors" when {
       "request supplied has invalid nino and tax year" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData("A12344A", "20178", validEmploymentId)) shouldBe
+        validator.validate(ListEmploymentsRawData("A12344A", "20178")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
-      }
-    }
-
-    "return NinoFormatError, TaxYearFormatError and EmploymentIdFormatError errors" when {
-      "request supplied has invalid nino, tax year and employmentId" in new Test {
-        validator.validate(DeleteCustomEmploymentRawData("A12344A", "20178", "ABCDE12345FG")) shouldBe
-          List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError)
       }
     }
   }
