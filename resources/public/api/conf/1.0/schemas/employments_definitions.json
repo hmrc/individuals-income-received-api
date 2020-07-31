@@ -156,7 +156,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}"
+            "example": "/individuals/income-received/employments/{nino}/{taxYear}\n/{employmentId}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
