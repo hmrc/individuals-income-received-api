@@ -42,7 +42,8 @@ class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateT
 
   private def parameterRuleValidation: IgnoreEmploymentRawData => List[List[MtdError]] = (data: IgnoreEmploymentRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 

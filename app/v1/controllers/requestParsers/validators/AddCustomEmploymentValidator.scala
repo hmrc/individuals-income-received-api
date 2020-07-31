@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
-import javax.inject.Inject
 import config.AppConfig
+import javax.inject.Inject
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors._
@@ -41,7 +41,8 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
 
   private def parameterRuleValidation: AddCustomEmploymentRawData => List[List[MtdError]] = (data: AddCustomEmploymentRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 

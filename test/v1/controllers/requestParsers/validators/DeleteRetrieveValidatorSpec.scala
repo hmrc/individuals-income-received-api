@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import support.UnitSpec
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
@@ -25,31 +27,40 @@ class DeleteRetrieveValidatorSpec extends UnitSpec {
   private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
 
-  val validator = new DeleteRetrieveValidator()
+  class Test extends MockAppConfig {
+
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new DeleteRetrieveValidator()
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2021)
+      .anyNumberOfTimes()
+  }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         validator.validate(DeleteRetrieveRawData(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
-      "an invalid nino is supplied" in {
+      "an invalid nino is supplied" in new Test {
         validator.validate(DeleteRetrieveRawData("A12344A", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "an invalid tax year is supplied" in {
+      "an invalid tax year is supplied" in new Test {
         validator.validate(DeleteRetrieveRawData(validNino, "20178")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors" in {
+      "request supplied has multiple errors" in new Test {
         validator.validate(DeleteRetrieveRawData("A12344A", "20178")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }

@@ -16,13 +16,16 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.DeleteRetrieveRawData
 
-class DeleteRetrieveValidator extends Validator[DeleteRetrieveRawData] {
+class DeleteRetrieveValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[DeleteRetrieveRawData] {
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   override def validate(data: DeleteRetrieveRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,6 +35,13 @@ class DeleteRetrieveValidator extends Validator[DeleteRetrieveRawData] {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
+    List(
+      // TODO: Enable this once we have DES specs for the non-employment endpoints.
+      //TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 }

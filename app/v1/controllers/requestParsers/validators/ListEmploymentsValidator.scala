@@ -18,12 +18,11 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import javax.inject.Inject
-import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.listEmployments.ListEmploymentsRawData
 
-class ListEmploymentsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class ListEmploymentsValidator @Inject()(implicit appConfig: AppConfig)
   extends Validator[ListEmploymentsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
@@ -41,7 +40,7 @@ class ListEmploymentsValidator @Inject()(implicit currentDateTime: CurrentDateTi
 
   private def parameterRuleValidation: ListEmploymentsRawData => List[List[MtdError]] = (data: ListEmploymentsRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 }

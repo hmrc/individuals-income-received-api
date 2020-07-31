@@ -42,7 +42,8 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
 
   private def parameterRuleValidation: AmendCustomEmploymentRawData => List[List[MtdError]] = (data: AmendCustomEmploymentRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
