@@ -177,7 +177,7 @@ class ListEmploymentResponseSpec extends UnitSpec {
   }
 
   "read from empty JSON" should {
-    "produce an empty RetrieveDividendsResponse object" in {
+    "produce an empty ListEmploymentResponse object" in {
       val emptyJson = JsObject.empty
 
       emptyJson.as[ListEmploymentResponse[Employment]] shouldBe ListEmploymentResponse(None, None)

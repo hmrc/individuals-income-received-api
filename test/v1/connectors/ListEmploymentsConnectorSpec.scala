@@ -64,7 +64,7 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
   }
 
   "ListEmploymentsConnector" when {
-    "retrieve" must {
+    "listEmployments" must {
       "return a 200 status for a success scenario" in new Test {
 
         val outcome = Right(ResponseWrapper(correlationId, validResponse))

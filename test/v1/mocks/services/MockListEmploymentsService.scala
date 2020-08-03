@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, ListEmploymentsConnector}
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listEmployments.ListEmploymentsRequest
 import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.services.ListEmploymentsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListEmploymentsConnector extends MockFactory {
+trait MockListEmploymentsService extends MockFactory {
 
-  val mockListEmploymentsConnector: ListEmploymentsConnector = mock[ListEmploymentsConnector]
+  val mockListEmploymentsService: ListEmploymentsService = mock[ListEmploymentsService]
 
-  object MockListEmploymentsConnector {
+  object MockListEmploymentsService {
 
-    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[DesOutcome[ListEmploymentResponse[Employment]]]] = {
-      (mockListEmploymentsConnector
-        .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]]] = {
+      (mockListEmploymentsService
+        .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
     }
   }
+
 }

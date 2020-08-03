@@ -51,16 +51,16 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
   trait Test extends MockListEmploymentsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: ListEmploymentsService = new ListEmploymentsService(connector = mockConnector)
+    val service: ListEmploymentsService = new ListEmploymentsService(connector = mockListEmploymentsConnector)
   }
 
   "ListEmploymentsService" when {
-    "retrieve" must {
+    "listEmployments" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, validResponse))
 
 
-        MockListEmploymentsConnector.retrieve(requestData)
+        MockListEmploymentsConnector.listEmployments(requestData)
           .returns(Future.successful(outcome))
 
         await(service.listEmployments(requestData)) shouldBe outcome
@@ -71,7 +71,7 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockListEmploymentsConnector.retrieve(requestData)
+            MockListEmploymentsConnector.listEmployments(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.listEmployments(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
