@@ -1,0 +1,19 @@
+{
+  "links": [
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}/financial-details",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}/financial-details",
+      "rel":"amend-employment-financial-details",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}/financial-details",
+      "rel":"delete-employment-financial-details",
+      "method":"DELETE"
+    }
+  ]
+}
