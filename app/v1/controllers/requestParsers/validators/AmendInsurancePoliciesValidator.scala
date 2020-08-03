@@ -17,8 +17,8 @@
 package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.amendInsurancePolicies.{AmendCommonInsurancePoliciesItem, AmendForeignPoliciesItem, AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequestBody, AmendVoidedIsaPoliciesItem}
+import v1.models.errors.MtdError
+import v1.models.request.amendInsurancePolicies._
 
 class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRawData] with ValueFormatErrorMessages {
 
@@ -37,7 +37,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
 
   private def bodyFormatValidator: AmendInsurancePoliciesRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendInsurancePoliciesRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendInsurancePoliciesRequestBody](data.body.json)
     )
   }
 
@@ -45,7 +45,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
 
     val requestBodyData = data.body.json.as[AmendInsurancePoliciesRequestBody]
 
-    List(flattenErrors(
+    List(Validator.flattenErrors(
       List(
         requestBodyData.lifeInsurance.map(_.zipWithIndex.flatMap {
           case (data, index) => validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
@@ -148,17 +148,5 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
         path = s"/foreign/$arrayIndex/yearsHeld"
       )
     ).flatten
-  }
-
-  private def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
-    errors.flatten.groupBy(_.message).map {case (_, errors) =>
-
-      val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
-
-      errors.fold(baseError)(
-        (error1, error2) =>
-          error1.copy(paths = Some(error1.paths.getOrElse(Seq.empty[String]) ++ error2.paths.getOrElse(Seq.empty[String])))
-      )
-    }.toList
   }
 }

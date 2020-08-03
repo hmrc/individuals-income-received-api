@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.Inject
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.MtdError
 import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
 
 class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
@@ -48,7 +48,7 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
 
   private def bodyFormatValidator: AmendCustomEmploymentRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendCustomEmploymentRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendCustomEmploymentRequestBody](data.body.json)
     )
   }
 

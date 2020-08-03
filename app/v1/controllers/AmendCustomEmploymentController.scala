@@ -80,13 +80,13 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
            EmploymentIdFormatError | StartDateFormatError | CessationDateFormatError |
            PayrollIdFormatError | RuleTaxYearNotSupportedError | RuleCessationDateBeforeStartDateError |
-           RuleTaxYearRangeInvalidError | RuleIncorrectOrEmptyBodyError | RuleTaxYearNotEndedError |
-           RuleStartDateAfterTaxYearEndError | RuleCessationDateBeforeTaxYearStartError |
-           MtdErrorWithCustomMessage(EmployerNameFormatError.code) |
-           MtdErrorWithCustomMessage(EmployerRefFormatError.code)
+           RuleTaxYearNotEndedError | RuleStartDateAfterTaxYearEndError | RuleCessationDateBeforeTaxYearStartError |
+           CustomMtdError(EmployerNameFormatError.code) |
+           CustomMtdError(EmployerRefFormatError.code) |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

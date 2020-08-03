@@ -174,6 +174,26 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
 
       val emptyRequestJson: JsValue = JsObject.empty
 
+      val nonValidRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": false,
+          |  "employerName": false,
+          |  "startDate": false,
+          |  "cessationDate": false,
+          |  "payrollId": false
+          |}
+        """.stripMargin
+      )
+
+      val missingFieldRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": "123/AZ12334"
+          |}
+        """.stripMargin
+      )
+
       val invalidEmployerRefRequestJson: JsValue = Json.parse(
         """
           |{
@@ -270,6 +290,23 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
       )
 
+      val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(List(
+          "/employerRef",
+          "/employerName",
+          "/payrollId",
+          "/cessationDate",
+          "/startDate"
+        ))
+      )
+
+      val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(List(
+          "/startDate",
+          "/employerName"
+        ))
+      )
+
       def getCurrentTaxYear: String = {
         val currentDate = DateTime.now(DateTimeZone.UTC)
 
@@ -290,8 +327,9 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
       }
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
+                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
@@ -310,20 +348,22 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", validRequestJson, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "20177", validRequestJson,  BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2015-17", validRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2015-16", validRequestJson, BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", getCurrentTaxYear, validRequestJson, BAD_REQUEST, RuleTaxYearNotEndedError),
-          ("AA123456A", "2019-20", emptyRequestJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError),
-          ("AA123456A", "2019-20", invalidEmployerRefRequestJson, BAD_REQUEST, EmployerRefFormatError),
-          ("AA123456A", "2019-20", invalidEmployerNameRequestJson, BAD_REQUEST, EmployerNameFormatError),
-          ("AA123456A", "2019-20", invalidPayrollIdRequestJson, BAD_REQUEST, PayrollIdFormatError),
-          ("AA123456A", "2019-20", invalidStartDateRequestJson, BAD_REQUEST, StartDateFormatError),
-          ("AA123456A", "2019-20", invalidCessationDateRequestJson, BAD_REQUEST, CessationDateFormatError),
-          ("AA123456A", "2019-20", invalidDateOrderRequestJson, BAD_REQUEST, RuleCessationDateBeforeStartDateError),
-          ("AA123456A", "2019-20", startDateLateRequestJson, BAD_REQUEST, RuleStartDateAfterTaxYearEndError),
-          ("AA123456A", "2019-20", cessationDateEarlyRequestJson, BAD_REQUEST, RuleCessationDateBeforeTaxYearStartError)
+          ("AA1123A", "2019-20", validRequestJson, BAD_REQUEST, NinoFormatError, None),
+          ("AA123456A", "20177", validRequestJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "2015-17", validRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
+          ("AA123456A", "2015-16", validRequestJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
+          ("AA123456A", getCurrentTaxYear, validRequestJson, BAD_REQUEST, RuleTaxYearNotEndedError, None),
+          ("AA123456A", "2019-20", invalidEmployerRefRequestJson, BAD_REQUEST, EmployerRefFormatError, None),
+          ("AA123456A", "2019-20", invalidEmployerNameRequestJson, BAD_REQUEST, EmployerNameFormatError, None),
+          ("AA123456A", "2019-20", invalidPayrollIdRequestJson, BAD_REQUEST, PayrollIdFormatError, None),
+          ("AA123456A", "2019-20", invalidStartDateRequestJson, BAD_REQUEST, StartDateFormatError, None),
+          ("AA123456A", "2019-20", invalidCessationDateRequestJson, BAD_REQUEST, CessationDateFormatError, None),
+          ("AA123456A", "2019-20", invalidDateOrderRequestJson, BAD_REQUEST, RuleCessationDateBeforeStartDateError, None),
+          ("AA123456A", "2019-20", startDateLateRequestJson, BAD_REQUEST, RuleStartDateAfterTaxYearEndError, None),
+          ("AA123456A", "2019-20", cessationDateEarlyRequestJson, BAD_REQUEST, RuleCessationDateBeforeTaxYearStartError, None),
+          ("AA123456A", "2019-20", emptyRequestJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
+          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, invalidFieldType, Some("(invalid field type)")),
+          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, missingMandatoryFieldErrors, Some("(missing mandatory fields)"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

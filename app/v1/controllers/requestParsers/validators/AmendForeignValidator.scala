@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.models.errors.MtdError
 import v1.models.request.amendForeign._
 
 class AmendForeignValidator extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
@@ -37,7 +37,7 @@ class AmendForeignValidator extends Validator[AmendForeignRawData] with ValueFor
 
   private def bodyFormatValidator: AmendForeignRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendForeignRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendForeignRequestBody](data.body.json)
     )
   }
 
@@ -45,7 +45,7 @@ class AmendForeignValidator extends Validator[AmendForeignRawData] with ValueFor
 
     val requestBodyData = data.body.json.as[AmendForeignRequestBody]
 
-    List(flattenErrors(
+    List(Validator.flattenErrors(
       List(
         requestBodyData.foreignEarnings.map { data => validateForeignEarnings(data)}.getOrElse(NoValidationErrors),
         requestBodyData.unremittableForeignIncome.map(_.zipWithIndex.flatMap {
@@ -79,17 +79,5 @@ class AmendForeignValidator extends Validator[AmendForeignRawData] with ValueFor
         amount = unremittableForeignIncome.amountTaxPaid,
         path = s"/unremittableForeignIncome/$arrayIndex/amountTaxPaid")
     ).flatten
-  }
-
-  private def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
-    errors.flatten.groupBy(_.message).map {case (_, errors) =>
-
-      val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
-
-      errors.fold(baseError)(
-        (error1, error2) =>
-          error1.copy(paths = Some(error1.paths.getOrElse(Seq.empty[String]) ++ error2.paths.getOrElse(Seq.empty[String])))
-      )
-    }.toList
   }
 }
