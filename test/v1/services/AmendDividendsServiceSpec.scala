@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class AmendDividendsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
-  private val taxYear = "2019"
+  private val taxYear = "2019-20"
   private val correlationId = "X-corr"
 
   private val foreignDividendModel = Seq(

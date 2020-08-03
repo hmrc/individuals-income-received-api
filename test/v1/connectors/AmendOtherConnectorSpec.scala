@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class AmendOtherConnectorSpec extends ConnectorSpec {
 
   private val nino: String = "AA111111A"
-  private val taxYear: String = "2019"
+  private val taxYear: String = "2019-20"
 
   val amendOtherRequest: AmendOtherRequest = AmendOtherRequest(
     nino = Nino(nino),
