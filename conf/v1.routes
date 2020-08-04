@@ -32,4 +32,4 @@ DELETE     /employments/:nino/:taxYear/:employmentId                        v1.c
 POST       /employments/:nino/:taxYear                                      v1.controllers.AddCustomEmploymentController.addEmployment(nino: String, taxYear: String)
 PUT        /employments/:nino/:taxYear/:employmentId/ignore                 v1.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
 
-DELETE     /employments/:nino/:taxYear/:employmentId/financial-data         v1.controllers.DeleteEmploymentFinancialDetailsController.delete(nino: String, taxYear: String, employmentId: String)
+DELETE     /employments/:nino/:taxYear/:employmentId/financial-data         v1.controllers.DeleteEmploymentFinancialDetailsController.deleteEmploymentFinancialDetails(nino: String, taxYear: String, employmentId: String)

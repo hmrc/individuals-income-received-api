@@ -25,7 +25,6 @@ import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteCustomEmploymentRequestParser
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
@@ -43,10 +42,10 @@ class DeleteEmploymentFinancialDetailsController @Inject()(val authService: Enro
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "DeleteEmploymentFinancialDetailsController",
-      endpointName = "delete"
+      endpointName = "deleteEmploymentFinancialDetails"
     )
 
-  def delete(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
+  def deleteEmploymentFinancialDetails(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
       val rawData: DeleteCustomEmploymentRawData = DeleteCustomEmploymentRawData(
@@ -56,13 +55,13 @@ class DeleteEmploymentFinancialDetailsController @Inject()(val authService: Enro
       )
 
       implicit val desUri: DesUri[Unit] = DesUri[Unit](
-        s"income-tax/income/employments/$nino/${DesTaxYear.fromMtd(taxYear)}/$employmentId"
+        s"income-tax/income/employments/$nino/$taxYear/$employmentId"
       )
 
       val result =
         for {
           _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete())
+          serviceResponse <- EitherT(service.delete(desErrorMap))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -84,9 +83,20 @@ class DeleteEmploymentFinancialDetailsController @Inject()(val authService: Enro
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError |
-           RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
+           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
+
+  private def desErrorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
+    )
 }

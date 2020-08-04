@@ -82,7 +82,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
           .delete()
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.delete(nino, taxYear, employmentId)(fakeDeleteRequest)
+        val result: Future[Result] = controller.deleteEmploymentFinancialDetails(nino, taxYear, employmentId)(fakeDeleteRequest)
 
         status(result) shouldBe NO_CONTENT
         contentAsString(result) shouldBe ""
@@ -99,7 +99,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.delete(nino, taxYear, employmentId)(fakeDeleteRequest)
+            val result: Future[Result] = controller.deleteEmploymentFinancialDetails(nino, taxYear, employmentId)(fakeDeleteRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -130,7 +130,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
               .delete()
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.delete(nino, taxYear, employmentId)(fakeDeleteRequest)
+            val result: Future[Result] = controller.deleteEmploymentFinancialDetails(nino, taxYear, employmentId)(fakeDeleteRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
