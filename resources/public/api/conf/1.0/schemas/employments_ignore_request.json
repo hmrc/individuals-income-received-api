@@ -1,10 +1,10 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve Employment Response",
-  "description": "Retrieve Employment Response",
+  "title": "Amend Employment Financial Details",
+  "description": "Amend Employment Financial Details",
   "type": "object",
   "properties": {
-    "ignoreEmployment": {"$ref": "employments_definitions.json#/definitions/ignoreEmployment"}
+    "employment": {"$ref": "employments_definitions.json#/definitions/ignoreEmployment"}
   },
   "required": ["ignoreEmployment"]
 }
