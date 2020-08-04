@@ -61,9 +61,13 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
   private def defaultDesErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_NINO" -> NinoFormatError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
       "NOT_FOUND" -> NotFoundError,
+      "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }
