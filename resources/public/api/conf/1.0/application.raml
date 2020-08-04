@@ -49,6 +49,8 @@ uses:
           delete: !include endpoints/employments/delete.raml
           /ignore:
             put: !include endpoints/employments/ignore.raml
+          /financial-data:
+            delete: !include endpoints/employments/financialData/delete.raml
     /other:
       (annotations.group):
         name: Other Employment Income
