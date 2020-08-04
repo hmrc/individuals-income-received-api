@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Amend Employment Financial Data",
-  "description": "Amend Employment Financial Data",
+  "title": "Amend Employment Financial Details",
+  "description": "Amend Employment Financial Details",
   "type": "object",
   "properties": {
     "employment": {"$ref": "employments_definitions.json#/definitions/ignoreEmployment"}
