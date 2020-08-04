@@ -79,16 +79,16 @@ class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleIncorrectOrEmptyBodyError |
-           MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(CountryCodeFormatError.code) |
-           MtdErrorWithCustomMessage(CountryCodeRuleError.code) |
-           MtdErrorWithCustomMessage(CustomerRefFormatError.code) |
-           MtdErrorWithCustomMessage(QOPSRefFormatError.code) |
-           MtdErrorWithCustomMessage(DoubleTaxationArticleFormatError.code) |
-           MtdErrorWithCustomMessage(DoubleTaxationTreatyFormatError.code) |
-           MtdErrorWithCustomMessage(SF74RefFormatError.code)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(ValueFormatError.code) |
+           CustomMtdError(CountryCodeFormatError.code) |
+           CustomMtdError(CountryCodeRuleError.code) |
+           CustomMtdError(CustomerRefFormatError.code) |
+           CustomMtdError(QOPSRefFormatError.code) |
+           CustomMtdError(DoubleTaxationArticleFormatError.code) |
+           CustomMtdError(DoubleTaxationTreatyFormatError.code) |
+           CustomMtdError(SF74RefFormatError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

@@ -125,7 +125,7 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect request body" in new Test {
         validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/ignoreEmployment"))))
       }
     }
   }

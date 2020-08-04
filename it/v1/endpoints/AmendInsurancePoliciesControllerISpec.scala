@@ -170,7 +170,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling 'Amend Insurance Policies' endpoint"should {
+  "Calling 'Amend Insurance Policies' endpoint" should {
     "return a 200 status code" when {
       "any valid request is made" in new Test {
 
@@ -834,6 +834,41 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
       )
 
+      val nonValidRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |   "lifeInsurance":[
+          |       {
+          |           "customerReference": "INPOLY123A",
+          |           "event": "Death of spouse",
+          |           "gainAmount": "no",
+          |           "taxPaid": true,
+          |           "yearsHeld": 15,
+          |           "yearsHeldSinceLastGain": 12,
+          |           "deficiencyRelief": 5000.99
+          |       }
+          |   ]
+          |}
+        """.stripMargin
+      )
+
+      val missingFieldRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |   "lifeInsurance":[
+          |       {
+          |           "customerReference": "INPOLY123A",
+          |           "event": "Death of spouse",
+          |           "gainAmount": 200.32,
+          |           "yearsHeld": 15,
+          |           "yearsHeldSinceLastGain": 12,
+          |           "deficiencyRelief": 5000.99
+          |       }
+          |   ]
+          |}
+        """.stripMargin
+      )
+
       val eventFormatError: MtdError = EventFormatError.copy(
           paths = Some(List(
             "/lifeInsurance/0/event",
@@ -850,8 +885,17 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ))
         )
 
+      val nonValidRequestBodyErrors: MtdError =  RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(Seq("/lifeInsurance/0/gainAmount"))
+      )
+
+      val missingFieldRequestBodyErrors: MtdError =  RuleIncorrectOrEmptyBodyError.copy(
+        paths = Some(Seq("/lifeInsurance/0/taxPaid"))
+      )
+
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: ErrorWrapper): Unit = {
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
+                                expectedBody: ErrorWrapper): Unit = {
           s"validation fails with ${expectedBody.error} error" in new Test {
 
             override val nino: String = requestNino
@@ -871,13 +915,16 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None) ),
+          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None) ),
+          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
           ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
           ("AA123456A", "2017-18", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), eventFormatError, None)),
-          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)))
+          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
+          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), nonValidRequestBodyErrors, None)),
+          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingFieldRequestBodyErrors, None))
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

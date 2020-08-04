@@ -517,8 +517,16 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       }
 
       "the submitted request body is not in the correct format" in {
+        val paths = List(
+          "/shareOption/0/dateOfOptionGrant", "/shareOption/0/taxableAmount", "/shareOption/0/employerName",
+          "/shareOption/0/noOfSharesAcquired", "/shareOption/0/optionNotExercisedButConsiderationReceived",
+          "/shareOption/0/schemePlanType", "/shareOption/0/classOfSharesAcquired", "/shareOption/0/exercisePrice",
+          "/shareOption/0/amountPaidForOption", "/shareOption/0/employersNicPaid", "/shareOption/0/marketValueOfSharesOnExcise",
+          "/shareOption/0/amountOfConsiderationReceived", "/shareOption/0/dateOfEvent", "/shareOption/0/profitOnOptionExercised"
+        )
+
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
       }
     }
 

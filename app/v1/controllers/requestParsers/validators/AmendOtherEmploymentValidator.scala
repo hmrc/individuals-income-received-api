@@ -16,10 +16,9 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages, _}
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment._
-import v1.controllers.requestParsers.validators.validations._
 
 class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
 
@@ -38,7 +37,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
 
   private def bodyFormatValidator: AmendOtherEmploymentRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendOtherEmploymentRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AmendOtherEmploymentRequestBody](data.body.json)
     )
   }
 
@@ -46,7 +45,7 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
 
     val requestBodyData = data.body.json.as[AmendOtherEmploymentRequestBody]
 
-    List(flattenErrors(
+    List(Validator.flattenErrors(
       List(
         requestBodyData.shareOption.map(_.zipWithIndex.flatMap {
           case (data, index) => validateShareOption(data, index)
@@ -176,18 +175,5 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
         path = s"/$fieldName/amountDeducted"
       )
     ).flatten
-  }
-
-
-  private def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
-    errors.flatten.groupBy(_.message).map {case (_, errors) =>
-
-      val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
-
-      errors.fold(baseError)(
-        (error1, error2) =>
-          error1.copy(paths = Some(error1.paths.getOrElse(Seq.empty[String]) ++ error2.paths.getOrElse(Seq.empty[String])))
-      )
-    }.toList
   }
 }

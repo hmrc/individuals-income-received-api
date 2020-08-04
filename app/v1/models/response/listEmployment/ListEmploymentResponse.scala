@@ -45,8 +45,8 @@ object ListEmploymentResponse extends HateoasLinks with JsonUtils{
     override def links(appConfig: AppConfig, data: ListEmploymentHateoasData): Seq[Link] = {
       import data._
       Seq(
-        listEmployment(appConfig, nino, taxYear, isSelf = true),
         addCustomEmployment(appConfig, nino, taxYear),
+        listEmployment(appConfig, nino, taxYear, isSelf = true)
       )
     }
   }

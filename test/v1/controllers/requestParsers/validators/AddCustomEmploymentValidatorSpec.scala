@@ -163,8 +163,10 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
       }
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect request body" in new Test {
+        val paths: Seq[String] = List("/employerRef", "/employerName", "/payrollId", "/cessationDate", "/startDate")
+
         validator.validate(AddCustomEmploymentRawData(validNino, validTaxYear, incorrectFormatRawBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
       }
 
       // body value error scenarios

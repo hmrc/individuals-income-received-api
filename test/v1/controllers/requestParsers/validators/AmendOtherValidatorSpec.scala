@@ -94,6 +94,14 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """.stripMargin
   )
 
+  private val missingMandatoryFieldJson: JsValue = Json.parse(
+    """
+      |{
+      |  "allOtherIncomeReceivedWhilstAbroad": [{}]
+      |}
+    """.stripMargin
+  )
+
   private val invalidCountryCodeRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -281,6 +289,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
   private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
   private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
   private val invalidTaxYearRawRequestBody = AnyContentAsJson(invalidTaxYearRequestBodyJson)
@@ -321,7 +330,6 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
       "a non-empty JSON body is submitted without any expected fields" in {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
@@ -329,7 +337,16 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
       "the submitted request body is not in the correct format" in {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/overseasIncomeAndGains/gainAmount"))))
+      }
+
+      "the submitted request body has missing mandatory fields" in {
+        validator.validate(AmendOtherRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
+            "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/0/foreignTaxCreditRelief",
+            "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
+          ))))
       }
     }
 

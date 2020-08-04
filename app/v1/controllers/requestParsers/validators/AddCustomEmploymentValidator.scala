@@ -16,8 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
-import javax.inject.Inject
 import config.AppConfig
+import javax.inject.Inject
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors._
@@ -47,7 +47,7 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
 
   private def bodyFormatValidator: AddCustomEmploymentRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AddCustomEmploymentRequestBody](data.body.json, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[AddCustomEmploymentRequestBody](data.body.json)
     )
   }
 
