@@ -20,13 +20,11 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.{MockDeleteCustomEmploymentRequestParser, MockDeleteRetrieveRequestParser}
+import v1.mocks.requestParsers.MockDeleteCustomEmploymentRequestParser
 import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
-import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -70,7 +68,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
-  "deleteController" should {
+  "deleteEmploymentFinancialDetailsController" should {
     "return NO_content" when {
       "happy path" in new Test {
 
@@ -112,6 +110,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST)
         )
 
