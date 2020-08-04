@@ -249,4 +249,25 @@ trait HateoasLinks {
       method = DELETE,
       rel = DELETE_CUSTOM_EMPLOYMENT
     )
+
+  def retrieveFinancialDetails(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",
+      method = GET,
+      rel = SELF
+    )
+
+  def amendFinancialDetails(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",
+      method = PUT,
+      rel = AMEND_EMPLOYMENT_FINANCIAL_DETAILS
+    )
+
+  def deleteFinancialDetails(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",
+      method = DELETE,
+      rel = DELETE_EMPLOYMENT_FINANCIAL_DETAILS
+    )
 }

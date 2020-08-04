@@ -46,5 +46,8 @@ object RelType {
   val AMEND_CUSTOM_EMPLOYMENT = "amend-custom-employment"
   val DELETE_CUSTOM_EMPLOYMENT = "delete-custom-employment"
 
+  val AMEND_EMPLOYMENT_FINANCIAL_DETAILS = "amend-employment-financial-details"
+  val DELETE_EMPLOYMENT_FINANCIAL_DETAILS = "delete-employment-financial-details"
+
   val SELF = "self"
 }
