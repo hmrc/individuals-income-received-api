@@ -16,10 +16,17 @@
 
 package v1.models.response.retrieveFinancialDetails
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Deductions(studentLoans: Option[StudentLoans])
 
 object Deductions {
-  implicit val format: OFormat[Deductions] = Json.format[Deductions]
+  val empty: Deductions = Deductions(None)
+
+  implicit val writes: OWrites[Deductions] = Json.writes[Deductions]
+
+  implicit val reads: Reads[Deductions] = (JsPath \ "studentLoans").readNullable[StudentLoans].map {
+    case StudentLoans.empty => None
+    case other => other
+  }.map(Deductions.apply)
 }

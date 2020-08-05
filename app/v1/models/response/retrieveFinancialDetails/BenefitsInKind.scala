@@ -48,5 +48,10 @@ case class BenefitsInKind(accommodation: Option[BigDecimal],
                           nonCash: Option[BigDecimal])
 
 object BenefitsInKind {
+  val empty: BenefitsInKind = BenefitsInKind(
+    None, None, None, None, None, None, None, None, None, None, None, None, None, None,
+    None, None, None, None, None, None, None, None, None, None, None, None, None, None
+  )
+
   implicit val format: OFormat[BenefitsInKind] = Json.format[BenefitsInKind]
 }

@@ -21,5 +21,6 @@ import play.api.libs.json.{Json, OFormat}
 case class StudentLoans(uglDeductionAmount: Option[BigDecimal], pglDeductionAmount: Option[BigDecimal])
 
 object StudentLoans {
+  val empty: StudentLoans = StudentLoans(None, None)
   implicit val format: OFormat[StudentLoans] = Json.format[StudentLoans]
 }
