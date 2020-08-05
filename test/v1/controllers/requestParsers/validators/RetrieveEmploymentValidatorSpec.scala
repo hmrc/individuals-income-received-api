@@ -24,7 +24,7 @@ import support.UnitSpec
 import utils.CurrentDateTime
 import v1.mocks.MockCurrentDateTime
 import v1.models.errors._
-import v1.models.request.retrieveCustomEmployment.RetrieveEmploymentRawData
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 
 class RetrieveEmploymentValidatorSpec extends UnitSpec {
 

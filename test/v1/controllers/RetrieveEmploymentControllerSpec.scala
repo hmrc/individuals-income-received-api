@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveEmploymentControllerFixture
+import v1.fixtures.RetrieveEmploymentControllerFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveEmploymentRequestParser
@@ -28,10 +28,10 @@ import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, 
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method._
-import v1.models.request.retrieveCustomEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 import v1.models.hateoas.RelType._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.retrieveCustomEmployment.{RetrieveCustomEmploymentHateoasData, RetrieveCustomEmploymentResponse}
+import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -46,7 +46,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   with HateoasLinks {
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
@@ -97,9 +97,9 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
       rel = IGNORE_EMPLOYMENT
     )
 
-  private val hmrcEnteredEmploymentResponseModel = RetrieveCustomEmploymentResponse(
-    employerRef = Some("123/abc"),
-    employerName = "Vera Lynn",
+  private val hmrcEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
+    employerRef = Some("123/AB56797"),
+    employerName = "Employer Name Ltd.",
     startDate = "2020-06-17",
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
@@ -107,17 +107,19 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     None
   )
 
-  private val customEnteredEmploymentResponseModel = RetrieveCustomEmploymentResponse(
-    employerRef = Some("123/abc"),
-    employerName = "Vera Lynn",
+  private val customEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
+    employerRef = Some("123/AB56797"),
+    employerName = "Employer Name Ltd.",
     startDate = "2020-06-17",
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     None,
-    submittedOn = Some("2020-06-17T10:53:38Z")
+    submittedOn = Some("2020-06-17")
   )
 
-  private val mtdResponse = RetrieveEmploymentControllerFixture.mtdResponseWithHateoas(nino, taxYear, employmentId)
+  private val mtdHmrcEnteredResponse = mtdHmrcEnteredResponseWithHateoas(nino, taxYear, employmentId)
+
+  private val mtdCustomEnteredEnteredResponse = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -137,28 +139,22 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
   "RetrieveEmploymentController" should {
     "return OK" when {
-      "happy path" in new Test {
+      "happy path for retrieving hmrc entered employment" in new Test {
 
         MockRetrieveCustomEmploymentRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveCustomEmploymentResponse]()
+          .retrieve[RetrieveEmploymentResponse]()
           .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentResponseModel))))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrieveCustomEmploymentResponse]()
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
-
         MockHateoasFactory
-          .wrap(hmrcEnteredEmploymentResponseModel, RetrieveCustomEmploymentHateoasData(nino, taxYear, employmentId))
+          .wrap(hmrcEnteredEmploymentResponseModel, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentResponseModel))
           .returns(HateoasWrapper(hmrcEnteredEmploymentResponseModel,
             Seq(
               listEmploymentLink,
               retrieveEmploymentLink,
-              amendCustomEmploymentLink,
-              deleteCustomEmploymentLink,
               ignoreEmploymentLink
             )
           ))
@@ -166,7 +162,37 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
+        contentAsJson(result) shouldBe mtdHmrcEnteredResponse
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+      }
+    }
+
+    "return OK" when {
+      "happy path for retrieving custom entered employment" in new Test {
+
+        MockRetrieveCustomEmploymentRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockDeleteRetrieveService
+          .retrieve[RetrieveEmploymentResponse]()
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
+
+        MockHateoasFactory
+          .wrap(customEnteredEmploymentResponseModel, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
+          .returns(HateoasWrapper(customEnteredEmploymentResponseModel,
+            Seq(
+              listEmploymentLink,
+              retrieveEmploymentLink,
+              amendCustomEmploymentLink,
+              deleteCustomEmploymentLink
+            )
+          ))
+
+        val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe mtdCustomEnteredEnteredResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -192,6 +218,8 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (EmploymentIdFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST)
         )
 
@@ -221,6 +249,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (EmploymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

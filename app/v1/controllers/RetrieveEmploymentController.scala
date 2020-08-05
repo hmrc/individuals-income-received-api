@@ -26,10 +26,9 @@ import utils.Logging
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
-import v1.models.request.retrieveCustomEmployment.RetrieveEmploymentRawData
-import v1.models.response.retrieveCustomEmployment.{RetrieveCustomEmploymentHateoasData, RetrieveCustomEmploymentResponse}
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
+import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,8 +43,8 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveCustomEmploymentController",
-      endpointName = "retrieveCustomEmployment"
+      controllerName = "RetrieveEmploymentController",
+      endpointName = "retrieveEmployment"
     )
 
   def retrieveEmployment(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
@@ -57,17 +56,17 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[RetrieveCustomEmploymentResponse] = DesUri[RetrieveCustomEmploymentResponse](
-        s"some-placeholder/foreign/$nino/${DesTaxYear.fromMtd(taxYear)}"
+      implicit val desUri: DesUri[RetrieveEmploymentResponse] = DesUri[RetrieveEmploymentResponse](
+        s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 
       val result =
         for {
           _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveCustomEmploymentResponse](desErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](desErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveCustomEmploymentHateoasData(nino, taxYear, employmentId))
+              .wrap(serviceResponse.responseData, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, serviceResponse.responseData))
               .asRight[ErrorWrapper])
         } yield {
           logger.info(
@@ -89,8 +88,8 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError|
+           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

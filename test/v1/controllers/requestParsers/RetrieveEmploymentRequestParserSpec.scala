@@ -20,7 +20,7 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockRetrieveEmploymentValidator
 import v1.models.errors._
-import v1.models.request.retrieveCustomEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 
 class RetrieveEmploymentRequestParserSpec extends UnitSpec {
 

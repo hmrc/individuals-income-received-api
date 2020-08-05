@@ -16,17 +16,17 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 object RetrieveEmploymentControllerFixture {
 
-  private val hmrcEnteredResponse = Json.parse(
+  val hmrcEnteredResponse: JsValue = Json.parse(
     """
       |{
       |    "employments": {
-      |            "employmentId": "00000000-0000-1000-8000-000000000000",
-      |            "employerName": "Vera Lynn",
-      |            "employerRef": "123/abc",
+      |            "employmentId": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+      |            "employerName": "Employer Name Ltd.",
+      |            "employerRef": "123/AB56797",
       |            "payrollId": "123345657",
       |            "startDate": "2020-06-17",
       |            "cessationDate": "2020-06-17",
@@ -36,25 +36,31 @@ object RetrieveEmploymentControllerFixture {
     """.stripMargin
   )
 
-  private val customEnteredResponse = Json.parse(
+  val customEnteredResponse: JsValue = Json.parse(
     """
       |{
       |    "customerDeclaredEmployments": {
-      |            "employmentId": "00000000-0000-1000-8000-000000000000",
-      |            "employerName": "Vera Lynn",
-      |            "employerRef": "123/abc",
+      |            "employmentId": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+      |            "employerName": "Employer Name Ltd.",
+      |            "employerRef": "123/AB56797",
       |            "payrollId": "123345657",
       |            "startDate": "2020-06-17",
       |            "cessationDate": "2020-06-17",
-      |            "submittedOn": "2020-06-17T10:53:38Z"
+      |            "submittedOn": "2020-06-17"
       |        }
       |}
     """.stripMargin
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = hmrcEnteredResponse.as[JsObject] ++ Json.parse(
+  def mtdHmrcEnteredResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json.parse(
     s"""
       |{
+      |   "employerRef": "123/AB56797",
+      |   "employerName": "Employer Name Ltd.",
+      |   "startDate": "2020-06-17",
+      |   "cessationDate": "2020-06-17",
+      |   "payrollId": "123345657",
+      |   "dateIgnored": "2020-06-17T10:53:38Z",
       |   "links":[
       |      {
       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
@@ -67,18 +73,47 @@ object RetrieveEmploymentControllerFixture {
       |         "rel": "self"
       |      },
       |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId/ignore",
       |         "method": "PUT",
-      |         "rel": "amend-custom-employment"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "method": "delete-custom-employment",
-      |         "rel": "self"
+      |         "rel": "ignore-employment"
       |      }
       |   ]
       |}
       |""".stripMargin
   ).as[JsObject]
 
+  def mtdCustomEnteredResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json.parse(
+    s"""
+       |{
+       |   "employerRef": "123/AB56797",
+       |   "employerName": "Employer Name Ltd.",
+       |   "startDate": "2020-06-17",
+       |   "cessationDate": "2020-06-17",
+       |   "payrollId": "123345657",
+       |   "submittedOn": "2020-06-17",
+       |   "links":[
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+       |         "method": "GET",
+       |         "rel": "list-employments"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "method": "GET",
+       |         "rel": "self"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "method": "PUT",
+       |         "rel": "amend-custom-employment"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "method": "DELETE",
+       |         "rel": "delete-custom-employment"
+       |      }
+       |   ]
+       |}
+       |""".stripMargin
+  ).as[JsObject]
 }

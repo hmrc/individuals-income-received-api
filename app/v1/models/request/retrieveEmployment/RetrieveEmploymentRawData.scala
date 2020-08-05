@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveCustomEmployment
+package v1.models.request.retrieveEmployment
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.request.RawData
 
-case class RetrieveEmploymentRequest(nino: Nino, taxYear: String, employmentId: String)
+case class RetrieveEmploymentRawData(nino: String, taxYear: String, employmentId: String) extends RawData

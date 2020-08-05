@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.RetrieveEmploymentValidator
 import v1.models.errors.MtdError
-import v1.models.request.retrieveCustomEmployment.RetrieveEmploymentRawData
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 
 class MockRetrieveEmploymentValidator extends MockFactory {
 

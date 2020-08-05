@@ -19,7 +19,7 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveEmploymentValidator
-import v1.models.request.retrieveCustomEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 
 class RetrieveEmploymentRequestParser @Inject()(val validator: RetrieveEmploymentValidator)
   extends RequestParser[RetrieveEmploymentRawData, RetrieveEmploymentRequest] {

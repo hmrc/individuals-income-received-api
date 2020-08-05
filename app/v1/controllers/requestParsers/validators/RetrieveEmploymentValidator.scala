@@ -21,7 +21,7 @@ import javax.inject.Inject
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
-import v1.models.request.retrieveCustomEmployment.RetrieveEmploymentRawData
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 
 class RetrieveEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
   extends Validator[RetrieveEmploymentRawData] {
