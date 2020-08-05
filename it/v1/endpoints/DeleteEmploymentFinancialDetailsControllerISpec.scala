@@ -34,7 +34,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpe
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val correlationId: String = "X-123"
 
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-data"
+    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
     def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
 
