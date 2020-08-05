@@ -16,7 +16,8 @@
 
 package v1.models.response.retrieveFinancialDetails
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Employment(employmentSequenceNumber: Option[String],
                       payrollId: Option[String],
@@ -34,5 +35,22 @@ case class Employment(employmentSequenceNumber: Option[String],
                       benefitsInKind: Option[BenefitsInKind])
 
 object Employment {
-  implicit val format: OFormat[Employment] = Json.format[Employment]
+  implicit val writes: OWrites[Employment] = Json.writes[Employment]
+
+  implicit val reads: Reads[Employment] = (
+    (JsPath \ "employmentSequenceNumber").readNullable[String] and
+      (JsPath \ "payrollId").readNullable[String] and
+      (JsPath \ "companyDirector").readNullable[Boolean] and
+      (JsPath \ "closeCompany").readNullable[Boolean] and
+      (JsPath \ "directorshipCeasedDate").readNullable[String] and
+      (JsPath \ "startDate").readNullable[String] and
+      (JsPath \ "cessationDate").readNullable[String] and
+      (JsPath \ "occPen").readNullable[Boolean] and
+      (JsPath \ "disguisedRemuneration").readNullable[Boolean] and
+      (JsPath \ "employer").read[Employer] and
+      (JsPath \ "pay").read[Pay] and
+      (JsPath \ "customerEstimatedPay").readNullable[CustomerEstimatedPay] and
+      (JsPath \ "deductions").readNullable[Deductions] and
+      (JsPath \ "benefitsInKind").readNullable[BenefitsInKind]
+    ) (Employment.apply _)
 }
