@@ -27,4 +27,6 @@ object SourceEnum {
   case object latest extends SourceEnum
 
   implicit val format: Format[SourceEnum] = Enums.format[SourceEnum]
+
+  val parser: PartialFunction[String, SourceEnum] = Enums.parser[SourceEnum]
 }
