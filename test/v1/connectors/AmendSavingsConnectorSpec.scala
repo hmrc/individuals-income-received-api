@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class AmendSavingsConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
-  val taxYear: String = "2019"
+  val taxYear: String = "2019-20"
 
   val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
     amountBeforeTax = None,

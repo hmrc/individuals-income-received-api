@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class AmendOtherEmploymentConnectorSpec extends ConnectorSpec {
 
   private val nino: String = "AA111111A"
-  private val taxYear: String = "2019"
+  private val taxYear: String = "2019-20"
 
   private val shareOptionModel = Seq(
     AmendShareOptionItem(
