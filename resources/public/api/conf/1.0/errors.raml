@@ -69,6 +69,17 @@ traits:
                 description: 'The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value.'
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
+  ruleTaxYearNotSupportedMinus4Years:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              rule_TaxYearNotSupportedMinus4Years:
+                description: "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value. The tax year must not exceed current tax year minus 4."
+                value:
+                  code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearRangeInvalid:
     responses:
       400:
@@ -355,3 +366,14 @@ traits:
                           description: 'The submission has been made before the tax year it relates to has ended.'
                           value:
                             code: RULE_TAX_YEAR_NOT_ENDED
+  formatSource:
+          responses:
+            400:
+              body:
+                application/json:
+                  type: types.errorResponse
+                  examples:
+                    formatSource:
+                      description: 'The format of the supplied source is not valid.'
+                      value:
+                        code: FORMAT_SOURCE

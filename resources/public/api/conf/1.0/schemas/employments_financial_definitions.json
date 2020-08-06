@@ -1,10 +1,175 @@
 {
   "definitions": {
-    "employment": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the Employment data was added. Must conform to the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:23Z"
+    },
+    "source": {
+      "type": "string",
+      "description": "Specifies the source of data returned. \"latest\" combines the HMRC and user-provided overridden values.",
+      "enum": ["hmrcHeld", "user", "latest"]
+    },
+    "customerAdded": {
+      "type": "string",
+      "description": "The date the employment data was added by the customer. Must conform to the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:23Z"
+    },
+    "dateIgnored": {
+      "type": "string",
+      "description": "The date the employment was ignored. Must conform to the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:23Z"
+    },
+    "retrieveEmployment": {
       "type": "object",
       "description": "Object containing the financial data relating to a single employment.",
       "properties": {
-        "pay": {"$ref": "#/definitions/pay"},
+        "employmentSequenceNumber": {
+          "type": "string",
+          "description": "A number that identifies the position of the employment in a sequence of employments for a given tax year.",
+          "example": "1",
+          "pattern": "^[1-9][0-9]{0,3}$"
+        },
+        "payrollId": {
+          "type": "string",
+          "description": "A unique identifier used by the employer to identify the employee.",
+          "example": "124214112412",
+          "pattern": "^[A-Za-z0-9.,\\-()/=!\"%&*;<>'+:\\?]{0,38}$"
+        },
+        "companyDirector": {
+          "type": "boolean",
+          "description": "Identifies the employee as a director when set to True.",
+          "example": "false"
+        },
+        "closeCompany": {
+          "type": "boolean",
+          "description": "Identifies if the employer is a close company.",
+          "example": "false"
+        },
+        "directorshipCeasedDate": {
+          "type": "string",
+          "description": "The date the directorship ended. Must conform to the format YYYY-MM-DD",
+          "example": "2020-07-01"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "The date the employment began. Must conform to the format YYYY-MM-DD",
+          "example": "2020-07-01"
+        },
+        "cessationDate": {
+          "type": "string",
+          "description": "The date the employment ended. Must conform to the format YYYY-MM-DD",
+          "example": "2020-07-01"
+        },
+        "occupationalPension": {
+          "type": "boolean",
+          "description": "Indicates that the employee pays into an occupational pension when set to True.",
+          "example": "false"
+        },
+        "disguisedRemuneration": {
+          "type": "boolean",
+          "description": "Indicates that the employee is declaring disguised remuneration when set to True.",
+          "example": "false"
+        },
+        "employer": {
+          "type": "object",
+          "description": "Object containing pay details for a single employment.",
+          "properties": {
+            "employerRef": {
+              "type": "string",
+              "description": "A unique identifier, the employer reference number.",
+              "example": "123/AB56797",
+              "pattern": "^[0-9]{3}\\/[^ ].{0,9}$"
+            },
+            "employerName": {
+              "type": "string",
+              "description": "The name of the employer the employee worked for.",
+              "example": "Employer Name Ltd.",
+              "pattern": "^.{0,74}$"
+            }
+          },
+          "required": [
+            "employerName"
+          ]
+        },
+        "pay": {
+          "type": "object",
+          "description": "Object containing pay details for a single employment.",
+          "properties": {
+            "taxablePayToDate": {"$ref": "#/definitions/taxablePayToDate"},
+            "totalTaxToDate": {"$ref": "#/definitions/totalTaxToDate"},
+            "tipsAndOtherPayments": {"$ref": "#/definitions/tipsAndOtherPayments"},
+            "payFrequency": {
+              "type": "string",
+              "description": "The payment frequency",
+              "example": "FORTNIGHTLY",
+              "enum": ["WEEKLY", "FORTNIGHTLY", "FOUR WEEKLY", "CALENDAR MONTHLY", "QUARTERLY", "BI-ANNUALLY", "ONE-OFF", "IRREGULAR", "ANNUALLY"]
+            },
+            "paymentDate": {
+              "type": "string",
+              "description": "The date of the latest payment. Must conform to the format YYYY-MM-DD",
+              "example": "2020-07-01"
+            },
+            "taxWeekNo": {
+              "type": "number",
+              "description": "The week count of the tax year. The value must be an integer between 1 and 56",
+              "example": "32",
+              "minimum": 1,
+              "maximum": 56,
+              "multipleOf": 1
+            },
+            "taxMonthNo": {
+              "type": "number",
+              "description": "The month count of the tax year. The value must be an integer between 1 and 12",
+              "example": "7",
+              "minimum": 1,
+              "maximum": 12,
+              "multipleOf": 1
+            }
+          },
+          "required": [
+            "taxablePayToDate",
+            "totalTaxToDate"
+          ]
+        },
+        "customerEstimatedPay": {
+          "type": "object",
+          "description": "Object containing estimated pay details for a single employment.",
+          "properties": {
+            "amount": {
+              "type": "number",
+              "description": "The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "example": "1500.99",
+              "minimum": 0,
+              "maximum": 99999999999.99,
+              "multipleOf": 0.01
+            }
+          }
+        },
+        "deductions": {"$ref": "#/definitions/deductions"},
+        "benefitsInKind": {"$ref": "#/definitions/benefitsInKind"}
+      },
+      "required": [
+        "employer", "pay"
+      ]
+    },
+    "amendEmployment": {
+      "type": "object",
+      "description": "Object containing the financial data relating to a single employment.",
+      "properties": {
+        "pay": {
+          "type": "object",
+          "description": "Object containing pay details for a single employment.",
+          "properties": {
+            "taxablePayToDate": {"$ref": "#/definitions/taxablePayToDate"},
+            "totalTaxToDate": {"$ref": "#/definitions/totalTaxToDate"},
+            "tipsAndOtherPayments": {"$ref": "#/definitions/tipsAndOtherPayments"}
+          },
+          "required": [
+            "taxablePayToDate",
+            "totalTaxToDate"
+          ]
+        },
         "deductions": {"$ref": "#/definitions/deductions"},
         "benefitsInKind": {"$ref": "#/definitions/benefitsInKind"}
       },
@@ -12,22 +177,9 @@
         "pay"
       ]
     },
-    "pay": {
-      "type": "object",
-      "description": "Object containing pay details for a single employment.",
-      "properties": {
-        "taxablePayToDate": {"$ref": "#/definitions/taxablePayToDate"},
-        "totalTaxToDate": {"$ref": "#/definitions/totalTaxToDate"},
-        "tipsAndOtherPayments": {"$ref": "#/definitions/tipsAndOtherPayments"}
-      },
-      "required": [
-        "taxablePayToDate",
-        "totalTaxToDate"
-      ]
-    },
     "deductions": {
       "type": "object",
-      "description": "Object containing details of deductions or a single employment.",
+      "description": "Object containing details of deductions for a single employment.",
       "properties": {
         "studentLoans": {"$ref": "#/definitions/studentLoans"}
       }
@@ -71,21 +223,24 @@
       "description": "The gross pay for this employment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "totalTaxToDate": {
       "type": "number",
       "description": "The amount of tax deducted for this employment. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": -99999999999.99,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "tipsAndOtherPayments": {
       "type": "number",
       "description": "The total amount of any tips and gratuities not paid by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "studentLoans": {
       "type": "object",
@@ -100,212 +255,242 @@
       "description": "The amount deducted for an undergraduate student loan. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "pglDeductionAmount": {
       "type": "number",
       "description": "The amount deducted for a postgraduate student loan. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "accommodation": {
       "type": "number",
       "description": "The value of accommodation costs provided by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "assets": {
       "type": "number",
       "description": "The value of any goods provided by the employer not exclusively used for work. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "assetsTransfer": {
       "type": "number",
       "description": "The value of any company assets signed over by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "beneficialLoan": {
       "type": "number",
       "description": "The amount of interest free or low interest loans given by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "car": {
       "type": "number",
       "description": "The cash equivalent of any cars made available by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "carFuel": {
       "type": "number",
       "description": "The amount paid for fuel when using company cars. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "educationalServices": {
       "type": "number",
       "description": "Scholarships or school fees paid by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "entertaining": {
       "type": "number",
       "description": "Entertainment costs paid by the employer either directly or reimbursed to the employee. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "expenses": {
       "type": "number",
       "description": "Expenses reimbursed by the employer to the employee. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "medicalInsurance": {
       "type": "number",
       "description": "The sum of insurance premiums paid by the employer for medical or dental insurance. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "telephone": {
       "type": "number",
       "description": "Telephone costs paid by the employer that are not exempt. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "service": {
       "type": "number",
       "description": "Services used by an employee and paid for by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "taxableExpenses": {
       "type": "number",
       "description": "Taxable expenses reimbursed by the employer to the employee. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "van": {
       "type": "number",
       "description": "The cash equivalent of any vans made available by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "vanFuel": {
       "type": "number",
       "description": "The amount paid by the employer for fuel costs when using company vans. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "mileage": {
       "type": "number",
-      "description": "The mileage amount paid over HMRC's approved rate by the employer for use of employees' own car for work. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "description": "The mileage amount paid over HMRC's approved rate by the employer for use of employee's own car for work. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "nonQualifyingRelocationExpenses": {
       "type": "number",
       "description": "Other costs involved in relocation paid for directly by the employer or reimbursed to the employee. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "nurseryPlaces": {
       "type": "number",
       "description": "Childcare costs paid by the employer or voucher or commercial childcare costs above the exempt limit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "otherItems": {
       "type": "number",
       "description": "The value of any other benefits. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "paymentsOnEmployeesBehalf": {
       "type": "number",
       "description": "Other costs incurred by the employee paid for by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "personalIncidentalExpenses": {
       "type": "number",
       "description": "Incidental (non-business) expenses incurred by an employee while travelling on business. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "qualifyingRelocationExpenses": {
       "type": "number",
       "description": "Employer paid costs associated with employee relocation including bridging loans. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "employerProvidedProfessionalSubscriptions": {
       "type": "number",
       "description": "Professional fees and subscriptions paid for by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "employerProvidedServices": {
       "type": "number",
       "description": "The value of services provided by the employer. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "incomeTaxPaidByDirector": {
       "type": "number",
       "description": "Non PAYE Income Tax for directors deducted from the employer by HMRC. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "travelAndSubsistence": {
       "type": "number",
       "description": "The cost of any travel and subsistence (accommodation, meals and so on) paid for by the employer, that is not exempt. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "vouchersAndCreditCards": {
       "type": "number",
       "description": "The value of vouchers given by the employer and the expenditure of any employer provided credit cards. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
     "nonCash": {
       "type": "number",
       "description": "The value of any other non-cash benefits paid to the employee. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
       "example": "1024.99",
       "minimum": 0,
-      "maximum:": 99999999999.99
+      "maximum:": 99999999999.99,
+      "multipleOf": 0.01
     },
-    "linksForAmend": {
+    "links": {
       "type": "array",
       "items": {
         "type": "object",
