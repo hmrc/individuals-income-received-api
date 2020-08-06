@@ -26,7 +26,7 @@ import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, Am
 
 import scala.concurrent.Future
 
-class AmendEmploymentFinancialDetailsConnectorSpec extends ConnectorSpec {
+class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
 
   private val nino: String = "AA111111A"
   private val taxYear: String = "2019-20"
@@ -92,7 +92,7 @@ class AmendEmploymentFinancialDetailsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: AmendEmploymentFinancialDetailsConnector = new AmendEmploymentFinancialDetailsConnector(
+    val connector: AmendFinancialDetailsConnector = new AmendFinancialDetailsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -102,8 +102,8 @@ class AmendEmploymentFinancialDetailsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "AmendEmploymentFinancialDetailsConnector" should {
-    "return a 204" when {
+  "AmendFinancialDetailsConnector" should {
+    "return a 204 status for a success scenario" when {
       "a valid request is submitted" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
@@ -114,7 +114,7 @@ class AmendEmploymentFinancialDetailsConnectorSpec extends ConnectorSpec {
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
 
-        await(connector.amendEmploymentFinancialDetails(request)) shouldBe outcome
+        await(connector.amendFinancialDetails(request)) shouldBe outcome
       }
     }
   }

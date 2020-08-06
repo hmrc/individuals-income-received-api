@@ -18,7 +18,7 @@ package v1.services
 
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockEmploymentFinancialDetailsConnector
+import v1.mocks.connectors.MockAmendFinancialDetailsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
@@ -27,7 +27,7 @@ import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, A
 
 import scala.concurrent.Future
 
-class AmendEmploymentFinancialDetailsServiceSpec extends ServiceSpec {
+class AmendFinancialDetailsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
@@ -93,25 +93,25 @@ class AmendEmploymentFinancialDetailsServiceSpec extends ServiceSpec {
 
   val request = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
 
-  trait Test extends MockEmploymentFinancialDetailsConnector {
+  trait Test extends MockAmendFinancialDetailsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: AmendEmploymentFinancialDetailsService = new AmendEmploymentFinancialDetailsService(
-      connector = mockAmendEmploymentFinancialDetailsConnector
+    val service: AmendFinancialDetailsService = new AmendFinancialDetailsService(
+      connector = mockAmendFinancialDetailsConnector
     )
   }
 
-  "EmploymentFinancialDetailsService" when {
-    "amendEmploymentFinancialDetails" must {
+  "AmendFinancialDetailsService" when {
+    "amendFinancialDetails" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
 
 
-        MockEmploymentFinancialDetailsConnector.amendEmploymentFinancialDetails(request)
+        MockAmendFinancialDetailsConnector.amendFinancialDetails(request)
           .returns(Future.successful(outcome))
 
-        await(service.amendEmploymentFinancialDetails(request)) shouldBe outcome
+        await(service.amendFinancialDetails(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -119,10 +119,10 @@ class AmendEmploymentFinancialDetailsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockEmploymentFinancialDetailsConnector.amendEmploymentFinancialDetails(request)
+            MockAmendFinancialDetailsConnector.amendFinancialDetails(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendEmploymentFinancialDetails(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input = Seq(

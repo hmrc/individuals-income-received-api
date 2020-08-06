@@ -24,10 +24,10 @@ import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendEmploymentFinancialDetailsConnector @Inject()(val http: HttpClient,
-                                                         val appConfig: AppConfig) extends BaseDesConnector {
+class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
+                                               val appConfig: AppConfig) extends BaseDesConnector {
 
-  def amendEmploymentFinancialDetails(request: AmendFinancialDetailsRequest)(
+  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[Unit]] = {
 
