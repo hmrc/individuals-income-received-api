@@ -16,8 +16,55 @@
 
 package v1.models.response.retrieveFinancialDetails
 
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class StudentLoansSpec extends UnitSpec {
+  val json: JsValue = Json.parse(
+    """
+      |{
+      |  "uglDeductionAmount": 200.33,
+      |  "pglDeductionAmount": 300.33
+      |}
+    """.stripMargin
+  )
 
+  val model: StudentLoans = StudentLoans(
+    uglDeductionAmount = Some(200.33),
+    pglDeductionAmount = Some(300.33)
+  )
+
+  "StudentLoans" when {
+    "read from valid JSON" should {
+      "produce the expected 'StudentLoans' object" in{
+        json.as[StudentLoans] shouldBe model
+      }
+    }
+
+    "read from empty JSON" should {
+      "produce an empty 'StudentLoans' object" in{
+        JsObject.empty.as[StudentLoans] shouldBe StudentLoans.empty
+      }
+    }
+
+    "read from invalid JSON" should {
+      "produce a JsError" in {
+        val invalidJson: JsValue = Json.parse(
+          """
+            |{
+            |  "uglDeductionAmount": true
+            |}
+          """.stripMargin
+        )
+
+        invalidJson.validate[StudentLoans] shouldBe a[JsError]
+      }
+    }
+
+    "written to JSON" should {
+      "produce the expected JsObject" in {
+        Json.toJson(model) shouldBe json
+      }
+    }
+  }
 }

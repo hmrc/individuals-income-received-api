@@ -16,8 +16,49 @@
 
 package v1.models.response.retrieveFinancialDetails
 
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class EmployerSpec extends UnitSpec {
+  val json: JsValue = Json.parse(
+    """
+      |{
+      |  "employerRef": "anEmployerReference",
+      |  "employerName": "Butlins Ltd"
+      |}
+    """.stripMargin
+  )
 
+  val model: Employer = Employer(
+    employerRef = Some("anEmployerReference"),
+    employerName = "Butlins Ltd"
+  )
+
+  "Employer" when {
+    "read from valid JSON" should {
+      "produce the expected 'Employer' object" in {
+        json.as[Employer] shouldBe model
+      }
+    }
+
+    "read from invalid JSON" should {
+      "produce a JsError" in {
+        val invalidJson: JsValue = Json.parse(
+          """
+            |{
+            |  "employerRef": "anEmployerReference"
+            |}
+          """.stripMargin
+        )
+
+        invalidJson.validate[Employer] shouldBe a[JsError]
+      }
+    }
+
+    "written to JSON" should {
+      "produce the expected JsObject" in {
+        Json.toJson(model) shouldBe json
+      }
+    }
+  }
 }

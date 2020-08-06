@@ -50,15 +50,15 @@ object Employment {
       (JsPath \ "employer").read[Employer] and
       (JsPath \ "pay").read[Pay] and
       (JsPath \ "customerEstimatedPay").readNullable[CustomerEstimatedPay].map {
-        case CustomerEstimatedPay.empty => None
+        case Some(CustomerEstimatedPay.empty) => None
         case other => other
       } and
       (JsPath \ "deductions").readNullable[Deductions].map {
-        case Deductions.empty => None
+        case Some(Deductions.empty) => None
         case other => other
       } and
       (JsPath \ "benefitsInKind").readNullable[BenefitsInKind].map {
-        case BenefitsInKind.empty => None
+        case Some(BenefitsInKind.empty) => None
         case other => other
       }
     ) (Employment.apply _)
