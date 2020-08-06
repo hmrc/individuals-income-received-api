@@ -284,7 +284,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
 
       // body value error scenarios
-      "return return ValueFormatError error for incorrect field formats" in new Test {
+      "return ValueFormatError error for incorrect field formats" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, allInvalidValueRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
