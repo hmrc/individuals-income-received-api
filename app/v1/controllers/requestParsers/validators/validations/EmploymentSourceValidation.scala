@@ -16,11 +16,11 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.domain.MtdSourceEnum
 import v1.models.errors.{MtdError, SourceFormatError}
-import v1.models.request.retrieveFinancialDetails.SourceEnum
 
 object EmploymentSourceValidation {
-  private val sourceEnums = List(SourceEnum.latest, SourceEnum.hmrcHeld, SourceEnum.user).map(_.toString)
+  private val sourceEnums = List(MtdSourceEnum.latest, MtdSourceEnum.hmrcHeld, MtdSourceEnum.user).map(_.toString)
 
   def validate(source: String): List[MtdError] = {
     if (sourceEnums.contains(source)) NoValidationErrors else List(SourceFormatError)

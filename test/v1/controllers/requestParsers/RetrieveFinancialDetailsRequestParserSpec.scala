@@ -19,8 +19,9 @@ package v1.controllers.requestParsers
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockRetrieveFinancialDetailsValidator
+import v1.models.domain.MtdSourceEnum
 import v1.models.errors._
-import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest, SourceEnum}
+import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
 
 class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
 
@@ -48,7 +49,7 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
         MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData).returns(Nil)
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
-          Right(RetrieveFinancialDetailsRequest(Nino(nino), taxYear, employmentId, SourceEnum.latest))
+          Right(RetrieveFinancialDetailsRequest(Nino(nino), taxYear, employmentId, MtdSourceEnum.latest))
       }
     }
 

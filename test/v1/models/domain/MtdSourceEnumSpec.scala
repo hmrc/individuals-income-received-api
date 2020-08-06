@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveFinancialDetails
+package v1.models.domain
 
-import play.api.libs.json.Format
-import utils.enums.Enums
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
 
-sealed trait SourceEnum
+class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
-object SourceEnum {
-  case object hmrcHeld extends SourceEnum
-  case object user extends SourceEnum
-  case object latest extends SourceEnum
+  testRoundTrip[MtdSourceEnum](
+    ("hmrcHeld", MtdSourceEnum.hmrcHeld),
+    ("user", MtdSourceEnum.user),
+    ("latest", MtdSourceEnum.latest),
+  )
 
-  implicit val format: Format[SourceEnum] = Enums.format[SourceEnum]
-
-  val parser: PartialFunction[String, SourceEnum] = Enums.parser[SourceEnum]
+  "toDesViewString" must {
+    "return the expected string" in {
+      MtdSourceEnum.hmrcHeld.toDesViewString shouldBe "HMRC-HELD"
+      MtdSourceEnum.latest.toDesViewString shouldBe "LATEST"
+      MtdSourceEnum.user.toDesViewString shouldBe "CUSTOMER"
+    }
+  }
 }

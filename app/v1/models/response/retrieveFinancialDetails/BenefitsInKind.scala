@@ -123,7 +123,7 @@ object BenefitsInKind {
     )
   }
 
-  private def boop(o: BenefitsInKind): (BenefitsInKindPart1, BenefitsInKindPart2) = {
+  private def splitBenefitsObject(o: BenefitsInKind): (BenefitsInKindPart1, BenefitsInKindPart2) = {
     import o._
 
     (
@@ -163,8 +163,8 @@ object BenefitsInKind {
   }
 
   implicit val writes: OWrites[BenefitsInKind] = (o: BenefitsInKind) => {
-    val beep = BenefitsInKind.boop(o)
-    Json.toJsObject(beep._1)(formatPt1) ++ Json.toJsObject(beep._2)(formatPt2)
+    val splitData = BenefitsInKind.splitBenefitsObject(o)
+    Json.toJsObject(splitData._1)(formatPt1) ++ Json.toJsObject(splitData._2)(formatPt2)
   }
 
   implicit val reads: Reads[BenefitsInKind] = (

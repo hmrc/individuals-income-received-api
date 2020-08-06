@@ -16,14 +16,24 @@
 
 package v1.models.response.retrieveFinancialDetails
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.domain.MtdSourceEnum
 
 case class RetrieveFinancialDetailsResponse(submittedOn: String,
-                                            source: Option[String],
+                                            source: Option[MtdSourceEnum],
                                             customerAdded: Option[String],
                                             dateIgnored: Option[String],
                                             employment: Employment)
 
 object RetrieveFinancialDetailsResponse {
-  implicit val format: OFormat[RetrieveFinancialDetailsResponse] = Json.format[RetrieveFinancialDetailsResponse]
+  implicit val writes: OWrites[RetrieveFinancialDetailsResponse] = Json.writes[RetrieveFinancialDetailsResponse]
+
+  implicit val reads: Reads[RetrieveFinancialDetailsResponse] = (
+    (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "source").readNullable[DesSourceEnum].map(_.map(_.toMtdEnum)) and
+      (JsPath \ "customerAdded").readNullable[String] and
+      (JsPath \ "dateIgnored").readNullable[String] and
+      (JsPath \ "employment").read[Employment]
+  ) (RetrieveFinancialDetailsResponse.apply _)
 }
