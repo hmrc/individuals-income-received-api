@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveFinancialDetails
+package v1.models.response.retrieveFinancialDetails
 
-import play.api.libs.json.Format
-import utils.enums.Enums
+import play.api.libs.json.{Json, OFormat}
 
-sealed trait SourceEnum
+case class Pay(taxablePayToDate: BigDecimal,
+               totalTaxToDate: BigDecimal,
+               tipsAndOtherPayments: Option[BigDecimal],
+               payFrequency: Option[String],
+               paymentDate: Option[String],
+               taxWeekNo: Option[Int],
+               taxMonthNo: Option[Int])
 
-object SourceEnum {
-  case object hmrcHeld extends SourceEnum
-  case object user extends SourceEnum
-  case object latest extends SourceEnum
-
-  implicit val format: Format[SourceEnum] = Enums.format[SourceEnum]
-
-  val parser: PartialFunction[String, SourceEnum] = Enums.parser[SourceEnum]
+object Pay {
+  implicit val format: OFormat[Pay] = Json.format[Pay]
 }

@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveFinancialDetails
+package v1.models.response.retrieveFinancialDetails
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-class SourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+case class Deductions(studentLoans: Option[StudentLoans])
 
-  testRoundTrip[SourceEnum](
-    ("hmrcHeld", SourceEnum.hmrcHeld),
-    ("user", SourceEnum.user),
-    ("latest", SourceEnum.latest),
-  )
+object Deductions {
+  val empty: Deductions = Deductions(None)
+
+  implicit val writes: OWrites[Deductions] = Json.writes[Deductions]
+
+  implicit val reads: Reads[Deductions] = (JsPath \ "studentLoans").readNullable[StudentLoans].map {
+    case Some(StudentLoans.empty) => None
+    case other => other
+  }.map(Deductions.apply)
 }

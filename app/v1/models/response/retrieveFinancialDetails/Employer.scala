@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.response.retrieveFinancialDetails
 
-import v1.models.domain.MtdSourceEnum
-import v1.models.errors.{MtdError, SourceFormatError}
+import play.api.libs.json.{Json, OFormat}
 
-object EmploymentSourceValidation {
-  private val sourceEnums = List(MtdSourceEnum.latest, MtdSourceEnum.hmrcHeld, MtdSourceEnum.user).map(_.toString)
+case class Employer(employerRef: Option[String], employerName: String)
 
-  def validate(source: String): List[MtdError] = {
-    if (sourceEnums.contains(source)) NoValidationErrors else List(SourceFormatError)
-  }
+object Employer {
+  implicit val format: OFormat[Employer] = Json.format[Employer]
 }

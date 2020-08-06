@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.domain
 
-import v1.models.domain.MtdSourceEnum
-import v1.models.errors.{MtdError, SourceFormatError}
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
 
-object EmploymentSourceValidation {
-  private val sourceEnums = List(MtdSourceEnum.latest, MtdSourceEnum.hmrcHeld, MtdSourceEnum.user).map(_.toString)
+class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  def validate(source: String): List[MtdError] = {
-    if (sourceEnums.contains(source)) NoValidationErrors else List(SourceFormatError)
+  testRoundTrip[MtdSourceEnum](
+    ("hmrcHeld", MtdSourceEnum.hmrcHeld),
+    ("user", MtdSourceEnum.user),
+    ("latest", MtdSourceEnum.latest),
+  )
+
+  "toDesViewString" must {
+    "return the expected string" in {
+      MtdSourceEnum.hmrcHeld.toDesViewString shouldBe "HMRC-HELD"
+      MtdSourceEnum.latest.toDesViewString shouldBe "LATEST"
+      MtdSourceEnum.user.toDesViewString shouldBe "CUSTOMER"
+    }
   }
 }
