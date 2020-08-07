@@ -49,6 +49,7 @@ object SchemePlanTypeFormatError extends MtdError("FORMAT_SCHEME_PLAN_TYPE","The
 object PayrollIdFormatError extends MtdError("FORMAT_PAYROLL_ID", "The provided payroll ID is invalid")
 object StartDateFormatError extends MtdError("FORMAT_START_DATE", "The provided start date is invalid")
 object CessationDateFormatError extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
+object SourceFormatError extends MtdError("FORMAT_SOURCE", "The provided source is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError extends

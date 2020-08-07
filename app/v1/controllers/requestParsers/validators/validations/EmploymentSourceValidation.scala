@@ -16,10 +16,13 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The field should be between 0 and 99999999999.99"
-  val ZERO_MINIMUM_INTEGER_INCLUSIVE = "The field should be between 0 and 99"
-  val DECIMAL_MINIMUM_INCLUSIVE = "The field should be between 0.01 and 99999999999.99"
-  val ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE = "The field should be 0 or more"
-  val BIG_DECIMAL_MINIMUM_INCLUSIVE = "The field should be between -99999999999.99 and 99999999999.99"
+import v1.models.domain.MtdSourceEnum
+import v1.models.errors.{MtdError, SourceFormatError}
+
+object EmploymentSourceValidation {
+  private val sourceEnums = List(MtdSourceEnum.latest, MtdSourceEnum.hmrcHeld, MtdSourceEnum.user).map(_.toString)
+
+  def validate(source: String): List[MtdError] = {
+    if (sourceEnums.contains(source)) NoValidationErrors else List(SourceFormatError)
+  }
 }

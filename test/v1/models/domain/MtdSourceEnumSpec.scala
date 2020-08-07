@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.domain
 
-protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The field should be between 0 and 99999999999.99"
-  val ZERO_MINIMUM_INTEGER_INCLUSIVE = "The field should be between 0 and 99"
-  val DECIMAL_MINIMUM_INCLUSIVE = "The field should be between 0.01 and 99999999999.99"
-  val ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE = "The field should be 0 or more"
-  val BIG_DECIMAL_MINIMUM_INCLUSIVE = "The field should be between -99999999999.99 and 99999999999.99"
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+
+class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+
+  testRoundTrip[MtdSourceEnum](
+    ("hmrcHeld", MtdSourceEnum.hmrcHeld),
+    ("user", MtdSourceEnum.user),
+    ("latest", MtdSourceEnum.latest),
+  )
+
+  "toDesViewString" must {
+    "return the expected string" in {
+      MtdSourceEnum.hmrcHeld.toDesViewString shouldBe "HMRC-HELD"
+      MtdSourceEnum.latest.toDesViewString shouldBe "LATEST"
+      MtdSourceEnum.user.toDesViewString shouldBe "CUSTOMER"
+    }
+  }
 }

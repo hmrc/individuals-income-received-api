@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveFinancialDetails
+package v1.models.response.retrieveFinancialDetails
 
-import play.api.libs.json.Format
-import utils.enums.Enums
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-sealed trait SourceEnum
+case class Deductions(studentLoans: Option[StudentLoans])
 
-object SourceEnum {
-  case object hmrcHeld extends SourceEnum
-  case object user extends SourceEnum
-  case object latest extends SourceEnum
+object Deductions {
+  val empty: Deductions = Deductions(None)
 
-  implicit val format: Format[SourceEnum] = Enums.format[SourceEnum]
+  implicit val writes: OWrites[Deductions] = Json.writes[Deductions]
+
+  implicit val reads: Reads[Deductions] = (JsPath \ "studentLoans").readNullable[StudentLoans].map {
+    case Some(StudentLoans.empty) => None
+    case other => other
+  }.map(Deductions.apply)
 }

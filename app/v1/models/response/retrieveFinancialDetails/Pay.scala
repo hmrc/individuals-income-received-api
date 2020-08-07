@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveFinancialDetails
+package v1.models.response.retrieveFinancialDetails
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import play.api.libs.json.{Json, OFormat}
 
-class SourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+case class Pay(taxablePayToDate: BigDecimal,
+               totalTaxToDate: BigDecimal,
+               tipsAndOtherPayments: Option[BigDecimal],
+               payFrequency: Option[String],
+               paymentDate: Option[String],
+               taxWeekNo: Option[Int],
+               taxMonthNo: Option[Int])
 
-  testRoundTrip[SourceEnum](
-    ("hmrcHeld", SourceEnum.hmrcHeld),
-    ("user", SourceEnum.user),
-    ("latest", SourceEnum.latest),
-  )
+object Pay {
+  implicit val format: OFormat[Pay] = Json.format[Pay]
 }

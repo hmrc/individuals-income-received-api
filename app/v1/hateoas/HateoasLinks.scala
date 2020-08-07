@@ -228,7 +228,7 @@ trait HateoasLinks {
       rel = IGNORE_EMPLOYMENT
     )
 
-  //Custom Employment
+  //Employment
   def addCustomEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = employmentUri(appConfig, nino, taxYear),
@@ -250,6 +250,7 @@ trait HateoasLinks {
       rel = DELETE_CUSTOM_EMPLOYMENT
     )
 
+  //Financial Details
   def retrieveFinancialDetails(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
     Link(
       href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",

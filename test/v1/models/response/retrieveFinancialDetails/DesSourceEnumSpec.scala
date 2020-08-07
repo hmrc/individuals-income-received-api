@@ -14,9 +14,25 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveFinancialDetails
+package v1.models.response.retrieveFinancialDetails
 
-import uk.gov.hmrc.domain.Nino
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
 import v1.models.domain.MtdSourceEnum
 
-case class RetrieveFinancialDetailsRequest(nino: Nino, taxYear: String, employmentId: String, source: MtdSourceEnum)
+class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+
+  testRoundTrip[DesSourceEnum](
+    ("HMRC HELD", DesSourceEnum.`HMRC HELD`),
+    ("CUSTOMER", DesSourceEnum.CUSTOMER),
+    ("LATEST", DesSourceEnum.LATEST),
+  )
+
+  "toMtdEnum" must {
+    "return the expected 'MtdSourceEnum' object" in {
+      DesSourceEnum.`HMRC HELD`.toMtdEnum shouldBe MtdSourceEnum.hmrcHeld
+      DesSourceEnum.LATEST.toMtdEnum shouldBe MtdSourceEnum.latest
+      DesSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
+    }
+  }
+}

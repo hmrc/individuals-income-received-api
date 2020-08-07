@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.response.retrieveFinancialDetails
 
-protected[validators] trait ValueFormatErrorMessages {
-  val ZERO_MINIMUM_INCLUSIVE = "The field should be between 0 and 99999999999.99"
-  val ZERO_MINIMUM_INTEGER_INCLUSIVE = "The field should be between 0 and 99"
-  val DECIMAL_MINIMUM_INCLUSIVE = "The field should be between 0.01 and 99999999999.99"
-  val ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE = "The field should be 0 or more"
-  val BIG_DECIMAL_MINIMUM_INCLUSIVE = "The field should be between -99999999999.99 and 99999999999.99"
+import play.api.libs.json.{Json, OFormat}
+
+case class CustomerEstimatedPay(amount: Option[BigDecimal])
+
+object CustomerEstimatedPay {
+  val empty: CustomerEstimatedPay = CustomerEstimatedPay(None)
+  implicit val format: OFormat[CustomerEstimatedPay] = Json.format[CustomerEstimatedPay]
 }
