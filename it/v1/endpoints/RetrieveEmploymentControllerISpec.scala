@@ -33,6 +33,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val desEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
     val correlationId: String = "X-123"
 
     val desHmrcEnteredResponse: JsValue = hmrcEnteredResponse
@@ -57,11 +58,13 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve hmrc entered employment" in new Test {
 
+        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, OK, desHmrcEnteredResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -74,11 +77,13 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve custom entered employment" in new Test {
 
+        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, OK, desCustomEnteredResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desCustomEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
