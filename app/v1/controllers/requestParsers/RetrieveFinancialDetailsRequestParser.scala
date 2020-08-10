@@ -26,5 +26,8 @@ class RetrieveFinancialDetailsRequestParser @Inject()(val validator: RetrieveFin
   extends RequestParser[RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest] {
 
   override protected def requestFor(data: RetrieveFinancialDetailsRawData): RetrieveFinancialDetailsRequest =
-    RetrieveFinancialDetailsRequest(Nino(data.nino), data.taxYear, data.employmentId, data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+    RetrieveFinancialDetailsRequest(Nino(data.nino),
+                                    data.taxYear,
+                                    data.employmentId,
+                                    data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
 }

@@ -51,6 +51,13 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
           Right(RetrieveFinancialDetailsRequest(Nino(nino), taxYear, employmentId, MtdSourceEnum.latest))
       }
+
+      "valid request data with out source is supplied" in new Test {
+        MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData.copy(source = None)).returns(Nil)
+
+        parser.parseRequest(retrieveFinancialDetailsRawData.copy(source = None)) shouldBe
+          Right(RetrieveFinancialDetailsRequest(Nino(nino), taxYear, employmentId, MtdSourceEnum.latest))
+      }
     }
 
     "return an ErrorWrapper" when {
