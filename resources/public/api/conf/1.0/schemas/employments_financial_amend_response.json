@@ -4,6 +4,6 @@
   "description": "Amend Employment Financial Details Response",
   "type": "object",
   "properties": {
-    "links": {"$ref": "employments_financial_definitions.json#/definitions/linksForAmend"}
+    "links": {"$ref": "employments_financial_definitions.json#/definitions/links"}
   }
 }

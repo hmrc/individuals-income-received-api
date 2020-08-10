@@ -4,10 +4,9 @@ uses:
   types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
 traits:
-  nameOfParameter:
+  source:
     queryParameters:
-      nameOfParameter:
-        description: "desc"
-        example: "example"
+      source:
+        description: "Specifies the source of data to be returned. Defaults to \"latest\" if not provided, which combines the HMRC and user-provided overridden values. <br>Limited to the following possible values: <b><ul><li>`hmrcHeld`<li>`user`<li>`latest`</b>"
         required: false
         
