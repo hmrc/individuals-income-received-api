@@ -61,7 +61,7 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
       )
 
       implicit val desUri: DesUri[RetrieveFinancialDetailsResponse] = DesUri[RetrieveFinancialDetailsResponse](
-        s"some-placeholder/employments/$nino/$taxYear/$employmentId?view" +
+        s"income-tax/income/employments/$nino/$taxYear/$employmentId?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
 
