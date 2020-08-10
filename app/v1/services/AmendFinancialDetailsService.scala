@@ -21,7 +21,7 @@ import cats.implicits._
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendEmploymentFinancialDetailsConnector
+import v1.connectors.AmendFinancialDetailsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors.{DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, TaxYearFormatError}
 import v1.models.outcomes.ResponseWrapper
@@ -30,15 +30,15 @@ import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendEmploymentFinancialDetailsService @Inject()(connector: AmendEmploymentFinancialDetailsConnector) extends DesResponseMappingSupport with Logging {
+class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsConnector) extends DesResponseMappingSupport with Logging {
 
-  def amendEmploymentFinancialDetails(request: AmendFinancialDetailsRequest)(
+  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendEmploymentFinancialDetails(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
