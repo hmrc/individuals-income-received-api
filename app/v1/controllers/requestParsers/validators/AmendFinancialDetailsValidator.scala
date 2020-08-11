@@ -43,7 +43,8 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
 
   private def parameterRuleValidation: AmendFinancialDetailsRawData => List[List[MtdError]] = (data: AmendFinancialDetailsRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
