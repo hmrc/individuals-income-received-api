@@ -119,7 +119,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
   private val mtdHmrcEnteredResponse = mtdHmrcEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
-  private val mtdCustomEnteredEnteredResponse = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
+  private val mtdCustomEnteredResponse = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -192,7 +192,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdCustomEnteredEnteredResponse
+        contentAsJson(result) shouldBe mtdCustomEnteredResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
