@@ -26,11 +26,13 @@ trait DesResponseMappingSupport {
   self: Logging =>
 
   final def validateRetrieveResponse[T: Writes](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
-    if (Json.toJson(desResponseWrapper.responseData) == JsObject.empty)
+    if (Json.toJson(desResponseWrapper.responseData) == JsObject.empty) {
       Left(ErrorWrapper(Some(desResponseWrapper.correlationId), NotFoundError, None))
-    else
+    }
+    else {
       Right(desResponseWrapper)
     }
+  }
 
   final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DesError])(
     implicit logContext: EndpointLogContext): ErrorWrapper = {
