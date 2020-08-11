@@ -33,5 +33,6 @@ POST       /employments/:nino/:taxYear                                      v1.c
 GET        /employments/:nino/:taxYear                                      v1.controllers.ListEmploymentsController.listEmployments(nino: String, taxYear: String)
 PUT        /employments/:nino/:taxYear/:employmentId/ignore                 v1.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
 
+PUT        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.AmendFinancialDetailsController.amendFinancialDetails(nino: String, taxYear: String, employmentId: String)
 DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.DeleteEmploymentFinancialDetailsController.deleteEmploymentFinancialDetails(nino: String, taxYear: String, employmentId: String)
 GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])

@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{AmendEmploymentFinancialDetailsConnector, DesOutcome}
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
+import v1.services.AmendFinancialDetailsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockEmploymentFinancialDetailsConnector extends MockFactory{
+trait MockAmendFinancialDetailsService extends MockFactory {
 
-  val mockAmendEmploymentFinancialDetailsConnector: AmendEmploymentFinancialDetailsConnector = mock[AmendEmploymentFinancialDetailsConnector]
+  val mockAmendFinancialDetailsService : AmendFinancialDetailsService = mock[AmendFinancialDetailsService]
 
-  object MockEmploymentFinancialDetailsConnector  {
-
-    def amendEmploymentFinancialDetails(request: AmendFinancialDetailsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (mockAmendEmploymentFinancialDetailsConnector
-        .amendEmploymentFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+  object MockAmendFinancialDetailsService {
+    def amendFinancialDetails(requestData: AmendFinancialDetailsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (mockAmendFinancialDetailsService
+        .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .expects(requestData, *, *, *)
     }
   }
+
 }

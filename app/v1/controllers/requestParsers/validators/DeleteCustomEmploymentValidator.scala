@@ -18,12 +18,11 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import javax.inject.Inject
-import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 
-class DeleteCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class DeleteCustomEmploymentValidator @Inject()(implicit appConfig: AppConfig)
   extends Validator[DeleteCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
@@ -42,7 +41,7 @@ class DeleteCustomEmploymentValidator @Inject()(implicit currentDateTime: Curren
 
   private def parameterRuleValidation: DeleteCustomEmploymentRawData => List[List[MtdError]] = (data: DeleteCustomEmploymentRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 }

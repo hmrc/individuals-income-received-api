@@ -41,7 +41,8 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
 
   private def parameterRuleValidation: AddCustomEmploymentRawData => List[List[MtdError]] = (data: AddCustomEmploymentRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
