@@ -19,74 +19,76 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
+import v1.fixtures.RetrieveEmploymentControllerFixture._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
+class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
-    val correlationId: String = "X-123"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    val source: Option[String] = Some("latest")
+    val desEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
+    val correlationId: String = "X-123"
 
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
+    val desHmrcEnteredResponse: JsValue = hmrcEnteredResponse
+    val desCustomEnteredResponse: JsValue = customEnteredResponse
+    val mtdHmrcEnteredResponse: JsValue = mtdHmrcEnteredResponseWithHateoas(nino, taxYear, employmentId)
+    val mtdCustomEnteredResponse: JsValue = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+    def uri: String = s"/employments/$nino/$taxYear/$employmentId"
 
-    def queryParams: Seq[(String, String)] =
-      Seq("source" -> source)
-        .collect {
-          case (k, Some(v)) => (k, v)
-        }
+    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
   }
 
-  "Calling retrieve financial details endpoint" should {
-    "return `latest` financial details with status 200" when {
-      "a valid request with employment source as `latest` is made" in new Test {
+  "Calling the 'retrieve employment' endpoint" should {
+    "return a 200 status code" when {
+      "any valid request is made to retrieve hmrc entered employment" in new Test {
+
+        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
+          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
-        response.json shouldBe mtdResponseWithHateoas(nino, taxYear, employmentId)
+        response.json shouldBe mtdHmrcEnteredResponse
         response.header("Content-Type") shouldBe Some("application/json")
       }
+    }
 
-      "a valid request with out any employment source is made" in new Test {
+    "return a 200 status code" when {
+      "any valid request is made to retrieve custom entered employment" in new Test {
 
-        override val source: Option[String] = None
+        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
+          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desCustomEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
-        response.json shouldBe mtdResponseWithHateoas(nino, taxYear, employmentId)
+        response.json shouldBe mtdCustomEnteredResponse
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }
@@ -94,15 +96,12 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String,
-                                requestEmploymentId: String, empSource: Option[String],
-                                expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
             override val employmentId: String = requestEmploymentId
-            override val source: Option[String] = empSource
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -118,13 +117,11 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", None, BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "20122", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", None, BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2019-20", "ABCDE12345FG", None, BAD_REQUEST, EmploymentIdFormatError),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", None, BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2016-17", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", None, BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", Some("SOURCE"), BAD_REQUEST, SourceFormatError)
-        )
+          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2019-20", "ABCDE12345FG", BAD_REQUEST, EmploymentIdFormatError),
+          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError))
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -137,7 +134,7 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.GET, desUri, Map("view" -> "LATEST"), desStatus, errorBody(desCode))
+              DesStub.onError(DesStub.GET, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -159,11 +156,7 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
-          (BAD_REQUEST, "INVALID_VIEW", BAD_REQUEST, SourceFormatError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DATE_RANGE", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
 
