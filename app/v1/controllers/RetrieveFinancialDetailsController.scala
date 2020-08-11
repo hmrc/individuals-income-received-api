@@ -95,8 +95,7 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError |
            EmploymentIdFormatError | RuleTaxYearRangeInvalidError |
-           SourceFormatError | RuleTaxYearNotSupportedError |
-           RuleTaxYearNotEndedError => BadRequest(Json.toJson(errorWrapper))
+           SourceFormatError | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

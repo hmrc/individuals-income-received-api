@@ -38,7 +38,7 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
-    def desUri: String = s"/some-placeholder/employments/$nino/$taxYear/$employmentId"
+    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
 
     def queryParams: Seq[(String, String)] =
       Seq("source" -> source)

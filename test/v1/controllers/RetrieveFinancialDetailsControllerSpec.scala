@@ -159,8 +159,7 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
           (EmploymentIdFormatError, BAD_REQUEST),
           (SourceFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST)
+          (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -193,7 +192,6 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
           (SourceFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
