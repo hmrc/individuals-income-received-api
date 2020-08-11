@@ -23,7 +23,7 @@ import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 
-class RetrieveEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class RetrieveEmploymentValidator @Inject()(implicit appConfig: AppConfig)
   extends Validator[RetrieveEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
