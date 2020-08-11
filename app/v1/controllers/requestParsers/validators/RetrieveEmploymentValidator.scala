@@ -42,7 +42,7 @@ class RetrieveEmploymentValidator @Inject()(implicit currentDateTime: CurrentDat
 
   private def parameterRuleValidation: RetrieveEmploymentRawData => List[List[MtdError]] = (data: RetrieveEmploymentRawData) => {
     List(
-      MtdTaxYearValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 }
