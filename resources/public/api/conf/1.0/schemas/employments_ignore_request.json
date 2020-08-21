@@ -4,7 +4,7 @@
   "description": "Amend Employment Financial Details",
   "type": "object",
   "properties": {
-    "employment": {"$ref": "employments_definitions.json#/definitions/ignoreEmployment"}
+    "ignoreEmployment": {"$ref": "employments_definitions.json#/definitions/ignoreEmployment"}
   },
   "required": ["ignoreEmployment"]
 }
