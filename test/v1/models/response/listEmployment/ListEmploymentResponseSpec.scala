@@ -50,7 +50,7 @@ class ListEmploymentResponseSpec extends UnitSpec {
       |            "payrollId": "123345657",
       |            "startDate": "2020-06-17",
       |            "cessationDate": "2020-06-17",
-      |            "submittedOn": "2020-06-17"
+      |            "submittedOn": "2020-06-17T10:53:38Z"
       |        },
       |        {
       |            "employmentId": "00000000-0000-1000-8000-000000000003",
@@ -59,7 +59,7 @@ class ListEmploymentResponseSpec extends UnitSpec {
       |            "payrollId": "123345657",
       |            "startDate": "2020-06-17",
       |            "cessationDate": "2020-06-17",
-      |            "submittedOn": "2020-06-17"
+      |            "submittedOn": "2020-06-17T10:53:38Z"
       |        }
       |    ]
       |}
@@ -156,7 +156,7 @@ class ListEmploymentResponseSpec extends UnitSpec {
             |            "payrollId": "123345657",
             |            "startDate": "2020-06-17",
             |            "cessationDate": "2020-06-17",
-            |            "submittedOn": "2020-06-17"
+            |            "submittedOn": "2020-06-17T10:53:38Z"
             |        },
             |        {
             |            "employmentId": "00000000-0000-1000-8000-000000000003",
@@ -165,7 +165,7 @@ class ListEmploymentResponseSpec extends UnitSpec {
             |            "payrollId": "123345657",
             |            "startDate": "2020-06-17",
             |            "cessationDate": "2020-06-17",
-            |            "submittedOn": "2020-06-17"
+            |            "submittedOn": "2020-06-17T10:53:38Z"
             |        }
             |    ]
             |}

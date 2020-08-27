@@ -46,7 +46,7 @@ object RetrieveEmploymentControllerFixture {
       |            "payrollId": "123345657",
       |            "startDate": "2020-06-17",
       |            "cessationDate": "2020-06-17",
-      |            "submittedOn": "2020-06-17"
+      |            "submittedOn": "2020-06-17T10:53:38Z"
       |        }
       |}
     """.stripMargin
@@ -90,7 +90,7 @@ object RetrieveEmploymentControllerFixture {
        |   "startDate": "2020-06-17",
        |   "cessationDate": "2020-06-17",
        |   "payrollId": "123345657",
-       |   "submittedOn": "2020-06-17",
+       |   "submittedOn": "2020-06-17T10:53:38Z",
        |   "links":[
        |      {
        |         "href": "/individuals/income-received/employments/$nino/$taxYear",

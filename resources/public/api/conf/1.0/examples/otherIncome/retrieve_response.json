@@ -32,17 +32,17 @@
   },
   "links":[
     {
-      "href":"/individuals/income-received/other/{nino}/{taxYear}",
+      "href":"/individuals/income-received/other/TC663795B/2021-22",
       "rel":"amend-other-income",
       "method":"PUT"
     },
     {
-      "href":"/individuals/income-received/other/{nino}/{taxYear}",
+      "href":"/individuals/income-received/other/TC663795B/2021-22",
       "rel":"self",
       "method":"GET"
     },
     {
-      "href":"/individuals/income-received/other/{nino}/{taxYear}",
+      "href":"/individuals/income-received/other/TC663795B/2021-22",
       "rel":"delete-other-income",
       "method":"DELETE"
     }
