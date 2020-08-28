@@ -15,7 +15,7 @@
     "employerName": {
       "type": "string",
       "description": "The name of the employer the employee worked for.",
-      "pattern": "^.{0,74}$",
+      "pattern": "^.{1,74}$",
       "example": "Employer Name Ltd."
     },
     "startDate": {
@@ -31,17 +31,18 @@
     "payrollId": {
       "type": "string",
       "description": "The unique identifier used by the employer to identify the employee.",
+      "pattern": "^[A-Za-z0-9.,\\-()/=!\"%&*;<>'+:\\?]{0,38}$",
       "example": "124214112412"
     },
     "dateIgnored": {
       "type": "string",
-      "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ss.ssZ",
+      "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ss:ssZ",
       "example": "2020-07-06T09:37:17Z"
     },
     "submittedOn": {
       "type": "string",
-      "description": "The date the custom employment was added. It must be provided in the format YYYY-MM-DD",
-      "example": "2020-07-06"
+      "description": "The date the custom employment was added. It must be provided in the format YYYY-MM-DDThh:mm:ss:ssZ",
+      "example": "2020-07-06T09:37:17Z"
     },
     "ignoreEmployment": {
       "type": "boolean",

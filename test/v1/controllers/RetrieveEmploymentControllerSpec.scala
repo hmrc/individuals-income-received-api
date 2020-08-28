@@ -114,7 +114,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     None,
-    submittedOn = Some("2020-06-17")
+    submittedOn = Some("2020-06-17T10:53:38Z")
   )
 
   private val mtdHmrcEnteredResponse = mtdHmrcEnteredResponseWithHateoas(nino, taxYear, employmentId)

@@ -1,17 +1,17 @@
 {
    "links":[
       {
-         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "href":"/individuals/income-received/dividends/TC663795B/2021-22",
          "rel":"amend-dividends-income",
          "method":"PUT"
       },
       {
-         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "href":"/individuals/income-received/dividends/TC663795B/2021-22",
          "rel":"self",
          "method":"GET"
       },
       {
-         "href":"/individuals/income-received/dividends/{nino}/{taxYear}",
+         "href":"/individuals/income-received/dividends/TC663795B/2021-22",
          "rel":"delete-dividends-income",
          "method":"DELETE"
       }

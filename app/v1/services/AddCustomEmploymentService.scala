@@ -52,6 +52,8 @@ class AddCustomEmploymentService @Inject()(connector: AddCustomEmploymentConnect
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "NOT_SUPPORTED_TAX_YEAR" -> RuleTaxYearNotEndedError,
+      "INVALID_DATE_RANGE" -> RuleStartDateAfterTaxYearEndError,
+      "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
       "INVALID_PAYLOAD" -> DownstreamError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "SERVER_ERROR" -> DownstreamError,

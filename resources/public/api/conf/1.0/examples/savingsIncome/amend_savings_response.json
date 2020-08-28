@@ -1,17 +1,17 @@
 {
    "links":[
       {
-         "href":"/individuals/income-received/savings/AA123456A/2019-20",
+         "href":"/individuals/income-received/savings/TC663795B/2021-22",
          "rel":"amend-savings-income",
          "method":"PUT"
       },
       {
-         "href":"/individuals/income-received/savings/AA123456A/2019-20",
+         "href":"/individuals/income-received/savings/TC663795B/2021-22",
          "rel":"self",
          "method":"GET"
       },
       {
-         "href":"/individuals/income-received/savings/AA123456A/2019-20",
+         "href":"/individuals/income-received/savings/TC663795B/2021-22",
          "rel":"delete-savings-income",
          "method":"DELETE"
       }

@@ -6,7 +6,7 @@
       "dateIgnored":"2020-06-17T10:53:38Z",
       "links":[
         {
-          "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}",
+          "href":"/individuals/income-received/employments/TC663795B/2021-22/1557ecb5-fd32-48cc-81f5-e6acd1099f1c",
           "rel":"self",
           "method":"GET"
         }
@@ -19,7 +19,7 @@
       "employerName":"Employer Name Ltd.",
       "links":[
         {
-          "href":"/individuals/income-received/employments/{nino}/{taxYear}/{employmentId}",
+          "href":"/individuals/income-received/employments/TC663795B/2021-22/2557ecb5-fd32-48cc-81f5-e6acd1099f2c",
           "rel":"self",
           "method":"GET"
         }
@@ -28,12 +28,12 @@
   ],
   "links":[
     {
-      "href":"/individuals/income-received/employments/{nino}/{taxYear}",
+      "href":"/individuals/income-received/employments/TC663795B/2021-22",
       "rel":"add-custom-employment",
       "method":"POST"
     },
     {
-      "href":"/individuals/income-received/employments/{nino}/{taxYear}",
+      "href":"/individuals/income-received/employments/TC663795B/2021-22",
       "rel":"self",
       "method":"GET"
     }

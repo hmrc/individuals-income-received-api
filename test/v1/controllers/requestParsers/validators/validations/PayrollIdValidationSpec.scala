@@ -23,11 +23,11 @@ class PayrollIdValidationSpec extends UnitSpec {
 
   "PayrollIdValidation" when {
     "validate" should {
-      "return an empty list for a valid employment ID" in {
+      "return an empty list for a valid payroll ID" in {
         PayrollIdValidation.validate("124214112412") shouldBe NoValidationErrors
       }
 
-      "return an EmploymentIdFormatError error for an invalid employment ID" in {
+      "return an PayrollIdFormatError error for an invalid payroll ID" in {
         PayrollIdValidation.validate("££££") shouldBe List(PayrollIdFormatError)
       }
     }
@@ -41,7 +41,7 @@ class PayrollIdValidationSpec extends UnitSpec {
         PayrollIdValidation.validateOptional(Some("124214112412")) shouldBe NoValidationErrors
       }
 
-      "return an EmploymentIdFormatError error when an invalid employment ID supplied" in {
+      "return an PayrollIdFormatError error when an invalid payroll ID supplied" in {
         PayrollIdValidation.validateOptional(Some("£££")) shouldBe List(PayrollIdFormatError)
       }
     }
