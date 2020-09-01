@@ -4,6 +4,7 @@
   "description": "Retrieve Insurance Policies Income Request",
   "type": "object",
   "properties": {
+    "submittedOn": {"$ref": "insurance_definitions.json#/definitions/submittedOn"},
     "lifeInsurance": {
       "type": "array",
       "description": "Financial details about life insurance income",
@@ -30,5 +31,6 @@
       "items": {"$ref": "insurance_definitions.json#/definitions/foreignObject"}
     },
     "links": {"$ref": "insurance_definitions.json#/definitions/links"}
-  }
+  },
+  "required": ["submittedOn"]
 }
