@@ -43,5 +43,30 @@
   "foreignService":{
     "customerReference":"EMP123A",
     "amountDeducted":1223.22
-  }
+  },
+  "lumpSums": [
+    {
+      "employerName":"Company Ltd",
+      "employerRef":"123/AB456",
+      "taxableLumpSumsAndCertainIncome": {
+        "amount": 5000.99,
+        "taxPaid": 5000.99,
+        "taxTakenOffInEmployment": false
+      },
+      "benefitFromEmployerFinancedRetirementScheme": {
+        "amount": 5000.99,
+        "exemptAmount": 5000.99,
+        "taxPaid": 500.99,
+        "taxTakenOffInEmployment": false
+      },
+      "redundancyCompensationPaymentsOverExemption": {
+        "amount": 4000.99,
+        "taxPaid": 400.99,
+        "taxTakenOffInEmployment": false
+      },
+      "redundancyCompensationPaymentsUnderExemption": {
+        "amount": 5000.99
+      }
+    }
+  ]
 }

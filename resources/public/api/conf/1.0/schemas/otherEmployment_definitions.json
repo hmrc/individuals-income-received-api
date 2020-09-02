@@ -1,5 +1,10 @@
 {
   "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the other employment income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:17Z"
+    },
     "shareOption": {
       "type": "array",
       "items": {
@@ -34,7 +39,7 @@
           },
           "optionNotExercisedButConsiderationReceived": {
             "type": "boolean",
-            "description": "Boolean indicating if the party with the option must give something of value to the party offering the option.",
+            "description": "Boolean option not exercised but consideration received for lapse, release or assignment of the option.",
             "example": "true"
           },
           "amountOfConsiderationReceived": {
@@ -240,7 +245,28 @@
     },
     "disability": {
       "type": "object",
-      "description": "An object that holds the key value for disability.",
+      "description": "An object that holds the key value for disability deductions.",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "An optional user supplied reference.",
+          "example": "OTHEREmp123A",
+          "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+        },
+        "amountDeducted": {
+          "type": "number",
+          "description": "The claim for an exemption for specific payments received for physical or mental impairment, when the employment ended or terms changed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": ["amountDeducted"]
+    },
+    "foreignService": {
+      "type": "object",
+      "description": "An object that holds the key value for foreign service deductions.",
       "properties": {
         "customerReference": {
           "type": "string",
@@ -259,26 +285,145 @@
       },
       "required": ["amountDeducted"]
     },
-    "foreignService": {
-      "type": "object",
-      "description": "An object that holds the key value for foreign service.",
-      "properties": {
-        "customerReference": {
-          "type": "string",
-          "description": "A reference the user supplies to identify the foreign income.",
-          "example": "OTHEREmp123A",
-          "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    "lumpSums": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "An array that holds details of lump sum income",
+        "properties": {
+          "employerName": {
+            "type": "string",
+            "description": "The name of the employer. The length must be between 1 and 105 characters.",
+            "example": "BPDTS Ltd."
+          },
+          "employerRef": {
+            "type": "string",
+            "description": "A reference number given to every business that registers with HMRC as an employer.",
+            "example": "123/AB456",
+            "pattern": "^[0-9]{3}\\/[^ ].{0,9}$"
+          },
+          "taxableLumpSumsAndCertainIncome": {
+            "type": "object",
+            "description": "An object that holds the key value for taxable lump sums and certain income",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the taxable lump sum. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxPaid": {
+                "type": "number",
+                "description": "The amount of tax paid on the lump sum. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxTakenOffInEmployment": {
+                "type": "boolean",
+                "description": "A boolean indicating whether tax has been taken off in employment.",
+                "example": "false"
+              }
+            },
+            "required": [
+              "amount",
+              "taxTakenOffInEmployment"
+            ]
+          },
+          "benefitFromEmployerFinancedRetirementScheme": {
+            "type": "object",
+            "description": "An object that holds the key value for benefits from employer financed retirement scheme",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the benefit received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "exemptAmount": {
+                "type": "number",
+                "description": "The amount of benefit exempt from tax. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxPaid": {
+                "type": "number",
+                "description": "The amount of tax paid on the benefit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxTakenOffInEmployment": {
+                "type": "boolean",
+                "description": "A boolean indicating whether tax has been taken off in employment.",
+                "example": "false"
+              }
+            },
+            "required": [
+              "amount",
+              "taxTakenOffInEmployment"
+            ]
+          },
+          "redundancyCompensationPaymentsOverExemption": {
+            "type": "object",
+            "description": "An object that holds the key value for redundancy compensation payments over exemption",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the redundancy compensation payment over exemption. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxPaid": {
+                "type": "number",
+                "description": "The amount of tax paid on the redundancy compensation payments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxTakenOffInEmployment": {
+                "type": "boolean",
+                "description": "A boolean indicating whether tax has been taken off in employment.",
+                "example": "false"
+              }
+            },
+            "required": [
+              "amount",
+              "taxTakenOffInEmployment"
+            ]
+          },
+          "redundancyCompensationPaymentsUnderExemption": {
+            "type": "object",
+            "description": "An object that holds the key value for redundancy compensation payments under exemption",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the redundancy compensation payments under exemption. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              }
+            },
+            "required": ["amount"]
+          }
         },
-        "amountDeducted": {
-          "type": "number",
-          "description": "The claim for an exemption for specific payments received for physical or mental impairment, when the employment ended or terms changed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-          "example": "5000.99",
-          "multipleOf": 0.01,
-          "minimum": 0,
-          "maximum:": 99999999999.99
-        }
-      },
-      "required": ["amountDeducted"]
+        "required": [
+          "employerName",
+          "employerRef"
+        ]
+      }
     },
     "links": {
       "type": "array",
