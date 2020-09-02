@@ -4,8 +4,10 @@
   "description": "Retrieve Savings Income Request",
   "type": "object",
   "properties": {
+    "submittedOn": {"$ref": "savings_definitions.json#/definitions/submittedOn"},
     "securities": {"$ref": "savings_definitions.json#/definitions/securities"},
     "foreignInterest": {"$ref": "savings_definitions.json#/definitions/foreignInterest"},
     "links": {"$ref": "savings_definitions.json#/definitions/links"}
-  }
+  },
+  "required": ["submittedOn"]
 }

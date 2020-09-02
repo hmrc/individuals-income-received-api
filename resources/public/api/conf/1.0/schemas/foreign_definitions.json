@@ -1,23 +1,30 @@
 {
   "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the foreign income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:17Z"
+    },
     "foreignEarnings": {
       "type": "object",
       "description": "The container that holds the key value for foreign earnings",
       "properties": {
         "customerReference": {
           "type": "string",
-          "description": "A reference the user supplies to identify the foreign income. Must be between 1 and 25 characters in length.",
-          "example": "FOREIGNINCME123A"
+          "description": "A reference the user supplies to identify the foreign income. Must be between 1 and 90 characters in length.",
+          "example": "FOREIGNINCME123A",
+          "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
         },
         "earningsNotTaxableUK": {
           "type": "number",
-          "description": "Received income in a foreign country that you could not bring to the UK because of exchange controls. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "description": "The income received in a foreign country that could not be transferred to UK because of exchange controls. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "example": "5000.99",
           "multipleOf": 0.01,
           "minimum": 0,
           "maximum:": 99999999999.99
         }
-      }
+      },
+      "required": ["earningsNotTaxableUK"]
     },
     "unremittableForeignIncome": {
       "type": "array",
@@ -48,7 +55,8 @@
           }
         },
         "required": [
-          "countryCode"
+          "countryCode",
+          "amountInForeignCurrency"
         ]
       }
     },
