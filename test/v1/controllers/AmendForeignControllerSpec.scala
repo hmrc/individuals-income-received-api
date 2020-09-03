@@ -184,6 +184,7 @@ class AmendForeignControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (CountryCodeRuleError, BAD_REQUEST),
