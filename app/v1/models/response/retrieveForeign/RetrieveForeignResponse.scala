@@ -43,8 +43,8 @@ object RetrieveForeignResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: RetrieveForeignHateoasData): Seq[Link] = {
       import data._
       Seq(
-        amendForeign(appConfig, nino, taxYear),
         retrieveForeign(appConfig, nino, taxYear),
+        amendForeign(appConfig, nino, taxYear),
         deleteForeign(appConfig, nino, taxYear)
       )
     }

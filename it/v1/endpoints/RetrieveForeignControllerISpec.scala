@@ -95,7 +95,8 @@ class RetrieveForeignControllerISpec extends IntegrationBaseSpec {
           ("AA1123A", "2019-20", BAD_REQUEST, NinoFormatError),
           ("AA123456A", "20177", BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError))
+          ("AA123456A", "2015-16", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

@@ -16,11 +16,26 @@
 
 package v1.models.response.retrieveForeign
 
-import play.api.libs.json.{JsError, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.foreign.RetrieveForeignFixture._
 
 class UnremittableForeignIncomeSpec extends UnitSpec {
+
+  val fullUnremittableForeignIncomeJson: JsValue = Json.parse(
+    """
+      |{
+      |    "countryCode": "FRA",
+      |    "amountInForeignCurrency": 1999.99,
+      |    "amountTaxPaid": 1999.99
+      |}
+    """.stripMargin
+  )
+
+  val fullUnremittableForeignIncomeModel1: UnremittableForeignIncome = UnremittableForeignIncome(
+    countryCode =  "FRA",
+    amountInForeignCurrency = 1999.99,
+    amountTaxPaid = Some(1999.99)
+  )
 
   "UnremittableForeignIncome" when {
     "read from valid JSON" should {
@@ -29,13 +44,7 @@ class UnremittableForeignIncomeSpec extends UnitSpec {
       }
     }
 
-    "read from a JSON with only mandatory fields" should {
-      "produce a UnremittableForeignIncome object with only mandatory fields" in {
-        minUnremittableForeignIncomeJson.as[UnremittableForeignIncome] shouldBe minUnremittableForeignIncomeModel
-      }
-    }
-
-    "read from empty JSON" should {
+    "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = Json.parse("""{}""")
 

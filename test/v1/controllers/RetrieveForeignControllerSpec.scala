@@ -32,7 +32,7 @@ import v1.models.hateoas.RelType.{AMEND_FOREIGN_INCOME, DELETE_FOREIGN_INCOME, S
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveForeign.{RetrieveForeignHateoasData, RetrieveForeignResponse}
+import v1.models.response.retrieveForeign.{ForeignEarnings, RetrieveForeignHateoasData, RetrieveForeignResponse, UnremittableForeignIncome}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,42 +45,66 @@ class RetrieveForeignControllerSpec extends ControllerBaseSpec
   with MockDeleteRetrieveRequestParser
   with HateoasLinks {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
-  val correlationId: String = "X-123"
+  private val nino: String = "AA123456A"
+  private val taxYear: String = "2019-20"
+  private val correlationId: String = "X-123"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  private val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  private val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
 
-  val amendForeignLink: Link =
+  private val amendForeignLink: Link =
     Link(
       href = s"/individuals/income-received/foreign/$nino/$taxYear",
       method = PUT,
       rel = AMEND_FOREIGN_INCOME
     )
 
-  val retrieveForeignLink: Link =
+  private val retrieveForeignLink: Link =
     Link(
       href = s"/individuals/income-received/foreign/$nino/$taxYear",
       method = GET,
       rel = SELF
     )
 
-  val deleteForeignLink: Link =
+  private val deleteForeignLink: Link =
     Link(
       href = s"/individuals/income-received/foreign/$nino/$taxYear",
       method = DELETE,
       rel = DELETE_FOREIGN_INCOME
     )
 
-  private val retrieveForeignResponse = RetrieveForeignFixture.fullRetrieveResponseBodyModel
+  private val fullForeignEarningsModel: ForeignEarnings = ForeignEarnings(
+    customerReference = Some("FOREIGNINCME123A"),
+    earningsNotTaxableUK = 1999.99
+  )
+
+  private val fullUnremittableForeignIncomeModel1: UnremittableForeignIncome = UnremittableForeignIncome(
+    countryCode =  "FRA",
+    amountInForeignCurrency = 1999.99,
+    amountTaxPaid = Some(1999.99)
+  )
+
+  private val fullUnremittableForeignIncomeModel2: UnremittableForeignIncome = UnremittableForeignIncome(
+    countryCode =  "IND",
+    amountInForeignCurrency = 2999.99,
+    amountTaxPaid = Some(2999.99)
+  )
+
+  private val retrieveForeignResponse = RetrieveForeignResponse(
+    submittedOn = "2019-04-04T01:01:01Z",
+    foreignEarnings = Some(fullForeignEarningsModel),
+    unremittableForeignIncome = Some(Seq(
+      fullUnremittableForeignIncomeModel1,
+      fullUnremittableForeignIncomeModel2
+    ))
+  )
   private val mtdResponse = RetrieveForeignFixture.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
@@ -115,8 +139,8 @@ class RetrieveForeignControllerSpec extends ControllerBaseSpec
           .wrap(retrieveForeignResponse, RetrieveForeignHateoasData(nino, taxYear))
           .returns(HateoasWrapper(retrieveForeignResponse,
             Seq(
-              amendForeignLink,
               retrieveForeignLink,
+              amendForeignLink,
               deleteForeignLink
             )
           ))
@@ -152,6 +176,7 @@ class RetrieveForeignControllerSpec extends ControllerBaseSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST)
+          //,(RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
