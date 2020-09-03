@@ -130,7 +130,6 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """
       |{
       |   "foreignEarnings": {
-      |     "customerReference":"FOREIGNINCME123A",
       |     "earningsNotTaxableUK":"-1"
       |   },
       |   "unremittableForeignIncome": [
@@ -332,13 +331,6 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     }
 
     "return ValueFormatError error (single failure)" when {
-      "one field fails value validation (life insurance)" in new Test {
-        validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidCustomerReferenceRequestBody)) shouldBe
-          List(CustomerRefFormatError.copy(
-            paths = Some(Seq("/foreignEarnings/customerReference"))
-          ))
-      }
-
       "one field fails value validation (countryCode 3 digit)" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidCountryCodeRequestBody)) shouldBe
           List(CountryCodeRuleError.copy(
