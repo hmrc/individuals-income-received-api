@@ -38,7 +38,7 @@ class DeleteForeignControllerSpec
     with MockDeleteRetrieveRequestParser {
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
@@ -109,6 +109,7 @@ class DeleteForeignControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST)
+          //,(RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
