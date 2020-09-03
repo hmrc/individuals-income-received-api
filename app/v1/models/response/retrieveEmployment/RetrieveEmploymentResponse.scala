@@ -50,7 +50,7 @@ object RetrieveEmploymentResponse extends HateoasLinks {
 
       val baseLinks = Seq(
         listEmployment(appConfig, nino, taxYear, isSelf = false),
-        retrieveEmployment(appConfig, nino, taxYear, employmentId, isSelf = true)
+        retrieveEmployment(appConfig, nino, taxYear, employmentId)
       )
 
       val customLinks = Seq(

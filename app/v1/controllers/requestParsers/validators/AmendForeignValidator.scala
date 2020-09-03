@@ -70,7 +70,7 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)
       CustomerRefValidation.validate(ref).map(
         _.copy(paths = Some(Seq(s"/foreignEarnings/customerReference")))
       )},
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = foreignEarnings.earningsNotTaxableUK,
         path = s"/foreignEarnings/earningsNotTaxableUK")
     ).flatten
@@ -81,7 +81,7 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)
       CountryCodeValidation.validate(unremittableForeignIncome.countryCode).map(
         _.copy(paths = Some(Seq(s"/unremittableForeignIncome/$arrayIndex/countryCode")))
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = unremittableForeignIncome.amountInForeignCurrency,
         path = s"/unremittableForeignIncome/$arrayIndex/amountInForeignCurrency"),
       DecimalValueValidation.validateOptional(

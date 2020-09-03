@@ -214,11 +214,11 @@ trait HateoasLinks {
       rel = if (isSelf) SELF else LIST_EMPLOYMENTS
     )
 
-  def retrieveEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String, isSelf: Boolean): Link =
+  def retrieveEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
     Link(
       href = employmentUriWithId(appConfig, nino, taxYear, employmentId),
       method = GET,
-      rel = if (isSelf) SELF else RETRIEVE_EMPLOYMENT
+      rel = SELF
     )
 
   def ignoreEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =

@@ -19,15 +19,13 @@ package v1.models.request.amendForeign
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class ForeignEarnings(customerReference: Option[String], earningsNotTaxableUK: Option[BigDecimal])
+case class ForeignEarnings(customerReference: Option[String], earningsNotTaxableUK: BigDecimal)
 
 object ForeignEarnings {
-  val empty: ForeignEarnings = ForeignEarnings(None, None)
-
   implicit val reads: Reads[ForeignEarnings] = Json.reads[ForeignEarnings]
 
   implicit val writes: OWrites[ForeignEarnings] = (
     (JsPath \ "customerReference").writeNullable[String] and
-      (JsPath \ "earningsNotTaxableUK").writeNullable[BigDecimal]
+      (JsPath \ "earningsNotTaxableUK").write[BigDecimal]
     ) (unlift(ForeignEarnings.unapply))
 }

@@ -91,18 +91,18 @@ class AmendForeignControllerSpec
 
   val foreignEarning: ForeignEarnings = ForeignEarnings(
     customerReference = Some("FOREIGNINCME123A"),
-    earningsNotTaxableUK = Some(1999.99)
+    earningsNotTaxableUK = 1999.99
   )
 
   val unremittableForeignIncomeItems: Seq[UnremittableForeignIncomeItem] = Seq(
     UnremittableForeignIncomeItem(
       countryCode = "FRA",
-      amountInForeignCurrency = Some(1999.99),
+      amountInForeignCurrency = 1999.99,
       amountTaxPaid = Some(1999.99)
     ),
     UnremittableForeignIncomeItem(
       countryCode = "IND",
-      amountInForeignCurrency = Some(2999.99),
+      amountInForeignCurrency = 2999.99,
       amountTaxPaid = Some(2999.99)
     )
   )

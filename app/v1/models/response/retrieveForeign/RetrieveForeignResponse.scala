@@ -19,6 +19,7 @@ package v1.models.response.retrieveForeign
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
@@ -26,15 +27,12 @@ case class RetrieveForeignResponse(submittedOn: String,
                                    foreignEarnings: Option[ForeignEarnings],
                                    unremittableForeignIncome: Option[Seq[UnremittableForeignIncome]])
 
-object RetrieveForeignResponse extends HateoasLinks {
+object RetrieveForeignResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveForeignResponse] = (
     (JsPath \ "submittedOn").read[String] and
       (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
-      (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].map{
-        case Some(Nil) => None
-        case other => other
-      }
+      (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].mapEmptySeqToNone
     ) (RetrieveForeignResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignResponse] = Json.writes[RetrieveForeignResponse]
