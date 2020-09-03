@@ -47,7 +47,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
   val securitiesModel: AmendSecurities =
     AmendSecurities(
       taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
+      grossAmount = 1455.0,
       netAmount = Some(123.22)
     )
 
@@ -118,7 +118,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
   val emptyObjectsJson: JsValue = Json.parse(
     """
       |{
-      |   "securities": {},
+      |   "securities": [],
       |   "foreignInterest": []
       |}
     """.stripMargin
@@ -140,12 +140,6 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
     "read from empty JSON" should {
       "produce an empty AmendSavingsRequestBody object" in {
         emptyJson.as[AmendSavingsRequestBody] shouldBe AmendSavingsRequestBody.empty
-      }
-    }
-
-    "read from JSON with empty securities and foreignInterest fields" should {
-      "produce an empty AmendSavingsRequestBody object" in {
-        emptyObjectsJson.as[AmendSavingsRequestBody] shouldBe AmendSavingsRequestBody.empty
       }
     }
 

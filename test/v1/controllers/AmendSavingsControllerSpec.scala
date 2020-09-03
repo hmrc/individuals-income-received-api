@@ -99,7 +99,7 @@ class AmendSavingsControllerSpec
 
   val security: AmendSecurities = AmendSecurities(
     taxTakenOff = Some(100.11),
-    grossAmount = Some(200.22),
+    grossAmount = 200.22,
     netAmount = Some(300.33)
   )
 
@@ -199,6 +199,7 @@ class AmendSavingsControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (CountryCodeRuleError, BAD_REQUEST),

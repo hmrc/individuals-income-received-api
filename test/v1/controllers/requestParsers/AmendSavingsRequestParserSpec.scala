@@ -65,7 +65,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
   private val validRequestBodyModel = AmendSavingsRequestBody(
     securities = Some(AmendSecurities(
       taxTakenOff = Some(100.11),
-      grossAmount = Some(100.12),
+      grossAmount = 100.12,
       netAmount = Some(100.13)
     )),
     foreignInterest = Some(Seq(

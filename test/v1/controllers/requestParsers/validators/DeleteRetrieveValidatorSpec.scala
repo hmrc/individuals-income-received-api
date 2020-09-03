@@ -25,7 +25,7 @@ import v1.models.request.DeleteRetrieveRawData
 class DeleteRetrieveValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2018-19"
+  private val validTaxYear = "2020-21"
 
   class Test extends MockAppConfig {
 
@@ -56,6 +56,13 @@ class DeleteRetrieveValidatorSpec extends UnitSpec {
       "an invalid tax year is supplied" in new Test {
         validator.validate(DeleteRetrieveRawData(validNino, "20178")) shouldBe
           List(TaxYearFormatError)
+      }
+    }
+
+    "return RuleTaxYearNotSupportedError error" when {
+      "an invalid tax year is supplied" in new Test {
+        validator.validate(DeleteRetrieveRawData(validNino, "2019-20")) shouldBe
+          List(RuleTaxYearNotSupportedError)
       }
     }
 

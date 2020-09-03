@@ -24,6 +24,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val desResponse: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "securities":
       |      {
       |         "taxTakenOff": 100.0,
@@ -47,7 +48,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val securitiesModel: Securities =
     Securities(
       taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
+      grossAmount = 1455.0,
       netAmount = Some(123.22)
     )
 
@@ -63,6 +64,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
   private val model: RetrieveSavingsResponse =
     RetrieveSavingsResponse(
+      submittedOn = "2019-04-04T01:01:01Z",
       securities = Some(securitiesModel),
       foreignInterest = Some(Seq(foreignInterestsItemModel))
     )
@@ -70,6 +72,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "securities":
       |      {
       |         "taxTakenOff": 100.0,
@@ -93,6 +96,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val desResponseInvalid: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "securities":
       |      {
       |         "taxTakenOff": "abc",
@@ -116,8 +120,17 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   val emptyObjectsJson: JsValue = Json.parse(
     """
       |{
-      |   "securities": {},
+      |   "submittedOn": "",
+      |   "securities": [],
       |   "foreignInterest": []
+      |}
+    """.stripMargin
+  )
+
+  val minimumObjectsJson: JsValue = Json.parse(
+    """
+      |{
+      |   "submittedOn": ""
       |}
     """.stripMargin
   )
@@ -135,18 +148,6 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
-      "produce a model with securities and foreignInterest as None" in {
-        JsObject.empty.as[RetrieveSavingsResponse] shouldBe RetrieveSavingsResponse.empty
-      }
-    }
-
-    "read from JSON with empty securities and foreignInterest fields" should {
-      "produce an empty AmendSavingsRequestBody object" in {
-        emptyObjectsJson.as[RetrieveSavingsResponse] shouldBe RetrieveSavingsResponse.empty
-      }
-    }
-
     "written to JSON" should {
       "produce the expected JSON" in {
         Json.toJson(model) shouldBe mtdJson
@@ -155,7 +156,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
     "written to JSON (no securities and foreignInterest)" should {
       "produce JSON with no securities and foreignInterest" in {
-        Json.toJson(RetrieveSavingsResponse.empty) shouldBe JsObject.empty
+        Json.toJson(RetrieveSavingsResponse.empty) shouldBe minimumObjectsJson
       }
     }
   }

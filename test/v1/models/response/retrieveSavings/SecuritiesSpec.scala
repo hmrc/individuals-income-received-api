@@ -18,6 +18,7 @@ package v1.models.response.retrieveSavings
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
+import v1.models.request.amendSavings.AmendSecurities
 
 class SecuritiesSpec extends UnitSpec {
 
@@ -34,7 +35,7 @@ class SecuritiesSpec extends UnitSpec {
   val model: Securities =
     Securities(
       taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
+      grossAmount = 1455.0,
       netAmount = Some(123.22)
     )
 
@@ -47,6 +48,21 @@ class SecuritiesSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
+  val minimumDesResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "grossAmount": 1455.0
+      |}
+    """.stripMargin
+  )
+
+  val minimumModel: AmendSecurities =
+    AmendSecurities(
+      taxTakenOff = None,
+      grossAmount = 1455.0,
+      netAmount = None
+    )
 
   val desResponseInvalid: JsValue = Json.parse(
     """
@@ -65,10 +81,9 @@ class SecuritiesSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
-      "produce an empty SecuritiesItems object" in {
-        val emptyJson = JsObject.empty
-        emptyJson.as[Securities] shouldBe Securities.empty
+    "read from a JSON with only mandatory fields" should {
+      "produce the expected SecuritiesItem object" in {
+        minimumDesResponse.as[AmendSecurities] shouldBe minimumModel
       }
     }
 
