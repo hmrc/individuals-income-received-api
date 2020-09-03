@@ -24,7 +24,6 @@ case class Securities(taxTakenOff: Option[BigDecimal],
                       netAmount: Option[BigDecimal])
 
 object Securities {
-  val empty: Securities = Securities(None, 0, None)
 
   implicit val reads: Reads[Securities] = (
     (JsPath \ "taxTakenOff").readNullable[BigDecimal] and

@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveSavings
 
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class RetrieveSavingsResponseSpec extends UnitSpec {
@@ -117,20 +117,21 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val emptyObjectsJson: JsValue = Json.parse(
+  val minimumFieldsJson: JsValue = Json.parse(
     """
       |{
-      |   "submittedOn": "",
-      |   "securities": [],
-      |   "foreignInterest": []
-      |}
-    """.stripMargin
-  )
-
-  val minimumObjectsJson: JsValue = Json.parse(
-    """
-      |{
-      |   "submittedOn": ""
+      |   "submittedOn": "2019-04-04T01:01:01Z",
+      |    "securities":
+      |      {
+      |         "grossAmount": 1499.99
+      |      },
+      |   "foreignInterest": [
+      |      {
+      |         "countryCode": "DEU",
+      |         "taxableAmount": 2321.22,
+      |         "foreignTaxCreditRelief": true
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -151,12 +152,6 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     "written to JSON" should {
       "produce the expected JSON" in {
         Json.toJson(model) shouldBe mtdJson
-      }
-    }
-
-    "written to JSON (no securities and foreignInterest)" should {
-      "produce JSON with no securities and foreignInterest" in {
-        Json.toJson(RetrieveSavingsResponse.empty) shouldBe minimumObjectsJson
       }
     }
   }

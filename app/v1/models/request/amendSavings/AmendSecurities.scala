@@ -24,8 +24,6 @@ case class AmendSecurities(taxTakenOff: Option[BigDecimal],
                            netAmount: Option[BigDecimal])
 
 object AmendSecurities {
-  val empty: AmendSecurities = AmendSecurities(None, 0, None)
-
   implicit val reads: Reads[AmendSecurities] = Json.reads[AmendSecurities]
 
   implicit val writes: OWrites[AmendSecurities] = (

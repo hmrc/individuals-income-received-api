@@ -23,15 +23,15 @@ import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveSavingsResponse(submittedOn: String, securities: Option[Securities], foreignInterest: Option[Seq[ForeignInterestItem]])
+case class RetrieveSavingsResponse(submittedOn: String,
+                                   securities: Option[Securities],
+                                   foreignInterest: Option[Seq[ForeignInterestItem]])
 
 object RetrieveSavingsResponse extends HateoasLinks with JsonUtils {
-  val empty: RetrieveSavingsResponse = RetrieveSavingsResponse("", None, None)
 
   implicit val reads: Reads[RetrieveSavingsResponse] = (
     (JsPath \ "submittedOn").read[String] and
     (JsPath \ "securities").readNullable[Securities].map(_.flatMap {
-      case Securities.empty => None
       case securities => Some(securities)
     }) and
       (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterestItem]].mapEmptySeqToNone

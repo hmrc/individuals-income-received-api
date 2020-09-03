@@ -59,9 +59,16 @@ class DeleteRetrieveValidatorSpec extends UnitSpec {
       }
     }
 
+    "return RuleTaxYearRangeInvalidError error" when {
+      "an invalid tax year range is supplied" in new Test {
+        validator.validate(DeleteRetrieveRawData(validNino, "2019-21")) shouldBe
+          List(RuleTaxYearRangeInvalidError)
+      }
+    }
+
     "return RuleTaxYearNotSupportedError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(DeleteRetrieveRawData(validNino, "2019-20")) shouldBe
+        validator.validate(DeleteRetrieveRawData(validNino, "2018-19")) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }

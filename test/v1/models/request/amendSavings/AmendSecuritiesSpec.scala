@@ -16,7 +16,7 @@
 
 package v1.models.request.amendSavings
 
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class AmendSecuritiesSpec extends UnitSpec {
@@ -55,6 +55,7 @@ class AmendSecuritiesSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
   val minimumModel: AmendSecurities =
     AmendSecurities(
       taxTakenOff = None,

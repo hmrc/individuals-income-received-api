@@ -27,7 +27,6 @@ object AmendSavingsRequestBody extends JsonUtils {
 
   implicit val reads: Reads[AmendSavingsRequestBody] = (
     (JsPath \ "securities").readNullable[AmendSecurities].map(_.flatMap {
-      case AmendSecurities.empty => None
       case securities => Some(securities)
     }) and
       (JsPath \ "foreignInterest").readNullable[Seq[AmendForeignInterestItem]].mapEmptySeqToNone

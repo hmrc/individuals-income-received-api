@@ -16,9 +16,8 @@
 
 package v1.models.response.retrieveSavings
 
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.amendSavings.AmendSecurities
 
 class SecuritiesSpec extends UnitSpec {
 
@@ -57,8 +56,8 @@ class SecuritiesSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val minimumModel: AmendSecurities =
-    AmendSecurities(
+  val minimumModel: Securities =
+    Securities(
       taxTakenOff = None,
       grossAmount = 1455.0,
       netAmount = None
@@ -83,7 +82,7 @@ class SecuritiesSpec extends UnitSpec {
 
     "read from a JSON with only mandatory fields" should {
       "produce the expected SecuritiesItem object" in {
-        minimumDesResponse.as[AmendSecurities] shouldBe minimumModel
+        minimumDesResponse.as[Securities] shouldBe minimumModel
       }
     }
 

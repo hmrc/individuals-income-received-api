@@ -196,22 +196,13 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
-  //noinspection ScalaStyle
-  class Test extends MockCurrentDateTime with MockAppConfig {
-
-    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
-
+  class Test extends MockAppConfig {
     implicit val appConfig: AppConfig = mockAppConfig
-
     val validator = new AmendSavingsValidator()
-
-    MockCurrentDateTime.getCurrentDate
-      .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
-      .anyNumberOfTimes()
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
+      .anyNumberOfTimes()
   }
 
 
@@ -236,9 +227,16 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       }
     }
 
+    "return RuleTaxYearRangeInvalidError error" when {
+      "an invalid tax year range is supplied" in new Test {
+        validator.validate(AmendSavingsRawData(validNino, "2019-21", validRawRequestBody)) shouldBe
+          List(RuleTaxYearRangeInvalidError)
+      }
+    }
+
     "return RuleTaxYearNotSupportedError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(AmendSavingsRawData(validNino, "2019-20", validRawRequestBody)) shouldBe
+        validator.validate(AmendSavingsRawData(validNino, "2018-19", validRawRequestBody)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }

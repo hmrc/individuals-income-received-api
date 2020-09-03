@@ -115,15 +115,6 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
     """.stripMargin
   )
 
-  val emptyObjectsJson: JsValue = Json.parse(
-    """
-      |{
-      |   "securities": [],
-      |   "foreignInterest": []
-      |}
-    """.stripMargin
-  )
-
   "AmendSavingsRequestBody" when {
     "read from valid JSON" should {
       "produce the expected AmendSavingsRequestBody object" in {
