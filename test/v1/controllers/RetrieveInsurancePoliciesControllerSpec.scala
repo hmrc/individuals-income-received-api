@@ -28,7 +28,7 @@ import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, 
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{AMEND_INSURANCE_POLICIES_INCOME, DELETE_INSURANCE_POLICIES_INCOME, SELF}
+import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -46,7 +46,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   with HateoasLinks {
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   private val rawData = DeleteRetrieveRawData(
@@ -127,6 +127,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
   )
 
   private val retrieveInsurancePoliciesResponseModel = RetrieveInsurancePoliciesResponse(
+    submittedOn = "2020-07-06T09:37:17Z",
     lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
     capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
     lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),

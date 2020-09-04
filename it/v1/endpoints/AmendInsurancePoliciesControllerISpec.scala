@@ -31,7 +31,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2017-18"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -192,8 +192,8 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       "all field value validations fail on the request body" in new Test {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-          s"""
-            {
+          """
+            |{
             |   "lifeInsurance":[
             |       {
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
@@ -291,17 +291,8 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueErrors: List[MtdError] = List(
-          CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/0/customerReference",
-              "/capitalRedemption/0/customerReference",
-              "/lifeAnnuity/1/customerReference",
-              "/voidedIsa/1/customerReference",
-              "/foreign/0/customerReference"
-            ))
-          ),
           ValueFormatError.copy(
-            message = "The field should be between 0.01 and 99999999999.99",
+            message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/lifeInsurance/0/gainAmount",
               "/lifeInsurance/0/deficiencyRelief",
@@ -309,6 +300,8 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/capitalRedemption/1/deficiencyRelief",
               "/lifeAnnuity/0/deficiencyRelief",
               "/voidedIsa/1/gainAmount",
+              "/voidedIsa/1/taxPaidAmount",
+              "/foreign/0/taxPaidAmount",
               "/foreign/1/gainAmount"
             ))
           ),
@@ -330,11 +323,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/foreign/1/yearsHeld"
             ))
           ),
-          ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+          CustomerRefFormatError.copy(
             paths = Some(List(
-              "/voidedIsa/1/taxPaidAmount",
-              "/foreign/0/taxPaidAmount"
+              "/lifeInsurance/0/customerReference",
+              "/capitalRedemption/0/customerReference",
+              "/lifeAnnuity/1/customerReference",
+              "/voidedIsa/1/customerReference",
+              "/foreign/0/customerReference"
             ))
           )
         )
@@ -569,15 +564,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         ValueFormatError.copy(
           message = "The field should be between 0 and 99999999999.99",
           paths = Some(List(
-            "/voidedIsa/0/taxPaidAmount",
-            "/voidedIsa/1/taxPaidAmount",
-            "/foreign/0/taxPaidAmount",
-            "/foreign/1/taxPaidAmount"
-          ))
-        ),
-        ValueFormatError.copy(
-          message = "The field should be between 0.01 and 99999999999.99",
-          paths = Some(List(
             "/lifeInsurance/0/gainAmount",
             "/lifeInsurance/0/deficiencyRelief",
             "/lifeInsurance/1/gainAmount",
@@ -588,8 +574,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             "/lifeAnnuity/1/gainAmount",
             "/lifeAnnuity/1/deficiencyRelief",
             "/voidedIsa/0/gainAmount",
+            "/voidedIsa/0/taxPaidAmount",
+            "/voidedIsa/1/taxPaidAmount",
             "/foreign/0/gainAmount",
-            "/foreign/1/gainAmount"
+            "/foreign/0/taxPaidAmount",
+            "/foreign/1/gainAmount",
+            "/foreign/1/taxPaidAmount"
           ))
         ),
         ValueFormatError.copy(
@@ -618,7 +608,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       )
 
       val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
-        s"""
+        """
           |{
           |   "lifeInsurance":[
           |       {
@@ -717,23 +707,19 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       )
 
       val customerRefFormatError: MtdError = CustomerRefFormatError.copy(
-          paths = Some(List(
-            "/lifeInsurance/0/customerReference",
-            "/lifeInsurance/1/customerReference",
-
-            "/capitalRedemption/0/customerReference",
-            "/capitalRedemption/1/customerReference",
-
-            "/lifeAnnuity/0/customerReference",
-            "/lifeAnnuity/1/customerReference",
-
-            "/voidedIsa/0/customerReference",
-            "/voidedIsa/1/customerReference",
-
-            "/foreign/0/customerReference",
-            "/foreign/1/customerReference"
-          ))
-        )
+        paths = Some(List(
+          "/lifeInsurance/0/customerReference",
+          "/lifeInsurance/1/customerReference",
+          "/capitalRedemption/0/customerReference",
+          "/capitalRedemption/1/customerReference",
+          "/lifeAnnuity/0/customerReference",
+          "/lifeAnnuity/1/customerReference",
+          "/voidedIsa/0/customerReference",
+          "/voidedIsa/1/customerReference",
+          "/foreign/0/customerReference",
+          "/foreign/1/customerReference"
+        ))
+      )
 
       val invalidEventRequestBodyJson: JsValue = Json.parse(
         """
@@ -870,20 +856,17 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       )
 
       val eventFormatError: MtdError = EventFormatError.copy(
-          paths = Some(List(
-            "/lifeInsurance/0/event",
-            "/lifeInsurance/1/event",
-
-            "/capitalRedemption/0/event",
-            "/capitalRedemption/1/event",
-
-            "/lifeAnnuity/0/event",
-            "/lifeAnnuity/1/event",
-
-            "/voidedIsa/0/event",
-            "/voidedIsa/1/event"
-          ))
-        )
+        paths = Some(List(
+          "/lifeInsurance/0/event",
+          "/lifeInsurance/1/event",
+          "/capitalRedemption/0/event",
+          "/capitalRedemption/1/event",
+          "/lifeAnnuity/0/event",
+          "/lifeAnnuity/1/event",
+          "/voidedIsa/0/event",
+          "/voidedIsa/1/event"
+        ))
+      )
 
       val nonValidRequestBodyErrors: MtdError =  RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(Seq("/lifeInsurance/0/gainAmount"))
@@ -915,15 +898,16 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
+          ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
-          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
-          ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
-          ("AA123456A", "2017-18", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), eventFormatError, None)),
-          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
-          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), nonValidRequestBodyErrors, None)),
-          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingFieldRequestBodyErrors, None))
+          ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearNotSupportedError, None)),
+          ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
+          ("AA123456A", "2019-20", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
+          ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
+          ("AA123456A", "2019-20", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), eventFormatError, None)),
+          ("AA123456A", "2019-20", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
+          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), nonValidRequestBodyErrors, None)),
+          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingFieldRequestBodyErrors, None))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
