@@ -1,6 +1,10 @@
 {
   "definitions": {
-
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the dividends income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:17Z"
+    },
     "countryCode": {
       "type": "string",
       "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
@@ -52,7 +56,7 @@
     "customerReferenceCloseCompanyLoansWrittenOff": {
       "type": "string",
       "description": "A reference the user supplies to identify the close company loans written off income.",
-      "example": "Written off",
+      "example": "Write off",
       "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
     },
     "grossAmount": {

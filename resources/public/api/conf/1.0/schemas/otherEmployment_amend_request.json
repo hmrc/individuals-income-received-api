@@ -7,7 +7,7 @@
     "shareOption": {"$ref": "otherEmployment_definitions.json#/definitions/shareOption"},
     "sharesAwardedOrReceived": {"$ref": "otherEmployment_definitions.json#/definitions/sharesAwardedOrReceived"},
     "disability": {"$ref": "otherEmployment_definitions.json#/definitions/disability"},
-    "foreignService": {"$ref": "otherEmployment_definitions.json#/definitions/foreignService"}
+    "foreignService": {"$ref": "otherEmployment_definitions.json#/definitions/foreignService"},
+    "lumpSums": {"$ref": "otherEmployment_definitions.json#/definitions/lumpSums"}
   }
 }
-

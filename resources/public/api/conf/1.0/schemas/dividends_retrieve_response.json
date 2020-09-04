@@ -4,6 +4,7 @@
   "description": "Retrieve Dividends Income Request",
   "type": "object",
   "properties": {
+    "submittedOn": {"$ref": "dividends_definitions.json#/definitions/submittedOn"},
     "foreignDividend": {
       "type": "array",
       "description": "Financial details about foreign dividend income.",
@@ -19,5 +20,6 @@
     "bonusIssuesOfSecurities": {"$ref": "dividends_definitions.json#/definitions/bonusIssuesOfSecurities"},
     "closeCompanyLoansWrittenOff": {"$ref": "dividends_definitions.json#/definitions/closeCompanyLoansWrittenOff"},
     "links": {"$ref": "dividends_definitions.json#/definitions/links"}
-  }
+  },
+  "required": ["submittedOn"]
 }

@@ -1,5 +1,10 @@
 {
   "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the pensions income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2020-07-06T09:37:17Z"
+    },
     "foreignPensions": {
       "type": "array",
       "items": {
@@ -60,7 +65,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "description": "Financial details about foreign pensions income",
+        "description": "Financial details about overseas pension contributions income",
         "properties": {
           "customerReference": {
             "type": "string",
@@ -92,7 +97,7 @@
           },
           "dblTaxationCountryCode": {
             "type": "string",
-            "description": "A three-letter code that represents a country name. The value must be ISO 3166-1 alpha-3",
+            "description": "A three-letter code that represents the double taxation country name. The value must be ISO 3166-1 alpha-3",
             "example": "FRA"
           },
           "dblTaxationArticle": {

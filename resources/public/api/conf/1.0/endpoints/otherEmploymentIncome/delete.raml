@@ -3,11 +3,12 @@ is:
   - headers.testScenarioHeader
   - errors.formatNino
   - errors.formatTaxYear
+  - errors.ruleTaxYearNotSupported
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: Delete Other Employment Income [test only]
-description: "This endpoint allows the developer to delete other employment income: Share options, Shares awarded or received, Disability and Foreign service."
+description: "This endpoint allows the developer to delete other employment income: share options, shares awarded or received, disability, lump sums and foreign service income. A National Insurance number and tax year must be provided."
 (annotations.sandboxData): !include ../../scenarios/common.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
