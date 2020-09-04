@@ -69,6 +69,30 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       foreignInterest = Some(Seq(foreignInterestsItemModel))
     )
 
+  private val minimumSecuritiesModel: Securities =
+    Securities(
+      taxTakenOff = None,
+      grossAmount = 1499.99,
+      netAmount = None
+    )
+
+  private val minimumForeignInterestsItemModel: ForeignInterestItem =
+    ForeignInterestItem(
+      amountBeforeTax = None,
+      countryCode = "DEU",
+      taxTakenOff = None,
+      specialWithholdingTax = None,
+      taxableAmount = 3000.33,
+      foreignTaxCreditRelief = true
+    )
+
+  private val minimumModel: RetrieveSavingsResponse =
+    RetrieveSavingsResponse(
+      submittedOn = "2019-04-04T01:01:01Z",
+      securities = Some(minimumSecuritiesModel),
+      foreignInterest = Some(Seq(minimumForeignInterestsItemModel))
+    )
+
   val mtdJson: JsValue = Json.parse(
     """
       |{
@@ -128,7 +152,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       |   "foreignInterest": [
       |      {
       |         "countryCode": "DEU",
-      |         "taxableAmount": 2321.22,
+      |         "taxableAmount": 3000.33,
       |         "foreignTaxCreditRelief": true
       |      }
       |   ]
@@ -146,6 +170,12 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     "read from invalid JSON" should {
       "produce a JsError" in {
         desResponseInvalid.validate[RetrieveSavingsResponse] shouldBe a[JsError]
+      }
+    }
+
+    "read from a JSON with only mandatory fields" should {
+      "produce the expected RetrieveSavingsResponse model" in {
+        minimumFieldsJson.as[RetrieveSavingsResponse] shouldBe minimumModel
       }
     }
 

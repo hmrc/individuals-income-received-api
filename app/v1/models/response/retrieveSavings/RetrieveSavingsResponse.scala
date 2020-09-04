@@ -31,9 +31,7 @@ object RetrieveSavingsResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveSavingsResponse] = (
     (JsPath \ "submittedOn").read[String] and
-    (JsPath \ "securities").readNullable[Securities].map(_.flatMap {
-      case securities => Some(securities)
-    }) and
+    (JsPath \ "securities").readNullable[Securities] and
       (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterestItem]].mapEmptySeqToNone
     ) (RetrieveSavingsResponse.apply _)
 
