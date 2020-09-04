@@ -19,7 +19,7 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveInsurancePoliciesControllerFixture
@@ -33,7 +33,6 @@ class RetrieveInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
-    val correlationId: String = "X-123"
 
     val desResponse: JsValue = RetrieveInsurancePoliciesControllerFixture.fullRetrieveInsurancePoliciesResponse
     val mtdResponse: JsValue = RetrieveInsurancePoliciesControllerFixture.mtdResponseWithHateoas(nino, taxYear)
@@ -65,23 +64,6 @@ class RetrieveInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponse
-        response.header("Content-Type") shouldBe Some("application/json")
-      }
-    }
-
-    "return a 404 status code" when {
-      "the DES response results in an empty model" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, OK, JsObject.empty)
-        }
-
-        val response: WSResponse = await(request.get)
-        response.status shouldBe NOT_FOUND
-        response.json shouldBe Json.toJson(NotFoundError)
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }

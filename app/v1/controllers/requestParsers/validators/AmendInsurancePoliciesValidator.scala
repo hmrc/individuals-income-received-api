@@ -16,13 +16,16 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.amendInsurancePolicies._
 
-class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRawData] with ValueFormatErrorMessages {
+class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[AmendInsurancePoliciesRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
   override def validate(data: AmendInsurancePoliciesRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,6 +35,12 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: AmendInsurancePoliciesRawData => List[List[MtdError]] = (data: AmendInsurancePoliciesRawData) => {
+    List(
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 
@@ -77,9 +86,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
       ),
       DecimalValueValidation.validate(
         amount = commonItem.gainAmount,
-        minValue = 0.01,
-        path = s"/$itemName/$arrayIndex/gainAmount",
-        message = DECIMAL_MINIMUM_INCLUSIVE
+        path = s"/$itemName/$arrayIndex/gainAmount"
       ),
       IntegerValueValidation.validateOptional(
         field = commonItem.yearsHeld,
@@ -91,9 +98,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
       ),
       DecimalValueValidation.validateOptional(
         amount = commonItem.deficiencyRelief,
-        minValue = 0.01,
-        path = s"/$itemName/$arrayIndex/deficiencyRelief",
-        message = DECIMAL_MINIMUM_INCLUSIVE
+        path = s"/$itemName/$arrayIndex/deficiencyRelief"
       )
     ).flatten
   }
@@ -109,9 +114,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
       ),
       DecimalValueValidation.validate(
         amount = voidedIsa.gainAmount,
-        path = s"/voidedIsa/$arrayIndex/gainAmount",
-        minValue = 0.01,
-        message = DECIMAL_MINIMUM_INCLUSIVE
+        path = s"/voidedIsa/$arrayIndex/gainAmount"
       ),
       DecimalValueValidation.validateOptional(
         amount = voidedIsa.taxPaidAmount,
@@ -135,9 +138,7 @@ class AmendInsurancePoliciesValidator extends Validator[AmendInsurancePoliciesRa
       ),
       DecimalValueValidation.validate(
         amount = foreign.gainAmount,
-        minValue = 0.01,
-        path = s"/foreign/$arrayIndex/gainAmount",
-        message = DECIMAL_MINIMUM_INCLUSIVE
+        path = s"/foreign/$arrayIndex/gainAmount"
       ),
       DecimalValueValidation.validateOptional(
         amount = foreign.taxPaidAmount,

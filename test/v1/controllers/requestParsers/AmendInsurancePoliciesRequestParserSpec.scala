@@ -25,10 +25,10 @@ import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.amendInsurancePolicies._
 
-class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
+class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -282,14 +282,14 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
       "multiple field value validation errors occur" in new Test {
 
         private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-          s"""
-            {
+          """
+            |{
             |   "lifeInsurance":[
             |       {
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.999,
-            |           "taxPaid": 5000.999,
+            |           "taxPaid": true,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.999
@@ -298,7 +298,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "INPOLY123A",
             |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.99,
+            |           "taxPaid": true,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.99
@@ -309,7 +309,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 3000.999,
-            |           "taxPaid": 5000.99,
+            |           "taxPaid": true,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.99
@@ -318,7 +318,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.999,
+            |           "taxPaid": true,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 120,
             |           "deficiencyRelief": 5000.999
@@ -329,7 +329,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.999,
+            |           "taxPaid": true,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.999
@@ -338,7 +338,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "This event string is 91 characters long ------------------------------------------------ 91",
             |           "gainAmount": 5000.99,
-            |           "taxPaid": 5000.99,
+            |           "taxPaid": true,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12,
             |           "deficiencyRelief": 5000.99
@@ -349,7 +349,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "INPOLY123A",
             |           "event": "Death of spouse",
             |           "gainAmount": 2000.99,
-            |           "taxPaid": 5000.99,
+            |           "taxPaidAmount": 5000.99,
             |           "yearsHeld": -15,
             |           "yearsHeldSinceLastGain": 120
             |       },
@@ -357,7 +357,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "event": "Death of spouse",
             |           "gainAmount": 5000.999,
-            |           "taxPaid": 5000.999,
+            |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15,
             |           "yearsHeldSinceLastGain": 12
             |       }
@@ -366,13 +366,13 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
             |       {
             |           "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
             |           "gainAmount": 5000.99,
-            |           "taxPaid": 5000.999,
+            |           "taxPaidAmount": 5000.999,
             |           "yearsHeld": 15
             |       },
             |       {
             |           "customerReference": "INPOLY123A",
             |           "gainAmount": 2000.999,
-            |           "taxPaid": 5000.99,
+            |           "taxPaidAmount": 5000.99,
             |           "yearsHeld": -15
             |       }
             |   ]
@@ -383,23 +383,17 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
         private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
         private val allInvalidValueErrors = List(
-          CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/0/customerReference",
-              "/capitalRedemption/0/customerReference",
-              "/lifeAnnuity/1/customerReference",
-              "/voidedIsa/1/customerReference",
-              "/foreign/0/customerReference"
-            ))
-          ),
           ValueFormatError.copy(
-            message = "The field should be between 0.01 and 99999999999.99",
+            message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/lifeInsurance/0/gainAmount",
               "/lifeInsurance/0/deficiencyRelief",
               "/capitalRedemption/0/gainAmount",
               "/capitalRedemption/1/deficiencyRelief",
               "/lifeAnnuity/0/deficiencyRelief",
+              "/voidedIsa/1/gainAmount",
+              "/voidedIsa/1/taxPaidAmount",
+              "/foreign/0/taxPaidAmount",
               "/foreign/1/gainAmount"
             ))
           ),
@@ -421,15 +415,13 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec{
               "/foreign/1/yearsHeld"
             ))
           ),
-          ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+          CustomerRefFormatError.copy(
             paths = Some(List(
-              "/lifeInsurance/0/taxPaid",
-              "/capitalRedemption/1/taxPaid",
-              "/lifeAnnuity/0/taxPaid",
-              "/voidedIsa/1/gainAmount",
-              "/voidedIsa/1/taxPaid",
-              "/foreign/0/taxPaid"
+              "/lifeInsurance/0/customerReference",
+              "/capitalRedemption/0/customerReference",
+              "/lifeAnnuity/1/customerReference",
+              "/voidedIsa/1/customerReference",
+              "/foreign/0/customerReference"
             ))
           )
         )

@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveInsurancePolicies
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
@@ -24,6 +24,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
+      |   "submittedOn": "2020-07-06T09:37:17Z",
       |   "lifeInsurance":[
       |      {
       |         "customerReference": "INPOLY123A",
@@ -123,6 +124,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
   )
 
   private val responseModel = RetrieveInsurancePoliciesResponse(
+    submittedOn = "2020-07-06T09:37:17Z",
     lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
     capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
     lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),
@@ -130,7 +132,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
     foreign = Some(Seq(foreignItemModel))
   )
 
-  "InsurancePoliciesItem" when {
+  "RetrieveInsurancePoliciesResponse" when {
     "read from valid JSON" should {
       "produce the expected object" in {
         json.as[RetrieveInsurancePoliciesResponse] shouldBe responseModel
@@ -152,13 +154,6 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
         )
 
         invalidJson.validate[RetrieveInsurancePoliciesResponse] shouldBe a[JsError]
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce an empty RetrieveInsurancePoliciesResponse Object" in {
-        val emptyJson = JsObject.empty
-        emptyJson.as[RetrieveInsurancePoliciesResponse] shouldBe RetrieveInsurancePoliciesResponse.empty
       }
     }
 
