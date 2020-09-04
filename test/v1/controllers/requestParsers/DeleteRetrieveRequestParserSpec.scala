@@ -26,7 +26,7 @@ import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 class DeleteRetrieveRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
 
   val deleteRetrieveSavingsRawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
@@ -45,7 +45,7 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
         MockDeleteRetrieveValidator.validate(deleteRetrieveSavingsRawData).returns(Nil)
 
         parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
-          Right(DeleteRetrieveRequest(Nino(nino), DesTaxYear("2018")))
+          Right(DeleteRetrieveRequest(Nino(nino), DesTaxYear("2020")))
       }
     }
 

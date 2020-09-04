@@ -16,7 +16,7 @@
 
 package v1.models.request.amendSavings
 
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class AmendSecuritiesSpec extends UnitSpec {
@@ -34,7 +34,7 @@ class AmendSecuritiesSpec extends UnitSpec {
   val model: AmendSecurities =
     AmendSecurities(
       taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
+      grossAmount = 1455.0,
       netAmount = Some(123.22)
     )
 
@@ -47,6 +47,21 @@ class AmendSecuritiesSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
+  val minimumDesResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "grossAmount": 1455.0
+      |}
+    """.stripMargin
+  )
+
+  val minimumModel: AmendSecurities =
+    AmendSecurities(
+      taxTakenOff = None,
+      grossAmount = 1455.0,
+      netAmount = None
+    )
 
   val desResponseInvalid: JsValue = Json.parse(
     """
@@ -65,10 +80,9 @@ class AmendSecuritiesSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
-      "produce an empty SecuritiesItems object" in {
-        val emptyJson = JsObject.empty
-        emptyJson.as[AmendSecurities] shouldBe AmendSecurities.empty
+    "read from a JSON with only mandatory fields" should {
+      "produce the expected AmendSecurities object" in {
+        minimumDesResponse.as[AmendSecurities] shouldBe minimumModel
       }
     }
 

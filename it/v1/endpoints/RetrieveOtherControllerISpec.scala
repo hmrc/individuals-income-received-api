@@ -32,7 +32,7 @@ class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2017-18"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
     val desResponse: JsValue = RetrieveOtherControllerFixture.fullRetrieveOtherResponse
@@ -92,9 +92,10 @@ class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", BAD_REQUEST, NinoFormatError),
+          ("AA1123A", "2019-20", BAD_REQUEST, NinoFormatError),
           ("AA123456A", "20177", BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError))
+          ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError))
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveSavings
 
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class RetrieveSavingsResponseSpec extends UnitSpec {
@@ -24,6 +24,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val desResponse: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "securities":
       |      {
       |         "taxTakenOff": 100.0,
@@ -47,7 +48,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val securitiesModel: Securities =
     Securities(
       taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
+      grossAmount = 1455.0,
       netAmount = Some(123.22)
     )
 
@@ -63,13 +64,39 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
   private val model: RetrieveSavingsResponse =
     RetrieveSavingsResponse(
+      submittedOn = "2019-04-04T01:01:01Z",
       securities = Some(securitiesModel),
       foreignInterest = Some(Seq(foreignInterestsItemModel))
+    )
+
+  private val minimumSecuritiesModel: Securities =
+    Securities(
+      taxTakenOff = None,
+      grossAmount = 1499.99,
+      netAmount = None
+    )
+
+  private val minimumForeignInterestsItemModel: ForeignInterestItem =
+    ForeignInterestItem(
+      amountBeforeTax = None,
+      countryCode = "DEU",
+      taxTakenOff = None,
+      specialWithholdingTax = None,
+      taxableAmount = 3000.33,
+      foreignTaxCreditRelief = true
+    )
+
+  private val minimumModel: RetrieveSavingsResponse =
+    RetrieveSavingsResponse(
+      submittedOn = "2019-04-04T01:01:01Z",
+      securities = Some(minimumSecuritiesModel),
+      foreignInterest = Some(Seq(minimumForeignInterestsItemModel))
     )
 
   val mtdJson: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "securities":
       |      {
       |         "taxTakenOff": 100.0,
@@ -93,6 +120,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   private val desResponseInvalid: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "securities":
       |      {
       |         "taxTakenOff": "abc",
@@ -113,11 +141,21 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val emptyObjectsJson: JsValue = Json.parse(
+  val minimumFieldsJson: JsValue = Json.parse(
     """
       |{
-      |   "securities": {},
-      |   "foreignInterest": []
+      |   "submittedOn": "2019-04-04T01:01:01Z",
+      |    "securities":
+      |      {
+      |         "grossAmount": 1499.99
+      |      },
+      |   "foreignInterest": [
+      |      {
+      |         "countryCode": "DEU",
+      |         "taxableAmount": 3000.33,
+      |         "foreignTaxCreditRelief": true
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -135,27 +173,15 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
-      "produce a model with securities and foreignInterest as None" in {
-        JsObject.empty.as[RetrieveSavingsResponse] shouldBe RetrieveSavingsResponse.empty
-      }
-    }
-
-    "read from JSON with empty securities and foreignInterest fields" should {
-      "produce an empty AmendSavingsRequestBody object" in {
-        emptyObjectsJson.as[RetrieveSavingsResponse] shouldBe RetrieveSavingsResponse.empty
+    "read from a JSON with only mandatory fields" should {
+      "produce the expected RetrieveSavingsResponse model" in {
+        minimumFieldsJson.as[RetrieveSavingsResponse] shouldBe minimumModel
       }
     }
 
     "written to JSON" should {
       "produce the expected JSON" in {
         Json.toJson(model) shouldBe mtdJson
-      }
-    }
-
-    "written to JSON (no securities and foreignInterest)" should {
-      "produce JSON with no securities and foreignInterest" in {
-        Json.toJson(RetrieveSavingsResponse.empty) shouldBe JsObject.empty
       }
     }
   }

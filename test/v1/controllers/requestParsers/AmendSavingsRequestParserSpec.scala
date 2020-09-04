@@ -28,7 +28,7 @@ import v1.models.request.amendSavings._
 class AmendSavingsRequestParserSpec extends UnitSpec{
 
   val nino: String = "AA123456B"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -65,7 +65,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
   private val validRequestBodyModel = AmendSavingsRequestBody(
     securities = Some(AmendSecurities(
       taxTakenOff = Some(100.11),
-      grossAmount = Some(100.12),
+      grossAmount = 100.12,
       netAmount = Some(100.13)
     )),
     foreignInterest = Some(Seq(
