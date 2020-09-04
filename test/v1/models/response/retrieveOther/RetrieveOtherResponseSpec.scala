@@ -24,6 +24,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "businessReceipts": [
       |      {
       |         "grossAmount": 5000.99,
@@ -120,6 +121,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
 
   private val responseModel = RetrieveOtherResponse(
+    submittedOn = "2019-04-04T01:01:01Z",
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),
     Some(overseasIncomeAndGainsModel),
@@ -134,8 +136,9 @@ class RetrieveOtherResponseSpec extends UnitSpec {
       }
     }
 
-    "read from valid JSON with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
-      "produce an empty RetrieveOtherResponse object" in {
+    "read from a valid JSON with submittedOn field, " +
+      "empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
+      "produce a expected response object" in {
         val json = Json.parse(
           """
             |{
@@ -146,15 +149,16 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        json.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        json.as[RetrieveOtherResponse] shouldBe
+          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None)
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty RetrieveOtherResponse object" in {
+      "produce a JsError" in {
         val emptyJson = JsObject.empty
 
-        emptyJson.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        emptyJson.as[RetrieveOtherResponse] shouldBe a[JsError]
       }
     }
 
@@ -163,6 +167,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
         val invalidJson = Json.parse(
           """
             |{
+            |   "submittedOn":"2019-04-04T01:01:01Z",
             |   "businessReceipts": [
             |      {
             |         "grossAmount": 5000.99,

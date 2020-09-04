@@ -23,7 +23,8 @@ import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveOtherResponse(businessReceipts: Option[Seq[BusinessReceiptsItem]],
+case class RetrieveOtherResponse(submittedOn: String,
+                                 businessReceipts: Option[Seq[BusinessReceiptsItem]],
                                  allOtherIncomeReceivedWhilstAbroad: Option[Seq[AllOtherIncomeReceivedWhilstAbroadItem]],
                                  overseasIncomeAndGains: Option[OverseasIncomeAndGains],
                                  chargeableForeignBenefitsAndGifts: Option[ChargeableForeignBenefitsAndGifts],
@@ -31,10 +32,9 @@ case class RetrieveOtherResponse(businessReceipts: Option[Seq[BusinessReceiptsIt
 
 object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
 
-  val empty: RetrieveOtherResponse = RetrieveOtherResponse(None, None,None,None,None)
-
   implicit val reads: Reads[RetrieveOtherResponse] = (
-    (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
+    (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "overseasIncomeAndGains").readNullable[OverseasIncomeAndGains] and
       (JsPath \ "chargeableForeignBenefitsAndGifts").readNullable[ChargeableForeignBenefitsAndGifts].map(_.flatMap {

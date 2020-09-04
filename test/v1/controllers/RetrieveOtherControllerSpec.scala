@@ -127,6 +127,7 @@ class RetrieveOtherControllerSpec extends ControllerBaseSpec
   private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
 
   private val retrieveOtherResponseModel = RetrieveOtherResponse(
+    submittedOn = "2019-04-04T01:01:01Z",
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),
     Some(overseasIncomeAndGainsModel),
