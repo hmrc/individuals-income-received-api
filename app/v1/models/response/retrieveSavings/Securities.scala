@@ -20,15 +20,14 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Securities(taxTakenOff: Option[BigDecimal],
-                      grossAmount: Option[BigDecimal],
+                      grossAmount: BigDecimal,
                       netAmount: Option[BigDecimal])
 
 object Securities {
-  val empty: Securities = Securities(None, None, None)
 
   implicit val reads: Reads[Securities] = (
     (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
-      (JsPath \ "grossAmount").readNullable[BigDecimal] and
+      (JsPath \ "grossAmount").read[BigDecimal] and
       (JsPath \ "netAmount").readNullable[BigDecimal]
     ) (Securities.apply _)
 

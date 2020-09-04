@@ -82,7 +82,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
 
   private val fullSecuritiesItemsModel = Securities(
       taxTakenOff = Some(100.0),
-      grossAmount = Some(1455.0),
+      grossAmount = 1455.0,
       netAmount = Some(123.22)
     )
 
@@ -96,6 +96,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
     )
 
   private val retrieveSavingsResponseModel = RetrieveSavingsResponse(
+      submittedOn = "2019-04-04T01:01:01Z",
       securities = Some(fullSecuritiesItemsModel),
       foreignInterest = Some(Seq(fullForeignInterestsModel))
     )
@@ -169,6 +170,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST)
         )
 

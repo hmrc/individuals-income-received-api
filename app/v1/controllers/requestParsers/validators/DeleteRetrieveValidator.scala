@@ -40,8 +40,7 @@ class DeleteRetrieveValidator @Inject()(implicit appConfig: AppConfig)
 
   private def parameterRuleValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
     List(
-      // TODO: Enable this once we have DES specs for the non-employment endpoints.
-      //TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 }

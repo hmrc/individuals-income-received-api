@@ -16,13 +16,16 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
 
-class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
+class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
   override def validate(data: AmendSavingsRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,6 +35,12 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: AmendSavingsRawData => List[List[MtdError]] = { data =>
+    List(
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 
@@ -61,7 +70,7 @@ class AmendSavingsValidator extends Validator[AmendSavingsRawData] with ValueFor
         amount = securities.taxTakenOff,
         path = "/securities/taxTakenOff"
       ),
-      DecimalValueValidation.validateOptional(
+      DecimalValueValidation.validate(
         amount = securities.grossAmount,
         path = "/securities/grossAmount"
       ),
