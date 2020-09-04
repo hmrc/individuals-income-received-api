@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -23,10 +25,10 @@ import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMess
 import v1.models.errors._
 import v1.models.request.amendOther.AmendOtherRawData
 
-class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
+class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages with MockAppConfig {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2018-19"
+  private val validTaxYear = "2019-20"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -301,46 +303,64 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
   private val invalidOmittedForeignIncomeRawRequestBody = AnyContentAsJson(invalidOmittedForeignIncomeRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
+  implicit val appConfig: AppConfig = mockAppConfig
   val validator = new AmendOtherValidator()
+
+  class Test extends MockAppConfig {
+
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new AmendOtherValidator()
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2020)
+  }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
-      "an invalid nino is supplied" in {
+      "an invalid nino is supplied" in new Test {
         validator.validate(AmendOtherRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "an invalid tax year is supplied" in {
+      "an invalid tax year is supplied" in new Test {
         validator.validate(AmendOtherRawData(validNino, "20178", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
+    "return RuleTaxYearNotSupportedError error" when {
+      "an invalid tax year is supplied" in new Test {
+        validator.validate(AmendOtherRawData(validNino, "2017-18", validRawRequestBody)) shouldBe
+          List(RuleTaxYearNotSupportedError)
+      }
+    }
+
     "return RuleIncorrectOrEmptyBodyError error" when {
-      "an empty JSON body is submitted" in {
+      "an empty JSON body is submitted" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-      "a non-empty JSON body is submitted without any expected fields" in {
+      "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-      "the submitted request body is not in the correct format" in {
+      "the submitted request body is not in the correct format" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/overseasIncomeAndGains/gainAmount"))))
       }
 
-      "the submitted request body has missing mandatory fields" in {
+      "the submitted request body has missing mandatory fields" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
             "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
@@ -351,35 +371,35 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     }
 
     "return CountryCodeFormatError error" when {
-      "an incorrectly formatted country code is submitted" in {
+      "an incorrectly formatted country code is submitted" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
           List(CountryCodeFormatError.copy(paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))))
       }
     }
 
     "return CountryCodeRuleError error" when {
-      "an invalid country code is submitted" in {
+      "an invalid country code is submitted" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidCountryCodeRuleRawRequestBody)) shouldBe
           List(CountryCodeRuleError.copy(paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))))
       }
     }
 
     "return TaxYearFormatError error" when {
-      "an incorrectly formatted tax year is submitted in the request body" in {
+      "an incorrectly formatted tax year is submitted in the request body" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidTaxYearRawRequestBody)) shouldBe
           List(TaxYearFormatError.copy(paths = Some(List("/businessReceipts/0/taxYear"))))
       }
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
-      "an invalid tax year range is submitted in the request body" in {
+      "an invalid tax year range is submitted in the request body" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidTaxYearRangeRuleRawRequestBody)) shouldBe
           List(RuleTaxYearRangeInvalidError.copy(paths = Some(List("/businessReceipts/0/taxYear"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
-      "one field fails value validation (business receipts)" in {
+      "one field fails value validation (business receipts)" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidBusinessReceiptsRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -387,7 +407,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           ))
       }
 
-      "one field fails value validation (all other income received whilst abroad)" in {
+      "one field fails value validation (all other income received whilst abroad)" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidAllOtherIncomeReceivedWhilstAbroadRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -395,7 +415,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           ))
       }
 
-      "one field fails value validation (overseas income and gains)" in {
+      "one field fails value validation (overseas income and gains)" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidOverseasIncomeAndGainsRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -403,7 +423,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           ))
       }
 
-      "one field fails value validation (chargeable foreign benefits and gifts)" in {
+      "one field fails value validation (chargeable foreign benefits and gifts)" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidChargeableForeignBenefitsAndGiftsRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -412,7 +432,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       }
 
 
-      "one field fails value validation (omitted foreign income)" in {
+      "one field fails value validation (omitted foreign income)" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, invalidOmittedForeignIncomeRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -422,7 +442,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     }
 
     "return ValueFormatError error (multiple failures)" when {
-      "multiple fields fail value validation" in {
+      "multiple fields fail value validation" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
             TaxYearFormatError.copy(
@@ -476,7 +496,7 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors (path parameters)" in {
+      "request supplied has multiple errors (path parameters)" in new Test {
         validator.validate(AmendOtherRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
