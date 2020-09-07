@@ -28,7 +28,7 @@ import v1.models.request.amendOther._
 class AmendOtherRequestParserSpec extends UnitSpec{
 
   val nino: String = "AA123456B"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """

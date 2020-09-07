@@ -24,6 +24,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "businessReceipts": [
       |      {
       |         "grossAmount": 5000.99,
@@ -120,6 +121,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
 
   private val responseModel = RetrieveOtherResponse(
+    submittedOn = "2019-04-04T01:01:01Z",
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),
     Some(overseasIncomeAndGainsModel),
@@ -134,9 +136,9 @@ class RetrieveOtherResponseSpec extends UnitSpec {
       }
     }
 
-    "read from valid JSON with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
-      "produce an empty RetrieveOtherResponse object" in {
-        val json = Json.parse(
+    "read from json with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
+      "produce a JsError" in {
+        val invalidJson = Json.parse(
           """
             |{
             |   "businessReceipts": [ ],
@@ -146,34 +148,31 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        json.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        invalidJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
+
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty RetrieveOtherResponse object" in {
+      "produce a JsError" in {
         val emptyJson = JsObject.empty
 
-        emptyJson.as[RetrieveOtherResponse] shouldBe RetrieveOtherResponse.empty
+        emptyJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
       }
     }
 
-    "read from invalid JSON" should {
-      "produce a JsError" in {
-        val invalidJson = Json.parse(
+    "read from a valid JSON with submittedOn field," should {
+      "produce a expected RetrieveOtherResponse object" in {
+        val json = Json.parse(
           """
             |{
-            |   "businessReceipts": [
-            |      {
-            |         "grossAmount": 5000.99,
-            |         "taxYear": 2018
-            |      }
-            |   ]
+            |   "submittedOn":"2019-04-04T01:01:01Z"
             |}
           """.stripMargin
         )
 
-        invalidJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
+        json.as[RetrieveOtherResponse] shouldBe
+          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None)
       }
     }
 
