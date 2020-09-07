@@ -136,10 +136,9 @@ class RetrieveOtherResponseSpec extends UnitSpec {
       }
     }
 
-    "read from a valid JSON with submittedOn field, " +
-      "empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
+    "read from json with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
       "produce a expected response object" in {
-        val json = Json.parse(
+        val invalidJson = Json.parse(
           """
             |{
             |   "businessReceipts": [ ],
@@ -149,8 +148,8 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           """.stripMargin
         )
 
-        json.as[RetrieveOtherResponse] shouldBe
-          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None)
+        invalidJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
+
       }
     }
 
@@ -158,27 +157,22 @@ class RetrieveOtherResponseSpec extends UnitSpec {
       "produce a JsError" in {
         val emptyJson = JsObject.empty
 
-        emptyJson.as[RetrieveOtherResponse] shouldBe a[JsError]
+        emptyJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
       }
     }
 
-    "read from invalid JSON" should {
-      "produce a JsError" in {
-        val invalidJson = Json.parse(
+    "read from a valid JSON with submittedOn field," should {
+      "produce a expected RetrieveOtherResponse object" in {
+        val json = Json.parse(
           """
             |{
-            |   "submittedOn":"2019-04-04T01:01:01Z",
-            |   "businessReceipts": [
-            |      {
-            |         "grossAmount": 5000.99,
-            |         "taxYear": 2018
-            |      }
-            |   ]
+            |   "submittedOn":"2019-04-04T01:01:01Z"
             |}
           """.stripMargin
         )
 
-        invalidJson.validate[RetrieveOtherResponse] shouldBe a[JsError]
+        json.as[RetrieveOtherResponse] shouldBe
+          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None)
       }
     }
 
