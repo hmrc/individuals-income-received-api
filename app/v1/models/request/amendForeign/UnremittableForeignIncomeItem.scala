@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class UnremittableForeignIncomeItem(countryCode: String,
-                                         amountInForeignCurrency: Option[BigDecimal],
+                                         amountInForeignCurrency: BigDecimal,
                                          amountTaxPaid: Option[BigDecimal])
 
 object UnremittableForeignIncomeItem {
@@ -28,7 +28,7 @@ object UnremittableForeignIncomeItem {
 
   implicit val writes: OWrites[UnremittableForeignIncomeItem] = (
     (JsPath \ "countryCode").write[String] and
-      (JsPath \ "amountInForeignCurrency").writeNullable[BigDecimal] and
+      (JsPath \ "amountInForeignCurrency").write[BigDecimal] and
       (JsPath \ "amountTaxPaid").writeNullable[BigDecimal]
     ) (unlift(UnremittableForeignIncomeItem.unapply))
 }

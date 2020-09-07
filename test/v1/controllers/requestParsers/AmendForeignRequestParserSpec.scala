@@ -52,12 +52,12 @@ class AmendForeignRequestParserSpec extends UnitSpec {
 
   private val fullForeignEarningsModel = ForeignEarnings(
     customerReference = Some("FOREIGNINCME123A"),
-    earningsNotTaxableUK = Some(99999999999.99)
+    earningsNotTaxableUK = 99999999999.99
   )
 
   private val fullUnremittableForeignIncomeModel = UnremittableForeignIncomeItem(
     countryCode = "FRA",
-    amountInForeignCurrency = Some(99.99),
+    amountInForeignCurrency = 99.99,
     amountTaxPaid = Some(1.0)
   )
 

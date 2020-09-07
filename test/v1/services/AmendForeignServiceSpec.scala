@@ -34,18 +34,18 @@ class AmendForeignServiceSpec extends ServiceSpec {
 
   private val foreignEarningsModel = ForeignEarnings(
     customerReference = Some("ref"),
-    earningsNotTaxableUK = Some(111.11)
+    earningsNotTaxableUK = 111.11
   )
 
   private val unremittableForeignIncomeModel = Seq(
     UnremittableForeignIncomeItem(
       countryCode = "DEU",
-      amountInForeignCurrency = Some(222.22),
+      amountInForeignCurrency = 222.22,
       amountTaxPaid = Some(333.33)
     ),
     UnremittableForeignIncomeItem(
       countryCode = "FRA",
-      amountInForeignCurrency = Some(444.44),
+      amountInForeignCurrency = 444.44,
       amountTaxPaid = Some(555.55)
     )
   )

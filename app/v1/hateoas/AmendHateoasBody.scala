@@ -102,7 +102,7 @@ trait AmendHateoasBody extends HateoasLinks {
 
     val links = Seq(
       listEmployment(appConfig, nino, taxYear, isSelf = false),
-      retrieveEmployment(appConfig, nino, taxYear, employmentId, isSelf = true),
+      retrieveEmployment(appConfig, nino, taxYear, employmentId),
       amendCustomEmployment(appConfig, nino, taxYear, employmentId),
       deleteCustomEmployment(appConfig, nino, taxYear, employmentId)
     )

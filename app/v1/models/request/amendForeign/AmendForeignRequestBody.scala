@@ -27,10 +27,7 @@ object AmendForeignRequestBody extends JsonUtils {
   val empty: AmendForeignRequestBody = AmendForeignRequestBody(None, None)
 
   implicit val reads: Reads[AmendForeignRequestBody] = (
-    (JsPath \ "foreignEarnings").readNullable[ForeignEarnings].map(_.flatMap {
-      case ForeignEarnings.empty => None
-      case foreignEarnings => Some(foreignEarnings)
-    }) and
+    (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncomeItem]].mapEmptySeqToNone
     ) (AmendForeignRequestBody.apply _)
 

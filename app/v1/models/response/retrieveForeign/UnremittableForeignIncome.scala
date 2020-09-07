@@ -20,14 +20,13 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class UnremittableForeignIncome(countryCode: String,
-                                     amountInForeignCurrency: Option[BigDecimal],
-                                     amountTaxPaid: Option[BigDecimal]
-                                    )
+                                     amountInForeignCurrency: BigDecimal,
+                                     amountTaxPaid: Option[BigDecimal])
 
 object UnremittableForeignIncome {
   implicit val reads: Reads[UnremittableForeignIncome] = (
     (JsPath \ "countryCode").read[String] and
-      (JsPath \ "amountInForeignCurrency").readNullable[BigDecimal] and
+      (JsPath \ "amountInForeignCurrency").read[BigDecimal] and
       (JsPath \ "amountTaxPaid").readNullable[BigDecimal]
     ) (UnremittableForeignIncome.apply _)
 

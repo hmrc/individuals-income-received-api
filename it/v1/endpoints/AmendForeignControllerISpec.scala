@@ -31,7 +31,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2017-18"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -389,17 +389,21 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
           }
         }
 
+        val validNino = "AA123456A"
+        val validTaxYear = "2019-20"
+
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
-          ("AA123456A", "2017-18", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
-          ("AA123456A", "2017-18", ruleCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeRuleError, None),
-          ("AA123456A", "2017-18", nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
-          ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, customerRefError, None),
-          ("AA123456A", "2017-18", allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError, None),
-          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors, Some("(invalid request body format)")),
-          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors, Some("(missing mandatory fields)"))
+          ("AA1123A", validTaxYear, validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
+          (validNino, "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          (validNino, "2018-20", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
+          (validNino, "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
+          (validNino, validTaxYear, invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
+          (validNino, validTaxYear, ruleCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeRuleError, None),
+          (validNino, validTaxYear, nonsenseRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
+          (validNino, validTaxYear, invalidCustomerRefRequestBodyJson, BAD_REQUEST, customerRefError, None),
+          (validNino, validTaxYear, allInvalidValueRequestBodyJson, BAD_REQUEST, allInvalidValueRequestError, None),
+          (validNino, validTaxYear, nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors, Some("(invalid request body format)")),
+          (validNino, validTaxYear, missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors, Some("(missing mandatory fields)"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
