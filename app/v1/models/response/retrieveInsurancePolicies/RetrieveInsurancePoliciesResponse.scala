@@ -23,17 +23,18 @@ import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveInsurancePoliciesResponse(lifeInsurance: Option[Seq[CommonInsurancePoliciesItem]],
+case class RetrieveInsurancePoliciesResponse(submittedOn: String,
+                                             lifeInsurance: Option[Seq[CommonInsurancePoliciesItem]],
                                              capitalRedemption: Option[Seq[CommonInsurancePoliciesItem]],
                                              lifeAnnuity: Option[Seq[CommonInsurancePoliciesItem]],
                                              voidedIsa: Option[Seq[VoidedIsaPoliciesItem]],
                                              foreign: Option[Seq[ForeignPoliciesItem]])
 
 object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
-  val empty: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(None, None, None, None, None)
 
   implicit val reads: Reads[RetrieveInsurancePoliciesResponse] = (
-    (JsPath \ "lifeInsurance").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
+    (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "lifeInsurance").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "capitalRedemption").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "lifeAnnuity").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "voidedIsa").readNullable[Seq[VoidedIsaPoliciesItem]].mapEmptySeqToNone and

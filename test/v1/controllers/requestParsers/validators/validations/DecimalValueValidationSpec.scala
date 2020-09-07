@@ -41,13 +41,13 @@ class DecimalValueValidationSpec extends UnitSpec with ValueFormatErrorMessages 
         ) shouldBe NoValidationErrors
       }
 
-      "return a ValueFormatError for an invalid decimal value with minValue of 0.01 (default validation)" in {
+      "return a ValueFormatError for an invalid decimal value with minValue of -99999999999.99 (default validation)" in {
         DecimalValueValidation.validate(
-          amount = -100,
-          minValue = 0.01,
+          amount = -999999999999.99,
+          minValue = -99999999999.99,
           path = "/path",
-          message = DECIMAL_MINIMUM_INCLUSIVE
-        ) shouldBe List(ValueFormatError.copy(message = DECIMAL_MINIMUM_INCLUSIVE, paths = Some(Seq("/path"))))
+          message = BIG_DECIMAL_MINIMUM_INCLUSIVE
+        ) shouldBe List(ValueFormatError.copy(message = BIG_DECIMAL_MINIMUM_INCLUSIVE, paths = Some(Seq("/path"))))
       }
 
       "return a ValueFormatError for an invalid decimal value (custom validation)" in {
@@ -63,29 +63,29 @@ class DecimalValueValidationSpec extends UnitSpec with ValueFormatErrorMessages 
     }
 
     "validateOptional" should {
-      "return an empty list for a value of 'None' with minValue of 0.01" in {
+      "return an empty list for a value of 'None' with minValue of -99999999999.99" in {
         DecimalValueValidation.validateOptional(
           amount = None,
-          minValue = 0.01,
+          minValue = -99999999999.99,
           path = "/path",
-          message = DECIMAL_MINIMUM_INCLUSIVE
+          message = BIG_DECIMAL_MINIMUM_INCLUSIVE
         ) shouldBe NoValidationErrors
       }
 
-      "validate correctly for some valid amount" in {
+      "validate correctly for some valid decimal value" in {
         DecimalValueValidation.validateOptional(
           amount = Some(100),
           path = "/path"
         ) shouldBe NoValidationErrors
       }
 
-      "validate correctly for some invalid amount with minValue of 0.01" in {
+      "validate correctly for some invalid decimal value with minValue of -99999999999.99" in {
         DecimalValueValidation.validateOptional(
-          amount = Some(0),
-          minValue = 0.01,
+          amount = Some(100000000000000.99),
+          minValue = -99999999999.99,
           path = "/path",
-          message = DECIMAL_MINIMUM_INCLUSIVE
-        ) shouldBe List(ValueFormatError.copy(message = DECIMAL_MINIMUM_INCLUSIVE, paths = Some(Seq("/path"))))
+          message = BIG_DECIMAL_MINIMUM_INCLUSIVE
+        ) shouldBe List(ValueFormatError.copy(message = BIG_DECIMAL_MINIMUM_INCLUSIVE, paths = Some(Seq("/path"))))
       }
     }
   }

@@ -57,7 +57,7 @@ class AmendInsurancePoliciesControllerSpec
   }
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   val requestBodyJson: JsValue = Json.parse(
@@ -277,30 +277,30 @@ class AmendInsurancePoliciesControllerSpec
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
-      |{
-      |   "links":[
-      |      {
-      |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
-      |         "rel":"amend-insurance-policies-income",
-      |         "method":"PUT"
-      |      },
-      |      {
-      |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
-      |         "rel":"self",
-      |         "method":"GET"
-      |      },
-      |      {
-      |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
-      |         "rel":"delete-insurance-policies-income",
-      |         "method":"DELETE"
-      |      }
-      |   ]
-      |}
-      |""".stripMargin
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
+       |         "rel":"amend-insurance-policies-income",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
+       |         "rel":"delete-insurance-policies-income",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
+       |""".stripMargin
   )
 
   "AmendInsurancePoliciesController" should {
-    "return NO_content" when {
+    "return OK" when {
       "happy path" in new Test {
 
         MockAmendInsurancePoliciesRequestParser
@@ -340,6 +340,7 @@ class AmendInsurancePoliciesControllerSpec
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CustomerRefFormatError, BAD_REQUEST),
