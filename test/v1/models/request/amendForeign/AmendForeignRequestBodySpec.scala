@@ -16,7 +16,7 @@
 
 package v1.models.request.amendForeign
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class AmendForeignRequestBodySpec extends UnitSpec {
@@ -46,18 +46,18 @@ class AmendForeignRequestBodySpec extends UnitSpec {
 
   private val foreignEarningsModel = ForeignEarnings(
     customerReference = Some("ref"),
-    earningsNotTaxableUK = Some(111.11)
+    earningsNotTaxableUK = 111.11
   )
 
   private val unremittableForeignIncomeModel = Seq(
     UnremittableForeignIncomeItem(
       countryCode = "GBR",
-      amountInForeignCurrency = Some(222.22),
+      amountInForeignCurrency = 222.22,
       amountTaxPaid = Some(333.33)
     ),
     UnremittableForeignIncomeItem(
       countryCode = "DEU",
-      amountInForeignCurrency = Some(444.44),
+      amountInForeignCurrency = 444.44,
       amountTaxPaid = Some(555.55)
     )
   )
@@ -71,13 +71,6 @@ class AmendForeignRequestBodySpec extends UnitSpec {
     "read from valid JSON" should {
       "produce the expected AmendForeignRequestBody object" in {
         json.as[AmendForeignRequestBody] shouldBe requestBodyModel
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce the expected AmendForeignRequestBody object" in {
-        val emptyJson = JsObject.empty
-        emptyJson.as[AmendForeignRequestBody] shouldBe AmendForeignRequestBody.empty
       }
     }
 

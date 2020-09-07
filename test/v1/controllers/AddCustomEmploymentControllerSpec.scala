@@ -62,7 +62,7 @@ class AddCustomEmploymentControllerSpec
 
     val links: List[Link] = List(
       listEmployment(mockAppConfig, nino, taxYear, isSelf = false),
-      retrieveEmployment(mockAppConfig, nino, taxYear, employmentId, isSelf = true),
+      retrieveEmployment(mockAppConfig, nino, taxYear, employmentId),
       amendCustomEmployment(mockAppConfig, nino, taxYear, employmentId),
       deleteCustomEmployment(mockAppConfig, nino, taxYear, employmentId)
     )

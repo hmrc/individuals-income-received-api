@@ -16,7 +16,7 @@
 
 package v1.models.request.amendForeign
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class ForeignEarningsSpec extends UnitSpec {
@@ -32,20 +32,13 @@ class ForeignEarningsSpec extends UnitSpec {
 
   private val model = ForeignEarnings(
     customerReference = Some("ref"),
-    earningsNotTaxableUK = Some(111.11)
+    earningsNotTaxableUK = 111.11
   )
 
   "ForeignEarnings" when {
     "read from valid JSON" should {
       "produce the expected ForeignEarnings object" in {
         json.as[ForeignEarnings] shouldBe model
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce the expected ForeignEarnings object" in {
-        val emptyJson = JsObject.empty
-        emptyJson.as[ForeignEarnings] shouldBe ForeignEarnings.empty
       }
     }
 

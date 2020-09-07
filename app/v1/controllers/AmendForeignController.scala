@@ -84,7 +84,8 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
            CustomMtdError(ValueFormatError.code) |
            CustomMtdError(CountryCodeFormatError.code) |
            CustomMtdError(CountryCodeRuleError.code) |
-           CustomMtdError(CustomerRefFormatError.code)
+           CustomMtdError(CustomerRefFormatError.code) |
+           RuleTaxYearNotSupportedError
       => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

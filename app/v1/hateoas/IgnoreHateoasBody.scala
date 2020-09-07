@@ -25,7 +25,7 @@ trait IgnoreHateoasBody extends HateoasLinks {
 
     val links = Seq(
       listEmployment(appConfig, nino, taxYear, isSelf = false),
-      retrieveEmployment(appConfig, nino, taxYear, employmentId, isSelf = true)
+      retrieveEmployment(appConfig, nino, taxYear, employmentId)
     )
 
     Json.obj("links" -> links)

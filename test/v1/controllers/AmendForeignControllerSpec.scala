@@ -57,7 +57,7 @@ class AmendForeignControllerSpec
   }
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   val requestBodyJson: JsValue = Json.parse(
@@ -91,18 +91,18 @@ class AmendForeignControllerSpec
 
   val foreignEarning: ForeignEarnings = ForeignEarnings(
     customerReference = Some("FOREIGNINCME123A"),
-    earningsNotTaxableUK = Some(1999.99)
+    earningsNotTaxableUK = 1999.99
   )
 
   val unremittableForeignIncomeItems: Seq[UnremittableForeignIncomeItem] = Seq(
     UnremittableForeignIncomeItem(
       countryCode = "FRA",
-      amountInForeignCurrency = Some(1999.99),
+      amountInForeignCurrency = 1999.99,
       amountTaxPaid = Some(1999.99)
     ),
     UnremittableForeignIncomeItem(
       countryCode = "IND",
-      amountInForeignCurrency = Some(2999.99),
+      amountInForeignCurrency = 2999.99,
       amountTaxPaid = Some(2999.99)
     )
   )
@@ -184,6 +184,7 @@ class AmendForeignControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (CountryCodeRuleError, BAD_REQUEST),

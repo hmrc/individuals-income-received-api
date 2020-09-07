@@ -19,22 +19,20 @@ package v1.models.response.retrieveForeign
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveForeignResponse(foreignEarnings: Option[ForeignEarnings], unremittableForeignIncome: Option[Seq[UnremittableForeignIncome]])
+case class RetrieveForeignResponse(submittedOn: String,
+                                   foreignEarnings: Option[ForeignEarnings],
+                                   unremittableForeignIncome: Option[Seq[UnremittableForeignIncome]])
 
-object RetrieveForeignResponse extends HateoasLinks {
+object RetrieveForeignResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveForeignResponse] = (
-    (JsPath \ "foreignEarnings").readNullable[ForeignEarnings].map(_.flatMap {
-      case ForeignEarnings(None, None) => None
-      case foreignEarnings => Some(foreignEarnings)
-    }) and
-      (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].map(_.flatMap {
-        case Nil => None
-        case unremittableForeignIncome => Some(unremittableForeignIncome)
-      })
+    (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
+      (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].mapEmptySeqToNone
     ) (RetrieveForeignResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignResponse] = Json.writes[RetrieveForeignResponse]
@@ -43,8 +41,8 @@ object RetrieveForeignResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: RetrieveForeignHateoasData): Seq[Link] = {
       import data._
       Seq(
-        amendForeign(appConfig, nino, taxYear),
         retrieveForeign(appConfig, nino, taxYear),
+        amendForeign(appConfig, nino, taxYear),
         deleteForeign(appConfig, nino, taxYear)
       )
     }

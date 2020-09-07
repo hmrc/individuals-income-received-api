@@ -33,7 +33,7 @@ class UnremittableForeignIncomeItemSpec extends UnitSpec {
 
   private val model = UnremittableForeignIncomeItem(
     countryCode = "GBR",
-    amountInForeignCurrency = Some(222.22),
+    amountInForeignCurrency = 222.22,
     amountTaxPaid = Some(333.33)
   )
 

@@ -19,7 +19,7 @@ package v1.models.response.listEmployment
 import cats.Functor
 import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads, Writes}
+import play.api.libs.json._
 import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
@@ -39,7 +39,7 @@ object ListEmploymentResponse extends HateoasLinks with JsonUtils{
   implicit object ListEmploymentLinksFactory extends HateoasListLinksFactory[ListEmploymentResponse, Employment, ListEmploymentHateoasData] {
     override def itemLinks(appConfig: AppConfig, data: ListEmploymentHateoasData, employment: Employment): Seq[Link] =
       Seq(
-        retrieveEmployment(appConfig, data.nino, data.taxYear, employment.employmentId, isSelf = true),
+        retrieveEmployment(appConfig, data.nino, data.taxYear, employment.employmentId),
       )
 
     override def links(appConfig: AppConfig, data: ListEmploymentHateoasData): Seq[Link] = {

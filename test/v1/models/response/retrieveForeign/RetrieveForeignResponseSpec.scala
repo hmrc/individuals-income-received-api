@@ -16,15 +16,19 @@
 
 package v1.models.response.retrieveForeign
 
+import mocks.MockAppConfig
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.foreign.RetrieveForeignFixture._
+import v1.hateoas.HateoasFactory
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
+import v1.models.hateoas.{HateoasWrapper, Link}
 
 class RetrieveForeignResponseSpec extends UnitSpec {
 
   private val fullRetrieveForeignResponseJson = Json.parse(
     """
       |{
+      |   "submittedOn": "2019-04-04T01:01:01Z",
       |   "foreignEarnings": {
       |     "customerReference": "FOREIGNINCME123A",
       |     "earningsNotTaxableUK": 1999.99
@@ -45,19 +49,33 @@ class RetrieveForeignResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
+  val fullForeignEarningsModel: ForeignEarnings = ForeignEarnings(
+    customerReference = Some("FOREIGNINCME123A"),
+    earningsNotTaxableUK = 1999.99
+  )
+
+  val fullUnremittableForeignIncomeModel1: UnremittableForeignIncome = UnremittableForeignIncome(
+    countryCode =  "FRA",
+    amountInForeignCurrency = 1999.99,
+    amountTaxPaid = Some(1999.99)
+  )
+
+  val fullUnremittableForeignIncomeModel2: UnremittableForeignIncome = UnremittableForeignIncome(
+    countryCode =  "IND",
+    amountInForeignCurrency = 2999.99,
+    amountTaxPaid = Some(2999.99)
+  )
+
   private val fullRetrieveResponseBodyModel = RetrieveForeignResponse(
-    Some(fullForeignEarningsModel),
-    Some(Seq(fullUnremittableForeignIncomeModel1, fullUnremittableForeignIncomeModel2))
+    submittedOn = "2019-04-04T01:01:01Z",
+    foreignEarnings = Some(fullForeignEarningsModel),
+    unremittableForeignIncome = Some(Seq(
+      fullUnremittableForeignIncomeModel1,
+      fullUnremittableForeignIncomeModel2
+    ))
   )
 
-  private val minRetrieveResponseBodyModel = RetrieveForeignResponse(None, None)
-
-  private val responseModelNoUnremittableForeignIncome = RetrieveForeignResponse(Some(fullForeignEarningsModel), None)
-
-  private val responseModelNoForeignEarnings = RetrieveForeignResponse(
-    None,
-    Some(Seq(fullUnremittableForeignIncomeModel1, fullUnremittableForeignIncomeModel2))
-  )
+  private val minRetrieveResponseBodyModel = RetrieveForeignResponse("2019-04-04T01:01:01Z", None, None)
 
   "RetrieveForeignResponse" when {
     "read from valid JSON" should {
@@ -68,54 +86,9 @@ class RetrieveForeignResponseSpec extends UnitSpec {
 
     "read from empty JSON" should {
       "produce a model with 'foreignEarnings' and 'unremittableForeignIncome' as None" in {
-        val emptyJson = Json.parse("""{}""")
+        val emptyJson = Json.parse("""{"submittedOn": "2019-04-04T01:01:01Z"}""")
 
         emptyJson.as[RetrieveForeignResponse] shouldBe minRetrieveResponseBodyModel
-      }
-    }
-
-    "read from valid JSON with an empty 'unremittableForeignIncome' array" should {
-      "produce a model with 'unremittableForeignIncome' as None" in {
-        val responseEmptyUnremittableForeignIncomeJson = Json.parse(
-          """
-            |{
-            |   "foreignEarnings": {
-            |     "customerReference": "FOREIGNINCME123A",
-            |     "earningsNotTaxableUK": 1999.99
-            |   },
-            |   "unremittableForeignIncome": []
-            |}
-          """.stripMargin
-        )
-
-        responseEmptyUnremittableForeignIncomeJson.as[RetrieveForeignResponse] shouldBe responseModelNoUnremittableForeignIncome
-      }
-    }
-
-    "read from valid JSON with empty 'foreignEarnings'" should {
-      "produce a model with 'foreignEarnings' as None" in {
-        val responseEmptyForeignEarningsJson = Json.parse(
-          """
-            |{
-            |   "foreignEarnings": { },
-            |   "unremittableForeignIncome": [
-            |     {
-            |       "countryCode": "FRA",
-            |       "amountInForeignCurrency": 1999.99,
-            |       "amountTaxPaid": 1999.99
-            |     },
-            |     {
-            |       "countryCode": "IND",
-            |       "amountInForeignCurrency": 2999.99,
-            |       "amountTaxPaid": 2999.99
-            |     }
-            |   ]
-            |
-            |}
-          """.stripMargin
-        )
-
-        responseEmptyForeignEarningsJson.as[RetrieveForeignResponse] shouldBe responseModelNoForeignEarnings
       }
     }
 
@@ -139,6 +112,29 @@ class RetrieveForeignResponseSpec extends UnitSpec {
     "written to JSON" should {
       "produce the expected JSON object" in {
         Json.toJson(fullRetrieveResponseBodyModel) shouldBe fullRetrieveForeignResponseJson
+      }
+    }
+  }
+
+  "LinksFactory" when {
+    class Test extends MockAppConfig {
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino = "someNino"
+      val taxYear = "2019-20"
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
+    }
+
+    "wrapping a RetrieveForeignResponse object" should {
+      "expose the correct hateoas links" in new Test {
+        hateoasFactory.wrap(fullRetrieveResponseBodyModel, RetrieveForeignHateoasData(nino, taxYear)) shouldBe
+          HateoasWrapper(
+            fullRetrieveResponseBodyModel,
+            Seq(
+              Link(s"/individuals/income-received/foreign/$nino/$taxYear", GET, "self"),
+              Link(s"/individuals/income-received/foreign/$nino/$taxYear", PUT, "amend-foreign-income"),
+              Link(s"/individuals/income-received/foreign/$nino/$taxYear", DELETE, "delete-foreign-income")
+            )
+          )
       }
     }
   }

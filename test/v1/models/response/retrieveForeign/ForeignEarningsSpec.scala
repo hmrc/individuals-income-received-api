@@ -16,22 +16,29 @@
 
 package v1.models.response.retrieveForeign
 
-import play.api.libs.json.{JsError, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.foreign.RetrieveForeignFixture._
 
 class ForeignEarningsSpec extends UnitSpec {
+
+  val fullForeignEarningsJson: JsValue = Json.parse(
+    """
+      |{
+      |    "customerReference": "FOREIGNINCME123A",
+      |    "earningsNotTaxableUK": 1999.99
+      |}
+    """.stripMargin
+  )
+
+  val fullForeignEarningsModel: ForeignEarnings = ForeignEarnings(
+    customerReference = Some("FOREIGNINCME123A"),
+    earningsNotTaxableUK = 1999.99
+  )
 
   "ForeignEarnings" when {
     "read from valid JSON" should {
       "produce the expected ForeignEarnings object" in {
         fullForeignEarningsJson.as[ForeignEarnings] shouldBe fullForeignEarningsModel
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce an empty ForeignEarnings object" in {
-        minForeignEarningsJson.as[ForeignEarnings] shouldBe minForeignEarningsModel
       }
     }
 
