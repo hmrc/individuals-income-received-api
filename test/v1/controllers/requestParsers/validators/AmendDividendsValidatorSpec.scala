@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -26,7 +28,7 @@ import v1.models.request.amendDividends.AmendDividendsRawData
 class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2018-19"
+  private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -343,47 +345,68 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
   private val invalidCloseCompanyLoansWrittenOffRawRequestBody = AnyContentAsJson(invalidCloseCompanyLoansWrittenOffRequestBodyJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
-  val validator = new AmendDividendsValidator()
+  class Test extends MockAppConfig {
+    implicit val appConfig: AppConfig = mockAppConfig
+    val validator = new AmendDividendsValidator()
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2021)
+      .anyNumberOfTimes()
+  }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
-      "an invalid nino is supplied" in {
+      "an invalid nino is supplied" in new Test {
         validator.validate(AmendDividendsRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "an invalid tax year is supplied" in {
+      "an invalid tax year is supplied" in new Test {
         validator.validate(AmendDividendsRawData(validNino, "20178", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleIncorrectOrEmptyBodyError error" when {
-      "an empty JSON body is submitted" in {
+      "an empty JSON body is submitted" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
 
-      "a non-empty JSON body is submitted without any expected fields" in {
+      "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-      "the submitted request body is not in the correct format" in {
+      "the submitted request body is not in the correct format" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/stockDividend/grossAmount"))))
       }
 
-      "mandatory fields are not provided" in {
+      "return RuleTaxYearRangeInvalidError error" when {
+        "an invalid tax year range is supplied" in new Test {
+          validator.validate(AmendDividendsRawData(validNino, "2019-21", validRawRequestBody)) shouldBe
+            List(RuleTaxYearRangeInvalidError)
+        }
+      }
+
+      "return RuleTaxYearNotSupportedError error" when {
+        "an invalid tax year is supplied" in new Test {
+          validator.validate(AmendDividendsRawData(validNino, "2018-19", validRawRequestBody)) shouldBe
+            List(RuleTaxYearNotSupportedError)
+        }
+      }
+
+      "mandatory fields are not provided" in new Test {
         val paths = Seq(
           "/foreignDividend/0/countryCode",
           "/dividendIncomeReceivedWhilstAbroad/1/foreignTaxCreditRelief",
@@ -409,28 +432,28 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
     }
 
     "return CountryCodeFormatError error" when {
-      "an incorrectly formatted country code is submitted" in {
+      "an incorrectly formatted country code is submitted" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
           List(CountryCodeFormatError.copy(paths = Some(List("/foreignDividend/0/countryCode"))))
       }
     }
 
     "return CountryCodeRuleError error" when {
-      "an invalid country code is submitted" in {
+      "an invalid country code is submitted" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidCountryCodeRuleRawRequestBody)) shouldBe
           List(CountryCodeRuleError.copy(paths = Some(List("/dividendIncomeReceivedWhilstAbroad/0/countryCode"))))
       }
     }
 
     "return CustomerRefFormatError error" when {
-      "an incorrectly formatted customer reference is submitted" in {
+      "an incorrectly formatted customer reference is submitted" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/redeemableShares/customerReference"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
-      "one field fails value validation (foreign dividend)" in {
+      "one field fails value validation (foreign dividend)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidForeignDividendRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -438,7 +461,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
           ))
       }
 
-      "one field fails value validation (dividend income received whilst abroad)" in {
+      "one field fails value validation (dividend income received whilst abroad)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidDividendIncomeReceivedWhilstAbroadRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -446,7 +469,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
           ))
       }
 
-      "one field fails value validation (stock dividend)" in {
+      "one field fails value validation (stock dividend)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidStockDividendRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -454,7 +477,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
           ))
       }
 
-      "one field fails value validation (redeemable shares)" in {
+      "one field fails value validation (redeemable shares)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidRedeemableSharesRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -462,7 +485,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
           ))
       }
 
-      "one field fails value validation (bonus issues of securities)" in {
+      "one field fails value validation (bonus issues of securities)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidBonusIssuesOfSecuritiesRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -470,7 +493,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
           ))
       }
 
-      "one field fails value validation (close company loans written off)" in {
+      "one field fails value validation (close company loans written off)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidCloseCompanyLoansWrittenOffRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -480,7 +503,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
     }
 
     "return ValueFormatError error (multiple failures)" when {
-      "multiple fields fail value validation" in {
+      "multiple fields fail value validation" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
             CountryCodeRuleError.copy(
@@ -533,7 +556,7 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors (path parameters)" in {
+      "request supplied has multiple errors (path parameters)" in new Test {
         validator.validate(AmendDividendsRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
