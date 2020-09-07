@@ -137,7 +137,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
     }
 
     "read from json with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
-      "produce a expected response object" in {
+      "produce a JsError" in {
         val invalidJson = Json.parse(
           """
             |{
