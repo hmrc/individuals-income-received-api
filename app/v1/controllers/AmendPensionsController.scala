@@ -19,7 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -32,6 +32,7 @@ import v1.services.{AmendPensionsService, EnrolmentsAuthService, MtdIdLookupServ
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
                                         val lookupService: MtdIdLookupService,
                                         appConfig: AppConfig,
@@ -79,7 +80,8 @@ class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
+      case BadRequestError | NinoFormatError | TaxYearFormatError |
+           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
            CustomMtdError(ValueFormatError.code) |
            CustomMtdError(CountryCodeFormatError.code) |

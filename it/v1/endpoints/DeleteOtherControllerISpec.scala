@@ -32,7 +32,6 @@ class DeleteOtherControllerISpec extends IntegrationBaseSpec {
 
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
-    val correlationId: String = "X-123"
 
     def uri: String = s"/other/$nino/$taxYear"
 

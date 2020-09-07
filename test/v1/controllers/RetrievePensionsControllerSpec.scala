@@ -28,7 +28,7 @@ import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, 
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{AMEND_PENSIONS_INCOME, DELETE_PENSIONS_INCOME, SELF}
+import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -46,7 +46,7 @@ class RetrievePensionsControllerSpec extends ControllerBaseSpec
   with HateoasLinks {
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
@@ -123,8 +123,9 @@ class RetrievePensionsControllerSpec extends ControllerBaseSpec
   )
 
   private val retrievePensionsResponseModel = RetrievePensionsResponse(
-    Some(foreignPensionsItemModel),
-    Some(overseasPensionContributionsItemModel)
+    submittedOn = "2020-07-06T09:37:17Z",
+    foreignPensions = Some(foreignPensionsItemModel),
+    overseasPensionContributions = Some(overseasPensionContributionsItemModel)
   )
 
   private val mtdResponse = RetrievePensionsControllerFixture.mtdResponseWithHateoas(nino, taxYear)

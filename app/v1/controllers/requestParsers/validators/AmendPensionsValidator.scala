@@ -16,13 +16,16 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.amendPensions._
 
-class AmendPensionsValidator extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
+class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
   override def validate(data: AmendPensionsRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,6 +35,12 @@ class AmendPensionsValidator extends Validator[AmendPensionsRawData] with ValueF
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: AmendPensionsRawData => List[List[MtdError]] = (data: AmendPensionsRawData) => {
+    List(
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 

@@ -32,7 +32,6 @@ class AuthISpec extends IntegrationBaseSpec {
     val nino          = "AA123456A"
     val taxYear       = "2019-20"
     val data        = "someData"
-    val correlationId = "X-123"
 
     val requestJson: String =
       s"""
