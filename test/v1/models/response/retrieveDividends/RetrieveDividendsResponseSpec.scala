@@ -17,7 +17,7 @@
 package v1.models.response.retrieveDividends
 
 import mocks.MockAppConfig
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1.hateoas.HateoasFactory
 import v1.models.hateoas.{HateoasWrapper, Link}
