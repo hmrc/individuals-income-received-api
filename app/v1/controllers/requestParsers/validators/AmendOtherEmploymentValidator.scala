@@ -16,13 +16,15 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages, _}
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment._
 
-class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
+class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
   override def validate(data: AmendOtherEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,6 +34,12 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: AmendOtherEmploymentRawData => List[List[MtdError]] = { data =>
+    List(
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 

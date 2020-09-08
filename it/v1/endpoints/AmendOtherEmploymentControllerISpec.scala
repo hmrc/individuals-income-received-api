@@ -31,7 +31,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2017-18"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
 
@@ -127,17 +127,17 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
          |{
          |    "links":[
          |        {
-         |            "href":"/individuals/income-received/employments/other/AA123456A/2017-18",
+         |            "href":"/individuals/income-received/employments/other/AA123456A/2019-20",
          |            "method":"PUT",
          |            "rel":"amend-employments-other-income"
          |        },
          |        {
-         |            "href":"/individuals/income-received/employments/other/AA123456A/2017-18",
+         |            "href":"/individuals/income-received/employments/other/AA123456A/2019-20",
          |            "method":"GET",
          |            "rel":"self"
          |        },
          |        {
-         |            "href":"/individuals/income-received/employments/other/AA123456A/2017-18",
+         |            "href":"/individuals/income-received/employments/other/AA123456A/2019-20",
          |            "method":"DELETE",
          |            "rel":"delete-employments-other-income"
          |        }
@@ -1242,20 +1242,21 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2017-18", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
+          ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
           ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
-          ("AA123456A", "2017-18", invalidValuesRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
-          ("AA123456A", "2017-18", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerNameFormatError, None)),
-          ("AA123456A", "2017-18", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerRefFormatError, None)),
-          ("AA123456A", "2017-18", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), dateFormatError, None)),
-          ("AA123456A", "2017-18", invalidClassOfSharesAwardedRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAwardedFormatError, None)),
-          ("AA123456A", "2017-18", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAcquiredFormatError, None)),
-          ("AA123456A", "2017-18", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
-          ("AA123456A", "2017-18", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), schemePlanTypeFormatError, None)),
-          ("AA123456A", "2017-18", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
-          ("AA123456A", "2017-18", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), invalidFieldType, None)),
-          ("AA123456A", "2017-18", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingMandatoryFieldErrors, None))
+          ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearNotSupportedError, None)),
+          ("AA123456A", "2019-20", invalidValuesRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
+          ("AA123456A", "2019-20", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerNameFormatError, None)),
+          ("AA123456A", "2019-20", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerRefFormatError, None)),
+          ("AA123456A", "2019-20", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), dateFormatError, None)),
+          ("AA123456A", "2019-20", invalidClassOfSharesAwardedRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAwardedFormatError, None)),
+          ("AA123456A", "2019-20", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAcquiredFormatError, None)),
+          ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
+          ("AA123456A", "2019-20", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), schemePlanTypeFormatError, None)),
+          ("AA123456A", "2019-20", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
+          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), invalidFieldType, None)),
+          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingMandatoryFieldErrors, None))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

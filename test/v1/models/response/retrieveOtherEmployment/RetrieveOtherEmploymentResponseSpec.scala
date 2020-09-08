@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveOtherEmployment
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
 
@@ -25,6 +25,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
+      |   "submittedOn": "2020-07-06T09:37:17Z",
       |   "shareOption": [
       |      {
       |         "employerName": "Company Ltd",
@@ -190,6 +191,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
   )
 
   private val responseModel = RetrieveOtherEmploymentResponse(
+    "2020-07-06T09:37:17Z",
     Some(shareOptionItemModel),
     Some(sharesAwardedOrReceivedItemModel),
     Some(disabilityModel),
@@ -200,29 +202,6 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
     "read from valid JSON" should {
       "produce the expected RetrieveOtherEmploymentResponse object" in {
         json.as[RetrieveOtherEmploymentResponse] shouldBe responseModel
-      }
-    }
-
-    "read from valid JSON with empty shareOption and sharesAwardedOrReceived arrays" should {
-      "produce an empty RetrieveOtherResponse object" in {
-        val json = Json.parse(
-          """
-            |{
-            |   "shareOption": [ ],
-            |   "sharesAwardedOrReceived": [ ]
-            |}
-          """.stripMargin
-        )
-
-        json.as[RetrieveOtherEmploymentResponse] shouldBe RetrieveOtherEmploymentResponse.empty
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce an empty RetrieveOtherEmploymentResponse object" in {
-        val emptyJson = JsObject.empty
-
-        emptyJson.as[RetrieveOtherEmploymentResponse] shouldBe RetrieveOtherEmploymentResponse.empty
       }
     }
 

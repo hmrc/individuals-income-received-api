@@ -57,7 +57,7 @@ class AmendOtherEmploymentControllerSpec
   }
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   private val requestBodyJson: JsValue = Json.parse(
@@ -316,6 +316,7 @@ class AmendOtherEmploymentControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (EmployerRefFormatError, BAD_REQUEST),
           (EmployerNameFormatError, BAD_REQUEST),

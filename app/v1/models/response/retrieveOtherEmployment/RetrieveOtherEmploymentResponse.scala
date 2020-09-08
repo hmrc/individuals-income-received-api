@@ -23,17 +23,17 @@ import utils.JsonUtils
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveOtherEmploymentResponse(shareOption: Option[Seq[ShareOptionItem]],
+case class RetrieveOtherEmploymentResponse(submittedOn: String,
+                                           shareOption: Option[Seq[ShareOptionItem]],
                                            sharesAwardedOrReceived: Option[Seq[SharesAwardedOrReceivedItem]],
                                            disability: Option[CommonOtherEmployment],
                                            foreignService: Option[CommonOtherEmployment])
 
 object RetrieveOtherEmploymentResponse extends HateoasLinks with JsonUtils {
 
-  val empty: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(None, None, None, None)
-
   implicit val reads: Reads[RetrieveOtherEmploymentResponse] = (
-    (JsPath \ "shareOption").readNullable[Seq[ShareOptionItem]].mapEmptySeqToNone and
+    (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "shareOption").readNullable[Seq[ShareOptionItem]].mapEmptySeqToNone and
       (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[SharesAwardedOrReceivedItem]].mapEmptySeqToNone and
       (JsPath \ "disability").readNullable[CommonOtherEmployment] and
       (JsPath \ "foreignService").readNullable[CommonOtherEmployment]

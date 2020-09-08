@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -29,7 +31,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
   with DateFormatErrorMessages {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2018-19"
+  private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -481,42 +483,68 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
 
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
-  val validator = new AmendOtherEmploymentValidator()
+
+  class Test extends MockAppConfig {
+
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new AmendOtherEmploymentValidator()
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2021)
+      .anyNumberOfTimes()
+  }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
-      "an invalid nino is supplied" in {
+      "an invalid nino is supplied" in new Test {
         validator.validate(AmendOtherEmploymentRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "an invalid tax year is supplied" in {
+      "an invalid tax year is supplied" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, "20178", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
+    "return RuleTaxYearRangeInvalidError error for an invalid tax year range" in new Test {
+      validator.validate(AmendOtherEmploymentRawData(validNino, "2020-22", validRawRequestBody)) shouldBe
+        List(RuleTaxYearRangeInvalidError)
+    }
+
+    "return multiple errors for multiple invalid request parameters" in new Test {
+      validator.validate(AmendOtherEmploymentRawData("notValid", "2020-22", validRawRequestBody)) shouldBe
+        List(NinoFormatError, RuleTaxYearRangeInvalidError)
+    }
+
+    // parameter rule error scenarios
+    "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
+      validator.validate(AmendOtherEmploymentRawData(validNino, "2019-20", validRawRequestBody)) shouldBe
+        List(RuleTaxYearNotSupportedError)
+    }
+
+    // body format error scenarios
     "return RuleIncorrectOrEmptyBodyError error" when {
-      "an empty JSON body is submitted" in {
+      "an empty JSON body is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
-      "a non-empty JSON body is submitted without any expected fields" in {
+      "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-      "the submitted request body is not in the correct format" in {
+      "the submitted request body is not in the correct format" in new Test {
         val paths = List(
           "/shareOption/0/dateOfOptionGrant", "/shareOption/0/taxableAmount", "/shareOption/0/employerName",
           "/shareOption/0/noOfSharesAcquired", "/shareOption/0/optionNotExercisedButConsiderationReceived",
@@ -531,28 +559,28 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return EmployerNameFormatError error" when {
-      "an incorrectly formatted employer name is submitted" in {
+      "an incorrectly formatted employer name is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidEmployerNameRawRequestBody)) shouldBe
           List(EmployerNameFormatError.copy(paths = Some(List("/shareOption/0/employerName"))))
       }
     }
 
     "return EmployerRefFormatError error" when {
-      "an incorrectly formatted employer reference is submitted" in {
+      "an incorrectly formatted employer reference is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidEmployerRefRawRequestBody)) shouldBe
           List(EmployerRefFormatError.copy(paths = Some(List("/shareOption/0/employerRef"))))
       }
     }
 
     "return SchemePlanTypeFormatError error" when {
-      "an incorrectly formatted scheme plan type is submitted" in {
+      "an incorrectly formatted scheme plan type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidSchemePlanRawRequestBody)) shouldBe
           List(SchemePlanTypeFormatError.copy(paths = Some(List("/shareOption/0/schemePlanType"))))
       }
     }
 
     "return DateFormatError error" when {
-      "an incorrectly formatted date is submitted" in {
+      "an incorrectly formatted date is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDateRawRequestBody)) shouldBe
           List(DateFormatError.copy(
             message = ISO_DATE_FORMAT,
@@ -561,28 +589,28 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return ClassOfSharesAcquiredFormatError error" when {
-      "an incorrectly formatted class of shares type is submitted" in {
+      "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesAcquiredRawRequestBody)) shouldBe
           List(ClassOfSharesAcquiredFormatError.copy(paths = Some(List("/shareOption/0/classOfSharesAcquired"))))
       }
     }
 
     "return ClassOfSharesAwardedFormatError error" when {
-      "an incorrectly formatted class of shares type is submitted" in {
+      "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesAwardedRawRequestBody)) shouldBe
           List(ClassOfSharesAwardedFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/classOfShareAwarded"))))
       }
     }
 
     "return CustomerRefFormatError error" when {
-      "an incorrectly formatted class of shares type is submitted" in {
+      "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/disability/customerReference"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
-      "one field fails value validation (shareOption)" in {
+      "one field fails value validation (shareOption)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidShareOptionRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -590,7 +618,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
           ))
       }
 
-      "one field fails value validation (sharesAwardedOrReceived)" in {
+      "one field fails value validation (sharesAwardedOrReceived)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidSharesAwardedOrReceivedRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -598,7 +626,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
           ))
       }
 
-      "one field fails value validation (Disability)" in {
+      "one field fails value validation (Disability)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDisabilityRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -606,7 +634,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
           ))
       }
 
-      "one field fails value validation (foreignService)" in {
+      "one field fails value validation (foreignService)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidForeignServiceRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -616,7 +644,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return ValueFormatError error (multiple failures)" when {
-      "multiple fields fail value validation" in {
+      "multiple fields fail value validation" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
             EmployerRefFormatError.copy(
@@ -721,7 +749,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors (path parameters)" in {
+      "request supplied has multiple errors (path parameters)" in new Test {
         validator.validate(AmendOtherEmploymentRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }

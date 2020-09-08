@@ -23,6 +23,7 @@ object RetrieveOtherEmploymentControllerFixture {
   val mtdResponse: JsValue = Json.parse(
     """
       |{
+      | "submittedOn": "2020-07-06T09:37:17Z",
       | "shareOption":[
       |   {
       |      "employerName": "Company Ltd",

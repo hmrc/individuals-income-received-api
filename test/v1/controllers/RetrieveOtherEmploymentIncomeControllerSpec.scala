@@ -100,6 +100,7 @@ class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
   )
 
   private val retrieveOtherResponseModel: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(
+    submittedOn = "2020-07-06T09:37:17Z",
     shareOption = Some(Seq(shareOption)),
     sharesAwardedOrReceived = Some(Seq(sharesAwardedOrReceived)),
     disability = Some(commonOtherEmployment),
