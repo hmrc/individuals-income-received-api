@@ -16,7 +16,7 @@
 
 package v1.models.response.retrievePensions
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class RetrievePensionsResponseSpec extends UnitSpec {
@@ -24,6 +24,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
+      |   "submittedOn": "2020-07-06T09:37:17Z",
       |   "foreignPensions": [
       |      {
       |         "countryCode": "DEU",
@@ -111,22 +112,15 @@ class RetrievePensionsResponseSpec extends UnitSpec {
   )
 
   private val responseModel = RetrievePensionsResponse(
-    Some(foreignPensionsItemModel),
-    Some(overseasPensionContributionsItemModel)
+    submittedOn = "2020-07-06T09:37:17Z",
+    foreignPensions = Some(foreignPensionsItemModel),
+    overseasPensionContributions = Some(overseasPensionContributionsItemModel)
   )
 
   "RetrievePensionsResponse" when {
     "read from valid JSON" should {
       "produce the expected RetrievePensionsResponse object" in {
         json.as[RetrievePensionsResponse] shouldBe responseModel
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce an empty RetrievePensionsResponse object" in {
-        val emptyJson = JsObject.empty
-
-        emptyJson.as[RetrievePensionsResponse] shouldBe RetrievePensionsResponse.empty
       }
     }
 

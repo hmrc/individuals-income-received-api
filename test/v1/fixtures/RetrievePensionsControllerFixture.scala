@@ -23,6 +23,7 @@ object RetrievePensionsControllerFixture {
   val fullRetrievePensionsResponse: JsValue = Json.parse(
     """
       |{
+      |   "submittedOn": "2020-07-06T09:37:17Z",
       |   "foreignPensions": [
       |      {
       |         "countryCode": "DEU",
