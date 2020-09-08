@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -45,35 +45,35 @@ class RetrieveDividendsControllerSpec extends ControllerBaseSpec
   with MockDeleteRetrieveRequestParser
   with HateoasLinks {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
-  val correlationId: String = "X-123"
+  private val nino: String = "AA123456A"
+  private val taxYear: String = "2019-20"
+  private val correlationId: String = "X-123"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  private val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  private val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = DesTaxYear.fromMtd(taxYear)
   )
 
-  val amendDividendsLink: Link =
+  private val amendDividendsLink: Link =
     Link(
       href = s"/individuals/income-received/dividends/$nino/$taxYear",
       method = PUT,
       rel = AMEND_DIVIDENDS_INCOME
     )
 
-  val retrieveDividendsLink: Link =
+  private val retrieveDividendsLink: Link =
     Link(
       href = s"/individuals/income-received/dividends/$nino/$taxYear",
       method = GET,
       rel = SELF
     )
 
-  val deleteDividendsLink: Link =
+  private val deleteDividendsLink: Link =
     Link(
       href = s"/individuals/income-received/dividends/$nino/$taxYear",
       method = DELETE,
@@ -139,12 +139,13 @@ class RetrieveDividendsControllerSpec extends ControllerBaseSpec
   )
 
   private val retrieveDividendsResponseModel = RetrieveDividendsResponse(
-    Some(foreignDividendItemModel),
-    Some(dividendIncomeReceivedWhilstAbroadItemModel),
-    Some(stockDividendModel),
-    Some(redeemableSharesModel),
-    Some(bonusIssuesOfSecuritiesModel),
-    Some(closeCompanyLoansWrittenOffModel)
+    submittedOn = "2020-07-06T09:37:17Z",
+    foreignDividend = Some(foreignDividendItemModel),
+    dividendIncomeReceivedWhilstAbroad = Some(dividendIncomeReceivedWhilstAbroadItemModel),
+    stockDividend = Some(stockDividendModel),
+    redeemableShares = Some(redeemableSharesModel),
+    bonusIssuesOfSecurities = Some(bonusIssuesOfSecuritiesModel),
+    closeCompanyLoansWrittenOff = Some(closeCompanyLoansWrittenOffModel)
   )
 
   private val mtdResponse = RetrieveDividendsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
@@ -190,7 +191,7 @@ class RetrieveDividendsControllerSpec extends ControllerBaseSpec
         val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse.as[JsObject] ++ mtdResponse.as[JsObject]
+        contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }

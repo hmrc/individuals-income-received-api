@@ -16,14 +16,19 @@
 
 package v1.models.response.retrieveDividends
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import mocks.MockAppConfig
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
+import v1.hateoas.HateoasFactory
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
 
 class RetrieveDividendsResponseSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
       |{
+      |    "submittedOn": "2020-07-06T09:37:17Z",
       |    "foreignDividend": [
       |      {
       |        "countryCode": "DEU",
@@ -95,6 +100,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
   private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 12321.22)
 
   private val responseModel = RetrieveDividendsResponse(
+    "2020-07-06T09:37:17Z",
     Some(foreignDividendModel),
     Some(dividendIncomeReceivedWhilstAbroadModel),
     Some(stockDividendModel),
@@ -109,56 +115,54 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
         json.as[RetrieveDividendsResponse] shouldBe responseModel
       }
     }
-  }
 
-  "read from empty JSON" should {
-    "produce an empty RetrieveDividendsResponse object" in {
-      val emptyJson = JsObject.empty
-
-      emptyJson.as[RetrieveDividendsResponse] shouldBe RetrieveDividendsResponse.empty
-    }
-  }
-
-  "read from valid JSON with empty foreignDividend and dividendIncomeReceivedWhilstAbroad arrays" should {
-    "produce an empty RetrieveDividendsResponse object" in {
-      val json = Json.parse(
-        """
-          |{
-          |   "foreignDividend": [ ],
-          |   "dividendIncomeReceivedWhilstAbroad": [ ]
-          |}
-        """.stripMargin
-      )
-
-      json.as[RetrieveDividendsResponse] shouldBe RetrieveDividendsResponse.empty
-    }
-  }
-
-  "read from invalid JSON" should {
-    "produce a JsError" in {
-      val invalidJson = Json.parse(
-        """
-          |{
-          |   "foreignDividend": [
-          |      {
-          |        "countryCode": true,
-          |        "amountBeforeTax": 1232.22,
-          |        "taxTakenOff": 22.22,
-          |        "specialWitholdingTax": 22.22,
-          |        "foreignTaxCreditRelief": true,
-          |        "taxableAmount": 2321.22
-          |      }
-          |    ]
-          |}
+    "read from invalid JSON" should {
+      "produce a JsError" in {
+        val invalidJson = Json.parse(
+          """
+            |{
+            |   "foreignDividend": [
+            |      {
+            |        "countryCode": true,
+            |        "amountBeforeTax": 1232.22,
+            |        "taxTakenOff": 22.22,
+            |        "specialWitholdingTax": 22.22,
+            |        "foreignTaxCreditRelief": true,
+            |        "taxableAmount": 2321.22
+            |      }
+            |    ]
+            |}
           """.stripMargin
-      )
-      invalidJson.validate[RetrieveDividendsResponse] shouldBe a[JsError]
+        )
+        invalidJson.validate[RetrieveDividendsResponse] shouldBe a[JsError]
+      }
+    }
+    "written to JSON" should {
+      "produce the expected JsObject" in {
+        Json.toJson(responseModel) shouldBe json
+      }
     }
   }
+  "LinksFactory" when {
+    class Test extends MockAppConfig {
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino = "someNino"
+      val taxYear = "2019-20"
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
+    }
 
-  "written to JSON" should {
-    "produce the expected JsObject" in {
-      Json.toJson(responseModel) shouldBe json
+    "wrapping a RetrieveForeignResponse object" should {
+      "expose the correct hateoas links" in new Test {
+        hateoasFactory.wrap(responseModel, RetrieveDividendsHateoasData(nino, taxYear)) shouldBe
+          HateoasWrapper(
+            responseModel,
+            Seq(
+              Link(s"/individuals/income-received/dividends/$nino/$taxYear", PUT, "amend-dividends-income"),
+              Link(s"/individuals/income-received/dividends/$nino/$taxYear", GET, "self"),
+              Link(s"/individuals/income-received/dividends/$nino/$taxYear", DELETE, "delete-dividends-income")
+            )
+          )
+      }
     }
   }
 }

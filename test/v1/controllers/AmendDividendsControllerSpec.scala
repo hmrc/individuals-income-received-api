@@ -57,7 +57,7 @@ class AmendDividendsControllerSpec
   }
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   val requestBodyJson: JsValue = Json.parse(
@@ -264,6 +264,7 @@ class AmendDividendsControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (CountryCodeFormatError, BAD_REQUEST),
           (CountryCodeRuleError, BAD_REQUEST),
