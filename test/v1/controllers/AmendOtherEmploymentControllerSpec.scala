@@ -237,11 +237,46 @@ class AmendOtherEmploymentControllerSpec
       amountDeducted = 7000.99
     )
 
+  private val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val benefitFromEmployerFinancedRetirementScheme = AmendBenefitFromEmployerFinancedRetirementSchemeItem(
+    amount = 5000.99,
+    exemptAmount = Some(2345.99),
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsOverExemption = AmendRedundancyCompensationPaymentsOverExemptionItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsUnderExemption = AmendRedundancyCompensationPaymentsUnderExemptionItem(
+    amount = 5000.99
+  )
+
+  private val lumpSums = Seq(
+    AmendLumpSums(
+      employerName = "BPDTS Ltd",
+      employerRef = "123/AB456",
+      taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+      benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+      redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+      redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+    )
+  )
+
   val amendOtherEmploymentRequestBody: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(
     shareOption = Some(shareOptionItem),
     sharesAwardedOrReceived = Some(sharesAwardedOrReceivedItem),
     disability = Some(disability),
-    foreignService = Some(foreignService)
+    foreignService = Some(foreignService),
+    lumpSums = Some(lumpSums)
   )
 
   val requestData: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(

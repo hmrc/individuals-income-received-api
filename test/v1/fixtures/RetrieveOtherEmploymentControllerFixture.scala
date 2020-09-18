@@ -68,7 +68,36 @@ object RetrieveOtherEmploymentControllerFixture {
       | "foreignService":{
       |   "customerReference": "customer reference",
       |   "amountDeducted": 1223.22
-      | }
+      | },
+      | "lumpSums": [
+      |    {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
       |}
       |""".stripMargin
   )

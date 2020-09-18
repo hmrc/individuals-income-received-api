@@ -27,7 +27,8 @@ case class RetrieveOtherEmploymentResponse(submittedOn: String,
                                            shareOption: Option[Seq[ShareOptionItem]],
                                            sharesAwardedOrReceived: Option[Seq[SharesAwardedOrReceivedItem]],
                                            disability: Option[CommonOtherEmployment],
-                                           foreignService: Option[CommonOtherEmployment])
+                                           foreignService: Option[CommonOtherEmployment],
+                                           lumpSums: Option[Seq[LumpSums]])
 
 object RetrieveOtherEmploymentResponse extends HateoasLinks with JsonUtils {
 
@@ -36,7 +37,8 @@ object RetrieveOtherEmploymentResponse extends HateoasLinks with JsonUtils {
       (JsPath \ "shareOption").readNullable[Seq[ShareOptionItem]].mapEmptySeqToNone and
       (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[SharesAwardedOrReceivedItem]].mapEmptySeqToNone and
       (JsPath \ "disability").readNullable[CommonOtherEmployment] and
-      (JsPath \ "foreignService").readNullable[CommonOtherEmployment]
+      (JsPath \ "foreignService").readNullable[CommonOtherEmployment] and
+      (JsPath \ "lumpSums").readNullable[Seq[LumpSums]].mapEmptySeqToNone
     ) (RetrieveOtherEmploymentResponse.apply _)
 
   implicit val writes: OWrites[RetrieveOtherEmploymentResponse] = Json.writes[RetrieveOtherEmploymentResponse]

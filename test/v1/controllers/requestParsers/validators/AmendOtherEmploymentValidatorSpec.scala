@@ -115,7 +115,63 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |    {
       |      "customerReference": "OTHEREmp999A",
       |      "amountDeducted": 7000.99
-      |    }
+      |    },
+      |   "lumpSums": [
+      |     {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |     },
+      |     {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -376,6 +432,42 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |""".stripMargin
   )
 
+  private val invalidLumpSumsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "lumpSums": [
+      |    {
+      |      "employerName": "Company Ltd",
+      |      "employerRef" : "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": -1111.11,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
+      |}
+      |""".stripMargin
+  )
+
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -458,7 +550,63 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |    {
       |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |      "amountDeducted": 7000.999
-      |    }
+      |    },
+      |   "lumpSums": [
+      |    {
+      |      "employerName": "This employerName string is 106 characters long--------------------------------------------------------106",
+      |      "employerRef" : "InvalidReference",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": -1111.11,
+      |           "taxPaid": 3333.333,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": -1000.999,
+      |           "exemptAmount": 2345.999,
+      |           "taxPaid": 123.456,
+      |           "taxTakenOffInEmployment": false
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": -2000.22,
+      |           "taxPaid": 3333.333,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": -5000.99
+      |         }
+      |      },
+      |      {
+      |      "employerName": "This employerName string is 106 characters long--------------------------------------------------------106",
+      |      "employerRef" : "InvalidReference",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 9999.999,
+      |           "taxPaid": 2727.211,
+      |           "taxTakenOffInEmployment": false
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": -1000.999,
+      |           "exemptAmount": -2345.11,
+      |           "taxPaid": 5000.555,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": -2000.22,
+      |           "taxPaid": 3333.333,
+      |           "taxTakenOffInEmployment": false
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.999
+      |         }
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -480,7 +628,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
   private val invalidSharesAwardedOrReceivedRawRequestBody = AnyContentAsJson(invalidSharesAwardedOrReceivedJson)
   private val invalidDisabilityRawRequestBody = AnyContentAsJson(invalidDisabilityJson)
   private val invalidForeignServiceRawRequestBody = AnyContentAsJson(invalidForeignServiceJson)
-
+  private val invalidLumpSumsRawRequestBody = AnyContentAsJson(invalidLumpSumsJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
 
@@ -641,6 +789,14 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
             paths = Some(Seq("/foreignService/amountDeducted"))
           ))
       }
+
+      "one field fails value validation (lumpSums)" in new Test {
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidLumpSumsRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ZERO_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/lumpSums/0/taxableLumpSumsAndCertainIncome/amount"))
+          ))
+      }
     }
 
     "return ValueFormatError error (multiple failures)" when {
@@ -652,7 +808,9 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/shareOption/0/employerRef",
                 "/shareOption/1/employerRef",
                 "/sharesAwardedOrReceived/0/employerRef",
-                "/sharesAwardedOrReceived/1/employerRef"
+                "/sharesAwardedOrReceived/1/employerRef",
+                "/lumpSums/0/employerRef",
+                "/lumpSums/1/employerRef"
               ))
             ),
             CustomerRefFormatError.copy(
@@ -693,7 +851,9 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/shareOption/0/employerName",
                 "/shareOption/1/employerName",
                 "/sharesAwardedOrReceived/0/employerName",
-                "/sharesAwardedOrReceived/1/employerName"
+                "/sharesAwardedOrReceived/1/employerName",
+                "/lumpSums/0/employerName",
+                "/lumpSums/1/employerName"
               ))
             ),
             ClassOfSharesAwardedFormatError.copy(
@@ -741,7 +901,24 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/sharesAwardedOrReceived/1/taxableAmount",
 
                 "/disability/amountDeducted",
-                "/foreignService/amountDeducted"
+                "/foreignService/amountDeducted",
+
+                "/lumpSums/0/taxableLumpSumsAndCertainIncome/amount",
+                "/lumpSums/0/taxableLumpSumsAndCertainIncome/taxPaid",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/amount",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
+                "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/amount",
+                "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
+                "/lumpSums/0/redundancyCompensationPaymentsUnderExemptionItem/amount",
+                "/lumpSums/1/taxableLumpSumsAndCertainIncome/amount",
+                "/lumpSums/1/taxableLumpSumsAndCertainIncome/taxPaid",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/amount",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
+                "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/amount",
+                "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
+                "/lumpSums/1/redundancyCompensationPaymentsUnderExemptionItem/amount"
               ))
             )
           )

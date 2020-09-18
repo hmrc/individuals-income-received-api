@@ -117,7 +117,36 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         |    {
         |      "customerReference": "OTHEREmp999A",
         |      "amountDeducted": 7000.99
-        |    }
+        |    },
+        |   "lumpSums": [
+        |    {
+        |      "employerName": "BPDTS Ltd",
+        |      "employerRef": "123/AB456",
+        |      "taxableLumpSumsAndCertainIncome":
+        |         {
+        |           "amount": 5000.99,
+        |           "taxPaid": 3333.33,
+        |           "taxTakenOffInEmployment": true
+        |         },
+        |      "benefitFromEmployerFinancedRetirementScheme":
+        |         {
+        |           "amount": 5000.99,
+        |           "exemptAmount": 2345.99,
+        |           "taxPaid": 3333.33,
+        |           "taxTakenOffInEmployment": true
+        |         },
+        |      "redundancyCompensationPaymentsOverExemption":
+        |         {
+        |           "amount": 5000.99,
+        |           "taxPaid": 3333.33,
+        |           "taxTakenOffInEmployment": true
+        |         },
+        |      "redundancyCompensationPaymentsUnderExemption":
+        |         {
+        |           "amount": 5000.99
+        |         }
+        |      }
+        |   ]
         |}
     """.stripMargin
     )

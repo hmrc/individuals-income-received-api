@@ -99,12 +99,45 @@ class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
     amountDeducted = 1223.22
   )
 
+  private val taxableLumpSumsAndCertainIncome = TaxableLumpSumsAndCertainIncomeItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val benefitFromEmployerFinancedRetirementScheme = BenefitFromEmployerFinancedRetirementSchemeItem(
+    amount = 5000.99,
+    exemptAmount = Some(2345.99),
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsOverExemption = RedundancyCompensationPaymentsOverExemptionItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsUnderExemption = RedundancyCompensationPaymentsUnderExemptionItem(
+    amount = Some(5000.99)
+  )
+
+  private val lumpSums = LumpSums(
+    employerName = "BPDTS Ltd",
+    employerRef = "123/AB456",
+    taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+    benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+    redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+    redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+  )
+
   private val retrieveOtherResponseModel: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(
     submittedOn = "2020-07-06T09:37:17Z",
     shareOption = Some(Seq(shareOption)),
     sharesAwardedOrReceived = Some(Seq(sharesAwardedOrReceived)),
     disability = Some(commonOtherEmployment),
-    foreignService = Some(commonOtherEmployment)
+    foreignService = Some(commonOtherEmployment),
+    lumpSums = Some(Seq(lumpSums))
   )
 
   private val amendLink: Link = Link(
