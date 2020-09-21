@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -29,7 +31,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
   with DateFormatErrorMessages {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2018-19"
+  private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -113,7 +115,63 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |    {
       |      "customerReference": "OTHEREmp999A",
       |      "amountDeducted": 7000.99
-      |    }
+      |    },
+      |   "lumpSums": [
+      |     {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |     },
+      |     {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -374,6 +432,42 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |""".stripMargin
   )
 
+  private val invalidLumpSumsJson: JsValue = Json.parse(
+    """
+      |{
+      |  "lumpSums": [
+      |    {
+      |      "employerName": "Company Ltd",
+      |      "employerRef" : "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": -1111.11,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
+      |}
+      |""".stripMargin
+  )
+
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -456,7 +550,63 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |    {
       |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
       |      "amountDeducted": 7000.999
-      |    }
+      |    },
+      |   "lumpSums": [
+      |    {
+      |      "employerName": "This employerName string is 106 characters long--------------------------------------------------------106",
+      |      "employerRef" : "InvalidReference",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": -1111.11,
+      |           "taxPaid": 3333.333,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": -1000.999,
+      |           "exemptAmount": 2345.999,
+      |           "taxPaid": 123.456,
+      |           "taxTakenOffInEmployment": false
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": -2000.22,
+      |           "taxPaid": 3333.333,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": -5000.99
+      |         }
+      |      },
+      |      {
+      |      "employerName": "This employerName string is 106 characters long--------------------------------------------------------106",
+      |      "employerRef" : "InvalidReference",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 9999.999,
+      |           "taxPaid": 2727.211,
+      |           "taxTakenOffInEmployment": false
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": -1000.999,
+      |           "exemptAmount": -2345.11,
+      |           "taxPaid": 5000.555,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": -2000.22,
+      |           "taxPaid": 3333.333,
+      |           "taxTakenOffInEmployment": false
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.999
+      |         }
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -478,45 +628,71 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
   private val invalidSharesAwardedOrReceivedRawRequestBody = AnyContentAsJson(invalidSharesAwardedOrReceivedJson)
   private val invalidDisabilityRawRequestBody = AnyContentAsJson(invalidDisabilityJson)
   private val invalidForeignServiceRawRequestBody = AnyContentAsJson(invalidForeignServiceJson)
-
+  private val invalidLumpSumsRawRequestBody = AnyContentAsJson(invalidLumpSumsJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
-  val validator = new AmendOtherEmploymentValidator()
+
+  class Test extends MockAppConfig {
+
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new AmendOtherEmploymentValidator()
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2021)
+      .anyNumberOfTimes()
+  }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
-      "an invalid nino is supplied" in {
+      "an invalid nino is supplied" in new Test {
         validator.validate(AmendOtherEmploymentRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "an invalid tax year is supplied" in {
+      "an invalid tax year is supplied" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, "20178", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
+    "return RuleTaxYearRangeInvalidError error for an invalid tax year range" in new Test {
+      validator.validate(AmendOtherEmploymentRawData(validNino, "2020-22", validRawRequestBody)) shouldBe
+        List(RuleTaxYearRangeInvalidError)
+    }
+
+    "return multiple errors for multiple invalid request parameters" in new Test {
+      validator.validate(AmendOtherEmploymentRawData("notValid", "2020-22", validRawRequestBody)) shouldBe
+        List(NinoFormatError, RuleTaxYearRangeInvalidError)
+    }
+
+    // parameter rule error scenarios
+    "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
+      validator.validate(AmendOtherEmploymentRawData(validNino, "2019-20", validRawRequestBody)) shouldBe
+        List(RuleTaxYearNotSupportedError)
+    }
+
+    // body format error scenarios
     "return RuleIncorrectOrEmptyBodyError error" when {
-      "an empty JSON body is submitted" in {
+      "an empty JSON body is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
-      "a non-empty JSON body is submitted without any expected fields" in {
+      "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-      "the submitted request body is not in the correct format" in {
+      "the submitted request body is not in the correct format" in new Test {
         val paths = List(
           "/shareOption/0/dateOfOptionGrant", "/shareOption/0/taxableAmount", "/shareOption/0/employerName",
           "/shareOption/0/noOfSharesAcquired", "/shareOption/0/optionNotExercisedButConsiderationReceived",
@@ -531,28 +707,28 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return EmployerNameFormatError error" when {
-      "an incorrectly formatted employer name is submitted" in {
+      "an incorrectly formatted employer name is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidEmployerNameRawRequestBody)) shouldBe
           List(EmployerNameFormatError.copy(paths = Some(List("/shareOption/0/employerName"))))
       }
     }
 
     "return EmployerRefFormatError error" when {
-      "an incorrectly formatted employer reference is submitted" in {
+      "an incorrectly formatted employer reference is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidEmployerRefRawRequestBody)) shouldBe
           List(EmployerRefFormatError.copy(paths = Some(List("/shareOption/0/employerRef"))))
       }
     }
 
     "return SchemePlanTypeFormatError error" when {
-      "an incorrectly formatted scheme plan type is submitted" in {
+      "an incorrectly formatted scheme plan type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidSchemePlanRawRequestBody)) shouldBe
           List(SchemePlanTypeFormatError.copy(paths = Some(List("/shareOption/0/schemePlanType"))))
       }
     }
 
     "return DateFormatError error" when {
-      "an incorrectly formatted date is submitted" in {
+      "an incorrectly formatted date is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDateRawRequestBody)) shouldBe
           List(DateFormatError.copy(
             message = ISO_DATE_FORMAT,
@@ -561,28 +737,28 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return ClassOfSharesAcquiredFormatError error" when {
-      "an incorrectly formatted class of shares type is submitted" in {
+      "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesAcquiredRawRequestBody)) shouldBe
           List(ClassOfSharesAcquiredFormatError.copy(paths = Some(List("/shareOption/0/classOfSharesAcquired"))))
       }
     }
 
     "return ClassOfSharesAwardedFormatError error" when {
-      "an incorrectly formatted class of shares type is submitted" in {
+      "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidClassOfSharesAwardedRawRequestBody)) shouldBe
           List(ClassOfSharesAwardedFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/classOfShareAwarded"))))
       }
     }
 
     "return CustomerRefFormatError error" when {
-      "an incorrectly formatted class of shares type is submitted" in {
+      "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/disability/customerReference"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
-      "one field fails value validation (shareOption)" in {
+      "one field fails value validation (shareOption)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidShareOptionRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -590,7 +766,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
           ))
       }
 
-      "one field fails value validation (sharesAwardedOrReceived)" in {
+      "one field fails value validation (sharesAwardedOrReceived)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidSharesAwardedOrReceivedRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -598,7 +774,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
           ))
       }
 
-      "one field fails value validation (Disability)" in {
+      "one field fails value validation (Disability)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDisabilityRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
@@ -606,17 +782,25 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
           ))
       }
 
-      "one field fails value validation (foreignService)" in {
+      "one field fails value validation (foreignService)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidForeignServiceRawRequestBody)) shouldBe
           List(ValueFormatError.copy(
             message = ZERO_MINIMUM_INCLUSIVE,
             paths = Some(Seq("/foreignService/amountDeducted"))
           ))
       }
+
+      "one field fails value validation (lumpSums)" in new Test {
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidLumpSumsRawRequestBody)) shouldBe
+          List(ValueFormatError.copy(
+            message = ZERO_MINIMUM_INCLUSIVE,
+            paths = Some(Seq("/lumpSums/0/taxableLumpSumsAndCertainIncome/amount"))
+          ))
+      }
     }
 
     "return ValueFormatError error (multiple failures)" when {
-      "multiple fields fail value validation" in {
+      "multiple fields fail value validation" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
             EmployerRefFormatError.copy(
@@ -624,7 +808,9 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/shareOption/0/employerRef",
                 "/shareOption/1/employerRef",
                 "/sharesAwardedOrReceived/0/employerRef",
-                "/sharesAwardedOrReceived/1/employerRef"
+                "/sharesAwardedOrReceived/1/employerRef",
+                "/lumpSums/0/employerRef",
+                "/lumpSums/1/employerRef"
               ))
             ),
             CustomerRefFormatError.copy(
@@ -665,7 +851,9 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/shareOption/0/employerName",
                 "/shareOption/1/employerName",
                 "/sharesAwardedOrReceived/0/employerName",
-                "/sharesAwardedOrReceived/1/employerName"
+                "/sharesAwardedOrReceived/1/employerName",
+                "/lumpSums/0/employerName",
+                "/lumpSums/1/employerName"
               ))
             ),
             ClassOfSharesAwardedFormatError.copy(
@@ -713,7 +901,24 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/sharesAwardedOrReceived/1/taxableAmount",
 
                 "/disability/amountDeducted",
-                "/foreignService/amountDeducted"
+                "/foreignService/amountDeducted",
+
+                "/lumpSums/0/taxableLumpSumsAndCertainIncome/amount",
+                "/lumpSums/0/taxableLumpSumsAndCertainIncome/taxPaid",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/amount",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
+                "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/amount",
+                "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
+                "/lumpSums/0/redundancyCompensationPaymentsUnderExemptionItem/amount",
+                "/lumpSums/1/taxableLumpSumsAndCertainIncome/amount",
+                "/lumpSums/1/taxableLumpSumsAndCertainIncome/taxPaid",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/amount",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
+                "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/amount",
+                "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
+                "/lumpSums/1/redundancyCompensationPaymentsUnderExemptionItem/amount"
               ))
             )
           )
@@ -721,7 +926,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors (path parameters)" in {
+      "request supplied has multiple errors (path parameters)" in new Test {
         validator.validate(AmendOtherEmploymentRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }

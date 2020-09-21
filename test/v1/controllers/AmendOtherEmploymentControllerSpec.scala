@@ -57,7 +57,7 @@ class AmendOtherEmploymentControllerSpec
   }
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   private val requestBodyJson: JsValue = Json.parse(
@@ -237,11 +237,46 @@ class AmendOtherEmploymentControllerSpec
       amountDeducted = 7000.99
     )
 
+  private val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val benefitFromEmployerFinancedRetirementScheme = AmendBenefitFromEmployerFinancedRetirementSchemeItem(
+    amount = 5000.99,
+    exemptAmount = Some(2345.99),
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsOverExemption = AmendRedundancyCompensationPaymentsOverExemptionItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsUnderExemption = AmendRedundancyCompensationPaymentsUnderExemptionItem(
+    amount = 5000.99
+  )
+
+  private val lumpSums = Seq(
+    AmendLumpSums(
+      employerName = "BPDTS Ltd",
+      employerRef = "123/AB456",
+      taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+      benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+      redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+      redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+    )
+  )
+
   val amendOtherEmploymentRequestBody: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(
     shareOption = Some(shareOptionItem),
     sharesAwardedOrReceived = Some(sharesAwardedOrReceivedItem),
     disability = Some(disability),
-    foreignService = Some(foreignService)
+    foreignService = Some(foreignService),
+    lumpSums = Some(lumpSums)
   )
 
   val requestData: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(
@@ -316,6 +351,7 @@ class AmendOtherEmploymentControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (EmployerRefFormatError, BAD_REQUEST),
           (EmployerNameFormatError, BAD_REQUEST),

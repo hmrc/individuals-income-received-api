@@ -16,13 +16,15 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages, _}
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment._
 
-class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
+class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
   override def validate(data: AmendOtherEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -32,6 +34,12 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
+    )
+  }
+
+  private def parameterRuleValidation: AmendOtherEmploymentRawData => List[List[MtdError]] = { data =>
+    List(
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 
@@ -55,6 +63,9 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.disability.map{ data => validateCommonOtherEmployment(data, fieldName = "disability")}.getOrElse(NoValidationErrors),
         requestBodyData.foreignService.map{ data => validateCommonOtherEmployment(data, fieldName = "foreignService")}.getOrElse(NoValidationErrors),
+        requestBodyData.lumpSums.map(_.zipWithIndex.flatMap {
+          case (data, index) => validateLumpSums(data, index)
+        }).getOrElse(NoValidationErrors).toList,
       )
     ))
   }
@@ -173,6 +184,49 @@ class AmendOtherEmploymentValidator extends Validator[AmendOtherEmploymentRawDat
       DecimalValueValidation.validate(
         amount = commonOtherEmployment.amountDeducted,
         path = s"/$fieldName/amountDeducted"
+      )
+    ).flatten
+  }
+
+  private def validateLumpSums(lumpSums: AmendLumpSums, arrayIndex: Int): List[MtdError] = {
+    List(
+      EmployerNameValidation.validate(lumpSums.employerName, 105).map(
+        _.copy(paths = Some(Seq(s"/lumpSums/$arrayIndex/employerName")))
+      ),
+      EmployerRefValidation.validate(lumpSums.employerRef).map(
+        _.copy(paths = Some(Seq(s"/lumpSums/$arrayIndex/employerRef")))
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.taxableLumpSumsAndCertainIncome.map(_.amount),
+        path = s"/lumpSums/$arrayIndex/taxableLumpSumsAndCertainIncome/amount"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.taxableLumpSumsAndCertainIncome.flatMap(_.taxPaid),
+        path = s"/lumpSums/$arrayIndex/taxableLumpSumsAndCertainIncome/taxPaid"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.benefitFromEmployerFinancedRetirementScheme.map(_.amount),
+        path = s"/lumpSums/$arrayIndex/benefitFromEmployerFinancedRetirementSchemeItem/amount"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.benefitFromEmployerFinancedRetirementScheme.flatMap(_.exemptAmount),
+        path = s"/lumpSums/$arrayIndex/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.benefitFromEmployerFinancedRetirementScheme.flatMap(_.taxPaid),
+        path = s"/lumpSums/$arrayIndex/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.redundancyCompensationPaymentsOverExemption.map(_.amount),
+        path = s"/lumpSums/$arrayIndex/redundancyCompensationPaymentsOverExemptionItem/amount"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.redundancyCompensationPaymentsOverExemption.flatMap(_.taxPaid),
+        path = s"/lumpSums/$arrayIndex/redundancyCompensationPaymentsOverExemptionItem/taxPaid"
+      ),
+      DecimalValueValidation.validateOptional(
+        amount = lumpSums.redundancyCompensationPaymentsUnderExemption.map(_.amount),
+        path = s"/lumpSums/$arrayIndex/redundancyCompensationPaymentsUnderExemptionItem/amount"
       )
     ).flatten
   }

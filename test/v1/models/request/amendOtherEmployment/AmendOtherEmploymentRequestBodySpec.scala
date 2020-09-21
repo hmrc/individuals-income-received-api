@@ -70,7 +70,36 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
       |    {
       |      "customerReference": "cust ref",
       |      "amountDeducted": 1223.22
-      |    }
+      |    },
+      |  "lumpSums": [
+      |    {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -120,11 +149,46 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
 
   private val foreignService = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
 
+  private val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val benefitFromEmployerFinancedRetirementScheme = AmendBenefitFromEmployerFinancedRetirementSchemeItem(
+    amount = 5000.99,
+    exemptAmount = Some(2345.99),
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsOverExemption = AmendRedundancyCompensationPaymentsOverExemptionItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsUnderExemption = AmendRedundancyCompensationPaymentsUnderExemptionItem(
+    amount = 5000.99
+  )
+
+  private val lumpSums = Seq(
+    AmendLumpSums(
+      employerName = "BPDTS Ltd",
+      employerRef = "123/AB456",
+      taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+      benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+      redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+      redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+    )
+  )
+
   private val requestBodyModel = AmendOtherEmploymentRequestBody(
     Some(shareOptionModel),
     Some(sharesAwardedOrReceivedModel),
     Some(disability),
-    Some(foreignService)
+    Some(foreignService),
+    Some(lumpSums)
   )
 
   "AmendOtherEmploymentRequestBody" when {

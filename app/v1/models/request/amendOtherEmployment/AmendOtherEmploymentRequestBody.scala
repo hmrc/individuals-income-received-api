@@ -23,22 +23,25 @@ import utils.JsonUtils
 case class AmendOtherEmploymentRequestBody(shareOption: Option[Seq[AmendShareOptionItem]],
                                            sharesAwardedOrReceived: Option[Seq[AmendSharesAwardedOrReceivedItem]],
                                            disability: Option[AmendCommonOtherEmployment],
-                                           foreignService: Option[AmendCommonOtherEmployment])
+                                           foreignService: Option[AmendCommonOtherEmployment],
+                                           lumpSums: Option[Seq[AmendLumpSums]])
 
 object AmendOtherEmploymentRequestBody extends JsonUtils {
-  val empty: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(None, None, None, None)
+  val empty: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(None, None, None, None, None)
 
   implicit val reads: Reads[AmendOtherEmploymentRequestBody] = (
   (JsPath \ "shareOption").readNullable[Seq[AmendShareOptionItem]].mapEmptySeqToNone and
     (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[AmendSharesAwardedOrReceivedItem]].mapEmptySeqToNone and
     (JsPath \ "disability").readNullable[AmendCommonOtherEmployment] and
-    (JsPath \ "foreignService").readNullable[AmendCommonOtherEmployment]
-  ) (AmendOtherEmploymentRequestBody.apply _)
+    (JsPath \ "foreignService").readNullable[AmendCommonOtherEmployment] and
+    (JsPath \ "lumpSums").readNullable[Seq[AmendLumpSums]].mapEmptySeqToNone
+    ) (AmendOtherEmploymentRequestBody.apply _)
 
   implicit val writes: OWrites[AmendOtherEmploymentRequestBody] = (
     (JsPath \ "shareOption").writeNullable[Seq[AmendShareOptionItem]] and
       (JsPath \ "sharesAwardedOrReceived").writeNullable[Seq[AmendSharesAwardedOrReceivedItem]] and
       (JsPath \ "disability").writeNullable[AmendCommonOtherEmployment] and
-      (JsPath \ "foreignService").writeNullable[AmendCommonOtherEmployment]
+      (JsPath \ "foreignService").writeNullable[AmendCommonOtherEmployment] and
+      (JsPath \ "lumpSums").writeNullable[Seq[AmendLumpSums]]
     ) (unlift(AmendOtherEmploymentRequestBody.unapply))
 }

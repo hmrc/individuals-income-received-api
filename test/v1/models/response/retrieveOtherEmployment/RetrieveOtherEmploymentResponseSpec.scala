@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveOtherEmployment
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
 
@@ -25,6 +25,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
+      |   "submittedOn": "2020-07-06T09:37:17Z",
       |   "shareOption": [
       |      {
       |         "employerName": "Company Ltd",
@@ -102,7 +103,36 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
       |   "foreignService": {
       |         "customerReference": "cust ref",
       |         "amountDeducted": 1234.50
-      |   }
+      |   },
+      |   "lumpSums": [
+      |    {
+      |      "employerName": "BPDTS Ltd",
+      |      "employerRef": "123/AB456",
+      |      "taxableLumpSumsAndCertainIncome":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "benefitFromEmployerFinancedRetirementScheme":
+      |         {
+      |           "amount": 5000.99,
+      |           "exemptAmount": 2345.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsOverExemption":
+      |         {
+      |           "amount": 5000.99,
+      |           "taxPaid": 3333.33,
+      |           "taxTakenOffInEmployment": true
+      |         },
+      |      "redundancyCompensationPaymentsUnderExemption":
+      |         {
+      |           "amount": 5000.99
+      |         }
+      |      }
+      |   ]
       |}
     """.stripMargin
   )
@@ -189,40 +219,51 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
     amountDeducted = 1234.50
   )
 
+  private val taxableLumpSumsAndCertainIncome = TaxableLumpSumsAndCertainIncomeItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val benefitFromEmployerFinancedRetirementScheme = BenefitFromEmployerFinancedRetirementSchemeItem(
+    amount = 5000.99,
+    exemptAmount = Some(2345.99),
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsOverExemption = RedundancyCompensationPaymentsOverExemptionItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsUnderExemption = RedundancyCompensationPaymentsUnderExemptionItem(
+    amount = Some(5000.99)
+  )
+
+  private val lumpSumsModel = Seq(LumpSums(
+    employerName = "BPDTS Ltd",
+    employerRef = "123/AB456",
+    taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+    benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+    redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+    redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+  ))
+
   private val responseModel = RetrieveOtherEmploymentResponse(
+    "2020-07-06T09:37:17Z",
     Some(shareOptionItemModel),
     Some(sharesAwardedOrReceivedItemModel),
     Some(disabilityModel),
-    Some(foreignServiceModel)
+    Some(foreignServiceModel),
+    Some(lumpSumsModel)
   )
 
   "RetrieveOtherEmploymentResponse" when {
     "read from valid JSON" should {
       "produce the expected RetrieveOtherEmploymentResponse object" in {
         json.as[RetrieveOtherEmploymentResponse] shouldBe responseModel
-      }
-    }
-
-    "read from valid JSON with empty shareOption and sharesAwardedOrReceived arrays" should {
-      "produce an empty RetrieveOtherResponse object" in {
-        val json = Json.parse(
-          """
-            |{
-            |   "shareOption": [ ],
-            |   "sharesAwardedOrReceived": [ ]
-            |}
-          """.stripMargin
-        )
-
-        json.as[RetrieveOtherEmploymentResponse] shouldBe RetrieveOtherEmploymentResponse.empty
-      }
-    }
-
-    "read from empty JSON" should {
-      "produce an empty RetrieveOtherEmploymentResponse object" in {
-        val emptyJson = JsObject.empty
-
-        emptyJson.as[RetrieveOtherEmploymentResponse] shouldBe RetrieveOtherEmploymentResponse.empty
       }
     }
 

@@ -79,7 +79,8 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
+      case BadRequestError | NinoFormatError | TaxYearFormatError |
+           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
            CustomMtdError(ValueFormatError.code) |
            CustomMtdError(CustomerRefFormatError.code) |
            CustomMtdError(EmployerNameFormatError.code) |

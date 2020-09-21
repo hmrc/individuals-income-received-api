@@ -114,6 +114,40 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
     amountDeducted = 1234.50
   )
 
+  private val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val benefitFromEmployerFinancedRetirementScheme = AmendBenefitFromEmployerFinancedRetirementSchemeItem(
+    amount = 5000.99,
+    exemptAmount = Some(2345.99),
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsOverExemption = AmendRedundancyCompensationPaymentsOverExemptionItem(
+    amount = 5000.99,
+    taxPaid = Some(3333.33),
+    taxTakenOffInEmployment = true
+  )
+
+  private val redundancyCompensationPaymentsUnderExemption = AmendRedundancyCompensationPaymentsUnderExemptionItem(
+    amount = 5000.99
+  )
+
+  private val lumpSumsModel = Seq(
+    AmendLumpSums(
+      employerName = "BPDTS Ltd",
+      employerRef = "123/AB456",
+      taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+      benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+      redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+      redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+    )
+  )
+
   val amendOtherEmploymentRequest: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(
       nino = Nino(nino),
       taxYear = DesTaxYear(taxYear),
@@ -121,7 +155,8 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
         shareOption = Some(shareOptionModel),
         sharesAwardedOrReceived = Some(sharesAwardedOrReceivedModel),
         disability = Some(disabilityModel),
-        foreignService = Some(foreignServiceModel)
+        foreignService = Some(foreignServiceModel),
+        lumpSums = Some(lumpSumsModel)
       )
   )
 
