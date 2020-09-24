@@ -24,7 +24,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockAddCustomEmploymentRequestParser
-import v1.mocks.services.{MockAddCustomEmploymentService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAddCustomEmploymentService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
@@ -40,6 +41,7 @@ class AddCustomEmploymentControllerSpec
     with MockMtdIdLookupService
     with MockAppConfig
     with MockAddCustomEmploymentService
+    with MockAuditService
     with MockAddCustomEmploymentRequestParser
     with MockHateoasFactory
     with HateoasLinks {
@@ -52,13 +54,14 @@ class AddCustomEmploymentControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockAddCustomEmploymentRequestParser,
       service = mockAddCustomEmploymentService,
+      auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
       cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("baseUrl").anyNumberOfTimes()
+    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
     val links: List[Link] = List(
       listEmployment(mockAppConfig, nino, taxYear, isSelf = false),
@@ -71,7 +74,7 @@ class AddCustomEmploymentControllerSpec
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  val correlationId: String = "X-123"
+  val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val requestBodyJson: JsValue = Json.parse(
     """
@@ -115,22 +118,22 @@ class AddCustomEmploymentControllerSpec
       |   "employmentId": "$employmentId",
       |   "links":[
       |      {
-      |         "href": "/baseUrl/employments/$nino/$taxYear",
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear",
       |         "rel": "list-employments",
       |         "method": "GET"
       |      },
       |      {
-      |         "href": "/baseUrl/employments/$nino/$taxYear/$employmentId",
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
       |         "rel": "self",
       |         "method": "GET"
       |      },
       |      {
-      |         "href": "/baseUrl/employments/$nino/$taxYear/$employmentId",
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
       |         "rel": "create-and-amend-custom-employment",
       |         "method": "PUT"
       |      },
       |      {
-      |         "href": "/baseUrl/employments/$nino/$taxYear/$employmentId",
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
       |         "rel": "delete-custom-employment",
       |         "method": "DELETE"
       |      }
@@ -138,6 +141,20 @@ class AddCustomEmploymentControllerSpec
       |}
     """.stripMargin
   )
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "AddACustomEmployment",
+      transactionName = "add-a-custom-employment",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = Some(requestBodyJson),
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
 
   "AddCustomEmploymentController" should {
     "return OK" when {
@@ -160,6 +177,9 @@ class AddCustomEmploymentControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe responseJson
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(responseJson))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -177,6 +197,9 @@ class AddCustomEmploymentControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -218,6 +241,9 @@ class AddCustomEmploymentControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

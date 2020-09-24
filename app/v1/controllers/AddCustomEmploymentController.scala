@@ -22,13 +22,16 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{GenericAuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 import v1.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
-import v1.services.{AddCustomEmploymentService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AddCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,6 +40,7 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
                                               val lookupService: MtdIdLookupService,
                                               requestParser: AddCustomEmploymentRequestParser,
                                               service: AddCustomEmploymentService,
+                                              auditService: AuditService,
                                               hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
@@ -73,6 +77,12 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
           )
 
+          auditSubmission(
+            GenericAuditDetail(request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body),
+              serviceResponse.correlationId, AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+            )
+          )
+
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -81,6 +91,12 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          GenericAuditDetail(request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body),
+            correlationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
 
         result
       }.merge
@@ -97,5 +113,12 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: GenericAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("AddACustomEmployment", "add-a-custom-employment", details)
+    auditService.auditEvent(event)
   }
 }
