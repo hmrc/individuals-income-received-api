@@ -62,7 +62,7 @@ class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
             model,
             Seq(
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", GET, "self"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", PUT, "amend-employment-financial-details"),
+              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", PUT, "create-and-amend-employment-financial-details"),
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", DELETE, "delete-employment-financial-details"),
             )
           )

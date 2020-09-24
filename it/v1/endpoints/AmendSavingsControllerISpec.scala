@@ -71,7 +71,7 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
          |   "links":[
          |      {
          |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-         |         "rel":"amend-savings-income",
+         |         "rel":"create-and-amend-savings-income",
          |         "method":"PUT"
          |      },
          |      {

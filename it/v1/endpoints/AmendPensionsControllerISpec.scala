@@ -87,7 +87,7 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
          |   "links":[
          |      {
          |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-         |         "rel":"amend-pensions-income",
+         |         "rel":"create-and-amend-pensions-income",
          |         "method":"PUT"
          |      },
          |      {

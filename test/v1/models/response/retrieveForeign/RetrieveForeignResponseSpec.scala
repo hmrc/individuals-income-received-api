@@ -131,7 +131,7 @@ class RetrieveForeignResponseSpec extends UnitSpec {
             fullRetrieveResponseBodyModel,
             Seq(
               Link(s"/individuals/income-received/foreign/$nino/$taxYear", GET, "self"),
-              Link(s"/individuals/income-received/foreign/$nino/$taxYear", PUT, "amend-foreign-income"),
+              Link(s"/individuals/income-received/foreign/$nino/$taxYear", PUT, "create-and-amend-foreign-income"),
               Link(s"/individuals/income-received/foreign/$nino/$taxYear", DELETE, "delete-foreign-income")
             )
           )

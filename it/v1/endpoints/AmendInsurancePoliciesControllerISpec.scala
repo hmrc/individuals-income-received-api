@@ -139,7 +139,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
          |   "links":[
          |      {
          |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
-         |         "rel":"amend-insurance-policies-income",
+         |         "rel":"create-and-amend-insurance-policies-income",
          |         "method":"PUT"
          |      },
          |      {

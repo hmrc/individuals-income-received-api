@@ -17,25 +17,25 @@
 package v1.models.hateoas
 
 object RelType {
-  val AMEND_SAVINGS_INCOME = "amend-savings-income"
+  val AMEND_SAVINGS_INCOME = "create-and-amend-savings-income"
   val DELETE_SAVINGS_INCOME = "delete-savings-income"
 
-  val AMEND_INSURANCE_POLICIES_INCOME = "amend-insurance-policies-income"
+  val AMEND_INSURANCE_POLICIES_INCOME = "create-and-amend-insurance-policies-income"
   val DELETE_INSURANCE_POLICIES_INCOME = "delete-insurance-policies-income"
 
-  val AMEND_FOREIGN_INCOME = "amend-foreign-income"
+  val AMEND_FOREIGN_INCOME = "create-and-amend-foreign-income"
   val DELETE_FOREIGN_INCOME = "delete-foreign-income"
 
-  val AMEND_PENSIONS_INCOME = "amend-pensions-income"
+  val AMEND_PENSIONS_INCOME = "create-and-amend-pensions-income"
   val DELETE_PENSIONS_INCOME = "delete-pensions-income"
 
-  val AMEND_OTHER_INCOME = "amend-other-income"
+  val AMEND_OTHER_INCOME = "create-and-amend-other-income"
   val DELETE_OTHER_INCOME = "delete-other-income"
 
-  val AMEND_OTHER_EMPLOYMENT_INCOME = "amend-employments-other-income"
+  val AMEND_OTHER_EMPLOYMENT_INCOME = "create-and-amend-employments-other-income"
   val DELETE_OTHER_EMPLOYMENT_INCOME = "delete-employments-other-income"
 
-  val AMEND_DIVIDENDS_INCOME = "amend-dividends-income"
+  val AMEND_DIVIDENDS_INCOME = "create-and-amend-dividends-income"
   val DELETE_DIVIDENDS_INCOME = "delete-dividends-income"
 
   val LIST_EMPLOYMENTS = "list-employments"
@@ -43,10 +43,10 @@ object RelType {
   val IGNORE_EMPLOYMENT = "ignore-employment"
 
   val ADD_CUSTOM_EMPLOYMENT = "add-custom-employment"
-  val AMEND_CUSTOM_EMPLOYMENT = "amend-custom-employment"
+  val AMEND_CUSTOM_EMPLOYMENT = "create-and-amend-custom-employment"
   val DELETE_CUSTOM_EMPLOYMENT = "delete-custom-employment"
 
-  val AMEND_EMPLOYMENT_FINANCIAL_DETAILS = "amend-employment-financial-details"
+  val AMEND_EMPLOYMENT_FINANCIAL_DETAILS = "create-and-amend-employment-financial-details"
   val DELETE_EMPLOYMENT_FINANCIAL_DETAILS = "delete-employment-financial-details"
 
   val SELF = "self"

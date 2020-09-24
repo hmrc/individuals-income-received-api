@@ -80,7 +80,7 @@ object RetrieveOtherControllerFixture {
        |      {
        |         "href":"/individuals/income-received/other/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-other-income"
+       |         "rel":"create-and-amend-other-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/other/$nino/$taxYear",

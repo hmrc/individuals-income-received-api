@@ -110,7 +110,7 @@ class AmendCustomEmploymentControllerSpec
        |      },
        |      {
        |         "href":"/baseUrl/employments/$nino/$taxYear/$employmentId",
-       |         "rel":"amend-custom-employment",
+       |         "rel":"create-and-amend-custom-employment",
        |         "method":"PUT"
        |      },
        |      {

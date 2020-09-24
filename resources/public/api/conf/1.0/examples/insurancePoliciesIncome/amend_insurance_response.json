@@ -2,7 +2,7 @@
    "links":[
       {
          "href":"/individuals/income-received/insurance-policies/TC663795B/2021-22",
-         "rel":"amend-insurance-policies-income",
+         "rel":"create-and-amend-insurance-policies-income",
          "method":"PUT"
       },
       {

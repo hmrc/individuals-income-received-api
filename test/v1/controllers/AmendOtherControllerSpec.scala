@@ -191,7 +191,7 @@ class AmendOtherControllerSpec
        |   "links":[
        |      {
        |         "href":"/baseUrl/other/$nino/$taxYear",
-       |         "rel":"amend-other-income",
+       |         "rel":"create-and-amend-other-income",
        |         "method":"PUT"
        |      },
        |      {

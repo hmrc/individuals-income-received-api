@@ -75,7 +75,7 @@ object RetrievePensionsControllerFixture {
        |      {
        |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-pensions-income"
+       |         "rel":"create-and-amend-pensions-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/pensions/$nino/$taxYear",

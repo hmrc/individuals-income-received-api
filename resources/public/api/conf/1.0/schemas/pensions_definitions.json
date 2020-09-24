@@ -140,7 +140,7 @@
             "type": "string",
             "enum": [
               "self",
-              "amend-pensions-income",
+              "create-and-amend-pensions-income",
               "delete-pensions-income"
             ]
           },

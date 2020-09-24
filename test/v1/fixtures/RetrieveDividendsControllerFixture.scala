@@ -87,7 +87,7 @@ object RetrieveDividendsControllerFixture {
        |      {
        |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-dividends-income"
+       |         "rel":"create-and-amend-dividends-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/dividends/$nino/$taxYear",

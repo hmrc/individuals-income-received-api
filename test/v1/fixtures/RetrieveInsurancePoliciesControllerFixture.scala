@@ -86,7 +86,7 @@ object RetrieveInsurancePoliciesControllerFixture {
        |      {
        |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-insurance-policies-income"
+       |         "rel":"create-and-amend-insurance-policies-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",

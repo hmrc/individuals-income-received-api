@@ -99,7 +99,7 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
          |   "links":[
          |      {
          |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-         |         "rel":"amend-dividends-income",
+         |         "rel":"create-and-amend-dividends-income",
          |         "method":"PUT"
          |      },
          |      {

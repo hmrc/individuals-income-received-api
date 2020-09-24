@@ -281,7 +281,7 @@ class AmendInsurancePoliciesControllerSpec
        |   "links":[
        |      {
        |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
-       |         "rel":"amend-insurance-policies-income",
+       |         "rel":"create-and-amend-insurance-policies-income",
        |         "method":"PUT"
        |      },
        |      {

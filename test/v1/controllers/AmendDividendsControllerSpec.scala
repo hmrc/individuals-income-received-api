@@ -204,7 +204,7 @@ class AmendDividendsControllerSpec
       |   "links":[
       |      {
       |         "href":"/baseUrl/dividends/$nino/$taxYear",
-      |         "rel":"amend-dividends-income",
+      |         "rel":"create-and-amend-dividends-income",
       |         "method":"PUT"
       |      },
       |      {

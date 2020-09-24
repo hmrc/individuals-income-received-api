@@ -158,7 +158,7 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "amend-dividends-income", "delete-dividends-income"
+              "self", "create-and-amend-dividends-income", "delete-dividends-income"
             ]
           },
           "method": {

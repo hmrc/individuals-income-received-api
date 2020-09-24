@@ -172,7 +172,7 @@ class AmendPensionsControllerSpec
       |   "links":[
       |      {
       |         "href":"/baseUrl/pensions/$nino/$taxYear",
-      |         "rel":"amend-pensions-income",
+      |         "rel":"create-and-amend-pensions-income",
       |         "method":"PUT"
       |      },
       |      {

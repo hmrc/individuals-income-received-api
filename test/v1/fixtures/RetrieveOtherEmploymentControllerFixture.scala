@@ -109,7 +109,7 @@ object RetrieveOtherEmploymentControllerFixture {
        |      {
        |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-employments-other-income"
+       |         "rel":"create-and-amend-employments-other-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
