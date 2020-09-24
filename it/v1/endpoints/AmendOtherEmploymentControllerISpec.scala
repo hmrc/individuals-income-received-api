@@ -158,7 +158,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
          |        {
          |            "href":"/individuals/income-received/employments/other/AA123456A/2019-20",
          |            "method":"PUT",
-         |            "rel":"amend-employments-other-income"
+         |            "rel":"create-and-amend-employments-other-income"
          |        },
          |        {
          |            "href":"/individuals/income-received/employments/other/AA123456A/2019-20",

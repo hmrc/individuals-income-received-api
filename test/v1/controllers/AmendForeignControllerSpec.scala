@@ -124,7 +124,7 @@ class AmendForeignControllerSpec
       |   "links":[
       |      {
       |         "href":"/baseUrl/foreign/$nino/$taxYear",
-      |         "rel":"amend-foreign-income",
+      |         "rel":"create-and-amend-foreign-income",
       |         "method":"PUT"
       |      },
       |      {

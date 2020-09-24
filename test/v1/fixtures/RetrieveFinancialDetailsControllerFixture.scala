@@ -254,7 +254,7 @@ object RetrieveFinancialDetailsControllerFixture {
        |      {
        |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
        |         "method":"PUT",
-       |         "rel":"amend-employment-financial-details"
+       |         "rel":"create-and-amend-employment-financial-details"
        |      },
        |      {
        |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",

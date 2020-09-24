@@ -18,7 +18,7 @@
   "links":[
     {
       "href":"/individuals/income-received/savings/TC663795B/2021-22",
-      "rel":"amend-savings-income",
+      "rel":"create-and-amend-savings-income",
       "method":"PUT"
     },
     {

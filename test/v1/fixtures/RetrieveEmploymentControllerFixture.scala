@@ -105,7 +105,7 @@ object RetrieveEmploymentControllerFixture {
        |      {
        |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
        |         "method": "PUT",
-       |         "rel": "amend-custom-employment"
+       |         "rel": "create-and-amend-custom-employment"
        |      },
        |      {
        |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",

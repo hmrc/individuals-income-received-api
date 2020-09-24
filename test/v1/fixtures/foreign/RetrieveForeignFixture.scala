@@ -56,7 +56,7 @@ object RetrieveForeignFixture {
        |      {
        |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-foreign-income"
+       |         "rel":"create-and-amend-foreign-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/foreign/$nino/$taxYear",

@@ -291,7 +291,7 @@ class AmendOtherEmploymentControllerSpec
        |   "links":[
        |      {
        |         "href":"/baseUrl/employments/other/$nino/$taxYear",
-       |         "rel":"amend-employments-other-income",
+       |         "rel":"create-and-amend-employments-other-income",
        |         "method":"PUT"
        |      },
        |      {

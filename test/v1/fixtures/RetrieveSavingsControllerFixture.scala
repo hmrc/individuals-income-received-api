@@ -51,7 +51,7 @@ object RetrieveSavingsControllerFixture {
        |      {
        |         "href":"/individuals/income-received/savings/$nino/$taxYear",
        |         "method":"PUT",
-       |         "rel":"amend-savings-income"
+       |         "rel":"create-and-amend-savings-income"
        |      },
        |      {
        |         "href":"/individuals/income-received/savings/$nino/$taxYear",

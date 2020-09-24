@@ -63,7 +63,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
          |   "links":[
          |      {
          |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-         |         "rel":"amend-foreign-income",
+         |         "rel":"create-and-amend-foreign-income",
          |         "method":"PUT"
          |      },
          |      {

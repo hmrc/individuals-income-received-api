@@ -139,7 +139,7 @@ class AmendSavingsControllerSpec
       |   "links":[
       |      {
       |         "href":"/baseUrl/savings/$nino/$taxYear",
-      |         "rel":"amend-savings-income",
+      |         "rel":"create-and-amend-savings-income",
       |         "method":"PUT"
       |      },
       |      {

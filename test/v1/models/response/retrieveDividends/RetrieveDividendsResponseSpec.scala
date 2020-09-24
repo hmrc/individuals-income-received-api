@@ -157,7 +157,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
           HateoasWrapper(
             responseModel,
             Seq(
-              Link(s"/individuals/income-received/dividends/$nino/$taxYear", PUT, "amend-dividends-income"),
+              Link(s"/individuals/income-received/dividends/$nino/$taxYear", PUT, "create-and-amend-dividends-income"),
               Link(s"/individuals/income-received/dividends/$nino/$taxYear", GET, "self"),
               Link(s"/individuals/income-received/dividends/$nino/$taxYear", DELETE, "delete-dividends-income")
             )

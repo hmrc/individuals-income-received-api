@@ -121,7 +121,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
              |      },
              |      {
              |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"amend-employment-financial-details",
+             |         "rel":"create-and-amend-employment-financial-details",
              |         "method":"PUT"
              |      },
              |      {

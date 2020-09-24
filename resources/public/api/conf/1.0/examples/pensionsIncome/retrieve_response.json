@@ -25,7 +25,7 @@
   "links":[
     {
       "href":"/individuals/income-received/pensions/TC663795B/2021-22",
-      "rel":"amend-pensions-income",
+      "rel":"create-and-amend-pensions-income",
       "method":"PUT"
     },
     {

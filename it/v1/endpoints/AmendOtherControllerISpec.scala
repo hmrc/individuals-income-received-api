@@ -92,7 +92,7 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
          |   "links":[
          |      {
          |         "href":"/individuals/income-received/other/$nino/$taxYear",
-         |         "rel":"amend-other-income",
+         |         "rel":"create-and-amend-other-income",
          |         "method":"PUT"
          |      },
          |      {

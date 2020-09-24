@@ -193,7 +193,7 @@ class AmendFinancialDetailsControllerSpec
        |      },
        |      {
        |         "href":"/baseUrl/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"amend-employment-financial-details",
+       |         "rel":"create-and-amend-employment-financial-details",
        |         "method":"PUT"
        |      },
        |      {
