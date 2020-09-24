@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Amend Dividends Income Request",
-  "description": "Amend Dividends Income Request",
+  "title": "Create And Amend Dividends Income Request",
+  "description": "Create And Amend Dividends Income Request",
   "type": "object",
   "properties": {
     "foreignDividend": {

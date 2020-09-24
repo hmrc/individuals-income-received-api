@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Amend Savings Income Request",
-  "description": "Amend Savings Income Request",
+  "title": "Create And Amend Savings Income Request",
+  "description": "Create And Amend Savings Income Request",
   "type": "object",
   "properties": {
     "securities": {"$ref": "savings_definitions.json#/definitions/securities"},

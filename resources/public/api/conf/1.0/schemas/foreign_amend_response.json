@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": 	"Amend Foreign Income Response",
-  "description":"Amend Foreign Income Response",
+  "title": 	"Create And Amend Foreign Income Response",
+  "description":"Create And Amend Foreign Income Response",
   "type": "object",
   "properties": {
     "links": {"$ref": "foreign_definitions.json#/definitions/links"}
