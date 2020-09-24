@@ -2,7 +2,7 @@
    "links":[
       {
          "href":"/individuals/income-received/employments/other/TC663795B/2021-22",
-         "rel":"create-and-amend-other-employment-income",
+         "rel":"amend-other-employment-income",
          "method":"PUT"
       },
       {

@@ -159,7 +159,7 @@
             "type": "string",
             "enum": [
               "self",
-              "create-and-amend-insurance-policies-income",
+              "amend-insurance-policies-income",
               "delete-insurance-policies-income"
             ]
           },

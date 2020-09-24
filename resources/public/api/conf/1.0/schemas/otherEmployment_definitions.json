@@ -440,7 +440,7 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "self", "create-and-amend-other-employment-income", "delete-other-employment-income"
+              "self", "amend-other-employment-income", "delete-other-employment-income"
             ]
           },
           "method": {

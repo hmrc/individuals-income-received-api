@@ -2,7 +2,7 @@
    "links":[
       {
          "href":"/individuals/income-received/dividends/TC663795B/2021-22",
-         "rel":"create-and-amend-dividends-income",
+         "rel":"amend-dividends-income",
          "method":"PUT"
       },
       {
