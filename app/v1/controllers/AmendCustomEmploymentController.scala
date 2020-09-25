@@ -23,12 +23,15 @@ import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.AmendCustomEmploymentRequestParser
 import v1.hateoas.AmendHateoasBody
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
-import v1.services.{AmendCustomEmploymentService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AmendCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,6 +40,7 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
                                                 appConfig: AppConfig,
                                                 requestParser: AmendCustomEmploymentRequestParser,
                                                 service: AmendCustomEmploymentService,
+                                                auditService: AuditService,
                                                 cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
 
@@ -65,6 +69,14 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
+
+          auditSubmission(
+            GenericAuditDetail(
+              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body), serviceResponse.correlationId,
+              AuditResponse(httpStatus = OK, response = Right(Some(amendCustomEmploymentHateoasBody(appConfig, nino, taxYear, employmentId))))
+            )
+          )
+
           Ok(amendCustomEmploymentHateoasBody(appConfig, nino, taxYear, employmentId))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -74,6 +86,12 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
 
+        auditSubmission(
+          GenericAuditDetail(
+            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body),
+            correlationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
         result
       }.merge
     }
@@ -91,5 +109,13 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+
+  private def auditSubmission(details: GenericAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("AmendACustomEmployment", "amend-a-custom-employment", details)
+    auditService.auditEvent(event)
   }
 }
