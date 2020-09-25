@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Amend Insurance Policies Income Request",
-  "description": "Amend Insurance Policies Income Request",
+  "title": "Create And Amend Insurance Policies Income Request",
+  "description": "Create And Amend Insurance Policies Income Request",
   "type": "object",
   "properties": {
     "lifeInsurance": {

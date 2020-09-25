@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Amend Other Employment Income Request",
-  "description": "Amend Other Employment Income Request",
+  "title": "Create And Amend Other Employment Income Request",
+  "description": "Create And Amend Other Employment Income Request",
   "type": "object",
   "properties": {
     "shareOption": {"$ref": "otherEmployment_definitions.json#/definitions/shareOption"},

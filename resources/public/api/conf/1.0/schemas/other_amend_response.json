@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": 	"Amend Other Income Response",
-  "description":"Amend Other Income Response",
+  "title": 	"Create And Amend Other Income Response",
+  "description":"Create And Amend Other Income Response",
   "type": "object",
   "properties": {
     "links": {"$ref": "other_definitions.json#/definitions/links"}

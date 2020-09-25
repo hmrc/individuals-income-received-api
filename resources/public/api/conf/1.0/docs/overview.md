@@ -1,4 +1,4 @@
-This suite of endpoints allows software packages to amend, retrieve and delete data relating to:
+This suite of endpoints allows software packages to create, amend, retrieve and delete data relating to:
 - employments
 - other employment income
 - dividends income

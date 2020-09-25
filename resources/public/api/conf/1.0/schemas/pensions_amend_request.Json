@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Amend Pensions Income Request",
-  "description": "Amend Pensions Income Request",
+  "title": "Create And Amend Pensions Income Request",
+  "description": "Create And Amend Pensions Income Request",
   "type": "object",
   "properties": {
     "foreignPensions": {"$ref": "pensions_definitions.json#/definitions/foreignPensions"},

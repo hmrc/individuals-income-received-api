@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": 	"Amend Pensions Income Response",
-  "description":"Amend Pensions Income Response",
+  "title": 	"Create And Amend Pensions Income Response",
+  "description":"Create And Amend Pensions Income Response",
   "type": "object",
   "properties": {
     "links": {"$ref": "pensions_definitions.json#/definitions/links"}

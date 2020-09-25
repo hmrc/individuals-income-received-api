@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": 	"Amend Insurance Policies Income Response",
-  "description":"Amend Insurance Policies Income Response",
+  "title": 	"Create And Amend Insurance Policies Income Response",
+  "description":"Create And Amend Insurance Policies Income Response",
   "type": "object",
   "properties": {
     "links": {"$ref": "insurance_definitions.json#/definitions/links"}
