@@ -22,7 +22,8 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendSavingsRequestParser
-import v1.mocks.services.{MockAmendSavingsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAmendSavingsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -37,7 +38,23 @@ class AmendSavingsControllerSpec
     with MockMtdIdLookupService
     with MockAppConfig
     with MockAmendSavingsService
+    with MockAuditService
     with MockAmendSavingsRequestParser {
+
+
+  def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendSavingsIncome",
+      transactionName = "create-amend-savings-income",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = auditRequest,
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
 
   trait Test {
     val hc = HeaderCarrier()
@@ -48,6 +65,7 @@ class AmendSavingsControllerSpec
       appConfig = mockAppConfig,
       requestParser = mockAmendSavingsRequestParser,
       service = mockAmendSavingsService,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -174,6 +192,9 @@ class AmendSavingsControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
       }
     }
 
@@ -191,6 +212,9 @@ class AmendSavingsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
@@ -226,6 +250,9 @@ class AmendSavingsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
