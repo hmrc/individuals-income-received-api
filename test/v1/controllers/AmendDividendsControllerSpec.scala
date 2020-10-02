@@ -22,7 +22,8 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendDividendsRequestParser
-import v1.mocks.services.{MockAmendDividendsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAmendDividendsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -36,6 +37,7 @@ class AmendDividendsControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
+    with MockAuditService
     with MockAmendDividendsService
     with MockAmendDividendsRequestParser {
 
@@ -48,17 +50,18 @@ class AmendDividendsControllerSpec
       appConfig = mockAppConfig,
       requestParser = mockAmendDividendsRequestParser,
       service = mockAmendDividendsService,
+      auditService = mockAuditService,
       cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("baseUrl").anyNumberOfTimes()
+    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
   }
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
-  val correlationId: String = "X-123"
+  val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
 
   val requestBodyJson: JsValue = Json.parse(
     """
@@ -203,17 +206,17 @@ class AmendDividendsControllerSpec
       |{
       |   "links":[
       |      {
-      |         "href":"/baseUrl/dividends/$nino/$taxYear",
+      |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
       |         "rel":"create-and-amend-dividends-income",
       |         "method":"PUT"
       |      },
       |      {
-      |         "href":"/baseUrl/dividends/$nino/$taxYear",
+      |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
       |         "rel":"self",
       |         "method":"GET"
       |      },
       |      {
-      |         "href":"/baseUrl/dividends/$nino/$taxYear",
+      |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
       |         "rel":"delete-dividends-income",
       |         "method":"DELETE"
       |      }
@@ -221,6 +224,20 @@ class AmendDividendsControllerSpec
       |}
     """.stripMargin
   )
+
+  def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendDividendsIncome",
+      transactionName = "create-amend-dividends-income",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = auditRequest,
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
 
   "AmendDividendsController" should {
     "return OK" when {
@@ -239,6 +256,9 @@ class AmendDividendsControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
       }
     }
 
@@ -256,6 +276,9 @@ class AmendDividendsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
@@ -292,6 +315,9 @@ class AmendDividendsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
