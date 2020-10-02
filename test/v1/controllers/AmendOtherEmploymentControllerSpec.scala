@@ -22,7 +22,8 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendOtherEmploymentRequestParser
-import v1.mocks.services.{MockAmendOtherEmploymentService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAmendOtherEmploymentService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -37,7 +38,23 @@ class AmendOtherEmploymentControllerSpec
     with MockMtdIdLookupService
     with MockAppConfig
     with MockAmendOtherEmploymentRequestParser
+    with MockAuditService
     with MockAmendOtherEmploymentService {
+
+
+  def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendOtherEmployment",
+      transactionName = "create-amend-other-employment",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = auditRequest,
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
 
   trait Test {
     val hc = HeaderCarrier()
@@ -48,6 +65,7 @@ class AmendOtherEmploymentControllerSpec
       appConfig = mockAppConfig,
       requestParser = mockAmendOtherEmploymentRequestParser,
       service = mockAmendOtherEmploymentService,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -326,6 +344,9 @@ class AmendOtherEmploymentControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
       }
     }
 
@@ -343,6 +364,9 @@ class AmendOtherEmploymentControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
@@ -382,6 +406,9 @@ class AmendOtherEmploymentControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
