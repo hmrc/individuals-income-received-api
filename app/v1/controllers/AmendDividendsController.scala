@@ -23,12 +23,15 @@ import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.AmendDividendsRequestParser
 import v1.hateoas.AmendHateoasBody
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.amendDividends.AmendDividendsRawData
-import v1.services.{AmendDividendsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AmendDividendsService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,6 +40,7 @@ class AmendDividendsController @Inject()(val authService: EnrolmentsAuthService,
                                          appConfig: AppConfig,
                                          requestParser: AmendDividendsRequestParser,
                                          service: AmendDividendsService,
+                                         auditService: AuditService,
                                          cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
 
@@ -64,6 +68,13 @@ class AmendDividendsController @Inject()(val authService: EnrolmentsAuthService,
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
+          auditSubmission(
+            GenericAuditDetail(
+              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body), serviceResponse.correlationId,
+              AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(amendDividendsHateoasBody(appConfig, nino, taxYear)))))
+            )
+          )
+
           Ok(amendDividendsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -72,6 +83,12 @@ class AmendDividendsController @Inject()(val authService: EnrolmentsAuthService,
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          GenericAuditDetail(request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body), correlationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
 
         result
       }.merge
@@ -90,5 +107,12 @@ class AmendDividendsController @Inject()(val authService: EnrolmentsAuthService,
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: GenericAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("CreateAmendDividendsIncome", "create-amend-dividends-income", details)
+    auditService.auditEvent(event)
   }
 }
