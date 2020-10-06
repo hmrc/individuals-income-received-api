@@ -73,8 +73,14 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
 
           auditSubmission(
             GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), None,
-              serviceResponse.correlationId, AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+              userDetails = request.userDetails,
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              request = None,
+              `X-CorrelationId` = serviceResponse.correlationId,
+              auditResponse = AuditResponse(
+                httpStatus = NO_CONTENT,
+                response = Right(None)
+              )
             )
           )
 
@@ -89,8 +95,14 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
 
         auditSubmission(
           GenericAuditDetail(
-            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), None,
-            correlationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            userDetails = request.userDetails,
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            request = None,
+            `X-CorrelationId` = correlationId,
+            auditResponse = AuditResponse(
+              httpStatus = result.header.status,
+              response = Left(errorWrapper.auditErrors)
+            )
           )
         )
 
@@ -111,7 +123,12 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("DeletePensionsIncome", "delete-pensions-income", details)
+    val event = AuditEvent(
+      auditType = "DeletePensionsIncome",
+      transactionName = "delete-pensions-income",
+      detail = details
+    )
+
     auditService.auditEvent(event)
   }
 }

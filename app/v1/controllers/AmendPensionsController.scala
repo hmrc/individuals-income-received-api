@@ -71,10 +71,17 @@ class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
 
           auditSubmission(
             GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body), serviceResponse.correlationId,
-              AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(amendPensionsHateoasBody(appConfig, nino, taxYear)))))
+              userDetails = request.userDetails,
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              request = Some(request.body),
+              `X-CorrelationId` = serviceResponse.correlationId,
+              auditResponse = AuditResponse(
+                httpStatus = OK,
+                response = Right(Some(amendPensionsHateoasBody(appConfig, nino, taxYear)))
+              )
             )
           )
+
           Ok(amendPensionsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -90,7 +97,10 @@ class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             request = Some(request.body),
             `X-CorrelationId` = correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            auditResponse = AuditResponse(
+              httpStatus = result.header.status,
+              response = Left(errorWrapper.auditErrors)
+            )
           )
         )
 
@@ -120,8 +130,12 @@ class AmendPensionsController @Inject()(val authService: EnrolmentsAuthService,
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent(
+      auditType = "CreateAmendPensionsIncome",
+      transactionName = "create-amend-pensions-income",
+      detail = details
+    )
 
-    val event = AuditEvent("CreateAmendPensionsIncome", "create-amend-pensions-income", details)
     auditService.auditEvent(event)
   }
 }
