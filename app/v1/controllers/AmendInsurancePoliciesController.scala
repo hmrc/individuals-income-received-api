@@ -76,7 +76,7 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               request = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(amendInsurancePoliciesHateoasBody(appConfig, nino, taxYear)))))
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(amendInsurancePoliciesHateoasBody(appConfig, nino, taxYear))))
             )
           )
 
