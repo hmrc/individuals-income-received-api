@@ -22,7 +22,8 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendPensionsRequestParser
-import v1.mocks.services.{MockAmendPensionsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAmendPensionsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -36,6 +37,7 @@ class AmendPensionsControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
+    with MockAuditService
     with MockAmendPensionsService
     with MockAmendPensionsRequestParser {
 
@@ -48,12 +50,13 @@ class AmendPensionsControllerSpec
       appConfig = mockAppConfig,
       requestParser = mockAmendPensionsRequestParser,
       service = mockAmendPensionsService,
+      auditService = mockAuditService,
       cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("baseUrl").anyNumberOfTimes()
+    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
   }
 
   val nino: String = "AA123456A"
@@ -171,17 +174,17 @@ class AmendPensionsControllerSpec
       |{
       |   "links":[
       |      {
-      |         "href":"/baseUrl/pensions/$nino/$taxYear",
+      |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
       |         "rel":"create-and-amend-pensions-income",
       |         "method":"PUT"
       |      },
       |      {
-      |         "href":"/baseUrl/pensions/$nino/$taxYear",
+      |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
       |         "rel":"self",
       |         "method":"GET"
       |      },
       |      {
-      |         "href":"/baseUrl/pensions/$nino/$taxYear",
+      |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
       |         "rel":"delete-pensions-income",
       |         "method":"DELETE"
       |      }
@@ -189,6 +192,20 @@ class AmendPensionsControllerSpec
       |}
     """.stripMargin
   )
+
+  def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendPensionsIncome",
+      transactionName = "create-amend-pensions-income",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = auditRequest,
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
 
   "AmendPensionsController" should {
     "return OK" when {
@@ -207,6 +224,9 @@ class AmendPensionsControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
       }
     }
 
@@ -224,6 +244,9 @@ class AmendPensionsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
@@ -264,6 +287,9 @@ class AmendPensionsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
           }
         }
 
