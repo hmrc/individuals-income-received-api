@@ -19,7 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -35,6 +35,7 @@ import v1.services.{AmendSavingsService, AuditService, EnrolmentsAuthService, Mt
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
                                        val lookupService: MtdIdLookupService,
                                        appConfig: AppConfig,
@@ -74,7 +75,7 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               request = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(amendSavingsHateoasBody(appConfig, nino, taxYear)))))
+              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(amendSavingsHateoasBody(appConfig, nino, taxYear))))
             )
           )
 

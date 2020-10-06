@@ -19,7 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -35,6 +35,7 @@ import v1.services.{AmendCustomEmploymentService, AuditService, EnrolmentsAuthSe
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthService,
                                                 val lookupService: MtdIdLookupService,
                                                 appConfig: AppConfig,
