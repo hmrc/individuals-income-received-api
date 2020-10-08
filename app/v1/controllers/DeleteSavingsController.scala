@@ -110,7 +110,7 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("DeleteSavingsIncome", "individuals-income-received-api", details)
+    val event = AuditEvent("DeleteSavingsIncome", "delete-savings-income", details)
     auditService.auditEvent(event)
   }
 }

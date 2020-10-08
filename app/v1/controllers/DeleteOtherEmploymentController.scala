@@ -110,7 +110,7 @@ class DeleteOtherEmploymentController @Inject()(val authService: EnrolmentsAuthS
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("DeleteOtherEmployment", "individuals-income-received-api", details)
+    val event = AuditEvent("DeleteOtherEmployment", "delete-other-employment", details)
     auditService.auditEvent(event)
   }
 }

@@ -56,7 +56,7 @@ class DeleteSavingsControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "DeleteSavingsIncome",
-      transactionName = "individuals-income-received-api",
+      transactionName = "delete-savings-income",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

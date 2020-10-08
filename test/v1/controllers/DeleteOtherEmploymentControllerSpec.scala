@@ -56,7 +56,7 @@ class DeleteOtherEmploymentControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "DeleteOtherEmployment",
-      transactionName = "individuals-income-received-api",
+      transactionName = "delete-other-employment",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
