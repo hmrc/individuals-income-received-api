@@ -22,7 +22,6 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
@@ -35,7 +34,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/insurance-policies/$nino/$taxYear"
 
-    def desUri: String = s"/some-placeholder/insurance-policies/$nino/${DesTaxYear.fromMtd(taxYear)}"
+    def desUri: String = s"/income-tax/insurance-policies/income/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -82,6 +81,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
+            response.header("Content-Type") shouldBe Some("application/json")
           }
         }
 
@@ -108,6 +108,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
+            response.header("Content-Type") shouldBe Some("application/json")
           }
         }
 
@@ -120,9 +121,10 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             """.stripMargin
 
         val input = Seq(
-          (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError))
 

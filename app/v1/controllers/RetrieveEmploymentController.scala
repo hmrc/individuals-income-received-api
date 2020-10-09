@@ -18,7 +18,7 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -33,6 +33,7 @@ import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupSer
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthService,
                                              val lookupService: MtdIdLookupService,
                                              requestParser: RetrieveEmploymentRequestParser,

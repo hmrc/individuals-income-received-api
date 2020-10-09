@@ -26,7 +26,6 @@ import utils.Logging
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
 import v1.models.response.retrieveOther.{RetrieveOtherHateoasData, RetrieveOtherResponse}
@@ -58,7 +57,7 @@ class RetrieveOtherController @Inject()(val authService: EnrolmentsAuthService,
       )
 
       implicit val desUri: DesUri[RetrieveOtherResponse] = DesUri[RetrieveOtherResponse](
-        s"some-placeholder/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
+        s"income-tax/income/other/$nino/$taxYear"
       )
 
       val result =

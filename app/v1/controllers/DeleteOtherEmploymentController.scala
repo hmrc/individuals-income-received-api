@@ -28,7 +28,6 @@ import utils.Logging
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
 import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
@@ -59,7 +58,7 @@ class DeleteOtherEmploymentController @Inject()(val authService: EnrolmentsAuthS
       )
 
       implicit val desUri: DesUri[Unit] = DesUri[Unit](
-        s"some-placeholder/employments/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
+        s"income-tax/income/employments/other/$nino/$taxYear"
       )
 
       val result =

@@ -25,7 +25,7 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.domain.{DesTaxYear, ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
+import v1.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
 import v1.models.errors._
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType._
@@ -46,7 +46,7 @@ class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
   with HateoasLinks {
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
 
   val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
@@ -56,7 +56,7 @@ class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
 
   val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear)
+    taxYear = taxYear
   )
 
   private val shareOption = ShareOptionItem(
