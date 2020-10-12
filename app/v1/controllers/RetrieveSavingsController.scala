@@ -26,7 +26,6 @@ import utils.Logging
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
 import v1.models.response.retrieveSavings.{RetrieveSavingsHateoasData, RetrieveSavingsResponse}
@@ -58,7 +57,7 @@ class RetrieveSavingsController @Inject()(val authService: EnrolmentsAuthService
       )
 
       implicit val desUri: DesUri[RetrieveSavingsResponse] = DesUri[RetrieveSavingsResponse](
-        s"some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
+        s"income-tax/income/savings/$nino/$taxYear"
       )
 
       val result =
@@ -96,4 +95,3 @@ class RetrieveSavingsController @Inject()(val authService: EnrolmentsAuthService
     }
   }
 }
-

@@ -19,7 +19,7 @@ package v1.controllers
 import cats.data.EitherT
 import cats.implicits._
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
@@ -28,7 +28,6 @@ import utils.Logging
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
 import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
@@ -59,7 +58,7 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
       )
 
       implicit val desUri: DesUri[Unit] = DesUri[Unit](
-        s"some-placeholder/savings/$nino/${DesTaxYear.fromMtd(taxYear)}"
+        s"income-tax/income/savings/$nino/$taxYear"
       )
 
       val result =

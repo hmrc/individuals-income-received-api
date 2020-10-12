@@ -23,7 +23,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -50,7 +49,7 @@ class DeleteDividendsControllerSpec
 
   val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear)
+    taxYear = taxYear
   )
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
