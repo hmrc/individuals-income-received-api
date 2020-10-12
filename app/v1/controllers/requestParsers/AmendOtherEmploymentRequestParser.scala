@@ -19,12 +19,11 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendOtherEmploymentValidator
-import v1.models.domain.DesTaxYear
 import v1.models.request.amendOtherEmployment._
 
 class AmendOtherEmploymentRequestParser @Inject()(val validator: AmendOtherEmploymentValidator)
   extends RequestParser[AmendOtherEmploymentRawData, AmendOtherEmploymentRequest] {
 
   override protected def requestFor(data: AmendOtherEmploymentRawData): AmendOtherEmploymentRequest =
-    AmendOtherEmploymentRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.json.as[AmendOtherEmploymentRequestBody])
+    AmendOtherEmploymentRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendOtherEmploymentRequestBody])
 }
