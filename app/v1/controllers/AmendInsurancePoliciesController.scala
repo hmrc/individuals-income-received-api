@@ -113,7 +113,6 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
            CustomMtdError(CustomerRefFormatError.code) |
            CustomMtdError(EventFormatError.code)
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }

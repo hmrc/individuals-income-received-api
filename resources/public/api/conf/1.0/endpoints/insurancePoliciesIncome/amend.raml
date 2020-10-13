@@ -11,10 +11,9 @@ is:
   - errors.formatValue
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
-  - errors.notFound
 displayName: Create and amend Insurance Policies Income [test only]
 description: "This endpoint allows a developer to create and amend insurance policies and financial income for less common types of income: Life Insurance Policies, Life Annuity Contracts, Capital Redemption Policies, Voided ISAs and Foreign Policies. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/createAmend.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
