@@ -11,10 +11,9 @@ is:
   - errors.formatValue
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
-  - errors.notFound
-displayName: Create and amend Other Income [test only]
+displayName: Create and Amend Other Income [test only]
 description: "This endpoint allows the developer to create and amend other income: business receipts, all other income received whilst abroad, overseas income and gains, chargeable foreign benefits and gifts and omitted foreign income.  A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/createAmend.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
