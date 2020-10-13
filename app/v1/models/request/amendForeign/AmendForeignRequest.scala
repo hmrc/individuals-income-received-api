@@ -17,6 +17,5 @@
 package v1.models.request.amendForeign
 
 import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
 
-case class AmendForeignRequest(nino: Nino, taxYear: DesTaxYear, body: AmendForeignRequestBody)
+case class AmendForeignRequest(nino: Nino, taxYear: String, body: AmendForeignRequestBody)

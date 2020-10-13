@@ -21,14 +21,13 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendForeignValidator
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.amendForeign._
 
 class AmendForeignRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -84,7 +83,7 @@ class AmendForeignRequestParserSpec extends UnitSpec {
         MockAmendForeignValidator.validate(amendForeignRawData).returns(Nil)
 
         parser.parseRequest(amendForeignRawData) shouldBe
-          Right(AmendForeignRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), validRequestBodyModel))
+          Right(AmendForeignRequest(Nino(nino), taxYear, validRequestBodyModel))
       }
     }
 

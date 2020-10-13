@@ -47,9 +47,12 @@ class AmendForeignService @Inject()(connector: AmendForeignConnector) extends De
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_NINO" -> NinoFormatError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
+      "INVALID_PAYLOAD" -> DownstreamError,
       "NOT_FOUND" -> NotFoundError,
+      "UNPROCESSABLE_ENTITY" -> DownstreamError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
