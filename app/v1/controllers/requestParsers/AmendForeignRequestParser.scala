@@ -19,12 +19,11 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendForeignValidator
-import v1.models.domain.DesTaxYear
 import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest, AmendForeignRequestBody}
 
 class AmendForeignRequestParser @Inject()(val validator: AmendForeignValidator)
   extends RequestParser[AmendForeignRawData, AmendForeignRequest] {
 
   override protected def requestFor(data: AmendForeignRawData): AmendForeignRequest =
-    AmendForeignRequest(Nino(data.nino), DesTaxYear.fromMtd(data.taxYear), data.body.json.as[AmendForeignRequestBody])
+    AmendForeignRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendForeignRequestBody])
 }

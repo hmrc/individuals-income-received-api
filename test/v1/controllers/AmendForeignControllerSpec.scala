@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendForeignRequestParser
 import v1.mocks.services.{MockAmendForeignService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendForeign._
@@ -117,7 +116,7 @@ class AmendForeignControllerSpec
 
   val requestData: AmendForeignRequest = AmendForeignRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = amendForeignRequestBody
   )
 
@@ -244,7 +243,6 @@ class AmendForeignControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

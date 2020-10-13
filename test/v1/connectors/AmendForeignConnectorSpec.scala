@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendForeign.{AmendForeignRequest, AmendForeignRequestBody, ForeignEarnings, UnremittableForeignIncomeItem}
 
@@ -53,9 +52,9 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
     unremittableForeignIncome = Some(unremittableForeignIncomeModel)
   )
 
-  val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(
+  private val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = amendForeignRequestBody
   )
 
@@ -78,7 +77,7 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/foreign/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/income/foreign/$nino/$taxYear",
             body = amendForeignRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
