@@ -128,7 +128,6 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
            CustomMtdError(SchemePlanTypeFormatError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }

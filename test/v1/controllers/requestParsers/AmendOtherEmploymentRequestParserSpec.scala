@@ -21,14 +21,13 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendOtherEmploymentValidator
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment._
 
 class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
-  val taxYear: String = "2017-18"
+  val taxYear: String = "2019-20"
 
   private val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -154,7 +153,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
     body = validRawRequestBody
   )
 
-  val shareOptionItem: Seq[AmendShareOptionItem] = Seq(
+  private val shareOptionItem = Seq(
     AmendShareOptionItem(
       employerName = "Company Ltd",
       employerRef = Some("123/AB456"),
@@ -191,77 +190,75 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
     )
   )
 
-    val sharesAwardedOrReceivedItem: Seq[AmendSharesAwardedOrReceivedItem] = Seq(
-      AmendSharesAwardedOrReceivedItem(
-        employerName = "Company Ltd",
-        employerRef = Some("123/AB456"),
-        schemePlanType = "SIP",
-        dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
-        noOfShareSecuritiesAwarded = 11,
-        classOfShareAwarded = "FIRST",
-        dateSharesAwarded = "2019-11-20",
-        sharesSubjectToRestrictions = true,
-        electionEnteredIgnoreRestrictions = false,
-        actualMarketValueOfSharesOnAward = 2123.22,
-        unrestrictedMarketValueOfSharesOnAward = 123.22,
-        amountPaidForSharesOnAward = 123.22,
-        marketValueAfterRestrictionsLifted = 1232.22,
-        taxableAmount = 12321.22
-      ),
-      AmendSharesAwardedOrReceivedItem(
-        employerName = "SecondCom Ltd",
-        employerRef = Some("123/AB456"),
-        schemePlanType = "Other",
-        dateSharesCeasedToBeSubjectToPlan = "2020-09-12",
-        noOfShareSecuritiesAwarded = 299,
-        classOfShareAwarded = "Ordinary shares",
-        dateSharesAwarded = "2020-09-12",
-        sharesSubjectToRestrictions = false,
-        electionEnteredIgnoreRestrictions = true,
-        actualMarketValueOfSharesOnAward = 5000.99,
-        unrestrictedMarketValueOfSharesOnAward = 5432.21,
-        amountPaidForSharesOnAward = 6000.99,
-        marketValueAfterRestrictionsLifted = 3333.33,
-        taxableAmount = 98765.99
-      )
+  private val sharesAwardedOrReceivedItem = Seq(
+    AmendSharesAwardedOrReceivedItem(
+      employerName = "Company Ltd",
+      employerRef = Some("123/AB456"),
+      schemePlanType = "SIP",
+      dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
+      noOfShareSecuritiesAwarded = 11,
+      classOfShareAwarded = "FIRST",
+      dateSharesAwarded = "2019-11-20",
+      sharesSubjectToRestrictions = true,
+      electionEnteredIgnoreRestrictions = false,
+      actualMarketValueOfSharesOnAward = 2123.22,
+      unrestrictedMarketValueOfSharesOnAward = 123.22,
+      amountPaidForSharesOnAward = 123.22,
+      marketValueAfterRestrictionsLifted = 1232.22,
+      taxableAmount = 12321.22
+    ),
+    AmendSharesAwardedOrReceivedItem(
+      employerName = "SecondCom Ltd",
+      employerRef = Some("123/AB456"),
+      schemePlanType = "Other",
+      dateSharesCeasedToBeSubjectToPlan = "2020-09-12",
+      noOfShareSecuritiesAwarded = 299,
+      classOfShareAwarded = "Ordinary shares",
+      dateSharesAwarded = "2020-09-12",
+      sharesSubjectToRestrictions = false,
+      electionEnteredIgnoreRestrictions = true,
+      actualMarketValueOfSharesOnAward = 5000.99,
+      unrestrictedMarketValueOfSharesOnAward = 5432.21,
+      amountPaidForSharesOnAward = 6000.99,
+      marketValueAfterRestrictionsLifted = 3333.33,
+      taxableAmount = 98765.99
     )
+  )
 
-  val disability: AmendCommonOtherEmployment =
-    AmendCommonOtherEmployment(
-      customerReference = Some("OTHEREmp123A"),
-      amountDeducted = 5000.99
-    )
+  private val disability = AmendCommonOtherEmployment(
+    customerReference = Some("OTHEREmp123A"),
+    amountDeducted = 5000.99
+  )
 
-  val foreignService: AmendCommonOtherEmployment =
-    AmendCommonOtherEmployment(
-      customerReference = Some("OTHEREmp999A"),
-      amountDeducted = 7000.99
-    )
+  private val foreignService = AmendCommonOtherEmployment(
+    customerReference = Some("OTHEREmp999A"),
+    amountDeducted = 7000.99
+  )
 
-  val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
+  private val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
     amount = 5000.99,
     taxPaid = Some(3333.33),
     taxTakenOffInEmployment = true
   )
 
-  val benefitFromEmployerFinancedRetirementScheme = AmendBenefitFromEmployerFinancedRetirementSchemeItem(
+  private val benefitFromEmployerFinancedRetirementScheme = AmendBenefitFromEmployerFinancedRetirementSchemeItem(
     amount = 5000.99,
     exemptAmount = Some(2345.99),
     taxPaid = Some(3333.33),
     taxTakenOffInEmployment = true
   )
 
-  val redundancyCompensationPaymentsOverExemption = AmendRedundancyCompensationPaymentsOverExemptionItem(
+  private val redundancyCompensationPaymentsOverExemption = AmendRedundancyCompensationPaymentsOverExemptionItem(
     amount = 5000.99,
     taxPaid = Some(3333.33),
     taxTakenOffInEmployment = true
   )
 
-  val redundancyCompensationPaymentsUnderExemption = AmendRedundancyCompensationPaymentsUnderExemptionItem(
+  private val redundancyCompensationPaymentsUnderExemption = AmendRedundancyCompensationPaymentsUnderExemptionItem(
     amount = 5000.99
   )
 
-  val lumpSums = Seq(
+  private val lumpSums = Seq(
     AmendLumpSums(
       employerName = "BPDTS Ltd",
       employerRef = "123/AB456",
@@ -271,7 +268,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
       redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
     )
   )
-  val amendOtherEmploymentRequestBody: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(
+  private val amendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(
     shareOption = Some(shareOptionItem),
     sharesAwardedOrReceived = Some(sharesAwardedOrReceivedItem),
     disability = Some(disability),
@@ -279,9 +276,9 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
     lumpSums = Some(lumpSums)
   )
 
-  val requestData: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(
+  private val requestData = AmendOtherEmploymentRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = amendOtherEmploymentRequestBody
   )
 

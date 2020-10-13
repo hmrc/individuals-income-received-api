@@ -16,10 +16,9 @@ is:
   - errors.formatSchemePlanType
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
-  - errors.notFound
-displayName: Create and amend Other Employment Income [test only]
+displayName: Create and Amend Other Employment Income [test only]
 description: "This endpoint allows a developer to create and amend other employment income: share options, shares awarded or received, disability, lump sums and foreign service income. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/createAmend.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:

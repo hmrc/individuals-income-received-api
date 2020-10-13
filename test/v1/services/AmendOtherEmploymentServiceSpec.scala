@@ -19,7 +19,6 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendOtherEmploymentConnector
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendOtherEmployment._
@@ -150,7 +149,7 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
 
   val amendOtherEmploymentRequest: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(
       nino = Nino(nino),
-      taxYear = DesTaxYear(taxYear),
+      taxYear = taxYear,
       body = AmendOtherEmploymentRequestBody(
         shareOption = Some(shareOptionModel),
         sharesAwardedOrReceived = Some(sharesAwardedOrReceivedModel),
@@ -191,9 +190,11 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          ("INVALID_NINO", NinoFormatError),
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NOT_FOUND", NotFoundError),
+          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_PAYLOAD", DownstreamError),
+          ("UNPROCESSABLE_ENTITY", DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

@@ -22,7 +22,6 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
@@ -177,7 +176,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/other/$nino/$taxYear"
 
-    def desUri: String = s"/some-placeholder/employments/other/$nino/${DesTaxYear.fromMtd(taxYear)}"
+    def desUri: String = s"/income-tax/income/other/employments/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -1317,9 +1316,11 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             """.stripMargin
 
         val input = Seq(
-          (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError))
 

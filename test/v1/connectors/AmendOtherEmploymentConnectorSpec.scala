@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendOtherEmployment._
 
@@ -154,10 +153,10 @@ class AmendOtherEmploymentConnectorSpec extends ConnectorSpec {
     lumpSums = Some(lumpSums)
   )
 
-  val amendOtherEmploymentRequest: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(
-      nino = Nino(nino),
-      taxYear = DesTaxYear(taxYear),
-      body = amendOtherEmploymentRequestBody
+  private val amendOtherEmploymentRequest = AmendOtherEmploymentRequest(
+    nino = Nino(nino),
+    taxYear = taxYear,
+    body = amendOtherEmploymentRequestBody
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -179,7 +178,7 @@ class AmendOtherEmploymentConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/employments/other/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/income/other/employments/$nino/$taxYear",
             body = amendOtherEmploymentRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
