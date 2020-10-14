@@ -36,7 +36,7 @@ object AmendOverseasPensionContributionsItem {
       (JsPath \ "exemptEmployersPensionContribs").write[BigDecimal] and
       (JsPath \ "migrantMemReliefQopsRefNo").writeNullable[String] and
       (JsPath \ "dblTaxationRelief").writeNullable[BigDecimal] and
-      (JsPath \ "dblTaxationCountryCode").writeNullable[String] and
+      (JsPath \ "dblTaxationCountry").writeNullable[String] and
       (JsPath \ "dblTaxationArticle").writeNullable[String] and
       (JsPath \ "dblTaxationTreaty").writeNullable[String] and
       (JsPath \ "sf74reference").writeNullable[String]
