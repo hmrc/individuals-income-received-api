@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendPensionsRequestParser
 import v1.mocks.services.{MockAmendPensionsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendPensions._
@@ -165,7 +164,7 @@ class AmendPensionsControllerSpec
 
   val requestData: AmendPensionsRequest = AmendPensionsRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = amendPensionsRequestBody
   )
 
@@ -296,7 +295,6 @@ class AmendPensionsControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

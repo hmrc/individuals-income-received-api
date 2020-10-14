@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributionsItem, AmendPensionsRequest, AmendPensionsRequestBody}
 
@@ -78,9 +77,9 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
     overseasPensionContributions = Some(overseasPensionContributionsModel)
   )
 
-  val amendPensionsRequest: AmendPensionsRequest = AmendPensionsRequest(
+  private val amendPensionsRequest: AmendPensionsRequest = AmendPensionsRequest(
       nino = Nino(nino),
-      taxYear = DesTaxYear(taxYear),
+      taxYear = taxYear,
       body = amendPensionsRequestBody
   )
 
@@ -103,7 +102,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/pensions/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/income/pensions/$nino/$taxYear",
             body = amendPensionsRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
