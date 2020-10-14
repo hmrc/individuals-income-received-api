@@ -105,7 +105,6 @@ class AmendDividendsController @Inject()(val authService: EnrolmentsAuthService,
            CustomMtdError(CustomerRefFormatError.code) |
            RuleTaxYearNotSupportedError
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }

@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendDividends._
 
@@ -99,7 +98,7 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
 
   val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
       nino = Nino(nino),
-      taxYear = DesTaxYear(taxYear),
+      taxYear = taxYear,
       body = amendDividendsRequestBody
   )
 
@@ -122,7 +121,7 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/dividends/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/income/dividends/$nino/$taxYear",
             body = amendDividendsRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
