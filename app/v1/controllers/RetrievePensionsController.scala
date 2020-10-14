@@ -57,7 +57,7 @@ class RetrievePensionsController @Inject()(val authService: EnrolmentsAuthServic
       )
 
       implicit val desUri: DesUri[RetrievePensionsResponse] = DesUri[RetrievePensionsResponse](
-        s"some-placeholder/pensions/$nino/$taxYear"
+        s"income-tax/income/pensions/$nino/$taxYear"
       )
 
       val result =

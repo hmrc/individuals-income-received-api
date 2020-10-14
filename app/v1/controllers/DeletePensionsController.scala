@@ -58,7 +58,7 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
       )
 
       implicit val desUri: DesUri[Unit] = DesUri[Unit](
-        s"some-placeholder/pensions/$nino/$taxYear"
+        s"income-tax/income/pensions/$nino/$taxYear"
       )
 
       val result =
