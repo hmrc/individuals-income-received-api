@@ -20,7 +20,6 @@ import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.fixtures.other.AmendOtherServiceConnectorFixture.requestBodyModel
 import v1.mocks.connectors.MockAmendOtherConnector
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendOther.AmendOtherRequest
@@ -35,7 +34,7 @@ class AmendOtherServiceSpec extends ServiceSpec {
 
   val amendOtherRequest: AmendOtherRequest = AmendOtherRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = requestBodyModel
   )
 
@@ -70,9 +69,11 @@ class AmendOtherServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          ("INVALID_NINO", NinoFormatError),
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NOT_FOUND", NotFoundError),
+          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_PAYLOAD", DownstreamError),
+          ("UNPROCESSABLE_ENTITY", DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

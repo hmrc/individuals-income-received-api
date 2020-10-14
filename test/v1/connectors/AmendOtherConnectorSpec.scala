@@ -20,7 +20,6 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.fixtures.other.AmendOtherServiceConnectorFixture.requestBodyModel
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendOther.AmendOtherRequest
 
@@ -31,9 +30,9 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
   private val nino: String = "AA111111A"
   private val taxYear: String = "2019-20"
 
-  val amendOtherRequest: AmendOtherRequest = AmendOtherRequest(
+  private val amendOtherRequest = AmendOtherRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = requestBodyModel
   )
 
@@ -56,7 +55,7 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/other/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/income/other/$nino/$taxYear",
             body = requestBodyModel,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
