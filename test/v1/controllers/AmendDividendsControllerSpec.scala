@@ -24,7 +24,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendDividendsRequestParser
 import v1.mocks.services.{MockAmendDividendsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendDividends._
@@ -197,7 +196,7 @@ class AmendDividendsControllerSpec
 
   val requestData: AmendDividendsRequest = AmendDividendsRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = amendDividendsRequestBody
   )
 
@@ -324,7 +323,6 @@ class AmendDividendsControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

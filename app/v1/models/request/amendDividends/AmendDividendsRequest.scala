@@ -17,6 +17,5 @@
 package v1.models.request.amendDividends
 
 import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
 
-case class AmendDividendsRequest(nino: Nino, taxYear: DesTaxYear, body: AmendDividendsRequestBody)
+case class AmendDividendsRequest(nino: Nino, taxYear: String, body: AmendDividendsRequestBody)

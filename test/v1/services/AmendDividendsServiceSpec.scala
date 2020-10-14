@@ -19,7 +19,6 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendDividendsConnector
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendDividends._
@@ -92,7 +91,7 @@ class AmendDividendsServiceSpec extends ServiceSpec {
 
   val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
       nino = Nino(nino),
-      taxYear = DesTaxYear(taxYear),
+      taxYear = taxYear,
       body = AmendDividendsRequestBody(
         Some(foreignDividendModel),
         Some(dividendIncomeReceivedWhilstAbroadModel),
@@ -134,9 +133,10 @@ class AmendDividendsServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          ("INVALID_NINO", NinoFormatError),
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NOT_FOUND", NotFoundError),
+          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_PAYLOAD", DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

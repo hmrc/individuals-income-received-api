@@ -35,10 +35,10 @@ class AmendDividendsConnector @Inject()(val http: HttpClient,
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear
 
     put(
-      uri = DesUri[Unit](s"some-placeholder/dividends/$nino/$taxYear"), body = request.body
+      uri = DesUri[Unit](s"income-tax/income/dividends/$nino/$taxYear"), body = request.body
     )
   }
 }
