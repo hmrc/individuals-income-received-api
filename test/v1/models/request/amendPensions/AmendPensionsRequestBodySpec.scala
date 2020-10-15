@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class AmendPensionsRequestBodySpec extends UnitSpec {
 
-  private val json = Json.parse(
+  private val mtdJson = Json.parse(
     """
       |{
       |   "foreignPensions": [
@@ -59,6 +59,53 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
       |         "migrantMemReliefQopsRefNo": "QOPS000245",
       |         "dblTaxationRelief": 5.50,
       |         "dblTaxationCountryCode": "NGA",
+      |         "dblTaxationArticle": "AB3477-5",
+      |         "dblTaxationTreaty": "Treaty",
+      |         "sf74reference": "SF74-1235"
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  private val desJson = Json.parse(
+    """
+      |{
+      |   "foreignPensions": [
+      |      {
+      |         "countryCode": "DEU",
+      |         "amountBeforeTax": 100.23,
+      |         "taxTakenOff": 1.23,
+      |         "specialWithholdingTax": 2.23,
+      |         "foreignTaxCreditRelief": false,
+      |         "taxableAmount": 3.23
+      |      },
+      |      {
+      |         "countryCode": "FRA",
+      |         "amountBeforeTax": 200.25,
+      |         "taxTakenOff": 1.27,
+      |         "specialWithholdingTax": 2.50,
+      |         "foreignTaxCreditRelief": true,
+      |         "taxableAmount": 3.50
+      |      }
+      |   ],
+      |   "overseasPensionContributions": [
+      |      {
+      |         "customerReference": "PENSIONINCOME245",
+      |         "exemptEmployersPensionContribs": 200.23,
+      |         "migrantMemReliefQopsRefNo": "QOPS000000",
+      |         "dblTaxationRelief": 4.23,
+      |         "dblTaxationCountry": "FRA",
+      |         "dblTaxationArticle": "AB3211-1",
+      |         "dblTaxationTreaty": "Treaty",
+      |         "sf74reference": "SF74-123456"
+      |      },
+      |      {
+      |         "customerReference": "PENSIONINCOME275",
+      |         "exemptEmployersPensionContribs": 270.50,
+      |         "migrantMemReliefQopsRefNo": "QOPS000245",
+      |         "dblTaxationRelief": 5.50,
+      |         "dblTaxationCountry": "NGA",
       |         "dblTaxationArticle": "AB3477-5",
       |         "dblTaxationTreaty": "Treaty",
       |         "sf74reference": "SF74-1235"
@@ -118,7 +165,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
   "AmendPensionsRequestBody" when {
     "read from valid JSON" should {
       "produce the expected AmendPensionsRequestBody object" in {
-        json.as[AmendPensionsRequestBody] shouldBe requestBodyModel
+        mtdJson.as[AmendPensionsRequestBody] shouldBe requestBodyModel
       }
     }
 
@@ -169,7 +216,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(requestBodyModel) shouldBe json
+        Json.toJson(requestBodyModel) shouldBe desJson
       }
     }
   }

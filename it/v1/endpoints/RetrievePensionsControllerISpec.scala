@@ -33,7 +33,54 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
 
-    val desResponse: JsValue = RetrievePensionsControllerFixture.fullRetrievePensionsResponse
+    val desResponse: JsValue = Json.parse(
+      """
+        |{
+        |   "submittedOn": "2020-07-06T09:37:17Z",
+        |   "foreignPensions": [
+        |      {
+        |         "countryCode": "DEU",
+        |         "amountBeforeTax": 100.23,
+        |         "taxTakenOff": 1.23,
+        |         "specialWithholdingTax": 2.23,
+        |         "foreignTaxCreditRelief": false,
+        |         "taxableAmount": 3.23
+        |      },
+        |      {
+        |         "countryCode": "FRA",
+        |         "amountBeforeTax": 200.25,
+        |         "taxTakenOff": 1.27,
+        |         "specialWithholdingTax": 2.50,
+        |         "foreignTaxCreditRelief": true,
+        |         "taxableAmount": 3.50
+        |      }
+        |   ],
+        |   "overseasPensionContributions": [
+        |      {
+        |         "customerReference": "PENSIONINCOME245",
+        |         "exemptEmployersPensionContribs": 200.23,
+        |         "migrantMemReliefQopsRefNo": "QOPS000000",
+        |         "dblTaxationRelief": 4.23,
+        |         "dblTaxationCountry": "FRA",
+        |         "dblTaxationArticle": "AB3211-1",
+        |         "dblTaxationTreaty": "Treaty",
+        |         "sf74reference": "SF74-123456"
+        |      },
+        |      {
+        |         "customerReference": "PENSIONINCOME275",
+        |         "exemptEmployersPensionContribs": 270.50,
+        |         "migrantMemReliefQopsRefNo": "QOPS000245",
+        |         "dblTaxationRelief": 5.50,
+        |         "dblTaxationCountry": "NGA",
+        |         "dblTaxationArticle": "AB3477-5",
+        |         "dblTaxationTreaty": "Treaty",
+        |         "sf74reference": "SF74-1235"
+        |      }
+        |   ]
+        |}
+    """.stripMargin
+    )
+
     val mtdResponse: JsValue = RetrievePensionsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
     def uri: String = s"/pensions/$nino/$taxYear"
