@@ -38,7 +38,7 @@ class AmendInsurancePoliciesConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear.value
 
     put(
-      uri = DesUri[Unit](s"some-placeholder/insurance-policies/$nino/$taxYear"), body = request.body
+      uri = DesUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear"), body = request.body
     )
   }
 }

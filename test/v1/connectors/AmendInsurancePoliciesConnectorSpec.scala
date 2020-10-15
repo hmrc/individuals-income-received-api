@@ -109,7 +109,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/insurance-policies/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/insurance-policies/income/$nino/$taxYear",
             body = amendInsurancePoliciesBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           ).returns(Future.successful(outcome))
