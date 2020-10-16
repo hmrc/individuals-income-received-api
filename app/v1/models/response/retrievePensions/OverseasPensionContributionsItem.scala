@@ -34,7 +34,7 @@ object OverseasPensionContributionsItem {
       (JsPath \ "exemptEmployersPensionContribs").read[BigDecimal] and
       (JsPath \ "migrantMemReliefQopsRefNo").readNullable[String] and
       (JsPath \ "dblTaxationRelief").readNullable[BigDecimal] and
-      (JsPath \ "dblTaxationCountryCode").readNullable[String] and
+      (JsPath \ "dblTaxationCountry").readNullable[String] and
       (JsPath \ "dblTaxationArticle").readNullable[String] and
       (JsPath \ "dblTaxationTreaty").readNullable[String] and
       (JsPath \ "sf74reference").readNullable[String]

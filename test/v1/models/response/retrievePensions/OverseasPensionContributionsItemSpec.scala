@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class OverseasPensionContributionsItemSpec extends UnitSpec {
 
-  private val json = Json.parse(
+  private val mtdJson = Json.parse(
     """
       |{
       |   "customerReference": "PENSIONINCOME245",
@@ -29,6 +29,21 @@ class OverseasPensionContributionsItemSpec extends UnitSpec {
       |   "migrantMemReliefQopsRefNo": "QOPS000000",
       |   "dblTaxationRelief": 4.23,
       |   "dblTaxationCountryCode": "FRA",
+      |   "dblTaxationArticle": "AB3211-1",
+      |   "dblTaxationTreaty": "Treaty",
+      |   "sf74reference": "SF74-123456"
+      |}
+    """.stripMargin
+  )
+
+  private val desJson = Json.parse(
+    """
+      |{
+      |   "customerReference": "PENSIONINCOME245",
+      |   "exemptEmployersPensionContribs": 200.23,
+      |   "migrantMemReliefQopsRefNo": "QOPS000000",
+      |   "dblTaxationRelief": 4.23,
+      |   "dblTaxationCountry": "FRA",
       |   "dblTaxationArticle": "AB3211-1",
       |   "dblTaxationTreaty": "Treaty",
       |   "sf74reference": "SF74-123456"
@@ -50,7 +65,7 @@ class OverseasPensionContributionsItemSpec extends UnitSpec {
   "OverseasPensionContributionsItem" when {
     "read from valid JSON" should {
       "produce the expected OverseasPensionContributionsItem object" in {
-        json.as[OverseasPensionContributionsItem] shouldBe model
+        desJson.as[OverseasPensionContributionsItem] shouldBe model
       }
     }
 
@@ -64,7 +79,7 @@ class OverseasPensionContributionsItemSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(model) shouldBe mtdJson
       }
     }
   }

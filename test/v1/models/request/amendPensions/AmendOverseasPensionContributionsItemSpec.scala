@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
 
-  private val json = Json.parse(
+  private val mtdJson = Json.parse(
     """
       |{
       |   "customerReference": "PENSIONINCOME245",
@@ -29,6 +29,21 @@ class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
       |   "migrantMemReliefQopsRefNo": "QOPS000000",
       |   "dblTaxationRelief": 4.23,
       |   "dblTaxationCountryCode": "FRA",
+      |   "dblTaxationArticle": "AB3211-1",
+      |   "dblTaxationTreaty": "Treaty",
+      |   "sf74reference": "SF74-123456"
+      |}
+    """.stripMargin
+  )
+
+  private val desJson = Json.parse(
+    """
+      |{
+      |   "customerReference": "PENSIONINCOME245",
+      |   "exemptEmployersPensionContribs": 200.23,
+      |   "migrantMemReliefQopsRefNo": "QOPS000000",
+      |   "dblTaxationRelief": 4.23,
+      |   "dblTaxationCountry": "FRA",
       |   "dblTaxationArticle": "AB3211-1",
       |   "dblTaxationTreaty": "Treaty",
       |   "sf74reference": "SF74-123456"
@@ -50,7 +65,7 @@ class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
   "AmendOverseasPensionContributionsItem" when {
     "read from valid JSON" should {
       "produce the expected AmendOverseasPensionContributionsItem object" in {
-        json.as[AmendOverseasPensionContributionsItem] shouldBe model
+        mtdJson.as[AmendOverseasPensionContributionsItem] shouldBe model
       }
     }
 
@@ -63,7 +78,7 @@ class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(model) shouldBe desJson
       }
     }
   }

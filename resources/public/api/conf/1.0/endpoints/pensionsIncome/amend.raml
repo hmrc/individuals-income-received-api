@@ -17,9 +17,9 @@ is:
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Create and amend Pensions Income [test only]
+displayName: Create and Amend Pensions Income [test only]
 description: "This endpoint allows the developer to create and amend foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/createAmend.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:

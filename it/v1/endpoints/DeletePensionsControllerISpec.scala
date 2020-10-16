@@ -34,7 +34,7 @@ class DeletePensionsControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/pensions/$nino/$taxYear"
 
-    def desUri: String = s"/some-placeholder/pensions/$nino/$taxYear"
+    def desUri: String = s"/income-tax/income/pensions/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 

@@ -21,7 +21,6 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendPensionsValidator
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.amendPensions._
 
@@ -144,7 +143,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
         MockAmendPensionsValidator.validate(amendPensionsRawData).returns(Nil)
 
         parser.parseRequest(amendPensionsRawData) shouldBe
-          Right(AmendPensionsRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), validRequestBodyModel))
+          Right(AmendPensionsRequest(Nino(nino), taxYear, validRequestBodyModel))
       }
     }
 
