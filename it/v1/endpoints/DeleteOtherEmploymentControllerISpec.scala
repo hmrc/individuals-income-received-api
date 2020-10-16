@@ -34,7 +34,7 @@ class DeleteOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/other/$nino/$taxYear"
 
-    def desUri: String = s"/income-tax/income/employments/other/$nino/$taxYear"
+    def desUri: String = s"/income-tax/income/other/employments/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 

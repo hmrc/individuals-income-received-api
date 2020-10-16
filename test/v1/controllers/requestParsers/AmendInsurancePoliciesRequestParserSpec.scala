@@ -21,7 +21,6 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendInsurancePoliciesValidator
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.amendInsurancePolicies._
 
@@ -243,7 +242,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
 
   val requestData: AmendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = amendInsurancePoliciesRequestBody
   )
 

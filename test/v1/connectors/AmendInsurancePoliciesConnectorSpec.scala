@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendInsurancePolicies._
 
@@ -30,7 +29,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2019-20"
 
-  val voidedIsaModel = AmendVoidedIsaPoliciesItem(
+  private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -39,7 +38,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
     yearsHeldSinceLastGain = Some(12)
   )
 
-  val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
+  private val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -49,7 +48,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
     deficiencyRelief = Some(5000.99)
   )
 
-  val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
+  private val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -59,14 +58,14 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
     deficiencyRelief = Some(5000.99)
   )
 
-  val foreignModel = AmendForeignPoliciesItem(
+  private val foreignModel = AmendForeignPoliciesItem(
     customerReference = Some("INPOLY123A"),
     gainAmount = 2000.99,
     taxPaidAmount = Some(5000.99),
     yearsHeld = Some(15)
   )
 
-  val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
+  private val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -86,7 +85,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
   private val amendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = amendInsurancePoliciesBody
   )
 
@@ -104,7 +103,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
   "AmendInsurancePoliciesConnector" when {
     "amendInsurancePolicies" must {
-      "return a 204 status for a success scenario" in new Test {
+      "return a 201 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient

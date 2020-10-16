@@ -18,6 +18,7 @@ package v1.connectors
 
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
+import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
@@ -34,8 +35,10 @@ class AmendInsurancePoliciesConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
+    implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
+
     val nino = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear
 
     put(
       uri = DesUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear"), body = request.body

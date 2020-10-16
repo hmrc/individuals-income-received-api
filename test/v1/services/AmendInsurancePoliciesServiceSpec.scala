@@ -19,7 +19,6 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendInsurancePoliciesConnector
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendInsurancePolicies._
@@ -32,7 +31,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
   private val taxYear = "2019-20"
   private val correlationId = "X-corr"
 
-  val voidedIsaModel = AmendVoidedIsaPoliciesItem(
+  private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -41,7 +40,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
     yearsHeldSinceLastGain = Some(12)
   )
 
-  val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
+  private val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -51,7 +50,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
     deficiencyRelief = Some(5000.99)
   )
 
-  val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
+  private val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -61,14 +60,14 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
     deficiencyRelief = Some(5000.99)
   )
 
-  val foreignModel = AmendForeignPoliciesItem(
+  private val foreignModel = AmendForeignPoliciesItem(
     customerReference = Some("INPOLY123A"),
     gainAmount = 2000.99,
     taxPaidAmount = Some(5000.99),
     yearsHeld = Some(15)
   )
 
-  val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
+  private val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
     event = Some("Death of spouse"),
     gainAmount = 2000.99,
@@ -88,7 +87,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
 
   private val amendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = amendInsurancePoliciesRequestBody
   )
 

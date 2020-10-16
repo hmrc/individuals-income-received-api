@@ -58,7 +58,7 @@ class DeleteOtherEmploymentController @Inject()(val authService: EnrolmentsAuthS
       )
 
       implicit val desUri: DesUri[Unit] = DesUri[Unit](
-        s"income-tax/income/employments/other/$nino/$taxYear"
+        s"income-tax/income/other/employments/$nino/$taxYear"
       )
 
       val result =

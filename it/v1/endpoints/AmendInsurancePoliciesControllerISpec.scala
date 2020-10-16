@@ -22,7 +22,6 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
@@ -159,7 +158,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/insurance-policies/$nino/$taxYear"
 
-    def desUri: String = s"/income-tax/insurance-policies/income/$nino/${DesTaxYear.fromMtd(taxYear)}"
+    def desUri: String = s"/income-tax/insurance-policies/income/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -178,7 +177,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, NO_CONTENT)
+          DesStub.onSuccess(DesStub.PUT, desUri, CREATED)
         }
 
         val response: WSResponse = await(request().put(requestBodyJson))
@@ -941,8 +940,8 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (SERVICE_UNAVAILABLE, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError))
 
