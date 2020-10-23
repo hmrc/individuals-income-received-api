@@ -170,7 +170,7 @@ class EmploymentSpec extends UnitSpec {
       employerRef = Some("223/AB12399"),
       employerName = "maggie"
     ),
-    pay = Pay(
+    pay = Some(Pay(
       taxablePayToDate = 34234.15,
       totalTaxToDate = 6782.92,
       tipsAndOtherPayments = Some(1024.99),
@@ -178,7 +178,7 @@ class EmploymentSpec extends UnitSpec {
       paymentDate = Some("2020-04-23"),
       taxWeekNo = Some(32),
       taxMonthNo = Some(8)
-    ),
+    )),
     customerEstimatedPay = Some(CustomerEstimatedPay(
       amount = Some(1500.99)
     )),
