@@ -29,7 +29,7 @@ case class Employment(employmentSequenceNumber: Option[String],
                       occupationalPension: Option[Boolean],
                       disguisedRemuneration: Option[Boolean],
                       employer: Employer,
-                      pay: Pay,
+                      pay: Option[Pay],
                       customerEstimatedPay: Option[CustomerEstimatedPay],
                       deductions: Option[Deductions],
                       benefitsInKind: Option[BenefitsInKind])
@@ -48,7 +48,7 @@ object Employment {
       (JsPath \ "occPen").readNullable[Boolean] and
       (JsPath \ "disguisedRemuneration").readNullable[Boolean] and
       (JsPath \ "employer").read[Employer] and
-      (JsPath \ "pay").read[Pay] and
+      (JsPath \ "pay").readNullable[Pay] and
       (JsPath \ "customerEstimatedPay").readNullable[CustomerEstimatedPay].map {
         case Some(CustomerEstimatedPay.empty) => None
         case other => other

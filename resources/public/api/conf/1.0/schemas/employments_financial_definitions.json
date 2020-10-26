@@ -150,7 +150,7 @@
         "benefitsInKind": {"$ref": "#/definitions/benefitsInKind"}
       },
       "required": [
-        "employer", "pay"
+        "employer"
       ]
     },
     "amendEmployment": {
