@@ -44,7 +44,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
     body = addCustomEmploymentRequestBody
   )
 
-  val response = AddCustomEmploymentResponse("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
+  val response: AddCustomEmploymentResponse = AddCustomEmploymentResponse("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
   class Test extends MockHttpClient with MockAppConfig {
 

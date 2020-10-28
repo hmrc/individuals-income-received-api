@@ -31,7 +31,8 @@ class AmendInsurancePoliciesConnector @Inject()(val http: HttpClient,
 
   def amendInsurancePolicies(request: AmendInsurancePoliciesRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[Unit]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[Unit]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

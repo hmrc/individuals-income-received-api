@@ -396,7 +396,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         )
 
         val wrappedErrors: ErrorWrapper = ErrorWrapper(
-          correlationId = Some(correlationId),
+          correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueRequestError)
         )
@@ -1270,21 +1270,21 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
-          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
-          ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearNotSupportedError, None)),
-          ("AA123456A", "2019-20", invalidValuesRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
-          ("AA123456A", "2019-20", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerNameFormatError, None)),
-          ("AA123456A", "2019-20", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), employerRefFormatError, None)),
-          ("AA123456A", "2019-20", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), dateFormatError, None)),
-          ("AA123456A", "2019-20", invalidClassOfSharesAwardedRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAwardedFormatError, None)),
-          ("AA123456A", "2019-20", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), classOfSharesAcquiredFormatError, None)),
-          ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
-          ("AA123456A", "2019-20", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), schemePlanTypeFormatError, None)),
-          ("AA123456A", "2019-20", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
-          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), invalidFieldType, None)),
-          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingMandatoryFieldErrors, None))
+          ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None)),
+          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
+          ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
+          ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
+          ("AA123456A", "2019-20", invalidValuesRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          ("AA123456A", "2019-20", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerNameFormatError, None)),
+          ("AA123456A", "2019-20", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerRefFormatError, None)),
+          ("AA123456A", "2019-20", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", dateFormatError, None)),
+          ("AA123456A", "2019-20", invalidClassOfSharesAwardedRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", classOfSharesAwardedFormatError, None)),
+          ("AA123456A", "2019-20", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", classOfSharesAcquiredFormatError, None)),
+          ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", customerRefFormatError, None)),
+          ("AA123456A", "2019-20", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", schemePlanTypeFormatError, None)),
+          ("AA123456A", "2019-20", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),
+          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", invalidFieldType, None)),
+          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldErrors, None))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

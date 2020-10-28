@@ -32,8 +32,8 @@ trait MockAmendFinancialDetailsConnector extends MockFactory{
 
     def amendFinancialDetails(request: AmendFinancialDetailsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendFinancialDetailsConnector
-        .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+        .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
 }

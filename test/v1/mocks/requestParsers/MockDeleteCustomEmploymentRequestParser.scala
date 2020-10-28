@@ -28,7 +28,7 @@ trait MockDeleteCustomEmploymentRequestParser extends MockFactory {
 
   object MockDeleteCustomEmploymentRequestParser {
     def parse(data: DeleteCustomEmploymentRawData): CallHandler[Either[ErrorWrapper, DeleteCustomEmploymentRequest]] = {
-      (mockDeleteCustomEmploymentRequestParser.parseRequest(_: DeleteCustomEmploymentRawData)).expects(data)
+      (mockDeleteCustomEmploymentRequestParser.parseRequest(_: DeleteCustomEmploymentRawData)(_: String)).expects(data, *)
     }
   }
 

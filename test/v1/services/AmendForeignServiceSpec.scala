@@ -29,7 +29,6 @@ class AmendForeignServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "X-corr"
 
   private val foreignEarningsModel = ForeignEarnings(
     customerReference = Some("ref"),
@@ -87,7 +86,7 @@ class AmendForeignServiceSpec extends ServiceSpec {
             MockAmendForeignConnector.amendForeign(amendForeignRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

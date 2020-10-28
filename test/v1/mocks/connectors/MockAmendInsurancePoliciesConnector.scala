@@ -32,8 +32,8 @@ trait MockAmendInsurancePoliciesConnector extends MockFactory {
 
     def amendInsurancePolicies(request: AmendInsurancePoliciesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendInsurancePoliciesConnector
-        .amendInsurancePolicies(_: AmendInsurancePoliciesRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+        .amendInsurancePolicies(_: AmendInsurancePoliciesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
 }

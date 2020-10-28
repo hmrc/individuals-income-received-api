@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendInsurancePoliciesRequestParser
 import v1.mocks.services.{MockAmendInsurancePoliciesService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -38,8 +39,12 @@ class AmendInsurancePoliciesControllerSpec
     with MockAppConfig
     with MockAmendInsurancePoliciesService
     with MockAuditService
-    with MockAmendInsurancePoliciesRequestParser {
+    with MockAmendInsurancePoliciesRequestParser
+    with MockIdGenerator {
 
+  val nino: String = "AA123456A"
+  val taxYear: String = "2019-20"
+  val correlationId: String = "X-123"
 
   def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -56,7 +61,7 @@ class AmendInsurancePoliciesControllerSpec
     )
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new AmendInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
@@ -65,17 +70,15 @@ class AmendInsurancePoliciesControllerSpec
       requestParser = mockAmendInsurancePoliciesRequestParser,
       service = mockAmendInsurancePoliciesService,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("baseUrl").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
-
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  val correlationId: String = "X-123"
 
   val requestBodyJson: JsValue = Json.parse(
     """
@@ -347,7 +350,7 @@ class AmendInsurancePoliciesControllerSpec
 
             MockAmendInsurancePoliciesRequestParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear)(fakePutRequest(requestBodyJson))
 
@@ -385,7 +388,7 @@ class AmendInsurancePoliciesControllerSpec
 
             MockAmendInsurancePoliciesService
               .amendInsurancePolicies(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear)(fakePutRequest(requestBodyJson))
 

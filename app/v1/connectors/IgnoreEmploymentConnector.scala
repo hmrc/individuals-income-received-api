@@ -29,7 +29,10 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
                                           val appConfig: AppConfig) extends BaseDesConnector {
 
   def ignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[Unit]] = {
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[Unit]] = {
+
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino

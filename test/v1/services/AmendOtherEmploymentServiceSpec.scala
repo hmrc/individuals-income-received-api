@@ -29,7 +29,6 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "X-corr"
 
   private val shareOptionModel = Seq(
     AmendShareOptionItem(
@@ -186,7 +185,7 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
             MockAmendOtherEmploymentConnector.amendOtherEmployment(amendOtherEmploymentRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendOtherEmployment(amendOtherEmploymentRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendOtherEmployment(amendOtherEmploymentRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

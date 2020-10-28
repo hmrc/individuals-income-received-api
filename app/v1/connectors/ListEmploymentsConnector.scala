@@ -31,7 +31,8 @@ class ListEmploymentsConnector @Inject()(val http: HttpClient,
 
   def listEmployments(request: ListEmploymentsRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[ListEmploymentResponse[Employment]]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[ListEmploymentResponse[Employment]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -43,4 +44,3 @@ class ListEmploymentsConnector @Inject()(val http: HttpClient,
     )
   }
 }
-

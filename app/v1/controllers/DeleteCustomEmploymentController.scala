@@ -24,7 +24,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v1.connectors.DesUri
 import v1.controllers.requestParsers.DeleteCustomEmploymentRequestParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -40,7 +40,8 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
                                                  requestParser: DeleteCustomEmploymentRequestParser,
                                                  service: DeleteRetrieveService,
                                                  auditService: AuditService,
-                                                 cc: ControllerComponents)(implicit ec: ExecutionContext)
+                                                 cc: ControllerComponents,
+                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -51,6 +52,11 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
 
   def deleteCustomEmployment(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       val rawData: DeleteCustomEmploymentRawData = DeleteCustomEmploymentRawData(
         nino = nino,
@@ -84,13 +90,16 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
         }
 
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           GenericAuditDetail(
             request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), None,
-            correlationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 

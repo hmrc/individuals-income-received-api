@@ -32,8 +32,8 @@ trait MockAmendSavingsConnector extends MockFactory {
 
     def amendSaving(request: AmendSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendSavingsConnector
-        .amendSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+        .amendSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
 }

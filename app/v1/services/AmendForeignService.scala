@@ -36,7 +36,8 @@ class AmendForeignService @Inject()(connector: AmendForeignConnector) extends De
   def amendForeign(request: AmendForeignRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendForeign(request)).leftMap(mapDesErrors(desErrorMap))

@@ -32,8 +32,8 @@ trait MockAmendOtherEmploymentConnector extends MockFactory {
 
     def amendOtherEmployment(request: AmendOtherEmploymentRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendOtherEmploymentConnector
-        .amendOtherEmployment(_: AmendOtherEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+        .amendOtherEmployment(_: AmendOtherEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
 }

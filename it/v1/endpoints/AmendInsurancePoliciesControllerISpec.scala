@@ -334,7 +334,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         )
 
         val wrappedErrors: ErrorWrapper = ErrorWrapper(
-          correlationId = Some(correlationId),
+          correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueErrors)
         )
@@ -897,16 +897,16 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), NinoFormatError, None)),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper(Some(""), TaxYearFormatError, None)),
-          ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearNotSupportedError, None)),
-          ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), RuleTaxYearRangeInvalidError, None)),
-          ("AA123456A", "2019-20", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), BadRequestError, Some(allInvalidValueErrors))),
-          ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), customerRefFormatError, None)),
-          ("AA123456A", "2019-20", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), eventFormatError, None)),
-          ("AA123456A", "2019-20", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper(Some(""), RuleIncorrectOrEmptyBodyError, None)),
-          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), nonValidRequestBodyErrors, None)),
-          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some(""), missingFieldRequestBodyErrors, None))
+          ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None)),
+          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
+          ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
+          ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
+          ("AA123456A", "2019-20", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", customerRefFormatError, None)),
+          ("AA123456A", "2019-20", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", eventFormatError, None)),
+          ("AA123456A", "2019-20", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),
+          ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", nonValidRequestBodyErrors, None)),
+          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingFieldRequestBodyErrors, None))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

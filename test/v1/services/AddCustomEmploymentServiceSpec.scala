@@ -30,7 +30,6 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2021-22"
-  private val correlationId = "X-corr"
 
   val addCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
     employerRef = Some("123/AB56797"),
@@ -76,7 +75,7 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
             MockAddCustomEmploymentConnector.addEmployment(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.addEmployment(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.addEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

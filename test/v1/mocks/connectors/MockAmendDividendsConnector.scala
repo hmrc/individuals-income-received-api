@@ -32,8 +32,8 @@ trait MockAmendDividendsConnector extends MockFactory {
 
     def amendDividends(request: AmendDividendsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockAmendDividendsConnector
-        .amendDividends(_: AmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+        .amendDividends(_: AmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
 

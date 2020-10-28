@@ -160,7 +160,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
         )
 
         val wrappedErrors: ErrorWrapper = ErrorWrapper(
-          correlationId = Some(correlationId),
+          correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueRequestError)
         )

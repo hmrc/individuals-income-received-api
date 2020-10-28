@@ -35,7 +35,8 @@ class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsCon
   def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDesErrors(desErrorMap))

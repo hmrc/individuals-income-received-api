@@ -29,6 +29,7 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
   val taxYear: String = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val validSource: String = "latest"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val retrieveFinancialDetailsRawData: RetrieveFinancialDetailsRawData = RetrieveFinancialDetailsRawData(
     nino = nino,
@@ -66,7 +67,7 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
@@ -74,7 +75,7 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
 
       "multiple validation errors occur (NinoFormatError, TaxYearFormatError, EmploymentIdFormatError and SourceFormatError errors)" in new Test {
@@ -82,7 +83,7 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError, SourceFormatError))
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError, SourceFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError, SourceFormatError))))
       }
     }
   }

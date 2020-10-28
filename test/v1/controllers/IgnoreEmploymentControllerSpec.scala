@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockIgnoreEmploymentRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockIgnoreEmploymentService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -38,10 +39,16 @@ class IgnoreEmploymentControllerSpec
     with MockAppConfig
     with MockIgnoreEmploymentService
     with MockAuditService
-    with MockIgnoreEmploymentRequestParser {
+    with MockIgnoreEmploymentRequestParser
+    with MockIdGenerator {
+
+  val nino: String = "AA123456A"
+  val taxYear: String = "2019-20"
+  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new IgnoreEmploymentController(
       authService = mockEnrolmentsAuthService,
@@ -50,18 +57,15 @@ class IgnoreEmploymentControllerSpec
       requestParser = mockIgnoreEmploymentRequestParser,
       service = mockIgnoreEmploymentService,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
-
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val requestBodyJson: JsValue = Json.parse(
     """
@@ -150,7 +154,7 @@ class IgnoreEmploymentControllerSpec
 
             MockIgnoreEmploymentRequestParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
 
@@ -187,7 +191,7 @@ class IgnoreEmploymentControllerSpec
 
             MockIgnoreEmploymentService
               .ignoreEmployment(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
 

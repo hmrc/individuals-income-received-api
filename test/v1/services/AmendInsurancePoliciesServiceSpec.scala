@@ -29,7 +29,6 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "X-corr"
 
   private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
     customerReference = Some("INPOLY123A"),
@@ -118,7 +117,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
             MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePoliciesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

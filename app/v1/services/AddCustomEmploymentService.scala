@@ -38,7 +38,8 @@ class AddCustomEmploymentService @Inject()(connector: AddCustomEmploymentConnect
   def addEmployment(request: AddCustomEmploymentRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]] = {
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.addEmployment(request)).leftMap(mapDesErrors(desErrorMap))

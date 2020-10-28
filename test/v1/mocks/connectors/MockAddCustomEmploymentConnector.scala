@@ -33,8 +33,8 @@ trait MockAddCustomEmploymentConnector extends MockFactory {
 
     def addEmployment(request: AddCustomEmploymentRequest): CallHandler[Future[DesOutcome[AddCustomEmploymentResponse]]] = {
       (mockAddCustomEmploymentConnector
-        .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(request, *, *)
+        .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
 

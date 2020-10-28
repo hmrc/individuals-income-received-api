@@ -36,8 +36,8 @@ trait MockListEmploymentsService extends MockFactory {
 
     def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]]] = {
       (mockListEmploymentsService
-        .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

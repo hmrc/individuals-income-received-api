@@ -25,7 +25,7 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.AmendCustomEmploymentRequestParser
 import v1.hateoas.AmendHateoasBody
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
@@ -42,7 +42,8 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
                                                 requestParser: AmendCustomEmploymentRequestParser,
                                                 service: AmendCustomEmploymentService,
                                                 auditService: AuditService,
-                                                cc: ControllerComponents)(implicit ec: ExecutionContext)
+                                                cc: ControllerComponents,
+                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -53,6 +54,11 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
 
   def amendEmployment(nino: String, taxYear: String, employmentId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
 
       val rawData: AmendCustomEmploymentRawData = AmendCustomEmploymentRawData(
         nino = nino,
@@ -84,13 +90,16 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
         }
 
       result.leftMap { errorWrapper =>
-        val correlationId = getCorrelationId(errorWrapper)
-        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           GenericAuditDetail(
             request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body),
-            correlationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
         result

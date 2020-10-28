@@ -34,8 +34,8 @@ trait MockAmendFinancialDetailsService extends MockFactory {
   object MockAmendFinancialDetailsService {
     def amendFinancialDetails(requestData: AmendFinancialDetailsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendFinancialDetailsService
-        .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

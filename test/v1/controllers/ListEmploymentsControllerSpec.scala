@@ -22,6 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListEmploymentsControllerFixture._
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListEmploymentsRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListEmploymentsService, MockMtdIdLookupService}
@@ -42,7 +43,8 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
   with MockListEmploymentsService
   with MockHateoasFactory
   with MockListEmploymentsRequestParser
-  with HateoasLinks {
+  with HateoasLinks
+  with MockIdGenerator {
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
@@ -122,7 +124,7 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
   private val mtdResponse = mtdResponseWithCustomHateoas(nino, taxYear, employmentId)
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new ListEmploymentsController(
       authService = mockEnrolmentsAuthService,
@@ -130,11 +132,13 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
       requestParser = mockListEmploymentsRequestParser,
       service = mockListEmploymentsService,
       hateoasFactory = mockHateoasFactory,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   "ListEmploymentsController" should {
@@ -173,7 +177,7 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
 
             MockListEmploymentsRequestParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.listEmployments(nino, taxYear)(fakeGetRequest)
 
@@ -204,7 +208,7 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
 
             MockListEmploymentsService
               .listEmployments(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.listEmployments(nino, taxYear)(fakeGetRequest)
 
