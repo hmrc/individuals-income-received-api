@@ -16,10 +16,12 @@
 
 package v1.controllers.requestParsers.validators
 
+import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -102,7 +104,7 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
   private val incorrectDatesRawBody1 = AnyContentAsJson(invalidDatesRequestJson1)
   private val incorrectDatesRawBody2 = AnyContentAsJson(invalidDatesRequestJson2)
 
-  class Test extends MockCurrentDateTime with MockAppConfig {
+  class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
@@ -117,12 +119,21 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
+
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
+      s"""
+         |taxYearNotEndedRule.enabled = $errorFeatureSwitch
+      """.stripMargin))))
   }
 
   "AmendCustomEmploymentValidator" when {
     "running a validation" should {
       "return no errors for a valid request" in new Test {
         validator.validate(AmendCustomEmploymentRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
+      }
+
+      "return RuleCessationDateBeforeTaxYearStart error when config for TaxYearNotEndedError is set to false" in new Test(false) {
+        validator.validate(AmendCustomEmploymentRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe List(RuleCessationDateBeforeTaxYearStartError)
       }
 
       // parameter format error scenarios
