@@ -28,7 +28,7 @@ trait MockRetrieveEmploymentRequestParser extends MockFactory {
 
   object MockRetrieveCustomEmploymentRequestParser {
     def parse(data: RetrieveEmploymentRawData): CallHandler[Either[ErrorWrapper, RetrieveEmploymentRequest]] = {
-      (mockRetrieveCustomEmploymentRequestParser.parseRequest(_: RetrieveEmploymentRawData)).expects(data)
+      (mockRetrieveCustomEmploymentRequestParser.parseRequest(_: RetrieveEmploymentRawData)(_: String)).expects(data, *)
     }
   }
 

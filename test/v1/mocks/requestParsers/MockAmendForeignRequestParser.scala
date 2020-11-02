@@ -28,7 +28,7 @@ trait MockAmendForeignRequestParser extends MockFactory {
 
   object MockAmendForeignRequestParser {
     def parse(data: AmendForeignRawData): CallHandler[Either[ErrorWrapper, AmendForeignRequest]] = {
-      (mockAmendForeignRequestParser.parseRequest(_: AmendForeignRawData)).expects(data)
+      (mockAmendForeignRequestParser.parseRequest(_: AmendForeignRawData)(_: String)).expects(data, *)
     }
   }
 

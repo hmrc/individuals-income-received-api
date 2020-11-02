@@ -28,6 +28,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
 
   private val nino: String = "AA123456B"
   private val taxYear: String = "2017-18"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestJson: JsValue = Json.parse(
     """
@@ -83,7 +84,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(addCustomEmploymentRawData.copy(nino = "notANino")) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple path parameter validation errors occur" in new Test {
@@ -91,7 +92,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(addCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
 
       "multiple field value validation errors occur" in new Test {
@@ -122,7 +123,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
           .returns(errors)
 
         parser.parseRequest(addCustomEmploymentRawData.copy(body = invalidValueRawBody)) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(errors)))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(errors)))
       }
     }
   }

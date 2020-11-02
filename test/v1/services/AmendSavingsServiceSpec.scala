@@ -30,7 +30,6 @@ class AmendSavingsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "X-corr"
 
   val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
     amountBeforeTax = None,
@@ -74,7 +73,7 @@ class AmendSavingsServiceSpec extends ServiceSpec {
             MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendSaving(amendSavingsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendSaving(amendSavingsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

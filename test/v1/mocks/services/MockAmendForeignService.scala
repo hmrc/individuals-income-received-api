@@ -35,8 +35,8 @@ trait MockAmendForeignService extends MockFactory {
 
     def amendForeign(requestData: AmendForeignRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendForeignService
-        .amendForeign(_: AmendForeignRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .amendForeign(_: AmendForeignRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

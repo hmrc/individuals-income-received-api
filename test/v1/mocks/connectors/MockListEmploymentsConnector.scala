@@ -33,8 +33,8 @@ trait MockListEmploymentsConnector extends MockFactory {
 
     def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[DesOutcome[ListEmploymentResponse[Employment]]]] = {
       (mockListEmploymentsConnector
-        .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

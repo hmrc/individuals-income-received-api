@@ -30,7 +30,6 @@ class AmendOtherServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val amendOtherRequest: AmendOtherRequest = AmendOtherRequest(
     nino = Nino(nino),
@@ -65,7 +64,7 @@ class AmendOtherServiceSpec extends ServiceSpec {
             MockAmendOtherConnector.amendOther(amendOtherRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amend(amendOtherRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amend(amendOtherRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

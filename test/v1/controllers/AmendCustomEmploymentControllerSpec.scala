@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendCustomEmploymentRequestParser
 import v1.mocks.services.{MockAmendCustomEmploymentService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -38,7 +39,8 @@ class AmendCustomEmploymentControllerSpec
     with MockAppConfig
     with MockAuditService
     with MockAmendCustomEmploymentRequestParser
-    with MockAmendCustomEmploymentService {
+    with MockAmendCustomEmploymentService
+    with MockIdGenerator {
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
@@ -55,12 +57,14 @@ class AmendCustomEmploymentControllerSpec
       requestParser = mockAmendCustomEmploymentRequestParser,
       service = mockAmendCustomEmploymentService,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino = nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -172,7 +176,7 @@ class AmendCustomEmploymentControllerSpec
 
             MockAmendCustomEmploymentRequestParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.amendEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
 
@@ -217,7 +221,7 @@ class AmendCustomEmploymentControllerSpec
 
             MockAmendCustomEmploymentService
               .amend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.amendEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
 

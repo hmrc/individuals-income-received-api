@@ -32,7 +32,6 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
   private val employmentId= "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  private val correlationId = "X-corr"
 
 
   private val payModel = AmendPay(
@@ -91,7 +90,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
     employment = employmentModel
   )
 
-  val request = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
+  val request: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
 
   trait Test extends MockAmendFinancialDetailsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
@@ -122,7 +121,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
             MockAmendFinancialDetailsConnector.amendFinancialDetails(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

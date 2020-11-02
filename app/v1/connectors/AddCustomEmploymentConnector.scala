@@ -30,7 +30,10 @@ class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
                                              val appConfig: AppConfig) extends BaseDesConnector {
 
   def addEmployment(request: AddCustomEmploymentRequest)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[AddCustomEmploymentResponse]] = {
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[AddCustomEmploymentResponse]] = {
+
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino

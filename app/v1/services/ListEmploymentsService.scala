@@ -34,9 +34,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends DesResponseMappingSupport with Logging{
 
-  def listEmployments(request: ListEmploymentsRequest)
-                  (implicit hc: HeaderCarrier, ec: ExecutionContext, logContext: EndpointLogContext):
-  Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]] = {
+  def listEmployments(request: ListEmploymentsRequest)(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.listEmployments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
@@ -53,4 +55,3 @@ class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) exte
     "SERVICE_UNAVAILABLE"       -> DownstreamError
   )
 }
-

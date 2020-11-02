@@ -239,7 +239,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         )
 
         val wrappedErrors: ErrorWrapper = ErrorWrapper(
-          correlationId = Some(correlationId),
+          correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueRequestError)
         )
@@ -614,18 +614,18 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), NinoFormatError, None), None),
-          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), TaxYearFormatError, None), None),
-          ("AA123456A", "2019-20", "ABCDE12345FG", validRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), EmploymentIdFormatError, None), None),
-          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), RuleTaxYearNotSupportedError, None), None),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), RuleTaxYearRangeInvalidError, None), None),
-          ("AA123456A", getCurrentTaxYear, "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), RuleTaxYearNotEndedError, None), None),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), RuleIncorrectOrEmptyBodyError, None), None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), invalidFieldTypeErrors, None), Some("(invalid field type)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingEmploymentObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), missingMandatoryEmploymentObjectError, None), Some("(missing mandatory employment object)")),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", missingPayObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), missingMandatoryPayObjectError, None), Some("(missing mandatory pay object)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldsRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), missingMandatoryFieldsErrors, None), Some("(missing mandatory fields)")),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper(Some("X-123"), BadRequestError, Some(allInvalidValueErrors)), None)
+          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None), None),
+          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None), None),
+          ("AA123456A", "2019-20", "ABCDE12345FG", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
+          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None), None),
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None), None),
+          ("AA123456A", getCurrentTaxYear, "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotEndedError, None), None),
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None), None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", invalidFieldTypeErrors, None), Some("(invalid field type)")),
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingEmploymentObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None), Some("(missing mandatory employment object)")),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", missingPayObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryPayObjectError, None), Some("(missing mandatory pay object)")),
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldsRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldsErrors, None), Some("(missing mandatory fields)")),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)), None)
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

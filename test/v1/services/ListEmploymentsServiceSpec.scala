@@ -29,8 +29,7 @@ import scala.concurrent.Future
 class ListEmploymentsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
-  private val taxYear = "2019"
-  private val correlationId = "X-corr"
+  private val taxYear = "2019-20"
 
   private val requestData = ListEmploymentsRequest(Nino(nino), taxYear)
 
@@ -74,7 +73,7 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
             MockListEmploymentsConnector.listEmployments(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.listEmployments(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.listEmployments(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

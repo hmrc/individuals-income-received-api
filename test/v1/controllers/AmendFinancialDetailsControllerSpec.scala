@@ -21,6 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendFinancialDetailsRequestParser
 import v1.mocks.services.{MockAmendFinancialDetailsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -40,7 +41,8 @@ class AmendFinancialDetailsControllerSpec
     with MockAppConfig
     with MockAmendFinancialDetailsRequestParser
     with MockAmendFinancialDetailsService
-    with MockAuditService {
+    with MockAuditService
+    with MockIdGenerator {
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
@@ -57,12 +59,14 @@ class AmendFinancialDetailsControllerSpec
       requestParser = mockAmendFinancialDetailsRequestParser,
       service = mockAmendFinancialDetailsService,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino = nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   private val requestBodyJson: JsValue = Json.parse(
@@ -253,7 +257,7 @@ class AmendFinancialDetailsControllerSpec
 
             MockAmendFinancialDetailsRequestParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
 
@@ -291,7 +295,7 @@ class AmendFinancialDetailsControllerSpec
 
             MockAmendFinancialDetailsService
               .amendFinancialDetails(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
 

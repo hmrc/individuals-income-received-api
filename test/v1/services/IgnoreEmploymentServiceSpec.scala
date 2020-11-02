@@ -29,7 +29,6 @@ class IgnoreEmploymentServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2021-22"
-  private val correlationId = "X-corr"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val ignoreEmploymentRequestBody: IgnoreEmploymentRequestBody = IgnoreEmploymentRequestBody(ignoreEmployment = true)
@@ -68,7 +67,7 @@ class IgnoreEmploymentServiceSpec extends ServiceSpec {
             MockIgnoreEmploymentConnector.ignoreEmployment(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.ignoreEmployment(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.ignoreEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

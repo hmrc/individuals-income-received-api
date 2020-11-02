@@ -22,6 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveEmploymentControllerFixture._
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveEmploymentRequestParser
 import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
@@ -43,7 +44,8 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   with MockDeleteRetrieveService
   with MockHateoasFactory
   with MockRetrieveEmploymentRequestParser
-  with HateoasLinks {
+  with HateoasLinks
+  with MockIdGenerator {
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
@@ -122,7 +124,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val mtdCustomEnteredResponse = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveEmploymentController(
       authService = mockEnrolmentsAuthService,
@@ -130,11 +132,13 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
       requestParser = mockRetrieveCustomEmploymentRequestParser,
       service = mockDeleteRetrieveService,
       hateoasFactory = mockHateoasFactory,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   "RetrieveEmploymentController" should {
@@ -204,7 +208,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
             MockRetrieveCustomEmploymentRequestParser
               .parse(rawData)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
@@ -236,7 +240,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
             MockDeleteRetrieveService
               .retrieve[RetrieveEmploymentResponse]()
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveEmployment(nino, taxYear,employmentId)(fakeGetRequest)
 

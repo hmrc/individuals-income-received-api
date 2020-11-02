@@ -36,8 +36,8 @@ trait MockAddCustomEmploymentService extends MockFactory {
 
     def addEmployment(requestData: AddCustomEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]]] = {
       (mockAddCustomEmploymentService
-        .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

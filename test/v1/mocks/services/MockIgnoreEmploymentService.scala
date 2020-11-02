@@ -35,8 +35,8 @@ trait MockIgnoreEmploymentService extends MockFactory {
 
     def ignoreEmployment(requestData: IgnoreEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockIgnoreEmploymentService
-        .ignoreEmployment(_: IgnoreEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .ignoreEmployment(_: IgnoreEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

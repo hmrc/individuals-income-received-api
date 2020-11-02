@@ -29,7 +29,6 @@ class AmendPensionsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "X-corr"
 
   private val foreignPensionsModel = Seq(
     AmendForeignPensionsItem(
@@ -73,7 +72,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
     )
   )
 
-  val amendPensionsRequest = AmendPensionsRequest(
+  val amendPensionsRequest: AmendPensionsRequest = AmendPensionsRequest(
       nino = Nino(nino),
       taxYear = taxYear,
       body = AmendPensionsRequestBody(
@@ -109,7 +108,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
             MockAmendPensionsConnector.amendPensions(amendPensionsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

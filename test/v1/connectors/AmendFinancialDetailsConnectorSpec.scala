@@ -88,7 +88,7 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
     employment = employmentModel
   )
 
-  val request = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
+  val request: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
 
   class Test extends MockHttpClient with MockAppConfig {
 

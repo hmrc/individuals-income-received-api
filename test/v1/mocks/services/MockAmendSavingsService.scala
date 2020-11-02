@@ -35,8 +35,8 @@ trait MockAmendSavingsService extends MockFactory {
 
     def amendSaving(requestData: AmendSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendSavingsService
-        .amendSaving(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .amendSaving(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 

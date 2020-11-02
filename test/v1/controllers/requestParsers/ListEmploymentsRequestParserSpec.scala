@@ -26,6 +26,7 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
   val taxYear: String = "2020-21"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val listEmploymentsRawData: ListEmploymentsRawData = ListEmploymentsRawData(
     nino = nino,
@@ -54,7 +55,7 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(listEmploymentsRawData) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
@@ -62,7 +63,7 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(listEmploymentsRawData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
     }
   }

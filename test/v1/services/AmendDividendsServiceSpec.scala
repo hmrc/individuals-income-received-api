@@ -29,7 +29,6 @@ class AmendDividendsServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val correlationId = "X-corr"
 
   private val foreignDividendModel = Seq(
     AmendForeignDividendItem(
@@ -129,7 +128,7 @@ class AmendDividendsServiceSpec extends ServiceSpec {
             MockAmendDividendsConnector.amendDividends(amendDividendsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.amendDividends(amendDividendsRequest)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.amendDividends(amendDividendsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(
