@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators
 
-import config.AppConfig
+import config.{AppConfig, FeatureSwitch}
 import javax.inject.Inject
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
@@ -41,9 +41,11 @@ class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateT
   }
 
   private def parameterRuleValidation: IgnoreEmploymentRawData => List[List[MtdError]] = (data: IgnoreEmploymentRawData) => {
+    val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
+
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear),
-      TaxYearNotEndedValidation.validate(data.taxYear)
+      if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear)  else List.empty[MtdError]
     )
   }
 
