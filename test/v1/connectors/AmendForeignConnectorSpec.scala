@@ -79,7 +79,7 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/foreign/$nino/$taxYear",
             body = amendForeignRequestBody,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = requiredHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendForeign(amendForeignRequest)) shouldBe outcome

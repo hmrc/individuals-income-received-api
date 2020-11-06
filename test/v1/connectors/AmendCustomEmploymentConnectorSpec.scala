@@ -66,7 +66,7 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
             body = amendCustomEmploymentRequestBody,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = requiredHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendEmployment(request)) shouldBe outcome

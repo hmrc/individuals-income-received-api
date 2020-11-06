@@ -57,7 +57,7 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/other/$nino/$taxYear",
             body = requestBodyModel,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = requiredHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amend(amendOtherRequest)) shouldBe outcome

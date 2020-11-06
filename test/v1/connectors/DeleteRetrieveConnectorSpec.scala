@@ -35,11 +35,6 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    val desRequestHeaders: Seq[(String, String)] = Seq(
-      "Environment" -> "des-environment",
-      "Authorization" -> s"Bearer des-token"
-    )
-
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
@@ -55,7 +50,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .delete(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            requiredHeaders = desRequestHeaders: _*
+            requiredHeaders = requiredHeaders :_*
           )
           .returns(Future.successful(outcome))
 
@@ -78,7 +73,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            requiredHeaders = desRequestHeaders: _*
+            requiredHeaders = requiredHeaders :_*
           )
           .returns(Future.successful(outcome))
 

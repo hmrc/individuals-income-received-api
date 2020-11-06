@@ -67,7 +67,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
           .post(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom",
             body = addCustomEmploymentRequestBody,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = requiredHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.addEmployment(request)) shouldBe outcome
