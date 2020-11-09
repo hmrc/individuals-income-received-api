@@ -25,7 +25,6 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendSavingsRequestParser
 import v1.mocks.services.{MockAmendSavingsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendSavings._
@@ -150,7 +149,7 @@ class AmendSavingsControllerSpec
 
   val requestData: AmendSavingsRequest = AmendSavingsRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = taxYear,
     body = amendSavingsRequestBody
   )
 
@@ -262,7 +261,6 @@ class AmendSavingsControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

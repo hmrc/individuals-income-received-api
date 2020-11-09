@@ -19,7 +19,6 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendSavingsConnector
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
@@ -42,7 +41,7 @@ class AmendSavingsServiceSpec extends ServiceSpec {
 
   private val amendSavingsRequest = AmendSavingsRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
   )
 
@@ -57,7 +56,7 @@ class AmendSavingsServiceSpec extends ServiceSpec {
   "AmendSavingsService" when {
     "amendSaving" must {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        private val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
           .returns(Future.successful(outcome))
@@ -77,9 +76,10 @@ class AmendSavingsServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          ("INVALID_NINO", NinoFormatError),
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NOT_FOUND", NotFoundError),
+          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_PAYLOAD",  DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

@@ -110,7 +110,7 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/insurance-policies/income/$nino/$taxYear",
             body = amendInsurancePoliciesBody,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = requiredHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe outcome

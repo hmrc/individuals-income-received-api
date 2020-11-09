@@ -21,11 +21,10 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockAmendSavingsValidator
-import v1.models.domain.DesTaxYear
 import v1.models.errors._
 import v1.models.request.amendSavings._
 
-class AmendSavingsRequestParserSpec extends UnitSpec{
+class AmendSavingsRequestParserSpec extends UnitSpec {
 
   val nino: String = "AA123456B"
   val taxYear: String = "2019-20"
@@ -107,7 +106,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec{
         MockAmendSavingsValidator.validate(amendSavingsRawData).returns(Nil)
 
         parser.parseRequest(amendSavingsRawData) shouldBe
-          Right(AmendSavingsRequest(Nino(nino), DesTaxYear.fromMtd(taxYear), validRequestBodyModel))
+          Right(AmendSavingsRequest(Nino(nino), taxYear, validRequestBodyModel))
       }
     }
 

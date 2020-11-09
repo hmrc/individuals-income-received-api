@@ -19,7 +19,6 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
-import v1.models.domain.DesTaxYear
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
 
@@ -43,7 +42,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
 
   val amendSavingsRequest: AmendSavingsRequest = AmendSavingsRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear(taxYear),
+    taxYear = taxYear,
     body = amendSavingsRequestBody
   )
 
@@ -66,9 +65,9 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .put(
-            url = s"$baseUrl/some-placeholder/savings/$nino/$taxYear",
+            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
             body = amendSavingsRequestBody,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = requiredHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome

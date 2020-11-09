@@ -53,11 +53,6 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    val desRequestHeaders: Seq[(String, String)] = Seq(
-      "Environment" -> "des-environment",
-      "Authorization" -> s"Bearer des-token"
-    )
-
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
@@ -72,7 +67,7 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear",
-            requiredHeaders = desRequestHeaders: _*
+            requiredHeaders = requiredHeaders :_*
           )
           .returns(Future.successful(outcome))
 
