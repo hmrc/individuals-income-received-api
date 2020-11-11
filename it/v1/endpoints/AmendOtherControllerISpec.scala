@@ -109,6 +109,58 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
+    val invalidRequestBodyJson2: JsValue = Json.parse(
+      """
+        |{
+        |   "businessReceipts": [
+        |      {
+        |         "grossAmount": 5000.99,
+        |         "taxYear": "2018-193"
+        |      },
+        |      {
+        |         "grossAmount": 6000.99,
+        |         "taxYear": "2019-23"
+        |      }
+        |   ],
+        |   "allOtherIncomeReceivedWhilstAbroad": [
+        |      {
+        |         "countryCode": "FRA",
+        |         "amountBeforeTax": 1999.99,
+        |         "taxTakenOff": 2.23,
+        |         "specialWithholdingTax": 3.23,
+        |         "foreignTaxCreditRelief": false,
+        |         "taxableAmount": 4.23,
+        |         "residentialFinancialCostAmount": 2999.99,
+        |         "broughtFwdResidentialFinancialCostAmount": 1999.99
+        |      },
+        |      {
+        |         "countryCode": "IND",
+        |         "amountBeforeTax": 2999.99,
+        |         "taxTakenOff": 3.23,
+        |         "specialWithholdingTax": 4.23,
+        |         "foreignTaxCreditRelief": true,
+        |         "taxableAmount": 5.23,
+        |         "residentialFinancialCostAmount": 3999.99,
+        |         "broughtFwdResidentialFinancialCostAmount": 2999.99
+        |      }
+        |   ],
+        |   "overseasIncomeAndGains": {
+        |      "gainAmount": 3000.99
+        |   },
+        |   "chargeableForeignBenefitsAndGifts": {
+        |      "transactionBenefit": 1999.99,
+        |      "protectedForeignIncomeSourceBenefit": 2999.99,
+        |      "protectedForeignIncomeOnwardGift": 3999.99,
+        |      "benefitReceivedAsASettler": 4999.99,
+        |      "onwardGiftReceivedAsASettler": 5999.99
+        |   },
+        |   "omittedForeignIncome": {
+        |      "amount": 4000.99
+        |   }
+        |}
+    """.stripMargin
+    )
+
     def uri: String = s"/other/$nino/$taxYear"
 
     def desUri: String = s"/income-tax/income/other/$nino/$taxYear"
@@ -136,6 +188,148 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request().put(requestBodyJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+    }
+
+    "return a TaxYearFormatError" when {
+      "a request body having invalid tax year format is supplied" in new Test {
+
+        val invalidRequestBodyJson: JsValue = Json.parse(
+          """
+            |{
+            |   "businessReceipts": [
+            |      {
+            |         "grossAmount": 5000.99,
+            |         "taxYear": "2018-193"
+            |      }
+            |   ],
+            |   "allOtherIncomeReceivedWhilstAbroad": [
+            |      {
+            |         "countryCode": "FRA",
+            |         "amountBeforeTax": 1999.99,
+            |         "taxTakenOff": 2.23,
+            |         "specialWithholdingTax": 3.23,
+            |         "foreignTaxCreditRelief": false,
+            |         "taxableAmount": 4.23,
+            |         "residentialFinancialCostAmount": 2999.99,
+            |         "broughtFwdResidentialFinancialCostAmount": 1999.99
+            |      },
+            |      {
+            |         "countryCode": "IND",
+            |         "amountBeforeTax": 2999.99,
+            |         "taxTakenOff": 3.23,
+            |         "specialWithholdingTax": 4.23,
+            |         "foreignTaxCreditRelief": true,
+            |         "taxableAmount": 5.23,
+            |         "residentialFinancialCostAmount": 3999.99,
+            |         "broughtFwdResidentialFinancialCostAmount": 2999.99
+            |      }
+            |   ],
+            |   "overseasIncomeAndGains": {
+            |      "gainAmount": 3000.99
+            |   },
+            |   "chargeableForeignBenefitsAndGifts": {
+            |      "transactionBenefit": 1999.99,
+            |      "protectedForeignIncomeSourceBenefit": 2999.99,
+            |      "protectedForeignIncomeOnwardGift": 3999.99,
+            |      "benefitReceivedAsASettler": 4999.99,
+            |      "onwardGiftReceivedAsASettler": 5999.99
+            |   },
+            |   "omittedForeignIncome": {
+            |      "amount": 4000.99
+            |   }
+            |}
+    """.stripMargin
+        )
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.PUT, desUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().put(invalidRequestBodyJson))
+        response.status shouldBe BAD_REQUEST
+        response.json shouldBe Json.toJson(ErrorWrapper(
+          correlationId = correlationId,
+          error = TaxYearFormatError.copy(
+            paths = Some(List("/businessReceipts/0/taxYear"))
+          ),
+          errors = None
+        ))
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+    }
+
+    "return a RuleTaxYearRangeInvalidError" when {
+      "a request body having invalid tax year range is supplied" in new Test {
+
+        val invalidRequestBodyJson: JsValue = Json.parse(
+          """
+            |{
+            |   "businessReceipts": [
+            |      {
+            |         "grossAmount": 5000.99,
+            |         "taxYear": "2018-23"
+            |      }
+            |   ],
+            |   "allOtherIncomeReceivedWhilstAbroad": [
+            |      {
+            |         "countryCode": "FRA",
+            |         "amountBeforeTax": 1999.99,
+            |         "taxTakenOff": 2.23,
+            |         "specialWithholdingTax": 3.23,
+            |         "foreignTaxCreditRelief": false,
+            |         "taxableAmount": 4.23,
+            |         "residentialFinancialCostAmount": 2999.99,
+            |         "broughtFwdResidentialFinancialCostAmount": 1999.99
+            |      },
+            |      {
+            |         "countryCode": "IND",
+            |         "amountBeforeTax": 2999.99,
+            |         "taxTakenOff": 3.23,
+            |         "specialWithholdingTax": 4.23,
+            |         "foreignTaxCreditRelief": true,
+            |         "taxableAmount": 5.23,
+            |         "residentialFinancialCostAmount": 3999.99,
+            |         "broughtFwdResidentialFinancialCostAmount": 2999.99
+            |      }
+            |   ],
+            |   "overseasIncomeAndGains": {
+            |      "gainAmount": 3000.99
+            |   },
+            |   "chargeableForeignBenefitsAndGifts": {
+            |      "transactionBenefit": 1999.99,
+            |      "protectedForeignIncomeSourceBenefit": 2999.99,
+            |      "protectedForeignIncomeOnwardGift": 3999.99,
+            |      "benefitReceivedAsASettler": 4999.99,
+            |      "onwardGiftReceivedAsASettler": 5999.99
+            |   },
+            |   "omittedForeignIncome": {
+            |      "amount": 4000.99
+            |   }
+            |}
+    """.stripMargin
+        )
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.PUT, desUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().put(invalidRequestBodyJson))
+        response.status shouldBe BAD_REQUEST
+        response.json shouldBe Json.toJson(ErrorWrapper(
+          correlationId = correlationId,
+          error = RuleTaxYearRangeInvalidError.copy(
+            paths = Some(List("/businessReceipts/0/taxYear"))
+          ),
+          errors = None
+        ))
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }

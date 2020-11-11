@@ -59,13 +59,11 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
-
       val rawData: AmendOtherRawData = AmendOtherRawData(
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body)
       )
-
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
@@ -81,7 +79,6 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
               AuditResponse(httpStatus = OK, response = Right(Some(amendOtherHateoasBody(appConfig, nino, taxYear))))
             )
           )
-
           Ok(amendOtherHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -100,7 +97,6 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
             resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
-
         result
       }.merge
     }
@@ -109,6 +105,8 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
            RuleTaxYearNotSupportedError |
+           CustomMtdError(TaxYearFormatError.code) |
+           CustomMtdError(RuleTaxYearRangeInvalidError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
            CustomMtdError(ValueFormatError.code) |
            CustomMtdError(CountryCodeFormatError.code) |
