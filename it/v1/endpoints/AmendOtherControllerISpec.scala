@@ -109,58 +109,6 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
-    val invalidRequestBodyJson2: JsValue = Json.parse(
-      """
-        |{
-        |   "businessReceipts": [
-        |      {
-        |         "grossAmount": 5000.99,
-        |         "taxYear": "2018-193"
-        |      },
-        |      {
-        |         "grossAmount": 6000.99,
-        |         "taxYear": "2019-23"
-        |      }
-        |   ],
-        |   "allOtherIncomeReceivedWhilstAbroad": [
-        |      {
-        |         "countryCode": "FRA",
-        |         "amountBeforeTax": 1999.99,
-        |         "taxTakenOff": 2.23,
-        |         "specialWithholdingTax": 3.23,
-        |         "foreignTaxCreditRelief": false,
-        |         "taxableAmount": 4.23,
-        |         "residentialFinancialCostAmount": 2999.99,
-        |         "broughtFwdResidentialFinancialCostAmount": 1999.99
-        |      },
-        |      {
-        |         "countryCode": "IND",
-        |         "amountBeforeTax": 2999.99,
-        |         "taxTakenOff": 3.23,
-        |         "specialWithholdingTax": 4.23,
-        |         "foreignTaxCreditRelief": true,
-        |         "taxableAmount": 5.23,
-        |         "residentialFinancialCostAmount": 3999.99,
-        |         "broughtFwdResidentialFinancialCostAmount": 2999.99
-        |      }
-        |   ],
-        |   "overseasIncomeAndGains": {
-        |      "gainAmount": 3000.99
-        |   },
-        |   "chargeableForeignBenefitsAndGifts": {
-        |      "transactionBenefit": 1999.99,
-        |      "protectedForeignIncomeSourceBenefit": 2999.99,
-        |      "protectedForeignIncomeOnwardGift": 3999.99,
-        |      "benefitReceivedAsASettler": 4999.99,
-        |      "onwardGiftReceivedAsASettler": 5999.99
-        |   },
-        |   "omittedForeignIncome": {
-        |      "amount": 4000.99
-        |   }
-        |}
-    """.stripMargin
-    )
-
     def uri: String = s"/other/$nino/$taxYear"
 
     def desUri: String = s"/income-tax/income/other/$nino/$taxYear"
@@ -330,6 +278,7 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
           ),
           errors = None
         ))
+
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }

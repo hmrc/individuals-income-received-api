@@ -54,18 +54,15 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
 
   def amendSaving(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
-
       val rawData: AmendSavingsRawData = AmendSavingsRawData(
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body)
       )
-
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
@@ -74,7 +71,6 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
           auditSubmission(
             GenericAuditDetail(
               userDetails = request.userDetails,
@@ -84,19 +80,16 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
               auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(amendSavingsHateoasBody(appConfig, nino, taxYear))))
             )
           )
-
           Ok(amendSavingsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
-
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
         val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
-
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
@@ -106,7 +99,6 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
-
         result
       }.merge
     }
