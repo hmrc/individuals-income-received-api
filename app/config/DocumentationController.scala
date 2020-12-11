@@ -23,6 +23,7 @@ import play.api.http.HttpErrorHandler
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+
 @Singleton
 class DocumentationController @Inject()(selfAssessmentApiDefinition: ApiDefinitionFactory,
                                         cc: ControllerComponents, assets: Assets, errorHandler: HttpErrorHandler)
