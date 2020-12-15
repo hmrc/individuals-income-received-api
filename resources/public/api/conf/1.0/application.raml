@@ -61,7 +61,7 @@ uses:
       /{nino}:
         /{taxYear}:
           uriParameters:
-            taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+            taxYear: !include pathParameters/taxYearMinimum2021.raml
           put: !include endpoints/otherEmploymentIncome/amend.raml
           get: !include endpoints/otherEmploymentIncome/retrieve.raml
           delete: !include endpoints/otherEmploymentIncome/delete.raml
@@ -72,7 +72,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         delete: !include endpoints/dividendsIncome/delete.raml
         put: !include endpoints/dividendsIncome/amend.raml
         get: !include endpoints/dividendsIncome/retrieve.raml
@@ -83,7 +83,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         put: !include endpoints/foreignIncome/amend.raml
         get: !include endpoints/foreignIncome/retrieve.raml
         delete: !include endpoints/foreignIncome/delete.raml
@@ -94,7 +94,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         put: !include endpoints/insurancePoliciesIncome/amend.raml
         get: !include endpoints/insurancePoliciesIncome/retrieve.raml
         delete: !include endpoints/insurancePoliciesIncome/delete.raml
@@ -105,7 +105,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         put: !include endpoints/pensionsIncome/amend.raml
         get: !include endpoints/pensionsIncome/retrieve.raml
         delete: !include endpoints/pensionsIncome/delete.raml
@@ -116,7 +116,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         put: !include endpoints/otherIncome/amend.raml
         get: !include endpoints/otherIncome/retrieve.raml
         delete: !include endpoints/otherIncome/delete.raml
@@ -127,7 +127,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearNoTaxYearEndMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         put: !include endpoints/savingsIncome/amend.raml
         get: !include endpoints/savingsIncome/retrieve.raml
         delete: !include endpoints/savingsIncome/delete.raml
