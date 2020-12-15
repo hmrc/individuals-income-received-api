@@ -20,7 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
