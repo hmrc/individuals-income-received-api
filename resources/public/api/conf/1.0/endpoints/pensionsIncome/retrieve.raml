@@ -9,7 +9,7 @@ is:
   - errors.notFound
 displayName: Retrieve Pensions Income [test only]
 description: "This endpoint allows the developer to retrieve previously populated foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/pensionsIncome/get.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:

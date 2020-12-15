@@ -10,7 +10,7 @@ is:
   - errors.notFound
 displayName: Delete Employment Financial Details [test only]
 description: "This endpoint allows a developer to delete the previously entered financial data from the list of employments for this user. This endpoint can only be used after the tax year has ended. A National Insurance number, Tax year and Employment ID must be provided."
-(annotations.sandboxData): !include ../../../scenarios/common.md
+(annotations.sandboxData): !include ../../../scenarios/employments/defaultResponse.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:

@@ -9,7 +9,7 @@ is:
   - errors.notFound
 displayName: Delete Pensions Income [test only]
 description: "This endpoint allows the developer to delete previously populated foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/pensionsIncome/delete.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:
