@@ -12,8 +12,8 @@ is:
   - errors.formatValue
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Create and amend Employment Financial Details [test only]
-description: "This endpoint allows a developer to submit or overwrite financial data for an individual employment. A National Insurance number, Tax year and Employment ID are required."
+displayName: Create and Amend Employment Financial Details [test only]
+description: "This endpoint allows a developer to submit or overwrite financial data for an individual employment.<strong> This endpoint can only be used after the tax year has ended. </strong> A National Insurance number, Tax year and Employment ID are required."
 (annotations.sandboxData): !include ../../../scenarios/common.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

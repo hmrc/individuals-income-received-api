@@ -19,7 +19,7 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: Add a Custom Employment [test only]
-description: "This endpoint allows the developer to add an employment missing from the list of employments for this user. This endpoint can only be used after the tax year has ended. Employments that are added via this method are not rolled over into the next tax year. A National Insurance number, tax year, employer name and start date are required."
+description: "This endpoint allows the developer to add an employment missing from the list of employments for this user.<strong> This endpoint can only be used after the tax year has ended. </strong> Employments that are added via this method are not rolled over into the next tax year. A National Insurance number, tax year, employer name and start date are required."
 (annotations.sandboxData): !include ../../scenarios/common.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
