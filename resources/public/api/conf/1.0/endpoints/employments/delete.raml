@@ -10,7 +10,7 @@ is:
   - errors.notFound
 displayName: Delete a Custom Employment [test only]
 description: "This endpoint allows the developer to delete a custom employment from the list of employments for this user. A National Insurance number, Tax year and Employment ID are required."
-(annotations.sandboxData): !include ../../scenarios/common.md
+(annotations.sandboxData): !include ../../scenarios/employments/defaultResponse.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:

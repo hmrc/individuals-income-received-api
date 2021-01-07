@@ -8,7 +8,7 @@
     </thead>
     <tbody>
         <tr>
-            <td><p>N/A - DEFAULT</p></td>
+            <td><p>DEFAULT_RESPONSE</p></td>
             <td><p>Simulates success response with custom employment.</p></td>
         </tr>
         <tr>

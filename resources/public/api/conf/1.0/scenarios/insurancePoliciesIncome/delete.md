@@ -1,4 +1,4 @@
-<p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+<p>This endpoint is now stateful, meaning it will store or return data submitted with related endpoints. <br><br>Stateless scenarios can still be simulated using Gov-Test-Scenario headers, which are only available in the sandbox environment.</p>
 <table>
     <thead>
         <tr>
@@ -8,12 +8,8 @@
     </thead>
     <tbody>
         <tr>
-            <td><p>DEFAULT_RESPONSE</p></td>
+            <td><p>DEFAULT_INSURANCE_POLICIES_DELETE</p></td>
             <td><p>Simulates success response.</p></td>
-        </tr>
-        <tr>
-            <td><p>CUSTOM_EMPLOYMENT</p></td>
-            <td><p>Simulates the scenario where a custom employment is submitted.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
