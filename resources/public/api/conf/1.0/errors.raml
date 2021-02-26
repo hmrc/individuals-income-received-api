@@ -377,3 +377,14 @@ traits:
                       description: 'The format of the supplied source is not valid.'
                       value:
                         code: FORMAT_SOURCE
+  ruleLumpSums:
+            responses:
+              400:
+                body:
+                  application/json:
+                    type: types.errorResponse
+                    examples:
+                      ruleLumpSums:
+                        description: 'Where lumpSums have been provided at least one child object is required.'
+                        value:
+                          code: RULE_LUMP_SUMS
