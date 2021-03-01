@@ -125,7 +125,7 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleLumpSumsError |
+      case BadRequestError | NinoFormatError | TaxYearFormatError |
            RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
            CustomMtdError(ValueFormatError.code) |
            CustomMtdError(CustomerRefFormatError.code) |
@@ -135,7 +135,8 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
            CustomMtdError(ClassOfSharesAwardedFormatError.code) |
            CustomMtdError(ClassOfSharesAcquiredFormatError.code) |
            CustomMtdError(SchemePlanTypeFormatError.code) |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(RuleLumpSumsError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

@@ -38,7 +38,7 @@ import v1.models.response.retrieveOtherEmployment._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveOtherEmploymentIncomeControllerSpec extends ControllerBaseSpec
+class RetrieveOtherEmploymentControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
   with MockDeleteRetrieveService

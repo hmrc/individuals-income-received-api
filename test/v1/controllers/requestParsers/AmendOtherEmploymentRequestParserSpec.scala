@@ -269,6 +269,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
       redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
     )
   )
+
   private val amendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(
     shareOption = Some(shareOptionItem),
     sharesAwardedOrReceived = Some(sharesAwardedOrReceivedItem),
@@ -316,8 +317,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple field value validation errors occur" in new Test {
-
-        private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
+        val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
             |{
             |  "shareOption": [
@@ -460,9 +460,9 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
             |""".stripMargin
         )
 
-        private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+        val allInvalidValueRawRequestBody: AnyContentAsJson = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
-        private val allInvalidValueErrors = List(
+        val allInvalidValueErrors: List[MtdError] = List(
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/disability/customerReference",

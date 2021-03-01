@@ -20,11 +20,11 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class AmendLumpSums(employerName: String,
-                    employerRef: String,
-                    taxableLumpSumsAndCertainIncome: Option[AmendTaxableLumpSumsAndCertainIncomeItem],
-                    benefitFromEmployerFinancedRetirementScheme: Option[AmendBenefitFromEmployerFinancedRetirementSchemeItem],
-                    redundancyCompensationPaymentsOverExemption: Option[AmendRedundancyCompensationPaymentsOverExemptionItem],
-                    redundancyCompensationPaymentsUnderExemption: Option[AmendRedundancyCompensationPaymentsUnderExemptionItem])
+                         employerRef: String,
+                         taxableLumpSumsAndCertainIncome: Option[AmendTaxableLumpSumsAndCertainIncomeItem],
+                         benefitFromEmployerFinancedRetirementScheme: Option[AmendBenefitFromEmployerFinancedRetirementSchemeItem],
+                         redundancyCompensationPaymentsOverExemption: Option[AmendRedundancyCompensationPaymentsOverExemptionItem],
+                         redundancyCompensationPaymentsUnderExemption: Option[AmendRedundancyCompensationPaymentsUnderExemptionItem])
 
 object AmendLumpSums {
   implicit val reads: Reads[AmendLumpSums] = (

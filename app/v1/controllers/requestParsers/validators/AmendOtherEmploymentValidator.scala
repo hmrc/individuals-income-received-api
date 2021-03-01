@@ -17,14 +17,21 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-import javax.inject.Inject
 import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages, _}
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment._
 
+import javax.inject.Inject
+
 class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendOtherEmploymentRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(
+    parameterFormatValidation,
+    parameterRuleValidation,
+    bodyFormatValidator,
+    bodyValueValidator,
+    bodyRuleValidator
+  )
 
   override def validate(data: AmendOtherEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -229,5 +236,17 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) ext
         path = s"/lumpSums/$arrayIndex/redundancyCompensationPaymentsUnderExemptionItem/amount"
       )
     ).flatten
+  }
+
+  private def bodyRuleValidator: AmendOtherEmploymentRawData => List[List[MtdError]] = { data =>
+    val requestBodyData = data.body.json.as[AmendOtherEmploymentRequestBody]
+
+    List(Validator.flattenErrors(
+      requestBodyData.lumpSums.fold[List[List[MtdError]]](NoValidationErrors) { lumpSums =>
+        lumpSums.zipWithIndex.map(indexedLumpSums =>
+          LumpSumsRuleValidation.validate(indexedLumpSums._1, indexedLumpSums._2)
+        ).toList
+      }
+    ))
   }
 }

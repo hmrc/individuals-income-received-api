@@ -18,7 +18,11 @@ package v1.models.errors
 
 import play.api.libs.json.{Json, Writes}
 
-case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
+case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
+  def withExtraPath(newPath: String): MtdError = paths.fold(this.copy(paths = Some(Seq(newPath)))){
+    existingPaths => this.copy(paths = Some(existingPaths :+ newPath))
+  }
+}
 
 object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]

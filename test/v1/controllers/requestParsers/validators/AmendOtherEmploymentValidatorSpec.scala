@@ -187,7 +187,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |      {}
       |   ]
       |}
-      |""".stripMargin
+    """.stripMargin
   )
 
   private val invalidEmployerNameJson: JsValue = Json.parse(
@@ -465,7 +465,53 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       |      }
       |   ]
       |}
-      |""".stripMargin
+    """.stripMargin
+  )
+
+  val ruleLumpSumsSingleErrorScenarioJson: JsValue = Json.parse(
+    """
+      |{
+      |  "lumpSums": [
+      |    {
+      |      "employerName": "name",
+      |      "employerRef": "456/AB452",
+      |      "taxableLumpSumsAndCertainIncome": {
+      |        "amount": 100.11,
+      |        "taxTakenOffInEmployment": true
+      |      }
+      |    },
+      |    {
+      |      "employerName": "name",
+      |      "employerRef": "456/AB456"
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+  )
+
+  val ruleLumpSumsMultipleErrorScenarioJson: JsValue = Json.parse(
+    """
+      |{
+      |  "lumpSums": [
+      |    {
+      |      "employerName": "name",
+      |      "employerRef": "123/AB456"
+      |    },
+      |    {
+      |      "employerName": "name",
+      |      "employerRef": "123/AB457",
+      |      "taxableLumpSumsAndCertainIncome": {
+      |        "amount": 100.11,
+      |        "taxTakenOffInEmployment": true
+      |      }
+      |    },
+      |    {
+      |      "employerName": "name2",
+      |      "employerRef": "123/AB458"
+      |    }
+      |  ]
+      |}
+    """.stripMargin
   )
 
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
@@ -629,6 +675,8 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
   private val invalidDisabilityRawRequestBody = AnyContentAsJson(invalidDisabilityJson)
   private val invalidForeignServiceRawRequestBody = AnyContentAsJson(invalidForeignServiceJson)
   private val invalidLumpSumsRawRequestBody = AnyContentAsJson(invalidLumpSumsJson)
+  private val ruleLumpSumsSingleScenarioRawRequestBody = AnyContentAsJson(ruleLumpSumsSingleErrorScenarioJson)
+  private val ruleLumpSumsMultipleScenarioRawRequestBody = AnyContentAsJson(ruleLumpSumsMultipleErrorScenarioJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
 
@@ -932,5 +980,16 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       }
     }
 
+    "return RuleLumpSumsError error" when {
+      "a lumpSums array item has been supplied without any defined child objects" in new Test {
+        validator.validate(AmendOtherEmploymentRawData("AA111111A", "2020-21", ruleLumpSumsSingleScenarioRawRequestBody)) shouldBe
+          List(RuleLumpSumsError.copy(paths = Some(Seq("/lumpSums/1"))))
+      }
+
+      "multiple lumpSums array items have been supplied without any defined child objects" in new Test {
+        validator.validate(AmendOtherEmploymentRawData("AA111111A", "2020-21", ruleLumpSumsMultipleScenarioRawRequestBody)) shouldBe
+          List(RuleLumpSumsError.copy(paths = Some(Seq("/lumpSums/0", "/lumpSums/2"))))
+      }
+    }
   }
 }
