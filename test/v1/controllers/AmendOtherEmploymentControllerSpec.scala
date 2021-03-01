@@ -385,7 +385,8 @@ class AmendOtherEmploymentControllerSpec
           (ClassOfSharesAwardedFormatError, BAD_REQUEST),
           (ClassOfSharesAcquiredFormatError, BAD_REQUEST),
           (SchemePlanTypeFormatError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST)
+          (ValueFormatError, BAD_REQUEST),
+          (RuleLumpSumsError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

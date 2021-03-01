@@ -52,25 +52,50 @@ object CessationDateFormatError extends MtdError("FORMAT_CESSATION_DATE", "The p
 object SourceFormatError extends MtdError("FORMAT_SOURCE", "The provided source is invalid")
 
 // Rule Errors
-object RuleTaxYearNotSupportedError extends
-  MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value")
+object RuleTaxYearNotSupportedError extends MtdError(
+  code = "RULE_TAX_YEAR_NOT_SUPPORTED",
+  message = "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value"
+)
 
-object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
+object RuleIncorrectOrEmptyBodyError extends MtdError(
+  code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED",
+  message = "An empty or non-matching body was submitted"
+)
 
-object RuleTaxYearRangeInvalidError
-  extends MtdError(code = "RULE_TAX_YEAR_RANGE_INVALID", message = "Tax year range invalid. A tax year range of one year is required")
+object RuleTaxYearRangeInvalidError extends MtdError(
+  code = "RULE_TAX_YEAR_RANGE_INVALID",
+  message = "Tax year range invalid. A tax year range of one year is required"
+)
 
-object RuleTaxYearNotEndedError extends MtdError( code = "RULE_TAX_YEAR_NOT_ENDED", "Tax year not ended")
+object RuleTaxYearNotEndedError extends MtdError(
+  code = "RULE_TAX_YEAR_NOT_ENDED",
+  message = "Tax year not ended"
+)
 
-object RuleCessationDateBeforeStartDateError extends
-  MtdError("RULE_CESSATION_DATE_BEFORE_START_DATE", "The cessation date cannot be earlier than the start date")
+object RuleCessationDateBeforeStartDateError extends MtdError(
+  code = "RULE_CESSATION_DATE_BEFORE_START_DATE",
+  message = "The cessation date cannot be earlier than the start date"
+)
 
-object RuleStartDateAfterTaxYearEndError extends MtdError("RULE_START_DATE_AFTER_TAX_YEAR_END", "The start date cannot be later than the tax year end")
+object RuleStartDateAfterTaxYearEndError extends MtdError(
+  code = "RULE_START_DATE_AFTER_TAX_YEAR_END",
+  message = "The start date cannot be later than the tax year end"
+)
 
-object RuleCessationDateBeforeTaxYearStartError extends
-  MtdError("RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START", "The cessation date cannot be before the tax year starts")
+object RuleCessationDateBeforeTaxYearStartError extends MtdError(
+  code = "RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START",
+  message = "The cessation date cannot be before the tax year starts"
+)
 
-object RuleCustomEmploymentError extends MtdError("RULE_CUSTOM_EMPLOYMENT", "A custom employment cannot be ignored")
+object RuleCustomEmploymentError extends MtdError(
+  code = "RULE_CUSTOM_EMPLOYMENT",
+  message = "A custom employment cannot be ignored"
+)
+
+object RuleLumpSumsError extends MtdError(
+  code = "RULE_LUMP_SUMS",
+  message = "At least one child object is required when lumpSums are provided"
+)
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
