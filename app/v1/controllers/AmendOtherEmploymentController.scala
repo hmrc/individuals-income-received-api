@@ -135,7 +135,8 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
            CustomMtdError(ClassOfSharesAwardedFormatError.code) |
            CustomMtdError(ClassOfSharesAcquiredFormatError.code) |
            CustomMtdError(SchemePlanTypeFormatError.code) |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(RuleLumpSumsError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

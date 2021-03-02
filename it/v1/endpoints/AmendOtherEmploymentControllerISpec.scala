@@ -33,7 +33,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
     val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
-
     val requestBodyJson: JsValue = Json.parse(
       """
         |{
@@ -1124,6 +1123,31 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           |""".stripMargin
       )
 
+      val invalidLumpSumsRequestBodyJson: JsValue = Json.parse(
+        """
+          |{
+          |  "lumpSums": [
+          |    {
+          |      "employerName": "name",
+          |      "employerRef": "123/AB456"
+          |    },
+          |    {
+          |      "employerName": "name",
+          |      "employerRef": "123/AB457",
+          |      "taxableLumpSumsAndCertainIncome": {
+          |        "amount": 100.11,
+          |        "taxTakenOffInEmployment": true
+          |      }
+          |    },
+          |    {
+          |      "employerName": "name2",
+          |      "employerRef": "123/AB458"
+          |    }
+          |  ]
+          |}
+        """.stripMargin
+      )
+
       val customerRefFormatError: MtdError = CustomerRefFormatError.copy(
         paths = Some(Seq(
           "/disability/customerReference",
@@ -1249,6 +1273,13 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
         ))
       )
 
+      val ruleLumpSumsError: MtdError = RuleLumpSumsError.copy(
+        paths = Some(Seq(
+          "/lumpSums/0",
+          "/lumpSums/2"
+        ))
+      )
+
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: ErrorWrapper): Unit = {
           s"validation fails with ${expectedBody.error} error" in new Test {
@@ -1284,7 +1315,8 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2019-20", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", schemePlanTypeFormatError, None)),
           ("AA123456A", "2019-20", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),
           ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", invalidFieldType, None)),
-          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldErrors, None))
+          ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldErrors, None)),
+          ("AA123456A", "2019-20", invalidLumpSumsRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", ruleLumpSumsError, None))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
