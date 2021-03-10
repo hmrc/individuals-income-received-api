@@ -115,7 +115,7 @@
         ]
       }
     },
-    "linksForIgnore": {
+    "linksForIgnoreAndUnignore": {
       "type": "array",
       "items": {
         "type": "object",

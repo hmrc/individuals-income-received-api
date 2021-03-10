@@ -11,17 +11,17 @@ is:
   - errors.ruleCustomEmployment
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Ignore an Employment [test only]
-description: "This endpoint allows the developer to ignore an HMRC provided employment from among the list of employments for this user. <strong>This endpoint can only be used after the tax year has ended.</strong> A National Insurance number, Tax year and Employment ID are required."
-(annotations.sandboxData): !include ../../scenarios/employments/ignore.md
+displayName: Unignore an Employment [test only]
+description: "This endpoint allows a developer to unignore the HMRC provided employment from a list of employments for this user. <strong>This endpoint can only be used after the tax year has ended.</strong> A National Insurance number, Tax year and Employment ID must be provided."
+(annotations.sandboxData): !include ../../scenarios/employments/unignore.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/employments_ignore_response.json
-        example: !include ../../examples/employments/ignore_response.json
+        type: !include ../../schemas/employments_unignore_response.json
+        example: !include ../../examples/employments/unignore_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
