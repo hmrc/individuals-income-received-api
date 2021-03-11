@@ -97,7 +97,7 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "list-employments" ,"self", "create-and-amend-custom-employment", "delete-custom-employment", "ignore-employment"
+              "list-employments" ,"self", "create-and-amend-custom-employment", "delete-custom-employment", "ignore-employment", "unignore-employment"
             ]
           },
           "method": {
