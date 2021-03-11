@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Ignore Employment Response",
-  "description": "Ignore Employment Response",
+  "title": "Unignore Employment Response",
+  "description": "Unignore Employment Response",
   "type": "object",
   "properties": {
     "links": {"$ref": "employments_definitions.json#/definitions/linksForIgnoreAndUnignore"}

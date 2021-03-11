@@ -3,7 +3,7 @@
     "submittedOn": {
       "type": "string",
       "description": "The date the other employment income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
-      "example": "2020-07-06T09:37:17Z"
+      "example": "2021-04-06T09:37:17Z"
     },
     "shareOption": {
       "type": "array",
@@ -434,7 +434,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/other/AA123456A/2019-20"
+            "example": "/individuals/income-received/employments/other/AA123456A/2021-22"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",

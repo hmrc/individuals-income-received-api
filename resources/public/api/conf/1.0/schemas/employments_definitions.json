@@ -37,12 +37,12 @@
     "dateIgnored": {
       "type": "string",
       "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
-      "example": "2020-07-06T09:37:17Z"
+      "example": "2021-04-06T09:37:17Z"
     },
     "submittedOn": {
       "type": "string",
       "description": "The date the custom employment was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
-      "example": "2020-07-06T09:37:17Z"
+      "example": "2021-04-06T09:37:17Z"
     },
     "ignoreEmployment": {
       "type": "boolean",
@@ -58,7 +58,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/{nino}/{taxYear}"
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -91,20 +91,20 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/{nino}/{taxYear}"
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "list-employments" ,"self", "create-and-amend-custom-employment", "delete-custom-employment", "ignore-employment"
+              "list-employments" ,"self", "create-and-amend-custom-employment", "delete-custom-employment", "ignore-employment", "unignore-employment"
             ]
           },
           "method": {
             "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
-              "GET", "PUT", "DELETE"
+              "GET", "PUT", "POST", "DELETE"
             ]
           }
         },
@@ -115,7 +115,7 @@
         ]
       }
     },
-    "linksForIgnore": {
+    "linksForIgnoreAndUnignore": {
       "type": "array",
       "items": {
         "type": "object",
@@ -124,7 +124,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/{nino}/{taxYear}"
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -157,7 +157,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/{nino}/{taxYear}\n/{employmentId}"
+            "example": "/individuals/income-received/employments/AA123456A/2021-22\n/4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
@@ -190,7 +190,7 @@
           "href": {
             "description": "The relative URL of the endpoint.",
             "type": "string",
-            "example": "/individuals/income-received/employments/{nino}/{taxYear}"
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",

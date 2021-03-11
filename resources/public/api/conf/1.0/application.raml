@@ -49,7 +49,9 @@ uses:
           put: !include endpoints/employments/amend.raml
           delete: !include endpoints/employments/delete.raml
           /ignore:
-            put: !include endpoints/employments/ignore.raml
+            post: !include endpoints/employments/ignore.raml
+          /unignore:
+            post: !include endpoints/employments/unignore.raml
           /financial-details:
             put: !include endpoints/employments/financialDetails/amend.raml
             delete: !include endpoints/employments/financialDetails/delete.raml
