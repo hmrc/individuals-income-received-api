@@ -39,8 +39,7 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       |    "employment": {
       |        "pay": {
       |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92,
-      |            "tipsAndOtherPayments": 1024.99
+      |            "totalTaxToDate": 6782.92
       |        },
       |        "deductions": {
       |            "studentLoans": {
@@ -94,8 +93,7 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
 
   private val payModel = AmendPay(
     taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92,
-    tipsAndOtherPayments = Some(1024.99)
+    totalTaxToDate = 6782.92
   )
 
   private val studentLoansModel = AmendStudentLoans(
@@ -203,8 +201,7 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
             |    "employment": {
             |        "pay": {
             |            "taxablePayToDate": 3500.758,
-            |            "totalTaxToDate": 6782.923,
-            |            "tipsAndOtherPayments": 1024.994
+            |            "totalTaxToDate": 6782.923
             |        },
             |        "deductions": {
             |            "studentLoans": {
@@ -258,7 +255,6 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/employment/pay/taxablePayToDate",
-              "/employment/pay/tipsAndOtherPayments",
               "/employment/deductions/studentLoans/uglDeductionAmount",
               "/employment/deductions/studentLoans/pglDeductionAmount",
               "/employment/benefitsInKind/accommodation",
