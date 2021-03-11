@@ -72,7 +72,7 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
          |      },
          |      {
          |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-         |         "rel": "create-and-amend-custom-employment",
+         |         "rel": "amend-custom-employment",
          |         "method": "PUT"
          |      },
          |      {
