@@ -68,7 +68,7 @@ class AddCustomEmploymentResponseSpec extends UnitSpec {
             Seq(
               Link(s"/individuals/income-received/employments/$nino/$taxYear", GET, "list-employments"),
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", GET, "self"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", PUT, "create-and-amend-custom-employment"),
+              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", PUT, "amend-custom-employment"),
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", DELETE, "delete-custom-employment"),
             )
           )

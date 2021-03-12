@@ -43,7 +43,7 @@ object RelType {
   val IGNORE_EMPLOYMENT = "ignore-employment"
 
   val ADD_CUSTOM_EMPLOYMENT = "add-custom-employment"
-  val AMEND_CUSTOM_EMPLOYMENT = "create-and-amend-custom-employment"
+  val AMEND_CUSTOM_EMPLOYMENT = "amend-custom-employment"
   val DELETE_CUSTOM_EMPLOYMENT = "delete-custom-employment"
 
   val AMEND_EMPLOYMENT_FINANCIAL_DETAILS = "create-and-amend-employment-financial-details"
