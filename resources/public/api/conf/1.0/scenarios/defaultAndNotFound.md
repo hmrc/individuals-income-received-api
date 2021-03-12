@@ -1,4 +1,4 @@
-<p>This endpoint is now stateful, meaning it will store or return data submitted with related endpoints. <br><br>Stateless scenarios can still be simulated using Gov-Test-Scenario headers, which are only available in the sandbox environment.</p>
+<p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
 <table>
     <thead>
         <tr>
@@ -8,7 +8,7 @@
     </thead>
     <tbody>
         <tr>
-            <td><p>DEFAULT_PENSIONS_INCOME_DELETE</p></td>
+            <td><p>N/A - DEFAULT</p></td>
             <td><p>Simulates success response.</p></td>
         </tr>
         <tr>
