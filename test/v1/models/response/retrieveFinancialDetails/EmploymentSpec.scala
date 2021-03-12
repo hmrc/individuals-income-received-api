@@ -39,7 +39,6 @@ class EmploymentSpec extends UnitSpec {
       |  "pay": {
       |    "taxablePayToDate": 34234.15,
       |    "totalTaxToDate": 6782.92,
-      |    "tipsAndOtherPayments": 1024.99,
       |    "payFrequency": "CALENDAR MONTHLY",
       |    "paymentDate": "2020-04-23",
       |    "taxWeekNo": 32,
@@ -107,7 +106,6 @@ class EmploymentSpec extends UnitSpec {
       |  "pay": {
       |    "taxablePayToDate": 34234.15,
       |    "totalTaxToDate": 6782.92,
-      |    "tipsAndOtherPayments": 1024.99,
       |    "payFrequency": "CALENDAR MONTHLY",
       |    "paymentDate": "2020-04-23",
       |    "taxWeekNo": 32,
@@ -173,7 +171,6 @@ class EmploymentSpec extends UnitSpec {
     pay = Some(Pay(
       taxablePayToDate = 34234.15,
       totalTaxToDate = 6782.92,
-      tipsAndOtherPayments = Some(1024.99),
       payFrequency = Some("CALENDAR MONTHLY"),
       paymentDate = Some("2020-04-23"),
       taxWeekNo = Some(32),
@@ -248,7 +245,6 @@ class EmploymentSpec extends UnitSpec {
             |  "pay": {
             |    "taxablePayToDate": 34234.15,
             |    "totalTaxToDate": 6782.92,
-            |    "tipsAndOtherPayments": 1024.99,
             |    "payFrequency": "CALENDAR MONTHLY",
             |    "paymentDate": "2020-04-23",
             |    "taxWeekNo": 32,

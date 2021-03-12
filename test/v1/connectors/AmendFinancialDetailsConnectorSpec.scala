@@ -34,8 +34,7 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
 
   private val payModel = AmendPay(
     taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92,
-    tipsAndOtherPayments = Some(1024.99)
+    totalTaxToDate = 6782.92
   )
 
   private val studentLoansModel = AmendStudentLoans(
