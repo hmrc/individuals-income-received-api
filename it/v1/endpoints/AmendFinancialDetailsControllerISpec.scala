@@ -42,8 +42,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         |    "employment": {
         |        "pay": {
         |            "taxablePayToDate": 3500.75,
-        |            "totalTaxToDate": 6782.92,
-        |            "tipsAndOtherPayments": 1024.99
+        |            "totalTaxToDate": 6782.92
         |        },
         |        "deductions": {
         |            "studentLoans": {
@@ -150,8 +149,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             |    "employment": {
             |        "pay": {
             |            "taxablePayToDate": 3500.758,
-            |            "totalTaxToDate": 6782.923,
-            |            "tipsAndOtherPayments": 1024.994
+            |            "totalTaxToDate": 6782.923
             |        },
             |        "deductions": {
             |            "studentLoans": {
@@ -203,7 +201,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
               "/employment/pay/taxablePayToDate",
-              "/employment/pay/tipsAndOtherPayments",
               "/employment/deductions/studentLoans/uglDeductionAmount",
               "/employment/deductions/studentLoans/pglDeductionAmount",
               "/employment/benefitsInKind/accommodation",
@@ -263,8 +260,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             |    "employment": {
             |        "pay": {
             |            "taxablePayToDate": 3500.758,
-            |            "totalTaxToDate": 6782.929,
-            |            "tipsAndOtherPayments": 1024.999
+            |            "totalTaxToDate": 6782.929
             |        },
             |        "deductions": {
             |            "studentLoans": {
@@ -325,7 +321,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             |            "message": "The field should be between 0 and 99999999999.99",
             |            "paths": [
             |                "/employment/pay/taxablePayToDate",
-            |                "/employment/pay/tipsAndOtherPayments",
             |                "/employment/deductions/studentLoans/uglDeductionAmount",
             |                "/employment/deductions/studentLoans/pglDeductionAmount",
             |                "/employment/benefitsInKind/accommodation",
@@ -361,8 +356,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           |    "employment": {
           |        "pay": {
           |            "taxablePayToDate": 3500.75,
-          |            "totalTaxToDate": 6782.92,
-          |            "tipsAndOtherPayments": 1024.99
+          |            "totalTaxToDate": 6782.92
           |        },
           |        "deductions": {
           |            "studentLoans": {
@@ -413,8 +407,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           |    "employment": {
           |        "pay": {
           |            "taxablePayToDate": true,
-          |            "totalTaxToDate": false,
-          |            "tipsAndOtherPayments": "true"
+          |            "totalTaxToDate": false
           |        },
           |        "deductions": {
           |            "studentLoans": {
@@ -450,7 +443,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           |{
           |    "employment": {
           |        "pay": {
-          |            "tipsAndOtherPayments": 1024.99
           |        }
           |    }
           |}
@@ -463,8 +455,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           |    "employment": {
           |        "pay": {
           |            "taxablePayToDate": 3500.758,
-          |            "totalTaxToDate": 6782.923,
-          |            "tipsAndOtherPayments": 1024.994
+          |            "totalTaxToDate": 6782.923
           |        },
           |        "deductions": {
           |            "studentLoans": {
@@ -509,11 +500,10 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
       val invalidFieldTypeErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(List(
-          "/employment/deductions/studentLoans/uglDeductionAmount",
-          "/employment/pay/tipsAndOtherPayments",
           "/employment/pay/totalTaxToDate",
           "/employment/pay/taxablePayToDate",
           "/employment/benefitsInKind/accommodation",
+          "/employment/deductions/studentLoans/uglDeductionAmount"
         ))
       )
 
@@ -537,7 +527,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           message = "The field should be between 0 and 99999999999.99",
           paths = Some(List(
             "/employment/pay/taxablePayToDate",
-            "/employment/pay/tipsAndOtherPayments",
             "/employment/deductions/studentLoans/uglDeductionAmount",
             "/employment/deductions/studentLoans/pglDeductionAmount",
             "/employment/benefitsInKind/accommodation",

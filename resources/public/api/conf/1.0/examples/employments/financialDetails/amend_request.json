@@ -2,8 +2,7 @@
   "employment": {
     "pay": {
       "taxablePayToDate": 1024.99,
-      "totalTaxToDate": 1024.99,
-      "tipsAndOtherPayments": 1024.99
+      "totalTaxToDate": 1024.99
     },
     "deductions": {
       "studentLoans": {

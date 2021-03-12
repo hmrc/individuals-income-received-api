@@ -80,10 +80,6 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
         message = BIG_DECIMAL_MINIMUM_INCLUSIVE
       ),
       DecimalValueValidation.validateOptional(
-        amount = employment.pay.tipsAndOtherPayments,
-        path = "/employment/pay/tipsAndOtherPayments"
-      ),
-      DecimalValueValidation.validateOptional(
         amount = employment.deductions.flatMap(_.studentLoans.flatMap(_.uglDeductionAmount)),
         path = "/employment/deductions/studentLoans/uglDeductionAmount"
       ),

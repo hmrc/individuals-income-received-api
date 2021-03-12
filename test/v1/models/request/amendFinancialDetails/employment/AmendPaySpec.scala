@@ -26,16 +26,14 @@ class AmendPaySpec extends UnitSpec {
     """
       |{
       |   "taxablePayToDate": 3500.75,
-      |   "totalTaxToDate": 6782.92,
-      |   "tipsAndOtherPayments": 1024.99
+      |   "totalTaxToDate": 6782.92
       |}
     """.stripMargin
   )
 
   private val model = AmendPay(
     taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92,
-    tipsAndOtherPayments = Some(1024.99)
+    totalTaxToDate = 6782.92
   )
 
   "AmendPay" when {

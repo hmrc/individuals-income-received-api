@@ -43,8 +43,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |    "employment": {
       |        "pay": {
       |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92,
-      |            "tipsAndOtherPayments": 1024.99
+      |            "totalTaxToDate": 6782.92
       |        },
       |        "deductions": {
       |            "studentLoans": {
@@ -104,7 +103,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |{
       |    "employment": {
       |        "pay": {
-      |            "tipsAndOtherPayments": 1024.99
       |        }
       |    }
       |}
@@ -117,8 +115,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |    "employment": {
       |        "pay": {
       |            "taxablePayToDate": true,
-      |            "totalTaxToDate": 6782.92,
-      |            "tipsAndOtherPayments": 1024.99
+      |            "totalTaxToDate": 6782.92
       |        },
       |        "deductions": {
       |            "studentLoans": {
@@ -139,8 +136,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |    "employment": {
       |        "pay": {
       |            "taxablePayToDate": 3500.758,
-      |            "totalTaxToDate": 6782.923,
-      |            "tipsAndOtherPayments": 1024.994
+      |            "totalTaxToDate": 6782.923
       |        },
       |        "deductions": {
       |            "studentLoans": {
@@ -307,7 +303,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
                 "/employment/pay/taxablePayToDate",
-                "/employment/pay/tipsAndOtherPayments",
                 "/employment/deductions/studentLoans/uglDeductionAmount",
                 "/employment/deductions/studentLoans/pglDeductionAmount",
                 "/employment/benefitsInKind/accommodation",

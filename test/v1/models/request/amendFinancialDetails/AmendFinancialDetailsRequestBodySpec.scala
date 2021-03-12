@@ -29,8 +29,7 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
       |    "employment": {
       |        "pay": {
       |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92,
-      |            "tipsAndOtherPayments": 1024.99
+      |            "totalTaxToDate": 6782.92
       |        },
       |        "deductions": {
       |            "studentLoans": {
@@ -75,8 +74,7 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
 
   private val payModel = AmendPay(
     taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92,
-    tipsAndOtherPayments = Some(1024.99)
+    totalTaxToDate = 6782.92
   )
 
   private val studentLoansModel = AmendStudentLoans(
