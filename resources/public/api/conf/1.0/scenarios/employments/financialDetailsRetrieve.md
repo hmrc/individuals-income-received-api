@@ -8,15 +8,15 @@
     </thead>
     <tbody>
         <tr>
-            <td><p>DEFAULT_RESPONSE<br><strong>?source=user</strong></p></td>
+            <td><p>N/A - DEFAULT<br><strong>?source=user</strong></p></td>
             <td><p>Requesting <strong>user</strong> source simulates success response with User provided financial details.</p></td>
         </tr>
         <tr>
-            <td><p>DEFAULT_RESPONSE<br><strong>?source=hmrcHeld</strong></p></td>
+            <td><p>N/A - DEFAULT<br><strong>?source=hmrcHeld</strong></p></td>
             <td><p>Requesting <strong>hmrcHeld</strong> source simulates success response with HMRC held financial details.</p></td>
         </tr>
         <tr>
-            <td><p>DEFAULT_RESPONSE<br><strong>?source=latest</strong></p></td>
+            <td><p>N/A - DEFAULT<br><strong>?source=latest</strong></p></td>
             <td><p>Requesting <strong>latest</strong> source simulates success response with Latest financial details, which is a combination of the HMRC held and User provided values.</p></td>
         </tr>
         <tr>
