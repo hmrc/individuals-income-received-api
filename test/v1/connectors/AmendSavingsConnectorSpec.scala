@@ -53,9 +53,9 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
   }
 
   "AmendSavingsConnector" when {
@@ -67,7 +67,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
             body = amendSavingsRequestBody,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredIfsHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome

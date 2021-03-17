@@ -17,13 +17,11 @@
 package v1.connectors
 
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.DesUri
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.connectors.DownstreamUri.IfsUri
 import v1.models.request.amendPensions.AmendPensionsRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -41,7 +39,7 @@ class AmendPensionsConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
 
     put(
-      uri = DesUri[Unit](s"income-tax/income/pensions/$nino/$taxYear"), body = request.body
+      uri = IfsUri[Unit](s"income-tax/income/pensions/$nino/$taxYear"), body = request.body
     )
   }
 }

@@ -90,9 +90,9 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
   }
 
   "AmendPensionsConnector" when {
@@ -104,7 +104,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/pensions/$nino/$taxYear",
             body = amendPensionsRequestBody,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredIfsHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendPensions(amendPensionsRequest)) shouldBe outcome

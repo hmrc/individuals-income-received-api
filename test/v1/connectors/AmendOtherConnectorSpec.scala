@@ -43,9 +43,9 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
   }
 
   "AmendOtherConnector" when {
@@ -57,7 +57,7 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/other/$nino/$taxYear",
             body = requestBodyModel,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredIfsHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amend(amendOtherRequest)) shouldBe outcome

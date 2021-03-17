@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.DownstreamUri.IfsUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
@@ -63,7 +63,7 @@ class RetrievePensionsController @Inject()(val authService: EnrolmentsAuthServic
         taxYear = taxYear
       )
 
-      implicit val desUri: DesUri[RetrievePensionsResponse] = DesUri[RetrievePensionsResponse](
+      implicit val ifsUri: IfsUri[RetrievePensionsResponse] = IfsUri[RetrievePensionsResponse](
         s"income-tax/income/pensions/$nino/$taxYear"
       )
 
