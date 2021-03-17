@@ -131,7 +131,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveSavingsResponse]()
+          .retrieve[RetrieveSavingsResponse](defaultDesErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveSavingsResponseModel))))
 
         MockHateoasFactory
@@ -189,7 +189,7 @@ class RetrieveSavingsControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveSavingsResponse]()
+              .retrieve[RetrieveSavingsResponse](defaultDesErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)

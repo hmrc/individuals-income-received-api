@@ -18,6 +18,7 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import play.api.libs.json.{Json, Reads}
+import v1.connectors.DownstreamUri.DesUri
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 

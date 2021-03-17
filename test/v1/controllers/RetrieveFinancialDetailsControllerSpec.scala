@@ -107,6 +107,19 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+
+    def desErrorMap: Map[String, MtdError] = Map(
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+      "INVALID_VIEW" -> SourceFormatError,
+      "INVALID_DATE_RANGE" -> RuleTaxYearNotSupportedError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
+    )
   }
 
   "MockRetrieveFinancialDetailsController" should {
@@ -118,7 +131,7 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveFinancialDetailsResponse]()
+          .retrieve[RetrieveFinancialDetailsResponse](desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, model))))
 
         MockHateoasFactory
@@ -178,7 +191,7 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveOtherResponse]()
+              .retrieve[RetrieveOtherResponse](desErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieve(nino, taxYear, employmentId, Some(source))(fakeGetRequest)

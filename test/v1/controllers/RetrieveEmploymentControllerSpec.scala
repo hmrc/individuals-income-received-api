@@ -139,6 +139,16 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+
+    def desErrorMap: Map[String, MtdError] =
+      Map(
+        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+        "INVALID_TAX_YEAR" -> TaxYearFormatError,
+        "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+        "NOT_FOUND" -> NotFoundError,
+        "SERVER_ERROR" -> DownstreamError,
+        "SERVICE_UNAVAILABLE" -> DownstreamError
+      )
   }
 
   "RetrieveEmploymentController" should {
@@ -150,7 +160,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveEmploymentResponse]()
+          .retrieve[RetrieveEmploymentResponse](desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentResponseModel))))
 
         MockHateoasFactory
@@ -179,7 +189,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveEmploymentResponse]()
+          .retrieve[RetrieveEmploymentResponse](desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
 
         MockHateoasFactory
@@ -239,7 +249,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveEmploymentResponse]()
+              .retrieve[RetrieveEmploymentResponse](desErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveEmployment(nino, taxYear,employmentId)(fakeGetRequest)

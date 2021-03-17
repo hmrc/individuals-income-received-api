@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.{Format, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.DesUri
+import v1.connectors.DownstreamUri.DesUri
 import v1.controllers.EndpointLogContext
 import v1.models.errors.{ErrorWrapper, MtdError}
 import v1.models.outcomes.ResponseWrapper
@@ -39,13 +39,13 @@ trait MockDeleteRetrieveService extends MockFactory {
     def delete(desErrorMap: Map[String, MtdError] = defaultDesMap): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockDeleteRetrieveService
         .delete(_: Map[String, MtdError])(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DesUri[Unit], _: String))
-        .expects(*, *, *, *, *, *)
+        .expects(desErrorMap, *, *, *, *, *)
     }
 
     def retrieve[Resp: Reads](desErrorMap: Map[String, MtdError] = defaultDesMap): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
       (mockDeleteRetrieveService
         .retrieve[Resp](_: Map[String, MtdError])(_: Format[Resp], _: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DesUri[Resp], _: String))
-        .expects(*, *, *, *, *, *, *)
+        .expects(desErrorMap, *, *, *, *, *, *)
     }
   }
 
