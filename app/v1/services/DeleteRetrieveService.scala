@@ -18,28 +18,26 @@ package v1.services
 
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.DeleteRetrieveConnector
-import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.{DeleteRetrieveConnector, DownstreamUri}
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.support.DesResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extends DesResponseMappingSupport with Logging {
 
   def delete(desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit hc: HeaderCarrier,
-               ec: ExecutionContext,
-               logContext: EndpointLogContext,
-               desUri: DesUri[Unit],
-               correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+                                                                      ec: ExecutionContext,
+                                                                      logContext: EndpointLogContext,
+                                                                      downstreamUri: DownstreamUri[Unit],
+                                                                      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.delete()).leftMap(mapDesErrors(desErrorMap))
@@ -49,10 +47,10 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
   }
 
   def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit hc: HeaderCarrier,
-                               ec: ExecutionContext,
-                               logContext: EndpointLogContext,
-                               desUri: DesUri[Resp],
-                               correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
+                                                                                      ec: ExecutionContext,
+                                                                                      logContext: EndpointLogContext,
+                                                                                      downstreamUri: DownstreamUri[Resp],
+                                                                                      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieve[Resp]()).leftMap(mapDesErrors(desErrorMap))
