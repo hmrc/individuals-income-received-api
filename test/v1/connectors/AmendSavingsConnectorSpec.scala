@@ -67,7 +67,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
             body = amendSavingsRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome

@@ -60,7 +60,7 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore",
             body = ignoreEmploymentRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.ignoreEmployment(request)) shouldBe outcome

@@ -66,7 +66,7 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
             body = amendCustomEmploymentRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendEmployment(request)) shouldBe outcome

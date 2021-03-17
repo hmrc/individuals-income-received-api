@@ -79,7 +79,7 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/foreign/$nino/$taxYear",
             body = amendForeignRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendForeign(amendForeignRequest)) shouldBe outcome

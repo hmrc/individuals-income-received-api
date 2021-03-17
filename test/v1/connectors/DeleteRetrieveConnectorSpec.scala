@@ -51,7 +51,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .delete(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           )
           .returns(Future.successful(outcome))
 
@@ -74,7 +74,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           )
           .returns(Future.successful(outcome))
 

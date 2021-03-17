@@ -104,7 +104,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/pensions/$nino/$taxYear",
             body = amendPensionsRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendPensions(amendPensionsRequest)) shouldBe outcome

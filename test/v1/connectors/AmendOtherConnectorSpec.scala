@@ -57,7 +57,7 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/other/$nino/$taxYear",
             body = requestBodyModel,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amend(amendOtherRequest)) shouldBe outcome

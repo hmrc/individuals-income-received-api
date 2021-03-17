@@ -110,7 +110,7 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId",
             body = requestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendFinancialDetails(request)) shouldBe outcome

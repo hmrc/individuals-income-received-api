@@ -123,7 +123,7 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/dividends/$nino/$taxYear",
             body = amendDividendsRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendDividends(amendDividendsRequest)) shouldBe outcome

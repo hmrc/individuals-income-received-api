@@ -67,7 +67,7 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear",
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           )
           .returns(Future.successful(outcome))
 
