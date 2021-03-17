@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package v1.models.request.ignoreEmployment
+package v1.models.request
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsObject, Writes}
 
-case class IgnoreEmploymentRequestBody(ignoreEmployment: Boolean)
-
-object IgnoreEmploymentRequestBody {
-  implicit val format: OFormat[IgnoreEmploymentRequestBody] = Json.format[IgnoreEmploymentRequestBody]
+object EmptyBody {
+  implicit val writes: Writes[EmptyBody.type] = (_: EmptyBody.type) => JsObject.empty
 }

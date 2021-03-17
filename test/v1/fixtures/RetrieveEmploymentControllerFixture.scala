@@ -74,7 +74,7 @@ object RetrieveEmploymentControllerFixture {
       |      },
       |      {
       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId/ignore",
-      |         "method": "PUT",
+      |         "method": "POST",
       |         "rel": "ignore-employment"
       |      }
       |   ]

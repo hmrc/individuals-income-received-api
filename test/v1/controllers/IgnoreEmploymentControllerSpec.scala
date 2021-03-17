@@ -18,7 +18,7 @@ package v1.controllers
 
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{AnyContentAsJson, Result}
+import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
@@ -27,7 +27,7 @@ import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockIgnor
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest, IgnoreEmploymentRequestBody}
+import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,43 +67,31 @@ class IgnoreEmploymentControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  val requestBodyJson: JsValue = Json.parse(
-    """
-      |{
-      |   "ignoreEmployment": true
-      |}
-    """.stripMargin
-  )
-
   val rawData: IgnoreEmploymentRawData = IgnoreEmploymentRawData(
     nino = nino,
     taxYear = taxYear,
-    employmentId = employmentId,
-    body = AnyContentAsJson(requestBodyJson)
+    employmentId = employmentId
   )
-
-  val ignoreEmploymentRequestBody: IgnoreEmploymentRequestBody = IgnoreEmploymentRequestBody(ignoreEmployment = true)
 
   val requestData: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
     taxYear = taxYear,
-    employmentId = employmentId,
-    body = ignoreEmploymentRequestBody
+    employmentId = employmentId
   )
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
       |{
-      |   "links":[
+      |   "links": [
       |      {
-      |         "href":"/individuals/income-received/employments/$nino/$taxYear",
-      |         "rel":"list-employments",
-      |         "method":"GET"
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+      |         "rel": "list-employments",
+      |         "method": "GET"
       |      },
       |      {
-      |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "rel":"self",
-      |         "method":"GET"
+      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+      |         "rel": "self",
+      |         "method": "GET"
       |      }
       |   ]
       |}
@@ -118,7 +106,7 @@ class IgnoreEmploymentControllerSpec
         userType = "Individual",
         agentReferenceNumber = None,
         params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        request = Some(requestBodyJson),
+        request = None,
         `X-CorrelationId` = correlationId,
         response = auditResponse
       )
@@ -136,7 +124,7 @@ class IgnoreEmploymentControllerSpec
           .ignoreEmployment(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
+        val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakeRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
@@ -156,7 +144,7 @@ class IgnoreEmploymentControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakeRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -172,7 +160,6 @@ class IgnoreEmploymentControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST)
@@ -193,7 +180,7 @@ class IgnoreEmploymentControllerSpec
               .ignoreEmployment(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.ignoreEmployment(nino, taxYear, employmentId)(fakeRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -207,6 +194,7 @@ class IgnoreEmploymentControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (EmploymentIdFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (RuleCustomEmploymentError, FORBIDDEN),

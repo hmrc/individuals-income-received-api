@@ -22,8 +22,6 @@ import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
@@ -34,30 +32,8 @@ import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2020-21"
+  private val validTaxYear = "2021-22"
   private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-
-  private val validRequestJson: JsValue = Json.parse(
-    """
-      |{
-      |  "ignoreEmployment": true
-      |}
-    """.stripMargin
-  )
-
-  private val emptyRequestJson: JsValue = JsObject.empty
-
-  private val incorrectFormatRequestJson: JsValue = Json.parse(
-    """
-      |{
-      |  "ignoreEmployment": "boop"
-      |}
-    """.stripMargin
-  )
-
-  private val validRawBody = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody = AnyContentAsJson(emptyRequestJson)
-  private val incorrectFormatRawBody = AnyContentAsJson(incorrectFormatRequestJson)
 
   class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
@@ -84,59 +60,48 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
   "IgnoreEmploymentValidator" when {
     "running a validation" should {
       "return no errors for a valid request" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
+        validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId)) shouldBe Nil
       }
 
       "return no errors when config for RuleTaxYearNotEndedError is set to false" in new Test(false) {
-        validator.validate(IgnoreEmploymentRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe List.empty
+        validator.validate(IgnoreEmploymentRawData(validNino, "2022-23", validEmploymentId)) shouldBe List.empty
       }
 
       // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
-        validator.validate(IgnoreEmploymentRawData("A12344A", validTaxYear, validEmploymentId, validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData("A12344A", validTaxYear, validEmploymentId)) shouldBe
           List(NinoFormatError)
       }
 
       "return TaxYearFormatError error for an invalid tax year format" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, "20178", validEmploymentId, validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData(validNino, "20178", validEmploymentId)) shouldBe
           List(TaxYearFormatError)
       }
 
       "return RuleTaxYearRangeInvalidError error for an invalid tax year range" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, "2018-20", validEmploymentId, validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData(validNino, "2018-20", validEmploymentId)) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
 
       "return EmploymentIdFormatError error for an invalid employment id" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, "notValid", validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, "notValid")) shouldBe
           List(EmploymentIdFormatError)
       }
 
       "return multiple errors for multiple invalid request parameters" in new Test {
-        validator.validate(IgnoreEmploymentRawData("notValid", "2018-20", "invalid", validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData("notValid", "2018-20", "invalid")) shouldBe
           List(NinoFormatError, RuleTaxYearRangeInvalidError, EmploymentIdFormatError)
       }
 
       // parameter rule error scenarios
       "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, "2019-20", validEmploymentId, validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData(validNino, "2019-20", validEmploymentId)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
 
       "return RuleTaxYearNotEndedError error for a tax year which hasn't ended" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe
+        validator.validate(IgnoreEmploymentRawData(validNino, "2022-23", validEmploymentId)) shouldBe
           List(RuleTaxYearNotEndedError)
-      }
-
-      // body format error scenarios
-      "return RuleIncorrectOrEmptyBodyError error for an empty request body" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId, emptyRawBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
-      }
-
-      "return RuleIncorrectOrEmptyBodyError error for an incorrect request body" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/ignoreEmployment"))))
       }
     }
   }

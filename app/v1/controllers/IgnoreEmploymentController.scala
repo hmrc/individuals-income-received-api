@@ -20,8 +20,8 @@ import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.Json
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
@@ -52,8 +52,8 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
       endpointName = "ignoreEmployment"
     )
 
-  def ignoreEmployment(nino: String, taxYear: String, employmentId: String): Action[JsValue] =
-    authorisedAction(nino).async(parse.json) { implicit request =>
+  def ignoreEmployment(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
+    authorisedAction(nino).async { implicit request =>
 
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
@@ -63,8 +63,7 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
       val rawData: IgnoreEmploymentRawData = IgnoreEmploymentRawData(
         nino = nino,
         taxYear = taxYear,
-        employmentId = employmentId,
-        body = AnyContentAsJson(request.body)
+        employmentId = employmentId
       )
 
       val result =
@@ -78,7 +77,7 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
           auditSubmission(
             GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body), serviceResponse.correlationId,
+              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), None, serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(ignoreEmploymentHateoasBody(appConfig, nino, taxYear, employmentId))))
             )
           )
@@ -97,7 +96,7 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
         auditSubmission(
           GenericAuditDetail(
-            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body),
+            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), None,
             resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
@@ -109,8 +108,7 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError |
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
+           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError
       => BadRequest(Json.toJson(errorWrapper))
       case RuleCustomEmploymentError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))

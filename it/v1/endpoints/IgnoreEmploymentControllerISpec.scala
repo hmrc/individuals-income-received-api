@@ -33,27 +33,19 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
     val taxYear: String = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-    val requestBodyJson: JsValue = Json.parse(
-      """
-        |{
-        |   "ignoreEmployment": true
-        |}
-      """.stripMargin
-    )
-
     val hateoasResponse: JsValue = Json.parse(
       s"""
          |{
-         |   "links":[
+         |   "links": [
          |      {
-         |         "href":"/individuals/income-received/employments/$nino/$taxYear",
-         |         "rel":"list-employments",
-         |         "method":"GET"
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+         |         "rel": "list-employments",
+         |         "method": "GET"
          |      },
          |      {
-         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-         |         "rel":"self",
-         |         "method":"GET"
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "rel": "self",
+         |         "method": "GET"
          |      }
          |   ]
          |}
@@ -81,10 +73,10 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, NO_CONTENT)
+          DesStub.onSuccess(DesStub.PUT, desUri, CREATED)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request().post(JsObject.empty))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -93,37 +85,14 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestBodyJson: JsValue = Json.parse(
-        """
-          |{
-          |   "ignoreEmployment": true
-          |}
-        """.stripMargin
-      )
-
-      val emptyRequestBody: JsValue = JsObject.empty
-
-      val wrongFieldTypeRequestBody: JsValue = Json.parse(
-        """
-          |{
-          |  "ignoreEmployment": "value"
-          |}
-        """.stripMargin
-      )
-
-      val wrongFieldTypeError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List("/ignoreEmployment"))
-      )
-
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, requestBody: JsValue,
+        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String,
                                 expectedStatus: Int, expectedBody: MtdError, scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
             override val employmentId: String = requestEmploymentId
-            override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -131,21 +100,19 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request().put(requestBodyJson))
+            val response: WSResponse = await(request().post(JsObject.empty))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
-          ("AA123456A", "2019-20", "ABCDE12345FG", validRequestBodyJson, BAD_REQUEST, EmploymentIdFormatError, None),
-          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
-          ("AA123456A", "2020-21", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotEndedError, None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", emptyRequestBody, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", wrongFieldTypeRequestBody, BAD_REQUEST, wrongFieldTypeError, Some("(wrong field type)"))
+          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, NinoFormatError, None),
+          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "2019-20", "ABCDE12345FG", BAD_REQUEST, EmploymentIdFormatError, None),
+          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotSupportedError, None),
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
+          ("AA123456A", "2020-21", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotEndedError, None)
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -162,7 +129,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
               DesStub.onError(DesStub.PUT, desUri, desStatus, errorBody(desCode))
             }
 
-            val response: WSResponse = await(request().put(requestBodyJson))
+            val response: WSResponse = await(request().post(JsObject.empty))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -179,10 +146,10 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR_END", BAD_REQUEST, RuleTaxYearNotEndedError),
           (FORBIDDEN, "NOT_HMRC_EMPLOYMENT", FORBIDDEN, RuleCustomEmploymentError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
 

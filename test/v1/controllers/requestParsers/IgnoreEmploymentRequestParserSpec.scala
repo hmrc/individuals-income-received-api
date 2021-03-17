@@ -16,45 +16,29 @@
 
 package v1.controllers.requestParsers
 
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockIgnoreEmploymentValidator
 import v1.models.errors._
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest, IgnoreEmploymentRequestBody}
+import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
 
 class IgnoreEmploymentRequestParserSpec extends UnitSpec {
 
   private val nino: String = "AA123456B"
-  private val taxYear: String = "2017-18"
+  private val taxYear: String = "2021-22"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  private val validRequestJson: JsValue = Json.parse(
-    """
-      |{
-      |  "ignoreEmployment": true
-      |}
-    """.stripMargin
-  )
-
-  private val validRawBody = AnyContentAsJson(validRequestJson)
 
   private val ignoreCustomEmploymentRawData = IgnoreEmploymentRawData(
     nino = nino,
     taxYear = taxYear,
-    employmentId = employmentId,
-    body = validRawBody
+    employmentId = employmentId
   )
 
-  private val ignoreEmploymentBodyModel = IgnoreEmploymentRequestBody(ignoreEmployment = true)
-
-  private val ignoreEmploymentRequest = IgnoreEmploymentRequest (
+  private val ignoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
     taxYear = taxYear,
-    employmentId = employmentId,
-    body = ignoreEmploymentBodyModel
+    employmentId = employmentId
   )
 
   trait Test extends MockIgnoreEmploymentValidator {
@@ -86,27 +70,6 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
 
         parser.parseRequest(ignoreCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
-      }
-
-      "a single field value validation error occur" in new Test {
-
-        private val invalidValueRequestJson: JsValue = Json.parse(
-          s"""
-             |{
-             |  "ignoreEmployment": "notValid"
-             |}
-            """.stripMargin
-        )
-
-        private val invalidValueRawBody = AnyContentAsJson(invalidValueRequestJson)
-
-        private val errors = List(RuleIncorrectOrEmptyBodyError)
-
-        MockIgnoreEmploymentValidator.validate(ignoreCustomEmploymentRawData.copy(body = invalidValueRawBody))
-          .returns(errors)
-
-        parser.parseRequest(ignoreCustomEmploymentRawData.copy(body = invalidValueRawBody)) shouldBe
-          Left(ErrorWrapper(correlationId, RuleIncorrectOrEmptyBodyError, None))
       }
     }
   }
