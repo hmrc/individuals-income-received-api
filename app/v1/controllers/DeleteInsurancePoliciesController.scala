@@ -18,20 +18,20 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1.connectors.DesUri
+import v1.connectors.DownstreamUri.IfsUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
 import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -50,21 +50,15 @@ class DeleteInsurancePoliciesController @Inject()(val authService: EnrolmentsAut
       endpointName = "delete"
     )
 
-  def delete(nino: String, taxYear: String): Action[AnyContent] =
-    authorisedAction(nino).async { implicit request =>
+  def delete(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
 
+      implicit val ifsUri: IfsUri[Unit] = IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear")
       implicit val correlationId: String = idGenerator.generateCorrelationId
+      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
+
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
-
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
-        nino = nino,
-        taxYear = taxYear
-      )
-
-      implicit val desUri: DesUri[Unit] = DesUri[Unit](
-        s"income-tax/insurance-policies/income/$nino/$taxYear"
+          s"with CorrelationId: $correlationId"
       )
 
       val result =
@@ -76,12 +70,10 @@ class DeleteInsurancePoliciesController @Inject()(val authService: EnrolmentsAut
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          auditSubmission(
-            GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), None,
-              serviceResponse.correlationId, AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
-            )
-          )
+          auditSubmission(GenericAuditDetail(
+            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), None,
+            serviceResponse.correlationId, AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+          ))
 
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
@@ -97,8 +89,14 @@ class DeleteInsurancePoliciesController @Inject()(val authService: EnrolmentsAut
 
         auditSubmission(
           GenericAuditDetail(
-            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), None,
-            resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
+            resCorrelationId,
+            AuditResponse(
+              httpStatus = result.header.status,
+              response = Left(errorWrapper.auditErrors)
+            )
           )
         )
 

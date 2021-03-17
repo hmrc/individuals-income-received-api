@@ -18,6 +18,7 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import play.api.libs.json.{Json, Reads}
+import v1.connectors.DownstreamUri.DesUri
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 
@@ -50,7 +51,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .delete(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           )
           .returns(Future.successful(outcome))
 
@@ -73,7 +74,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredDesHeaders :_*
           )
           .returns(Future.successful(outcome))
 

@@ -95,7 +95,7 @@ class DeleteDividendsControllerSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .delete()
+          .delete(defaultDesErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
@@ -150,7 +150,7 @@ class DeleteDividendsControllerSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .delete()
+              .delete(defaultDesErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)

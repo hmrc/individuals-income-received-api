@@ -109,9 +109,9 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
   }
 
   "AmendDividendsConnector" when {
@@ -123,7 +123,7 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/income/dividends/$nino/$taxYear",
             body = amendDividendsRequestBody,
-            requiredHeaders = requiredHeaders :_*
+            requiredHeaders = requiredIfsHeaders :_*
           ).returns(Future.successful(outcome))
 
         await(connector.amendDividends(amendDividendsRequest)) shouldBe outcome

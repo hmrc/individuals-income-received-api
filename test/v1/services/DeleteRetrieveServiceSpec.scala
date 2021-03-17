@@ -17,7 +17,7 @@
 package v1.services
 
 import play.api.libs.json.{Format, Json}
-import v1.connectors.DesUri
+import v1.connectors.DownstreamUri.DesUri
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockDeleteRetrieveConnector
 import v1.models.errors._

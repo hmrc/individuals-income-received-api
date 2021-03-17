@@ -17,6 +17,7 @@
 package v1.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
@@ -30,21 +31,21 @@ class DeleteRetrieveConnector @Inject()(val http: HttpClient,
 
   def delete()(implicit hc: HeaderCarrier,
                ec: ExecutionContext,
-               desUri: DesUri[Unit],
+               downstreamUri: DownstreamUri[Unit],
                correlationId: String): Future[DesOutcome[Unit]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    delete(uri = desUri)
+    delete(uri = downstreamUri)
   }
 
   def retrieve[Resp: Reads]()(implicit hc: HeaderCarrier,
                               ec: ExecutionContext,
-                              desUri: DesUri[Resp],
+                              downstreamUri: DownstreamUri[Resp],
                               correlationId: String): Future[DesOutcome[Resp]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    get(uri = desUri)
+    get(uri = downstreamUri)
   }
 }

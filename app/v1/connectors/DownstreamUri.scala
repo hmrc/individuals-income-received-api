@@ -16,4 +16,11 @@
 
 package v1.connectors
 
-case class DesUri[Resp](value: String)
+trait DownstreamUri[Resp] {
+  val value: String
+}
+
+object DownstreamUri {
+  case class DesUri[Resp](value: String) extends DownstreamUri[Resp]
+  case class IfsUri[Resp](value: String) extends DownstreamUri[Resp]
+}
