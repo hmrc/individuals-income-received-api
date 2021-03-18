@@ -21,7 +21,7 @@ import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockIgnoreEmploymentConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRequest, IgnoreEmploymentRequestBody}
+import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
 
@@ -31,13 +31,10 @@ class IgnoreEmploymentServiceSpec extends ServiceSpec {
   private val taxYear = "2021-22"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  val ignoreEmploymentRequestBody: IgnoreEmploymentRequestBody = IgnoreEmploymentRequestBody(ignoreEmployment = true)
-
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
     taxYear = taxYear,
-    employmentId = employmentId,
-    body = ignoreEmploymentRequestBody
+    employmentId = employmentId
   )
 
   trait Test extends MockIgnoreEmploymentConnector{
@@ -73,10 +70,10 @@ class IgnoreEmploymentServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_EMPLOYMENT_ID", NotFoundError),
-          ("INVALID_PAYLOAD", DownstreamError),
+          ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
           ("INVALID_REQUEST_BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
           ("NOT_HMRC_EMPLOYMENT", RuleCustomEmploymentError),
+          ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

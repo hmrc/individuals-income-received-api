@@ -20,7 +20,8 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRequest, IgnoreEmploymentRequestBody}
+import v1.models.request.EmptyBody
+import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
 
@@ -30,13 +31,10 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
   val taxYear: String = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  val ignoreEmploymentRequestBody: IgnoreEmploymentRequestBody = IgnoreEmploymentRequestBody(ignoreEmployment = true)
-
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
     taxYear = taxYear,
-    employmentId = employmentId,
-    body = ignoreEmploymentRequestBody
+    employmentId = employmentId
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -53,13 +51,13 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
 
   "IgnoreEmploymentConnector" when {
     "ignoreEmployment" should {
-      "return a 204 status upon HttpClient success" in new Test {
+      "return a 201 status upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore",
-            body = ignoreEmploymentRequestBody,
+            body = EmptyBody,
             requiredHeaders = requiredDesHeaders :_*
           ).returns(Future.successful(outcome))
 

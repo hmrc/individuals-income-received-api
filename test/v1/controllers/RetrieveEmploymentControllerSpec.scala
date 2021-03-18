@@ -95,7 +95,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val ignoreEmploymentLink: Link =
     Link(
       href = s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/ignore",
-      method = PUT,
+      method = POST,
       rel = IGNORE_EMPLOYMENT
     )
 

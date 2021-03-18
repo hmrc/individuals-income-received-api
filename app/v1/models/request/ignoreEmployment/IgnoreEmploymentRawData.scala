@@ -16,7 +16,6 @@
 
 package v1.models.request.ignoreEmployment
 
-import play.api.mvc.AnyContentAsJson
 import v1.models.request.RawData
 
-case class IgnoreEmploymentRawData(nino: String, taxYear: String, employmentId: String, body: AnyContentAsJson) extends RawData
+case class IgnoreEmploymentRawData(nino: String, taxYear: String, employmentId: String) extends RawData

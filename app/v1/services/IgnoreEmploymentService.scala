@@ -51,12 +51,11 @@ class IgnoreEmploymentService @Inject()(connector: IgnoreEmploymentConnector)
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID" -> NotFoundError,
-      "INVALID_PAYLOAD" -> DownstreamError,
+      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR_END" -> RuleTaxYearNotEndedError,
       "NOT_HMRC_EMPLOYMENT" -> RuleCustomEmploymentError,
+      "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
-
 }

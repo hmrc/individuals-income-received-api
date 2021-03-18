@@ -21,12 +21,12 @@ import javax.inject.Inject
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequestBody}
+import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 
 class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
   extends Validator[IgnoreEmploymentRawData] {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   override def validate(data: IgnoreEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -46,12 +46,6 @@ class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateT
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear),
       if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear)  else List.empty[MtdError]
-    )
-  }
-
-  private def bodyFormatValidator: IgnoreEmploymentRawData => List[List[MtdError]] = { data =>
-    List(
-      JsonFormatValidation.validate[IgnoreEmploymentRequestBody](data.body.json)
     )
   }
 }
