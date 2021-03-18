@@ -37,7 +37,6 @@ import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, Ret
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-
 class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
@@ -99,14 +98,31 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
       rel = IGNORE_EMPLOYMENT
     )
 
-  private val hmrcEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
+  private val unignoreEmploymentLink: Link =
+    Link(
+      href = s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/unignore",
+      method = POST,
+      rel = UNIGNORE_EMPLOYMENT
+    )
+
+  private val hmrcEnteredEmploymentWithoutDateIgnoredResponseModel = RetrieveEmploymentResponse(
+    employerRef = Some("123/AB56797"),
+    employerName = "Employer Name Ltd.",
+    startDate = "2020-06-17",
+    cessationDate = Some("2020-06-17"),
+    payrollId = Some("123345657"),
+    dateIgnored = None,
+    submittedOn = None
+  )
+
+  private val hmrcEnteredEmploymentWithDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
     startDate = "2020-06-17",
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
-    None
+    submittedOn = None
   )
 
   private val customEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
@@ -115,11 +131,13 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     startDate = "2020-06-17",
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
-    None,
+    dateIgnored = None,
     submittedOn = Some("2020-06-17T10:53:38Z")
   )
 
-  private val mtdHmrcEnteredResponse = mtdHmrcEnteredResponseWithHateoas(nino, taxYear, employmentId)
+  private val mtdHmrcEnteredResponseWithoutDateIgnored = mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino, taxYear, employmentId)
+
+  private val mtdHmrcEnteredResponseWithDateIgnored = mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino, taxYear, employmentId)
 
   private val mtdCustomEnteredResponse = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
@@ -153,7 +171,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
   "RetrieveEmploymentController" should {
     "return OK" when {
-      "happy path for retrieving hmrc entered employment" in new Test {
+      "happy path for retrieving hmrc entered employment with no date ignored present" in new Test {
 
         MockRetrieveCustomEmploymentRequestParser
           .parse(rawData)
@@ -161,11 +179,14 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
         MockDeleteRetrieveService
           .retrieve[RetrieveEmploymentResponse](desErrorMap)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentResponseModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithoutDateIgnoredResponseModel))))
 
         MockHateoasFactory
-          .wrap(hmrcEnteredEmploymentResponseModel, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentResponseModel))
-          .returns(HateoasWrapper(hmrcEnteredEmploymentResponseModel,
+          .wrap(
+            hmrcEnteredEmploymentWithoutDateIgnoredResponseModel,
+            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithoutDateIgnoredResponseModel)
+          )
+          .returns(HateoasWrapper(hmrcEnteredEmploymentWithoutDateIgnoredResponseModel,
             Seq(
               listEmploymentLink,
               retrieveEmploymentLink,
@@ -176,7 +197,39 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdHmrcEnteredResponse
+        contentAsJson(result) shouldBe mtdHmrcEnteredResponseWithoutDateIgnored
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+      }
+    }
+
+    "return OK" when {
+      "happy path for retrieving hmrc entered employment with date ignored present" in new Test {
+
+        MockRetrieveCustomEmploymentRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockDeleteRetrieveService
+          .retrieve[RetrieveEmploymentResponse](desErrorMap)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
+
+        MockHateoasFactory
+          .wrap(
+            hmrcEnteredEmploymentWithDateIgnoredResponseModel,
+            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithDateIgnoredResponseModel)
+          )
+          .returns(HateoasWrapper(hmrcEnteredEmploymentWithDateIgnoredResponseModel,
+            Seq(
+              listEmploymentLink,
+              retrieveEmploymentLink,
+              unignoreEmploymentLink
+            )
+          ))
+
+        val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe mtdHmrcEnteredResponseWithDateIgnored
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }

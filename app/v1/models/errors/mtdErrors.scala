@@ -96,6 +96,11 @@ object RuleCustomEmploymentError extends MtdError(
   message = "A custom employment cannot be ignored"
 )
 
+object RuleCustomEmploymentUnignoreError extends MtdError(
+  code = "RULE_CUSTOM_EMPLOYMENT",
+  message = "A custom employment cannot be unignored"
+)
+
 object RuleLumpSumsError extends MtdError(
   code = "RULE_LUMP_SUMS",
   message = "At least one child object is required when lumpSums are provided"

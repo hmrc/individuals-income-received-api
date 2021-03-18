@@ -35,9 +35,11 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val desEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
-    val desHmrcEnteredResponse: JsValue = hmrcEnteredResponse
+    val desHmrcEnteredResponseWithoutDateIgnored: JsValue = hmrcEnteredResponseWithoutDateIgnored
+    val desHmrcEnteredResponseWithDateIgnored: JsValue = hmrcEnteredResponseWithDateIgnored
     val desCustomEnteredResponse: JsValue = customEnteredResponse
-    val mtdHmrcEnteredResponse: JsValue = mtdHmrcEnteredResponseWithHateoas(nino, taxYear, employmentId)
+    val mtdHmrcEnteredResponseWithoutDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino, taxYear, employmentId)
+    val mtdHmrcEnteredResponseWithDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino, taxYear, employmentId)
     val mtdCustomEnteredResponse: JsValue = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId"
@@ -55,7 +57,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
 
   "Calling the 'retrieve employment' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made to retrieve hmrc entered employment" in new Test {
+      "any valid request is made to retrieve hmrc entered employment with no date ignored present" in new Test {
 
         val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
 
@@ -63,12 +65,31 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithoutDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
-        response.json shouldBe mtdHmrcEnteredResponse
+        response.json shouldBe mtdHmrcEnteredResponseWithoutDateIgnored
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+    }
+
+    "return a 200 status code" when {
+      "any valid request is made to retrieve hmrc entered employment with date ignored present" in new Test {
+
+        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithDateIgnored)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdHmrcEnteredResponseWithDateIgnored
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }

@@ -228,6 +228,13 @@ trait HateoasLinks {
       rel = IGNORE_EMPLOYMENT
     )
 
+  def unignoreEmployment(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
+    Link(
+      href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/unignore",
+      method = POST,
+      rel = UNIGNORE_EMPLOYMENT
+    )
+
   //Employment
   def addCustomEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(

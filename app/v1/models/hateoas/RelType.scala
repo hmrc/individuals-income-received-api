@@ -41,6 +41,7 @@ object RelType {
   val LIST_EMPLOYMENTS = "list-employments"
   val RETRIEVE_EMPLOYMENT = "retrieve-employment"
   val IGNORE_EMPLOYMENT = "ignore-employment"
+  val UNIGNORE_EMPLOYMENT = "unignore-employment"
 
   val ADD_CUSTOM_EMPLOYMENT = "add-custom-employment"
   val AMEND_CUSTOM_EMPLOYMENT = "amend-custom-employment"

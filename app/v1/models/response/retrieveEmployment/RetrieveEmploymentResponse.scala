@@ -58,9 +58,14 @@ object RetrieveEmploymentResponse extends HateoasLinks {
         deleteCustomEmployment(appConfig, nino, taxYear, employmentId)
       )
 
+      val hmrcLinks = data.response.dateIgnored match {
+        case Some(_) => baseLinks ++ Seq(unignoreEmployment(appConfig, nino, taxYear, employmentId))
+        case None => baseLinks ++ Seq(ignoreEmployment(appConfig, nino, taxYear, employmentId))
+      }
+
       data.response.submittedOn match {
         case Some(_) => baseLinks ++ customLinks
-        case None => baseLinks ++ Seq(ignoreEmployment(appConfig, nino, taxYear, employmentId))
+        case None => hmrcLinks
       }
     }
   }
