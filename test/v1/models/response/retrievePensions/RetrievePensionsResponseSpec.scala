@@ -73,7 +73,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
     """
       |{
       |   "submittedOn": "2020-07-06T09:37:17Z",
-      |   "foreignPensions": [
+      |   "foreignPension": [
       |      {
       |         "countryCode": "DEU",
       |         "amountBeforeTax": 100.23,
@@ -91,7 +91,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
       |         "taxableAmount": 3.50
       |      }
       |   ],
-      |   "overseasPensionContributions": [
+      |   "overseasPensionContribution": [
       |      {
       |         "customerReference": "PENSIONINCOME245",
       |         "exemptEmployersPensionContribs": 200.23,
@@ -100,7 +100,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
       |         "dblTaxationCountry": "FRA",
       |         "dblTaxationArticle": "AB3211-1",
       |         "dblTaxationTreaty": "Treaty",
-      |         "sf74reference": "SF74-123456"
+      |         "sf74Reference": "SF74-123456"
       |      },
       |      {
       |         "customerReference": "PENSIONINCOME275",
@@ -110,7 +110,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
       |         "dblTaxationCountry": "NGA",
       |         "dblTaxationArticle": "AB3477-5",
       |         "dblTaxationTreaty": "Treaty",
-      |         "sf74reference": "SF74-1235"
+      |         "sf74Reference": "SF74-1235"
       |      }
       |   ]
       |}
@@ -137,7 +137,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
   )
 
   private val overseasPensionContributionsItemModel = Seq(
-    OverseasPensionContributionsItem(
+    OverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -147,7 +147,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    OverseasPensionContributionsItem(
+    OverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),

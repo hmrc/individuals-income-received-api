@@ -21,18 +21,18 @@ import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
 
 case class AmendPensionsRequestBody(foreignPensions: Option[Seq[AmendForeignPensionsItem]],
-                                    overseasPensionContributions: Option[Seq[AmendOverseasPensionContributionsItem]])
+                                    overseasPensionContributions: Option[Seq[AmendOverseasPensionContributions]])
 
 object AmendPensionsRequestBody extends JsonUtils {
   val empty: AmendPensionsRequestBody = AmendPensionsRequestBody(None, None)
 
   implicit val reads: Reads[AmendPensionsRequestBody] = (
     (JsPath \ "foreignPensions").readNullable[Seq[AmendForeignPensionsItem]].mapEmptySeqToNone and
-      (JsPath \ "overseasPensionContributions").readNullable[Seq[AmendOverseasPensionContributionsItem]].mapEmptySeqToNone
+      (JsPath \ "overseasPensionContributions").readNullable[Seq[AmendOverseasPensionContributions]].mapEmptySeqToNone
     ) (AmendPensionsRequestBody.apply _)
 
   implicit val writes: OWrites[AmendPensionsRequestBody] = (
-    (JsPath \ "foreignPensions").writeNullable[Seq[AmendForeignPensionsItem]] and
-      (JsPath \ "overseasPensionContributions").writeNullable[Seq[AmendOverseasPensionContributionsItem]]
+    (JsPath \ "foreignPension").writeNullable[Seq[AmendForeignPensionsItem]] and
+      (JsPath \ "overseasPensionContribution").writeNullable[Seq[AmendOverseasPensionContributions]]
     ) (unlift(AmendPensionsRequestBody.unapply))
 }

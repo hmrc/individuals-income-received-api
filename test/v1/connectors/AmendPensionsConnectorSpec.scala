@@ -20,7 +20,7 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributionsItem, AmendPensionsRequest, AmendPensionsRequestBody}
+import v1.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributions, AmendPensionsRequest, AmendPensionsRequestBody}
 
 import scala.concurrent.Future
 
@@ -50,7 +50,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
   )
 
   private val overseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributionsItem(
+    AmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME555"),
       exemptEmployersPensionContribs = 300.33,
       migrantMemReliefQopsRefNo = Some("QOPS000001"),
@@ -60,7 +60,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-654321")
     ),
-    AmendOverseasPensionContributionsItem(
+    AmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),

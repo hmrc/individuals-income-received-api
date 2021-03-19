@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendPensions
+package v1.models.response.retrievePensions
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
+class OverseasPensionContributionsSpec extends UnitSpec {
 
   private val mtdJson = Json.parse(
     """
@@ -46,12 +46,12 @@ class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
       |   "dblTaxationCountry": "FRA",
       |   "dblTaxationArticle": "AB3211-1",
       |   "dblTaxationTreaty": "Treaty",
-      |   "sf74reference": "SF74-123456"
+      |   "sf74Reference": "SF74-123456"
       |}
     """.stripMargin
   )
 
-  private val model = AmendOverseasPensionContributionsItem(
+  private val model = OverseasPensionContributions(
     customerReference = Some("PENSIONINCOME245"),
     exemptEmployersPensionContribs = 200.23,
     migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -62,23 +62,24 @@ class AmendOverseasPensionContributionsItemSpec extends UnitSpec {
     sf74reference = Some("SF74-123456")
   )
 
-  "AmendOverseasPensionContributionsItem" when {
+  "OverseasPensionContributionsItem" when {
     "read from valid JSON" should {
-      "produce the expected AmendOverseasPensionContributionsItem object" in {
-        mtdJson.as[AmendOverseasPensionContributionsItem] shouldBe model
+      "produce the expected OverseasPensionContributionsItem object" in {
+        desJson.as[OverseasPensionContributions] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendOverseasPensionContributionsItem] shouldBe a[JsError]
+
+        invalidJson.validate[OverseasPensionContributions] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe desJson
+        Json.toJson(model) shouldBe mtdJson
       }
     }
   }

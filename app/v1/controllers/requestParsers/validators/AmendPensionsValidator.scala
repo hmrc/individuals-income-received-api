@@ -90,7 +90,7 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
     ).flatten
   }
 
-  private def validateOverseasPensionContributions(overseasPensionContributions: AmendOverseasPensionContributionsItem, arrayIndex: Int): List[MtdError] = {
+  private def validateOverseasPensionContributions(overseasPensionContributions: AmendOverseasPensionContributions, arrayIndex: Int): List[MtdError] = {
     List(
       CustomerRefValidation.validateOptional(overseasPensionContributions.customerReference).map(
         _.copy(paths = Some(Seq(s"/overseasPensionContributions/$arrayIndex/customerReference")))

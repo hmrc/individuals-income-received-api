@@ -19,19 +19,19 @@ package v1.models.request.amendPensions
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendOverseasPensionContributionsItem(customerReference: Option[String],
-                                                 exemptEmployersPensionContribs: BigDecimal,
-                                                 migrantMemReliefQopsRefNo: Option[String],
-                                                 dblTaxationRelief: Option[BigDecimal],
-                                                 dblTaxationCountryCode: Option[String],
-                                                 dblTaxationArticle: Option[String],
-                                                 dblTaxationTreaty: Option[String],
-                                                 sf74reference: Option[String])
+case class AmendOverseasPensionContributions(customerReference: Option[String],
+                                             exemptEmployersPensionContribs: BigDecimal,
+                                             migrantMemReliefQopsRefNo: Option[String],
+                                             dblTaxationRelief: Option[BigDecimal],
+                                             dblTaxationCountryCode: Option[String],
+                                             dblTaxationArticle: Option[String],
+                                             dblTaxationTreaty: Option[String],
+                                             sf74reference: Option[String])
 
-object AmendOverseasPensionContributionsItem {
-  implicit val reads: Reads[AmendOverseasPensionContributionsItem] = Json.reads[AmendOverseasPensionContributionsItem]
+object AmendOverseasPensionContributions {
+  implicit val reads: Reads[AmendOverseasPensionContributions] = Json.reads[AmendOverseasPensionContributions]
 
-  implicit val writes: OWrites[AmendOverseasPensionContributionsItem] = (
+  implicit val writes: OWrites[AmendOverseasPensionContributions] = (
     (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "exemptEmployersPensionContribs").write[BigDecimal] and
       (JsPath \ "migrantMemReliefQopsRefNo").writeNullable[String] and
@@ -39,6 +39,6 @@ object AmendOverseasPensionContributionsItem {
       (JsPath \ "dblTaxationCountry").writeNullable[String] and
       (JsPath \ "dblTaxationArticle").writeNullable[String] and
       (JsPath \ "dblTaxationTreaty").writeNullable[String] and
-      (JsPath \ "sf74reference").writeNullable[String]
-    ) (unlift(AmendOverseasPensionContributionsItem.unapply))
+      (JsPath \ "sf74Reference").writeNullable[String]
+    ) (unlift(AmendOverseasPensionContributions.unapply))
 }

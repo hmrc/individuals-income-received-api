@@ -19,17 +19,17 @@ package v1.models.response.retrievePensions
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class OverseasPensionContributionsItem(customerReference: Option[String],
-                                            exemptEmployersPensionContribs: BigDecimal,
-                                            migrantMemReliefQopsRefNo: Option[String],
-                                            dblTaxationRelief: Option[BigDecimal],
-                                            dblTaxationCountryCode: Option[String],
-                                            dblTaxationArticle: Option[String],
-                                            dblTaxationTreaty: Option[String],
-                                            sf74reference: Option[String])
+case class OverseasPensionContributions(customerReference: Option[String],
+                                        exemptEmployersPensionContribs: BigDecimal,
+                                        migrantMemReliefQopsRefNo: Option[String],
+                                        dblTaxationRelief: Option[BigDecimal],
+                                        dblTaxationCountryCode: Option[String],
+                                        dblTaxationArticle: Option[String],
+                                        dblTaxationTreaty: Option[String],
+                                        sf74reference: Option[String])
 
-object OverseasPensionContributionsItem {
-  implicit val reads: Reads[OverseasPensionContributionsItem] = (
+object OverseasPensionContributions {
+  implicit val reads: Reads[OverseasPensionContributions] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "exemptEmployersPensionContribs").read[BigDecimal] and
       (JsPath \ "migrantMemReliefQopsRefNo").readNullable[String] and
@@ -37,9 +37,9 @@ object OverseasPensionContributionsItem {
       (JsPath \ "dblTaxationCountry").readNullable[String] and
       (JsPath \ "dblTaxationArticle").readNullable[String] and
       (JsPath \ "dblTaxationTreaty").readNullable[String] and
-      (JsPath \ "sf74reference").readNullable[String]
-    ) (OverseasPensionContributionsItem.apply _)
+      (JsPath \ "sf74Reference").readNullable[String]
+    ) (OverseasPensionContributions.apply _)
 
-  implicit val writes: OWrites[OverseasPensionContributionsItem] = Json.writes[OverseasPensionContributionsItem]
+  implicit val writes: OWrites[OverseasPensionContributions] = Json.writes[OverseasPensionContributions]
 }
 

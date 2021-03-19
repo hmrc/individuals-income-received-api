@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrievePensions
+package v1.models.request.amendPensions
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class OverseasPensionContributionsItemSpec extends UnitSpec {
+class AmendOverseasPensionContributionsSpec extends UnitSpec {
 
   private val mtdJson = Json.parse(
     """
@@ -46,12 +46,12 @@ class OverseasPensionContributionsItemSpec extends UnitSpec {
       |   "dblTaxationCountry": "FRA",
       |   "dblTaxationArticle": "AB3211-1",
       |   "dblTaxationTreaty": "Treaty",
-      |   "sf74reference": "SF74-123456"
+      |   "sf74Reference": "SF74-123456"
       |}
     """.stripMargin
   )
 
-  private val model = OverseasPensionContributionsItem(
+  private val model = AmendOverseasPensionContributions(
     customerReference = Some("PENSIONINCOME245"),
     exemptEmployersPensionContribs = 200.23,
     migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -62,24 +62,23 @@ class OverseasPensionContributionsItemSpec extends UnitSpec {
     sf74reference = Some("SF74-123456")
   )
 
-  "OverseasPensionContributionsItem" when {
+  "AmendOverseasPensionContributionsItem" when {
     "read from valid JSON" should {
-      "produce the expected OverseasPensionContributionsItem object" in {
-        desJson.as[OverseasPensionContributionsItem] shouldBe model
+      "produce the expected AmendOverseasPensionContributionsItem object" in {
+        mtdJson.as[AmendOverseasPensionContributions] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-
-        invalidJson.validate[OverseasPensionContributionsItem] shouldBe a[JsError]
+        invalidJson.validate[AmendOverseasPensionContributions] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe mtdJson
+        Json.toJson(model) shouldBe desJson
       }
     }
   }

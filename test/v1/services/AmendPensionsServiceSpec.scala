@@ -50,7 +50,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
   )
 
   private val overseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributionsItem(
+    AmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME555"),
       exemptEmployersPensionContribs = 300.33,
       migrantMemReliefQopsRefNo = Some("QOPS000001"),
@@ -60,7 +60,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-654321")
     ),
-    AmendOverseasPensionContributionsItem(
+    AmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
