@@ -32,7 +32,7 @@ import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributionsItem, RetrievePensionsHateoasData, RetrievePensionsResponse}
+import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -101,7 +101,7 @@ class RetrievePensionsControllerSpec extends ControllerBaseSpec
   )
 
   private val overseasPensionContributionsItemModel = Seq(
-    OverseasPensionContributionsItem(
+    OverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -111,7 +111,7 @@ class RetrievePensionsControllerSpec extends ControllerBaseSpec
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    OverseasPensionContributionsItem(
+    OverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),

@@ -99,7 +99,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
   )
 
   private val fullOverseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributionsItem(
+    AmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -109,7 +109,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    AmendOverseasPensionContributionsItem(
+    AmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),

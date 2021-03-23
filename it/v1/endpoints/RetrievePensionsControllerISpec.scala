@@ -37,7 +37,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
       """
         |{
         |   "submittedOn": "2020-07-06T09:37:17Z",
-        |   "foreignPensions": [
+        |   "foreignPension": [
         |      {
         |         "countryCode": "DEU",
         |         "amountBeforeTax": 100.23,
@@ -55,7 +55,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
         |         "taxableAmount": 3.50
         |      }
         |   ],
-        |   "overseasPensionContributions": [
+        |   "overseasPensionContribution": [
         |      {
         |         "customerReference": "PENSIONINCOME245",
         |         "exemptEmployersPensionContribs": 200.23,
@@ -64,7 +64,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
         |         "dblTaxationCountry": "FRA",
         |         "dblTaxationArticle": "AB3211-1",
         |         "dblTaxationTreaty": "Treaty",
-        |         "sf74reference": "SF74-123456"
+        |         "sf74Reference": "SF74-123456"
         |      },
         |      {
         |         "customerReference": "PENSIONINCOME275",
@@ -74,7 +74,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
         |         "dblTaxationCountry": "NGA",
         |         "dblTaxationArticle": "AB3477-5",
         |         "dblTaxationTreaty": "Treaty",
-        |         "sf74reference": "SF74-1235"
+        |         "sf74Reference": "SF74-1235"
         |      }
         |   ]
         |}
