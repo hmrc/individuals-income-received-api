@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td><p>N/A - DEFAULT<br><strong>?source=latest</strong></p></td>
-            <td><p>Requesting <strong>latest</strong> source simulates success response with Latest financial details, which is a combination of the HMRC held and User provided values.</p></td>
+            <td><p>Requesting <strong>latest</strong> source simulates success response with Latest financial details submitted.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
