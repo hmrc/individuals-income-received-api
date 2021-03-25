@@ -7,7 +7,7 @@
     },
     "source": {
       "type": "string",
-      "description": "Specifies the source of data returned. \"latest\" combines the HMRC and user-provided overridden values.",
+      "description": "Specifies the source of data to be returned. If source is not provided, the latest submitted values will be returned.",
       "enum": ["hmrcHeld", "user", "latest"]
     },
     "customerAdded": {
