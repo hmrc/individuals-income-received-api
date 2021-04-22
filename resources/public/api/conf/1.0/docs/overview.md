@@ -1,5 +1,5 @@
-This suite of endpoints allows software packages to create, amend, retrieve and delete data relating to:
-- employments
+This API allows developers to retrieve, create, amend or delete data relating to:
+- employment income
 - other employment income
 - dividends income
 - foreign income
@@ -7,3 +7,5 @@ This suite of endpoints allows software packages to create, amend, retrieve and 
 - pensions income
 - other income
 - savings income
+
+For information on how to connect to this API [see the Income Tax MTD end-to-end service guide](https://developer.service.hmrc.gov.uk/guides/income-tax-mtd-end-to-end-service-guide/).
