@@ -16,11 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteCustomEmploymentValidator
 import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
+@Singleton
 class DeleteCustomEmploymentRequestParser @Inject()(val validator: DeleteCustomEmploymentValidator)
   extends RequestParser[DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest] {
 

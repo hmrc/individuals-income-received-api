@@ -17,11 +17,13 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-import javax.inject.Inject
+
+import javax.inject.{Inject, Singleton}
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
 
+@Singleton
 class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig)
   extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
 

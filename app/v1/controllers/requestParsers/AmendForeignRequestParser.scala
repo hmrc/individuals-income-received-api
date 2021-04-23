@@ -16,11 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendForeignValidator
 import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest, AmendForeignRequestBody}
 
+@Singleton
 class AmendForeignRequestParser @Inject()(val validator: AmendForeignValidator)
   extends RequestParser[AmendForeignRawData, AmendForeignRequest] {
 

@@ -18,22 +18,22 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import javax.inject.{ Inject, Singleton }
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.{ IdGenerator, Logging }
 import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
 import v1.models.errors._
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 import v1.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
-import v1.services.{AddCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{ AddCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthService,
@@ -44,7 +44,9 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
                                               hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,38 +56,32 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
 
   def addEmployment(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] with CorrelationId: $correlationId")
 
-      val rawData: AddCustomEmploymentRawData = AddCustomEmploymentRawData(
-        nino = nino,
-        taxYear = taxYear,
-        body = AnyContentAsJson(request.body)
-      )
+      val rawData: AddCustomEmploymentRawData = AddCustomEmploymentRawData(nino = nino, taxYear = taxYear, body = AnyContentAsJson(request.body))
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.addEmployment(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrap(
-                serviceResponse.responseData,
-                AddCustomEmploymentHateoasData(nino, taxYear, serviceResponse.responseData.employmentId)
-              )
-              .asRight[ErrorWrapper])
+              .wrap(serviceResponse.responseData, AddCustomEmploymentHateoasData(nino, taxYear, serviceResponse.responseData.employmentId))
+              .asRight[ErrorWrapper]
+          )
         } yield {
           logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - Success response received with CorrelationId: ${serviceResponse.correlationId}"
           )
 
           auditSubmission(
-            GenericAuditDetail(request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body),
-              serviceResponse.correlationId, AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
+            GenericAuditDetail(
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              Some(request.body),
+              serviceResponse.correlationId,
+              AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
             )
           )
 
@@ -96,14 +92,17 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          GenericAuditDetail(request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body),
-            resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          GenericAuditDetail(
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            Some(request.body),
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
@@ -113,20 +112,16 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
-           RuleTaxYearNotSupportedError | RuleTaxYearNotEndedError | EmployerRefFormatError |
-           EmployerNameFormatError | PayrollIdFormatError | StartDateFormatError |
-           CessationDateFormatError | RuleCessationDateBeforeStartDateError |
-           RuleStartDateAfterTaxYearEndError | RuleCessationDateBeforeTaxYearStartError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
-      => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
+          RuleTaxYearNotEndedError | EmployerRefFormatError | EmployerNameFormatError | PayrollIdFormatError | StartDateFormatError |
+          CessationDateFormatError | RuleCessationDateBeforeStartDateError | RuleStartDateAfterTaxYearEndError |
+          RuleCessationDateBeforeTaxYearStartError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+        BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("AddACustomEmployment", "add-a-custom-employment", details)
     auditService.auditEvent(event)
   }

@@ -16,11 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendDividendsValidator
 import v1.models.request.amendDividends.{AmendDividendsRawData, AmendDividendsRequest, AmendDividendsRequestBody}
 
+@Singleton
 class AmendDividendsRequestParser @Inject()(val validator: AmendDividendsValidator)
   extends RequestParser[AmendDividendsRawData, AmendDividendsRequest] {
 

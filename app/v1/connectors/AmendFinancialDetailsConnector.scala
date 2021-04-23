@@ -18,7 +18,7 @@ package v1.connectors
 
 import config.AppConfig
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v1.connectors.DownstreamUri.DesUri
@@ -26,6 +26,7 @@ import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
                                                val appConfig: AppConfig) extends BaseDesConnector {
 

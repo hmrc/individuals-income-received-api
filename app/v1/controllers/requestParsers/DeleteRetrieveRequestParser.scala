@@ -16,11 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteRetrieveValidator
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
+@Singleton
 class DeleteRetrieveRequestParser @Inject()(val validator: DeleteRetrieveValidator)
   extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {
 
