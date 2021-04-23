@@ -16,11 +16,12 @@
 
 package v1.controllers.requestParsers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendOtherEmploymentValidator
 import v1.models.request.amendOtherEmployment._
 
+@Singleton
 class AmendOtherEmploymentRequestParser @Inject()(val validator: AmendOtherEmploymentValidator)
   extends RequestParser[AmendOtherEmploymentRawData, AmendOtherEmploymentRequest] {
 

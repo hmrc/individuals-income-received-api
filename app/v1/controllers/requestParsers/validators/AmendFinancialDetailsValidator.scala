@@ -17,13 +17,15 @@
 package v1.controllers.requestParsers.validators
 
 import config.{AppConfig, FeatureSwitch}
-import javax.inject.Inject
+
+import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
 
+@Singleton
 class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
   extends Validator[AmendFinancialDetailsRawData] with ValueFormatErrorMessages {
 

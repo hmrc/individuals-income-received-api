@@ -19,11 +19,13 @@ package v1.hateoas
 import cats.Functor
 import cats.implicits._
 import config.AppConfig
-import javax.inject.Inject
+
+import javax.inject.{Inject, Singleton}
 import v1.models.hateoas._
 
 import scala.language.higherKinds
 
+@Singleton
 class HateoasFactory @Inject()(appConfig: AppConfig) {
 
   def wrap[A, D <: HateoasData](payload: A, data: D)(implicit lf: HateoasLinksFactory[A, D]): HateoasWrapper[A] = {
