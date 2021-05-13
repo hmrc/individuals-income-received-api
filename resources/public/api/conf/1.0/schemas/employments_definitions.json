@@ -15,7 +15,7 @@
     "employerName": {
       "type": "string",
       "description": "The name of the employer the employee worked for.",
-      "pattern": "^.{1,74}$",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,74}$",
       "example": "Employer Name Ltd."
     },
     "startDate": {

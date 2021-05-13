@@ -13,7 +13,8 @@
         "properties": {
           "employerName": {
             "type": "string",
-            "description": "The name of the employer. The length must be between 1 and 105 characters.",
+            "description": "The name of the employer.",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$",
             "example": "BPDTS Ltd."
           },
           "employerRef": {
@@ -138,7 +139,8 @@
         "properties": {
           "employerName": {
             "type": "string",
-            "description": "The name of the employer. The length must be between 1 and 105 characters.",
+            "description": "The name of the employer.",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$",
             "example": "BPDTS Ltd."
           },
           "employerRef": {
@@ -293,7 +295,8 @@
         "properties": {
           "employerName": {
             "type": "string",
-            "description": "The name of the employer. The length must be between 1 and 105 characters.",
+            "description": "The name of the employer.",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$",
             "example": "BPDTS Ltd."
           },
           "employerRef": {
