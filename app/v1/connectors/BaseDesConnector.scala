@@ -19,7 +19,6 @@ package v1.connectors
 import config.AppConfig
 import play.api.Logger
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
 import v1.connectors.DownstreamUri.{DesUri, IfsUri}
 
@@ -31,13 +30,33 @@ trait BaseDesConnector {
 
   val logger: Logger = Logger(this.getClass)
 
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnv, "CorrelationId" -> correlationId)
+  private def desHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier,
+                                                                                  correlationId: String): HeaderCarrier =
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.desToken}",
+          "Environment" -> appConfig.desEnv,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
+    )
 
-  private[connectors] def ifsHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.ifsToken}")))
-      .withExtraHeaders("Environment" -> appConfig.ifsEnv, "CorrelationId" -> correlationId)
+  private def ifsHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier,
+                                                                                  correlationId: String): HeaderCarrier =
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.desToken}",
+          "Environment" -> appConfig.ifsEnv,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.ifsEnvironmentHeaders.getOrElse(Seq.empty))
+    )
 
   def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
                                                                      hc: HeaderCarrier,
@@ -91,8 +110,11 @@ trait BaseDesConnector {
     case IfsUri(value) => s"${appConfig.ifsBaseUrl}/$value"
   }
 
-  private def getBackendHeaders[Resp](uri: DownstreamUri[Resp], hc: HeaderCarrier, correlationId: String): HeaderCarrier = uri match {
-    case DesUri(_) => desHeaderCarrier(hc, correlationId)
-    case IfsUri(_) => ifsHeaderCarrier(hc, correlationId)
+  private def getBackendHeaders[Resp](uri: DownstreamUri[Resp],
+                                      hc: HeaderCarrier,
+                                      correlationId: String,
+                                      additionalHeaders: Seq[String] = Seq.empty): HeaderCarrier = uri match {
+    case DesUri(_) => desHeaderCarrier(additionalHeaders)(hc, correlationId)
+    case IfsUri(_) => ifsHeaderCarrier(additionalHeaders)(hc, correlationId)
   }
 }

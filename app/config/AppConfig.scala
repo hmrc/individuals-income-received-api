@@ -28,10 +28,12 @@ trait AppConfig {
   def desBaseUrl: String
   def desEnv: String
   def desToken: String
+  def desEnvironmentHeaders: Option[Seq[String]]
 
   def ifsBaseUrl: String
   def ifsEnv: String
   def ifsToken: String
+  def ifsEnvironmentHeaders: Option[Seq[String]]
 
   def apiGatewayContext: String
   def minimumPermittedTaxYear: Int
@@ -51,10 +53,12 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val desBaseUrl: String = config.baseUrl("des")
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
+  val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
   val ifsBaseUrl: String = config.baseUrl("ifs")
   val ifsEnv: String = config.getString("microservice.services.ifs.env")
   val ifsToken: String = config.getString("microservice.services.ifs.token")
+  val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
 
   val apiGatewayContext: String = config.getString("api.gateway.context")
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
