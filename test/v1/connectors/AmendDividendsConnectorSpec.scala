@@ -112,6 +112,7 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AmendDividendsConnector" when {
@@ -122,8 +123,10 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/dividends/$nino/$taxYear",
+            config = dummyIfsHeaderCarrierConfig,
             body = amendDividendsRequestBody,
-            requiredHeaders = requiredIfsHeaders :_*
+            requiredHeaders = requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.amendDividends(amendDividendsRequest)) shouldBe outcome

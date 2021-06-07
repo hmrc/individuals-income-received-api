@@ -506,10 +506,10 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
-            CountryCodeRuleError.copy(
+            CountryCodeFormatError.copy(
               paths = Some(List(
-                "/foreignDividend/1/countryCode",
-                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+                "/foreignDividend/0/countryCode",
+                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
               ))
             ),
             ValueFormatError.copy(
@@ -537,18 +537,18 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
                 "/closeCompanyLoansWrittenOff/grossAmount"
               ))
             ),
+            CountryCodeRuleError.copy(
+              paths = Some(List(
+                "/foreignDividend/1/countryCode",
+                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+              ))
+            ),
             CustomerRefFormatError.copy(
               paths = Some(List(
                 "/stockDividend/customerReference",
                 "/redeemableShares/customerReference",
                 "/bonusIssuesOfSecurities/customerReference",
                 "/closeCompanyLoansWrittenOff/customerReference"
-              ))
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(List(
-                "/foreignDividend/0/countryCode",
-                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
               ))
             )
           )

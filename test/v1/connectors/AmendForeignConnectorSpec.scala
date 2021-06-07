@@ -68,6 +68,7 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AmendForeignConnector" when {
@@ -78,8 +79,10 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/foreign/$nino/$taxYear",
+            config = dummyIfsHeaderCarrierConfig,
             body = amendForeignRequestBody,
-            requiredHeaders = requiredIfsHeaders :_*
+            requiredHeaders = requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.amendForeign(amendForeignRequest)) shouldBe outcome

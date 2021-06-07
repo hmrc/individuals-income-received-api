@@ -24,7 +24,7 @@ import v1.connectors.DownstreamUri.{DesUri, IfsUri}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait BaseDesConnector {
+trait BaseDownstreamConnector {
   val http: HttpClient
   val appConfig: AppConfig
 
@@ -50,7 +50,7 @@ trait BaseDesConnector {
       extraHeaders = hc.extraHeaders ++
         // Contract headers
         Seq(
-          "Authorization" -> s"Bearer ${appConfig.desToken}",
+          "Authorization" -> s"Bearer ${appConfig.ifsToken}",
           "Environment" -> appConfig.ifsEnv,
           "CorrelationId" -> correlationId
         ) ++

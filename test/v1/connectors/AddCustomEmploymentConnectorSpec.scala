@@ -56,6 +56,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "AddCustomEmploymentConnector" when {
@@ -66,8 +67,10 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .post(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom",
+            config = dummyDesHeaderCarrierConfig,
             body = addCustomEmploymentRequestBody,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.addEmployment(request)) shouldBe outcome

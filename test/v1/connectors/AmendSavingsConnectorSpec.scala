@@ -56,6 +56,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AmendSavingsConnector" when {
@@ -66,8 +67,10 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
+            config = dummyIfsHeaderCarrierConfig,
             body = amendSavingsRequestBody,
-            requiredHeaders = requiredIfsHeaders :_*
+            requiredHeaders = requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome

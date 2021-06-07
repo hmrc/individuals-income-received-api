@@ -138,8 +138,8 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
-          CountryCodeRuleError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
+          CustomerRefFormatError.copy(
+            paths = Some(List("/foreignEarnings/customerReference"))
           ),
           ValueFormatError.copy(
             paths = Some(List(
@@ -151,11 +151,11 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
             )),
             message = "The field should be between 0 and 99999999999.99"
           ),
-          CustomerRefFormatError.copy(
-            paths = Some(List("/foreignEarnings/customerReference"))
-          ),
           CountryCodeFormatError.copy(
             paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+          ),
+          CountryCodeRuleError.copy(
+            paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
           )
         )
 

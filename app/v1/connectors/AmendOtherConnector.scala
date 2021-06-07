@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendOtherConnector @Inject()(val http: HttpClient,
-                                    val appConfig: AppConfig) extends BaseDesConnector {
+                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def amend(request: AmendOtherRequest)(
     implicit hc: HeaderCarrier,

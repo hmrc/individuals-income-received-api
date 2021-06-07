@@ -26,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class UnignoreEmploymentConnector @Inject()(val http: HttpClient,
-                                            val appConfig: AppConfig) extends BaseDesConnector {
+                                            val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def unignoreEmployment(request: IgnoreEmploymentRequest)(
     implicit hc: HeaderCarrier,

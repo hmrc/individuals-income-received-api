@@ -99,6 +99,7 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "AmendFinancialDetailsConnector" should {
@@ -109,8 +110,10 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId",
+            config = dummyDesHeaderCarrierConfig,
             body = requestBody,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.amendFinancialDetails(request)) shouldBe outcome

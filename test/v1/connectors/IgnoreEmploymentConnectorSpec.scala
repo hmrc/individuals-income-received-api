@@ -47,6 +47,7 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "IgnoreEmploymentConnector" when {
@@ -57,8 +58,10 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore",
+            config = dummyDesHeaderCarrierConfig,
             body = EmptyBody,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.ignoreEmployment(request)) shouldBe outcome

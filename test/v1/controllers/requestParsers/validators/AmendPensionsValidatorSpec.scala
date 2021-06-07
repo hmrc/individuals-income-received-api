@@ -405,9 +405,9 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
       "the submitted request body has missing mandatory fields" in new Test {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-            "/foreignPensions/0/taxableAmount",
+            "/foreignPensions/0/countryCode",
             "/foreignPensions/0/foreignTaxCreditRelief",
-            "/foreignPensions/0/countryCode"
+            "/foreignPensions/0/taxableAmount"
           ))))
       }
     }

@@ -169,6 +169,7 @@ class AmendOtherEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "AmendOtherEmploymentConnector" when {
@@ -179,8 +180,10 @@ class AmendOtherEmploymentConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/other/employments/$nino/$taxYear",
+            config = dummyDesHeaderCarrierConfig,
             body = amendOtherEmploymentRequestBody,
-            requiredHeaders = requiredDesHeaders :_*
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
         await(connector.amendOtherEmployment(amendOtherEmploymentRequest)) shouldBe outcome

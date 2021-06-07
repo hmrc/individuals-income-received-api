@@ -46,6 +46,7 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "UnignoreEmploymentConnector" when {
@@ -56,8 +57,11 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .delete(
             url = s"$baseUrl/income-tax/employments/$nino/$taxYear/ignore/$employmentId",
-            requiredHeaders = requiredIfsHeaders :_*
-          ).returns(Future.successful(outcome))
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+
+        ).returns(Future.successful(outcome))
 
         await(connector.unignoreEmployment(request)) shouldBe outcome
       }

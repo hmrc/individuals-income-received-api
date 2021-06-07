@@ -1202,15 +1202,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
-          message = "The field should be 0 or more",
-          paths = Some(List(
-            "/shareOption/0/noOfSharesAcquired",
-            "/shareOption/1/noOfSharesAcquired",
-            "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-            "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-          ))
-        ),
-        ValueFormatError.copy(
           message = "The field should be between 0 and 99999999999.99",
           paths = Some(List(
             "/shareOption/0/amountOfConsiderationReceived",
@@ -1242,15 +1233,24 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             "/disability/amountDeducted",
             "/foreignService/amountDeducted"
           ))
+        ),
+        ValueFormatError.copy(
+          message = "The field should be 0 or more",
+          paths = Some(List(
+            "/shareOption/0/noOfSharesAcquired",
+            "/shareOption/1/noOfSharesAcquired",
+            "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+            "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+          ))
         )
       )
 
       val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(List(
-          "/shareOption/0/profitOnOptionExercised",
-          "/shareOption/0/taxableAmount",
           "/shareOption/0/marketValueOfSharesOnExcise",
-          "/shareOption/0/employersNicPaid"
+          "/shareOption/0/profitOnOptionExercised",
+          "/shareOption/0/employersNicPaid",
+          "/shareOption/0/taxableAmount"
         ))
       )
 

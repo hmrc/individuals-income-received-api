@@ -25,7 +25,7 @@ import v1.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 
-class BaseDesConnectorSpec extends ConnectorSpec {
+class BaseDownstreamConnectorSpec extends ConnectorSpec {
   // WLOG
   val body = "body"
   val outcome = Right(ResponseWrapper(correlationId, Result(2)))
@@ -38,30 +38,37 @@ class BaseDesConnectorSpec extends ConnectorSpec {
   implicit val httpReads: HttpReads[DesOutcome[Result]] = mock[HttpReads[DesOutcome[Result]]]
 
   class DesTest extends MockHttpClient with MockAppConfig {
-    val connector: BaseDesConnector = new BaseDesConnector {
+    val connector: BaseDownstreamConnector = new BaseDownstreamConnector {
       val http: HttpClient = mockHttpClient
       val appConfig: AppConfig = mockAppConfig
     }
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   class IfsTest extends MockHttpClient with MockAppConfig {
-    val connector: BaseDesConnector = new BaseDesConnector {
+    val connector: BaseDownstreamConnector = new BaseDownstreamConnector {
       val http: HttpClient = mockHttpClient
       val appConfig: AppConfig = mockAppConfig
     }
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "for DES" when {
     "post" must {
       "posts with the required des headers and returns the result" in new DesTest {
         MockedHttpClient
-          .post(absoluteUrl, body, requiredDesHeaders: _*)
+          .post(absoluteUrl,
+            config = dummyIfsHeaderCarrierConfig,
+            body,
+            requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(outcome))
 
         await(connector.post(body, DesUri[Result](url))) shouldBe outcome
@@ -71,7 +78,11 @@ class BaseDesConnectorSpec extends ConnectorSpec {
     "get" must {
       "get with the required des headers and return the result" in new DesTest {
         MockedHttpClient
-          .get(absoluteUrl, requiredDesHeaders: _*)
+          .get(absoluteUrl,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(outcome))
 
         await(connector.get(DesUri[Result](url))) shouldBe outcome
@@ -81,7 +92,11 @@ class BaseDesConnectorSpec extends ConnectorSpec {
     "delete" must {
       "delete with the required des headers and return the result" in new DesTest {
         MockedHttpClient
-          .delete(absoluteUrl, requiredDesHeaders: _*)
+          .delete(absoluteUrl,
+            config =  dummyIfsHeaderCarrierConfig,
+            requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(outcome))
 
         await(connector.delete(DesUri[Result](url))) shouldBe outcome
@@ -90,7 +105,12 @@ class BaseDesConnectorSpec extends ConnectorSpec {
 
     "put" must {
       "put with the required des headers and return result" in new DesTest {
-        MockedHttpClient.put(absoluteUrl, body, requiredDesHeaders: _*)
+        MockedHttpClient.put(absoluteUrl,
+          config = dummyIfsHeaderCarrierConfig,
+          body,
+          requiredDesHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+        )
           .returns(Future.successful(outcome))
 
         await(connector.put(body, DesUri[Result](url))) shouldBe outcome
@@ -102,7 +122,12 @@ class BaseDesConnectorSpec extends ConnectorSpec {
     "post" must {
       "posts with the required ifs headers and returns the result" in new IfsTest {
         MockedHttpClient
-          .post(absoluteUrl, body, requiredIfsHeaders: _*)
+          .post(absoluteUrl,
+            config = dummyIfsHeaderCarrierConfig,
+            body,
+            requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(outcome))
 
         await(connector.post(body, IfsUri[Result](url))) shouldBe outcome
@@ -112,7 +137,11 @@ class BaseDesConnectorSpec extends ConnectorSpec {
     "get" must {
       "get with the required des headers and return the result" in new IfsTest {
         MockedHttpClient
-          .get(absoluteUrl, requiredIfsHeaders: _*)
+          .get(absoluteUrl,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(outcome))
 
         await(connector.get(IfsUri[Result](url))) shouldBe outcome
@@ -122,7 +151,11 @@ class BaseDesConnectorSpec extends ConnectorSpec {
     "delete" must {
       "delete with the required des headers and return the result" in new IfsTest {
         MockedHttpClient
-          .delete(absoluteUrl, requiredIfsHeaders: _*)
+          .delete(absoluteUrl,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
           .returns(Future.successful(outcome))
 
         await(connector.delete(IfsUri[Result](url))) shouldBe outcome
@@ -131,7 +164,11 @@ class BaseDesConnectorSpec extends ConnectorSpec {
 
     "put" must {
       "put with the required des headers and return result" in new IfsTest {
-        MockedHttpClient.put(absoluteUrl, body, requiredIfsHeaders: _*)
+        MockedHttpClient.put(absoluteUrl,
+          config =  dummyIfsHeaderCarrierConfig,
+          body,
+          requiredIfsHeaders,
+          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(outcome))
 
         await(connector.put(body, IfsUri[Result](url))) shouldBe outcome
