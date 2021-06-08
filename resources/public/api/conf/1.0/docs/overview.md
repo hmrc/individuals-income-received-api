@@ -1,5 +1,5 @@
 This API allows developers to retrieve, create, amend or delete data relating to:
-- employment income
+- employment income (this includes income from occupational pensions)
 - other employment income
 - dividends income
 - foreign income
