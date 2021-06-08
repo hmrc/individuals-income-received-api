@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.other.AmendOtherServiceConnectorFixture.requestBodyModel
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
@@ -53,13 +54,15 @@ class AmendOtherConnectorSpec extends ConnectorSpec {
     "amendOther" must {
       "return a 204 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/other/$nino/$taxYear",
             config =  dummyIfsHeaderCarrierConfig,
             body = requestBodyModel,
-            requiredHeaders = requiredIfsHeaders,
+            requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 

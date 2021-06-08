@@ -17,8 +17,8 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.AmendForeignValidator
+import v1.models.domain.Nino
 import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest, AmendForeignRequestBody}
 
 @Singleton

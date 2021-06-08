@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
@@ -53,6 +54,13 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
     "unignoreEmployment" should {
       "return a 204 status upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        val otherHeaders: Seq[(String, String)] = Seq(
+          "Gov-Test-Scenario" -> "DEFAULT",
+          "AnotherHeader" -> "HeaderValue"
+        )
+
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
         MockedHttpClient
           .delete(

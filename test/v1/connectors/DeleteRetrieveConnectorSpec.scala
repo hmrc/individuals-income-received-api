@@ -18,6 +18,7 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import play.api.libs.json.{Json, Reads}
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.DownstreamUri.DesUri
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
@@ -48,6 +49,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
         implicit val desUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
         MockedHttpClient
           .delete(
@@ -73,6 +75,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, Data("value")))
         implicit val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
         MockedHttpClient
           .get(
