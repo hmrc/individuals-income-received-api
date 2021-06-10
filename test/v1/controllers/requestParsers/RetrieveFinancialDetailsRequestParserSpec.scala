@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.mocks.validators.MockRetrieveFinancialDetailsValidator
 import v1.models.domain.MtdSourceEnum
 import v1.models.errors._

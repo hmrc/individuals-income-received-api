@@ -290,6 +290,15 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueErrors: List[MtdError] = List(
+          CustomerRefFormatError.copy(
+            paths = Some(List(
+              "/lifeInsurance/0/customerReference",
+              "/capitalRedemption/0/customerReference",
+              "/lifeAnnuity/1/customerReference",
+              "/voidedIsa/1/customerReference",
+              "/foreign/0/customerReference"
+            ))
+          ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
@@ -304,12 +313,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/foreign/1/gainAmount"
             ))
           ),
-          EventFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/1/event",
-              "/lifeAnnuity/1/event"
-            ))
-          ),
+
           ValueFormatError.copy(
             message = "The field should be between 0 and 99",
             paths = Some(List(
@@ -322,13 +326,10 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               "/foreign/1/yearsHeld"
             ))
           ),
-          CustomerRefFormatError.copy(
+          EventFormatError.copy(
             paths = Some(List(
-              "/lifeInsurance/0/customerReference",
-              "/capitalRedemption/0/customerReference",
-              "/lifeAnnuity/1/customerReference",
-              "/voidedIsa/1/customerReference",
-              "/foreign/0/customerReference"
+              "/lifeInsurance/1/event",
+              "/lifeAnnuity/1/event"
             ))
           )
         )

@@ -260,8 +260,8 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
 
       val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(List(
-          "/startDate",
-          "/employerName"
+          "/employerName",
+          "/startDate"
         ))
       )
 

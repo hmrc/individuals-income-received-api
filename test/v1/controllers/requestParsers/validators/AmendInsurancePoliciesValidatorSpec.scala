@@ -539,6 +539,16 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+
+            CustomerRefFormatError.copy(
+              paths = Some(List(
+                "/lifeInsurance/0/customerReference",
+                "/capitalRedemption/0/customerReference",
+                "/lifeAnnuity/1/customerReference",
+                "/voidedIsa/1/customerReference",
+                "/foreign/0/customerReference"
+              ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -553,12 +563,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/foreign/1/gainAmount"
               ))
             ),
-            EventFormatError.copy(
-              paths = Some(List(
-                "/lifeInsurance/1/event",
-                "/lifeAnnuity/1/event"
-              ))
-            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
               paths = Some(List(
@@ -571,13 +575,10 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/foreign/1/yearsHeld"
               ))
             ),
-            CustomerRefFormatError.copy(
+            EventFormatError.copy(
               paths = Some(List(
-                "/lifeInsurance/0/customerReference",
-                "/capitalRedemption/0/customerReference",
-                "/lifeAnnuity/1/customerReference",
-                "/voidedIsa/1/customerReference",
-                "/foreign/0/customerReference"
+                "/lifeInsurance/1/event",
+                "/lifeAnnuity/1/event"
               ))
             )
           )

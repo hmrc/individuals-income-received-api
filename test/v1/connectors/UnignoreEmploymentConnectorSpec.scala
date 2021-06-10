@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
@@ -46,6 +47,7 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "UnignoreEmploymentConnector" when {
@@ -53,11 +55,16 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
       "return a 204 status upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+
         MockedHttpClient
           .delete(
             url = s"$baseUrl/income-tax/employments/$nino/$taxYear/ignore/$employmentId",
-            requiredHeaders = requiredIfsHeaders :_*
-          ).returns(Future.successful(outcome))
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+
+        ).returns(Future.successful(outcome))
 
         await(connector.unignoreEmployment(request)) shouldBe outcome
       }

@@ -283,8 +283,8 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       "return RuleIncorrectOrEmptyBodyError error for an incorrect formatted request body" in new Test {
         val paths: Seq[String] = Seq(
           "/employment/pay/taxablePayToDate",
-          "/employment/benefitsInKind/accommodation",
-          "/employment/deductions/studentLoans/uglDeductionAmount"
+          "/employment/deductions/studentLoans/uglDeductionAmount",
+          "/employment/benefitsInKind/accommodation"
         )
 
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
@@ -295,10 +295,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       "return ValueFormatError error for incorrect field formats" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, allInvalidValueRawRequestBody)) shouldBe
           List(
-            ValueFormatError.copy(
-              message = BIG_DECIMAL_MINIMUM_INCLUSIVE,
-              paths = Some(List("/employment/pay/totalTaxToDate"))
-            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -334,6 +330,10 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
                 "/employment/benefitsInKind/vouchersAndCreditCards",
                 "/employment/benefitsInKind/nonCash"
                 ))
+            ),
+            ValueFormatError.copy(
+              message = BIG_DECIMAL_MINIMUM_INCLUSIVE,
+              paths = Some(List("/employment/pay/totalTaxToDate"))
             )
           )
       }

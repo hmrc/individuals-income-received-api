@@ -16,6 +16,6 @@
 
 package v1.models.request.deleteCustomEmployment
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 
 case class DeleteCustomEmploymentRequest(nino: Nino, taxYear: String, employmentId: String)

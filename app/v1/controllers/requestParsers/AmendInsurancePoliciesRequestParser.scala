@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.AmendInsurancePoliciesValidator
 import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody}
 

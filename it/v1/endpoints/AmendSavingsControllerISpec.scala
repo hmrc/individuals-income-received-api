@@ -161,11 +161,6 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
-          CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/foreignInterest/2/countryCode"
-            ))
-          ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
             paths = Some(List(
@@ -190,6 +185,11 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
             paths = Some(List(
               "/foreignInterest/0/countryCode",
               "/foreignInterest/1/countryCode"
+            ))
+          ),
+          CountryCodeRuleError.copy(
+            paths = Some(List(
+              "/foreignInterest/2/countryCode"
             ))
           )
         )

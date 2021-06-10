@@ -16,7 +16,7 @@
 
 package v1.models.errors
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{Json, OWrites}
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
   def withExtraPath(newPath: String): MtdError = paths.fold(this.copy(paths = Some(Seq(newPath)))){
@@ -25,7 +25,10 @@ case class MtdError(code: String, message: String, paths: Option[Seq[String]] = 
 }
 
 object MtdError {
-  implicit val writes: Writes[MtdError] = Json.writes[MtdError]
+  implicit val writes: OWrites[MtdError] = Json.writes[MtdError]
+
+  implicit def genericWrites[T <: MtdError]: OWrites[T] =
+    writes.contramap[T](c => c: MtdError)
 }
 
 object CustomMtdError {

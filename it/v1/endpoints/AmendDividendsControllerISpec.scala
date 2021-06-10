@@ -210,10 +210,10 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
-          CountryCodeRuleError.copy(
+          CountryCodeFormatError.copy(
             paths = Some(List(
-              "/foreignDividend/1/countryCode",
-              "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+              "/foreignDividend/0/countryCode",
+              "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
             ))
           ),
           ValueFormatError.copy(
@@ -241,18 +241,18 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
               "/closeCompanyLoansWrittenOff/grossAmount"
             ))
           ),
+          CountryCodeRuleError.copy(
+            paths = Some(List(
+              "/foreignDividend/1/countryCode",
+              "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+            ))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/stockDividend/customerReference",
               "/redeemableShares/customerReference",
               "/bonusIssuesOfSecurities/customerReference",
               "/closeCompanyLoansWrittenOff/customerReference"
-            ))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignDividend/0/countryCode",
-              "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
             ))
           )
         )
@@ -341,11 +341,11 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
             |   "message":"Invalid request",
             |   "errors": [
             |        {
-            |            "code": "RULE_COUNTRY_CODE",
-            |            "message": "The country code is not a valid ISO 3166-1 alpha-3 country code",
+            |            "code": "FORMAT_COUNTRY_CODE",
+            |            "message": "The format of the country code is invalid",
             |            "paths": [
-            |                "/foreignDividend/1/countryCode",
-            |                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+            |                "/foreignDividend/0/countryCode",
+            |                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
             |            ]
             |        },
             |        {
@@ -361,19 +361,19 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
             |            ]
             |        },
             |        {
+            |            "code": "RULE_COUNTRY_CODE",
+            |            "message": "The country code is not a valid ISO 3166-1 alpha-3 country code",
+            |            "paths": [
+            |                "/foreignDividend/1/countryCode",
+            |                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+            |            ]
+            |        },
+            |        {
             |            "code": "FORMAT_CUSTOMER_REF",
             |            "message": "The provided customer reference is invalid",
             |            "paths": [
             |                "/stockDividend/customerReference",
             |                "/bonusIssuesOfSecurities/customerReference"
-            |            ]
-            |        },
-            |        {
-            |            "code": "FORMAT_COUNTRY_CODE",
-            |            "message": "The format of the country code is invalid",
-            |            "paths": [
-            |                "/foreignDividend/0/countryCode",
-            |                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
             |            ]
             |        }
             |    ]

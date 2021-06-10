@@ -25,17 +25,22 @@ trait AppConfig {
 
   def mtdIdBaseUrl: String
 
+  //DES Config
   def desBaseUrl: String
   def desEnv: String
   def desToken: String
+  def desEnvironmentHeaders: Option[Seq[String]]
 
+  //IFS Config
   def ifsBaseUrl: String
   def ifsEnv: String
   def ifsToken: String
+  def ifsEnvironmentHeaders: Option[Seq[String]]
 
   def apiGatewayContext: String
   def minimumPermittedTaxYear: Int
 
+  //API Config
   def apiStatus(version: String): String
   def featureSwitch: Option[Configuration]
   def endpointsEnabled(version: String): Boolean
@@ -48,17 +53,22 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
 
   val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
+  //DES Config
   val desBaseUrl: String = config.baseUrl("des")
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
+  val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
+  //IFS Config
   val ifsBaseUrl: String = config.baseUrl("ifs")
   val ifsEnv: String = config.getString("microservice.services.ifs.env")
   val ifsToken: String = config.getString("microservice.services.ifs.token")
+  val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
 
   val apiGatewayContext: String = config.getString("api.gateway.context")
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 
+  //API Config
   def apiStatus(version: String): String = config.getString(s"api.$version.status")
   def featureSwitch: Option[Configuration] = configuration.getOptional[Configuration](s"feature-switch")
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")

@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
-                                             val appConfig: AppConfig) extends BaseDesConnector {
+                                             val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def addEmployment(request: AddCustomEmploymentRequest)(
     implicit hc: HeaderCarrier,
@@ -38,7 +38,7 @@ class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
 
     post(request.body, DesUri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))

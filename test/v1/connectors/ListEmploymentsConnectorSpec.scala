@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listEmployments.ListEmploymentsRequest
@@ -56,18 +57,21 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "ListEmploymentsConnector" when {
     "listEmployments" must {
       "return a 200 status for a success scenario" in new Test {
-
         val outcome = Right(ResponseWrapper(correlationId, validResponse))
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear",
-            requiredHeaders = requiredDesHeaders :_*
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))
 

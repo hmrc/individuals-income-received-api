@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendCustomEmploymentConnector @Inject()(val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDesConnector {
+                                               val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def amendEmployment(request: AmendCustomEmploymentRequest)(
     implicit hc: HeaderCarrier,
@@ -37,7 +37,7 @@ class AmendCustomEmploymentConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
