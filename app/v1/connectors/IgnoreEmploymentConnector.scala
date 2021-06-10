@@ -40,7 +40,7 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
 
     implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
 
-    val nino = request.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 

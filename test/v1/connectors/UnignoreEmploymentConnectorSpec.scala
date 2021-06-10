@@ -55,17 +55,12 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
       "return a 204 status upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        val otherHeaders: Seq[(String, String)] = Seq(
-          "Gov-Test-Scenario" -> "DEFAULT",
-          "AnotherHeader" -> "HeaderValue"
-        )
-
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .delete(
             url = s"$baseUrl/income-tax/employments/$nino/$taxYear/ignore/$employmentId",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
 

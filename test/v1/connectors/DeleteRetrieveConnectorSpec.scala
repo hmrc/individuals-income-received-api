@@ -49,7 +49,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
         implicit val desUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .delete(
@@ -75,7 +75,7 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, Data("value")))
         implicit val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .get(

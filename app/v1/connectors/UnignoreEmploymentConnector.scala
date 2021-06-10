@@ -35,7 +35,7 @@ class UnignoreEmploymentConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
