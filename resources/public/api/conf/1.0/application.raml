@@ -35,7 +35,7 @@ uses:
   /employments:
     (annotations.group):
       name: Employments
-      description: Resources relating to an individual's employments
+      description: Resources relating to an individual's employments (please note, an occupational pension is classed as employment income and is identified by the occupationalPension property)
     /{nino}:
       /{taxYear}:
         uriParameters:
@@ -103,7 +103,7 @@ uses:
   /pensions:
     (annotations.group):
       name: Pensions Income
-      description: Resources relating to an individual's pensions income
+      description: Resources relating to an individual's pensions income (please note, an occupational pension is classed as pensions income and is identified by the occupationalPension property)
     /{nino}:
       /{taxYear}:
         uriParameters:
