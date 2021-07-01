@@ -14,6 +14,16 @@ traits:
               description: 'The supplied income source could not be found.'
               value:
                 code: MATCHING_RESOURCE_NOT_FOUND
+  ppdSubmissionIdNotFound:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            example:
+              description: 'The PPD submission ID was not found'
+              value:
+                code: PPD_SUBMISSION_ID_NOT_FOUND
   clientOrAgentNotAuthorised:
     responses:
       403:
@@ -268,16 +278,16 @@ traits:
                 value:
                   code: FORMAT_EMPLOYMENT_ID
   formatStartDate:
-      responses:
-        400:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                formatStartDate:
-                  description: 'The format of the supplied start date field is not valid.'
-                  value:
-                    code: FORMAT_START_DATE
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatStartDate:
+                description: 'The format of the supplied start date field is not valid.'
+                value:
+                  code: FORMAT_START_DATE
   formatCessationDate:
         responses:
           400:
@@ -290,178 +300,234 @@ traits:
                     value:
                       code: FORMAT_CESSATION_DATE
   formatPayrollId:
-          responses:
-            400:
-              body:
-                application/json:
-                  type: types.errorResponse
-                  examples:
-                    formatPayrollId:
-                      description: 'The format of the supplied payroll ID field is not valid.'
-                      value:
-                        code: FORMAT_PAYROLL_ID
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatPayrollId:
+                description: 'The format of the supplied payroll ID field is not valid.'
+                value:
+                  code: FORMAT_PAYROLL_ID
+  formatPpdSubmissionId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatPpdSubmissionId:
+                description: 'The format of the supplied PPD submission ID is invalid.'
+                value:
+                  code: FORMAT_PPD_SUBMISSION_ID
   emptyOrIncorrectBody:
-          responses:
-            400:
-              body:
-                application/json:
-                  type: types.errorResponse
-                  examples:
-                    emptyOrIncorrectBody:
-                      description: 'An empty or non-matching body was submitted.'
-                      value:
-                        code: RULE_EMPTY_OR_INCORRECT_BODY_SUBMITTED
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              emptyOrIncorrectBody:
+                description: 'An empty or non-matching body was submitted.'
+                value:
+                  code: RULE_EMPTY_OR_INCORRECT_BODY_SUBMITTED
   cessationDateBeforeStartDate:
-          responses:
-            400:
-              body:
-                application/json:
-                  type: types.errorResponse
-                  examples:
-                    cessationDateBeforeStartDate:
-                      description: 'The cessation date is earlier than the start date.'
-                      value:
-                        code: RULE_END_DATE_BEFORE_START_DATE
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cessationDateBeforeStartDate:
+                description: 'The cessation date is earlier than the start date.'
+                value:
+                  code: RULE_END_DATE_BEFORE_START_DATE
   startDateAfterTaxYearEnd:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      startDateAfterTaxYearEnd:
-                        description: 'The employment is listed as starting after the tax year ended.'
-                        value:
-                          code: RULE_START_DATE_AFTER_TAX_YEAR_END
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              startDateAfterTaxYearEnd:
+                description: 'The employment is listed as starting after the tax year ended.'
+                value:
+                  code: RULE_START_DATE_AFTER_TAX_YEAR_END
   cessationDateBeforeTaxYearStart:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cessationDateBeforeTaxYearStart:
-                          description: 'The employment is listed as ending before the tax year began.'
-                          value:
-                            code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cessationDateBeforeTaxYearStart:
+                description: 'The employment is listed as ending before the tax year began.'
+                value:
+                  code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START
   ruleCustomEmployment:
-              responses:
-                403:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        ruleCustomEmployment:
-                          description: 'The Employment ID provided is for a custom (user-provided) employment.'
-                          value:
-                            code: RULE_CUSTOM_EMPLOYMENT
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleCustomEmployment:
+                description: 'The Employment ID provided is for a custom (user-provided) employment.'
+                value:
+                  code: RULE_CUSTOM_EMPLOYMENT
   ruleTaxYearNotEnded:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearNotEnded:
+                description: 'The submission has been made before the tax year it relates to has ended.'
+                value:
+                  code: RULE_TAX_YEAR_NOT_ENDED
+  ruleAmountGainLoss:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleAmountGainLoss:
+                description: 'Either amountOfGain or amountOfLoss, must be provided but not both.'
+                value:
+                  code: RULE_AMOUNT_GAIN_LOSS
+  ruleCompletionDateBeforeDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleCompletionDateBeforeDisposalDate:
+                description: 'The completionDate must not be earlier than the disposalDate.'
+                value:
+                  code: RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE
+  ruleAcquisitionDateBeforeDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleAcquisitionDateBeforeDisposalDate:
+                description: 'The acquisitionDate must not be earlier than the disposalDate.'
+                value:
+                  code: RULE_ACQUISITION_DATE_BEFORE_DISPOSAL_DATE
+  ruleLossesGreaterThanGain:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleLossesGreaterThanGain:
+                description: 'The total losses from this year or the previous year must not be greater than the gain. '
+                value:
+                  code: RULE_LOSSES_GREATER_THAN_GAIN
+  formatSource:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatSource:
+                description: 'The format of the supplied source is not valid.'
+                value:
+                  code: FORMAT_SOURCE
+  ruleLumpSums:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleLumpSums:
+                description: 'Where lumpSums have been provided at least one child object is required.'
+                value:
+                  code: RULE_LUMP_SUMS
+  cgtOtherRuleGainLoss:
               responses:
                 400:
                   body:
                     application/json:
                       type: types.errorResponse
                       examples:
-                        ruleTaxYearNotEnded:
-                          description: 'The submission has been made before the tax year it relates to has ended.'
+                        cgtOtherRuleGainLoss:
+                          description: 'Only one of gain or loss values can be provided.'
                           value:
-                            code: RULE_TAX_YEAR_NOT_ENDED
-  formatSource:
-          responses:
-            400:
-              body:
-                application/json:
-                  type: types.errorResponse
-                  examples:
-                    formatSource:
-                      description: 'The format of the supplied source is not valid.'
-                      value:
-                        code: FORMAT_SOURCE
-  ruleLumpSums:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      ruleLumpSums:
-                        description: 'Where lumpSums have been provided at least one child object is required.'
-                        value:
-                          code: RULE_LUMP_SUMS
-  cgtOtherRuleGainLoss:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherRuleGainLoss:
-                        description: 'Only one of gain or loss values can be provided.'
-                        value:
-                          code: RULE_GAIN_LOSS
-  cgtOtherFormatAssetDescription:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherFormatAssetDescription:
-                        description: 'The format of the supplied asset description is not valid.'
-                        value:
-                          code: FORMAT_ASSET_DESCRIPTION
-  cgtOtherFormatAssetType:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherFormatAssetType:
-                        description: 'The format of the supplied assetType value is invalid.'
-                        value:
-                          code: FORMAT_ASSET_TYPE
-  cgtOtherFormatClaimOrElectionCodes:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherFormatClaimOrElectionCodes:
-                        description: 'The format of the supplied claimOrElectionCodes value is invalid.'
-                        value:
-                          code: FORMAT_CLAIM_OR_ELECTION_CODES
-  cgtOtherRuleDisposalDate:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherRuleDisposalDate:
-                        description: "The disposalDate must be in the specified tax year and no later than today's date."
-                        value:
-                          code: RULE_DISPOSAL_DATE
-  cgtOtherRuleAcquisitionDate:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherRuleAcquisitionDate:
-                        description: 'The acquisitionDate must not be later than disposalDate.'
-                        value:
-                          code: RULE_ACQUISITION_DATE
-  cgtOtherRuleGainAfterReliefLossAfterRelief:
-            responses:
-              400:
-                body:
-                  application/json:
-                    type: types.errorResponse
-                    examples:
-                      cgtOtherRuleGainAfterReliefLossAfterRelief:
-                        description: 'Only one of gainAfterRelief or lossAfterRelief values can be provided.'
-                        value:
-                          code: RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF
+                            code: RULE_GAIN_LOSS
+    cgtOtherFormatAssetDescription:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        cgtOtherFormatAssetDescription:
+                          description: 'The format of the supplied asset description is not valid.'
+                          value:
+                            code: FORMAT_ASSET_DESCRIPTION
+    cgtOtherFormatAssetType:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        cgtOtherFormatAssetType:
+                          description: 'The format of the supplied assetType value is invalid.'
+                          value:
+                            code: FORMAT_ASSET_TYPE
+    cgtOtherFormatClaimOrElectionCodes:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        cgtOtherFormatClaimOrElectionCodes:
+                          description: 'The format of the supplied claimOrElectionCodes value is invalid.'
+                          value:
+                            code: FORMAT_CLAIM_OR_ELECTION_CODES
+    cgtOtherRuleDisposalDate:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        cgtOtherRuleDisposalDate:
+                          description: "The disposalDate must be in the specified tax year and no later than today's date."
+                          value:
+                            code: RULE_DISPOSAL_DATE
+    cgtOtherRuleAcquisitionDate:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        cgtOtherRuleAcquisitionDate:
+                          description: 'The acquisitionDate must not be later than disposalDate.'
+                          value:
+                            code: RULE_ACQUISITION_DATE
+    cgtOtherRuleGainAfterReliefLossAfterRelief:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        cgtOtherRuleGainAfterReliefLossAfterRelief:
+                          description: 'Only one of gainAfterRelief or lossAfterRelief values can be provided.'
+                          value:
+                            code: RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF
+
