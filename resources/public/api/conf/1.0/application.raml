@@ -138,15 +138,15 @@ uses:
       name: Capital Gains Tax
       description: Resources relating to capital gains tax
     /residential-property:
-          (annotations.group):
-            name: CGT PPD Overrides
-            description: Resources relating to CGT PPD Overrides
-          /{nino}:
-            /{taxYear}:
-              /ppd:
-                uriParameters:
-                  taxYear: !include pathParameters/taxYearMinimum2021.raml
-                put: !include endpoints/cgt/amend.raml
+      (annotations.group):
+        name: CGT PPD Overrides
+        description: Resources relating to CGT PPD Overrides
+      /{nino}:
+        /{taxYear}:
+          /ppd:
+            uriParameters:
+              taxYear: !include pathParameters/taxYearMinimum2021.raml
+            put: !include endpoints/cgt/amend.raml
     /other-gains:
       /{nino}:
         /{taxYear}:
