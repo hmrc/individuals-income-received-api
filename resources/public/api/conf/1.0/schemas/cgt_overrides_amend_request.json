@@ -12,7 +12,7 @@
     "singlePropertyDisposals": {
       "type": "array",
       "description": "Details about the single property disposals.",
-      "items": {"$ref": "dividends_definitions.json#/definitions/dividendIncomeReceivedWhilstAbroad"}
+      "items": {"$ref": "cgt_overrides_definitions.json#/definitions/singlePropertyDisposals"}
     }
   }
 }
