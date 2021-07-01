@@ -26,7 +26,7 @@ description: "This endpoint allows the developer to override residential propert
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../../schemas/cgtOverrides_amend_request.json
+      type: !include ../../schemas/cgt_overrides_amend_request.json
       examples:
         full_amendment:
           description: Full CGT Overrides Amendment
@@ -35,7 +35,7 @@ responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/cgt_amend_response.json
+        type: !include ../../schemas/cgt_overrides_amend_response.json
         example: !include ../../examples/cgt/amend_response.json
     headers:
       X-CorrelationId:
