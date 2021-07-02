@@ -49,6 +49,6 @@ object SinglePropertyDisposals {
       (JsPath \ "lossesFromThisYear").writeNullable[BigDecimal] and
       (JsPath \ "lossesFromPreviousYear").writeNullable[BigDecimal] and
       (JsPath \ "amountOfNetGain").writeNullable[BigDecimal] and
-      (JsPath \ "amountOfNetLoss").writeNullable[BigDecimal]
+      (JsPath \ "amountOfLoss").writeNullable[BigDecimal]
   ) (unlift(SinglePropertyDisposals.unapply))
 }

@@ -162,7 +162,7 @@ class CreateAmendCgtPpdOverridesRequestBodySpec extends UnitSpec {
       |             "otherReliefAmount": 3434.23,
       |             "lossesFromThisYear": 436.23,
       |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetLoss": 4567.89
+      |             "amountOfLoss": 4567.89
       |         }
       |    ]
       |}
