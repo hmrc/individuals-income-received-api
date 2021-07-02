@@ -132,7 +132,7 @@ class CreateAmendCgtPpdOverridesRequestBodySpec extends UnitSpec {
       |         },
       |         {
       |            "ppdSubmissionId": "AB0000000098",
-      |            "amountOfNetLoss": 134.99
+      |            "amountOfLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [

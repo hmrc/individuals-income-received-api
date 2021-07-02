@@ -29,6 +29,6 @@ object MultiplePropertyDisposals {
   implicit val writes: OWrites[MultiplePropertyDisposals] = (
     (JsPath \ "ppdSubmissionId").write[String] and
       (JsPath \ "amountOfNetGain").writeNullable[BigDecimal] and
-      (JsPath \ "amountOfNetLoss").writeNullable[BigDecimal]
+      (JsPath \ "amountOfLoss").writeNullable[BigDecimal]
   ) (unlift(MultiplePropertyDisposals.unapply))
 }
