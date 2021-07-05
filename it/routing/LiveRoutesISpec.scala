@@ -146,5 +146,20 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
     }
   }
 
-  // TODO - Add a test here once a CGT endpoint has been built.
+  "Calling the 'delete cgt ppd overrides' endpoint (switched off in production)" should {
+    "return a 404 status code" when {
+      "the feature switch is turned off to point to the live routes only" in new Test {
+
+        override def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
+
+        override def setupStubs(): StubMapping = {
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+        }
+
+        val response: WSResponse = await(request(uri).delete)
+        response.status shouldBe NOT_FOUND
+      }
+    }
+  }
 }

@@ -1,3 +1,4 @@
+# Additional Income endpoints
 PUT        /savings/:nino/:taxYear                                          v1.controllers.AmendSavingsController.amendSaving(nino: String, taxYear: String)
 DELETE     /savings/:nino/:taxYear                                          v1.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
 GET        /savings/:nino/:taxYear                                          v1.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
@@ -26,6 +27,7 @@ PUT        /dividends/:nino/:taxYear                                        v1.c
 DELETE     /dividends/:nino/:taxYear                                        v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
 GET        /dividends/:nino/:taxYear                                        v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
+# Employment endpoints
 PUT        /employments/:nino/:taxYear/:employmentId                        v1.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
 DELETE     /employments/:nino/:taxYear/:employmentId                        v1.controllers.DeleteCustomEmploymentController.deleteCustomEmployment(nino: String, taxYear: String, employmentId: String)
 
@@ -40,3 +42,4 @@ DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1.c
 GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
 
 # Capital Gains Tax endpoints
+DELETE     /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.DeleteCgtPpdOverridesController.deleteCgtPpdOverrides(nino: String, taxYear: String)
