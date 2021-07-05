@@ -21,7 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.{IntegrationBaseSpec, WireMockMethods}
+import support.IntegrationBaseSpec
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class LiveRoutesISpec extends IntegrationBaseSpec {
@@ -42,7 +42,6 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
   )
 
   private trait Test {
-
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
 
@@ -86,31 +85,6 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
   }
-
-/*  def testEndpointFeatureSwitch(mtdUri: String, desUri: String, desMethod: DesStub.HTTPMethod, successStatus: Int, conf: Map[String, Any]): Unit = {
-    s"calling the MTD uri - $mtdUri" should {
-      s"return a $successStatus status code" when {
-        "the endpoint is enabled in config" in new Test {
-
-          def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DesStub.onSuccess(desMethod, desUri, successStatus)
-          }
-
-          val response: WSResponse = await(request(uri).put(requestBodyJson))
-          response.status shouldBe successStatus
-        }
-      }
-    }
-  }
-
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  def uri: String = s"/savings/$nino/$taxYear"
-  def desUri: String = s"/income-tax/income/savings/$nino/$taxYear"
-  testEndpointFeatureSwitch(uri, desUri, DesStub.PUT, NO_CONTENT, Map.empty)*/
 
   "Calling the 'amend savings' endpoint (switched on in production)" should {
     "return a 200 status code" when {
@@ -171,4 +145,6 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
       }
     }
   }
+
+  // TODO - Add a test here once a CGT endpoint has been built.
 }
