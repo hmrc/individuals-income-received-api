@@ -49,8 +49,8 @@ case class VersionRoutingMapImpl @Inject()(appConfig: AppConfig,
     VERSION_1 -> {
       (featureSwitch.isForeignRoutingEnabled, featureSwitch.isCgtRoutingEnabled) match {
         case (true, true) => v1RouterWithAll
-        case (false, true) => v1RouterWithForeign
-        case (true, false) => v1RouterWithCgt
+        case (true, false) => v1RouterWithForeign
+        case (false, true) => v1RouterWithCgt
         case (false, false) => v1Router
       }
     }

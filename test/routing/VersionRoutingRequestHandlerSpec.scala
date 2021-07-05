@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.routing
+package routing
 
 import akka.actor.ActorSystem
 import com.typesafe.config.ConfigFactory
@@ -67,7 +67,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   }
 
   class Test(implicit acceptHeader: Option[String]) {
-    val httpConfiguration = HttpConfiguration("context")
+    val httpConfiguration: HttpConfiguration = HttpConfiguration("context")
     private val errorHandler      = mock[HttpErrorHandler]
     private val filters           = mock[HttpFilters]
     (filters.filters _).stubs().returns(Seq.empty)
