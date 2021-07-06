@@ -45,8 +45,13 @@ case class FeatureSwitch(value: Option[Configuration]) {
     enabled.getOrElse(false)
   }
 
-  def isFullRoutingEnabled: Boolean = value match {
-    case Some(config) => config.getOptional[Boolean] ("all-endpoints.enabled").getOrElse(true)
+  def isForeignRoutingEnabled: Boolean = value match {
+    case Some(config) => config.getOptional[Boolean] ("foreign-endpoints.enabled").getOrElse(true)
+    case None => true
+  }
+
+  def isCgtRoutingEnabled: Boolean = value match {
+    case Some(config) => config.getOptional[Boolean] ("cgt-endpoints.enabled").getOrElse(true)
     case None => true
   }
 }

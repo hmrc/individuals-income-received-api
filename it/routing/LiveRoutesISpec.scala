@@ -37,11 +37,11 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
     "microservice.services.auth.port" -> mockPort,
     "auditing.consumer.baseUri.port" -> mockPort,
     "minimumPermittedTaxYear" -> 2020,
-    "feature-switch.all-endpoints.enabled" -> false
+    "feature-switch.foreign-endpoints.enabled" -> false,
+    "feature-switch.cgt-endpoints.enabled" -> false
   )
 
   private trait Test {
-
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
 
@@ -79,7 +79,7 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def request(): WSRequest = {
+    def request(uri: String): WSRequest = {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
@@ -87,7 +87,6 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
   }
 
   "Calling the 'amend savings' endpoint (switched on in production)" should {
-
     "return a 200 status code" when {
       "the feature switch is turned off to point to live routes only" in new Test {
 
@@ -100,14 +99,13 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
           DesStub.onSuccess(DesStub.PUT, desUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request(uri).put(requestBodyJson))
         response.status shouldBe OK
       }
     }
   }
 
   "Calling the 'amend foreign' endpoint (switched off in production)" should {
-
     "return a 404 status code" when {
       "the feature switch is turned off to point to live routes only" in new Test {
 
@@ -142,10 +140,11 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.ninoFound(nino)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request(uri).put(requestBodyJson))
         response.status shouldBe NOT_FOUND
       }
     }
   }
 
+  // TODO - Add a test here once a CGT endpoint has been built.
 }
