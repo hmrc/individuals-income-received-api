@@ -133,3 +133,13 @@ uses:
         put: !include endpoints/savingsIncome/amend.raml
         get: !include endpoints/savingsIncome/retrieve.raml
         delete: !include endpoints/savingsIncome/delete.raml
+  /disposals:
+    (annotations.group):
+      name: Capital Gains Tax
+      description: Resources relating to an individual's savings income
+    /other-gains:
+      /{nino}:
+        /{taxYear}:
+          uriParameters:
+            taxYear: !include pathParameters/taxYearMinimum2021.raml
+          put: !include endpoints/capitalGainsTax/other/amend.raml

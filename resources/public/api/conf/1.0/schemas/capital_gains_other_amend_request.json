@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create and Amend Other Capital Gains and Disposals Request",
+  "description": "Create and Amend Other Capital Gains and Disposals Request",
+  "type": "object",
+  "properties": {
+    "disposals": {"$ref": "capital_gains_other_definitions.json#/definitions/disposals"},
+    "nonStandardGains": {"$ref": "capital_gains_other_definitions.json#/definitions/nonStandardGains"},
+    "losses": {"$ref": "capital_gains_other_definitions.json#/definitions/losses"},
+    "adjustments": {"$ref": "capital_gains_other_definitions.json#/definitions/adjustments"}
+  }
+}
