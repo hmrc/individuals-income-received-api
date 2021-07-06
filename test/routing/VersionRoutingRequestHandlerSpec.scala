@@ -201,6 +201,4 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
       }
     }
   }
-
-
 }

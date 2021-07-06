@@ -22,7 +22,7 @@ object AppDependencies {
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"        %% "bootstrap-backend-play-28" % "4.3.0",
+    "uk.gov.hmrc"        %% "bootstrap-backend-play-28" % "5.6.0",
     "org.typelevel"      %% "cats-core"                 % "2.6.0",
     "com.chuusai"        %% "shapeless"                 % "2.4.0-M1",
     "com.neovisionaries" % "nv-i18n"                    % "1.27"
