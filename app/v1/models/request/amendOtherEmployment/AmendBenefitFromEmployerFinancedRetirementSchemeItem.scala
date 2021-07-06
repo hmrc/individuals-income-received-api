@@ -32,5 +32,5 @@ object AmendBenefitFromEmployerFinancedRetirementSchemeItem {
       (JsPath \ "exemptAmount").writeNullable[BigDecimal] and
       (JsPath \ "taxPaid").writeNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").write[Boolean]
-    ) (unlift(AmendBenefitFromEmployerFinancedRetirementSchemeItem.unapply _))
+    ) (unlift(AmendBenefitFromEmployerFinancedRetirementSchemeItem.unapply))
 }

@@ -44,7 +44,7 @@ class AmendShareOptionItemSpec extends UnitSpec {
   )
 
   private val model = AmendShareOptionItem(
-      employerName = ("Company Ltd"),
+      employerName = "Company Ltd",
       employerRef = Some ("AB1321/123"),
       schemePlanType = "EMI",
       dateOfOptionGrant = "2019-11-20",

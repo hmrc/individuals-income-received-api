@@ -54,9 +54,9 @@ object AmendOtherServiceConnectorFixture {
     )
   )
 
-  val overseasIncomeAndGainsModel = AmendOverseasIncomeAndGains(gainAmount = 3000.99)
+  val overseasIncomeAndGainsModel: AmendOverseasIncomeAndGains = AmendOverseasIncomeAndGains(gainAmount = 3000.99)
 
-  val chargeableForeignBenefitsAndGiftsModel = AmendChargeableForeignBenefitsAndGifts(
+  val chargeableForeignBenefitsAndGiftsModel: AmendChargeableForeignBenefitsAndGifts = AmendChargeableForeignBenefitsAndGifts(
     transactionBenefit = Some(1999.99),
     protectedForeignIncomeSourceBenefit = Some(2999.99),
     protectedForeignIncomeOnwardGift = Some(3999.99),
@@ -64,9 +64,9 @@ object AmendOtherServiceConnectorFixture {
     onwardGiftReceivedAsASettler = Some(5999.99)
   )
 
-  val omittedForeignIncomeModel = AmendOmittedForeignIncome(amount = 4000.99)
+  val omittedForeignIncomeModel: AmendOmittedForeignIncome = AmendOmittedForeignIncome(amount = 4000.99)
 
-  val requestBodyModel = AmendOtherRequestBody(
+  val requestBodyModel: AmendOtherRequestBody = AmendOtherRequestBody(
     Some(businessReceiptsModel),
     Some(allOtherIncomeReceivedWhilstAbroadModel),
     Some(overseasIncomeAndGainsModel),

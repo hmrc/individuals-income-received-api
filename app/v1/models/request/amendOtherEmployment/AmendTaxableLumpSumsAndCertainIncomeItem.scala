@@ -30,5 +30,5 @@ object AmendTaxableLumpSumsAndCertainIncomeItem {
     (JsPath \ "amount").write[BigDecimal] and
       (JsPath \ "taxPaid").writeNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").write[Boolean]
-    ) (unlift(AmendTaxableLumpSumsAndCertainIncomeItem.unapply _))
+    ) (unlift(AmendTaxableLumpSumsAndCertainIncomeItem.unapply))
 }

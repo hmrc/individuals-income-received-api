@@ -90,12 +90,6 @@ class EnumsSpec extends UnitSpec with Inspectors {
         case object `enum-one` extends Enum2 {
           override def altName: String = "one"
         }
-        case object `enum-two` extends Enum2 {
-          override def altName: String = "two"
-        }
-        case object `enum-three` extends Enum2 {
-          override def altName: String = "three"
-        }
 
         implicit val show: Show[Enum2]     = Show.show[Enum2](_.altName)
         implicit val format: Format[Enum2] = Enums.format[Enum2]
