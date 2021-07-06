@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides Request",
+  "description": "Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides Request",
+  "type": "object",
+  "properties": {
+    "multiplePropertyDisposals": {
+      "type": "array",
+      "description": "Details about the property disposals.",
+      "items": {"$ref": "cgt_overrides_definitions.json#/definitions/multiplePropertyDisposals"}
+    },
+    "singlePropertyDisposals": {
+      "type": "array",
+      "description": "Details about the single property disposals.",
+      "items": {"$ref": "cgt_overrides_definitions.json#/definitions/singlePropertyDisposals"}
+    }
+  }
+}

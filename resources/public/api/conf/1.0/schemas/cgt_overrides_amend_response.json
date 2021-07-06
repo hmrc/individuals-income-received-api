@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": 	"Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides",
+  "description":"Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "cgt_overrides_definitions.json#/definitions/links"}
+  }
+}
