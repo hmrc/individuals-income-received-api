@@ -45,7 +45,7 @@ class ControllerBaseSpec extends UnitSpec
 
   def fakePutRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 
-  def defaultDesErrorMap: Map[String, MtdError] =
+  def defaultDownstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,

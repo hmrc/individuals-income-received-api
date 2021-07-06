@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveEmploymentControllerFixture._
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
 
@@ -65,7 +65,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithoutDateIgnored)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithoutDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
@@ -84,7 +84,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithDateIgnored)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
@@ -103,7 +103,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, desQueryParam, OK, desCustomEnteredResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desCustomEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -154,7 +154,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request.get)

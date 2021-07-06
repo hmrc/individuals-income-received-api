@@ -186,7 +186,7 @@ class RetrieveOtherEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveOtherEmploymentResponse](defaultDesErrorMap)
+          .retrieve[RetrieveOtherEmploymentResponse](defaultDownstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))))
 
         MockHateoasFactory
@@ -246,7 +246,7 @@ class RetrieveOtherEmploymentControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveOtherEmploymentResponse](defaultDesErrorMap)
+              .retrieve[RetrieveOtherEmploymentResponse](defaultDownstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveOther(nino, taxYear)(fakeGetRequest)

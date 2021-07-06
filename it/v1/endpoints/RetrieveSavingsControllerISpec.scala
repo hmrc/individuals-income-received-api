@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveSavingsControllerFixture
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
 
@@ -33,7 +33,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
 
-    val desResponse: JsValue = Json.parse(
+    val ifsResponse: JsValue = Json.parse(
       """
         |{
         |   "submittedOn": "2019-04-04T01:01:01Z",
@@ -61,7 +61,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/savings/$nino/$taxYear"
 
-    def desUri: String = s"/income-tax/income/savings/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/income/savings/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -80,7 +80,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, OK, ifsResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -121,15 +121,15 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -143,7 +143,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
