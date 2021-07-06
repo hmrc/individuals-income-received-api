@@ -445,80 +445,79 @@ traits:
                 value:
                   code: RULE_LUMP_SUMS
   cgtOtherRuleGainLoss:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherRuleGainLoss:
-                          description: 'Only one of gain or loss values can be provided.'
-                          value:
-                            code: RULE_GAIN_LOSS
-    cgtOtherFormatAssetDescription:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherFormatAssetDescription:
-                          description: 'The format of the supplied asset description is not valid.'
-                          value:
-                            code: FORMAT_ASSET_DESCRIPTION
-    cgtOtherFormatAssetType:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherFormatAssetType:
-                          description: 'The format of the supplied assetType value is invalid.'
-                          value:
-                            code: FORMAT_ASSET_TYPE
-    cgtOtherFormatClaimOrElectionCodes:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherFormatClaimOrElectionCodes:
-                          description: 'The format of the supplied claimOrElectionCodes value is invalid.'
-                          value:
-                            code: FORMAT_CLAIM_OR_ELECTION_CODES
-    cgtOtherRuleDisposalDate:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherRuleDisposalDate:
-                          description: "The disposalDate must be in the specified tax year and no later than today's date."
-                          value:
-                            code: RULE_DISPOSAL_DATE
-    cgtOtherRuleAcquisitionDate:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherRuleAcquisitionDate:
-                          description: 'The acquisitionDate must not be later than disposalDate.'
-                          value:
-                            code: RULE_ACQUISITION_DATE
-    cgtOtherRuleGainAfterReliefLossAfterRelief:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        cgtOtherRuleGainAfterReliefLossAfterRelief:
-                          description: 'Only one of gainAfterRelief or lossAfterRelief values can be provided.'
-                          value:
-                            code: RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF
-
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherRuleGainLoss:
+                description: 'Only one of gain or loss values can be provided.'
+                value:
+                  code: RULE_GAIN_LOSS
+  cgtOtherFormatAssetDescription:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherFormatAssetDescription:
+                description: 'The format of the supplied asset description is not valid.'
+                value:
+                  code: FORMAT_ASSET_DESCRIPTION
+  cgtOtherFormatAssetType:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherFormatAssetType:
+                description: 'The format of the supplied assetType value is invalid.'
+                value:
+                  code: FORMAT_ASSET_TYPE
+  cgtOtherFormatClaimOrElectionCodes:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherFormatClaimOrElectionCodes:
+                description: 'The format of the supplied claimOrElectionCodes value is invalid.'
+                value:
+                  code: FORMAT_CLAIM_OR_ELECTION_CODES
+  cgtOtherRuleDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherRuleDisposalDate:
+                description: "The disposalDate must be in the specified tax year and no later than today's date."
+                value:
+                  code: RULE_DISPOSAL_DATE
+  cgtOtherRuleAcquisitionDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherRuleAcquisitionDate:
+                description: 'The acquisitionDate must not be later than disposalDate.'
+                value:
+                  code: RULE_ACQUISITION_DATE
+  cgtOtherRuleGainAfterReliefLossAfterRelief:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              cgtOtherRuleGainAfterReliefLossAfterRelief:
+                description: 'Only one of gainAfterRelief or lossAfterRelief values can be provided.'
+                value:
+                  code: RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF
