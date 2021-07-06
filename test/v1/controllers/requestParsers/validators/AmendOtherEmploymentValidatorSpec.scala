@@ -21,14 +21,13 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.validations.{DateFormatErrorMessages, ValueFormatErrorMessages}
+import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.errors._
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 
 
 class AmendOtherEmploymentValidatorSpec extends UnitSpec
-  with ValueFormatErrorMessages
-  with DateFormatErrorMessages {
+  with ValueFormatErrorMessages {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2020-21"
@@ -778,9 +777,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     "return DateFormatError error" when {
       "an incorrectly formatted date is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDateRawRequestBody)) shouldBe
-          List(DateFormatError.copy(
-            message = ISO_DATE_FORMAT,
-            paths = Some(List("/shareOption/0/dateOfOptionGrant"))))
+          List(DateFormatError.copy(paths = Some(List("/shareOption/0/dateOfOptionGrant"))))
       }
     }
 
@@ -882,7 +879,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
               ))
             ),
             DateFormatError.copy(
-              message = ISO_DATE_FORMAT,
               paths = Some(List(
                 "/shareOption/0/dateOfOptionGrant",
                 "/shareOption/0/dateOfEvent",

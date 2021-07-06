@@ -16,16 +16,21 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import support.UnitSpec
+import v1.models.errors.AssetDescriptionFormatError
 
-object TaxYearNotSupportedValidation {
+class AssetDescriptionValidationSpec extends UnitSpec {
+  "validate" should {
+    "return an empty List" when {
+      "the provided description is valid" in {
+        AssetDescriptionValidation.validate("A description 123", "path") shouldBe NoValidationErrors
+      }
+    }
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String, minimumTaxYear: Int): List[MtdError] = {
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear < minimumTaxYear) List(RuleTaxYearNotSupportedError)
-    else NoValidationErrors
+    "return an error" when {
+      "the provided description is invalid" in {
+        AssetDescriptionValidation.validate("", "path") shouldBe List(AssetDescriptionFormatError.copy(paths = Some(Seq("path"))))
+      }
+    }
   }
 }

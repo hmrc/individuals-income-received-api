@@ -44,7 +44,7 @@ class RetrieveFinancialDetailsValidator @Inject()(implicit appConfig: AppConfig)
 
   private def parameterRuleValidation: RetrieveFinancialDetailsRawData => List[List[MtdError]] = (data: RetrieveFinancialDetailsRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 }

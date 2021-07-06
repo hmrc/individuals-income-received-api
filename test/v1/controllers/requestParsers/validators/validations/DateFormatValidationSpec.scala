@@ -17,7 +17,6 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.validations.DateFormatValidation.ISO_DATE_FORMAT
 import v1.models.errors.{DateFormatError, MtdError}
 
 class DateFormatValidationSpec extends UnitSpec {
@@ -35,7 +34,7 @@ class DateFormatValidationSpec extends UnitSpec {
         DateFormatValidation.validateWithPath(
           date = "20-04-2017",
           path = "/path",
-        ) shouldBe List(DateFormatError.copy(message =  ISO_DATE_FORMAT, paths = Some(Seq("/path"))))
+        ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
       }
     }
 

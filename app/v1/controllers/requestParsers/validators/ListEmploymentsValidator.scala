@@ -42,7 +42,7 @@ class ListEmploymentsValidator @Inject()(implicit appConfig: AppConfig)
 
   private def parameterRuleValidation: ListEmploymentsRawData => List[List[MtdError]] = (data: ListEmploymentsRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 }

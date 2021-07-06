@@ -16,7 +16,7 @@
 
 package v1.models.domain
 
-import play.api.libs.json
+import play.api.libs.json.Format
 import utils.enums.Enums
 
 sealed trait AssetType
@@ -31,6 +31,6 @@ object AssetType {
 
   case object otherAsset extends AssetType
 
-  implicit val format: json.Format[AssetType] = Enums.format[AssetType]
-
+  implicit val format: Format[AssetType] = Enums.format[AssetType]
+  val parser: PartialFunction[String, AssetType] = Enums.parser[AssetType]
 }

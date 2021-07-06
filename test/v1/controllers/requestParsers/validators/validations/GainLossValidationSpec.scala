@@ -16,16 +16,23 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import support.UnitSpec
+import v1.models.errors.RuleGainLossError
 
-object TaxYearNotSupportedValidation {
+class GainLossValidationSpec extends UnitSpec {
+  val res: BigDecimal = 1000.23
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String, minimumTaxYear: Int): List[MtdError] = {
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear < minimumTaxYear) List(RuleTaxYearNotSupportedError)
-    else NoValidationErrors
+  "validate" should {
+    Seq(
+      (Some(res), Some(res), List(RuleGainLossError.copy(paths = Some(Seq("path"))))),
+      (Some(res), None, NoValidationErrors),
+      (None, Some(res), NoValidationErrors),
+      (None, None, NoValidationErrors),
+    ).foreach {
+      case (gain, loss, result) =>
+        s"return ${if (result.isEmpty) "an empty List" else "an error"} when passed in gain: $gain and loss: $loss" in {
+          GainLossValidation.validate(gain, loss, RuleGainLossError, "path") shouldBe result
+        }
+    }
   }
 }

@@ -16,26 +16,21 @@
 
 package v1.models.domain
 
-import play.api.libs.json.Format
-import utils.enums.Enums
+import support.UnitSpec
 
-sealed trait MtdSourceEnum {
-  def toDesViewString: String
-}
+class DesTaxYearSpec extends UnitSpec {
+  private val desYear = "2019"
+  private val mtdYear = "2018-19"
 
-object MtdSourceEnum {
-  case object hmrcHeld extends MtdSourceEnum {
-    override def toDesViewString: String = "HMRC-HELD"
+  "fromMtd" should {
+    "return a des tax year" in {
+      DesTaxYear.fromMtd(mtdYear) shouldBe DesTaxYear(desYear)
+    }
   }
 
-  case object user extends MtdSourceEnum {
-    override def toDesViewString: String = "CUSTOMER"
+  "toMtd" should {
+    "return an mtd tax year" in {
+      DesTaxYear.toMtd(DesTaxYear(desYear)) shouldBe mtdYear
+    }
   }
-
-  case object latest extends MtdSourceEnum {
-    override def toDesViewString: String = "LATEST"
-  }
-
-  implicit val format: Format[MtdSourceEnum] = Enums.format[MtdSourceEnum]
-  val parser: PartialFunction[String, MtdSourceEnum] = Enums.parser[MtdSourceEnum]
 }

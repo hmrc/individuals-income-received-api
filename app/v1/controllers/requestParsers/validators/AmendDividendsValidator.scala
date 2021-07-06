@@ -42,7 +42,7 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig)
 
   private def parameterRuleValidation: AmendDividendsRawData => List[List[MtdError]] = { data =>
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 

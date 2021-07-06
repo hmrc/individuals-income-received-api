@@ -16,7 +16,7 @@
 
 package v1.models.domain
 
-import play.api.libs.json
+import play.api.libs.json.Format
 import utils.enums.Enums
 
 sealed trait ClaimOrElectionCodes
@@ -45,6 +45,6 @@ object ClaimOrElectionCodes {
 
   case object INV extends ClaimOrElectionCodes
 
-  implicit val format: json.Format[ClaimOrElectionCodes] = Enums.format[ClaimOrElectionCodes]
-
+  implicit val format: Format[ClaimOrElectionCodes] = Enums.format[ClaimOrElectionCodes]
+  val parser: PartialFunction[String, ClaimOrElectionCodes] = Enums.parser[ClaimOrElectionCodes]
 }

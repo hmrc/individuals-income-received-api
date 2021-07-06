@@ -50,7 +50,7 @@ object DoubleTaxationTreatyFormatError  extends MtdError("FORMAT_DOUBLE_TAXATION
 object SF74RefFormatError               extends MtdError("FORMAT_SF74_REF", "The provided SF74 reference is invalid")
 object EmployerNameFormatError          extends MtdError("FORMAT_EMPLOYER_NAME", "The provided employer name is invalid")
 object EmployerRefFormatError           extends MtdError("FORMAT_EMPLOYER_REF", "The provided employer ref is invalid")
-object DateFormatError                  extends MtdError("FORMAT_DATE", "")
+object DateFormatError                  extends MtdError("FORMAT_DATE", "The field should be in the format YYYY-MM-DD")
 object ClassOfSharesAwardedFormatError  extends MtdError("FORMAT_CLASS_OF_SHARES_AWARDED", "The provided class of shares awarded is invalid")
 object ClassOfSharesAcquiredFormatError extends MtdError("FORMAT_CLASS_OF_SHARES_ACQUIRED", "The provided class of shares acquired is invalid")
 object SchemePlanTypeFormatError        extends MtdError("FORMAT_SCHEME_PLAN_TYPE", "The provided scheme plan type is invalid")
@@ -58,6 +58,9 @@ object PayrollIdFormatError             extends MtdError("FORMAT_PAYROLL_ID", "T
 object StartDateFormatError             extends MtdError("FORMAT_START_DATE", "The provided start date is invalid")
 object CessationDateFormatError         extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
 object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The provided source is invalid")
+object AssetDescriptionFormatError             extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
+object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
+object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
@@ -117,11 +120,36 @@ object RuleLumpSumsError
       message = "At least one child object is required when lumpSums are provided"
     )
 
+object RuleGainLossError
+    extends MtdError(
+      code = "RULE_GAIN_LOSS",
+      message = "Only one of gain or loss values can be provided"
+    )
+
+object RuleDisposalDateError
+    extends MtdError(
+      code = "RULE_DISPOSAL_DATE",
+      message = "The disposalDate must be in the specified tax year and no later than today's date"
+    )
+
+object RuleAcquisitionDateError
+    extends MtdError(
+      code = "RULE_ACQUISITION_DATE",
+      message = "The acquisitionDate must not be later than disposalDate"
+    )
+
+object RuleGainAfterReliefLossAfterReliefError
+    extends MtdError(
+      code = "RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF",
+      message = "Only one of gainAfterRelief or lossAfterRelief values can be provided"
+    )
+
 // Not found errors
-object PPDSubmissionIdNotFoundError extends MtdError(
-  code = "PPD_SUBMISSION_ID_NOT_FOUND",
-  message = "Matching resource not found"
-)
+object PPDSubmissionIdNotFoundError
+    extends MtdError(
+      code = "PPD_SUBMISSION_ID_NOT_FOUND",
+      message = "Matching resource not found"
+    )
 
 // Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

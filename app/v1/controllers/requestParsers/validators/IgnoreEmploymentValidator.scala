@@ -46,7 +46,7 @@ class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateT
     val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
       if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear)  else List.empty[MtdError]
     )
   }
