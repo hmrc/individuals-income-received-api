@@ -411,28 +411,6 @@ traits:
                 description: 'Either amountOfGain or amountOfLoss, must be provided but not both.'
                 value:
                   code: RULE_AMOUNT_GAIN_LOSS
-  ruleCompletionDateBeforeDisposalDate:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleCompletionDateBeforeDisposalDate:
-                description: 'The completionDate must not be earlier than the disposalDate.'
-                value:
-                  code: RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE
-  ruleAcquisitionDateBeforeDisposalDate:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleAcquisitionDateBeforeDisposalDate:
-                description: 'The acquisitionDate must not be earlier than the disposalDate.'
-                value:
-                  code: RULE_ACQUISITION_DATE_BEFORE_DISPOSAL_DATE
   ruleLossesGreaterThanGain:
     responses:
       400:
