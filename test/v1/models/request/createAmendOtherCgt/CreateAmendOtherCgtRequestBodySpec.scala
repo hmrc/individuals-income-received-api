@@ -19,7 +19,6 @@ package v1.models.request.createAmendOtherCgt
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 import v1.models.domain.{AssetType, ClaimOrElectionCodes}
-import v1.models.request.CreateAmendOtherCgt.{CreateAmendOtherCgtRequestBody, Disposal, Losses, NonStandardGains}
 
 class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
 
@@ -39,7 +38,6 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       |            "PRR"
       |         ],
       |         "gainAfterRelief": 10.12,
-      |         "lossAfterRelief": 11.12,
       |         "rttTaxPaid": 12.12
       |      }
       |   ],
@@ -78,7 +76,6 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       |            "PRR"
       |         ],
       |         "gainAfterRelief": 10.12,
-      |         "lossAfterRelief": 11.12,
       |         "rttTaxPaid": 12.12
       |      },
       |      {
@@ -94,7 +91,6 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       |            "BAD"
       |         ],
       |         "gainAfterRelief":110.12,
-      |         "lossAfterRelief":111.12,
       |         "rttTaxPaid":112.12
       |      }
       |   ],
@@ -128,7 +124,7 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
     None,
     Some(Seq(ClaimOrElectionCodes.PRR)),
     Some(10.12),
-    Some(11.12),
+    None,
     Some(12.12)
   )
 
@@ -143,7 +139,7 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
     None,
     Some(Seq(ClaimOrElectionCodes.PRR, ClaimOrElectionCodes.BAD)),
     Some(110.12),
-    Some(111.12),
+    None,
     Some(112.12)
   )
 
@@ -191,7 +187,6 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       |            "PRR"
       |         ],
       |         "gainAfterRelief":10.12,
-      |         "lossAfterRelief":11.12,
       |         "rttTaxPaid":12.12
       |      }
       |   ],
@@ -230,7 +225,6 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       |            "PRR"
       |         ],
       |         "gainAfterRelief":10.12,
-      |         "lossAfterRelief":11.12,
       |         "rttTaxPaid":12.12
       |      },
       |      {
@@ -246,7 +240,6 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       |            "BAD"
       |         ],
       |         "gainAfterRelief":110.12,
-      |         "lossAfterRelief":111.12,
       |         "rttTaxPaid":112.12
       |      }
       |   ],

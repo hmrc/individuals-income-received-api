@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.request.CreateAmendOtherCgt
+package v1.models.request.createAmendOtherCgt
 
 import v1.models.domain.Nino
 

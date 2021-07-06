@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.request.CreateAmendOtherCgt
+package v1.models.request.createAmendOtherCgt
 
 import play.api.libs.json.{Json, OFormat}
 import v1.models.domain.{AssetType, ClaimOrElectionCodes}
@@ -33,6 +33,5 @@ case class Disposal(assetType: AssetType,
                     rttTaxPaid: Option[BigDecimal])
 
 object Disposal {
-
   implicit val format: OFormat[Disposal] =  Json.format[Disposal]
 }

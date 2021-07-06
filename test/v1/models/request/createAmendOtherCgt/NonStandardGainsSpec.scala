@@ -16,9 +16,8 @@
 
 package v1.models.request.createAmendOtherCgt
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.CreateAmendOtherCgt.NonStandardGains
 
 class NonStandardGainsSpec extends UnitSpec {
 
@@ -62,7 +61,7 @@ class NonStandardGainsSpec extends UnitSpec {
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      |  "carriedInterestGain": "101.99",
+      |  "carriedInterestGain": "fghj",
       |  "carriedInterestRttTaxPaid": 102.99,
       |  "attributedGains": 103.99,
       |  "attributedGainsRttTaxPaid": 104.99,
@@ -82,6 +81,12 @@ class NonStandardGainsSpec extends UnitSpec {
     "read from an empty JSON" should {
       "produce an empty object" in {
         emptyJson.as[NonStandardGains] shouldBe NonStandardGains.empty
+      }
+    }
+
+    "read from an invalid JSON" should {
+      "produce a JsError" in {
+        invalidJson.validate[NonStandardGains] shouldBe a[JsError]
       }
     }
 

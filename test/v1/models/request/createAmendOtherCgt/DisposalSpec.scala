@@ -19,7 +19,6 @@ package v1.models.request.createAmendOtherCgt
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 import v1.models.domain.{AssetType, ClaimOrElectionCodes}
-import v1.models.request.CreateAmendOtherCgt.Disposal
 
 class DisposalSpec extends UnitSpec {
 
@@ -37,7 +36,6 @@ class DisposalSpec extends UnitSpec {
       |    "PRR"
       |  ],
       |  "gainAfterRelief": 10.12,
-      |  "lossAfterRelief": 11.12,
       |  "rttTaxPaid": 12.12
       |}
       |""".stripMargin
@@ -59,7 +57,6 @@ class DisposalSpec extends UnitSpec {
       |    "BAD"
       |  ],
       |  "gainAfterRelief": 10.12,
-      |  "lossAfterRelief": 11.12,
       |  "rttTaxPaid": 12.12
       |}
       |""".stripMargin
@@ -76,7 +73,7 @@ class DisposalSpec extends UnitSpec {
     None,
     Some(Seq(ClaimOrElectionCodes.PRR)),
     Some(10.12),
-    Some(11.12),
+    None,
     Some(12.12)
   )
 
@@ -91,7 +88,7 @@ class DisposalSpec extends UnitSpec {
     None,
     Some(Seq(ClaimOrElectionCodes.PRR, ClaimOrElectionCodes.OTH, ClaimOrElectionCodes.BAD)),
     Some(10.12),
-    Some(11.12),
+    None,
     Some(12.12)
   )
 
@@ -109,7 +106,6 @@ class DisposalSpec extends UnitSpec {
       |    "PRR"
       |  ],
       |  "gainAfterRelief":10.12,
-      |  "lossAfterRelief":11.12,
       |  "rttTaxPaid":12.12
       |}
       |""".stripMargin
@@ -131,7 +127,6 @@ class DisposalSpec extends UnitSpec {
       |    "BAD"
       |  ],
       |  "gainAfterRelief":10.12,
-      |  "lossAfterRelief":11.12,
       |  "rttTaxPaid":12.12
       |}
       |""".stripMargin

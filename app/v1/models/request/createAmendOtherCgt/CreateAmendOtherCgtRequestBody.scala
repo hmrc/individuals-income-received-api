@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.CreateAmendOtherCgt
+package v1.models.request.createAmendOtherCgt
 
 import play.api.libs.json.{Json, OFormat}
 
-case class Losses(broughtForwardLossesUsedInCurrentYear: Option[BigDecimal],
-                  setAgainstInYearGains: Option[BigDecimal],
-                  setAgainstInYearGeneralIncome: Option[BigDecimal],
-                  setAgainstEarlierYear: Option[BigDecimal])
+case class CreateAmendOtherCgtRequestBody(disposals: Option[Seq[Disposal]],
+                                          nonStandardGains: Option[NonStandardGains],
+                                          losses: Option[Losses],
+                                          adjustments: Option[BigDecimal])
 
-object Losses {
-  val empty: Losses = Losses(None, None, None, None)
+object CreateAmendOtherCgtRequestBody {
+  val empty: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(None, None, None, None)
 
-  implicit val format: OFormat[Losses] =  Json.format[Losses]
+  implicit val format: OFormat[CreateAmendOtherCgtRequestBody] =  Json.format[CreateAmendOtherCgtRequestBody]
+
 }
