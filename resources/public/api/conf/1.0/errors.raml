@@ -10,20 +10,33 @@ traits:
         body:
           application/json:
             type: types.errorResponse
-            example:
-              description: 'The supplied income source could not be found.'
-              value:
-                code: MATCHING_RESOURCE_NOT_FOUND
-  ppdSubmissionIdNotFound:
+            examples:
+              notFound:
+                description: 'The supplied income source could not be found.'
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
+  notFoundCgtOverrides:
     responses:
       404:
         body:
           application/json:
             type: types.errorResponse
-            example:
-              description: 'The PPD submission ID was not found'
-              value:
-                code: PPD_SUBMISSION_ID_NOT_FOUND
+            examples:
+              notFoundCgtOverrides:
+                description: 'There are no submissions found.'
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
+  notFoundPpdSubmissionId:
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              notFoundPpdSubmissionId:
+                description: 'The PPD submission ID was not found.'
+                value:
+                  code: PPD_SUBMISSION_ID_NOT_FOUND
   clientOrAgentNotAuthorised:
     responses:
       403:
