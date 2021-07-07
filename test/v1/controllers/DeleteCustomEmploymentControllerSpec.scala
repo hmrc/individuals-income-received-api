@@ -88,7 +88,7 @@ class DeleteCustomEmploymentControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
-    def desErrorMap: Map[String, MtdError] =
+    def downstreamErrorMap: Map[String, MtdError] =
       Map(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR" -> TaxYearFormatError,
@@ -109,7 +109,7 @@ class DeleteCustomEmploymentControllerSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .delete(desErrorMap)
+          .delete(downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteCustomEmployment(nino, taxYear, employmentId)(fakeDeleteRequest)
@@ -164,7 +164,7 @@ class DeleteCustomEmploymentControllerSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .delete(desErrorMap)
+              .delete(downstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteCustomEmployment(nino, taxYear, employmentId)(fakeDeleteRequest)

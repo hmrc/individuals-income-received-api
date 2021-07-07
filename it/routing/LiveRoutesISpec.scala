@@ -22,7 +22,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class LiveRoutesISpec extends IntegrationBaseSpec {
 
@@ -90,13 +90,13 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "the feature switch is turned off to point to live routes only" in new Test {
 
-        def desUri: String = s"/income-tax/income/savings/$nino/$taxYear"
+        def ifsUri: String = s"/income-tax/income/savings/$nino/$taxYear"
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.PUT, desUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request(uri).put(requestBodyJson))
@@ -146,5 +146,20 @@ class LiveRoutesISpec extends IntegrationBaseSpec {
     }
   }
 
-  // TODO - Add a test here once a CGT endpoint has been built.
+  "Calling the 'delete cgt ppd overrides' endpoint (switched off in production)" should {
+    "return a 404 status code" when {
+      "the feature switch is turned off to point to the live routes only" in new Test {
+
+        override def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
+
+        override def setupStubs(): StubMapping = {
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+        }
+
+        val response: WSResponse = await(request(uri).delete)
+        response.status shouldBe NOT_FOUND
+      }
+    }
+  }
 }

@@ -19,51 +19,47 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.fixtures.foreign.RetrieveForeignFixture
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import v1.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class RetrieveForeignControllerISpec extends IntegrationBaseSpec {
+class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
 
-    val ifsResponse: JsValue = RetrieveForeignFixture.fullRetrieveForeignResponseJson
-    val mtdResponse: JsValue = RetrieveForeignFixture.mtdResponseWithHateoas(nino, taxYear)
+    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
 
-    def uri: String = s"/foreign/$nino/$taxYear"
-
-    def ifsUri: String = s"/income-tax/income/foreign/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
-    def request: WSRequest = {
+    def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
   }
 
-  "Calling the 'retrieve foreign' endpoint" should {
-    "return a 200 status code" when {
+  "Calling the 'delete cgt ppd overrides' endpoint" should {
+    "return a 204 status code" when {
       "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
-          AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, OK, ifsResponse)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, ifsUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request.get)
-        response.status shouldBe OK
-        response.json shouldBe mtdResponse
+        val response: WSResponse = await(request().delete)
+        response.status shouldBe NO_CONTENT
+        response.body shouldBe ""
         response.header("Content-Type") shouldBe Some("application/json")
+        response.header("X-CorrelationId").nonEmpty shouldBe true
       }
     }
 
@@ -77,12 +73,11 @@ class RetrieveForeignControllerISpec extends IntegrationBaseSpec {
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
-              AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -91,9 +86,9 @@ class RetrieveForeignControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "20177", BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2015-16", BAD_REQUEST, RuleTaxYearNotSupportedError)
+          ("AA123456A", "20199", BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2019-21", BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -104,13 +99,12 @@ class RetrieveForeignControllerISpec extends IntegrationBaseSpec {
           s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
-              AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.DELETE, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -131,7 +125,8 @@ class RetrieveForeignControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

@@ -23,7 +23,7 @@ import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AuthISpec extends IntegrationBaseSpec {
 
@@ -42,7 +42,7 @@ class AuthISpec extends IntegrationBaseSpec {
     def setupStubs(): StubMapping
     def uri: String = s"/savings/$nino/$taxYear"
 
-    def desUri: String = s"/income-tax/income/savings/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/income/savings/$nino/$taxYear"
 
     def request(): WSRequest = {
       setupStubs()
@@ -50,7 +50,7 @@ class AuthISpec extends IntegrationBaseSpec {
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
 
-    val desResponse: JsValue = Json.parse(
+    val ifsResponse: JsValue = Json.parse(
       """
         | {
         | "responseData" : "someResponse"
@@ -82,7 +82,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.DELETE, desUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, ifsUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request().delete)

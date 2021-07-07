@@ -108,7 +108,7 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
-    def desErrorMap: Map[String, MtdError] = Map(
+    def downstreamErrorMap: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
@@ -131,7 +131,7 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveFinancialDetailsResponse](desErrorMap)
+          .retrieve[RetrieveFinancialDetailsResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, model))))
 
         MockHateoasFactory
@@ -191,7 +191,7 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveOtherResponse](desErrorMap)
+              .retrieve[RetrieveOtherResponse](downstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieve(nino, taxYear, employmentId, Some(source))(fakeGetRequest)

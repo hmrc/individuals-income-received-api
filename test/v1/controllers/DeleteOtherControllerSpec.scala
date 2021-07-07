@@ -95,7 +95,7 @@ class DeleteOtherControllerSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .delete(defaultDesErrorMap)
+          .delete(defaultDownstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteOther(nino, taxYear)(fakeDeleteRequest)
@@ -149,7 +149,7 @@ class DeleteOtherControllerSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .delete(defaultDesErrorMap)
+              .delete(defaultDownstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteOther(nino, taxYear)(fakeDeleteRequest)

@@ -18,12 +18,11 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -31,11 +30,10 @@ import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class DeleteForeignControllerSpec
+class DeleteCgtPpdOverridesControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockAuditService
     with MockDeleteRetrieveService
     with MockDeleteRetrieveRequestParser
     with MockIdGenerator {
@@ -54,29 +52,14 @@ class DeleteForeignControllerSpec
     taxYear = taxYear
   )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "DeleteForeignIncome",
-      transactionName = "delete-foreign-income",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
-      )
-    )
-
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new DeleteForeignController(
+    val controller = new DeleteCgtPpdOverridesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteRetrieveRequestParser,
       service = mockDeleteRetrieveService,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -86,8 +69,8 @@ class DeleteForeignControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  "DeleteForeignController" should {
-    "return NO_content" when {
+  "DeleteCgtPpdOverridesController" should {
+    "return NO_CONTENT" when {
       "happy path" in new Test {
 
         MockDeleteRetrieveRequestParser
@@ -98,14 +81,11 @@ class DeleteForeignControllerSpec
           .delete(defaultDownstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.deleteForeign(nino, taxYear)(fakeDeleteRequest)
+        val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
 
         status(result) shouldBe NO_CONTENT
         contentAsString(result) shouldBe ""
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, None, None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -118,15 +98,11 @@ class DeleteForeignControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.deleteForeign(nino, taxYear)(fakeDeleteRequest)
+            val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -153,14 +129,11 @@ class DeleteForeignControllerSpec
               .delete(defaultDownstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.deleteForeign(nino, taxYear)(fakeDeleteRequest)
+            val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

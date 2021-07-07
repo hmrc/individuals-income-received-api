@@ -24,7 +24,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
@@ -63,7 +63,7 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -80,7 +80,7 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -136,7 +136,7 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.GET, desUri, Map("view" -> "LATEST"), desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, desUri, Map("view" -> "LATEST"), desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request.get)

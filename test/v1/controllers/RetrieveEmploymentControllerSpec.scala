@@ -158,7 +158,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
-    def desErrorMap: Map[String, MtdError] =
+    def downstreamErrorMap: Map[String, MtdError] =
       Map(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR" -> TaxYearFormatError,
@@ -178,7 +178,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveEmploymentResponse](desErrorMap)
+          .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithoutDateIgnoredResponseModel))))
 
         MockHateoasFactory
@@ -210,7 +210,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveEmploymentResponse](desErrorMap)
+          .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
 
         MockHateoasFactory
@@ -242,7 +242,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveEmploymentResponse](desErrorMap)
+          .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
 
         MockHateoasFactory
@@ -302,7 +302,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
               .returns(Right(requestData))
 
             MockDeleteRetrieveService
-              .retrieve[RetrieveEmploymentResponse](desErrorMap)
+              .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveEmployment(nino, taxYear,employmentId)(fakeGetRequest)
