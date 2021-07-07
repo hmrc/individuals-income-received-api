@@ -34,6 +34,11 @@ case class SinglePropertyDisposals(submissionId: String,
                                    amountOfNetLoss: Option[BigDecimal]) {
 
   def isSubmissionIdEmpty: Boolean = submissionId.isEmpty
+
+  def isNetGainEmpty: Boolean = amountOfNetGain.isEmpty
+  def isNetLossEmpty: Boolean = amountOfNetLoss.isEmpty
+  def isBothSupplied: Boolean = !isNetGainEmpty && ! isNetLossEmpty
+  def isBothEmpty: Boolean = isNetGainEmpty && isNetLossEmpty
 }
 
 object SinglePropertyDisposals {

@@ -249,7 +249,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "otherReliefAmount": -3434.23,
       |             "lossesFromThisYear": 436.23297423,
       |             "lossesFromPreviousYear": 234.2334728,
-      |             "amountOfNetGain": -4567.89
+      |             "amountOfNetGain": 4567.8974726
       |         },
       |         {
       |             "submissionId": "AB0000000092",
@@ -317,7 +317,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val bothGainsAndLossRequestBodyJson: JsValue = Json.parse(
+  private val bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -366,7 +366,105 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val nietherGainsOrLossRequestBodyJson: JsValue = Json.parse(
+  private val bothGainsAndLossSinglePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "submissionId": "AB0000000092",
+      |            "amountOfNetGain": 1234.78,
+      |            "amountOfNetLoss": 134.99
+      |         },
+      |         {
+      |            "submissionId": "AB0000000098",
+      |            "amountOfNetGain": 1234.78,
+      |            "amountOfNetLoss": 134.99
+      |         }
+      |    ],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000098",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         },
+      |         {
+      |             "submissionId": "AB0000000091",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetLoss": 4567.89
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
+  private val nietherGainsOrLossMultiplePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "submissionId": "AB0000000092",
+      |            "amountOfNetGain": 1234.78,
+      |            "amountOfNetLoss": 134.99
+      |         },
+      |         {
+      |            "submissionId": "AB0000000098",
+      |            "amountOfNetGain": 1234.78,
+      |            "amountOfNetLoss": 134.99
+      |         }
+      |    ],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000098",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         },
+      |         {
+      |             "submissionId": "AB0000000091",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetLoss": 4567.89
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
+  private val nietherGainsOrLossSinglePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -422,8 +520,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val invalidSubmissionIdRequestBody = AnyContentAsJson(invalidSubmissionIdRequestBodyJson)
   private val invalidValueRequestBody = AnyContentAsJson(invalidValueRequestBodyJson)
   private val invalidDateRequestBody = AnyContentAsJson(invalidDateRequestBodyJson)
-  private val bothGainsAndLossRequestBody = AnyContentAsJson(bothGainsAndLossRequestBodyJson)
-  private val nietherGainsOrLossRequestBody = AnyContentAsJson(nietherGainsOrLossRequestBodyJson)
+  private val bothGainsAndLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson)
+  private val bothGainsAndLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
+  private val nietherGainsOrLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(nietherGainsOrLossMultiplePropertyDisposalsRequestBodyJson)
+  private val nietherGainsOrLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(nietherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
 
   class Test extends MockAppConfig {
 
@@ -467,17 +567,21 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return RuleIncorrectOrEmptyBodyError error" when {
       "an JSON body missing a mandatory field is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(
+            paths = Some(Seq("/multiplePropertyDisposals/0/submissionId",
+              "/multiplePropertyDisposals/1/submissionId",
+              "/singlePropertyDisposals/0/submissionId",
+              "/singlePropertyDisposals/1/submissionId"))))
       }
 
       "a json is submitted with an empty multiplePropertyDisposals" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, emptyMultiplePropertyDisposalsRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/multiplePropertyDisposals"))))
       }
 
       "a json is submitted with an empty singlePropertyDisposals" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, emptySinglePropertyDisposalsRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/singlePropertyDisposals"))))
       }
     }
 
@@ -528,13 +632,23 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     }
 
     "return a RuleAmountGainLossError" when {
-      "both amountOfNetGain and amountOfNetLoss are provided" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, bothGainsAndLossRequestBody)) shouldBe
+      "both amountOfNetGain and amountOfNetLoss are provided for multiplePropertyDisposals" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, bothGainsAndLossMultiplePropertyDisposalsRequestBody)) shouldBe
           List(RuleAmountGainLossError)
       }
 
-      "neither amountOfNetGain or amountOfNetLoss are provided" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, nietherGainsOrLossRequestBody)) shouldBe
+      "neither amountOfNetGain or amountOfNetLoss are provided for multiplePropertyDisposals" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, nietherGainsOrLossMultiplePropertyDisposalsRequestBody)) shouldBe
+          List(RuleAmountGainLossError)
+      }
+
+      "both amountOfNetGain and amountOfNetLoss are provided for singlePropertyDisposals" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, bothGainsAndLossSinglePropertyDisposalsRequestBody)) shouldBe
+          List(RuleAmountGainLossError)
+      }
+
+      "neither amountOfNetGain or amountOfNetLoss are provided for singlePropertyDisposals" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, nietherGainsOrLossSinglePropertyDisposalsRequestBody)) shouldBe
           List(RuleAmountGainLossError)
       }
     }

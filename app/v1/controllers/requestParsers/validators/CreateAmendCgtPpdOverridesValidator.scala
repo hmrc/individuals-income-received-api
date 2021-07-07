@@ -26,7 +26,13 @@ import v1.models.request.createAmendCgtPpdOverrides._
 class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppConfig)
   extends Validator[CreateAmendCgtPpdOverridesRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, lossOrGainsValidator, bodyFormatValidator, incorrectOrEmptyBodyValidator, bodyValueValidator)
+  private val validationSet = List(
+    parameterFormatValidation,
+    parameterRuleValidation,
+    bodyFormatValidator,
+    lossOrGainsValidator,
+    bodyValueValidator,
+    emptySingleOrMultipleDisposalsValidator)
 
 
   override def validate(data: CreateAmendCgtPpdOverridesRawData): List[MtdError] = {
@@ -52,10 +58,18 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
     )
   }
 
-  private def incorrectOrEmptyBodyValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
+  private def emptySingleOrMultipleDisposalsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
     val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
 
-    if(requestBody.isEmptyOrIncorrectBody) List(List(RuleIncorrectOrEmptyBodyError)) else NoValidationErrors
+    if(requestBody.singlePropertyDisposals.isEmpty) {
+      List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/singlePropertyDisposals")))))
+    }
+    else if(requestBody.multiplePropertyDisposals.isEmpty) {
+      List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/multiplePropertyDisposals")))))
+    }
+    else {
+      NoValidationErrors
+    }
   }
 
 
@@ -64,19 +78,47 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
 
     List(
       requestBody.multiplePropertyDisposals.map(_.zipWithIndex.flatMap {
-        case (data, index) => validateBothSupplied(data, index)
+        case (data, index) => validateBothSuppliedMultipleDisposals(data, index)
+      }).getOrElse(NoValidationErrors).toList,
+      requestBody.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
+        case (data, index) => validateBothSuppliedSingleDisposals(data, index)
+      }).getOrElse(NoValidationErrors).toList,
+      requestBody.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
+        case (data, index) => validateGainGreaterThanLoss(data, index)
       }).getOrElse(NoValidationErrors).toList
     )
   }
 
-  private def validateBothSupplied(multiplePropertyDisposals: MultiplePropertyDisposals, arrayIndex: Int): List[MtdError] = {
+  private def validateBothSuppliedMultipleDisposals(multiplePropertyDisposals: MultiplePropertyDisposals, arrayIndex: Int): List[MtdError] = {
 
       if(multiplePropertyDisposals.isBothSupplied) {
         List(RuleAmountGainLossError)
       }
       else if(multiplePropertyDisposals.isEmpty) {
         List(RuleAmountGainLossError)
-      } else NoValidationErrors
+      } else {
+        NoValidationErrors
+      }
+  }
+
+  private def validateBothSuppliedSingleDisposals(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
+
+    if(singlePropertyDisposals.isBothSupplied) {
+      List(RuleAmountGainLossError)
+    }
+    else if(singlePropertyDisposals.isBothEmpty) {
+      List(RuleAmountGainLossError)
+    } else {
+      NoValidationErrors
+    }
+  }
+
+  private def validateGainGreaterThanLoss(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
+    if((!singlePropertyDisposals.amountOfNetGain.isEmpty) && (singlePropertyDisposals.lossesFromPreviousYear > singlePropertyDisposals.amountOfNetGain || singlePropertyDisposals.lossesFromThisYear > singlePropertyDisposals.amountOfNetGain)) {
+      List(RuleLossesGreaterThanGainError)
+    } else {
+      NoValidationErrors
+    }
   }
 
   private def bodyValueValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
@@ -90,7 +132,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
         }).getOrElse(NoValidationErrors).toList,
         requestBodyData.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
           case (data, index) => validateSinglePropertyDisposals(data, index)
-        }).getOrElse(NoValidationErrors).toList,
+        }).getOrElse(NoValidationErrors).toList
       )
     ))
   }
