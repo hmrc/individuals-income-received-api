@@ -1,0 +1,51 @@
+{
+  "submittedOn": "2020-07-06T09:37:17Z",
+  "disposals": [
+    {
+      "assetType": "otherProperty",
+      "assetDescription": "Property Sale",
+      "acquisitionDate": "2021-05-01",
+      "disposalDate": "2021-06-01",
+      "disposalProceeds": 1000.12,
+      "allowableCosts": 1000.12,
+      "gain": 1000.12,
+      "claimOrElectionCodes": [
+        "PRR"
+      ],
+      "gainAfterRelief": 1000.12,
+      "rttTaxPaid": 1000.12
+    }
+  ],
+  "nonStandardGains": {
+    "carriedInterestGain": 1000.12,
+    "carriedInterestRttTaxPaid": 1000.12,
+    "attributedGains": 1000.12,
+    "attributedGainsRttTaxPaid": 1000.12,
+    "otherGains": 1000.12,
+    "otherGainsRttTaxPaid": 1000.12
+  },
+  "losses": {
+    "broughtForwardLossesUsedInCurrentYear": 1000.12,
+    "setAgainstInYearGains": 1000.12,
+    "setAgainstInYearGeneralIncome": 1000.12,
+    "setAgainstEarlierYear": 1000.12
+  },
+  "adjustments": 1000.12,
+  "links": [
+    {
+      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
+      "rel": "create-and-amend-other-capital-gains-and-disposals",
+      "method": "PUT"
+    },
+    {
+      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
+      "rel": "delete-other-capital-gains-and-disposals",
+      "method": "DELETE"
+    },
+    {
+      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
+      "rel": "self",
+      "method": "GET"
+    }
+  ]
+}

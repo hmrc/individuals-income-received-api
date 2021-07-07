@@ -15,17 +15,28 @@ traits:
                 description: 'The supplied income source could not be found.'
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
-  notFoundCgtOverrides:
+  notFoundOtherCgtAndDisposals:
     responses:
       404:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              notFoundCgtOverrides:
-                description: 'There are no submissions found.'
+              notFoundOtherCgtAndDisposals:
+                description: 'Other Capital Gains and disposals could not be found for the supplied nino and taxYear.'
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
+  notFoundCgtOverrides:
+      responses:
+        404:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                notFoundCgtOverrides:
+                  description: 'There are no submissions found.'
+                  value:
+                    code: MATCHING_RESOURCE_NOT_FOUND
   notFoundPpdSubmissionId:
     responses:
       404:
