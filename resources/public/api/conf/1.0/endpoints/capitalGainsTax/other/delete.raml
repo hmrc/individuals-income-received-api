@@ -7,9 +7,9 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Delete other Capital Gains disposals
+displayName: Delete Other Capital Gains and Disposals
 description: "This endpoint allows the developer to delete user submitted Other Capital Gains and Disposals with the exception of residential property, for a given NINO and tax year."
-(annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
+(annotations.sandboxData): !include ../../../scenarios/defaultAndNotFound.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:
