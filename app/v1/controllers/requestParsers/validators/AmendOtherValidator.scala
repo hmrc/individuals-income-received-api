@@ -41,7 +41,7 @@ class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Valid
 
   private def parameterRuleValidation: AmendOtherRawData => List[List[MtdError]] = { data =>
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 

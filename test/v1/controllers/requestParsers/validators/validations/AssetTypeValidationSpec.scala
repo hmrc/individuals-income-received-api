@@ -16,19 +16,30 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.MtdSourceEnum
-import v1.models.errors.{MtdError, SourceFormatError}
+import support.UnitSpec
+import v1.models.errors.AssetTypeFormatError
 
-import scala.util.{Failure, Success, Try}
+class AssetTypeValidationSpec extends UnitSpec {
+  "validate" should {
+    "return an empty List" when {
+      Seq(
+        "otherProperty",
+        "unlistedShares",
+        "listedShares",
+        "otherAsset"
+      ).foreach (
+        assetType =>
+          s"$assetType is supplied" in {
+            AssetTypeValidation.validate(assetType, "path") shouldBe NoValidationErrors
+          }
+      )
+    }
 
-object EmploymentSourceValidation {
-
-  def validate(source: String): List[MtdError] = {
-    Try {
-      Option(source).map(MtdSourceEnum.parser)
-    } match {
-      case Failure(_) => List(SourceFormatError)
-      case Success(_) => NoValidationErrors
+    "return an error" when {
+      "supplied an invalid assetType" in {
+        AssetTypeValidation.validate("beans", "path") shouldBe List(AssetTypeFormatError.copy(paths = Some(Seq("path"))))
+      }
     }
   }
+
 }

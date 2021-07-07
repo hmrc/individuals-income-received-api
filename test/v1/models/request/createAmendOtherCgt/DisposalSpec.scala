@@ -63,7 +63,7 @@ class DisposalSpec extends UnitSpec {
   )
 
   val mtdRequestBody: Disposal = Disposal(
-    AssetType.otherProperty,
+    AssetType.otherProperty.toString,
     "Property Sale",
     "2021-01-01",
     "2021-02-01",
@@ -71,14 +71,14 @@ class DisposalSpec extends UnitSpec {
     100.13,
     Some(900.12),
     None,
-    Some(Seq(ClaimOrElectionCodes.PRR)),
+    Some(Seq(ClaimOrElectionCodes.PRR.toString)),
     Some(10.12),
     None,
     Some(12.12)
   )
 
   val mtdRequestBodyWithMultipleCodes: Disposal = Disposal(
-    AssetType.otherProperty,
+    AssetType.otherProperty.toString,
     "Property Sale",
     "2021-01-01",
     "2021-02-01",
@@ -86,7 +86,7 @@ class DisposalSpec extends UnitSpec {
     100.13,
     Some(900.12),
     None,
-    Some(Seq(ClaimOrElectionCodes.PRR, ClaimOrElectionCodes.OTH, ClaimOrElectionCodes.BAD)),
+    Some(Seq(ClaimOrElectionCodes.PRR.toString, ClaimOrElectionCodes.OTH.toString, ClaimOrElectionCodes.BAD.toString)),
     Some(10.12),
     None,
     Some(12.12)

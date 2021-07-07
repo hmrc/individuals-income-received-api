@@ -16,16 +16,12 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import v1.models.errors.MtdError
 
-object TaxYearNotSupportedValidation {
+object GainLossValidation {
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String, minimumTaxYear: Int): List[MtdError] = {
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear < minimumTaxYear) List(RuleTaxYearNotSupportedError)
-    else NoValidationErrors
+  def validate(gain: Option[BigDecimal], loss: Option[BigDecimal], error: MtdError, path: String): List[MtdError] = (gain, loss) match {
+    case (Some(_), Some(_)) => List(error.copy(paths = Some(Seq(path))))
+    case _                  => NoValidationErrors
   }
 }

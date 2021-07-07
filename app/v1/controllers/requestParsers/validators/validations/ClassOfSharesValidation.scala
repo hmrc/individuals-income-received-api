@@ -23,7 +23,7 @@ object ClassOfSharesValidation {
 
   def validate(classOfShares: String, acquired: Boolean): List[MtdError] = {
     if(classOfShares.matches(regex)) {NoValidationErrors}
-    else if (!classOfShares.matches(regex) && acquired == true) {List(ClassOfSharesAcquiredFormatError)}
+    else if (!classOfShares.matches(regex) && acquired) {List(ClassOfSharesAcquiredFormatError)}
     else {List(ClassOfSharesAwardedFormatError)}
   }
 }

@@ -16,4 +16,16 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-trait Validation
+import v1.models.errors.{MtdError, RuleAcquisitionDateError}
+
+import java.time.LocalDate
+
+object AcquisitionDateValidation {
+  def validate(disposalDate: String, acquisitionDate: String, path: String): List[MtdError] = {
+    if(LocalDate.parse(acquisitionDate).isAfter(LocalDate.parse(disposalDate))) {
+      List(RuleAcquisitionDateError.copy(paths = Some(Seq(path))))
+    } else {
+      NoValidationErrors
+    }
+  }
+}

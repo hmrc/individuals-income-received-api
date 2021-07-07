@@ -42,7 +42,7 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)
 
   private def parameterRuleValidation: AmendForeignRawData => List[List[MtdError]] = (data: AmendForeignRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 

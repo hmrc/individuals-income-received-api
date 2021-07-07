@@ -114,7 +114,7 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
   )
 
   val disposal: Disposal = Disposal(
-    AssetType.otherProperty,
+    AssetType.otherProperty.toString,
     "Property Sale",
     "2021-01-01",
     "2021-02-01",
@@ -122,14 +122,14 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
     100.13,
     Some(900.12),
     None,
-    Some(Seq(ClaimOrElectionCodes.PRR)),
+    Some(Seq(ClaimOrElectionCodes.PRR.toString)),
     Some(10.12),
     None,
     Some(12.12)
   )
 
   val disposal2: Disposal = Disposal(
-    AssetType.otherProperty,
+    AssetType.otherProperty.toString,
     "Property Sale",
     "2021-02-01",
     "2021-03-01",
@@ -137,7 +137,7 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
     1100.13,
     Some(1900.12),
     None,
-    Some(Seq(ClaimOrElectionCodes.PRR, ClaimOrElectionCodes.BAD)),
+    Some(Seq(ClaimOrElectionCodes.PRR.toString, ClaimOrElectionCodes.BAD.toString)),
     Some(110.12),
     None,
     Some(112.12)

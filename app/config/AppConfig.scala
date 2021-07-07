@@ -39,6 +39,7 @@ trait AppConfig {
 
   def apiGatewayContext: String
   def minimumPermittedTaxYear: Int
+  def minimumCgtPermittedTaxYear: Int
 
   //API Config
   def apiStatus(version: String): String
@@ -67,6 +68,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
 
   val apiGatewayContext: String = config.getString("api.gateway.context")
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
+  val minimumCgtPermittedTaxYear: Int = config.getInt("minimumCgtPermittedTaxYear")
 
   //API Config
   def apiStatus(version: String): String = config.getString(s"api.$version.status")

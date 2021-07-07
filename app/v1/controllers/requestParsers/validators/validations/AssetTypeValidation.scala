@@ -16,16 +16,19 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import v1.models.domain.AssetType
+import v1.models.errors.{AssetTypeFormatError, MtdError}
 
-object TaxYearNotSupportedValidation {
+import scala.util.{Failure, Success, Try}
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String, minimumTaxYear: Int): List[MtdError] = {
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
+object AssetTypeValidation {
 
-    if (desTaxYear < minimumTaxYear) List(RuleTaxYearNotSupportedError)
-    else NoValidationErrors
+  def validate(assetType: String, path: String): List[MtdError] = {
+    Try {
+      Option(assetType).map(AssetType.parser)
+    } match {
+      case Failure(_) => List(AssetTypeFormatError.copy(paths = Some(Seq(path))))
+      case Success(_) => NoValidationErrors
+    }
   }
 }

@@ -16,11 +16,20 @@
 
 package v1.controllers.requestParsers.validators
 
-import java.time.format.DateTimeFormatter
+import java.time.format.{ DateTimeFormatter, DateTimeFormatterBuilder }
+import java.time.temporal.ChronoField
 
 package object validations {
 
   val NoValidationErrors = List()
+
   val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+  val yearFormat: DateTimeFormatter =
+    new DateTimeFormatterBuilder()
+      .appendPattern("yyyy")
+      .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+      .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+      .toFormatter()
 
 }

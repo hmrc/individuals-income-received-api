@@ -17,9 +17,8 @@
 package v1.models.request.createAmendOtherCgt
 
 import play.api.libs.json.{Json, OFormat}
-import v1.models.domain.{AssetType, ClaimOrElectionCodes}
 
-case class Disposal(assetType: AssetType,
+case class Disposal(assetType: String,
                     assetDescription: String,
                     acquisitionDate: String,
                     disposalDate: String,
@@ -27,7 +26,7 @@ case class Disposal(assetType: AssetType,
                     allowableCosts: BigDecimal,
                     gain: Option[BigDecimal],
                     loss: Option[BigDecimal],
-                    claimOrElectionCodes: Option[Seq[ClaimOrElectionCodes]],
+                    claimOrElectionCodes: Option[Seq[String]],
                     gainAfterRelief: Option[BigDecimal],
                     lossAfterRelief: Option[BigDecimal],
                     rttTaxPaid: Option[BigDecimal])
