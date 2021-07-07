@@ -21,7 +21,19 @@ import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
 
 case class CreateAmendCgtPpdOverridesRequestBody(multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
-                                                 singlePropertyDisposals: Option[Seq[SinglePropertyDisposals]])
+                                                 singlePropertyDisposals: Option[Seq[SinglePropertyDisposals]]) {
+
+  def multiplePropertyDisposalsIsEmpty: Boolean = multiplePropertyDisposals.isEmpty
+
+  def singlePropertyDisposalsIsEmpty: Boolean = singlePropertyDisposals.isEmpty
+
+  def isEmpty: Boolean = multiplePropertyDisposalsIsEmpty && singlePropertyDisposalsIsEmpty
+
+  def isEmptyOrIncorrectBody: Boolean = isEmpty || {
+    multiplePropertyDisposalsIsEmpty ||
+    singlePropertyDisposalsIsEmpty
+  }
+}
 
 object CreateAmendCgtPpdOverridesRequestBody extends JsonUtils {
   val empty: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(None, None)

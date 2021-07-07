@@ -17,11 +17,22 @@
 package v1.models.request.createAmendCgtPpdOverrides
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 
 case class MultiplePropertyDisposals(submissionId: String,
                                      amountOfNetGain: Option[BigDecimal],
-                                     amountOfNetLoss: Option[BigDecimal])
+                                     amountOfNetLoss: Option[BigDecimal]) {
+
+  def isAmountOfGainEmpty: Boolean = amountOfNetGain.isEmpty
+
+  def isAmountOfLossEmpty: Boolean = amountOfNetLoss.isEmpty
+
+  def isSubmissionIdEmpty: Boolean = submissionId.isEmpty
+
+  def isBothSupplied: Boolean = !isAmountOfGainEmpty && !isAmountOfLossEmpty
+
+  def isEmpty: Boolean = isAmountOfGainEmpty && isAmountOfLossEmpty
+}
 
 object MultiplePropertyDisposals {
   implicit val reads: Reads[MultiplePropertyDisposals] = Json.reads[MultiplePropertyDisposals]

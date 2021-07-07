@@ -31,7 +31,10 @@ case class SinglePropertyDisposals(submissionId: String,
                                    lossesFromThisYear: Option[BigDecimal],
                                    lossesFromPreviousYear: Option[BigDecimal],
                                    amountOfNetGain: Option[BigDecimal],
-                                   amountOfNetLoss: Option[BigDecimal])
+                                   amountOfNetLoss: Option[BigDecimal]) {
+
+  def isSubmissionIdEmpty: Boolean = submissionId.isEmpty
+}
 
 object SinglePropertyDisposals {
   implicit val reads: Reads[SinglePropertyDisposals] = Json.reads[SinglePropertyDisposals]
