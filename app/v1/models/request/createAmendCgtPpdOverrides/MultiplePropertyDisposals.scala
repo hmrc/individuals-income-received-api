@@ -27,8 +27,6 @@ case class MultiplePropertyDisposals(submissionId: String,
 
   def isAmountOfLossEmpty: Boolean = amountOfNetLoss.isEmpty
 
-  def isSubmissionIdEmpty: Boolean = submissionId.isEmpty
-
   def isBothSupplied: Boolean = !isAmountOfGainEmpty && !isAmountOfLossEmpty
 
   def isEmpty: Boolean = isAmountOfGainEmpty && isAmountOfLossEmpty
