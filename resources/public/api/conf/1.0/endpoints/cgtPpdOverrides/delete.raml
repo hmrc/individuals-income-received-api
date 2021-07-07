@@ -7,8 +7,8 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Delete 'Report and Pay Capital Gains Tax on Property' Overrides
-description: "This endpoint allows the developer to delete user submitted overrides for previously submitted disposals reported via the HMRC 'Report and pay Capital Gains Tax on property' service."
+displayName: Delete 'Report and Pay Capital Gains Tax on residential property' Overrides
+description: "This endpoint allows the developer to delete user submitted overrides for previously submitted disposals reported via the HMRC 'Report and Pay Capital Gains Tax on residential property' service. This endpoint can only be used after the tax year has ended."
 (annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
