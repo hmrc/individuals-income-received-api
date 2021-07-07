@@ -50,5 +50,9 @@ object RelType {
   val AMEND_EMPLOYMENT_FINANCIAL_DETAILS = "create-and-amend-employment-financial-details"
   val DELETE_EMPLOYMENT_FINANCIAL_DETAILS = "delete-employment-financial-details"
 
+  val CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS = "create-and-amend-other-capital-gains-and-disposals"
+  val RETRIEVE_OTHER_CGT_AND_DISPOSALS = "retrieve-other-capital-gains-and-disposals"
+  val DELETE_OTHER_CGT_AND_DISPOSALS = "delete-other-capital-gains-and-disposals"
+
   val SELF = "self"
 }
