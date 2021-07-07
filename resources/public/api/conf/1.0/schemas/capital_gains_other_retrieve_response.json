@@ -6,8 +6,7 @@
   "properties": {
     "submittedOn": {
       "type": "string",
-      "description": "The date the disposals were submitted to the Report and pay Capital Gains Tax on UK property service.",
-      "pattern": "YYYY-MM-DDThh:mm:ssZ",
+      "description": "The date the disposals were submitted to the Report and pay Capital Gains Tax on UK property service. It is in the format YYYY-MM-DDThh:mm:ssZ.",
       "example": "2020-07-06T09:37:17Z"
     },
     "disposals": {"$ref": "capital_gains_other_definitions.json#/definitions/disposals"},
