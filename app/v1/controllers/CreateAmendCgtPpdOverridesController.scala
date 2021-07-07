@@ -29,14 +29,14 @@ import v1.hateoas.HateoasFactory
 import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AuditService, CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesController@Inject()(val authService: EnrolmentsAuthService,
                                                     val lookupService: MtdIdLookupService,
                                                     requestParser: AddCustomEmploymentRequestParser,
-                                                    service: AddCustomEmploymentService,
+                                                    service: CreateAmendCgtPpdOverridesService,
                                                     auditService: AuditService,
                                                     hateoasFactory: HateoasFactory,
                                                     cc: ControllerComponents,
@@ -61,12 +61,7 @@ class CreateAmendCgtPpdOverridesController@Inject()(val authService: EnrolmentsA
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.createAmendCgtPpdOverrides(parsedRequest))
-          hateoasResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, CreateAmendCgtPpdOverridesHateoasData(nino, taxYear, serviceResponse.responseData.employmentId))
-              .asRight[ErrorWrapper]
-          )
+          serviceResponse <- EitherT(service.createAndAmend(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - Success response received with CorrelationId: ${serviceResponse.correlationId}"
@@ -77,12 +72,10 @@ class CreateAmendCgtPpdOverridesController@Inject()(val authService: EnrolmentsA
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
               Some(request.body),
-              serviceResponse.correlationId,
-              AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
-            )
+              serviceResponse.correlationId,)
           )
 
-          Ok(Json.toJson(hateoasResponse))
+          Ok(amendDividendsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
