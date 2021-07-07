@@ -58,13 +58,6 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
     if(requestBody.isEmptyOrIncorrectBody) List(List(RuleIncorrectOrEmptyBodyError)) else NoValidationErrors
   }
 
-  private def incorrectOrEmptyBodyMultipleSubmissionId(multiplePropertyDisposals: MultiplePropertyDisposals, arrayIndex:Int): List[MtdError] = {
-    if(multiplePropertyDisposals.isSubmissionIdEmpty) (List(RuleIncorrectOrEmptyBodyError.copy(s"/multiplePropertyDisposals/$arrayIndex/submissionId", s"/multiplePropertyDisposals/$arrayIndex/submissionId"))) else NoValidationErrors
-  }
-
-  private def incorrectOrEmptyBodySingleSubmissionId(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex:Int): List[MtdError] = {
-    if(singlePropertyDisposals.isSubmissionIdEmpty) (List(RuleIncorrectOrEmptyBodyError.copy(s"/singlePropertyDisposals/$arrayIndex/submissionId", s"/singlePropertyDisposals/$arrayIndex/submissionId"))) else NoValidationErrors
-  }
 
   private def lossOrGainsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
