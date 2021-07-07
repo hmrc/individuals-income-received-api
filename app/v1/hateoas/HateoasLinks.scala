@@ -50,6 +50,9 @@ trait HateoasLinks {
   private def employmentUriWithId(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String) =
     s"/${appConfig.apiGatewayContext}/employments/$nino/$taxYear/$employmentId"
 
+  private def otherCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/disposals/other-gains/$nino/$taxYear"
+
   //API resource links
 
   //Savings Income
@@ -277,5 +280,27 @@ trait HateoasLinks {
       href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",
       method = DELETE,
       rel = DELETE_EMPLOYMENT_FINANCIAL_DETAILS
+    )
+
+  // Other CGT and Disposals
+  def retrieveOtherCgt(appConfig: AppConfig, nino: String, taxYear: String, isSelf: Boolean): Link =
+    Link(
+      href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = GET,
+      rel = if(isSelf) SELF else RETRIEVE_OTHER_CGT_AND_DISPOSALS
+    )
+
+  def createAmendOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS
+    )
+
+  def deleteOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_OTHER_CGT_AND_DISPOSALS
     )
 }
