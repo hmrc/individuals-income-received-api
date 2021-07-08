@@ -22,7 +22,7 @@ import v1.models.request.createAmendOtherCgt.{CreateAmendOtherCgtRequestBody, Di
 object CreateAmendOtherCgtConnectorServiceFixture {
 
   val disposal: Disposal = Disposal(
-    AssetType.otherProperty,
+    AssetType.otherProperty.toString,
     "Property Sale",
     "2021-01-01",
     "2021-02-01",
@@ -30,7 +30,7 @@ object CreateAmendOtherCgtConnectorServiceFixture {
     100.13,
     Some(900.12),
     None,
-    Some(Seq(ClaimOrElectionCodes.PRR)),
+    Some(Seq(ClaimOrElectionCodes.PRR.toString)),
     Some(10.12),
     None,
     Some(12.12)
