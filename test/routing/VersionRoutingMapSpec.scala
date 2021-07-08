@@ -30,7 +30,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
   val v1Routes: v1.Routes = app.injector.instanceOf[v1.Routes]
   val v1WithAllRoutes: v1WithAll.Routes = app.injector.instanceOf[v1WithAll.Routes]
   val v1WithCgtRoutes: v1WithCgt.Routes = app.injector.instanceOf[v1WithCgt.Routes]
-  val v1WithForeignRoutes: v1withForeign.Routes = app.injector.instanceOf[v1withForeign.Routes]
+  val v1WithForeignRoutes: v1WithForeign.Routes = app.injector.instanceOf[v1WithForeign.Routes]
 
   "map" when {
     "routing to v1" when {

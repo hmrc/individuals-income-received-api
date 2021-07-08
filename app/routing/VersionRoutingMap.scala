@@ -39,7 +39,7 @@ trait VersionRoutingMap {
 case class VersionRoutingMapImpl @Inject()(appConfig: AppConfig,
                                            defaultRouter: Router,
                                            v1Router: v1.Routes,
-                                           v1RouterWithForeign: v1withForeign.Routes,
+                                           v1RouterWithForeign: v1WithForeign.Routes,
                                            v1RouterWithCgt: v1WithCgt.Routes,
                                            v1RouterWithAll: v1WithAll.Routes) extends VersionRoutingMap {
 
