@@ -583,7 +583,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     val validator = new CreateAmendCgtPpdOverridesValidator()
 
     MockCurrentDateTime.getCurrentDate
-      .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
+      .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 
     MockedAppConfig.minimumPermittedTaxYear
@@ -614,7 +614,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
 
     "return a RuleTaxYearNotEnded error" when {
       "the current tax year is provided" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2022-23", validRequestBody)) shouldBe
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2021-22", validRequestBody)) shouldBe
           List(RuleTaxYearNotEndedError)
       }
     }
