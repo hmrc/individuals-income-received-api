@@ -18,10 +18,14 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import mocks.MockAppConfig
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
+import v1.mocks.MockCurrentDateTime
 import v1.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
@@ -372,13 +376,11 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    "multiplePropertyDisposals": [
       |         {
       |            "submissionId": "AB0000000092",
-      |            "amountOfNetGain": 1234.78,
       |            "amountOfNetLoss": 134.99
       |         },
       |         {
       |            "submissionId": "AB0000000098",
-      |            "amountOfNetGain": 1234.78,
-      |            "amountOfNetLoss": 134.99
+      |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
@@ -394,7 +396,8 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "otherReliefAmount": 3434.23,
       |             "lossesFromThisYear": 436.23,
       |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetGain": 4567.89
+      |             "amountOfNetGain": 4567.89,
+      |             "amountOfNetLoss": 4567.89
       |         },
       |         {
       |             "submissionId": "AB0000000091",
@@ -408,6 +411,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "otherReliefAmount": 3434.23,
       |             "lossesFromThisYear": 436.23,
       |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89,
       |             "amountOfNetLoss": 4567.89
       |         }
       |    ]
@@ -415,7 +419,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val nietherGainsOrLossMultiplePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
+  private val neitherGainsOrLossMultiplePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -464,18 +468,61 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val nietherGainsOrLossSinglePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
+  private val neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
       |         {
       |            "submissionId": "AB0000000092",
-      |            "amountOfNetGain": 1234.78,
       |            "amountOfNetLoss": 134.99
       |         },
       |         {
       |            "submissionId": "AB0000000098",
-      |            "amountOfNetGain": 1234.78,
+      |            "amountOfNetGain": 1234.78
+      |         }
+      |    ],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000098",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23
+      |         },
+      |         {
+      |             "submissionId": "AB0000000091",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
+  private val currentYearLossesGreaterThanGainsJson: JsValue = Json.parse(
+    """
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "submissionId": "AB0000000092",
+      |            "amountOfNetGain": 1234.78
+      |         },
+      |         {
+      |            "submissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
@@ -492,7 +539,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "otherReliefAmount": 3434.23,
       |             "lossesFromThisYear": 436.23,
       |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetGain": 4567.89
+      |             "amountOfNetGain": -4567.89
       |         },
       |         {
       |             "submissionId": "AB0000000091",
@@ -522,14 +569,22 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val invalidDateRequestBody = AnyContentAsJson(invalidDateRequestBodyJson)
   private val bothGainsAndLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson)
   private val bothGainsAndLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
-  private val nietherGainsOrLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(nietherGainsOrLossMultiplePropertyDisposalsRequestBodyJson)
-  private val nietherGainsOrLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(nietherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
+  private val neitherGainsOrLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossMultiplePropertyDisposalsRequestBodyJson)
+  private val neitherGainsOrLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
+  private val currentYearLossesGreaterThanGainsRequestBody = AnyContentAsJson(currentYearLossesGreaterThanGainsJson)
 
-  class Test extends MockAppConfig {
 
+  class Test extends MockCurrentDateTime with MockAppConfig {
+
+    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
     implicit val appConfig: AppConfig = mockAppConfig
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
+
+    MockCurrentDateTime.getCurrentDate
+      .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
+      .anyNumberOfTimes()
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2019)
@@ -554,6 +609,20 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "an invalid tax year is supplied" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "20178", validRequestBody)) shouldBe
           List(TaxYearFormatError)
+      }
+    }
+
+    "return a RuleTaxYearNotEnded error" when {
+      "the current tax year is provided" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2022-23", validRequestBody)) shouldBe
+          List(RuleTaxYearNotEndedError)
+      }
+    }
+
+    "return a RuleTaxYearRangeInvalidError" when {
+      "a tex year with an invalid range is provided" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2018-20", validRequestBody)) shouldBe
+          List(RuleTaxYearRangeInvalidError)
       }
     }
 
@@ -588,7 +657,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a submissionIdFormatError" when {
       "a body with incorrect submissionIds is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidSubmissionIdRequestBody)) shouldBe
-          List(SubmissionIdFormatError)
+          List(SubmissionIdFormatError.copy(paths = Some(Seq("multiplePropertyDisposals/0/submissionId"))))
       }
     }
 
@@ -597,26 +666,26 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidValueRequestBody)) shouldBe
           List(ValueFormatError.copy(
             paths = Some(List(
-              "/multiplePropertyDisposals/amountOfNetGain",
-              "/multiplePropertyDisposals/amountOfNetLoss",
-              "/singlePropertyDisposals/disposalProceeds",
-              "/singlePropertyDisposals/acquisitionAmount",
-              "/singlePropertyDisposals/improvementCosts",
-              "/singlePropertyDisposals/additionalCosts",
-              "/singlePropertyDisposals/prfAmount",
-              "/singlePropertyDisposals/otherReliefAmount",
-              "/singlePropertyDisposals/lossesFromThisYear",
-              "/singlePropertyDisposals/lossesFromPreviousYear",
-              "/singlePropertyDisposals/amountOfNetGain",
-              "/singlePropertyDisposals/disposalProceeds",
-              "/singlePropertyDisposals/acquisitionAmount",
-              "/singlePropertyDisposals/improvementCosts",
-              "/singlePropertyDisposals/additionalCosts",
-              "/singlePropertyDisposals/prfAmount",
-              "/singlePropertyDisposals/otherReliefAmount",
-              "/singlePropertyDisposals/lossesFromThisYear",
-              "/singlePropertyDisposals/lossesFromPreviousYear",
-              "/singlePropertyDisposals/amountOfNetLoss"
+              "/multiplePropertyDisposals/0/amountOfNetGain",
+              "/multiplePropertyDisposals/1/amountOfNetLoss",
+              "/singlePropertyDisposals/0/disposalProceeds",
+              "/singlePropertyDisposals/0/acquisitionAmount",
+              "/singlePropertyDisposals/0/improvementCosts",
+              "/singlePropertyDisposals/0/additionalCosts",
+              "/singlePropertyDisposals/0/prfAmount",
+              "/singlePropertyDisposals/0/otherReliefAmount",
+              "/singlePropertyDisposals/0/lossesFromThisYear",
+              "/singlePropertyDisposals/0/lossesFromPreviousYear",
+              "/singlePropertyDisposals/0/amountOfNetGain",
+              "/singlePropertyDisposals/1/disposalProceeds",
+              "/singlePropertyDisposals/1/acquisitionAmount",
+              "/singlePropertyDisposals/1/improvementCosts",
+              "/singlePropertyDisposals/1/additionalCosts",
+              "/singlePropertyDisposals/1/prfAmount",
+              "/singlePropertyDisposals/1/otherReliefAmount",
+              "/singlePropertyDisposals/1/lossesFromThisYear",
+              "/singlePropertyDisposals/1/lossesFromPreviousYear",
+              "/singlePropertyDisposals/1/amountOfNetLoss"
             )),
             message = "The field should be between 0 and 99999999999.99"
           )
@@ -627,29 +696,36 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a dateFormatError" when {
       "a body with an incorrect date is provided" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidDateRequestBody)) shouldBe
-          List(DateFormatError)
+          List(DateFormatError.copy(paths = Some(Seq("singlePropertyDisposals/0/completionDate"))))
       }
     }
 
     "return a RuleAmountGainLossError" when {
       "both amountOfNetGain and amountOfNetLoss are provided for multiplePropertyDisposals" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, bothGainsAndLossMultiplePropertyDisposalsRequestBody)) shouldBe
-          List(RuleAmountGainLossError)
+          List(RuleAmountGainLossError.copy(paths = Some(Seq("/multiplePropertyDisposals/0", "/multiplePropertyDisposals/1"))))
       }
 
       "neither amountOfNetGain or amountOfNetLoss are provided for multiplePropertyDisposals" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, nietherGainsOrLossMultiplePropertyDisposalsRequestBody)) shouldBe
-          List(RuleAmountGainLossError)
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, neitherGainsOrLossMultiplePropertyDisposalsRequestBody)) shouldBe
+          List(RuleAmountGainLossError.copy(paths = Some(Seq("/multiplePropertyDisposals/0", "/multiplePropertyDisposals/1"))))
       }
 
       "both amountOfNetGain and amountOfNetLoss are provided for singlePropertyDisposals" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, bothGainsAndLossSinglePropertyDisposalsRequestBody)) shouldBe
-          List(RuleAmountGainLossError)
+          List(RuleAmountGainLossError.copy(paths = Some(Seq("/singlePropertyDisposals/0", "/singlePropertyDisposals/1"))))
       }
 
       "neither amountOfNetGain or amountOfNetLoss are provided for singlePropertyDisposals" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, nietherGainsOrLossSinglePropertyDisposalsRequestBody)) shouldBe
-          List(RuleAmountGainLossError)
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, neitherGainsOrLossSinglePropertyDisposalsRequestBody)) shouldBe
+          List(RuleAmountGainLossError.copy(paths = Some(Seq("/singlePropertyDisposals/0", "/singlePropertyDisposals/1"))))
+      }
+    }
+
+    "return a RuleLossesGreaterThanGainError" when {
+      "the losses for this year are larger than the total gains" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, currentYearLossesGreaterThanGainsRequestBody)) shouldBe
+          List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq("singlePropertyDisposals/0"))))
       }
     }
   }

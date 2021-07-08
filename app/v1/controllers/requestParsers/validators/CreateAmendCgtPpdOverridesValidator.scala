@@ -18,12 +18,13 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
+import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides._
 
 @Singleton
-class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppConfig)
+class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
   extends Validator[CreateAmendCgtPpdOverridesRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(
@@ -48,7 +49,8 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
 
   private def parameterRuleValidation: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
@@ -61,10 +63,10 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
   private def emptySingleOrMultipleDisposalsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
     val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
 
-    if(requestBody.singlePropertyDisposals.isEmpty) {
+    if (requestBody.singlePropertyDisposals.isEmpty) {
       List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/singlePropertyDisposals")))))
     }
-    else if(requestBody.multiplePropertyDisposals.isEmpty) {
+    else if (requestBody.multiplePropertyDisposals.isEmpty) {
       List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/multiplePropertyDisposals")))))
     }
     else {
@@ -75,47 +77,51 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
 
   private def lossOrGainsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
-
-    List(
-      requestBody.multiplePropertyDisposals.map(_.zipWithIndex.flatMap {
-        case (data, index) => validateBothSuppliedMultipleDisposals(data, index)
-      }).getOrElse(NoValidationErrors).toList,
-      requestBody.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
-        case (data, index) => validateBothSuppliedSingleDisposals(data, index)
-      }).getOrElse(NoValidationErrors).toList,
-      requestBody.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
-        case (data, index) => validateGainGreaterThanLoss(data, index)
-      }).getOrElse(NoValidationErrors).toList
+    List(Validator.flattenErrors(
+      List(
+        requestBody.multiplePropertyDisposals.map(_.zipWithIndex.flatMap {
+          case (data, index) => validateBothSuppliedMultipleDisposals(data, index)
+        }).getOrElse(NoValidationErrors).toList,
+        requestBody.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
+          case (data, index) => validateBothSuppliedSingleDisposals(data, index)
+        }).getOrElse(NoValidationErrors).toList,
+        requestBody.singlePropertyDisposals.map(_.zipWithIndex.flatMap {
+          case (data, index) => validateGainGreaterThanLoss(data, index)
+        }).getOrElse(NoValidationErrors).toList
+      )
+    )
     )
   }
 
   private def validateBothSuppliedMultipleDisposals(multiplePropertyDisposals: MultiplePropertyDisposals, arrayIndex: Int): List[MtdError] = {
 
-      if(multiplePropertyDisposals.isBothSupplied) {
-        List(RuleAmountGainLossError)
-      }
-      else if(multiplePropertyDisposals.isEmpty) {
-        List(RuleAmountGainLossError)
-      } else {
-        NoValidationErrors
-      }
+    if (multiplePropertyDisposals.isBothSupplied) {
+      List(RuleAmountGainLossError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex"))))
+    }
+    else if (multiplePropertyDisposals.isEmpty) {
+      List(RuleAmountGainLossError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex"))))
+    } else {
+      NoValidationErrors
+    }
   }
 
   private def validateBothSuppliedSingleDisposals(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
 
-    if(singlePropertyDisposals.isBothSupplied) {
-      List(RuleAmountGainLossError)
+    if (singlePropertyDisposals.isBothSupplied) {
+      List(RuleAmountGainLossError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex"))))
     }
-    else if(singlePropertyDisposals.isBothEmpty) {
-      List(RuleAmountGainLossError)
+    else if (singlePropertyDisposals.isBothEmpty) {
+      List(RuleAmountGainLossError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex"))))
     } else {
       NoValidationErrors
     }
   }
 
   private def validateGainGreaterThanLoss(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
-    if((!singlePropertyDisposals.amountOfNetGain.isEmpty) && (singlePropertyDisposals.lossesFromPreviousYear > singlePropertyDisposals.amountOfNetGain || singlePropertyDisposals.lossesFromThisYear > singlePropertyDisposals.amountOfNetGain)) {
-      List(RuleLossesGreaterThanGainError)
+    if (singlePropertyDisposals.amountOfNetGain.isDefined &&
+      (singlePropertyDisposals.lossesFromPreviousYear > singlePropertyDisposals.amountOfNetGain ||
+        singlePropertyDisposals.lossesFromThisYear > singlePropertyDisposals.amountOfNetGain)) {
+      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex"))))
     } else {
       NoValidationErrors
     }
@@ -138,63 +144,68 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit val appConfig: AppC
   }
 
   private def validateMultiplePropertyDisposals(multiplePropertyDisposals: MultiplePropertyDisposals, arrayIndex: Int): List[MtdError] = {
+
     List(
-      SubmissionIdValidation.validate(multiplePropertyDisposals.submissionId),
+      SubmissionIdValidation.validate(
+        multiplePropertyDisposals.submissionId, SubmissionIdFormatError.copy(paths = Some(Seq(s"multiplePropertyDisposals/$arrayIndex/submissionId")))),
       DecimalValueValidation.validateOptional(
         amount = multiplePropertyDisposals.amountOfNetGain,
-        path = s"/multiplePropertyDisposals/amountOfNetGain"
+        path = s"/multiplePropertyDisposals/$arrayIndex/amountOfNetGain"
       ),
       DecimalValueValidation.validateOptional(
         amount = multiplePropertyDisposals.amountOfNetLoss,
-        path = s"/multiplePropertyDisposals/amountOfNetLoss"
+        path = s"/multiplePropertyDisposals/$arrayIndex/amountOfNetLoss"
       )
     ).flatten
   }
 
   private def validateSinglePropertyDisposals(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
+
     List(
-      SubmissionIdValidation.validate(singlePropertyDisposals.submissionId),
-      DateFormatValidation.validate(singlePropertyDisposals.completionDate, DateFormatError),
+      SubmissionIdValidation.validate(
+        singlePropertyDisposals.submissionId, SubmissionIdFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/submissionId")))),
+      DateFormatValidation.validate(
+        singlePropertyDisposals.completionDate, DateFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/completionDate")))),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.disposalProceeds,
-        path = s"/singlePropertyDisposals/disposalProceeds"
+        path = s"/singlePropertyDisposals/$arrayIndex/disposalProceeds"
       ),
       DateFormatValidation.validate(singlePropertyDisposals.acquisitionDate, DateFormatError),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.acquisitionAmount,
-        path = s"/singlePropertyDisposals/acquisitionAmount"
+        path = s"/singlePropertyDisposals/$arrayIndex/acquisitionAmount"
       ),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.improvementCosts,
-        path = s"/singlePropertyDisposals/improvementCosts"
+        path = s"/singlePropertyDisposals/$arrayIndex/improvementCosts"
       ),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.additionalCosts,
-        path = s"/singlePropertyDisposals/additionalCosts"
+        path = s"/singlePropertyDisposals/$arrayIndex/additionalCosts"
       ),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.prfAmount,
-        path = s"/singlePropertyDisposals/prfAmount"
+        path = s"/singlePropertyDisposals/$arrayIndex/prfAmount"
       ),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.otherReliefAmount,
-        path = s"/singlePropertyDisposals/otherReliefAmount"
+        path = s"/singlePropertyDisposals/$arrayIndex/otherReliefAmount"
       ),
       DecimalValueValidation.validateOptional(
         amount = singlePropertyDisposals.lossesFromThisYear,
-        path = s"/singlePropertyDisposals/lossesFromThisYear"
+        path = s"/singlePropertyDisposals/$arrayIndex/lossesFromThisYear"
       ),
       DecimalValueValidation.validateOptional(
         amount = singlePropertyDisposals.lossesFromPreviousYear,
-        path = s"/singlePropertyDisposals/lossesFromPreviousYear"
+        path = s"/singlePropertyDisposals/$arrayIndex/lossesFromPreviousYear"
       ),
       DecimalValueValidation.validateOptional(
         amount = singlePropertyDisposals.amountOfNetGain,
-        path = s"/singlePropertyDisposals/amountOfNetGain"
+        path = s"/singlePropertyDisposals/$arrayIndex/amountOfNetGain"
       ),
       DecimalValueValidation.validateOptional(
         amount = singlePropertyDisposals.amountOfNetLoss,
-        path = s"/singlePropertyDisposals/amountOfNetLoss"
+        path = s"/singlePropertyDisposals/$arrayIndex/amountOfNetLoss"
       )
     ).flatten
   }

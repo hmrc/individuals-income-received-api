@@ -39,7 +39,7 @@ object CustomMtdError {
 object NinoFormatError                  extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError               extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object EmploymentIdFormatError          extends MtdError("FORMAT_EMPLOYMENT_ID", "The provided employment ID is invalid")
-object SubmissionIdFormatError          extends MtdError("FORMAT_SUBMISSION_ID", "The format of the supplied submission ID is invalid.")
+object SubmissionIdFormatError          extends MtdError("FORMAT_SUBMISSION_ID", "The provided ppdSubmissionId is invalid")
 object CountryCodeFormatError           extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
 object CountryCodeRuleError             extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 object ValueFormatError                 extends MtdError("FORMAT_VALUE", "")
@@ -121,13 +121,13 @@ object RuleLumpSumsError
 object RuleAmountGainLossError
   extends MtdError(
     code = "RULE_AMOUNT_GAIN_LOSS",
-    message = "Either amountOfGain or amountOfLoss, must be provided but not both."
+    message = "Either amountOfGain or amountOfLoss, must be provided but not both"
   )
 
 object RuleLossesGreaterThanGainError
   extends MtdError(
     code = "RULE_LOSSES_GREATER_THAN_GAIN",
-    message = "The total losses from this year or the previous year must not be greater than the gain."
+    message = "The total losses from this year or the previous year must not be greater than the gain"
   )
 
 // Not found errors

@@ -16,14 +16,14 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, SubmissionIdFormatError}
+import v1.models.errors.MtdError
 
 object SubmissionIdValidation {
 
   private val submissionIdRegex = "^[A-Za-z0-9]{12}$"
 
-  def validate(submissionId: String): List[MtdError] = {
-    if (submissionId.matches(submissionIdRegex)) NoValidationErrors else List(SubmissionIdFormatError)
+  def validate(submissionId: String, error: MtdError): List[MtdError] = {
+    if (submissionId.matches(submissionIdRegex)) NoValidationErrors else List(error)
   }
 
 }
