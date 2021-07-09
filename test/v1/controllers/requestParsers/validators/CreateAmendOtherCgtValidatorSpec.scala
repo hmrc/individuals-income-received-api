@@ -30,7 +30,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
   object Data {
 
     val validNino    = "AA123456A"
-    val validTaxYear = "2021-22"
+    val validTaxYear = "2019-20"
 
     private val validRequestBodyJson: JsValue = Json.parse(
       """
@@ -39,8 +39,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12,
         |      "gain":1000.12,
@@ -111,8 +111,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12,
         |      "gain":1000.12,
@@ -130,8 +130,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.123
         |    }
@@ -155,8 +155,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":678987654567898654567876545678765456789765456789876545678987671000.13,
         |      "allowableCosts":-1000.12,
         |      "gain":1000.122,
@@ -193,8 +193,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":678987654567898654567876545678765456789765456789876545678987671000.13,
         |      "allowableCosts":-1000.12,
         |      "loss":1000.122,
@@ -231,8 +231,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":678987654567898654567876545678765456789765456789876545678987671000.13,
         |      "allowableCosts":-1000.12,
         |      "gain":1000.122,
@@ -245,8 +245,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":678987654567898654567876545678765456789765456789876545678987671000.13,
         |      "allowableCosts":-1000.12,
         |      "loss":1000.122,
@@ -300,8 +300,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12
         |    }
@@ -317,8 +317,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"beans",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12
         |    }
@@ -334,8 +334,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12,
         |      "claimOrElectionCodes": [
@@ -375,8 +375,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-07-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-07-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12
         |    }
@@ -392,8 +392,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |    {
         |      "assetType":"otherProperty",
         |      "assetDescription":"Property Sale",
-        |      "acquisitionDate":"2021-05-01",
-        |      "disposalDate":"2021-06-01",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
         |      "disposalProceeds":1000.12,
         |      "allowableCosts":1000.12,
         |      "lossAfterRelief":1000.12,
@@ -437,9 +437,9 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
     val validator = new CreateAmendOtherCgtValidator()
 
-    private val MINIMUM_YEAR = 2022
+    private val MINIMUM_YEAR = 2020
 
-    MockedAppConfig.minimumCgtPermittedTaxYear returns MINIMUM_YEAR
+    MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR
   }
 
   "running a validation" should {
@@ -472,7 +472,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
     "return RuleTaxYearRangeInvalidError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(CreateAmendOtherCgtRawData(validNino, "2021-23", validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendOtherCgtRawData(validNino, "2019-23", validRawRequestBody)) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
