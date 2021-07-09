@@ -439,7 +439,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
     private val MINIMUM_YEAR = 2020
 
-    MockedAppConfig.minimumCgtPermittedTaxYear returns MINIMUM_YEAR
+    MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR
   }
 
   "running a validation" should {
