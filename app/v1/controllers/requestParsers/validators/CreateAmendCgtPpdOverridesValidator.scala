@@ -98,7 +98,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
     if (multiplePropertyDisposals.isBothSupplied) {
       List(RuleAmountGainLossError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex"))))
     }
-    else if (multiplePropertyDisposals.isEmpty) {
+    else if (multiplePropertyDisposals.isNetAmountEmpty) {
       List(RuleAmountGainLossError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex"))))
     } else {
       NoValidationErrors

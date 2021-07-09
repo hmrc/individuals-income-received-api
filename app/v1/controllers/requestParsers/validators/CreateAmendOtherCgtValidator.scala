@@ -43,7 +43,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
 
   private def parameterRuleValidation: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumCgtPermittedTaxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 

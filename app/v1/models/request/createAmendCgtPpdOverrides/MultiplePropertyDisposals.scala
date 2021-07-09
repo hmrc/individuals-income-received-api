@@ -29,7 +29,7 @@ case class MultiplePropertyDisposals(submissionId: String,
 
   def isBothSupplied: Boolean = !isAmountOfGainEmpty && !isAmountOfLossEmpty
 
-  def isEmpty: Boolean = isAmountOfGainEmpty && isAmountOfLossEmpty
+  def isNetAmountEmpty: Boolean = isAmountOfGainEmpty && isAmountOfLossEmpty
 }
 
 object MultiplePropertyDisposals {
