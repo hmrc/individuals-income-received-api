@@ -482,7 +482,6 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        println(validRawRequestBody)
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
