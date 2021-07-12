@@ -404,6 +404,42 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         |""".stripMargin
     )
 
+    private val allThreeGainsMissingJson: JsValue = Json.parse(
+      """
+        |{
+        |  "disposals":[
+        |    {
+        |      "assetType":"otherProperty",
+        |      "assetDescription":"Property Sale",
+        |      "acquisitionDate":"2019-05-01",
+        |      "disposalDate":"2019-06-01",
+        |      "disposalProceeds":1000.12,
+        |      "allowableCosts":1000.12,
+        |      "gain":1000.12,
+        |      "claimOrElectionCodes":[
+        |        "PRR"
+        |      ],
+        |      "gainAfterRelief":1000.12,
+        |      "rttTaxPaid":1000.12
+        |    }
+        |  ],
+        |  "nonStandardGains":{
+        |    "carriedInterestRttTaxPaid":1000.12,
+        |    "attributedGainsRttTaxPaid":1000.12,
+        |    "otherGainsRttTaxPaid":1000.12
+        |  },
+        |  "losses":{
+        |    "broughtForwardLossesUsedInCurrentYear":1000.12,
+        |    "setAgainstInYearGains":1000.12,
+        |    "setAgainstInYearGeneralIncome":1000.12,
+        |    "setAgainstEarlierYear":1000.12
+        |  },
+        |  "adjustments":1000.12
+        |}
+    """.stripMargin
+    )
+
+
     val validRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(validRequestBodyJson)
     val emptyRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(emptyRequestBodyJson)
     val nonsenseRawRequestBody: AnyContentAsJson                           = AnyContentAsJson(nonsenseRequestBodyJson)
@@ -423,6 +459,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
     val badDisposalDateRawRequestBody: AnyContentAsJson                    = AnyContentAsJson(badDisposalDateJson)
     val badAcquisitionDateRawRequestBody: AnyContentAsJson                 = AnyContentAsJson(badAcquisitionDateJson)
     val badGainAfterReliefLossAfterReliefRawRequestBody: AnyContentAsJson  = AnyContentAsJson(badGainAfterReliefLossAfterReliefJson)
+    val allThreeGainsMissingRequestBody: AnyContentAsJson                  = AnyContentAsJson(allThreeGainsMissingJson)
   }
 
   import Data._
@@ -445,6 +482,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
+        println(validRawRequestBody)
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
@@ -525,6 +563,15 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
               "/disposals/0/assetType",
               "/disposals/0/allowableCosts",
             ))))
+      }
+
+      "the submitted body is missing carriedInterestGain, attributedGains, and otherGains " in new Test {
+        validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, allThreeGainsMissingRequestBody)) shouldBe
+        List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
+            "/nonStandardGains"
+          )))
+        )
       }
     }
 

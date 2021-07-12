@@ -28,7 +28,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     extends Validator[CreateAmendOtherCgtRawData]
     with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation, oneMinimumRequiredFieldValidator)
 
   override def validate(data: CreateAmendOtherCgtRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -63,6 +63,26 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     }.getOrElse(NoValidationErrors))
 
     standardValidation ++ emptyValidation
+  }
+
+  private def oneMinimumRequiredFieldValidator: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
+    val requestBodyData = data.body.json.as[CreateAmendOtherCgtRequestBody]
+
+    List(Validator.flattenErrors(
+      List(
+        requestBodyData.nonStandardGains.map {
+          case data => oneOfThreeGainsSuppliedValidation(data)
+        }.getOrElse(NoValidationErrors)
+      )
+    ))
+  }
+
+  private def oneOfThreeGainsSuppliedValidation(nonStandardGains: NonStandardGains): List[MtdError] = {
+
+    if (nonStandardGains.isThreeFieldsEmpty) {
+      List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/nonStandardGains"))))
+    }
+    else NoValidationErrors
   }
 
   private def bodyFormatValidation: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
