@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CreateAmendOtherCgtService @Inject()(connector: CreateAmendOtherCgtConnector)
   extends DesResponseMappingSupport with Logging {
 
-  def createAndAmend(request: CreateAmendOtherCgtRequest)(
+  def createAmend(request: CreateAmendOtherCgtRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext,

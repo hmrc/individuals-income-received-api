@@ -120,4 +120,15 @@ trait AmendHateoasBody extends HateoasLinks {
 
     Json.obj("links" -> links)
   }
+
+  def amendOtherCgtHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+
+    val links = Seq(
+      createAmendOtherCgt(appConfig, nino, taxYear),
+      retrieveOtherCgt(appConfig, nino, taxYear, isSelf = false),
+      deleteOtherCgt(appConfig, nino, taxYear)
+    )
+
+    Json.obj("links" -> links)
+  }
 }
