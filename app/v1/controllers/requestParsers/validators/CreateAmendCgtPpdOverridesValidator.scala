@@ -54,9 +54,21 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   }
 
   private def bodyFormatValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
-    List(
+    val jsonFormatError = List(
       JsonFormatValidation.validate[CreateAmendCgtPpdOverridesRequestBody](data.body.json)
     )
+
+    val requestBodyObj = data.body.json.asOpt[CreateAmendCgtPpdOverridesRequestBody]
+    val emptyValidation: List[List[MtdError]] = List(requestBodyObj.map {
+      body =>
+        val emptyMultiplePropertyDisposalsError = if(body.multiplePropertyDisposals.exists(_.isEmpty)) List("/multiplePropertyDisposals") else List()
+        val emptySinglePropertyDisposalsError = if(body.singlePropertyDisposals.exists(_.isEmpty)) List("/singlePropertyDisposals") else List()
+
+        val allMissingFields = emptyMultiplePropertyDisposalsError ++ emptySinglePropertyDisposalsError
+        if(allMissingFields.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(allMissingFields)))
+    }.getOrElse(NoValidationErrors))
+
+    jsonFormatError ++ emptyValidation
   }
 
   private def lossOrGainsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {

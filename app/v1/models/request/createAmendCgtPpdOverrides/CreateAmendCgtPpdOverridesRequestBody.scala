@@ -17,7 +17,7 @@
 package v1.models.request.createAmendCgtPpdOverrides
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
 case class CreateAmendCgtPpdOverridesRequestBody(multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
@@ -26,10 +26,7 @@ case class CreateAmendCgtPpdOverridesRequestBody(multiplePropertyDisposals: Opti
 object CreateAmendCgtPpdOverridesRequestBody extends JsonUtils {
   val empty: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(None, None)
 
-  implicit val reads: Reads[CreateAmendCgtPpdOverridesRequestBody] = (
-    (JsPath \ "multiplePropertyDisposals").readNullable[Seq[MultiplePropertyDisposals]].mapEmptySeqToNone and
-      (JsPath \ "singlePropertyDisposals").readNullable[Seq[SinglePropertyDisposals]].mapEmptySeqToNone
-  ) (CreateAmendCgtPpdOverridesRequestBody.apply _)
+  implicit val reads: Reads[CreateAmendCgtPpdOverridesRequestBody] =  Json.format[CreateAmendCgtPpdOverridesRequestBody]
 
   implicit val writes: OWrites[CreateAmendCgtPpdOverridesRequestBody] = (
     (JsPath \ "multiplePropertyDisposals").writeNullable[Seq[MultiplePropertyDisposals]] and

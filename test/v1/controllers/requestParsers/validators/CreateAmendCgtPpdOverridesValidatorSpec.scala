@@ -181,7 +181,37 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val emptyMultiplePropertyDisposalsRequestJson: JsValue = Json.parse(
     """
       |{
-      |    "multiplePropertyDisposals": []
+      |    "multiplePropertyDisposals": [],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000098",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         },
+      |         {
+      |             "submissionId": "AB0000000091",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetLoss": 4567.89
+      |         }
+      |    ]
       |}
       |""".stripMargin
   )
@@ -596,8 +626,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 
+    private val MINIMUM_PERMITTED_TAX_YEAR = 2019
+
     MockedAppConfig.minimumPermittedTaxYear
-      .returns(2019)
+      .returns(MINIMUM_PERMITTED_TAX_YEAR)
       .anyNumberOfTimes()
   }
 
@@ -665,12 +697,12 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
 
       "an JSON body with empty multiplePropertyDisposals array is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, emptyMultiplePropertyDisposalsRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/multiplePropertyDisposals"))))
       }
 
       "an JSON body with empty singlePropertyDisposals array is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, emptySinglePropertyDisposalsRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError)
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/singlePropertyDisposals"))))
       }
     }
 
