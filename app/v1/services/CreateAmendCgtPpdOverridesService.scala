@@ -31,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOverridesConnector) extends DesResponseMappingSupport with Logging {
 
-  def createAndAmend(request: CreateAmendCgtPpdOverridesRequest)(
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext,

@@ -32,7 +32,7 @@ import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRa
 class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val validNino = "AA123456A"
-  private val validTaxYear = "2018-19"
+  private val validTaxYear = "2019-20"
 
   private val validRequestJson: JsValue = Json.parse(
     """
@@ -626,9 +626,9 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 
-    private val MINIMUM_PERMITTED_TAX_YEAR = 2019
+    private val MINIMUM_PERMITTED_TAX_YEAR = 2020
 
-    MockedAppConfig.minimumPermittedTaxYear
+    MockedAppConfig.minimumCgtPermittedTaxYear
       .returns(MINIMUM_PERMITTED_TAX_YEAR)
       .anyNumberOfTimes()
   }
@@ -709,7 +709,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a submissionIdFormatError" when {
       "a body with incorrect submissionIds is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidSubmissionIdRequestBody)) shouldBe
-          List(SubmissionIdFormatError.copy(paths = Some(Seq("multiplePropertyDisposals/0/submissionId"))))
+          List(PPDSubmissionIdFormatError.copy(paths = Some(Seq("multiplePropertyDisposals/0/submissionId"))))
       }
     }
 

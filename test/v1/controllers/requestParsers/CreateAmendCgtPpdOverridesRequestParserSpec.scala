@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.mocks.validators.MockCreateAmendCgtPpdOverridesValidator
 import v1.models.domain.Nino
-import v1.models.errors.{BadRequestError, DateFormatError, ErrorWrapper, NinoFormatError, SubmissionIdFormatError, ValueFormatError}
+import v1.models.errors.{BadRequestError, DateFormatError, ErrorWrapper, NinoFormatError, PPDSubmissionIdFormatError, ValueFormatError}
 import v1.models.request.createAmendCgtPpdOverrides._
 
 class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
@@ -218,7 +218,7 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
         private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueBodyJson)
 
         private val allInvalidValueErrors = List(
-          SubmissionIdFormatError.copy(
+          PPDSubmissionIdFormatError.copy(
             paths = Some(Seq("/multiplePropertyDisposals/1/submissionId",
               "/singlePropertyDisposals/1/submissionId",
               "/multiplePropertyDisposals/2/submissionId",

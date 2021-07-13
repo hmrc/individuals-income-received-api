@@ -121,6 +121,17 @@ trait AmendHateoasBody extends HateoasLinks {
     Json.obj("links" -> links)
   }
 
+  def amendCgtPpdOverridesHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+
+    val links = Seq(
+      createAmendCgtPpdOverrides(appConfig, nino, taxYear),
+      deleteCgtPpdOverrides(appConfig, nino, taxYear),
+      retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear, isSelf = true)
+    )
+
+    Json.obj("links" -> links)
+  }
+
   def amendOtherCgtHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
 
     val links = Seq(

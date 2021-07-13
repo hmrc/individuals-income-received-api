@@ -53,7 +53,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
           .returns(Future.successful(outcome))
 
-        await(service.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
+        await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -64,7 +64,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
             MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
@@ -73,7 +73,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
             MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
 
-            await(service.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

@@ -48,7 +48,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
 
   private def parameterRuleValidation: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumCgtPermittedTaxYear),
       TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
@@ -143,7 +143,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
 
     List(
       SubmissionIdValidation.validate(
-        multiplePropertyDisposals.submissionId, SubmissionIdFormatError.copy(paths = Some(Seq(s"multiplePropertyDisposals/$arrayIndex/submissionId")))),
+        multiplePropertyDisposals.submissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"multiplePropertyDisposals/$arrayIndex/submissionId")))),
       DecimalValueValidation.validateOptional(
         amount = multiplePropertyDisposals.amountOfNetGain,
         path = s"/multiplePropertyDisposals/$arrayIndex/amountOfNetGain"
@@ -159,7 +159,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
 
     List(
       SubmissionIdValidation.validate(
-        singlePropertyDisposals.submissionId, SubmissionIdFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/submissionId")))),
+        singlePropertyDisposals.submissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/submissionId")))),
       DateFormatValidation.validateWithPath(
         singlePropertyDisposals.completionDate, path = s"singlePropertyDisposals/$arrayIndex/completionDate"),
       DecimalValueValidation.validate(

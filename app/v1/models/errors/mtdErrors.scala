@@ -39,7 +39,7 @@ object CustomMtdError {
 object NinoFormatError                  extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError               extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object EmploymentIdFormatError          extends MtdError("FORMAT_EMPLOYMENT_ID", "The provided employment ID is invalid")
-object SubmissionIdFormatError          extends MtdError("FORMAT_SUBMISSION_ID", "The provided submissionId is invalid")
+object PPDSubmissionIdFormatError       extends MtdError("FORMAT_PPD_SUBMISSION_ID", "The provided ppdSubmissionId is invalid")
 object CountryCodeFormatError           extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
 object CountryCodeRuleError             extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 object ValueFormatError                 extends MtdError("FORMAT_VALUE", "")
@@ -59,7 +59,7 @@ object PayrollIdFormatError             extends MtdError("FORMAT_PAYROLL_ID", "T
 object StartDateFormatError             extends MtdError("FORMAT_START_DATE", "The provided start date is invalid")
 object CessationDateFormatError         extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
 object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The provided source is invalid")
-object AssetDescriptionFormatError             extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
+object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
 
