@@ -46,7 +46,7 @@ An example with multiple errors:
       "errors": [
           {
              "code": "FORMAT_VALUE",
-             "message": "The valie should be between 0 and 99999999999.99",
+             "message": "The value should be between 0 and 99999999999.99",
              "paths": [ "/objectName/fieldName1", "/arrayName/0/fieldName2" ]
           },
           {
