@@ -149,7 +149,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
               "/unremittableForeignIncome/1/amountInForeignCurrency",
               "/unremittableForeignIncome/1/amountTaxPaid"
             )),
-            message = "The field should be between 0 and 99999999999.99"
+            message = "The value should be between 0 and 99999999999.99"
           ),
           CountryCodeFormatError.copy(
             paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
@@ -344,7 +344,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
-        message = "The field should be between 0 and 99999999999.99",
+        message = "The value should be between 0 and 99999999999.99",
         paths = Some(List(
           "/foreignEarnings/earningsNotTaxableUK",
           "/unremittableForeignIncome/0/amountInForeignCurrency",

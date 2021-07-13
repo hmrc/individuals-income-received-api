@@ -352,7 +352,7 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
             paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))
           ),
           ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+            message = "The value should be between 0 and 99999999999.99",
             paths = Some(List(
               "/businessReceipts/0/grossAmount",
               "/businessReceipts/1/grossAmount",
@@ -485,7 +485,7 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
             |        },
             |        {
             |            "code": "FORMAT_VALUE",
-            |            "message": "The field should be between 0 and 99999999999.99",
+            |            "message": "The value should be between 0 and 99999999999.99",
             |            "paths": [
             |                "/businessReceipts/0/grossAmount",
             |                "/businessReceipts/1/grossAmount",
@@ -735,7 +735,7 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
-        message = "The field should be between 0 and 99999999999.99",
+        message = "The value should be between 0 and 99999999999.99",
         paths = Some(List(
           "/businessReceipts/0/grossAmount",
           "/businessReceipts/1/grossAmount",

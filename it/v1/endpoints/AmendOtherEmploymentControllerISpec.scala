@@ -323,6 +323,15 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
               "/sharesAwardedOrReceived/1/schemePlanType"
             ))
           ),
+          ValueFormatError.copy(
+            message = "The value should be 0 or more",
+            paths = Some(List(
+              "/shareOption/0/noOfSharesAcquired",
+              "/shareOption/1/noOfSharesAcquired",
+              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+            ))
+          ),
           DateFormatError.copy(
             message = "The field should be in the format YYYY-MM-DD",
             paths = Some(List(
@@ -351,16 +360,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             ))
           ),
           ValueFormatError.copy(
-            message = "The field should be 0 or more",
-            paths = Some(List(
-              "/shareOption/0/noOfSharesAcquired",
-              "/shareOption/1/noOfSharesAcquired",
-              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            ))
-          ),
-          ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+            message = "The value should be between 0 and 99999999999.99",
             paths = Some(List(
               "/shareOption/0/amountOfConsiderationReceived",
               "/shareOption/0/exercisePrice",
@@ -542,6 +542,16 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |            ]
             |        },
             |        {
+            |            "code":"FORMAT_VALUE",
+            |            "message":"The value should be 0 or more",
+            |            "paths":[
+            |                "/shareOption/0/noOfSharesAcquired",
+            |                "/shareOption/1/noOfSharesAcquired",
+            |                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+            |                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+            |            ]
+            |        },
+            |        {
             |            "code":"FORMAT_DATE",
             |            "message":"The field should be in the format YYYY-MM-DD",
             |            "paths":[
@@ -575,17 +585,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |        },
             |        {
             |            "code":"FORMAT_VALUE",
-            |            "message":"The field should be 0 or more",
-            |            "paths":[
-            |                "/shareOption/0/noOfSharesAcquired",
-            |                "/shareOption/1/noOfSharesAcquired",
-            |                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-            |                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            |            ]
-            |        },
-            |        {
-            |            "code":"FORMAT_VALUE",
-            |            "message":"The field should be between 0 and 99999999999.99",
+            |            "message":"The value should be between 0 and 99999999999.99",
             |            "paths":[
             |                "/shareOption/0/amountOfConsiderationReceived",
             |                "/shareOption/0/exercisePrice",
@@ -1202,7 +1202,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
-          message = "The field should be between 0 and 99999999999.99",
+          message = "The value should be between 0 and 99999999999.99",
           paths = Some(List(
             "/shareOption/0/amountOfConsiderationReceived",
             "/shareOption/0/exercisePrice",
@@ -1235,7 +1235,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           ))
         ),
         ValueFormatError.copy(
-          message = "The field should be 0 or more",
+          message = "The value should be 0 or more",
           paths = Some(List(
             "/shareOption/0/noOfSharesAcquired",
             "/shareOption/1/noOfSharesAcquired",

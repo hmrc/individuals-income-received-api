@@ -878,6 +878,15 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/sharesAwardedOrReceived/1/schemePlanType"
               ))
             ),
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+              ))
+            ),
             DateFormatError.copy(
               paths = Some(List(
                 "/shareOption/0/dateOfOptionGrant",
@@ -904,15 +913,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
               paths = Some(List(
                 "/sharesAwardedOrReceived/0/classOfShareAwarded",
                 "/sharesAwardedOrReceived/1/classOfShareAwarded"
-              ))
-            ),
-            ValueFormatError.copy(
-              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
-              paths = Some(List(
-                "/shareOption/0/noOfSharesAcquired",
-                "/shareOption/1/noOfSharesAcquired",
-                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
               ))
             ),
             ValueFormatError.copy(

@@ -28,7 +28,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     extends Validator[CreateAmendOtherCgtRawData]
     with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation, oneMinimumRequiredFieldValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation)
 
   override def validate(data: CreateAmendOtherCgtRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -49,7 +49,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
 
   private def jsonFormatValidation: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
     val standardValidation = List(
-      JsonFormatValidation.validate[CreateAmendOtherCgtRequestBody](data.body.json),
+      JsonFormatValidation.validate[CreateAmendOtherCgtRequestBody](data.body.json)
     )
 
     val requestBodyData = data.body.json.asOpt[CreateAmendOtherCgtRequestBody]
@@ -65,17 +65,6 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     standardValidation ++ emptyValidation
   }
 
-  private def oneMinimumRequiredFieldValidator: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
-    val requestBodyData = data.body.json.as[CreateAmendOtherCgtRequestBody]
-
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.nonStandardGains.map {
-          case data => oneOfThreeGainsSuppliedValidation(data)
-        }.getOrElse(NoValidationErrors)
-      )
-    ))
-  }
 
   private def oneOfThreeGainsSuppliedValidation(nonStandardGains: NonStandardGains): List[MtdError] = {
 
@@ -125,7 +114,8 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
             .map(_.zipWithIndex.flatMap {
               case (disposal, index) => validateDisposalRules(disposal, data.taxYear, index)
             })
-            .getOrElse(NoValidationErrors)
+            .getOrElse(NoValidationErrors),
+          requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation(_)).getOrElse(NoValidationErrors)
         )
       )
     )
