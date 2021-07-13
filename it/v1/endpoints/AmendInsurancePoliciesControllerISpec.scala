@@ -300,7 +300,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             ))
           ),
           ValueFormatError.copy(
-            message = "The value should be between 0 and 99999999999.99",
+            message = "The value must be between 0 and 99999999999.99",
             paths = Some(List(
               "/lifeInsurance/0/gainAmount",
               "/lifeInsurance/0/deficiencyRelief",
@@ -315,7 +315,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ),
 
           ValueFormatError.copy(
-            message = "The value should be between 0 and 99",
+            message = "The value must be between 0 and 99",
             paths = Some(List(
               "/lifeInsurance/0/yearsHeld",
               "/capitalRedemption/0/yearsHeld",
@@ -562,7 +562,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
-          message = "The value should be between 0 and 99999999999.99",
+          message = "The value must be between 0 and 99999999999.99",
           paths = Some(List(
             "/lifeInsurance/0/gainAmount",
             "/lifeInsurance/0/deficiencyRelief",
@@ -583,7 +583,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ))
         ),
         ValueFormatError.copy(
-          message = "The value should be between 0 and 99",
+          message = "The value must be between 0 and 99",
           paths = Some(List(
             "/lifeInsurance/0/yearsHeld",
             "/lifeInsurance/0/yearsHeldSinceLastGain",

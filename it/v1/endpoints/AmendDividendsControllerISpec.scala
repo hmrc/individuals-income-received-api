@@ -217,7 +217,7 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
             ))
           ),
           ValueFormatError.copy(
-            message = "The value should be between 0 and 99999999999.99",
+            message = "The value must be between 0 and 99999999999.99",
             paths = Some(List(
               "/foreignDividend/0/amountBeforeTax",
               "/foreignDividend/0/taxTakenOff",
@@ -350,7 +350,7 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
             |        },
             |        {
             |            "code": "FORMAT_VALUE",
-            |            "message": "The value should be between 0 and 99999999999.99",
+            |            "message": "The value must be between 0 and 99999999999.99",
             |            "paths": [
             |                "/foreignDividend/0/amountBeforeTax",
             |                "/foreignDividend/1/taxTakenOff",
@@ -642,7 +642,7 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
-        message = "The value should be between 0 and 99999999999.99",
+        message = "The value must be between 0 and 99999999999.99",
         paths = Some(List(
           "/foreignDividend/0/amountBeforeTax",
           "/foreignDividend/0/taxTakenOff",

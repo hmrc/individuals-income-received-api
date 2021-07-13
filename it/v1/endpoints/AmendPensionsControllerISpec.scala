@@ -186,6 +186,23 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          ValueFormatError.copy(
+            message = "The value must be between 0 and 99999999999.99",
+            paths = Some(List(
+              "/foreignPensions/0/amountBeforeTax",
+              "/foreignPensions/0/taxTakenOff",
+              "/foreignPensions/0/specialWithholdingTax",
+              "/foreignPensions/0/taxableAmount",
+              "/foreignPensions/1/amountBeforeTax",
+              "/foreignPensions/1/taxTakenOff",
+              "/foreignPensions/1/specialWithholdingTax",
+              "/foreignPensions/1/taxableAmount",
+              "/overseasPensionContributions/0/exemptEmployersPensionContribs",
+              "/overseasPensionContributions/0/dblTaxationRelief",
+              "/overseasPensionContributions/1/exemptEmployersPensionContribs",
+              "/overseasPensionContributions/1/dblTaxationRelief"
+            ))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/overseasPensionContributions/0/customerReference",
@@ -226,23 +243,6 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
             paths = Some(List(
               "/foreignPensions/1/countryCode",
               "/overseasPensionContributions/1/dblTaxationCountryCode"
-            ))
-          ),
-          ValueFormatError.copy(
-            message = "The value should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/foreignPensions/0/amountBeforeTax",
-              "/foreignPensions/0/taxTakenOff",
-              "/foreignPensions/0/specialWithholdingTax",
-              "/foreignPensions/0/taxableAmount",
-              "/foreignPensions/1/amountBeforeTax",
-              "/foreignPensions/1/taxTakenOff",
-              "/foreignPensions/1/specialWithholdingTax",
-              "/foreignPensions/1/taxableAmount",
-              "/overseasPensionContributions/0/exemptEmployersPensionContribs",
-              "/overseasPensionContributions/0/dblTaxationRelief",
-              "/overseasPensionContributions/1/exemptEmployersPensionContribs",
-              "/overseasPensionContributions/1/dblTaxationRelief"
             ))
           )
         )
@@ -319,6 +319,14 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
             |   "message":"Invalid request",
             |   "errors": [
             |        {
+            |            "code": "FORMAT_VALUE",
+            |            "message": "The value must be between 0 and 99999999999.99",
+            |            "paths": [
+            |                "/foreignPensions/1/taxableAmount",
+            |                "/overseasPensionContributions/0/dblTaxationRelief"
+            |            ]
+            |        },
+            |        {
             |            "code": "FORMAT_CUSTOMER_REF",
             |            "message": "The provided customer reference is invalid",
             |            "paths": [
@@ -367,14 +375,6 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
             |            "paths": [
             |                "/foreignPensions/0/countryCode",
             |                "/overseasPensionContributions/1/dblTaxationCountryCode"
-            |            ]
-            |        },
-            |        {
-            |            "code": "FORMAT_VALUE",
-            |            "message": "The value should be between 0 and 99999999999.99",
-            |            "paths": [
-            |                "/foreignPensions/1/taxableAmount",
-            |                "/overseasPensionContributions/0/dblTaxationRelief"
             |            ]
             |        }
             |    ]
@@ -779,7 +779,7 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
-        message = "The value should be between 0 and 99999999999.99",
+        message = "The value must be between 0 and 99999999999.99",
         paths = Some(List(
           "/foreignPensions/0/amountBeforeTax",
           "/foreignPensions/0/taxTakenOff",

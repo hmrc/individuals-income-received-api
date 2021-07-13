@@ -687,7 +687,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
               "/singlePropertyDisposals/1/lossesFromPreviousYear",
               "/singlePropertyDisposals/1/amountOfNetLoss"
             )),
-            message = "The value should be between 0 and 99999999999.99"
+            message = "The value must be between 0 and 99999999999.99"
           )
           )
       }
