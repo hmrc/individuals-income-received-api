@@ -445,26 +445,6 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages wit
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendOtherRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
-            TaxYearFormatError.copy(
-              paths = Some(List(
-                "/businessReceipts/0/taxYear"
-              ))
-            ),
-            CountryCodeRuleError.copy(
-              paths = Some(List(
-                "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
-              ))
-            ),
-            RuleTaxYearRangeInvalidError.copy(
-              paths = Some(List(
-                "/businessReceipts/1/taxYear"
-              ))
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(List(
-                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
-              ))
-            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -489,6 +469,26 @@ class AmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages wit
                 "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
                 "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
                 "/omittedForeignIncome/amount"
+              ))
+            ),
+            TaxYearFormatError.copy(
+              paths = Some(List(
+                "/businessReceipts/0/taxYear"
+              ))
+            ),
+            CountryCodeRuleError.copy(
+              paths = Some(List(
+                "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
+              ))
+            ),
+            RuleTaxYearRangeInvalidError.copy(
+              paths = Some(List(
+                "/businessReceipts/1/taxYear"
+              ))
+            ),
+            CountryCodeFormatError.copy(
+              paths = Some(List(
+                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
               ))
             )
           )

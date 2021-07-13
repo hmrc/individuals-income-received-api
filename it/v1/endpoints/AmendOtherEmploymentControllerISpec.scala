@@ -303,6 +303,39 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
               "/sharesAwardedOrReceived/1/employerRef"
             ))
           ),
+          ValueFormatError.copy(
+            message = "The value must be between 0 and 99999999999.99",
+            paths = Some(List(
+              "/shareOption/0/amountOfConsiderationReceived",
+              "/shareOption/0/exercisePrice",
+              "/shareOption/0/amountPaidForOption",
+              "/shareOption/0/marketValueOfSharesOnExcise",
+              "/shareOption/0/profitOnOptionExercised",
+              "/shareOption/0/employersNicPaid",
+              "/shareOption/0/taxableAmount",
+              "/shareOption/1/amountOfConsiderationReceived",
+              "/shareOption/1/exercisePrice",
+              "/shareOption/1/amountPaidForOption",
+              "/shareOption/1/marketValueOfSharesOnExcise",
+              "/shareOption/1/profitOnOptionExercised",
+              "/shareOption/1/employersNicPaid",
+              "/shareOption/1/taxableAmount",
+
+              "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
+              "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
+              "/sharesAwardedOrReceived/0/taxableAmount",
+              "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
+              "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
+              "/sharesAwardedOrReceived/1/taxableAmount",
+
+              "/disability/amountDeducted",
+              "/foreignService/amountDeducted"
+            ))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List(
               "/disability/customerReference",
@@ -313,6 +346,15 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             paths = Some(List(
               "/shareOption/0/classOfSharesAcquired",
               "/shareOption/1/classOfSharesAcquired"
+            ))
+          ),
+          ValueFormatError.copy(
+            message = "The value must be 0 or more",
+            paths = Some(List(
+              "/shareOption/0/noOfSharesAcquired",
+              "/shareOption/1/noOfSharesAcquired",
+              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
             ))
           ),
           SchemePlanTypeFormatError.copy(
@@ -348,48 +390,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             paths = Some(List(
               "/sharesAwardedOrReceived/0/classOfShareAwarded",
               "/sharesAwardedOrReceived/1/classOfShareAwarded"
-            ))
-          ),
-          ValueFormatError.copy(
-            message = "The field should be 0 or more",
-            paths = Some(List(
-              "/shareOption/0/noOfSharesAcquired",
-              "/shareOption/1/noOfSharesAcquired",
-              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            ))
-          ),
-          ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/shareOption/0/amountOfConsiderationReceived",
-              "/shareOption/0/exercisePrice",
-              "/shareOption/0/amountPaidForOption",
-              "/shareOption/0/marketValueOfSharesOnExcise",
-              "/shareOption/0/profitOnOptionExercised",
-              "/shareOption/0/employersNicPaid",
-              "/shareOption/0/taxableAmount",
-              "/shareOption/1/amountOfConsiderationReceived",
-              "/shareOption/1/exercisePrice",
-              "/shareOption/1/amountPaidForOption",
-              "/shareOption/1/marketValueOfSharesOnExcise",
-              "/shareOption/1/profitOnOptionExercised",
-              "/shareOption/1/employersNicPaid",
-              "/shareOption/1/taxableAmount",
-
-              "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
-              "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
-              "/sharesAwardedOrReceived/0/taxableAmount",
-              "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
-              "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
-              "/sharesAwardedOrReceived/1/taxableAmount",
-
-              "/disability/amountDeducted",
-              "/foreignService/amountDeducted"
             ))
           )
         )
@@ -516,6 +516,38 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |            ]
             |        },
             |        {
+            |            "code":"FORMAT_VALUE",
+            |            "message":"The value must be between 0 and 99999999999.99",
+            |            "paths":[
+            |                "/shareOption/0/amountOfConsiderationReceived",
+            |                "/shareOption/0/exercisePrice",
+            |                "/shareOption/0/amountPaidForOption",
+            |                "/shareOption/0/marketValueOfSharesOnExcise",
+            |                "/shareOption/0/profitOnOptionExercised",
+            |                "/shareOption/0/employersNicPaid",
+            |                "/shareOption/0/taxableAmount",
+            |                "/shareOption/1/amountOfConsiderationReceived",
+            |                "/shareOption/1/exercisePrice",
+            |                "/shareOption/1/amountPaidForOption",
+            |                "/shareOption/1/marketValueOfSharesOnExcise",
+            |                "/shareOption/1/profitOnOptionExercised",
+            |                "/shareOption/1/employersNicPaid",
+            |                "/shareOption/1/taxableAmount",
+            |                "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
+            |                "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
+            |                "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
+            |                "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
+            |                "/sharesAwardedOrReceived/0/taxableAmount",
+            |                "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
+            |                "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
+            |                "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
+            |                "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
+            |                "/sharesAwardedOrReceived/1/taxableAmount",
+            |                "/disability/amountDeducted",
+            |                "/foreignService/amountDeducted"
+            |            ]
+            |        },
+            |        {
             |            "code":"FORMAT_CUSTOMER_REF",
             |            "message":"The provided customer reference is invalid",
             |            "paths":[
@@ -529,6 +561,16 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |            "paths":[
             |                "/shareOption/0/classOfSharesAcquired",
             |                "/shareOption/1/classOfSharesAcquired"
+            |            ]
+            |        },
+            |        {
+            |            "code":"FORMAT_VALUE",
+            |            "message":"The value must be 0 or more",
+            |            "paths":[
+            |                "/shareOption/0/noOfSharesAcquired",
+            |                "/shareOption/1/noOfSharesAcquired",
+            |                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+            |                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
             |            ]
             |        },
             |        {
@@ -571,48 +613,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             |            "paths":[
             |                "/sharesAwardedOrReceived/0/classOfShareAwarded",
             |                "/sharesAwardedOrReceived/1/classOfShareAwarded"
-            |            ]
-            |        },
-            |        {
-            |            "code":"FORMAT_VALUE",
-            |            "message":"The field should be 0 or more",
-            |            "paths":[
-            |                "/shareOption/0/noOfSharesAcquired",
-            |                "/shareOption/1/noOfSharesAcquired",
-            |                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-            |                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            |            ]
-            |        },
-            |        {
-            |            "code":"FORMAT_VALUE",
-            |            "message":"The field should be between 0 and 99999999999.99",
-            |            "paths":[
-            |                "/shareOption/0/amountOfConsiderationReceived",
-            |                "/shareOption/0/exercisePrice",
-            |                "/shareOption/0/amountPaidForOption",
-            |                "/shareOption/0/marketValueOfSharesOnExcise",
-            |                "/shareOption/0/profitOnOptionExercised",
-            |                "/shareOption/0/employersNicPaid",
-            |                "/shareOption/0/taxableAmount",
-            |                "/shareOption/1/amountOfConsiderationReceived",
-            |                "/shareOption/1/exercisePrice",
-            |                "/shareOption/1/amountPaidForOption",
-            |                "/shareOption/1/marketValueOfSharesOnExcise",
-            |                "/shareOption/1/profitOnOptionExercised",
-            |                "/shareOption/1/employersNicPaid",
-            |                "/shareOption/1/taxableAmount",
-            |                "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
-            |                "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
-            |                "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
-            |                "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
-            |                "/sharesAwardedOrReceived/0/taxableAmount",
-            |                "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
-            |                "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
-            |                "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
-            |                "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
-            |                "/sharesAwardedOrReceived/1/taxableAmount",
-            |                "/disability/amountDeducted",
-            |                "/foreignService/amountDeducted"
             |            ]
             |        }
             |    ]
@@ -1202,7 +1202,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
-          message = "The field should be between 0 and 99999999999.99",
+          message = "The value must be between 0 and 99999999999.99",
           paths = Some(List(
             "/shareOption/0/amountOfConsiderationReceived",
             "/shareOption/0/exercisePrice",
@@ -1235,7 +1235,7 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           ))
         ),
         ValueFormatError.copy(
-          message = "The field should be 0 or more",
+          message = "The value must be 0 or more",
           paths = Some(List(
             "/shareOption/0/noOfSharesAcquired",
             "/shareOption/1/noOfSharesAcquired",
