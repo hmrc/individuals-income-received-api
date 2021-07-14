@@ -52,7 +52,7 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
         MockCreateAmendOtherCgtConnector.createAndAmend(createAmendOtherCgtRequest)
           .returns(Future.successful(outcome))
 
-        await(service.createAndAmend(createAmendOtherCgtRequest)) shouldBe outcome
+        await(service.createAmend(createAmendOtherCgtRequest)) shouldBe outcome
       }
     }
 
@@ -64,7 +64,7 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
           MockCreateAmendOtherCgtConnector.createAndAmend(createAmendOtherCgtRequest)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.createAndAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+          await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
@@ -73,7 +73,7 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
           MockCreateAmendOtherCgtConnector.createAndAmend(createAmendOtherCgtRequest)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
 
-          await(service.createAndAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+          await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input = Seq(
