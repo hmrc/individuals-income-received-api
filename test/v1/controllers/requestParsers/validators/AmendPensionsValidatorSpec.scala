@@ -484,6 +484,23 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(List(
+                "/foreignPensions/0/amountBeforeTax",
+                "/foreignPensions/0/taxTakenOff",
+                "/foreignPensions/0/specialWithholdingTax",
+                "/foreignPensions/0/taxableAmount",
+                "/foreignPensions/1/amountBeforeTax",
+                "/foreignPensions/1/taxTakenOff",
+                "/foreignPensions/1/specialWithholdingTax",
+                "/foreignPensions/1/taxableAmount",
+                "/overseasPensionContributions/0/exemptEmployersPensionContribs",
+                "/overseasPensionContributions/0/dblTaxationRelief",
+                "/overseasPensionContributions/1/exemptEmployersPensionContribs",
+                "/overseasPensionContributions/1/dblTaxationRelief"
+              ))
+            ),
             CustomerRefFormatError.copy(
               paths = Some(List(
                 "/overseasPensionContributions/0/customerReference",
@@ -524,23 +541,6 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
               paths = Some(List(
                 "/foreignPensions/1/countryCode",
                 "/overseasPensionContributions/1/dblTaxationCountryCode"
-              ))
-            ),
-            ValueFormatError.copy(
-              message = ZERO_MINIMUM_INCLUSIVE,
-              paths = Some(List(
-                "/foreignPensions/0/amountBeforeTax",
-                "/foreignPensions/0/taxTakenOff",
-                "/foreignPensions/0/specialWithholdingTax",
-                "/foreignPensions/0/taxableAmount",
-                "/foreignPensions/1/amountBeforeTax",
-                "/foreignPensions/1/taxTakenOff",
-                "/foreignPensions/1/specialWithholdingTax",
-                "/foreignPensions/1/taxableAmount",
-                "/overseasPensionContributions/0/exemptEmployersPensionContribs",
-                "/overseasPensionContributions/0/dblTaxationRelief",
-                "/overseasPensionContributions/1/exemptEmployersPensionContribs",
-                "/overseasPensionContributions/1/dblTaxationRelief"
               ))
             )
           )

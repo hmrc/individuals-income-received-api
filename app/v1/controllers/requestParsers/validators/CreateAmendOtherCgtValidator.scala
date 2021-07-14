@@ -49,7 +49,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
 
   private def jsonFormatValidation: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
     val standardValidation = List(
-      JsonFormatValidation.validate[CreateAmendOtherCgtRequestBody](data.body.json),
+      JsonFormatValidation.validate[CreateAmendOtherCgtRequestBody](data.body.json)
     )
 
     val requestBodyData = data.body.json.asOpt[CreateAmendOtherCgtRequestBody]
@@ -63,6 +63,15 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     }.getOrElse(NoValidationErrors))
 
     standardValidation ++ emptyValidation
+  }
+
+
+  private def oneOfThreeGainsSuppliedValidation(nonStandardGains: NonStandardGains): List[MtdError] = {
+
+    if (nonStandardGains.isThreeFieldsEmpty) {
+      List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/nonStandardGains"))))
+    }
+    else NoValidationErrors
   }
 
   private def bodyFormatValidation: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
@@ -105,7 +114,8 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
             .map(_.zipWithIndex.flatMap {
               case (disposal, index) => validateDisposalRules(disposal, data.taxYear, index)
             })
-            .getOrElse(NoValidationErrors)
+            .getOrElse(NoValidationErrors),
+          requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation(_)).getOrElse(NoValidationErrors)
         )
       )
     )

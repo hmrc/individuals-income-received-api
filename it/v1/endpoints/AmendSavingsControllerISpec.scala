@@ -162,7 +162,7 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
 
         val allInvalidValueRequestError: List[MtdError] = List(
           ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+            message = "The value must be between 0 and 99999999999.99",
             paths = Some(List(
               "/securities/taxTakenOff",
               "/securities/grossAmount",
@@ -367,7 +367,7 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
-        message = "The field should be between 0 and 99999999999.99",
+        message = "The value must be between 0 and 99999999999.99",
         paths = Some(List(
           "/securities/taxTakenOff",
           "/securities/grossAmount",

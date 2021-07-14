@@ -339,20 +339,8 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
-          TaxYearFormatError.copy(
-            paths = Some(List("/businessReceipts/0/taxYear"))
-          ),
-          CountryCodeRuleError.copy(
-            paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/1/countryCode"))
-          ),
-          RuleTaxYearRangeInvalidError.copy(
-            paths = Some(List("/businessReceipts/1/taxYear"))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))
-          ),
           ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+            message = "The value must be between 0 and 99999999999.99",
             paths = Some(List(
               "/businessReceipts/0/grossAmount",
               "/businessReceipts/1/grossAmount",
@@ -376,6 +364,18 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
               "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
               "/omittedForeignIncome/amount"
             ))
+          ),
+          TaxYearFormatError.copy(
+            paths = Some(List("/businessReceipts/0/taxYear"))
+          ),
+          CountryCodeRuleError.copy(
+            paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/1/countryCode"))
+          ),
+          RuleTaxYearRangeInvalidError.copy(
+            paths = Some(List("/businessReceipts/1/taxYear"))
+          ),
+          CountryCodeFormatError.copy(
+            paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))
           )
         )
 
@@ -456,6 +456,33 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
             |    "code": "INVALID_REQUEST",
             |    "errors": [
             |        {
+            |            "code": "FORMAT_VALUE",
+            |            "message": "The value must be between 0 and 99999999999.99",
+            |            "paths": [
+            |                "/businessReceipts/0/grossAmount",
+            |                "/businessReceipts/1/grossAmount",
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
+            |                "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+            |                "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
+            |                "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+            |                "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
+            |                "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
+            |                "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
+            |                "/overseasIncomeAndGains/gainAmount",
+            |                "/chargeableForeignBenefitsAndGifts/transactionBenefit",
+            |                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
+            |                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
+            |                "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
+            |                "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
+            |                "/omittedForeignIncome/amount"
+            |            ]
+            |        },
+            |        {
             |            "code": "FORMAT_TAX_YEAR",
             |            "message": "The provided tax year is invalid",
             |            "paths": [
@@ -481,33 +508,6 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
             |            "message": "The format of the country code is invalid",
             |            "paths": [
             |                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
-            |            ]
-            |        },
-            |        {
-            |            "code": "FORMAT_VALUE",
-            |            "message": "The field should be between 0 and 99999999999.99",
-            |            "paths": [
-            |                "/businessReceipts/0/grossAmount",
-            |                "/businessReceipts/1/grossAmount",
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
-            |                "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-            |                "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
-            |                "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-            |                "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
-            |                "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
-            |                "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
-            |                "/overseasIncomeAndGains/gainAmount",
-            |                "/chargeableForeignBenefitsAndGifts/transactionBenefit",
-            |                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
-            |                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
-            |                "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
-            |                "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
-            |                "/omittedForeignIncome/amount"
             |            ]
             |        }
             |    ],
@@ -735,7 +735,7 @@ class AmendOtherControllerISpec extends IntegrationBaseSpec {
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
-        message = "The field should be between 0 and 99999999999.99",
+        message = "The value must be between 0 and 99999999999.99",
         paths = Some(List(
           "/businessReceipts/0/grossAmount",
           "/businessReceipts/1/grossAmount",

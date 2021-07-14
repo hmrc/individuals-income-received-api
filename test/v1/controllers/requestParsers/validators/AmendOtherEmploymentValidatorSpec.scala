@@ -858,63 +858,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/lumpSums/1/employerRef"
               ))
             ),
-            CustomerRefFormatError.copy(
-              paths = Some(List(
-                "/disability/customerReference",
-                "/foreignService/customerReference"
-              ))
-            ),
-            ClassOfSharesAcquiredFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/classOfSharesAcquired",
-                "/shareOption/1/classOfSharesAcquired"
-              ))
-            ),
-            SchemePlanTypeFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/schemePlanType",
-                "/shareOption/1/schemePlanType",
-                "/sharesAwardedOrReceived/0/schemePlanType",
-                "/sharesAwardedOrReceived/1/schemePlanType"
-              ))
-            ),
-            DateFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/dateOfOptionGrant",
-                "/shareOption/0/dateOfEvent",
-                "/shareOption/1/dateOfOptionGrant",
-                "/shareOption/1/dateOfEvent",
-                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
-                "/sharesAwardedOrReceived/0/dateSharesAwarded",
-                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-                "/sharesAwardedOrReceived/1/dateSharesAwarded"
-              ))
-            ),
-            EmployerNameFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/employerName",
-                "/shareOption/1/employerName",
-                "/sharesAwardedOrReceived/0/employerName",
-                "/sharesAwardedOrReceived/1/employerName",
-                "/lumpSums/0/employerName",
-                "/lumpSums/1/employerName"
-              ))
-            ),
-            ClassOfSharesAwardedFormatError.copy(
-              paths = Some(List(
-                "/sharesAwardedOrReceived/0/classOfShareAwarded",
-                "/sharesAwardedOrReceived/1/classOfShareAwarded"
-              ))
-            ),
-            ValueFormatError.copy(
-              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
-              paths = Some(List(
-                "/shareOption/0/noOfSharesAcquired",
-                "/shareOption/1/noOfSharesAcquired",
-                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-              ))
-            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -963,6 +906,63 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/amount",
                 "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
                 "/lumpSums/1/redundancyCompensationPaymentsUnderExemptionItem/amount"
+              ))
+            ),
+            CustomerRefFormatError.copy(
+              paths = Some(List(
+                "/disability/customerReference",
+                "/foreignService/customerReference"
+              ))
+            ),
+            ClassOfSharesAcquiredFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/classOfSharesAcquired",
+                "/shareOption/1/classOfSharesAcquired"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+              ))
+            ),
+            SchemePlanTypeFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/schemePlanType",
+                "/shareOption/1/schemePlanType",
+                "/sharesAwardedOrReceived/0/schemePlanType",
+                "/sharesAwardedOrReceived/1/schemePlanType"
+              ))
+            ),
+            DateFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/dateOfOptionGrant",
+                "/shareOption/0/dateOfEvent",
+                "/shareOption/1/dateOfOptionGrant",
+                "/shareOption/1/dateOfEvent",
+                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/0/dateSharesAwarded",
+                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/1/dateSharesAwarded"
+              ))
+            ),
+            EmployerNameFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/employerName",
+                "/shareOption/1/employerName",
+                "/sharesAwardedOrReceived/0/employerName",
+                "/sharesAwardedOrReceived/1/employerName",
+                "/lumpSums/0/employerName",
+                "/lumpSums/1/employerName"
+              ))
+            ),
+            ClassOfSharesAwardedFormatError.copy(
+              paths = Some(List(
+                "/sharesAwardedOrReceived/0/classOfShareAwarded",
+                "/sharesAwardedOrReceived/1/classOfShareAwarded"
               ))
             )
           )

@@ -194,7 +194,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
         val allInvalidValueRequestError: List[MtdError] = List(
           ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
+            message = "The value must be between 0 and 99999999999.99",
             paths = Some(List(
               "/employment/pay/taxablePayToDate",
               "/employment/deductions/studentLoans/uglDeductionAmount",
@@ -230,7 +230,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             ))
           ),
           ValueFormatError.copy(
-            message = "The field should be between -99999999999.99 and 99999999999.99",
+            message = "The value must be between -99999999999.99 and 99999999999.99",
             paths = Some(List("/employment/pay/totalTaxToDate"))
           )
         )
@@ -311,7 +311,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             |   "errors": [
             |        {
             |            "code": "FORMAT_VALUE",
-            |            "message": "The field should be between 0 and 99999999999.99",
+            |            "message": "The value must be between 0 and 99999999999.99",
             |            "paths": [
             |                "/employment/pay/taxablePayToDate",
             |                "/employment/deductions/studentLoans/uglDeductionAmount",
@@ -326,7 +326,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             |        },
             |        {
             |            "code": "FORMAT_VALUE",
-            |            "message": "The field should be between -99999999999.99 and 99999999999.99",
+            |            "message": "The value must be between -99999999999.99 and 99999999999.99",
             |            "paths": [
             |                "/employment/pay/totalTaxToDate"
             |            ]
@@ -520,7 +520,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
-          message = "The field should be between 0 and 99999999999.99",
+          message = "The value must be between 0 and 99999999999.99",
           paths = Some(List(
             "/employment/pay/taxablePayToDate",
             "/employment/deductions/studentLoans/uglDeductionAmount",
@@ -556,7 +556,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           ))
         ),
         ValueFormatError.copy(
-          message = "The field should be between -99999999999.99 and 99999999999.99",
+          message = "The value must be between -99999999999.99 and 99999999999.99",
           paths = Some(List("/employment/pay/totalTaxToDate"))
         )
       )
