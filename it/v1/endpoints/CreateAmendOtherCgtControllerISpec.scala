@@ -230,20 +230,18 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec {
       "/disposals/0/disposalProceeds",
       "/disposals/0/allowableCosts",
       "/disposals/0/gain",
-      "/disposals/0/loss",
       "/disposals/0/gainAfterRelief",
-      "/disposals/0/lossAfterRelief",
       "/disposals/0/rttTaxPaid",
-      "/nonStandardGains/0/carriedInterestGain",
-      "/nonStandardGains/0/carriedInterestRttTaxPaid",
-      "/nonStandardGains/0/attributedGains",
-      "/nonStandardGains/0/attributedGainsRttTaxPaid",
-      "/nonStandardGains/0/otherGains",
-      "/nonStandardGains/0/otherGainsRttTaxPaid",
-      "/losses/0/broughtForwardLossesUsedInCurrentYear",
-      "/losses/0/setAgainstInYearGains",
-      "/losses/0/setAgainstInYearGeneralIncome",
-      "/losses/0/setAgainstEarlierYear"
+      "/nonStandardGains/carriedInterestGain",
+      "/nonStandardGains/carriedInterestRttTaxPaid",
+      "/nonStandardGains/attributedGains",
+      "/nonStandardGains/attributedGainsRttTaxPaid",
+      "/nonStandardGains/otherGains",
+      "/nonStandardGains/otherGainsRttTaxPaid",
+      "/losses/broughtForwardLossesUsedInCurrentYear",
+      "/losses/setAgainstInYearGains",
+      "/losses/setAgainstInYearGeneralIncome",
+      "/losses/setAgainstEarlierYear"
     ))
   )
 
@@ -253,7 +251,7 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec {
     Some(Seq(
       positiveDecimalsOutOfRangeError,
       ValueFormatError.copy(
-        message = "The field should be between -99999999999.99 and 99999999999.99",
+        message = "The value must be between -99999999999.99 and 99999999999.99",
         paths = Some(Seq(
           "/adjustments"
         ))
