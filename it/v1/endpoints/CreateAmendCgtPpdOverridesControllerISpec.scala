@@ -91,10 +91,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
      """.stripMargin
   )
 
-  val emptyFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-    paths = Some(Seq("/multiplePropertyDisposals", "/singlePropertyDisposals"))
-  )
-
   val missingFieldsJson: JsValue = Json.parse(
     """
       |{
@@ -108,15 +104,15 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
     paths = Some(Seq(
       "/multiplePropertyDisposals/0/submissionId",
 
+      "/singlePropertyDisposals/0/otherReliefAmount",
       "/singlePropertyDisposals/0/submissionId",
-      "/singlePropertyDisposals/0/completionDate",
       "/singlePropertyDisposals/0/disposalProceeds",
       "/singlePropertyDisposals/0/acquisitionDate",
-      "/singlePropertyDisposals/0/acquisitionAmount",
-      "/singlePropertyDisposals/0/improvementCosts",
-      "/singlePropertyDisposals/0/additionalCosts",
       "/singlePropertyDisposals/0/prfAmount",
-      "/singlePropertyDisposals/0/otherReliefAmount"
+      "/singlePropertyDisposals/0/improvementCosts",
+      "/singlePropertyDisposals/0/completionDate",
+      "/singlePropertyDisposals/0/additionalCosts",
+      "/singlePropertyDisposals/0/acquisitionAmount"
     ))
   )
 
@@ -151,24 +147,47 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val gainAndLossErrors: ErrorWrapper = ErrorWrapper(
-    correlationId = "",
-    BadRequestError,
-    Some(Seq(
-      RuleAmountGainLossError.copy(
-        paths = Some(Seq(
-          "/multiplePropertyDisposals/0",
-          "/singlePropertyDisposals/0"
-        ))
-      ),
-      RuleLossesGreaterThanGainError.copy(
-        paths = Some(Seq(
-          "/singlePropertyDisposals/0"
-        ))
-      ),
+  val amountGainLossError: MtdError = RuleAmountGainLossError.copy(
+    paths = Some(Seq(
+      "/multiplePropertyDisposals/0",
+      "/singlePropertyDisposals/0"
     ))
   )
 
+  val lossGreaterThanGainJson: JsValue = Json.parse(
+    """
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "submissionId": "AB0000000092",
+      |            "amountOfNetGain": 1234.78
+      |         }
+      |    ],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000098",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 6464.99,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
+  val lossesGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
+    paths = Some(Seq(
+      "singlePropertyDisposals/0"
+    ))
+  )
 
   private val invalidValueRequestBodyJson: JsValue = Json.parse(
     """
@@ -217,39 +236,34 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val invalidValueErrors: ErrorWrapper = ErrorWrapper(
-    correlationId = "",
-    BadRequestError,
-    Some(Seq(
-      ValueFormatError.copy(
-        message = "The field should be between 0 and 99999999999.99",
-        paths = Some(Seq(
-          "/multiplePropertyDisposals/0/amountOfNetGain",
-          "/multiplePropertyDisposals/1/amountOfNetLoss",
-          "/singlePropertyDisposals/0/disposalProceeds",
-          "/singlePropertyDisposals/0/acquisitionAmount",
-          "/singlePropertyDisposals/0/improvementCosts",
-          "/singlePropertyDisposals/0/additionalCosts",
-          "/singlePropertyDisposals/0/prfAmount",
-          "/singlePropertyDisposals/0/otherReliefAmount",
-          "/singlePropertyDisposals/0/lossesFromThisYear",
-          "/singlePropertyDisposals/0/lossesFromPreviousYear",
-          "/singlePropertyDisposals/0/amountOfNetGain",
-          "/singlePropertyDisposals/1/disposalProceeds",
-          "/singlePropertyDisposals/1/acquisitionAmount",
-          "/singlePropertyDisposals/1/improvementCosts",
-          "/singlePropertyDisposals/1/additionalCosts",
-          "/singlePropertyDisposals/1/prfAmount",
-          "/singlePropertyDisposals/1/otherReliefAmount",
-          "/singlePropertyDisposals/1/lossesFromThisYear",
-          "/singlePropertyDisposals/1/lossesFromPreviousYear",
-          "/singlePropertyDisposals/1/amountOfNetLoss"
-        ))
-      ))
-    )
+  val invalidValueErrors: MtdError = ValueFormatError.copy(
+    message = "The field should be between 0 and 99999999999.99",
+    paths = Some(Seq(
+      "/multiplePropertyDisposals/0/amountOfNetGain",
+      "/multiplePropertyDisposals/1/amountOfNetLoss",
+      "/singlePropertyDisposals/0/disposalProceeds",
+      "/singlePropertyDisposals/0/acquisitionAmount",
+      "/singlePropertyDisposals/0/improvementCosts",
+      "/singlePropertyDisposals/0/additionalCosts",
+      "/singlePropertyDisposals/0/prfAmount",
+      "/singlePropertyDisposals/0/otherReliefAmount",
+      "/singlePropertyDisposals/0/lossesFromThisYear",
+      "/singlePropertyDisposals/0/lossesFromPreviousYear",
+      "/singlePropertyDisposals/0/amountOfNetGain",
+      "/singlePropertyDisposals/1/disposalProceeds",
+      "/singlePropertyDisposals/1/acquisitionAmount",
+      "/singlePropertyDisposals/1/improvementCosts",
+      "/singlePropertyDisposals/1/additionalCosts",
+      "/singlePropertyDisposals/1/prfAmount",
+      "/singlePropertyDisposals/1/otherReliefAmount",
+      "/singlePropertyDisposals/1/lossesFromThisYear",
+      "/singlePropertyDisposals/1/lossesFromPreviousYear",
+      "/singlePropertyDisposals/1/amountOfNetLoss"
+    ))
   )
 
-  val formatPropertyDisposalsJson: JsValue = Json.parse(
+
+  val PPDsubmissionFormatJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -278,29 +292,54 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val formatPropertyDisposalsErrors: ErrorWrapper = ErrorWrapper(
-    correlationId = "",
-    BadRequestError,
-    Some(Seq(
-      DateFormatError.copy(
-        paths = Some(Seq(
-          "singlePropertyDisposals/0/completionDate",
-          "singlePropertyDisposals/0/acquisitionDate"
-        ))
-      ),
-      PPDSubmissionIdFormatError.copy(
-        paths = Some(Seq(
-          "multiplePropertyDisposals/0/submissionId",
-          "singlePropertyDisposals/0/submissionId",
-        ))
-      )
+  val submissionFormatError: MtdError = PPDSubmissionIdFormatError.copy(
+    paths = Some(Seq(
+      "multiplePropertyDisposals/0/submissionId",
+      "singlePropertyDisposals/0/submissionId",
     ))
   )
+
+  val invalidDateFormatJson: JsValue = Json.parse(
+    """
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "submissionId": "AB0000000091",
+      |            "amountOfNetGain": 1234.78
+      |         }
+      |    ],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000092",
+      |             "completionDate": "20-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2003-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
+  val dateFormatError: MtdError = DateFormatError.copy(
+    paths = Some(Seq(
+      "/singlePropertyDisposals/0/completionDate",
+      "/singlePropertyDisposals/0/acquisitionDate"
+    ))
+  )
+
 
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2021-22"
+    val taxYear: String = "2020-21"
     val correlationId: String = "X-123"
 
     val hateoasResponse: JsValue = Json.parse(
@@ -327,7 +366,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
-    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
+    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd "
 
     def ifsUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
 
@@ -393,11 +432,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
           // Body Errors
           ("AA123456A", "2020-21", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
           ("AA123456A", "2020-21", nonsenseDataJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("nonsenseBody")),
-          ("AA123456A", "2020-21", emptyFieldsJson, BAD_REQUEST, emptyFieldsError, None, Some("emptyFields")),
+          ("AA123456A", "2020-21", emptyFieldsJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyFields")),
           ("AA123456A", "2020-21", missingFieldsJson, BAD_REQUEST, missingFieldsError, None, Some("missingFields")),
-          ("AA123456A", "2020-21", gainAndLossJson, BAD_REQUEST, BadRequestError, Some(gainAndLossErrors), Some("gainAndLossRule")),
-          ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, BadRequestError, Some(invalidValueErrors), Some("invalidNumValues")),
-          ("AA123456A", "2020-21", formatPropertyDisposalsJson, BAD_REQUEST, BadRequestError, Some(formatPropertyDisposalsErrors), Some("formatPropertyDisposals")),
+          ("AA123456A", "2020-21", gainAndLossJson, BAD_REQUEST, amountGainLossError, None, Some("gainAndLossRule")),
+          ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
+          ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
+          ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
+          ("AA123456A", "2020-21", PPDsubmissionFormatJson, BAD_REQUEST, submissionFormatError, None, Some("formatPropertyDisposals")),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

@@ -50,7 +50,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
+        MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
           .returns(Future.successful(outcome))
 
         await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
@@ -61,7 +61,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector" in new Test {
 
-            MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
+            MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -70,7 +70,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
 
-            MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
+            MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))

@@ -17,6 +17,7 @@
 package v1.services
 
 import cats.data.EitherT
+import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendCgtPpdOverridesConnector
@@ -26,7 +27,6 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 import v1.support.DesResponseMappingSupport
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOverridesConnector) extends DesResponseMappingSupport with Logging {
@@ -38,7 +38,7 @@ class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOv
     correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

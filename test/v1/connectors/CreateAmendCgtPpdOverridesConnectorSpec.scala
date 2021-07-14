@@ -66,7 +66,7 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
-        await(connector.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
+        await(connector.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
       }
     }
   }
