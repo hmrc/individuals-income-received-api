@@ -81,6 +81,60 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
+  private val validOnlyMultiplePropertyDisposalsRequestJson: JsValue = Json.parse(
+    """
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "submissionId": "AB0000000092",
+      |            "amountOfNetGain": 1234.78
+      |         },
+      |         {
+      |            "submissionId": "AB0000000098",
+      |            "amountOfNetLoss": 134.99
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
+  private val validOnlySinglePropertyDisposalsRequestJson: JsValue = Json.parse(
+    """
+      |{
+      |   "singlePropertyDisposals": [
+      |         {
+      |             "submissionId": "AB0000000098",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         },
+      |         {
+      |             "submissionId": "AB0000000091",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetLoss": 4567.89
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
+  )
+
   private val missingMandatoryFieldJson: JsValue = Json.parse(
     """
       |{
@@ -165,16 +219,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val emptySinglePropertyDisposalsRequestJson: JsValue = Json.parse(
     """
       |{
-      |    "multiplePropertyDisposals": [
-      |         {
-      |            "submissionId": "AB0000000092",
-      |            "amountOfNetGain": 1234.78
-      |         },
-      |         {
-      |            "submissionId": "AB0000000098",
-      |            "amountOfNetLoss": 134.99
-      |         }
-      |    ],
       |    "singlePropertyDisposals": []
       |}
       |""".stripMargin
@@ -424,14 +468,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
-      |            "amountOfNetGain": 1234.78,
-      |            "amountOfNetLoss": 134.99
+      |            "submissionId": "AB0000000092"
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
-      |            "amountOfNetGain": 1234.78,
-      |            "amountOfNetLoss": 134.99
+      |            "submissionId": "AB0000000098"
       |         }
       |    ],
       |    "singlePropertyDisposals": [
@@ -539,7 +579,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "otherReliefAmount": 3434.23,
       |             "lossesFromThisYear": 436.23,
       |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetGain": -4567.89
+      |             "amountOfNetGain": 67.89
       |         },
       |         {
       |             "submissionId": "AB0000000091",
@@ -586,8 +626,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 
+    private val MINIMUM_PERMITTED_TAX_YEAR = 2019
+
     MockedAppConfig.minimumPermittedTaxYear
-      .returns(2019)
+      .returns(MINIMUM_PERMITTED_TAX_YEAR)
       .anyNumberOfTimes()
   }
 
@@ -595,6 +637,16 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return no errors" when {
       "a valid request is supplied" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, validRequestBody)) shouldBe Nil
+      }
+
+      "a valid request contains only multiple disposals is supplied" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear,
+          AnyContentAsJson(validOnlyMultiplePropertyDisposalsRequestJson))) shouldBe Nil
+      }
+
+      "a valid request contains only single disposals is supplied" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear,
+          AnyContentAsJson(validOnlySinglePropertyDisposalsRequestJson))) shouldBe Nil
       }
     }
 
@@ -643,12 +695,12 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
               "/singlePropertyDisposals/1/submissionId"))))
       }
 
-      "a json is submitted with an empty multiplePropertyDisposals" in new Test {
+      "an JSON body with empty multiplePropertyDisposals array is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, emptyMultiplePropertyDisposalsRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/multiplePropertyDisposals"))))
       }
 
-      "a json is submitted with an empty singlePropertyDisposals" in new Test {
+      "an JSON body with empty singlePropertyDisposals array is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, emptySinglePropertyDisposalsRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/singlePropertyDisposals"))))
       }

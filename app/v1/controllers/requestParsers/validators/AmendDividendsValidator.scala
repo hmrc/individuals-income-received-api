@@ -96,7 +96,8 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig)
     ).flatten
   }
 
-  private def validateDividendIncomeReceivedWhilstAbroad(dividendIncomeReceivedWhilstAbroad: AmendDividendIncomeReceivedWhilstAbroadItem, arrayIndex: Int): List[MtdError] = {
+  private def validateDividendIncomeReceivedWhilstAbroad(dividendIncomeReceivedWhilstAbroad: AmendDividendIncomeReceivedWhilstAbroadItem,
+                                                         arrayIndex: Int): List[MtdError] = {
     List(
       CountryCodeValidation.validate(dividendIncomeReceivedWhilstAbroad.countryCode).map(
         _.copy(paths = Some(Seq(s"/dividendIncomeReceivedWhilstAbroad/$arrayIndex/countryCode")))

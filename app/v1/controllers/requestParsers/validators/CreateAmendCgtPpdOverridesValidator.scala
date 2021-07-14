@@ -31,9 +31,8 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
     parameterFormatValidation,
     parameterRuleValidation,
     bodyFormatValidator,
-    lossOrGainsValidator,
     bodyValueValidator,
-    emptySingleOrMultipleDisposalsValidator)
+    lossOrGainsValidator)
 
 
   override def validate(data: CreateAmendCgtPpdOverridesRawData): List[MtdError] = {
@@ -55,25 +54,22 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   }
 
   private def bodyFormatValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
-    List(
+    val jsonFormatError = List(
       JsonFormatValidation.validate[CreateAmendCgtPpdOverridesRequestBody](data.body.json)
     )
+
+    val requestBodyObj = data.body.json.asOpt[CreateAmendCgtPpdOverridesRequestBody]
+    val emptyValidation: List[List[MtdError]] = List(requestBodyObj.map {
+      body =>
+        val emptyMultiplePropertyDisposalsError = if(body.multiplePropertyDisposals.exists(_.isEmpty)) List("/multiplePropertyDisposals") else List()
+        val emptySinglePropertyDisposalsError = if(body.singlePropertyDisposals.exists(_.isEmpty)) List("/singlePropertyDisposals") else List()
+
+        val allMissingFields = emptyMultiplePropertyDisposalsError ++ emptySinglePropertyDisposalsError
+        if(allMissingFields.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(allMissingFields)))
+    }.getOrElse(NoValidationErrors))
+
+    jsonFormatError ++ emptyValidation
   }
-
-  private def emptySingleOrMultipleDisposalsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
-    val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
-
-    if (requestBody.singlePropertyDisposals.isEmpty) {
-      List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/singlePropertyDisposals")))))
-    }
-    else if (requestBody.multiplePropertyDisposals.isEmpty) {
-      List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/multiplePropertyDisposals")))))
-    }
-    else {
-      NoValidationErrors
-    }
-  }
-
 
   private def lossOrGainsValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
@@ -164,13 +160,14 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
     List(
       SubmissionIdValidation.validate(
         singlePropertyDisposals.submissionId, SubmissionIdFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/submissionId")))),
-      DateFormatValidation.validate(
-        singlePropertyDisposals.completionDate, DateFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/completionDate")))),
+      DateFormatValidation.validateWithPath(
+        singlePropertyDisposals.completionDate, path = s"singlePropertyDisposals/$arrayIndex/completionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.disposalProceeds,
         path = s"/singlePropertyDisposals/$arrayIndex/disposalProceeds"
       ),
-      DateFormatValidation.validate(singlePropertyDisposals.acquisitionDate, DateFormatError),
+      DateFormatValidation.validateWithPath(singlePropertyDisposals.acquisitionDate,
+        path = s"singlePropertyDisposals/$arrayIndex/acquisitionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.acquisitionAmount,
         path = s"/singlePropertyDisposals/$arrayIndex/acquisitionAmount"
