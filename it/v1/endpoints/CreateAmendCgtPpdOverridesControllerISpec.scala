@@ -74,7 +74,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val nonsenseDataJson: JsValue = Json.parse(
+  val nonsenseBodyJson: JsValue = Json.parse(
     """
       |{
       |  "aField": "aValue"
@@ -89,6 +89,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |   "singlePropertyDisposals": []
       |}
      """.stripMargin
+  )
+
+  val emptyFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
+    paths = Some(Seq(
+      "/multiplePropertyDisposals",
+      "/singlePropertyDisposals"
+    ))
   )
 
   val missingFieldsJson: JsValue = Json.parse(
@@ -237,7 +244,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
   )
 
   val invalidValueErrors: MtdError = ValueFormatError.copy(
-    message = "The field should be between 0 and 99999999999.99",
+    message = "The value must be between 0 and 99999999999.99",
     paths = Some(Seq(
       "/multiplePropertyDisposals/0/amountOfNetGain",
       "/multiplePropertyDisposals/1/amountOfNetLoss",
@@ -330,8 +337,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
   val dateFormatError: MtdError = DateFormatError.copy(
     paths = Some(Seq(
-      "/singlePropertyDisposals/0/completionDate",
-      "/singlePropertyDisposals/0/acquisitionDate"
+      "singlePropertyDisposals/0/completionDate",
+      "singlePropertyDisposals/0/acquisitionDate"
     ))
   )
 
@@ -431,8 +438,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
           // Body Errors
           ("AA123456A", "2020-21", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
-          ("AA123456A", "2020-21", nonsenseDataJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("nonsenseBody")),
-          ("AA123456A", "2020-21", emptyFieldsJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyFields")),
+          ("AA123456A", "2020-21", nonsenseBodyJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("nonsenseBody")),
+          ("AA123456A", "2020-21", emptyFieldsJson, BAD_REQUEST, emptyFieldsError, None, Some("emptyFields")),
           ("AA123456A", "2020-21", missingFieldsJson, BAD_REQUEST, missingFieldsError, None, Some("missingFields")),
           ("AA123456A", "2020-21", gainAndLossJson, BAD_REQUEST, amountGainLossError, None, Some("gainAndLossRule")),
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
@@ -452,10 +459,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request().put(validRequestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -474,7 +481,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PPDSubmissionIdNotFoundError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
           (CONFLICT, "DUPLICATE_SUBMISSION", INTERNAL_SERVER_ERROR, DownstreamError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
