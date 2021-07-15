@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllCgt
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{Json, OFormat}
 
-case class RetrieveAllCgtResponse(ppdService: Option[PpdServiceObject],
-                                  customerAddedDisposals: Option[CustomerAddedDisposals])
-object RetrieveAllCgtResponse {
-  implicit val format: OFormat[RetrieveAllCgtResponse] = Json.format[RetrieveAllCgtResponse]
+case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdServiceObject],
+                                                     customerAddedDisposals: Option[CustomerAddedDisposals])
+object RetrieveAllResidentialPropertyCgtResponse {
+  implicit val format: OFormat[RetrieveAllResidentialPropertyCgtResponse] = Json.format[RetrieveAllResidentialPropertyCgtResponse]
 }

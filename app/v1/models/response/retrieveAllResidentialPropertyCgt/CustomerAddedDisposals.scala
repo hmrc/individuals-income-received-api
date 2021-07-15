@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllCgt
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PpdServiceObject(multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
-                            singlePropertyDisposals: Option[Seq[SinglePropertyDisposals]])
-
-object PpdServiceObject {
-  implicit val format: OFormat[PpdServiceObject] = Json.format[PpdServiceObject]
+case class CustomerAddedDisposals(submittedOn: String,
+                                  disposals: Seq[Disposals])
+object CustomerAddedDisposals {
+  implicit val format: OFormat[CustomerAddedDisposals] = Json.format[CustomerAddedDisposals]
 }

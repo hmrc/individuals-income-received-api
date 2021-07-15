@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllCgt
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.domain.MtdSourceEnum
 
-class RetrieveAllCgtResponseSpec extends UnitSpec {
+class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
 
   private val mtdJson: JsValue = Json.parse(
     """
@@ -219,8 +219,8 @@ class RetrieveAllCgtResponseSpec extends UnitSpec {
       Seq(disposals)
     )
 
-  private val model: RetrieveAllCgtResponse =
-    RetrieveAllCgtResponse(
+  private val model: RetrieveAllResidentialPropertyCgtResponse =
+    RetrieveAllResidentialPropertyCgtResponse(
       Some(ppdService),
       Some(customerAddedDisposals)
     )
@@ -230,7 +230,7 @@ class RetrieveAllCgtResponseSpec extends UnitSpec {
     "Reads" should {
       "return a valid object" when {
         "a valid json is supplied" in {
-          desJson.as[RetrieveAllCgtResponse] shouldBe model
+          desJson.as[RetrieveAllResidentialPropertyCgtResponse] shouldBe model
         }
       }
     }

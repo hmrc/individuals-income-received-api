@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveAllCgt
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import v1.models.domain.{MtdSourceEnum, Nino}
+import play.api.libs.json.{Json, OFormat}
 
-case class RetrieveAllCgtRequest(nino: Nino, taxYear: String, source: MtdSourceEnum)
+case class PpdServiceObject(multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
+                            singlePropertyDisposals: Option[Seq[SinglePropertyDisposals]])
+
+object PpdServiceObject {
+  implicit val format: OFormat[PpdServiceObject] = Json.format[PpdServiceObject]
+}

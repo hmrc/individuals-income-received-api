@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveAllCgt
+package v1.models.request.retrieveAllResidentialPropertyCgt
 
 import v1.models.request.RawData
 
-case class RetrieveAllCgtRawData(nino: String, taxYear: String, source:Option[String]) extends RawData
+case class RetrieveAllResidentialPropertyCgtRawData(nino: String, taxYear: String, source:Option[String]) extends RawData

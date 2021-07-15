@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllCgt
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class DisposalsSpec extends UnitSpec {
+class CustomerAddedDisposalsSpec extends UnitSpec {
 
   private val mtdJson: JsValue = Json.parse(
     """
       |{
+      |    "submittedOn": "2020-07-06T09:37:17Z",
+      |    "disposals": [
+      |      {
       |        "customerReference": "CGTDISPOSAL01",
       |        "disposalDate": "2022-02-04",
       |        "completionDate": "2022-03-08",
@@ -38,13 +41,19 @@ class DisposalsSpec extends UnitSpec {
       |        "lossesFromPreviousYear": 1999.99,
       |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99
-      |}
+      |      }
+      |    ]
+      |  }
       |""".stripMargin
   )
+
 
   private val desJson: JsValue = Json.parse(
     """
       |{
+      |    "submittedOn": "2020-07-06T09:37:17Z",
+      |    "disposals": [
+      |      {
       |        "customerReference": "CGTDISPOSAL01",
       |        "disposalDate": "2022-02-04",
       |        "completionDate": "2022-03-08",
@@ -59,12 +68,13 @@ class DisposalsSpec extends UnitSpec {
       |        "lossesFromPreviousYear": 1999.99,
       |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99
-      |}
+      |      }
+      |    ]
+      |  }
       |""".stripMargin
   )
 
-
-  private val model: Disposals = Disposals(
+  private val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
     "2022-03-08",
@@ -81,12 +91,17 @@ class DisposalsSpec extends UnitSpec {
     Some(1999.99)
   )
 
+  private val model: CustomerAddedDisposals =
+    CustomerAddedDisposals(
+      "2020-07-06T09:37:17Z",
+      Seq(disposals)
+    )
 
-  "Disposals" when {
+  "CustomerAddedDisposals" when {
     "Reads" should {
       "return a valid object" when {
         "a valid json is supplied" in {
-          desJson.as[Disposals] shouldBe model
+          desJson.as[CustomerAddedDisposals] shouldBe model
         }
       }
     }
@@ -97,7 +112,5 @@ class DisposalsSpec extends UnitSpec {
       }
     }
   }
-
-
 
 }

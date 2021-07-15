@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllCgt
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
