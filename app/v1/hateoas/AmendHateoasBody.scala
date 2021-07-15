@@ -125,7 +125,7 @@ trait AmendHateoasBody extends HateoasLinks {
 
     val links = Seq(
       createAmendOtherCgt(appConfig, nino, taxYear),
-      retrieveOtherCgt(appConfig, nino, taxYear, isSelf = true),
+      retrieveOtherCgt(appConfig, nino, taxYear),
       deleteOtherCgt(appConfig, nino, taxYear)
     )
 

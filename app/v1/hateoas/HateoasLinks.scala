@@ -283,11 +283,11 @@ trait HateoasLinks {
     )
 
   // Other CGT and Disposals
-  def retrieveOtherCgt(appConfig: AppConfig, nino: String, taxYear: String, isSelf: Boolean): Link =
+  def retrieveOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_OTHER_CGT_AND_DISPOSALS
+      rel = SELF
     )
 
   def createAmendOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
