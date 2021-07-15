@@ -1,0 +1,76 @@
+{
+  "multiplePropertyDisposals": [
+    {
+      "source": "hmrcHeld",
+      "submittedOn": "2021-04-26T10:59:47.544Z",
+      "ppdSubmissionId": "ABC123456781",
+      "ppdSubmissionDate": "2021-04-26T10:59:47.544Z",
+      "numberOfDisposals": 3,
+      "disposalTaxYear": "2021",
+      "completionDate": "2021-04-06",
+      "amountOfNetGain": 237.99,
+      "amountOfLoss": 4646.23,
+      "ppdReturnCharge": 3232.54
+    }
+  ],
+  "singlePropertyDisposals": [
+    {
+      "source": "hmrcHeld",
+      "submittedOn": "2021-04-26T10:59:47.544Z",
+      "ppdSubmissionId": "ABC123456781",
+      "ppdSubmissionDate": "2021-04-26T10:59:47.544Z",
+      "disposalDate": "2021-04-06",
+      "completionDate": "2021-04-06",
+      "disposalProceeds": 2434.35,
+      "acquisitionDate": "2021-04-06",
+      "acquisitionAmount": 6565.34,
+      "improvementCosts": 3532.45,
+      "additionalCosts": 3433.78,
+      "prfAmount": 4224.23,
+      "otherReliefAmount": 5652.35,
+      "lossesFromThisYear": 3433.23,
+      "lossesFromPreviousYear": 2421.23,
+      "amountOfNetGain": 783.34,
+      "amountOfLoss": 2342.23,
+      "ppdReturnCharge": 2342.12
+    }
+  ],
+  "customerAddedDisposals": {
+    "submittedOn": "2021-04-26T10:59:47.544Z"
+    },
+  "disposals": [
+    {
+      "customerReference": "CGTDISPOSAL01",
+      "disposalDate": "2021-04-06",
+      "completionDate": "2021-04-06",
+      "disposalProceeds": 3433.34,
+      "acquisitionDate": "2021-04-06",
+      "acquisitionAmount": 235.33,
+      "improvementCosts": 561.34,
+      "additionalCosts": 456.23,
+      "prfAmount": 345.12,
+      "otherReliefAmount": 378.12,
+      "lossesFromThisYear": 368.87,
+      "lossesFromPreviousYear": 781.23,
+      "amountOfNetGain": 341.45,
+      "amountOfLoss": 451.89
+    }
+   ],
+  "links": [
+    {
+      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
+      "rel": "create-or-amend-disdposal-and-overrides",
+      "method": "PUT"
+    },
+    {
+      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
+      "rel": "delete-disdposal-and-overrides",
+      "method": "DELETE"
+    },
+    {
+      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
+      "rel": "self",
+      "method": "GET"
+    }
+  ]
+}
