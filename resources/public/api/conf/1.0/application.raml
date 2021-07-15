@@ -143,8 +143,8 @@ uses:
           uriParameters:
             taxYear: !include pathParameters/taxYearMinimum2021.raml
           /ppd:
-            put: !include endpoints/cgt/amend.raml
-            delete: !include endpoints/cgt/delete.raml
+            put: !include endpoints/cgt/residentialProperty/amendPpd.raml
+            delete: !include endpoints/cgt/residentialProperty/deletePpd.raml
     /other-gains:
       (annotations.group):
         name: Other Capital Gains and Disposals
@@ -153,6 +153,6 @@ uses:
         /{taxYear}:
           uriParameters:
             taxYear: !include pathParameters/taxYearMinimum2021.raml
-          put: !include endpoints/capitalGainsTax/other/amend.raml
-          get: !include endpoints/capitalGainsTax/other/get.raml
-          delete: !include endpoints/capitalGainsTax/other/delete.raml
+          put: !include endpoints/cgt/other/amend.raml
+          get: !include endpoints/cgt/other/get.raml
+          delete: !include endpoints/cgt/other/delete.raml
