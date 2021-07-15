@@ -35,7 +35,7 @@ object RetrieveOtherCgtResponse extends HateoasLinks {
       Seq(
         createAmendOtherCgt(appConfig, data.nino, data.taxYear),
         deleteOtherCgt(appConfig, data.nino, data.taxYear),
-        retrieveOtherCgt(appConfig, data.nino, data.taxYear, isSelf = true)
+        retrieveOtherCgt(appConfig, data.nino, data.taxYear)
       )
     }
   }

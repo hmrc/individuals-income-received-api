@@ -27,9 +27,6 @@ import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
 import v1.mocks.services.{MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.Nino
 import v1.models.errors._
-import v1.models.hateoas.Link
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, RETRIEVE_OTHER_CGT_AND_DISPOSALS}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendOtherCgt._
 
@@ -138,27 +135,6 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
     body = requestModel
   )
 
-  val amendOtherCgtLink: Link =
-    Link(
-      href = s"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
-      method = PUT,
-      rel = CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS
-    )
-
-  val retrieveOtherCgtLink: Link =
-    Link(
-      href = s"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
-      method = GET,
-      rel = RETRIEVE_OTHER_CGT_AND_DISPOSALS
-    )
-
-  val deleteOtherCgtLink: Link =
-    Link(
-      href = s"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
-      method = DELETE,
-      rel = DELETE_OTHER_CGT_AND_DISPOSALS
-    )
-
   val mtdResponse: JsValue = Json.parse(
     s"""
        |{
@@ -171,7 +147,7 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
        |      {
        |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
        |         "method":"GET",
-       |         "rel":"retrieve-other-capital-gains-and-disposals"
+       |         "rel":"self"
        |      },
        |      {
        |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
