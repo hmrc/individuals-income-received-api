@@ -385,7 +385,7 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec {
          |      {
          |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
          |         "method":"GET",
-         |         "rel":"retrieve-other-capital-gains-and-disposals"
+         |         "rel":"self"
          |      },
          |      {
          |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
