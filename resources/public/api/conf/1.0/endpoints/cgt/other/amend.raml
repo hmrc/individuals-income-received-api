@@ -28,13 +28,13 @@ body:
       examples:
         full_amendment:
           description: Other Capital Gains and Disposals with Gains
-          value: !include ../../../examples/capitalGainsTax/other/amend_request.json
+          value: !include ../../../examples/cgt/other/amend_request.json
 responses:
   200:
     body:
       application/json:
         type: !include ../../../schemas/capital_gains_other_amend_response.json
-        example: !include ../../../examples/capitalGainsTax/other/amend_response.json
+        example: !include ../../../examples/cgt/other/amend_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
