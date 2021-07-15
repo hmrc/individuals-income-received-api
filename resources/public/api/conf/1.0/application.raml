@@ -135,16 +135,19 @@ uses:
         delete: !include endpoints/savingsIncome/delete.raml
   /disposals:
     /residential-property:
-      (annotations.group):
-        name: Capital Gains on Residential Property Disposals
-        description: Resources relating to an individual’s residential property disposals and overrides
       /{nino}:
         /{taxYear}:
           uriParameters:
             taxYear: !include pathParameters/taxYearMinimum2021.raml
           /ppd:
+            (annotations.group):
+              name: Capital Gains on Residential Property Disposals - PPD
+              description: Resources relating to 'Report and Pay Capital Gains Tax on Property' Overrides
             put: !include endpoints/cgt/residentialProperty/amendPpd.raml
             delete: !include endpoints/cgt/residentialProperty/deletePpd.raml
+          (annotations.group):
+            name: Capital Gains on Residential Property Disposals - non PPD
+            description: Resources not relating to 'Report and Pay Capital Gains Tax on Property' Overrides
           delete: !include endpoints/cgt/residentialProperty/deleteNonPpd.raml
     /other-gains:
       (annotations.group):
