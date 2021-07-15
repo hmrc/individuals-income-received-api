@@ -311,11 +311,11 @@ trait HateoasLinks {
     )
 
   // Retrieve All CGT Residential Property Disposals and Overrides
-  def retrieveAllCgtPpdDisposalsOverrides(appConfig: AppConfig, nino: String, taxYear: String, isSelf: Boolean): Link =
+  def retrieveAllCgtPpdDisposalsOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS
+      rel = SELF
     )
 
   // 'Report and Pay Capital Gains Tax on Property' Overrides

@@ -48,7 +48,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
 
   private def parameterRuleValidation: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumCgtPermittedTaxYear),
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
       TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
@@ -117,7 +117,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
     if (singlePropertyDisposals.amountOfNetGain.isDefined &&
       (singlePropertyDisposals.lossesFromPreviousYear > singlePropertyDisposals.amountOfNetGain ||
         singlePropertyDisposals.lossesFromThisYear > singlePropertyDisposals.amountOfNetGain)) {
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex"))))
+      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex"))))
     } else {
       NoValidationErrors
     }
@@ -142,8 +142,8 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   private def validateMultiplePropertyDisposals(multiplePropertyDisposals: MultiplePropertyDisposals, arrayIndex: Int): List[MtdError] = {
 
     List(
-      SubmissionIdValidation.validate(
-        multiplePropertyDisposals.submissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"multiplePropertyDisposals/$arrayIndex/submissionId")))),
+      PpdSubmissionIdValidation.validate(
+        multiplePropertyDisposals.ppdSubmissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
       DecimalValueValidation.validateOptional(
         amount = multiplePropertyDisposals.amountOfNetGain,
         path = s"/multiplePropertyDisposals/$arrayIndex/amountOfNetGain"
@@ -158,16 +158,16 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   private def validateSinglePropertyDisposals(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
 
     List(
-      SubmissionIdValidation.validate(
-        singlePropertyDisposals.submissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"singlePropertyDisposals/$arrayIndex/submissionId")))),
+      PpdSubmissionIdValidation.validate(
+        singlePropertyDisposals.ppdSubmissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
       DateFormatValidation.validateWithPath(
-        singlePropertyDisposals.completionDate, path = s"singlePropertyDisposals/$arrayIndex/completionDate"),
+        singlePropertyDisposals.completionDate, path = s"/singlePropertyDisposals/$arrayIndex/completionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.disposalProceeds,
         path = s"/singlePropertyDisposals/$arrayIndex/disposalProceeds"
       ),
       DateFormatValidation.validateWithPath(singlePropertyDisposals.acquisitionDate,
-        path = s"singlePropertyDisposals/$arrayIndex/acquisitionDate"),
+        path = s"/singlePropertyDisposals/$arrayIndex/acquisitionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.acquisitionAmount,
         path = s"/singlePropertyDisposals/$arrayIndex/acquisitionAmount"

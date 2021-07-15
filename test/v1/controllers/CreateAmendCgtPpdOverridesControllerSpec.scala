@@ -55,17 +55,17 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -79,7 +79,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",

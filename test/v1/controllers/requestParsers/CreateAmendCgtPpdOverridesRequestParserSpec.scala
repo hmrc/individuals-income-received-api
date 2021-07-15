@@ -21,7 +21,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.mocks.validators.MockCreateAmendCgtPpdOverridesValidator
 import v1.models.domain.Nino
-import v1.models.errors.{BadRequestError, DateFormatError, ErrorWrapper, NinoFormatError, PPDSubmissionIdFormatError, ValueFormatError}
+import v1.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides._
 
 class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
@@ -35,17 +35,17 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -59,7 +59,7 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -173,17 +173,17 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
             |{
             |    "multiplePropertyDisposals": [
             |         {
-            |            "submissionId": "notASubmissionId",
+            |            "ppdSubmissionId": "notASubmissionId",
             |            "amountOfNetGain": 1234.787385
             |         },
             |         {
-            |            "submissionId": "notASubmissionId",
+            |            "ppdSubmissionId": "notASubmissionId",
             |            "amountOfNetLoss": -134.99
             |         }
             |    ],
             |    "singlePropertyDisposals": [
             |         {
-            |             "submissionId": "notASubmissionId",
+            |             "ppdSubmissionId": "notASubmissionId",
             |             "completionDate": "20201-02-28",
             |             "disposalProceeds": 454.24999,
             |             "acquisitionDate": "20209-03-29",
@@ -197,7 +197,7 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
             |             "amountOfNetGain": -4567.89
             |         },
             |         {
-            |             "submissionId": "notASubmissionId",
+            |             "ppdSubmissionId": "notASubmissionId",
             |             "completionDate": "20-02-28",
             |             "disposalProceeds": -454.24,
             |             "acquisitionDate": "200-03-29",
@@ -219,43 +219,44 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
 
         private val allInvalidValueErrors = List(
           PPDSubmissionIdFormatError.copy(
-            paths = Some(Seq("/multiplePropertyDisposals/1/submissionId",
-              "/singlePropertyDisposals/1/submissionId",
-              "/multiplePropertyDisposals/2/submissionId",
-              "/singlePropertyDisposals/2/submissionId"))
+            paths = Some(Seq(
+              "/multiplePropertyDisposals/0/ppdSubmissionId",
+              "/singlePropertyDisposals/0/ppdSubmissionId",
+              "/multiplePropertyDisposals/1/ppdSubmissionId",
+              "/singlePropertyDisposals/1/ppdSubmissionId"))
           ),
           ValueFormatError.copy(
             paths = Some(List(
-              "/multiplePropertyDisposals/1/amountOfNetGain",
-              "/multiplePropertyDisposals/2/amountOfNetLoss",
-              "/singlePropertyDisposals/1/amountOfNetLoss",
+              "/multiplePropertyDisposals/0/amountOfNetGain",
+              "/multiplePropertyDisposals/1/amountOfNetLoss",
+              "/singlePropertyDisposals/0/amountOfNetLoss",
+              "/singlePropertyDisposals/0/disposalProceeds",
+              "/singlePropertyDisposals/0/acquisitionAmount",
+              "/singlePropertyDisposals/0/improvementCosts",
+              "/singlePropertyDisposals/0/additionalCosts",
+              "/singlePropertyDisposals/0/prfAmount",
+              "/singlePropertyDisposals/0/otherReliefAmount",
+              "/singlePropertyDisposals/0/lossesFromThisYear",
+              "/singlePropertyDisposals/0/lossesFromPreviousYear",
+              "/singlePropertyDisposals/0/amountOfNetGain",
               "/singlePropertyDisposals/1/disposalProceeds",
               "/singlePropertyDisposals/1/acquisitionAmount",
+              "/singlePropertyDisposals/1/improvementCosts",
               "/singlePropertyDisposals/1/improvementCosts",
               "/singlePropertyDisposals/1/additionalCosts",
               "/singlePropertyDisposals/1/prfAmount",
               "/singlePropertyDisposals/1/otherReliefAmount",
               "/singlePropertyDisposals/1/lossesFromThisYear",
               "/singlePropertyDisposals/1/lossesFromPreviousYear",
-              "/singlePropertyDisposals/1/amountOfNetGain",
-              "/singlePropertyDisposals/2/disposalProceeds",
-              "/singlePropertyDisposals/2/acquisitionAmount",
-              "/singlePropertyDisposals/2/improvementCosts",
-              "/singlePropertyDisposals/2/improvementCosts",
-              "/singlePropertyDisposals/2/additionalCosts",
-              "/singlePropertyDisposals/2/prfAmount",
-              "/singlePropertyDisposals/2/otherReliefAmount",
-              "/singlePropertyDisposals/2/lossesFromThisYear",
-              "/singlePropertyDisposals/2/lossesFromPreviousYear",
-              "/singlePropertyDisposals/2/amountOfNetLoss"
+              "/singlePropertyDisposals/1/amountOfNetLoss"
             ))
           ),
           DateFormatError.copy(
             paths = Some(List(
-              "singlePropertyDisposals/1/completionDate",
-              "singlePropertyDisposals/1/acquisitionDate",              "singlePropertyDisposals/1/completionDate",
-              "singlePropertyDisposals/2/completionDate",              "singlePropertyDisposals/1/completionDate",
-              "singlePropertyDisposals/2/acquisitionDate",
+              "/singlePropertyDisposals/0/completionDate",
+              "/singlePropertyDisposals/0/acquisitionDate",
+              "/singlePropertyDisposals/1/completionDate",
+              "/singlePropertyDisposals/1/acquisitionDate",
             ))
           )
         )

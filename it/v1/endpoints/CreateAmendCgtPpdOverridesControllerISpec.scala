@@ -32,17 +32,17 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -56,7 +56,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -109,15 +109,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(Seq(
-      "/multiplePropertyDisposals/0/submissionId",
-
       "/singlePropertyDisposals/0/otherReliefAmount",
-      "/singlePropertyDisposals/0/submissionId",
       "/singlePropertyDisposals/0/disposalProceeds",
       "/singlePropertyDisposals/0/acquisitionDate",
       "/singlePropertyDisposals/0/prfAmount",
+      "/multiplePropertyDisposals/0/ppdSubmissionId",
       "/singlePropertyDisposals/0/improvementCosts",
       "/singlePropertyDisposals/0/completionDate",
+      "/singlePropertyDisposals/0/ppdSubmissionId",
       "/singlePropertyDisposals/0/additionalCosts",
       "/singlePropertyDisposals/0/acquisitionAmount"
     ))
@@ -128,14 +127,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78,
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -166,13 +165,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -192,7 +191,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
   val lossesGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
     paths = Some(Seq(
-      "singlePropertyDisposals/0"
+      "/singlePropertyDisposals/0"
     ))
   )
 
@@ -201,17 +200,17 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.787385
       |         },
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetLoss": -134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000092",
+      |             "ppdSubmissionId": "AB0000000092",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24999,
       |             "acquisitionDate": "2020-03-29",
@@ -225,7 +224,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |             "amountOfNetGain": 4567.8974726
       |         },
       |         {
-      |             "submissionId": "AB0000000092",
+      |             "ppdSubmissionId": "AB0000000092",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": -454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -275,13 +274,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "notAnID",
+      |            "ppdSubmissionId": "notAnID",
       |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "notAnID",
+      |             "ppdSubmissionId": "notAnID",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -299,10 +298,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val submissionFormatError: MtdError = PPDSubmissionIdFormatError.copy(
+  val ppdSubmissionFormatError: MtdError = PPDSubmissionIdFormatError.copy(
     paths = Some(Seq(
-      "multiplePropertyDisposals/0/submissionId",
-      "singlePropertyDisposals/0/submissionId",
+      "/multiplePropertyDisposals/0/ppdSubmissionId",
+      "/singlePropertyDisposals/0/ppdSubmissionId",
     ))
   )
 
@@ -311,13 +310,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000091",
+      |            "ppdSubmissionId": "AB0000000091",
       |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000092",
+      |             "ppdSubmissionId": "AB0000000092",
       |             "completionDate": "20-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2003-29",
@@ -337,8 +336,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
   val dateFormatError: MtdError = DateFormatError.copy(
     paths = Some(Seq(
-      "singlePropertyDisposals/0/completionDate",
-      "singlePropertyDisposals/0/acquisitionDate"
+      "/singlePropertyDisposals/0/completionDate",
+      "/singlePropertyDisposals/0/acquisitionDate"
     ))
   )
 
@@ -445,7 +444,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", PPDsubmissionFormatJson, BAD_REQUEST, submissionFormatError, None, Some("formatPropertyDisposals")),
+          ("AA123456A", "2020-21", PPDsubmissionFormatJson, BAD_REQUEST, ppdSubmissionFormatError, None, Some("formatPropertyDisposals")),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

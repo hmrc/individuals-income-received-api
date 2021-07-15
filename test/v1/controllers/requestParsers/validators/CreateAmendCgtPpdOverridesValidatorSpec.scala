@@ -39,17 +39,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -63,7 +63,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -86,11 +86,11 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ]
@@ -103,7 +103,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |   "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -117,7 +117,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -184,7 +184,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    "multiplePropertyDisposals": [],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -198,7 +198,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -229,17 +229,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "notAnID",
+      |            "ppdSubmissionId": "notAnID",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -253,7 +253,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -276,17 +276,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.787385
       |         },
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetLoss": -134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000092",
+      |             "ppdSubmissionId": "AB0000000092",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24999,
       |             "acquisitionDate": "2020-03-29",
@@ -300,7 +300,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.8974726
       |         },
       |         {
-      |             "submissionId": "AB0000000092",
+      |             "ppdSubmissionId": "AB0000000092",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": -454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -323,17 +323,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "20-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -347,7 +347,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -370,19 +370,19 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78,
       |            "amountOfNetLoss": 134.99
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetGain": 1234.78,
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -396,7 +396,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -419,17 +419,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetLoss": 134.99
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -444,7 +444,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetLoss": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -468,15 +468,15 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092"
+      |            "ppdSubmissionId": "AB0000000092"
       |         },
       |         {
-      |            "submissionId": "AB0000000098"
+      |            "ppdSubmissionId": "AB0000000098"
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -490,7 +490,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 4567.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -513,17 +513,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetLoss": 134.99
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -536,7 +536,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "lossesFromPreviousYear": 234.23
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -558,17 +558,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "submissionId": "AB0000000092",
+      |            "ppdSubmissionId": "AB0000000092",
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "submissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "submissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000098",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -582,7 +582,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |             "amountOfNetGain": 67.89
       |         },
       |         {
-      |             "submissionId": "AB0000000091",
+      |             "ppdSubmissionId": "AB0000000091",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -628,7 +628,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
 
     private val MINIMUM_PERMITTED_TAX_YEAR = 2020
 
-    MockedAppConfig.minimumCgtPermittedTaxYear
+    MockedAppConfig.minimumPermittedTaxYear
       .returns(MINIMUM_PERMITTED_TAX_YEAR)
       .anyNumberOfTimes()
   }
@@ -689,10 +689,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "an JSON body missing a mandatory field is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(
-            paths = Some(Seq("/multiplePropertyDisposals/0/submissionId",
-              "/multiplePropertyDisposals/1/submissionId",
-              "/singlePropertyDisposals/0/submissionId",
-              "/singlePropertyDisposals/1/submissionId"))))
+            paths = Some(Seq("/multiplePropertyDisposals/0/ppdSubmissionId",
+              "/multiplePropertyDisposals/1/ppdSubmissionId",
+              "/singlePropertyDisposals/0/ppdSubmissionId",
+              "/singlePropertyDisposals/1/ppdSubmissionId"))))
       }
 
       "an JSON body with empty multiplePropertyDisposals array is submitted" in new Test {
@@ -709,7 +709,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a submissionIdFormatError" when {
       "a body with incorrect submissionIds is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidSubmissionIdRequestBody)) shouldBe
-          List(PPDSubmissionIdFormatError.copy(paths = Some(Seq("multiplePropertyDisposals/0/submissionId"))))
+          List(PPDSubmissionIdFormatError.copy(paths = Some(Seq("/multiplePropertyDisposals/0/ppdSubmissionId"))))
       }
     }
 
@@ -748,7 +748,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a dateFormatError" when {
       "a body with an incorrect date is provided" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidDateRequestBody)) shouldBe
-          List(DateFormatError.copy(paths = Some(Seq("singlePropertyDisposals/0/completionDate"))))
+          List(DateFormatError.copy(paths = Some(Seq("/singlePropertyDisposals/0/completionDate"))))
       }
     }
 
@@ -777,7 +777,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a RuleLossesGreaterThanGainError" when {
       "the losses for this year are larger than the total gains" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, currentYearLossesGreaterThanGainsRequestBody)) shouldBe
-          List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq("singlePropertyDisposals/0"))))
+          List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq("/singlePropertyDisposals/0"))))
       }
     }
   }
