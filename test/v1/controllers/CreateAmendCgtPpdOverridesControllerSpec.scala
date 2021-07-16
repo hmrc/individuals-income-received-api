@@ -244,7 +244,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           (ValueFormatError, BAD_REQUEST),
           (RuleAmountGainLossError, BAD_REQUEST),
           (DateFormatError, BAD_REQUEST),
-          (PPDSubmissionIdFormatError, BAD_REQUEST),
+          (PpdSubmissionIdFormatError, BAD_REQUEST),
           (RuleLossesGreaterThanGainError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST)
         )
@@ -276,7 +276,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (PPDSubmissionIdNotFoundError, NOT_FOUND),
+          (PpdSubmissionIdNotFoundError, NOT_FOUND),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

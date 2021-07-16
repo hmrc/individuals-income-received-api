@@ -218,7 +218,7 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
         private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueBodyJson)
 
         private val allInvalidValueErrors = List(
-          PPDSubmissionIdFormatError.copy(
+          PpdSubmissionIdFormatError.copy(
             paths = Some(Seq(
               "/multiplePropertyDisposals/0/ppdSubmissionId",
               "/singlePropertyDisposals/0/ppdSubmissionId",

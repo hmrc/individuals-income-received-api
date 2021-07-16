@@ -81,7 +81,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", DownstreamError),
           ("INVALID_PAYLOAD", DownstreamError),
-          ("PPD_SUBMISSIONID_NOT_FOUND", PPDSubmissionIdNotFoundError),
+          ("PPD_SUBMISSIONID_NOT_FOUND", PpdSubmissionIdNotFoundError),
           ("NO_PPD_SUBMISSIONS_FOUND", NotFoundError),
           ("DUPLICATE_SUBMISSION", DownstreamError),
           ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),

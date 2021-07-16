@@ -298,7 +298,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val ppdSubmissionFormatError: MtdError = PPDSubmissionIdFormatError.copy(
+  val ppdSubmissionFormatError: MtdError = PpdSubmissionIdFormatError.copy(
     paths = Some(Seq(
       "/multiplePropertyDisposals/0/ppdSubmissionId",
       "/singlePropertyDisposals/0/ppdSubmissionId",
@@ -480,7 +480,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PPDSubmissionIdNotFoundError),
+          (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PpdSubmissionIdNotFoundError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
           (CONFLICT, "DUPLICATE_SUBMISSION", INTERNAL_SERVER_ERROR, DownstreamError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),

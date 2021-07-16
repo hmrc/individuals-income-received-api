@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.PPDSubmissionIdFormatError
+import v1.models.errors.PpdSubmissionIdFormatError
 
 class PpdSubmissionIdValidationSpec extends UnitSpec {
 
@@ -26,15 +26,15 @@ class PpdSubmissionIdValidationSpec extends UnitSpec {
       "return an empty list for a valid ppdSubmissionId" in {
         PpdSubmissionIdValidation.validate(
           ppdSubmissionId = "AB0000000098",
-          PPDSubmissionIdFormatError
+          PpdSubmissionIdFormatError
         ) shouldBe NoValidationErrors
       }
 
-      "return a PPDSubmissionIdFormatError for an invalid ppdSubmissionId" in {
+      "return a PpdSubmissionIdFormatError for an invalid ppdSubmissionId" in {
         PpdSubmissionIdValidation.validate(
           ppdSubmissionId = "NotAnID",
-          PPDSubmissionIdFormatError
-        ) shouldBe List(PPDSubmissionIdFormatError)
+          PpdSubmissionIdFormatError
+        ) shouldBe List(PpdSubmissionIdFormatError)
       }
     }
   }

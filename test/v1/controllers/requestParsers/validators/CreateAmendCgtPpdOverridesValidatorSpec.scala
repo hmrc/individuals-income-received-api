@@ -706,10 +706,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       }
     }
 
-    "return a submissionIdFormatError" when {
-      "a body with incorrect submissionIds is submitted" in new Test {
+    "return a PpdSubmissionIdFormatError" when {
+      "a body with incorrect ppdSubmissionIds is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidSubmissionIdRequestBody)) shouldBe
-          List(PPDSubmissionIdFormatError.copy(paths = Some(Seq("/multiplePropertyDisposals/0/ppdSubmissionId"))))
+          List(PpdSubmissionIdFormatError.copy(paths = Some(Seq("/multiplePropertyDisposals/0/ppdSubmissionId"))))
       }
     }
 

@@ -143,7 +143,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
 
     List(
       PpdSubmissionIdValidation.validate(
-        multiplePropertyDisposals.ppdSubmissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
+        multiplePropertyDisposals.ppdSubmissionId, PpdSubmissionIdFormatError.copy(paths = Some(Seq(s"/multiplePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
       DecimalValueValidation.validateOptional(
         amount = multiplePropertyDisposals.amountOfNetGain,
         path = s"/multiplePropertyDisposals/$arrayIndex/amountOfNetGain"
@@ -159,7 +159,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
 
     List(
       PpdSubmissionIdValidation.validate(
-        singlePropertyDisposals.ppdSubmissionId, PPDSubmissionIdFormatError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
+        singlePropertyDisposals.ppdSubmissionId, PpdSubmissionIdFormatError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
       DateFormatValidation.validateWithPath(
         singlePropertyDisposals.completionDate, path = s"/singlePropertyDisposals/$arrayIndex/completionDate"),
       DecimalValueValidation.validate(

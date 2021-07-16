@@ -96,12 +96,12 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
            CustomMtdError(RuleAmountGainLossError.code) |
            CustomMtdError(ValueFormatError.code) |
            CustomMtdError(DateFormatError.code) |
-           CustomMtdError(PPDSubmissionIdFormatError.code) |
+           CustomMtdError(PpdSubmissionIdFormatError.code) |
            CustomMtdError(RuleLossesGreaterThanGainError.code) |
            CustomMtdError(RuleTaxYearNotEndedError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError | PPDSubmissionIdNotFoundError
+      case NotFoundError | PpdSubmissionIdNotFoundError
       => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
         }
