@@ -18,7 +18,7 @@ package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
 import v1.controllers.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
-import v1.models.domain.Nino
+import v1.models.domain.{MtdSourceEnum, Nino}
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 @Singleton
@@ -26,5 +26,9 @@ class RetrieveAllResidentialPropertyCgtRequestParser @Inject()(val validator: Re
   extends RequestParser[RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest] {
 
   override protected def requestFor(data: RetrieveAllResidentialPropertyCgtRawData): RetrieveAllResidentialPropertyCgtRequest =
-    RetrieveAllResidentialPropertyCgtRequest(Nino(data.nino), data.taxYear, data.source)
+    RetrieveAllResidentialPropertyCgtRequest(
+      Nino(data.nino),
+      data.taxYear,
+      data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest)
+    )
 }

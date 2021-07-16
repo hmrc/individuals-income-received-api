@@ -30,7 +30,7 @@ class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2021-22"
-  private val validSource = "hmrcHeld"
+  private val validSource = Some("hmrcHeld")
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
@@ -51,8 +51,11 @@ class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in new Test {
+      "a valid request is supplied with a source" in new Test {
         validator.validate(RetrieveAllResidentialPropertyCgtRawData(validNino, validTaxYear, validSource)) shouldBe Nil
+      }
+      "a valid request is supplied with no source" in new Test {
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData(validNino, validTaxYear, None)) shouldBe Nil
       }
     }
 
@@ -86,7 +89,7 @@ class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
     "return NinoFormatError, TaxYearFormatError and SourceFormatError errors" when {
       "request supplied has invalid nino, tax year and source" in new Test {
-        validator.validate(RetrieveAllResidentialPropertyCgtRawData("A12344A", "20178", "ABCDE12345FG")) shouldBe
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData("A12344A", "20178", Some("ABCDE12345FG"))) shouldBe
           List(NinoFormatError, TaxYearFormatError, SourceFormatError)
       }
     }

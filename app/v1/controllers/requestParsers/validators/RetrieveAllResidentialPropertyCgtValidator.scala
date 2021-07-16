@@ -32,15 +32,17 @@ class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: A
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] = (data: RetrieveAllResidentialPropertyCgtRawData) => {
+  private def parameterFormatValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] =
+    (data: RetrieveAllResidentialPropertyCgtRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear),
-      EmploymentSourceValidation.validate(data.source)
+      data.source.map(EmploymentSourceValidation.validate).getOrElse(Nil)
     )
   }
 
-  private def parameterRuleValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] = (data: RetrieveAllResidentialPropertyCgtRawData) => {
+  private def parameterRuleValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] =
+    (data: RetrieveAllResidentialPropertyCgtRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
