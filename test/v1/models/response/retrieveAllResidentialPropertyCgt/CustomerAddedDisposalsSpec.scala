@@ -39,7 +39,6 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99
       |      }
       |    ]
@@ -66,7 +65,6 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99
       |      }
       |    ]
@@ -88,7 +86,7 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
     Some(1999.99),
     Some(1999.99),
     Some(1999.99),
-    Some(1999.99),
+    None,
     Some(1999.99)
   )
 
