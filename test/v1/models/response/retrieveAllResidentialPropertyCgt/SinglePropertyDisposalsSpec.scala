@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class SinglePropertyDisposalsSpec extends UnitSpec {
 
-   val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |        "source": "hmrcHeld",
@@ -48,7 +48,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   )
 
 
-   val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |        "source": "HMRC HELD",
@@ -74,7 +74,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   )
 
 
-   val model: SinglePropertyDisposals =
+  val model: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),

@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class DisposalsSpec extends UnitSpec {
 
-   val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |        "customerReference": "CGTDISPOSAL01",
@@ -43,7 +43,7 @@ class DisposalsSpec extends UnitSpec {
   )
 
 
-   val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |        "customerReference": "CGTDISPOSAL01",
@@ -65,7 +65,7 @@ class DisposalsSpec extends UnitSpec {
   )
 
 
-   val model: Disposals = Disposals(
+  val model: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
     "2022-03-08",
@@ -98,7 +98,6 @@ class DisposalsSpec extends UnitSpec {
       }
     }
   }
-
 
 
 }

@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class MultiplePropertyDisposalsSpec extends UnitSpec {
 
-   val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |        "source": "hmrcHeld",
@@ -39,7 +39,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
   )
 
 
-   val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |        "source": "HMRC HELD",
@@ -56,7 +56,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
   )
 
 
-   val model: MultiplePropertyDisposals =
+  val model: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),

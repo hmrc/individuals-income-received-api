@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
 
-   val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |  "ppdService": {
@@ -86,7 +86,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
   )
 
 
-   val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |  "ppdService": {
@@ -150,7 +150,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
   )
 
 
-   val multiplePropertyDisposals: MultiplePropertyDisposals =
+  val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -165,7 +165,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
     )
 
 
-   val singlePropertyDisposals: SinglePropertyDisposals =
+  val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -188,14 +188,14 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
     )
 
 
-   val ppdService: PpdService =
+  val ppdService: PpdService =
     PpdService(
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
 
 
-   val disposals: Disposals = Disposals(
+  val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
     "2022-03-08",
@@ -213,14 +213,14 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
   )
 
 
-   val customerAddedDisposals: CustomerAddedDisposals =
+  val customerAddedDisposals: CustomerAddedDisposals =
     CustomerAddedDisposals(
       "2020-07-06T09:37:17Z",
       Seq(disposals)
     )
 
 
-   val model: RetrieveAllResidentialPropertyCgtResponse =
+  val model: RetrieveAllResidentialPropertyCgtResponse =
     RetrieveAllResidentialPropertyCgtResponse(
       Some(ppdService),
       Some(customerAddedDisposals)

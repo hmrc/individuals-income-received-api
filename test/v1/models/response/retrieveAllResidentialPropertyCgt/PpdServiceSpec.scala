@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class PpdServiceSpec extends UnitSpec {
 
-   val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -64,7 +64,7 @@ class PpdServiceSpec extends UnitSpec {
   )
 
 
-   val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -106,7 +106,7 @@ class PpdServiceSpec extends UnitSpec {
   )
 
 
-   val multiplePropertyDisposals: MultiplePropertyDisposals =
+  val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -120,7 +120,7 @@ class PpdServiceSpec extends UnitSpec {
       Some(1999.99)
     )
 
-   val singlePropertyDisposals: SinglePropertyDisposals =
+  val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -143,7 +143,7 @@ class PpdServiceSpec extends UnitSpec {
     )
 
 
-   val model: PpdService =
+  val model: PpdService =
     PpdService(
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
