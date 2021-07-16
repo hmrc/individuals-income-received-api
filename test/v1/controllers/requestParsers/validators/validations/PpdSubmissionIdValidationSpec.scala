@@ -30,7 +30,7 @@ class PpdSubmissionIdValidationSpec extends UnitSpec {
         ) shouldBe NoValidationErrors
       }
 
-      "return a CustomerRefFormatError for an invalid ppdSubmissionId" in {
+      "return a PPDSubmissionIdFormatError for an invalid ppdSubmissionId" in {
         PpdSubmissionIdValidation.validate(
           ppdSubmissionId = "NotAnID",
           PPDSubmissionIdFormatError

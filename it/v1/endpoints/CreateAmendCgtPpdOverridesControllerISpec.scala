@@ -269,7 +269,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
   )
 
 
-  val PPDsubmissionFormatJson: JsValue = Json.parse(
+  val ppdSubmissionFormatJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -385,7 +385,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling 'Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides' endpoint" should {
+  "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
     "return a 204 status code" when {
       "any valid request is made" in new Test {
 
@@ -444,7 +444,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", PPDsubmissionFormatJson, BAD_REQUEST, ppdSubmissionFormatError, None, Some("formatPropertyDisposals")),
+          ("AA123456A", "2020-21", ppdSubmissionFormatJson, BAD_REQUEST, ppdSubmissionFormatError, None, Some("ppdSubmissionIDFormat")),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

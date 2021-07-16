@@ -18,7 +18,7 @@ package v1.controllers
 
 import cats.data.EitherT
 import config.AppConfig
-
+import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -29,7 +29,6 @@ import v1.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 import v1.services.{CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService}
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
@@ -84,7 +83,8 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
         val resCorrelationId = errorWrapper.correlationId
         val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - Error response received with CorrelationId: $resCorrelationId")
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         result
       }.merge
@@ -101,7 +101,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
            CustomMtdError(RuleTaxYearNotEndedError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError | CustomMtdError(PPDSubmissionIdNotFoundError.code)
+      case NotFoundError | PPDSubmissionIdNotFoundError
       => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
         }

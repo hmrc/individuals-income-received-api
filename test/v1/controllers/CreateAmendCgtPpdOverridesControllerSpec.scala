@@ -27,9 +27,6 @@ import v1.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
 import v1.mocks.services.{MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.Nino
 import v1.models.errors._
-import v1.models.hateoas.Link
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{CREATE_AND_AMEND_CGT_PPD_OVERRIDES, DELETE_CGT_PPD_OVERRIDES, RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendCgtPpdOverrides._
 
@@ -157,28 +154,6 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
     body = requestModel
   )
 
-  val createAmendCgtPpdOverridesLink: Link =
-    Link(
-      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
-      method = PUT,
-      rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
-    )
-
-  val deleteCgtPpdOverridesLink: Link =
-    Link(
-      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
-      method = DELETE,
-      rel = DELETE_CGT_PPD_OVERRIDES
-    )
-
-  val retrieveAllCgtPpdDisposalsOverridesLink: Link =
-    Link(
-      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/",
-      method = GET,
-      rel = RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS
-    )
-
-
   val mtdResponse: JsValue = Json.parse(
     s"""
        |{
@@ -272,7 +247,6 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           (PPDSubmissionIdFormatError, BAD_REQUEST),
           (RuleLossesGreaterThanGainError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (PPDSubmissionIdNotFoundError, NOT_FOUND),
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -301,6 +275,9 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (PPDSubmissionIdNotFoundError, NOT_FOUND),
+          (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
