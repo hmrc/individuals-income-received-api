@@ -34,7 +34,7 @@ case class MultiplePropertyDisposals(source: MtdSourceEnum,
 
 object MultiplePropertyDisposals {
   implicit val reads: Reads[MultiplePropertyDisposals] = (
-    (JsPath \ "source").read[DesSourceEnum].map(_.toMtdEnum) and
+    (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "submittedOn").readNullable[String] and
       (JsPath \ "ppdSubmissionId").read[String] and
       (JsPath \ "ppdSubmissionDate").readNullable[String] and

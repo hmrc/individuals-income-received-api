@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveFinancialDetails
+package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import play.api.libs.json.Format
+import utils.enums.Enums
 import v1.models.domain.MtdSourceEnum
 
-class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+sealed trait DownstreamSourceEnum {
+  def toMtdEnum: MtdSourceEnum
+}
 
-  testRoundTrip[DesSourceEnum](
-    ("HMRC HELD", DesSourceEnum.`HMRC HELD`),
-    ("CUSTOMER", DesSourceEnum.CUSTOMER),
-    ("LATEST", DesSourceEnum.LATEST),
-  )
+object DownstreamSourceEnum {
+  implicit val format: Format[DownstreamSourceEnum] = Enums.format[DownstreamSourceEnum]
 
-  "toMtdEnum" must {
-    "return the expected 'MtdSourceEnum' object" in {
-      DesSourceEnum.`HMRC HELD`.toMtdEnum shouldBe MtdSourceEnum.hmrcHeld
-      DesSourceEnum.LATEST.toMtdEnum shouldBe MtdSourceEnum.latest
-      DesSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
-    }
+  case object `HMRC HELD` extends DownstreamSourceEnum {
+    override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.hmrcHeld
   }
+
+  case object CUSTOMER extends DownstreamSourceEnum {
+    override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.user
+  }
+
 }

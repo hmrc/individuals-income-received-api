@@ -16,24 +16,22 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import play.api.libs.json.Format
-import utils.enums.Enums
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
 import v1.models.domain.MtdSourceEnum
 
-sealed trait DesSourceEnum {
-  def toMtdEnum: MtdSourceEnum
+class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+
+  testRoundTrip[DownstreamSourceEnum](
+    ("HMRC HELD", DownstreamSourceEnum.`HMRC HELD`),
+    ("CUSTOMER", DownstreamSourceEnum.CUSTOMER),
+  )
+
+  "toMtdEnum" must {
+    "return the expected 'MtdSourceEnum' object" in {
+      DownstreamSourceEnum.`HMRC HELD`.toMtdEnum shouldBe MtdSourceEnum.hmrcHeld
+      DownstreamSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
+    }
+  }
 }
 
-object DesSourceEnum {
-  val parser: PartialFunction[String, DesSourceEnum] = Enums.parser[DesSourceEnum]
-  implicit val format: Format[DesSourceEnum] = Enums.format[DesSourceEnum]
-
-  case object `HMRC HELD` extends DesSourceEnum {
-    override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.hmrcHeld
-  }
-
-  case object CUSTOMER extends DesSourceEnum {
-    override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.user
-  }
-
-}

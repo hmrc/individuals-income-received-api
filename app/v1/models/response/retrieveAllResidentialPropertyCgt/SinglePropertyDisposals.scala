@@ -42,7 +42,7 @@ case class SinglePropertyDisposals(source: MtdSourceEnum,
 
 object SinglePropertyDisposals {
   implicit val reads: Reads[SinglePropertyDisposals] = (
-    (JsPath \ "source").read[DesSourceEnum].map(_.toMtdEnum) and
+    (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "submittedOn").readNullable[String] and
       (JsPath \ "ppdSubmissionId").read[String] and
       (JsPath \ "ppdSubmissionDate").readNullable[String] and
