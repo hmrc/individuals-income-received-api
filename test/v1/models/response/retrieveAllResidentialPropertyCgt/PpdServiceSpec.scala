@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import v1.models.domain.MtdSourceEnum
 
