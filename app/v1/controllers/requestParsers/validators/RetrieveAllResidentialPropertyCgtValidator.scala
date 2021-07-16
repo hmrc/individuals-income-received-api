@@ -20,19 +20,19 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
-import v1.models.request.retrieveAllCgt.RetrieveAllCgtRawData
+import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
 
 @Singleton
-class RetrieveAllCgtValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveAllCgtRawData] {
+class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[RetrieveAllResidentialPropertyCgtRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveAllCgtRawData): List[MtdError] = {
+  override def validate(data: RetrieveAllResidentialPropertyCgtRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: RetrieveAllCgtRawData => List[List[MtdError]] = (data: RetrieveAllCgtRawData) => {
+  private def parameterFormatValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] = (data: RetrieveAllResidentialPropertyCgtRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear),
@@ -40,7 +40,7 @@ class RetrieveAllCgtValidator @Inject()(implicit appConfig: AppConfig)
     )
   }
 
-  private def parameterRuleValidation: RetrieveAllCgtRawData => List[List[MtdError]] = (data: RetrieveAllCgtRawData) => {
+  private def parameterRuleValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] = (data: RetrieveAllResidentialPropertyCgtRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )

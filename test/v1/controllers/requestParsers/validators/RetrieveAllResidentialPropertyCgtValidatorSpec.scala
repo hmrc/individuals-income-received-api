@@ -24,9 +24,9 @@ import support.UnitSpec
 import utils.CurrentDateTime
 import v1.mocks.MockCurrentDateTime
 import v1.models.errors._
-import v1.models.request.retrieveAllCgt.RetrieveAllCgtRawData
+import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
 
-class RetrieveAllCgtValidatorSpec extends UnitSpec {
+class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2021-22"
@@ -39,7 +39,7 @@ class RetrieveAllCgtValidatorSpec extends UnitSpec {
 
     implicit val appConfig: AppConfig = mockAppConfig
 
-    val validator = new RetrieveAllCgtValidator()
+    val validator = new RetrieveAllResidentialPropertyCgtValidator()
 
     MockCurrentDateTime.getCurrentDate
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
@@ -52,41 +52,41 @@ class RetrieveAllCgtValidatorSpec extends UnitSpec {
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(RetrieveAllCgtRawData(validNino, validTaxYear, validSource)) shouldBe Nil
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData(validNino, validTaxYear, validSource)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(RetrieveAllCgtRawData("A12344A", validTaxYear, validSource)) shouldBe
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData("A12344A", validTaxYear, validSource)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(RetrieveAllCgtRawData(validNino, "20178", validSource)) shouldBe
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData(validNino, "20178", validSource)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
       "a tax year that is not supported is supplied" in new Test {
-        validator.validate(RetrieveAllCgtRawData(validNino, "2018-19", validSource)) shouldBe
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData(validNino, "2018-19", validSource)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return NinoFormatError and TaxYearFormatError errors" when {
       "request supplied has invalid nino and tax year" in new Test {
-        validator.validate(RetrieveAllCgtRawData("A12344A", "20178", validSource)) shouldBe
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData("A12344A", "20178", validSource)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }
 
     "return NinoFormatError, TaxYearFormatError and SourceFormatError errors" when {
       "request supplied has invalid nino, tax year and source" in new Test {
-        validator.validate(RetrieveAllCgtRawData("A12344A", "20178", "ABCDE12345FG")) shouldBe
+        validator.validate(RetrieveAllResidentialPropertyCgtRawData("A12344A", "20178", "ABCDE12345FG")) shouldBe
           List(NinoFormatError, TaxYearFormatError, SourceFormatError)
       }
     }

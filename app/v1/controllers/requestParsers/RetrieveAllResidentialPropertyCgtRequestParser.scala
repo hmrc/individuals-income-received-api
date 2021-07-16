@@ -17,14 +17,14 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
-import v1.controllers.requestParsers.validators.RetrieveAllCgtValidator
+import v1.controllers.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
 import v1.models.domain.Nino
-import v1.models.request.retrieveAllCgt.{RetrieveAllCgtRawData, RetrieveAllCgtRequest}
+import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 @Singleton
-class RetrieveAllCgtRequestParser @Inject()(val validator: RetrieveAllCgtValidator)
-  extends RequestParser[RetrieveAllCgtRawData, RetrieveAllCgtRequest] {
+class RetrieveAllResidentialPropertyCgtRequestParser @Inject()(val validator: RetrieveAllResidentialPropertyCgtValidator)
+  extends RequestParser[RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest] {
 
-  override protected def requestFor(data: RetrieveAllCgtRawData): RetrieveAllCgtRequest =
-    RetrieveAllCgtRequest(Nino(data.nino), data.taxYear, data.source)
+  override protected def requestFor(data: RetrieveAllResidentialPropertyCgtRawData): RetrieveAllResidentialPropertyCgtRequest =
+    RetrieveAllResidentialPropertyCgtRequest(Nino(data.nino), data.taxYear, data.source)
 }
