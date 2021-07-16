@@ -16,10 +16,22 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import play.api.libs.json.{Json, OFormat}
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+import v1.models.domain.MtdSourceEnum
 
-case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdService],
-                                                     customerAddedDisposals: Option[CustomerAddedDisposals])
-object RetrieveAllResidentialPropertyCgtResponse {
-  implicit val format: OFormat[RetrieveAllResidentialPropertyCgtResponse] = Json.format[RetrieveAllResidentialPropertyCgtResponse]
+class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+
+  testRoundTrip[DesSourceEnum](
+    ("HMRC HELD", DesSourceEnum.`HMRC HELD`),
+    ("CUSTOMER", DesSourceEnum.CUSTOMER),
+  )
+
+  "toMtdEnum" must {
+    "return the expected 'MtdSourceEnum' object" in {
+      DesSourceEnum.`HMRC HELD`.toMtdEnum shouldBe MtdSourceEnum.hmrcHeld
+      DesSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
+    }
+  }
 }
+

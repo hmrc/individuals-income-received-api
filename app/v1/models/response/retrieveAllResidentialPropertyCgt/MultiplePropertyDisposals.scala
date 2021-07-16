@@ -19,13 +19,12 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.MtdSourceEnum
-import v1.models.response.retrieveFinancialDetails.DesSourceEnum
 
 case class MultiplePropertyDisposals(source: MtdSourceEnum,
                                      submittedOn: Option[String],
                                      ppdSubmissionId: String,
                                      ppdSubmissionDate: Option[String],
-                                     numberOfDisposals: Option[BigDecimal],
+                                     numberOfDisposals: Option[BigInt],
                                      disposalTaxYear: Option[BigInt],
                                      completionDate: Option[String],
                                      amountOfNetGain: Option[BigDecimal],
@@ -39,8 +38,8 @@ object MultiplePropertyDisposals {
       (JsPath \ "submittedOn").readNullable[String] and
       (JsPath \ "ppdSubmissionId").read[String] and
       (JsPath \ "ppdSubmissionDate").readNullable[String] and
-      (JsPath \ "numberOfDisposals").readNullable[BigDecimal] and
-      (JsPath \ "disposalTaxYear").readNullable[BigInt] and
+      (JsPath \ "numberOfDisposals").readNullable[BigInt] and
+      (JsPath \ "disposalTaxYear").readNullable[String].map(_.map(BigInt(_))) and
       (JsPath \ "completionDate").readNullable[String] and
       (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").readNullable[BigDecimal] and

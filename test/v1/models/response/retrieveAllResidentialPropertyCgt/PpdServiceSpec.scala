@@ -20,9 +20,9 @@ import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 import v1.models.domain.MtdSourceEnum
 
-class PpdServiceObjectSpec extends UnitSpec {
+class PpdServiceSpec extends UnitSpec {
 
-  private val mtdJson: JsValue = Json.parse(
+   val mtdJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -34,7 +34,6 @@ class PpdServiceObjectSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
@@ -57,7 +56,6 @@ class PpdServiceObjectSpec extends UnitSpec {
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
       |        "amountOfNetGain": 1999.99,
-      |        "amountOfNetLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
       |    ]
@@ -65,7 +63,8 @@ class PpdServiceObjectSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  private val desJson: JsValue = Json.parse(
+
+   val desJson: JsValue = Json.parse(
     """
       |{
       |    "multiplePropertyDisposals": [
@@ -75,9 +74,8 @@ class PpdServiceObjectSpec extends UnitSpec {
       |        "ppdSubmissionId": "Da2467289108",
       |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
       |        "numberOfDisposals": 3,
-      |        "disposalTaxYear": 2022,
+      |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
@@ -100,7 +98,6 @@ class PpdServiceObjectSpec extends UnitSpec {
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
       |        "amountOfNetGain": 1999.99,
-      |        "amountOfLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
       |    ]
@@ -108,7 +105,8 @@ class PpdServiceObjectSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  private val multiplePropertyDisposals: MultiplePropertyDisposals =
+
+   val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -117,12 +115,12 @@ class PpdServiceObjectSpec extends UnitSpec {
       Some(3),
       Some(2022),
       Some("2022-03-08"),
-      Some(1999.99),
+      None,
       Some(1999.99),
       Some(1999.99)
     )
 
-  private val singlePropertyDisposals: SinglePropertyDisposals =
+   val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -140,21 +138,23 @@ class PpdServiceObjectSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      Some(1999.99),
+      None,
       Some(1999.99)
     )
 
-  private val model: PpdServiceObject =
-    PpdServiceObject(
+
+   val model: PpdService =
+    PpdService(
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
 
-  "PpdServiceObject" when {
+
+  "PpdService" when {
     "Reads" should {
       "return a valid object" when {
         "a valid json is supplied" in {
-          desJson.as[PpdServiceObject] shouldBe model
+          desJson.as[PpdService] shouldBe model
         }
       }
     }

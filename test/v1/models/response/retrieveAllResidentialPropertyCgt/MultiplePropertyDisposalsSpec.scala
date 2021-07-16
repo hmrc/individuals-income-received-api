@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class MultiplePropertyDisposalsSpec extends UnitSpec {
 
-  private val mtdJson: JsValue = Json.parse(
+   val mtdJson: JsValue = Json.parse(
     """
       |{
       |        "source": "hmrcHeld",
@@ -32,14 +32,14 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |}
       |""".stripMargin
   )
 
-  private val desJson: JsValue = Json.parse(
+
+   val desJson: JsValue = Json.parse(
     """
       |{
       |        "source": "HMRC HELD",
@@ -47,16 +47,16 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       |        "ppdSubmissionId": "Da2467289108",
       |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
       |        "numberOfDisposals": 3,
-      |        "disposalTaxYear": 2022,
+      |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |}
       |""".stripMargin
   )
 
-  private val model: MultiplePropertyDisposals =
+
+   val model: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -65,7 +65,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       Some(3),
       Some(2022),
       Some("2022-03-08"),
-      Some(1999.99),
+      None,
       Some(1999.99),
       Some(1999.99)
     )

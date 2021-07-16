@@ -18,8 +18,9 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{Json, OFormat}
 
-case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdService],
-                                                     customerAddedDisposals: Option[CustomerAddedDisposals])
-object RetrieveAllResidentialPropertyCgtResponse {
-  implicit val format: OFormat[RetrieveAllResidentialPropertyCgtResponse] = Json.format[RetrieveAllResidentialPropertyCgtResponse]
+case class PpdService(multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
+                      singlePropertyDisposals: Option[Seq[SinglePropertyDisposals]])
+
+object PpdService {
+  implicit val format: OFormat[PpdService] = Json.format[PpdService]
 }

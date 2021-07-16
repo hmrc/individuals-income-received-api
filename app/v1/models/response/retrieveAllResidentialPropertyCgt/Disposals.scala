@@ -32,7 +32,7 @@ case class Disposals(customerReference: Option[String],
                      lossesFromThisYear: Option[BigDecimal],
                      lossesFromPreviousYear: Option[BigDecimal],
                      amountOfNetGain: Option[BigDecimal],
-                     amountOfNetLoss: Option[BigDecimal],
+                     amountOfNetLoss: Option[BigDecimal]
                     )
 object Disposals {
   implicit val reads: Reads[Disposals] = (
