@@ -1,0 +1,19 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
+      "rel":"create-and-amend-cgt-residential-property-disposals",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
+      "rel":"delete-cgt-residential-property-disposals",
+      "method":"DELETE"
+    }
+  ]
+}
