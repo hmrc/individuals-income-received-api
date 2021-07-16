@@ -55,22 +55,5 @@
       "amountOfNetGain": 341.45,
       "amountOfLoss": 451.89
     }
-   ],
-  "links": [
-    {
-      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
-      "rel": "create-or-amend-disdposal-and-overrides",
-      "method": "PUT"
-    },
-    {
-      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
-      "rel": "delete-disdposal-and-overrides",
-      "method": "DELETE"
-    },
-    {
-      "href": "/income-received/disposals/other-gains/AA111111A/2020-21",
-      "rel": "self",
-      "method": "GET"
-    }
   ]
 }
