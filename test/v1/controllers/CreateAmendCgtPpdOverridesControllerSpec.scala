@@ -246,7 +246,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           (DateFormatError, BAD_REQUEST),
           (PPDSubmissionIdFormatError, BAD_REQUEST),
           (RuleLossesGreaterThanGainError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (RuleTaxYearNotEndedError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
