@@ -20,7 +20,7 @@ import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
 import v1.models.domain.MtdSourceEnum
 
-class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
+class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[DesSourceEnum](
     ("HMRC HELD", DesSourceEnum.`HMRC HELD`),
