@@ -7,8 +7,11 @@
     "disposals": {
       "type": "array",
       "description": "An array of residential property disposals.",
-      "items": {"$ref": "cgt_overrides_definitions.json#/definitions/multiplePropertyDisposals"}
+      "items": {"$ref": "cgt_non_ppd_definitions.json#/definitions/disposals"}
     }
-  }
+  },
+  "required": [
+    "disposals"
+  ]
 }
 

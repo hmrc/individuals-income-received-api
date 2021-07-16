@@ -28,21 +28,13 @@ body:
       examples:
         full_amendment:
           description: Full CGT Overrides Amendment
-<<<<<<< HEAD:resources/public/api/conf/1.0/endpoints/cgt/residentialProperty/amendPpd.raml
           value: !include ../../../examples/cgt/residentialProperty/amend_ppd_request.json
-=======
-          value: !include ../../../examples/cgt/residentialProperty/amend_request_ppd.json
->>>>>>> b8fa99d (MTDSA-9372 Create Amend Residential Property Disposals Non PPD RAML):resources/public/api/conf/1.0/endpoints/cgt/residentialProperty/amend.raml
 responses:
   200:
     body:
       application/json:
         type: !include ../../../schemas/cgt_overrides_amend_response.json
-<<<<<<< HEAD:resources/public/api/conf/1.0/endpoints/cgt/residentialProperty/amendPpd.raml
         example: !include ../../../examples/cgt/residentialProperty/amend_ppd_response.json
-=======
-        example: !include ../../../examples/cgt/residentialProperty/amend_response_ppd.json
->>>>>>> b8fa99d (MTDSA-9372 Create Amend Residential Property Disposals Non PPD RAML):resources/public/api/conf/1.0/endpoints/cgt/residentialProperty/amend.raml
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

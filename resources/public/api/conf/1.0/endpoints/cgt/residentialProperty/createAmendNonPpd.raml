@@ -20,22 +20,22 @@ is:
 
 displayName: Create and Amend CGT Residential Property Disposals [test only]
 description: "This endpoint allows the developer to submit residential property disposals that are not reported via the Report and pay Capital Gains Tax on UK property service for a given NINO and tax year. This endpoint can only be used for a completion date of 7th March or later (but not a date in the future) and a disposal date within the specified tax year."
-(annotations.sandboxData): !include ../../scenarios/defaultOnly.md
+(annotations.sandboxData): !include ../../../scenarios/defaultOnly.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
    application/json:
-      type: !include ../../schemas/cgt_overrides_amend_request.json
+      type: !include ../../../schemas/cgt_non_ppd_create_amend_request.json
       examples:
         full_amendment:
-          description: Full CGT Overrides Amendment
-          value: !include ../../examples/cgt/residentialProperty/create_amend_non_ppd_request.json
+          description: Full CGT Non PPD Amendment
+          value: !include ../../../examples/cgt/residentialProperty/create_amend_non_ppd_request.json
 responses:
   200:
     body:
       application/json:
-        type: !include ../../schemas/cgt_overrides_amend_response.json
-        example: !include ../../examples/cgt/residentialProperty/create_amend_non_ppd_response.json
+        type: !include ../../../schemas/cgt_non_ppd_create_amend_response.json
+        example: !include ../../../examples/cgt/residentialProperty/create_amend_non_ppd_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
