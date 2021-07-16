@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class DisposalsSpec extends UnitSpec {
 
-  private val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |        "customerReference": "CGTDISPOSAL01",
@@ -36,13 +36,13 @@ class DisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99
       |}
       |""".stripMargin
   )
 
-  private val desJson: JsValue = Json.parse(
+
+  val desJson: JsValue = Json.parse(
     """
       |{
       |        "customerReference": "CGTDISPOSAL01",
@@ -57,14 +57,13 @@ class DisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99
       |}
       |""".stripMargin
   )
 
 
-  private val model: Disposals = Disposals(
+  val model: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
     "2022-03-08",
@@ -77,7 +76,7 @@ class DisposalsSpec extends UnitSpec {
     Some(1999.99),
     Some(1999.99),
     Some(1999.99),
-    Some(1999.99),
+    None,
     Some(1999.99)
   )
 
@@ -97,7 +96,6 @@ class DisposalsSpec extends UnitSpec {
       }
     }
   }
-
 
 
 }

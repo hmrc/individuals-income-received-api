@@ -19,7 +19,6 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.MtdSourceEnum
-import v1.models.response.retrieveFinancialDetails.DesSourceEnum
 
 case class SinglePropertyDisposals(source: MtdSourceEnum,
                                    submittedOn: Option[String],
@@ -43,7 +42,7 @@ case class SinglePropertyDisposals(source: MtdSourceEnum,
 
 object SinglePropertyDisposals {
   implicit val reads: Reads[SinglePropertyDisposals] = (
-    (JsPath \ "source").read[DesSourceEnum].map(_.toMtdEnum) and
+    (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "submittedOn").readNullable[String] and
       (JsPath \ "ppdSubmissionId").read[String] and
       (JsPath \ "ppdSubmissionDate").readNullable[String] and

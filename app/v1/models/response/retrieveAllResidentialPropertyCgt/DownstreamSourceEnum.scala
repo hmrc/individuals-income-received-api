@@ -16,10 +16,23 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.Format
+import utils.enums.Enums
+import v1.models.domain.MtdSourceEnum
 
-case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdService],
-                                                     customerAddedDisposals: Option[CustomerAddedDisposals])
-object RetrieveAllResidentialPropertyCgtResponse {
-  implicit val format: OFormat[RetrieveAllResidentialPropertyCgtResponse] = Json.format[RetrieveAllResidentialPropertyCgtResponse]
+sealed trait DownstreamSourceEnum {
+  def toMtdEnum: MtdSourceEnum
+}
+
+object DownstreamSourceEnum {
+  implicit val format: Format[DownstreamSourceEnum] = Enums.format[DownstreamSourceEnum]
+
+  case object `HMRC HELD` extends DownstreamSourceEnum {
+    override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.hmrcHeld
+  }
+
+  case object CUSTOMER extends DownstreamSourceEnum {
+    override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.user
+  }
+
 }

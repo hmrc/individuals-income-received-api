@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class CustomerAddedDisposalsSpec extends UnitSpec {
 
-  private val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |    "submittedOn": "2020-07-06T09:37:17Z",
@@ -39,7 +39,6 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99
       |      }
       |    ]
@@ -48,7 +47,7 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
   )
 
 
-  private val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |    "submittedOn": "2020-07-06T09:37:17Z",
@@ -66,7 +65,6 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99
       |      }
       |    ]
@@ -74,7 +72,8 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  private val disposals: Disposals = Disposals(
+
+  val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
     "2022-03-08",
@@ -87,15 +86,17 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
     Some(1999.99),
     Some(1999.99),
     Some(1999.99),
-    Some(1999.99),
+    None,
     Some(1999.99)
   )
 
-  private val model: CustomerAddedDisposals =
+
+  val model: CustomerAddedDisposals =
     CustomerAddedDisposals(
       "2020-07-06T09:37:17Z",
       Seq(disposals)
     )
+
 
   "CustomerAddedDisposals" when {
     "Reads" should {

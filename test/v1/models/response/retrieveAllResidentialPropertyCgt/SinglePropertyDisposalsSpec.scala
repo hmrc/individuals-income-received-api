@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class SinglePropertyDisposalsSpec extends UnitSpec {
 
-  private val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |        "source": "hmrcHeld",
@@ -40,7 +40,6 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
@@ -48,7 +47,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   )
 
 
-  private val desJson: JsValue = Json.parse(
+  val desJson: JsValue = Json.parse(
     """
       |{
       |        "source": "HMRC HELD",
@@ -66,7 +65,6 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
@@ -74,7 +72,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   )
 
 
-  private val model: SinglePropertyDisposals =
+  val model: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -91,7 +89,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      Some(1999.99),
+      None,
       Some(1999.99),
       Some(1999.99)
     )

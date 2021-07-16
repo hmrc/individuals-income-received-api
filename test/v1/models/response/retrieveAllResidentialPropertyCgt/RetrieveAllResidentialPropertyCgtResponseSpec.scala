@@ -22,7 +22,7 @@ import v1.models.domain.MtdSourceEnum
 
 class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
 
-  private val mtdJson: JsValue = Json.parse(
+  val mtdJson: JsValue = Json.parse(
     """
       |{
       |  "ppdService": {
@@ -36,7 +36,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
       |        "amountOfNetGain": 1999.99,
-      |        "amountOfNetLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
       |    ],
@@ -58,7 +57,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
       |        "amountOfNetGain": 1999.99,
-      |        "amountOfNetLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
       |    ]
@@ -79,7 +77,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfNetLoss": 1999.99
       |      }
       |    ]
@@ -88,7 +85,8 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  private val desJson: JsValue = Json.parse(
+
+  val desJson: JsValue = Json.parse(
     """
       |{
       |  "ppdService": {
@@ -99,10 +97,9 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "ppdSubmissionId": "Da2467289108",
       |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
       |        "numberOfDisposals": 3,
-      |        "disposalTaxYear": 2022,
+      |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
       |        "amountOfNetGain": 1999.99,
-      |        "amountOfLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
       |    ],
@@ -124,7 +121,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
       |        "amountOfNetGain": 1999.99,
-      |        "amountOfLoss": 1999.99,
       |        "ppdReturnCharge": 1999.99
       |      }
       |    ]
@@ -145,7 +141,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
       |        "amountOfLoss": 1999.99
       |      }
       |    ]
@@ -154,7 +149,8 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  private val multiplePropertyDisposals: MultiplePropertyDisposals =
+
+  val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -164,11 +160,12 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       Some(2022),
       Some("2022-03-08"),
       Some(1999.99),
-      Some(1999.99),
+      None,
       Some(1999.99)
     )
 
-  private val singlePropertyDisposals: SinglePropertyDisposals =
+
+  val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
       Some("2020-07-06"),
@@ -186,17 +183,19 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      Some(1999.99),
+      None,
       Some(1999.99)
     )
 
-  private val ppdService: PpdServiceObject =
-    PpdServiceObject(
+
+  val ppdService: PpdService =
+    PpdService(
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
 
-  private val disposals: Disposals = Disposals(
+
+  val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
     "2022-03-08",
@@ -209,24 +208,26 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
     Some(1999.99),
     Some(1999.99),
     Some(1999.99),
-    Some(1999.99),
+    None,
     Some(1999.99)
   )
 
-  private val customerAddedDisposals: CustomerAddedDisposals =
+
+  val customerAddedDisposals: CustomerAddedDisposals =
     CustomerAddedDisposals(
       "2020-07-06T09:37:17Z",
       Seq(disposals)
     )
 
-  private val model: RetrieveAllResidentialPropertyCgtResponse =
+
+  val model: RetrieveAllResidentialPropertyCgtResponse =
     RetrieveAllResidentialPropertyCgtResponse(
       Some(ppdService),
       Some(customerAddedDisposals)
     )
 
 
-  "RetrieveAllCgtResponse" when {
+  "RetrieveAllResidentialPropertyCgtResponse" when {
     "Reads" should {
       "return a valid object" when {
         "a valid json is supplied" in {
