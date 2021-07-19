@@ -45,7 +45,7 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
     )
   }
 
-  "CreateAmendCgtPpdOverridesService" when {
+  "CreateAmendCgtResidentialPropertyDisposalsService" when {
     "createAndAmend" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
