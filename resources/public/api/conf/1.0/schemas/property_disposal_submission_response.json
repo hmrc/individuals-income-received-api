@@ -24,9 +24,9 @@
                 ]
               },
               "submittedOn": {
-                "description": "The date the disposals were submitted to the Report and pay Capital Gains Tax on UK property service. It is in the format YYYY-MM-DD",
+                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ssZ",
                 "type": "string",
-                "example": "2020-07-06"
+                "example": "2020-07-06T09:37:17Z"
               },
               "ppdSubmissionId": {
                 "description": "The reference number returned to the customer from the Report and pay Capital Gains Tax on UK property service. Must conform to the regular expression: ^[A-Za-z0-9]{12}$",
@@ -34,7 +34,7 @@
                 "example": "Da2467289108"
               },
               "ppdSubmissionDate": {
-                "description": "The date the disposals were submitted. It is in the format YYYY-MM-DDThh:mm:ssZ",
+                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ssZ",
                 "type": "string",
                 "example": "2020-07-06T09:37:17Z"
               },
@@ -102,9 +102,9 @@
                 ]
               },
               "submittedOn": {
-                "description": "The date the disposals were submitted. It is in the format YYYY-MM-DD",
+                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ssZ",
                 "type": "string",
-                "example": "2020-07-06"
+                "example": "2020-07-06T09:37:17Z"
               },
               "ppdSubmissionId": {
                 "description": "The reference number returned to the customer from the Report and pay Capital Gains Tax on UK property service. Must conform to the regular expression: ^[A-Za-z0-9]{12}$",
@@ -112,7 +112,7 @@
                 "example": "Da2467289108"
               },
               "ppdSubmissionDate": {
-                "description": "The date the disposal was submitted. It is in the format YYYY-MM-DDThh:mm:ssZ",
+                "description": "The date the disposal was submitted, in the format YYYY-MM-DDThh:mm:ssZ",
                 "type": "string",
                 "example": "2020-07-06T09:37:17Z"
               },
