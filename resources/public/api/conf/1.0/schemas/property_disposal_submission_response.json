@@ -41,13 +41,13 @@
               "numberOfDisposals": {
                 "description": "The number of properties disposed of within a single Report and pay Capital Gains Tax on UK property service submission. The value must be between 2 and 999",
                 "type": "number",
-                "minimum": "2",
-                "maximum": "999",
+                "minimum": 2,
+                "maximum": 999,
                 "example": "3"
               },
               "disposalTaxYear": {
                 "description": "The tax year in which the properties were disposed. The 2021-22 tax year would be represented as 2022. It is in the format ^2[0-9]{3}$.",
-                "type": "number",
+                "type": "string",
                 "example": "2022"
               },
               "completionDate": {
@@ -345,13 +345,13 @@
               "maximum": 99999999999.99,
               "example": "1999.99"
             },
-            "required": [
-              "submittedOn",
-              "disposalDate",
-              "completionDate",
-              "disposalProceeds",
-              "acquisitionDate",
-              "acquisitionAmount"
+          "required": [
+            "submittedOn",
+            "disposalDate",
+            "completionDate",
+            "disposalProceeds",
+            "acquisitionDate",
+            "acquisitionAmount"
             ]
           }
         },
