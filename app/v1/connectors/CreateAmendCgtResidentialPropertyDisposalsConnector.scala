@@ -38,7 +38,7 @@ class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject()(val http: Ht
     val taxYear = request.taxYear
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"), body = request.body
+      uri = IfsUri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"), body = request.body
     )
   }
 
