@@ -218,19 +218,19 @@
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
                 "example": "1999.99"
-                }
-              },
-              "required": [
-                "source",
-                "ppdSubmissionId",
-                "disposalDate",
-                "completionDate",
-                "disposalProceeds",
-                "acquisitionDate",
-                "acquisitionAmount"
-              ]
-            }
+              }
+            },
+            "required": [
+              "source",
+              "ppdSubmissionId",
+              "disposalDate",
+              "completionDate",
+              "disposalProceeds",
+              "acquisitionDate",
+              "acquisitionAmount"
+            ]
           }
+        }
       },
       "customerAddedDisposals": {
         "type": "object",
@@ -345,13 +345,13 @@
               "maximum": 99999999999.99,
               "example": "1999.99"
             },
-          "required": [
-            "submittedOn",
-            "disposalDate",
-            "completionDate",
-            "disposalProceeds",
-            "acquisitionDate",
-            "acquisitionAmount"
+            "required": [
+              "submittedOn",
+              "disposalDate",
+              "completionDate",
+              "disposalProceeds",
+              "acquisitionDate",
+              "acquisitionAmount"
             ]
           }
         },
@@ -398,4 +398,5 @@
         "links"
       ]
     }
+  }
 }
