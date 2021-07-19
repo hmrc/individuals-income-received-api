@@ -466,6 +466,17 @@ traits:
                 description: 'Only one of gain or loss values can be provided.'
                 value:
                   code: RULE_GAIN_LOSS
+  nonPpdRuleGainLoss:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              nonPpdRuleGainLoss:
+                description: 'Either gain or loss must be provided but not both.'
+                value:
+                  code: RULE_GAIN_LOSS
   cgtOtherFormatAssetDescription:
     responses:
       400:
@@ -508,6 +519,17 @@ traits:
             examples:
               ruleDisposalDate:
                 description: "The disposalDate must be in the specified tax year and no later than today's date."
+                value:
+                  code: RULE_DISPOSAL_DATE
+  NonPpdRuleDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              NonPpdRuleDisposalDate:
+                description: "The disposalDate must be within the specified tax year."
                 value:
                   code: RULE_DISPOSAL_DATE
   cgtOtherRuleAcquisitionDate:
