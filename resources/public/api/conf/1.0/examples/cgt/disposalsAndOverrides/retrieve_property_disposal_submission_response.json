@@ -1,60 +1,64 @@
 {
-  "multiplePropertyDisposals": [
-    {
-      "source": "hmrcHeld",
-      "submittedOn": "2021-04-26T10:59:47.544Z",
-      "ppdSubmissionId": "ABC123456781",
-      "ppdSubmissionDate": "2021-04-26T10:59:47.544Z",
-      "numberOfDisposals": 3,
-      "disposalTaxYear": "2021",
-      "completionDate": "2021-04-06",
-      "amountOfNetGain": 237.99,
-      "amountOfLoss": 4646.23,
-      "ppdReturnCharge": 3232.54
-    }
-  ],
-  "singlePropertyDisposals": [
-    {
-      "source": "hmrcHeld",
-      "submittedOn": "2021-04-26T10:59:47.544Z",
-      "ppdSubmissionId": "ABC123456781",
-      "ppdSubmissionDate": "2021-04-26T10:59:47.544Z",
-      "disposalDate": "2021-04-06",
-      "completionDate": "2021-04-06",
-      "disposalProceeds": 2434.35,
-      "acquisitionDate": "2021-04-06",
-      "acquisitionAmount": 6565.34,
-      "improvementCosts": 3532.45,
-      "additionalCosts": 3433.78,
-      "prfAmount": 4224.23,
-      "otherReliefAmount": 5652.35,
-      "lossesFromThisYear": 3433.23,
-      "lossesFromPreviousYear": 2421.23,
-      "amountOfNetGain": 783.34,
-      "amountOfLoss": 2342.23,
-      "ppdReturnCharge": 2342.12
-    }
-  ],
-  "customerAddedDisposals": {
-    "submittedOn": "2021-04-26T10:59:47.544Z"
+  "ppdService": {
+    "multiplePropertyDisposals": [
+      {
+        "source": "hmrcHeld",
+        "submittedOn": "2020-07-06",
+        "ppdSubmissionId": "Da2467289108",
+        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
+        "numberOfDisposals": 3,
+        "disposalTaxYear": 2022,
+        "completionDate": "2022-03-08",
+        "amountOfNetGain": 1999.99,
+        "amountOfLoss": 1999.99,
+        "ppdReturnCharge": 1999.99
+      }
+    ],
+    "singlePropertyDisposals": [
+      {
+        "source": "HMRC HELD",
+        "submittedOn": "2020-07-06",
+        "ppdSubmissionId": "Da2467289108",
+        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
+        "disposalDate": "2022-02-04",
+        "completionDate": "2022-03-08",
+        "disposalProceeds": 1999.99,
+        "acquisitionDate": "2018-04-06",
+        "acquisitionAmount": 1999.99,
+        "improvementCosts": 1999.99,
+        "additionalCosts": 5000.99,
+        "prfAmount": 1999.99,
+        "otherReliefAmount": 1999.99,
+        "lossesFromThisYear": 1999.99,
+        "lossesFromPreviousYear": 1999.99,
+        "amountOfNetGain": 1999.99,
+        "amountOfLoss": 1999.99,
+        "ppdReturnCharge": 1999.99
+      }
+    ]
   },
-  "disposals": [
-    {
-      "customerReference": "CGTDISPOSAL01",
-      "disposalDate": "2021-04-06",
-      "completionDate": "2021-04-06",
-      "disposalProceeds": 3433.34,
-      "acquisitionDate": "2021-04-06",
-      "acquisitionAmount": 235.33,
-      "improvementCosts": 561.34,
-      "additionalCosts": 456.23,
-      "prfAmount": 345.12,
-      "otherReliefAmount": 378.12,
-      "lossesFromThisYear": 368.87,
-      "lossesFromPreviousYear": 781.23,
-      "amountOfNetGain": 341.45,
-      "amountOfLoss": 451.89
-    }
+  "customerAddedDisposals": {
+    "submittedOn": "2020-07-06T09:37:17Z",
+    "disposals": [
+      {
+        "customerReference": "CGTDISPOSAL01",
+        "disposalDate": "2022-02-04",
+        "completionDate": "2022-03-08",
+        "disposalProceeds": 1999.99,
+        "acquisitionDate": "2018-04-06",
+        "acquisitionAmount": 1999.99,
+        "improvementCosts": 1999.99,
+        "additionalCosts": 5000.99,
+        "prfAmount": 1999.99,
+        "otherReliefAmount": 1999.99,
+        "lossesFromThisYear": 1999.99,
+        "lossesFromPreviousYear": 1999.99,
+        "amountOfNetGain": 1999.99,
+        "amountOfLoss": 1999.99
+      }
+    ]
+  }
+}
   ],
   "links":[
     {

@@ -218,6 +218,7 @@
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
                 "example": "1999.99"
+                }
               },
               "required": [
                 "source",
@@ -230,7 +231,6 @@
               ]
             }
           }
-        }
       },
       "customerAddedDisposals": {
         "type": "object",
@@ -398,5 +398,4 @@
         "links"
       ]
     }
-  }
 }
