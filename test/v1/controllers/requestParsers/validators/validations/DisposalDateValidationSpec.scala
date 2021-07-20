@@ -17,11 +17,12 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
+import v1.models.domain.DesTaxYear
 import v1.models.errors.RuleDisposalDateError
 
 import java.time.LocalDate
 
-class DisposalDateValidationSpec extends UnitSpec {
+class DisposalDateValidationSpec extends UnitSpec with DisposalDateErrorMessages {
 
   private val now = LocalDate.now()
 
@@ -35,21 +36,33 @@ class DisposalDateValidationSpec extends UnitSpec {
   "validate" should {
     "return an empty list" when {
       "the supplied date is within the supplied tax year and no later than today" in {
-        DisposalDateValidation.validate(validDate, validTaxYear, "path") shouldBe List()
+        DisposalDateValidation.validate(validDate, validTaxYear, "path", validateToday = true, IN_YEAR_NO_LATER_THAN_TODAY) shouldBe List()
+      }
+      "the supplied date is within the supplied tax year and validateToday is false" in {
+        val year = now.plusYears(1).getYear.toString
+        val taxYear = DesTaxYear.toMtd(DesTaxYear(year))
+        val date = LocalDate.parse(year, yearFormat)
+          .withMonth(4)
+          .withDayOfMonth(4)
+          .format(dateFormat)
+        DisposalDateValidation.validate(date, taxYear, "path", validateToday = false, IN_YEAR_NO_LATER_THAN_TODAY) shouldBe List()
       }
     }
 
     "return an error" when {
       "the supplied date is after today" in {
-        DisposalDateValidation.validate(dateAfterToday, validTaxYear, "path") shouldBe List(RuleDisposalDateError.copy(paths = Some(Seq("path"))))
+        DisposalDateValidation.validate(dateAfterToday, validTaxYear, "path", validateToday = true, IN_YEAR_NO_LATER_THAN_TODAY) shouldBe List(
+          RuleDisposalDateError.copy(paths = Some(Seq("path")), message = IN_YEAR_NO_LATER_THAN_TODAY))
       }
 
       "the supplied date is before the supplied tax year" in {
-        DisposalDateValidation.validate(dateBeforeTaxYear, validTaxYear, "path") shouldBe List(RuleDisposalDateError.copy(paths = Some(Seq("path"))))
+        DisposalDateValidation.validate(dateBeforeTaxYear, validTaxYear, "path", validateToday = true, IN_YEAR_NO_LATER_THAN_TODAY) shouldBe List(
+          RuleDisposalDateError.copy(paths = Some(Seq("path")), message = IN_YEAR_NO_LATER_THAN_TODAY))
       }
 
       "the supplied date is after the supplied tax year" in {
-        DisposalDateValidation.validate(dateAfterTaxYear, validTaxYear, "path") shouldBe List(RuleDisposalDateError.copy(paths = Some(Seq("path"))))
+        DisposalDateValidation.validate(dateAfterTaxYear, validTaxYear, "path", validateToday = true, IN_YEAR_NO_LATER_THAN_TODAY) shouldBe List(
+          RuleDisposalDateError.copy(paths = Some(Seq("path")), message = IN_YEAR_NO_LATER_THAN_TODAY))
       }
     }
   }

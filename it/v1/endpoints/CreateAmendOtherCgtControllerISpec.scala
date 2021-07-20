@@ -22,10 +22,11 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
+import v1.controllers.requestParsers.validators.validations.DisposalDateErrorMessages
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec {
+class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with DisposalDateErrorMessages {
 
   val validRequestJson: JsValue = Json.parse(
     """
@@ -342,7 +343,8 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec {
       RuleDisposalDateError.copy(
         paths = Some(Seq(
           "/disposals/0"
-        ))
+        )),
+        message = IN_YEAR_NO_LATER_THAN_TODAY
       ),
       RuleAcquisitionDateError.copy(
         paths = Some(Seq(

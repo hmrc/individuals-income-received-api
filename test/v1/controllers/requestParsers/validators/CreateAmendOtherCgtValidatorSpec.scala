@@ -21,11 +21,11 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
+import v1.controllers.requestParsers.validators.validations.{DisposalDateErrorMessages, ValueFormatErrorMessages}
 import v1.models.errors._
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
 
-class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMessages with MockAppConfig {
+class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMessages with DisposalDateErrorMessages with MockAppConfig {
 
   object Data {
 
@@ -464,10 +464,6 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
   import Data._
 
-  implicit val appConfig: AppConfig = mockAppConfig
-
-  val validator = new CreateAmendOtherCgtValidator()
-
   class Test extends MockAppConfig {
 
     implicit val appConfig: AppConfig = mockAppConfig
@@ -768,7 +764,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
               paths = Some(
                 Seq(
                   "/disposals/0"
-                ))
+                )),
+              message = IN_YEAR_NO_LATER_THAN_TODAY
             ))
       }
     }

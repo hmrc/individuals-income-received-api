@@ -21,6 +21,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import utils.CurrentDateTime
 
+import java.time.LocalDate
+
 
 trait MockCurrentDateTime extends MockFactory {
 
@@ -28,5 +30,6 @@ trait MockCurrentDateTime extends MockFactory {
 
   object MockCurrentDateTime {
     def getCurrentDate: CallHandler[DateTime] = (mockCurrentDateTime.getDateTime _).expects()
+    def getLocalDate: CallHandler[LocalDate] = (mockCurrentDateTime.getLocalDate _).expects()
   }
 }
