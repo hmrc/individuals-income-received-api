@@ -14,7 +14,7 @@ description: "This endpoint allows the developer, for a given NINO and tax year,
                 • Disposals previously reported via the HMRC 'Report and Pay Capital Gains Tax on UK Property' (PPD)<br>
                 • User submitted residential property disposals overrides (PPD)<br>
                 • User submitted residential property disposals (Non-PDD)"
-(annotations.sandboxData): include ../../../scenarios/disposalsAndOverridesRetrieve.md
+(annotations.sandboxData): !include ../../../scenarios/cgt/disposalsAndOverridesRetrieve.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:

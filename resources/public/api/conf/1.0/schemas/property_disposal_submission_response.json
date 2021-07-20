@@ -231,131 +231,131 @@
             ]
           }
         }
-      },
-      "customerAddedDisposals": {
-        "type": "object",
-        "description": "Residential property disposals that weren't reported via the Report and pay Capital Gains Tax on UK property service and submitted by the customer into ITSA.",
-        "properties": {
-          "submittedOn": {
-            "description": "The date the residential property disposals were submitted. It is in the format YYYY-MM-DDThh:mm:ssZ",
-            "type": "string",
-            "example": "2020-07-06T09:37:17Z"
-          },
-          "disposals": {
-            "type": "array",
-            "description": "An array of residential property disposals.",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "properties": {
-                "customerReference": {
-                  "description": "The unique reference for a residential property disposal supplied by the customer. Must conform to the regular expression: ^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$",
-                  "type": "string",
-                  "example": "CGTDISPOSAL01"
-                },
-                "disposalDate": {
-                  "description": "The date that contracts were exchanged between the owner and the recipient in the format YYYY-MM-DD. The date must fall within the specified taxYear.",
-                  "type": "string",
-                  "example": "2022-02-04"
-                },
-                "completionDate": {
-                  "description": "The completion date of the sale or disposal of the property, in the format YYYY-MM-DD. It must be on or after 7th March of the specified tax year and must not be a date in the future.",
-                  "type": "string",
-                  "example": "2022-03-08"
-                },
-                "disposalProceeds": {
-                  "description": "The total disposal proceeds from the sale of the residential property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "acquisitionDate": {
-                  "description": "The date the disposed property was acquired in the format YYYY-MM-DD",
-                  "type": "string",
-                  "example": "2018-04-06"
-                },
-                "acquisitionAmount": {
-                  "description": "The total amount paid to acquire the property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "improvementCosts": {
-                  "description": "The total amount of additional costs when the property was acquired (Acquisition Fees) or disposed of (Disposal Fees). It may include fees for surveyors, estate agents and solicitors. If the costs were shared, enter only the amount of that particular owner's share. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "5000.99"
-                },
-                "prfAmount": {
-                  "description": "The total amount of Private Residence Relief claimed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "otherReliefAmount": {
-                  "description": "The total amount of other reliefs claimed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "lossesFromThisYear": {
-                  "description": "The amount of Capital Gains Tax losses from other disposals in the current tax year that reduce the overall gain of this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "lossesFromPreviousYear": {
-                  "description": "The amount of Capital Gains Tax losses from disposals in previous tax years that reduce the overall gain of this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "amountOfNetGain": {
-                  "description": "The total amount of net gain from the disposal.  Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "amountOfNetLoss": {
-                  "description": "The total amount of net loss from the disposal.  Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                  "type": "number",
-                  "multipleOf": 0.01,
-                  "minimum": 0.00,
-                  "maximum": 99999999999.99,
-                  "example": "1999.99"
-                },
-                "required": [
-                  "disposalDate",
-                  "completionDate",
-                  "disposalProceeds",
-                  "acquisitionDate",
-                  "acquisitionAmount"
-                ]
-              }
-            }
-          }
-        },
-        "required": [
-          "submittedOn",
-          "disposals"
-        ]
       }
+    },
+    "customerAddedDisposals": {
+      "type": "object",
+      "description": "Residential property disposals that weren't reported via the Report and pay Capital Gains Tax on UK property service and submitted by the customer into ITSA.",
+      "properties": {
+        "submittedOn": {
+          "description": "The date the residential property disposals were submitted. It is in the format YYYY-MM-DDThh:mm:ssZ",
+          "type": "string",
+          "example": "2020-07-06T09:37:17Z"
+        },
+        "disposals": {
+          "type": "array",
+          "description": "An array of residential property disposals.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "customerReference": {
+                "description": "The unique reference for a residential property disposal supplied by the customer. Must conform to the regular expression: ^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$",
+                "type": "string",
+                "example": "CGTDISPOSAL01"
+              },
+              "disposalDate": {
+                "description": "The date that contracts were exchanged between the owner and the recipient in the format YYYY-MM-DD. The date must fall within the specified taxYear.",
+                "type": "string",
+                "example": "2022-02-04"
+              },
+              "completionDate": {
+                "description": "The completion date of the sale or disposal of the property, in the format YYYY-MM-DD. It must be on or after 7th March of the specified tax year and must not be a date in the future.",
+                "type": "string",
+                "example": "2022-03-08"
+              },
+              "disposalProceeds": {
+                "description": "The total disposal proceeds from the sale of the residential property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "acquisitionDate": {
+                "description": "The date the disposed property was acquired in the format YYYY-MM-DD",
+                "type": "string",
+                "example": "2018-04-06"
+              },
+              "acquisitionAmount": {
+                "description": "The total amount paid to acquire the property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "improvementCosts": {
+                "description": "The total amount of additional costs when the property was acquired (Acquisition Fees) or disposed of (Disposal Fees). It may include fees for surveyors, estate agents and solicitors. If the costs were shared, enter only the amount of that particular owner's share. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "prfAmount": {
+                "description": "The total amount of Private Residence Relief claimed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "otherReliefAmount": {
+                "description": "The total amount of other reliefs claimed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "lossesFromThisYear": {
+                "description": "The amount of Capital Gains Tax losses from other disposals in the current tax year that reduce the overall gain of this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "lossesFromPreviousYear": {
+                "description": "The amount of Capital Gains Tax losses from disposals in previous tax years that reduce the overall gain of this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "amountOfNetGain": {
+                "description": "The total amount of net gain from the disposal.  Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              },
+              "amountOfNetLoss": {
+                "description": "The total amount of net loss from the disposal.  Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1999.99"
+              }
+            },
+            "required": [
+              "disposalDate",
+              "completionDate",
+              "disposalProceeds",
+              "acquisitionDate",
+              "acquisitionAmount"
+            ]
+          }
+        }
+      },
+      "required": [
+        "submittedOn",
+        "disposals"
+      ]
     },
     "links": {
       "type": "array",
@@ -372,9 +372,11 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
             "type": "string",
             "enum": [
-              "create-or-amend-disposal-and-overrides",
+              "create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides",
+              "delete-report-and-pay-capital-gains-tax-on-property-overrides",
+              "create-and-amend-cgt-residential-property-disposals",
               "self",
-              "delete-disposal-and-overrides"
+              "delete-cgt-residential-property-disposals"
             ]
           },
           "method": {

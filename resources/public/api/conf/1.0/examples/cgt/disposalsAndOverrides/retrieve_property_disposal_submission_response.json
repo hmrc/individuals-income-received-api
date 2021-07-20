@@ -35,7 +35,8 @@
         "amountOfLoss": 1999.99,
         "ppdReturnCharge": 1999.99
       }
-    ],
+    ]
+  },
   "customerAddedDisposals": {
     "submittedOn": "2020-07-06T09:37:17Z",
     "disposals": [
@@ -56,7 +57,6 @@
         "amountOfLoss": 1999.99
       }
     ]
-  }
   },
   "links":[
     {
@@ -83,6 +83,6 @@
       "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
       "rel":"self",
       "method":"GET"
-    },
+    }
   ]
 }
