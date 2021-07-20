@@ -386,9 +386,9 @@
           }
         }
       }
-    },
-    "required": [
-      "links"
-    ]
-  }
+    }
+  },
+  "required": [
+    "links"
+  ]
 }
