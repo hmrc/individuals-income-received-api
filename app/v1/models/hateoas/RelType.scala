@@ -61,6 +61,5 @@ object RelType {
 
   val RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS = "retrieve-all-cgt-residential-property-disposals-and-overrides"
 
-
   val SELF = "self"
 }

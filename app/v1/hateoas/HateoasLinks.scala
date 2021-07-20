@@ -53,10 +53,14 @@ trait HateoasLinks {
   private def otherCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/other-gains/$nino/$taxYear"
 
+<<<<<<< HEAD
   private def cgtPpdOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear/ppd"
 
   private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
+=======
+  private def cgtResidentialPropertyDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+>>>>>>> f08cc77 (controler skeliton)
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
 
   //API resource links
@@ -347,4 +351,3 @@ trait HateoasLinks {
       rel = DELETE_CGT_PPD_OVERRIDES
     )
 }
-
