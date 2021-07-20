@@ -31,14 +31,14 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOverridesConnector) extends DesResponseMappingSupport with Logging {
 
-  def createAndAmend(request: CreateAmendCgtPpdOverridesRequest)(
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext,
     correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
@@ -50,7 +50,7 @@ class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOv
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "INVALID_PAYLOAD" -> DownstreamError,
-      "PPD_SUBMISSIONID_NOT_FOUND" -> PPDSubmissionIdNotFoundError,
+      "PPD_SUBMISSIONID_NOT_FOUND" -> PpdSubmissionIdNotFoundError,
       "NO_PPD_SUBMISSIONS_FOUND" -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "INVALID_DISPOSAL_TYPE" -> DownstreamError,

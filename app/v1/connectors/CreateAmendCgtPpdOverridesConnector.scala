@@ -15,7 +15,6 @@
  */
 
 package v1.connectors
-
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.IfsUri
@@ -27,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient,
                                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAndAmend(request: CreateAmendCgtPpdOverridesRequest)(
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[Unit]] = {
@@ -41,5 +40,4 @@ class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient,
       uri = IfsUri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"), body = request.body
     )
   }
-
 }

@@ -24,7 +24,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      |   "submissionId": "AB0000000092",
+      |   "ppdSubmissionId": "AB0000000092",
       |   "amountOfNetGain": 1234.78
       |}
       |""".stripMargin
@@ -49,7 +49,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      |   "submissionId": 83287398.11,
+      |   "ppdSubmissionId": 83287398.11,
       |   "amountOfNetGain": 1234.78
       |}
       |""".stripMargin
