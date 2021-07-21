@@ -33,8 +33,8 @@ object RetrieveAllResidentialPropertyCgtResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: RetrieveAllResidentialPropertyCgtHateoasData): Seq[Link] = {
       import data._
       Seq(
-        createAmendPpdCgt(appConfig, nino, taxYear),
-        deletePpdCgt(appConfig, nino, taxYear),
+        createAmendCgtPpdOverrides(appConfig, nino, taxYear),
+        deleteCgtPpdOverrides(appConfig, nino, taxYear),
         createAmendNonPpdCgt(appConfig, nino, taxYear),
         deleteNonPpdCgt(appConfig, nino, taxYear),
         retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear)

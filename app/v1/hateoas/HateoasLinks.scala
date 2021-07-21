@@ -318,20 +318,6 @@ trait HateoasLinks {
       rel = SELF
     )
 
-  def createAmendPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
-      method = PUT,
-      rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
-    )
-
-  def deletePpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
-      method = DELETE,
-      rel = DELETE_CGT_PPD_OVERRIDES
-    )
-
   def createAmendNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
