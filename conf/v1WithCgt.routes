@@ -39,6 +39,7 @@ GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.c
 
 # Capital Gains Tax endpoints
 DELETE     /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.DeleteCgtPpdOverridesController.deleteCgtPpdOverrides(nino: String, taxYear: String)
+GET        /disposals/residential-property/:nino/:taxYear                   v1.controllers.RetrieveAllResidentialPropertyCgtController.retrieveAll(nino: String, taxYear: String, source: Option[String])
 
 PUT        /disposals/other-gains/:nino/:taxYear                            v1.controllers.CreateAmendOtherCgtController.createAmendOtherCgt(nino: String, taxYear: String)
 GET        /disposals/other-gains/:nino/:taxYear                            v1.controllers.RetrieveOtherCgtController.retrieveOtherCgt(nino: String, taxYear: String)

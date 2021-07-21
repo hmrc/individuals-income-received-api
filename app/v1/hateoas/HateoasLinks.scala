@@ -53,6 +53,12 @@ trait HateoasLinks {
   private def otherCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/other-gains/$nino/$taxYear"
 
+  private def ppdCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear/ppd"
+
+  private def nonPpdCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
+
   //API resource links
 
   //Savings Income
@@ -303,4 +309,41 @@ trait HateoasLinks {
       method = DELETE,
       rel = DELETE_OTHER_CGT_AND_DISPOSALS
     )
+
+  // PPD CGT and Disposals
+  def retrieveAllPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = nonPpdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def createAmendPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = ppdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_PPD_CGT_AND_DISPOSALS
+    )
+
+  def deletePpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = ppdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_PPD_CGT_AND_DISPOSALS
+    )
+
+  def createAmendNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = nonPpdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS
+    )
+
+  def deleteNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = nonPpdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_NON_PPD_CGT_AND_DISPOSALS
+    )
+
 }
