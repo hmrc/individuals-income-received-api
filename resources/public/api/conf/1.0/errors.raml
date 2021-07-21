@@ -430,7 +430,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleLossesGreaterThanGain:
-                description: 'The total losses from this year or the previous year must not be greater than the gain. '
+                description: 'The total losses from this year or the previous year must not be greater than the gain.'
                 value:
                   code: RULE_LOSSES_GREATER_THAN_GAIN
   formatSource:
@@ -455,14 +455,14 @@ traits:
                 description: 'Where lumpSums have been provided at least one child object is required.'
                 value:
                   code: RULE_LUMP_SUMS
-  cgtOtherRuleGainLoss:
+  ruleGainLoss:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              cgtOtherRuleGainLoss:
+              ruleGainLoss:
                 description: 'Only one of gain or loss values can be provided.'
                 value:
                   code: RULE_GAIN_LOSS
@@ -506,8 +506,19 @@ traits:
           application/json:
             type: types.errorResponse
             examples:
-              cgtOtherRuleDisposalDate:
+              ruleDisposalDate:
                 description: "The disposalDate must be in the specified tax year and no later than today's date."
+                value:
+                  code: RULE_DISPOSAL_DATE
+  nonPpdRuleDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              nonPpdRuleDisposalDate:
+                description: "The disposalDate must be within the specified tax year."
                 value:
                   code: RULE_DISPOSAL_DATE
   cgtOtherRuleAcquisitionDate:
@@ -532,3 +543,36 @@ traits:
                 description: 'Only one of gainAfterRelief or lossAfterRelief values can be provided.'
                 value:
                   code: RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF
+  ruleCompletionDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleCompletionDate:
+                description: 'The completionDate must be on or after 7th March of the specified tax year and not a date in the future.'
+                value:
+                  code: RULE_COMPLETION_DATE
+  ruleCompletionDateBeforeDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleCompletionDateBeforeDisposalDate:
+                description: 'The completionDate must not be earlier than the disposalDate.'
+                value:
+                  code: RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE
+  ruleAcquisitionDateBeforeDisposalDate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleAcquisitionDateBeforeDisposalDate:
+                description: 'The acquisitionDate must not be earlier than the disposalDate.'
+                value:
+                  code: RULE_ACQUISITION_DATE_BEFORE_DISPOSAL_DATE

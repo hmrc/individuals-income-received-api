@@ -149,6 +149,7 @@ uses:
           (annotations.group):
             name: Capital Gains on Residential Property Disposals - non PPD
             description: Resources not relating to 'Report and Pay Capital Gains Tax on Property' Overrides
+          put: !include endpoints/cgt/residentialProperty/createAmendNonPpd.raml
           delete: !include endpoints/cgt/residentialProperty/deleteNonPpd.raml
     /other-gains:
       (annotations.group):
