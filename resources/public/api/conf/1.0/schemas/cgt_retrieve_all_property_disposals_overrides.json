@@ -16,7 +16,7 @@
             "type": "object",
             "properties": {
               "source": {
-                "description": "Specifies the source of data to be returned. If source is not provided, the latest values will be returned. Limited to the following possible values:",
+                "description": "Specifies the source of data to be returned. If source is not provided, the latest values will be returned.",
                 "type": "string",
                 "enum": [
                   "hmrcHeld",
@@ -24,31 +24,34 @@
                 ]
               },
               "submittedOn": {
-                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ssZ",
+                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
                 "type": "string",
-                "example": "2020-07-06T09:37:17Z"
+                "example": "2020-07-07T10:59:47.544Z"
               },
               "ppdSubmissionId": {
-                "description": "The reference number returned to the customer from the Report and pay Capital Gains Tax on UK property service. Must conform to the regular expression: ^[A-Za-z0-9]{12}$",
+                "description": "The reference number returned to the customer from the Report and pay Capital Gains Tax on UK property service.",
                 "type": "string",
-                "example": "Da2467289108"
+                "example": "Da2467289108",
+                "pattern": "^[A-Za-z0-9]{12}$"
               },
               "ppdSubmissionDate": {
-                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ssZ",
+                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
                 "type": "string",
-                "example": "2020-07-06T09:37:17Z"
+                "example": "2020-07-07T10:59:47.544Z"
               },
               "numberOfDisposals": {
                 "description": "The number of properties disposed of within a single Report and pay Capital Gains Tax on UK property service submission. The value must be between 2 and 999",
                 "type": "number",
                 "minimum": 2,
                 "maximum": 999,
+                "multipleOf": 1,
                 "example": "3"
               },
               "disposalTaxYear": {
-                "description": "The tax year in which the properties were disposed. The 2021-22 tax year would be represented as 2022. It is in the format ^2[0-9]{3}$.",
+                "description": "The tax year in which the properties were disposed. The 2021-22 tax year would be represented as 2022.",
                 "type": "number",
-                "example": "2022"
+                "example": "2022",
+                "pattern": "^2[0-9]{3}$"
               },
               "completionDate": {
                 "description": "The completion date of the sale or disposal of the properties, in the format YYYY-MM-DD.",
@@ -94,7 +97,7 @@
             "type": "object",
             "properties": {
               "source": {
-                "description": "Specifies the source of data to be returned. If source is not provided, the latest values will be returned. Limited to the following possible values:",
+                "description": "Specifies the source of data to be returned. If source is not provided, the latest values will be returned.",
                 "type": "string",
                 "enum": [
                   "hmrcHeld",
@@ -102,19 +105,20 @@
                 ]
               },
               "submittedOn": {
-                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ssZ",
+                "description": "The date the disposals were submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
                 "type": "string",
-                "example": "2020-07-06T09:37:17Z"
+                "example": "2020-07-07T10:59:47.544Z"
               },
               "ppdSubmissionId": {
-                "description": "The reference number returned to the customer from the Report and pay Capital Gains Tax on UK property service. Must conform to the regular expression: ^[A-Za-z0-9]{12}$",
+                "description": "The reference number returned to the customer from the Report and pay Capital Gains Tax on UK property service.",
                 "type": "string",
-                "example": "Da2467289108"
+                "example": "Da2467289108",
+                "pattern": "^[A-Za-z0-9]{12}$"
               },
               "ppdSubmissionDate": {
-                "description": "The date the disposal was submitted, in the format YYYY-MM-DDThh:mm:ssZ",
+                "description": "The date the disposal was submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
                 "type": "string",
-                "example": "2020-07-06T09:37:17Z"
+                "example": "2020-07-07T10:59:47.544Z"
               },
               "disposalDate": {
                 "description": "The date that contracts were exchanged between the owner and the recipient in the format YYYY-MM-DD. The date must fall within the specified taxYear.",
@@ -238,9 +242,9 @@
       "description": "Residential property disposals that weren't reported via the Report and pay Capital Gains Tax on UK property service and submitted by the customer into ITSA.",
       "properties": {
         "submittedOn": {
-          "description": "The date the residential property disposals were submitted. It is in the format YYYY-MM-DDThh:mm:ssZ",
+          "description": "The date the residential property disposals were submitted, in the format YYYY-MM-DDThh:mm:ss.SSSZ",
           "type": "string",
-          "example": "2020-07-06T09:37:17Z"
+          "example": "2020-07-07T10:59:47.544Z"
         },
         "disposals": {
           "type": "array",
@@ -250,9 +254,10 @@
             "type": "object",
             "properties": {
               "customerReference": {
-                "description": "The unique reference for a residential property disposal supplied by the customer. Must conform to the regular expression: ^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$",
+                "description": "The unique reference for a residential property disposal supplied by the customer.",
                 "type": "string",
-                "example": "CGTDISPOSAL01"
+                "example": "CGTDISPOSAL01",
+                "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
               },
               "disposalDate": {
                 "description": "The date that contracts were exchanged between the owner and the recipient in the format YYYY-MM-DD. The date must fall within the specified taxYear.",

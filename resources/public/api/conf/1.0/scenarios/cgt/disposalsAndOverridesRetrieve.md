@@ -14,8 +14,8 @@
             <td><p>Requesting <strong>latest</strong> source simulates success response with Latest disposals and overrides submitted.</p></td>
         </tr>
         <tr>
-            <td><p>LOSS</p></td>
-            <td><p>Simulates success response with User provided disposals and overrides, with losses.</p></td>
+            <td><p>LOSS<br><strong>?source=latest</strong></p></td>
+            <td><p>Requesting <strong>latest</strong> source with LOSS simulates success response with User provided disposals and overrides with losses.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
