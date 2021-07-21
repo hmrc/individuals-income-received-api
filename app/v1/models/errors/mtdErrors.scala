@@ -158,7 +158,7 @@ object RuleGainAfterReliefLossAfterReliefError
 
 object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE", "The completionDate must not be earlier than the disposalDate")
 
-object RuleAcquisitionDateBeforeDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_BEFORE_DISPOSAL_DATE", "The acquisitionDate must not be earlier than the disposalDate")
+object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
 
 object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be on or after 7th March of the specified tax year and not a date in the future")
 

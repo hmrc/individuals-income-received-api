@@ -43,7 +43,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     private val validCustomerReference = "CGTDISPOSAL01"
     private val validDisposalDate = "2020-03-01"
     private val validCompletionDate = "2020-04-02"
-    private val validAcquisitionDate = "2020-04-02"
+    private val validAcquisitionDate = "2020-02-01"
     private val validValue = 1000.12
 
     private val validRequestBodyJson: JsValue = Json.parse(
@@ -310,7 +310,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |""".stripMargin
     )
 
-    private val acquisitionDateBeforeDisposalDateJson: JsValue = Json.parse(
+    private val acquisitionDateAfterDisposalDateJson: JsValue = Json.parse(
       s"""
         |{
         |  "disposals":[
@@ -319,7 +319,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |      "disposalDate":"$validDisposalDate",
         |      "completionDate":"$validCompletionDate",
         |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"2020-02-01",
+        |      "acquisitionDate":"2020-04-01",
         |      "acquisitionAmount":$validValue,
         |      "improvementCosts":$validValue,
         |      "additionalCosts":$validValue,
@@ -391,7 +391,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |      "disposalDate":"2018-06-01",
         |      "completionDate":"$validCompletionDate",
         |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"$validAcquisitionDate",
+        |      "acquisitionDate":"2018-05-01",
         |      "acquisitionAmount":$validValue,
         |      "improvementCosts":$validValue,
         |      "additionalCosts":$validValue,
@@ -465,7 +465,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val badDateRawRequestBody: AnyContentAsJson                             = AnyContentAsJson(badDateJson)
     val badCustomerReferenceRawRequestBody: AnyContentAsJson                = AnyContentAsJson(badCustomerReferenceJson)
     val completionDateBeforeDisposalDateRawRequestBody: AnyContentAsJson    = AnyContentAsJson(completionDateBeforeDisposalDateJson)
-    val acquisitionDateBeforeDisposalDateRawRequestBody: AnyContentAsJson   = AnyContentAsJson(acquisitionDateBeforeDisposalDateJson)
+    val acquisitionDateAfterDisposalDateRawRequestBody: AnyContentAsJson    = AnyContentAsJson(acquisitionDateAfterDisposalDateJson)
     val completionDateInFutureRawRequestBody: AnyContentAsJson              = AnyContentAsJson(completionDateInFutureJson)
     val completionDateBefore7thMarchRawRequestBody: AnyContentAsJson        = AnyContentAsJson(completionDateBefore7thMarchJson)
     val disposalDateNotInTaxYearRawRequestBody: AnyContentAsJson            = AnyContentAsJson(disposalDateNotInTaxYearJson)
@@ -699,11 +699,11 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     }
 
     "return RuleAcquisitionDateBeforeDisposalDateError error" when {
-      "supplied completion date is before supplied disposal date" in new Test {
+      "supplied acquisition date is after supplied disposal date" in new Test {
         validator.validate(
-          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, acquisitionDateBeforeDisposalDateRawRequestBody)) shouldBe
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, acquisitionDateAfterDisposalDateRawRequestBody)) shouldBe
           List(
-            RuleAcquisitionDateBeforeDisposalDateError.copy(
+            RuleAcquisitionDateAfterDisposalDateError.copy(
               paths = Some(
                 Seq(
                   "/disposals/0"

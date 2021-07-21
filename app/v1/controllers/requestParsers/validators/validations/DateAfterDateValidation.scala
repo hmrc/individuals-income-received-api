@@ -20,11 +20,11 @@ import v1.models.errors.MtdError
 
 import java.time.LocalDate
 
-object DateBeforeDateValidation {
+object DateAfterDateValidation {
 
   def validate(dateWhichShouldBeEarlier: String, dateWhichShouldBeLater: String, path: String, error: MtdError): List[MtdError] = {
     val formattedDateWhichShouldBeEarlier = LocalDate.parse(dateWhichShouldBeEarlier)
     val formattedDateWhichShouldBeLater   = LocalDate.parse(dateWhichShouldBeLater)
-    if (formattedDateWhichShouldBeEarlier isBefore formattedDateWhichShouldBeLater) NoValidationErrors else List(error.copy(paths = Some(Seq(path))))
+    if (formattedDateWhichShouldBeEarlier isAfter formattedDateWhichShouldBeLater) List(error.copy(paths = Some(Seq(path)))) else NoValidationErrors
   }
 }

@@ -162,17 +162,17 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
 
   private def validateDisposalRule(disposal: Disposal, index: Int, taxYear: String): List[MtdError] = {
     List(
-      DateBeforeDateValidation.validate(
+      DateAfterDateValidation.validate(
         dateWhichShouldBeEarlier = disposal.disposalDate,
         dateWhichShouldBeLater = disposal.completionDate,
         path = s"/disposals/$index",
         error = RuleCompletionDateBeforeDisposalDateError
       ),
-      DateBeforeDateValidation.validate(
-        dateWhichShouldBeEarlier = disposal.disposalDate,
-        dateWhichShouldBeLater = disposal.acquisitionDate,
+      DateAfterDateValidation.validate(
+        dateWhichShouldBeEarlier = disposal.acquisitionDate,
+        dateWhichShouldBeLater = disposal.disposalDate,
         path = s"/disposals/$index",
-        error = RuleAcquisitionDateBeforeDisposalDateError
+        error = RuleAcquisitionDateAfterDisposalDateError
       ),
       CompletionDateValidation.validate(
         date = disposal.completionDate,

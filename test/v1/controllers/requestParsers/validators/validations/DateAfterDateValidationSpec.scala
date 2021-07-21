@@ -19,7 +19,7 @@ package v1.controllers.requestParsers.validators.validations
 import support.UnitSpec
 import v1.models.errors.MtdError
 
-class DateBeforeDateValidationSpec extends UnitSpec {
+class DateAfterDateValidationSpec extends UnitSpec {
   private val earlierDate = "2020-01-01"
   private val laterDate = "2020-01-02"
 
@@ -28,7 +28,7 @@ class DateBeforeDateValidationSpec extends UnitSpec {
   "validate" should {
     "return NoValidationErrors" when {
       "date 1 is before date 2" in {
-        DateBeforeDateValidation.validate(
+        DateAfterDateValidation.validate(
           dateWhichShouldBeEarlier = earlierDate,
           dateWhichShouldBeLater = laterDate,
           path = "path",
@@ -38,7 +38,7 @@ class DateBeforeDateValidationSpec extends UnitSpec {
     }
     "return an error" when {
       "date 1 is after date 2" in {
-        DateBeforeDateValidation.validate(
+        DateAfterDateValidation.validate(
           dateWhichShouldBeEarlier = laterDate,
           dateWhichShouldBeLater = earlierDate,
           path = "path",
