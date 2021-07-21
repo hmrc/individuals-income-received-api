@@ -16,7 +16,7 @@
             "type": "object",
             "properties": {
               "source": {
-                "description": "Specifies the source of data to be returned. If source is not provided, the latest values will be returned.",
+                "description": "Specifies the source of data to be returned.",
                 "type": "string",
                 "enum": [
                   "hmrcHeld",
@@ -97,7 +97,7 @@
             "type": "object",
             "properties": {
               "source": {
-                "description": "Specifies the source of data to be returned. If source is not provided, the latest values will be returned.",
+                "description": "Specifies the source of data to be returned.",
                 "type": "string",
                 "enum": [
                   "hmrcHeld",
