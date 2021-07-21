@@ -3,12 +3,12 @@
     "multiplePropertyDisposals": [
       {
         "source": "hmrcHeld",
-        "submittedOn": "2020-07-06",
+        "submittedOn": "2020-07-07T10:59:47.544Z",
         "ppdSubmissionId": "Da2467289108",
-        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
+        "ppdSubmissionDate": "2020-07-07T10:59:47.544Z",
         "numberOfDisposals": 3,
-        "disposalTaxYear": 2022,
-        "completionDate": "2022-03-08",
+        "disposalTaxYear": 2021,
+        "completionDate": "2020-03-08",
         "amountOfNetGain": 1999.99,
         "ppdReturnCharge": 1999.99
       }
@@ -16,11 +16,11 @@
     "singlePropertyDisposals": [
       {
         "source": "hmrcHeld",
-        "submittedOn": "2020-07-06",
-        "ppdSubmissionId": "Da2467289108",
-        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
-        "disposalDate": "2022-02-04",
-        "completionDate": "2022-03-08",
+        "submittedOn": "2020-07-07T10:59:47.544Z",
+        "ppdSubmissionId": "Da2467289109",
+        "ppdSubmissionDate": "2020-07-07T10:59:47.544Z",
+        "disposalDate": "2020-05-04",
+        "completionDate": "2020-05-08",
         "disposalProceeds": 1999.99,
         "acquisitionDate": "2018-04-06",
         "acquisitionAmount": 1999.99,
@@ -36,12 +36,12 @@
     ]
   },
   "customerAddedDisposals": {
-    "submittedOn": "2020-07-06T09:37:17Z",
+    "submittedOn": "2020-08-07T10:59:47.544Z",
     "disposals": [
       {
         "customerReference": "CGTDISPOSAL01",
-        "disposalDate": "2022-02-04",
-        "completionDate": "2022-03-08",
+        "disposalDate": "2020-05-04",
+        "completionDate": "2020-05-08",
         "disposalProceeds": 1999.99,
         "acquisitionDate": "2018-04-06",
         "acquisitionAmount": 1999.99,
@@ -57,27 +57,27 @@
   },
   "links":[
     {
-      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22/ppd",
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2020-21/ppd",
       "rel":"create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides",
       "method":"PUT"
     },
     {
-      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22/ppd",
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2020-21/ppd",
       "rel":"delete-report-and-pay-capital-gains-tax-on-property-overrides",
       "method":"DELETE"
     },
     {
-      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2020-21",
       "rel":"create-and-amend-cgt-residential-property-disposals",
       "method":"PUT"
     },
     {
-      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2020-21",
       "rel":"delete-cgt-residential-property-disposals",
       "method":"DELETE"
     },
     {
-      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2021-22",
+      "href":"/individuals/income-received/disposals/residential-property/TC663795B/2020-21",
       "rel":"self",
       "method":"GET"
     }
