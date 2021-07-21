@@ -49,6 +49,13 @@ class RetrieveAllResidentialPropertyCgtRequestParserSpec extends UnitSpec {
         parser.parseRequest(retrieveAllResidentialPropertyCgtRawData) shouldBe
           Right(RetrieveAllResidentialPropertyCgtRequest(Nino(nino), taxYear, MtdSourceEnum.hmrcHeld))
       }
+
+      "valid request with no source is supplied" in new Test {
+        MockRetrieveAllResidentialPropertyCgtValidator.validate(retrieveAllResidentialPropertyCgtRawData.copy(source = None)).returns(Nil)
+
+        parser.parseRequest(retrieveAllResidentialPropertyCgtRawData.copy(source = None)) shouldBe
+          Right(RetrieveAllResidentialPropertyCgtRequest(Nino(nino), taxYear, MtdSourceEnum.latest))
+      }
     }
 
     "return an ErrorWrapper" when {

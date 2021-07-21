@@ -37,7 +37,7 @@ object RetrieveAllResidentialPropertyCgtResponse extends HateoasLinks {
         deletePpdCgt(appConfig, nino, taxYear),
         createAmendNonPpdCgt(appConfig, nino, taxYear),
         deleteNonPpdCgt(appConfig, nino, taxYear),
-        retrieveAllPpdCgt(appConfig, nino, taxYear)
+        retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear)
       )
     }
   }

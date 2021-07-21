@@ -73,7 +73,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec extends ControllerBaseSpec
     Link(
       href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
       method = PUT,
-      rel = RelType.CREATE_AND_AMEND_PPD_CGT_AND_DISPOSALS
+      rel = RelType.CREATE_AND_AMEND_CGT_PPD_OVERRIDES
     )
 
   val createAndAmendNonPpdCgtLink: Link =
@@ -87,7 +87,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec extends ControllerBaseSpec
     Link(
       href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
       method = DELETE,
-      rel = RelType.DELETE_PPD_CGT_AND_DISPOSALS
+      rel = RelType.DELETE_CGT_PPD_OVERRIDES
     )
 
   val deleteNonPpdCgtLink: Link =

@@ -42,6 +42,7 @@ DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1.c
 GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
 
 # Capital Gains Tax endpoints
+PUT        /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.CreateAmendCgtPpdOverridesController.createAmendCgtPpdOverrides(nino: String, taxYear: String)
 DELETE     /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.DeleteCgtPpdOverridesController.deleteCgtPpdOverrides(nino: String, taxYear: String)
 GET        /disposals/residential-property/:nino/:taxYear                   v1.controllers.RetrieveAllResidentialPropertyCgtController.retrieveAll(nino: String, taxYear: String, source: Option[String])
 

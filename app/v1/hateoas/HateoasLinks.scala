@@ -53,10 +53,10 @@ trait HateoasLinks {
   private def otherCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/other-gains/$nino/$taxYear"
 
-  private def ppdCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+  private def cgtPpdOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear/ppd"
 
-  private def nonPpdCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
+  private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
 
   //API resource links
@@ -310,40 +310,55 @@ trait HateoasLinks {
       rel = DELETE_OTHER_CGT_AND_DISPOSALS
     )
 
-  // PPD CGT and Disposals
-  def retrieveAllPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+  // Retrieve All CGT Residential Property Disposals and Overrides
+  def retrieveAllCgtPpdDisposalsOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = nonPpdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
       method = GET,
       rel = SELF
     )
 
   def createAmendPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = ppdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
       method = PUT,
-      rel = CREATE_AND_AMEND_PPD_CGT_AND_DISPOSALS
+      rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
     )
 
   def deletePpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = ppdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
       method = DELETE,
-      rel = DELETE_PPD_CGT_AND_DISPOSALS
+      rel = DELETE_CGT_PPD_OVERRIDES
     )
 
   def createAmendNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = nonPpdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
       method = PUT,
       rel = CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS
     )
 
   def deleteNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
-      href = nonPpdCgtAndDisposalsUri(appConfig, nino,taxYear),
+      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
       method = DELETE,
       rel = DELETE_NON_PPD_CGT_AND_DISPOSALS
     )
 
+  // 'Report and Pay Capital Gains Tax on Property' Overrides
+  def createAmendCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
+    )
+
+  def deleteCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_CGT_PPD_OVERRIDES
+    )
 }
+

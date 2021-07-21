@@ -19,7 +19,7 @@ package v1.models.request.createAmendCgtPpdOverrides
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class SinglePropertyDisposals(submissionId: String,
+case class SinglePropertyDisposals(ppdSubmissionId: String,
                                    completionDate: String,
                                    disposalProceeds: BigDecimal,
                                    acquisitionDate: String,
