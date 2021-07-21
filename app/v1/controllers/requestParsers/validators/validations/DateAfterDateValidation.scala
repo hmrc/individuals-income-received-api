@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package utils
+package v1.controllers.requestParsers.validators.validations
 
-import org.joda.time.{DateTime, DateTimeZone}
+import v1.models.errors.MtdError
 
 import java.time.LocalDate
-import javax.inject.Singleton
 
-@Singleton
-class CurrentDateTime {
-  def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
+object DateAfterDateValidation {
 
-  def getLocalDate: LocalDate = LocalDate.now()
+  def validate(dateWhichShouldBeEarlier: String, dateWhichShouldBeLater: String, path: String, error: MtdError): List[MtdError] = {
+    val formattedDateWhichShouldBeEarlier = LocalDate.parse(dateWhichShouldBeEarlier)
+    val formattedDateWhichShouldBeLater   = LocalDate.parse(dateWhichShouldBeLater)
+    if (formattedDateWhichShouldBeEarlier isAfter formattedDateWhichShouldBeLater) List(error.copy(paths = Some(Seq(path)))) else NoValidationErrors
+  }
 }

@@ -26,7 +26,8 @@ import javax.inject.{ Inject, Singleton }
 @Singleton
 class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     extends Validator[CreateAmendOtherCgtRawData]
-    with ValueFormatErrorMessages {
+    with ValueFormatErrorMessages
+    with DisposalDateErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation)
 
@@ -115,7 +116,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
               case (disposal, index) => validateDisposalRules(disposal, data.taxYear, index)
             })
             .getOrElse(NoValidationErrors),
-          requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation(_)).getOrElse(NoValidationErrors)
+          requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation).getOrElse(NoValidationErrors)
         )
       )
     )
@@ -236,7 +237,9 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
       DisposalDateValidation.validate(
         date = disposal.disposalDate,
         taxYear = taxYear,
-        path = s"/disposals/$arrayIndex"
+        path = s"/disposals/$arrayIndex",
+        validateToday = true,
+        errorMessage = IN_YEAR_NO_LATER_THAN_TODAY
       ),
       AcquisitionDateValidation.validate(
         disposalDate = disposal.disposalDate,

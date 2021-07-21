@@ -777,7 +777,10 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a RuleLossesGreaterThanGainError" when {
       "the losses for this year are larger than the total gains" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, currentYearLossesGreaterThanGainsRequestBody)) shouldBe
-          List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq("/singlePropertyDisposals/0"))))
+          List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(
+            "/singlePropertyDisposals/0/lossesFromThisYear",
+            "/singlePropertyDisposals/0/lossesFromPreviousYear"
+          ))))
       }
     }
   }

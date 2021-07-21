@@ -32,7 +32,9 @@ case class Disposal(customerReference: Option[String],
                     lossesFromThisYear: Option[BigDecimal],
                     lossesFromPreviousYear: Option[BigDecimal],
                     amountOfNetGain: Option[BigDecimal],
-                    amountOfNetLoss: Option[BigDecimal])
+                    amountOfNetLoss: Option[BigDecimal]) {
+  def gainAndLossAreBothSupplied: Boolean = amountOfNetLoss.isDefined && amountOfNetGain.isDefined
+}
 
 object Disposal {
   implicit val reads: Reads[Disposal] = Json.reads[Disposal]

@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package utils
+package v1.controllers.requestParsers.validators.validations
 
-import org.joda.time.{DateTime, DateTimeZone}
+trait DisposalDateErrorMessages {
 
-import java.time.LocalDate
-import javax.inject.Singleton
-
-@Singleton
-class CurrentDateTime {
-  def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
-
-  def getLocalDate: LocalDate = LocalDate.now()
+  val IN_YEAR_NO_LATER_THAN_TODAY = "The disposalDate must be in the specified tax year and no later than today's date"
+  val IN_YEAR = "The disposalDate must be in the specified tax year"
 }
+

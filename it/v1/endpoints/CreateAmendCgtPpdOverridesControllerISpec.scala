@@ -191,7 +191,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
   val lossesGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
     paths = Some(Seq(
-      "/singlePropertyDisposals/0"
+      "/singlePropertyDisposals/0/lossesFromThisYear"
     ))
   )
 

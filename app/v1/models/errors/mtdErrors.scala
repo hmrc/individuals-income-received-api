@@ -62,7 +62,6 @@ object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The p
 object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
-
 // Rule Errors
 object RuleTaxYearNotSupportedError
   extends MtdError(
@@ -142,7 +141,7 @@ object RuleGainLossError
 object RuleDisposalDateError
     extends MtdError(
       code = "RULE_DISPOSAL_DATE",
-      message = "The disposalDate must be in the specified tax year and no later than today's date"
+      message = ""
     )
 
 object RuleAcquisitionDateError
@@ -156,6 +155,12 @@ object RuleGainAfterReliefLossAfterReliefError
       code = "RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF",
       message = "Only one of gainAfterRelief or lossAfterRelief values can be provided"
     )
+
+object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE", "The completionDate must not be earlier than the disposalDate")
+
+object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
+
+object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be on or after 7th March of the specified tax year and not a date in the future")
 
 // Not found errors
 object PpdSubmissionIdNotFoundError

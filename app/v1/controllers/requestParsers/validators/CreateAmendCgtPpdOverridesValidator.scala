@@ -114,13 +114,18 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   }
 
   private def validateGainGreaterThanLoss(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
-    if (singlePropertyDisposals.amountOfNetGain.isDefined &&
-      (singlePropertyDisposals.lossesFromPreviousYear > singlePropertyDisposals.amountOfNetGain ||
-        singlePropertyDisposals.lossesFromThisYear > singlePropertyDisposals.amountOfNetGain)) {
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex"))))
-    } else {
-      NoValidationErrors
-    }
+    List(
+      ValueGreaterThanValueValidation.validateOptional(
+        valueWhichShouldBeLowerOrEqualO = singlePropertyDisposals.lossesFromThisYear,
+        valueWhichShouldBeHigherOrEqualO = singlePropertyDisposals.amountOfNetGain,
+        path = s"/singlePropertyDisposals/$arrayIndex/lossesFromThisYear"
+      ),
+      ValueGreaterThanValueValidation.validateOptional(
+        valueWhichShouldBeLowerOrEqualO = singlePropertyDisposals.lossesFromPreviousYear,
+        valueWhichShouldBeHigherOrEqualO = singlePropertyDisposals.amountOfNetGain,
+        path = s"/singlePropertyDisposals/$arrayIndex/lossesFromPreviousYear"
+      )
+    ).flatten
   }
 
   private def bodyValueValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
