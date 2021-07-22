@@ -24,7 +24,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      |   "submissionId": "AB0000000098",
+      |   "ppdSubmissionId": "AB0000000098",
       |   "completionDate": "2020-02-28",
       |   "disposalProceeds": 454.24,
       |   "acquisitionDate": "2020-03-29",
@@ -79,7 +79,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   val invalidJson: JsValue = Json.parse(
     """
       |{
-      |   "submissionId": 68836.11,
+      |   "ppdSubmissionId": 68836.11,
       |   "completionDate": "2020-02-28",
       |   "disposalProceeds": 454.24,
       |   "acquisitionDate": "2020-03-29",

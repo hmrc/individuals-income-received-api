@@ -16,14 +16,9 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.MtdError
+trait DisposalDateErrorMessages {
 
-object SubmissionIdValidation {
-
-  private val submissionIdRegex = "^[A-Za-z0-9]{12}$"
-
-  def validate(submissionId: String, error: MtdError): List[MtdError] = {
-    if (submissionId.matches(submissionIdRegex)) NoValidationErrors else List(error)
-  }
-
+  val IN_YEAR_NO_LATER_THAN_TODAY = "The disposalDate must be in the specified tax year and no later than today's date"
+  val IN_YEAR = "The disposalDate must be in the specified tax year"
 }
+

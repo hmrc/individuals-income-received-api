@@ -16,29 +16,22 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.DesTaxYear
 import v1.models.errors.{MtdError, RuleDisposalDateError}
 
 import java.time.LocalDate
 
 object DisposalDateValidation {
 
-  private val APRIL = 4
-  private val SIX = 6
-  private val FIVE = 5
-
-  def validate(date: String, taxYear: String, path: String): List[MtdError] = {
+  def validate(date: String, taxYear: String, path: String, validateToday: Boolean, errorMessage: String): List[MtdError] = {
     val now = LocalDate.now()
     val parsedDate = LocalDate.parse(date)
-    if(parsedDate.isAfter(now)) {
-      List(RuleDisposalDateError.copy(paths = Some(Seq(path))))
+    if(validateToday && parsedDate.isAfter(now)) {
+      List(RuleDisposalDateError.copy(paths = Some(Seq(path)), message = errorMessage))
     } else {
-      val year = LocalDate.parse(DesTaxYear.fromMtd(taxYear).value, yearFormat)
-      val fromDate = year.minusYears(1).withMonth(APRIL).withDayOfMonth(SIX)
-      val toDate = year.withMonth(APRIL).withDayOfMonth(FIVE)
+      val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
       if(parsedDate.isBefore(fromDate) || parsedDate.isAfter(toDate)) {
-        List(RuleDisposalDateError.copy(paths = Some(Seq(path))))
+        List(RuleDisposalDateError.copy(paths = Some(Seq(path)), message = errorMessage))
       } else {
         NoValidationErrors
       }

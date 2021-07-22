@@ -53,5 +53,14 @@ object RelType {
   val CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS = "create-and-amend-other-capital-gains-and-disposals"
   val DELETE_OTHER_CGT_AND_DISPOSALS = "delete-other-capital-gains-and-disposals"
 
+  val CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS = "create-and-amend-cgt-residential-property-disposals"
+  val DELETE_NON_PPD_CGT_AND_DISPOSALS = "delete-cgt-residential-property-disposals"
+
+  val CREATE_AND_AMEND_CGT_PPD_OVERRIDES = "create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
+  val DELETE_CGT_PPD_OVERRIDES = "delete-report-and-pay-capital-gains-tax-on-property-overrides"
+
+  val RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS = "retrieve-all-cgt-residential-property-disposals-and-overrides"
+
+
   val SELF = "self"
 }

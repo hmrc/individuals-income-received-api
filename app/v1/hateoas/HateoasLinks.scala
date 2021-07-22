@@ -53,6 +53,12 @@ trait HateoasLinks {
   private def otherCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/other-gains/$nino/$taxYear"
 
+  private def cgtPpdOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear/ppd"
+
+  private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
+
   //API resource links
 
   //Savings Income
@@ -303,4 +309,42 @@ trait HateoasLinks {
       method = DELETE,
       rel = DELETE_OTHER_CGT_AND_DISPOSALS
     )
+
+  // Retrieve All CGT Residential Property Disposals and Overrides
+  def retrieveAllCgtPpdDisposalsOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def createAmendNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS
+    )
+
+  def deleteNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_NON_PPD_CGT_AND_DISPOSALS
+    )
+
+  // 'Report and Pay Capital Gains Tax on Property' Overrides
+  def createAmendCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
+    )
+
+  def deleteCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_CGT_PPD_OVERRIDES
+    )
 }
+

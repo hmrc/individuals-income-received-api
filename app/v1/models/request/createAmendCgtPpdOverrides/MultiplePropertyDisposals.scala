@@ -19,7 +19,7 @@ package v1.models.request.createAmendCgtPpdOverrides
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class MultiplePropertyDisposals(submissionId: String,
+case class MultiplePropertyDisposals(ppdSubmissionId: String,
                                      amountOfNetGain: Option[BigDecimal],
                                      amountOfNetLoss: Option[BigDecimal]) {
 

@@ -18,9 +18,12 @@ package utils
 
 import org.joda.time.{DateTime, DateTimeZone}
 
+import java.time.LocalDate
 import javax.inject.Singleton
 
 @Singleton
 class CurrentDateTime {
   def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
+
+  def getLocalDate: LocalDate = LocalDate.now()
 }

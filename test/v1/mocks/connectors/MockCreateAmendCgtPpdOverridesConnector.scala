@@ -30,9 +30,9 @@ trait MockCreateAmendCgtPpdOverridesConnector extends MockFactory {
 
   object MockCreateAmendCgtPpdOverridesConnector {
 
-    def createAndAmend(request: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def createAmend(request: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockCreateAmendCgtPpdOverridesConnector
-        .createAndAmend(_: CreateAmendCgtPpdOverridesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .createAmend(_: CreateAmendCgtPpdOverridesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
   }

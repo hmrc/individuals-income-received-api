@@ -50,10 +50,10 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
+        MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
           .returns(Future.successful(outcome))
 
-        await(service.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
+        await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -61,19 +61,19 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector" in new Test {
 
-            MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
+            MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
 
-            MockCreateAmendCgtPpdOverridesConnector.createAndAmend(createAmendCgtPpdOverridesRequest)
+            MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
 
-            await(service.createAndAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(
@@ -81,7 +81,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", DownstreamError),
           ("INVALID_PAYLOAD", DownstreamError),
-          ("PPD_SUBMISSIONID_NOT_FOUND", PPDSubmissionIdNotFoundError),
+          ("PPD_SUBMISSIONID_NOT_FOUND", PpdSubmissionIdNotFoundError),
           ("NO_PPD_SUBMISSIONS_FOUND", NotFoundError),
           ("DUPLICATE_SUBMISSION", DownstreamError),
           ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
