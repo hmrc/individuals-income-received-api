@@ -565,14 +565,14 @@ traits:
                 description: 'The completionDate must not be earlier than the disposalDate.'
                 value:
                   code: RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE
-  ruleAcquisitionDateBeforeDisposalDate:
+  ruleAcquisitionDateAfterDisposalDate:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              ruleAcquisitionDateBeforeDisposalDate:
-                description: 'The acquisitionDate must not be earlier than the disposalDate.'
+              ruleAcquisitionDateAfterDisposalDate:
+                description: 'The acquisitionDate must not be later than disposalDate.'
                 value:
-                  code: RULE_ACQUISITION_DATE_BEFORE_DISPOSAL_DATE
+                  code: RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE
