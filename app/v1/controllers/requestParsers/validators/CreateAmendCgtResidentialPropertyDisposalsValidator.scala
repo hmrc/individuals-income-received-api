@@ -198,31 +198,22 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
   }
 
   private def validateLossOrGains(disposal: Disposal, index: Int): List[MtdError] = {
-    val errors = List(
-      if (disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors,
-      ValueGreaterThanValueValidation.validateOptional(
-        valueWhichShouldBeLowerOrEqualO = disposal.lossesFromThisYear,
-        valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
-        path = s"/disposals/$index/lossesFromThisYear"
-      ),
-      ValueGreaterThanValueValidation.validateOptional(
-        valueWhichShouldBeLowerOrEqualO = disposal.lossesFromPreviousYear,
-        valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
-        path = s"/disposals/$index/lossesFromPreviousYear"
+    List(
+      Validator.flattenErrors(
+        List(
+          if (disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors,
+          ValueGreaterThanValueValidation.validateOptional(
+            valueWhichShouldBeLowerOrEqualO = disposal.lossesFromThisYear,
+            valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
+            path = s"/disposals/$index/lossesFromThisYear"
+          ),
+          ValueGreaterThanValueValidation.validateOptional(
+            valueWhichShouldBeLowerOrEqualO = disposal.lossesFromPreviousYear,
+            valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
+            path = s"/disposals/$index/lossesFromPreviousYear"
+          )
+        )
       )
-    )
-
-    if (errors == List(Nil,
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/disposals/$index/lossesFromThisYear")))),
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/disposals/$index/lossesFromPreviousYear")))))) {
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/disposals/$index/lossesFromThisYear", s"/disposals/$index/lossesFromPreviousYear"))))
-    } else if (errors == List(List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))),
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/disposals/$index/lossesFromThisYear")))),
-      List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/disposals/$index/lossesFromPreviousYear")))))) {
-      List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index"))),
-        RuleLossesGreaterThanGainError.copy(paths = Some(Seq(s"/disposals/$index/lossesFromThisYear", s"/disposals/$index/lossesFromPreviousYear"))))
-    } else {
-      errors.flatten
-    }
+    ).flatten
   }
 }
