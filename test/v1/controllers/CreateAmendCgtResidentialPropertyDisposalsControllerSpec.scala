@@ -65,7 +65,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
       |         "lossesFromThisYear": 1999.99,
       |         "lossesFromPreviousYear": 1999.99,
       |         "amountOfNetGain": 1999.99,
-      |         "amountOfNetLoss": 1999.99,
+      |         "amountOfNetLoss": 1999.99
       |      }
       |   ]
       |}
@@ -195,12 +195,12 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
           (DateFormatError, BAD_REQUEST),
           (CustomerRefFormatError, BAD_REQUEST),
           (RuleCompletionDateBeforeDisposalDateError, BAD_REQUEST),
-          (RuleAcquisitionDateBeforeDisposalDateError, BAD_REQUEST),
-          (RuleCompleationDateError, BAD_REQUEST),
+          (RuleAcquisitionDateAfterDisposalDateError, BAD_REQUEST),
+          (RuleCompletionDateError, BAD_REQUEST),
           (RuleDisposalDateError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (RuleGainLossError, BAD_REQUEST),
-          (RuleLossesGreaterThanGainError.code, BAD_REQUEST)
+          (RuleLossesGreaterThanGainError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

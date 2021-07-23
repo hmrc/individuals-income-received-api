@@ -482,6 +482,30 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |""".stripMargin
     )
 
+    private val lossFromPreviousYearAndThisYearGreaterThanGainJson: JsValue = Json.parse(
+      s"""
+        |{
+        |  "disposals":[
+        |    {
+        |      "customerReference":"$validCustomerReference",
+        |      "disposalDate":"$validDisposalDate",
+        |      "completionDate":"$validCompletionDate",
+        |      "disposalProceeds":$validValue,
+        |      "acquisitionDate":"$validAcquisitionDate",
+        |      "acquisitionAmount":$validValue,
+        |      "improvementCosts":$validValue,
+        |      "additionalCosts":$validValue,
+        |      "prfAmount":$validValue,
+        |      "otherReliefAmount":$validValue,
+        |      "lossesFromPreviousYear":$validValue,
+        |      "lossesFromThisYear":$validValue,
+        |      "amountOfNetGain":200.24
+        |    }
+        |  ]
+        |}
+        |""".stripMargin
+    )
+
     val validRawRequestBody: AnyContentAsJson                               = AnyContentAsJson(validRequestBodyJson)
     val emptyRawRequestBody: AnyContentAsJson                               = AnyContentAsJson(emptyRequestBodyJson)
     val nonsenseRawRequestBody: AnyContentAsJson                            = AnyContentAsJson(nonsenseRequestBodyJson)
@@ -502,6 +526,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val gainAndLossRawRequestBody: AnyContentAsJson                         = AnyContentAsJson(gainAndLossJson)
     val lossFromThisYearGreaterThanGainRawRequestBody: AnyContentAsJson     = AnyContentAsJson(lossFromThisYearGreaterThanGainJson)
     val lossFromPreviousYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(lossFromPreviousYearGreaterThanGainJson)
+    val lossFromPreviousYearAndThisYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(lossFromPreviousYearAndThisYearGreaterThanGainJson)
   }
 
   import Data._
@@ -813,6 +838,11 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         validator.validate(
           CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, lossFromPreviousYearGreaterThanGainRawRequestBody)) shouldBe
           List(RuleLossesGreaterThanGainError.copy(paths = Some(List("/disposals/0/lossesFromPreviousYear"))))
+      }
+      "both loss from previous year and loss from this year are greater than gain" in new Test {
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, lossFromPreviousYearAndThisYearGreaterThanGainRawRequestBody)) shouldBe
+          List(RuleLossesGreaterThanGainError.copy(paths = Some(List("/disposals/0/lossesFromThisYear","/disposals/0/lossesFromPreviousYear"))))
       }
     }
 

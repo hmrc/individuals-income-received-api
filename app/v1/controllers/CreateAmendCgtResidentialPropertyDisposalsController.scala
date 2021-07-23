@@ -95,9 +95,9 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
            CustomMtdError(DateFormatError.code) |
            CustomMtdError(CustomerRefFormatError.code) |
            CustomMtdError(RuleCompletionDateBeforeDisposalDateError.code) |
-           CustomMtdError(RuleAcquisitionDateBeforeDisposalDateError.code) |
+           CustomMtdError(RuleAcquisitionDateAfterDisposalDateError.code) |
            CustomMtdError(RuleLossesGreaterThanGainError.code) |
-           CustomMtdError(RuleCompleationDateError.code) |
+           CustomMtdError(RuleCompletionDateError.code) |
            CustomMtdError(RuleDisposalDateError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
