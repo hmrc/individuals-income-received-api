@@ -19,20 +19,20 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{CreateAmendCgtResidentialPropertyDisposalsConnector, DesOutcome}
-import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
+import v1.connectors.{CreateAmendNonPayeEmploymentIncomeConnector, DesOutcome}
+import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateCgtResidentialPropertyDisposalsConnector extends MockFactory {
+trait MockCreateAmendNonPayeEmploymentIncomeConnector extends MockFactory {
 
-  val mockCreateCgtResidentialPropertyDisposalsConnector: CreateAmendCgtResidentialPropertyDisposalsConnector = mock[CreateAmendCgtResidentialPropertyDisposalsConnector]
+  val mockCreateAmendNonPayeEmploymentIncomeConnector: CreateAmendNonPayeEmploymentIncomeConnector = mock[CreateAmendNonPayeEmploymentIncomeConnector]
 
-  object MockCreateAmendCgtResidentialPropertyDisposalsConnector {
+  object MockCreateAmendNonPayeEmploymentIncomeConnector {
 
-    def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (mockCreateCgtResidentialPropertyDisposalsConnector
-        .createAndAmend(_: CreateAmendCgtResidentialPropertyDisposalsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def createAndAmend(request: CreateAmendNonPayeEmploymentIncomeRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (mockCreateAmendNonPayeEmploymentIncomeConnector
+        .createAndAmend(_: CreateAmendNonPayeEmploymentIncomeRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
   }

@@ -17,43 +17,43 @@
 package v1.services
 
 import v1.controllers.EndpointLogContext
-import v1.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture.requestBodyModel
-import v1.mocks.connectors.MockCreateAmendCgtResidentialPropertyDisposalsConnector
+import v1.fixtures.nonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeServiceConnectorFixture.requestBodyModel
+import v1.mocks.connectors.MockCreateAmendNonPayeEmploymentIncomeConnector
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
+import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRequest
 
 import scala.concurrent.Future
 
-class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec {
+class CreateAmendNonPayeEmploymentIncomeServiceSpec extends ServiceSpec {
 
   private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
-  val createAmendCgtResidentialPropertyDisposalsRequest: CreateAmendCgtResidentialPropertyDisposalsRequest = CreateAmendCgtResidentialPropertyDisposalsRequest(
+  val createAmendNonPayeEmploymentIncomeRequest: CreateAmendNonPayeEmploymentIncomeRequest = CreateAmendNonPayeEmploymentIncomeRequest(
     nino = Nino(nino),
     taxYear = taxYear,
     body = requestBodyModel
   )
 
-  trait Test extends MockCreateAmendCgtResidentialPropertyDisposalsConnector {
+  trait Test extends MockCreateAmendNonPayeEmploymentIncomeConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "amend")
 
-    val service: CreateAmendCgtResidentialPropertyDisposalsService = new CreateAmendCgtResidentialPropertyDisposalsService(
-      connector = mockCreateAmendCgtResidentialPropertyDisposalsConnector
+    val service: CreateAmendNonPayeEmploymentIncomeService = new CreateAmendNonPayeEmploymentIncomeService(
+      connector = mockCreateAmendNonPayeEmploymentIncomeConnector
     )
   }
 
-  "CreateAmendCgtResidentialPropertyDisposalsService" when {
+  "CreateAmendNonPayeEmploymentIncomeService" when {
     "createAndAmend" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
+        MockCreateAmendNonPayeEmploymentIncomeConnector.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)
           .returns(Future.successful(outcome))
 
-        await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe outcome
+        await(service.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -61,19 +61,19 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector" in new Test {
 
-            MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
+            MockCreateAmendNonPayeEmploymentIncomeConnector.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
 
-            MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
+            MockCreateAmendNonPayeEmploymentIncomeConnector.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
 
-            await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(
@@ -81,8 +81,8 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", DownstreamError),
           ("INVALID_PAYLOAD", DownstreamError),
-          ("INVALID_DISPOSAL_DATE", DownstreamError),
-          ("INVALID_COMPLETION_DATE", DownstreamError),
+          ("NO_DATA_FOUND", DownstreamError),
+          ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )
