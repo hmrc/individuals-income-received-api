@@ -44,8 +44,8 @@ object DecimalValueValidation extends ValueFormatErrorMessages {
                path: String,
                message: String = ZERO_MINIMUM_INCLUSIVE): List[MtdError] = {
 
-    val scaleCheck = !(amount.scale > maxScale)
-    val rangeCheck = !(amount > maxValue || amount < minValue)
+    val scaleCheck = checkAmountScale(amount = amount, maxScale = maxScale)
+    val rangeCheck = checkAmountRange(amount = amount, minValue = minValue, maxValue = maxValue)
 
     if (rangeCheck && scaleCheck) NoValidationErrors else List(
       ValueFormatError.copy(

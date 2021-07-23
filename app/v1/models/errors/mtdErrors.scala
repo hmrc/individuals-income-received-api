@@ -62,6 +62,8 @@ object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The p
 object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
+object TipsFormatError                  extends MtdError("FORMAT_TIPS", "The value must be between 0.00 and 99999999999.99")
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
   extends MtdError(

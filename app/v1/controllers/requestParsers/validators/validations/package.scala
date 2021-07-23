@@ -41,6 +41,9 @@ package object validations {
     (fromDate, toDate)
   }
 
+  def checkAmountScale(amount: BigDecimal, maxScale: Int): Boolean = !(amount.scale > maxScale)
+  def checkAmountRange(amount: BigDecimal, minValue: BigDecimal, maxValue: BigDecimal): Boolean = !(amount > maxValue || amount < minValue)
+
   val yearFormat: DateTimeFormatter =
     new DateTimeFormatterBuilder()
       .appendPattern("yyyy")
