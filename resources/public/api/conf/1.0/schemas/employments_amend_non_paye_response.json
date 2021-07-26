@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create And Amend Non-PAYE Employment Response",
+  "description": "Create And Amend Non-PAYE Employment Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "employments_definitions.json#/definitions/linksForAddAmendNonPaye"}
+  }
+}
