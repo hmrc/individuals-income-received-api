@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create and Amend None-PAYE employment income Request",
+  "description": "Create and Amend None-PAYE employment income Request",
+  "type": "object",
+  "properties": {
+    "tips": {
+      "type": "number",
+      "description": "The total amount of tips received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1024.99",
+      "minimum": 0,
+      "maximum": 99999999999.99,
+      "multipleOf": 0.01
+    }
+  }
+}

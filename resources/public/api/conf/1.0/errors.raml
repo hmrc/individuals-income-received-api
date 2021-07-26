@@ -147,6 +147,17 @@ traits:
                 description: 'The format of the supplied country code is not valid.'
                 value:
                   code: FORMAT_COUNTRY_CODE
+  formatTips:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatTips:
+                description: "The format of the supplied tips value is invalid."
+                value:
+                  code: FORMAT_TIPS
   ruleCountryCode:
     responses:
       400:
