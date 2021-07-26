@@ -1,19 +1,3 @@
 {
-  "links":[
-    {
-      "href":"/individuals/income-received/employments/non-paye/{nino}/{taxYear}",
-      "rel":"create-and-amend-non-paye-employment-income",
-      "method":"PUT"
-    },
-    {
-      "href":"/individuals/income-received/employments/non-paye/{nino}/{taxYear}",
-      "rel":"self",
-      "method":"GET"
-    },
-    {
-      "href":"/individuals/income-received/employments/non-paye/{nino}/{taxYear}",
-      "rel":"delete-non-paye-employment-income",
-      "method":"DELETE"
-    }
-  ]
+  "tips": 99.99
 }

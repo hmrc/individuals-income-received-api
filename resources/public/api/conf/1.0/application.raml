@@ -56,6 +56,15 @@ uses:
             put: !include endpoints/employments/financialDetails/amend.raml
             delete: !include endpoints/employments/financialDetails/delete.raml
             get: !include endpoints/employments/financialDetails/retrieve.raml
+    /non-paye:
+      (annotations.group):
+        name: Non-PAYE Employment Income
+        description: Resources relating to an individual's Non-PAYE employment income
+      /{nino}:
+        /{taxYear}:
+          uriParameters:
+            taxYear: !include pathParameters/taxYearMinimum2021.raml
+          put: !include endpoints/nonPayeEmployments/createAmend.raml
     /other:
       (annotations.group):
         name: Other Employment Income
