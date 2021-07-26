@@ -622,7 +622,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

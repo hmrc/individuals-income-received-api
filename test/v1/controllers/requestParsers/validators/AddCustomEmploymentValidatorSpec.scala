@@ -112,7 +112,7 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
     val validator = new AddCustomEmploymentValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

@@ -17,14 +17,16 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
+import utils.CurrentDateTime
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors._
-import v1.models.request.createAmendNonPayeEmploymentIncome._
+import v1.models.request.createAmendNonPayeEmployment._
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 
 @Singleton
-class CreateAmendNonPayeEmploymentIncomeValidator @Inject()(appConfig: AppConfig) extends Validator[CreateAmendNonPayeEmploymentIncomeRawData] {
+class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[CreateAmendNonPayeEmploymentRawData] {
   private val validationSet = List(
     parameterFormatValidation,
     parameterRuleValidation,
@@ -32,31 +34,32 @@ class CreateAmendNonPayeEmploymentIncomeValidator @Inject()(appConfig: AppConfig
     bodyValueValidator
   )
 
-  override def validate(data: CreateAmendNonPayeEmploymentIncomeRawData): List[MtdError] = {
+  override def validate(data: CreateAmendNonPayeEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: CreateAmendNonPayeEmploymentIncomeRawData => List[List[MtdError]] = data => {
+  private def parameterFormatValidation: CreateAmendNonPayeEmploymentRawData => List[List[MtdError]] = data => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: CreateAmendNonPayeEmploymentIncomeRawData => List[List[MtdError]] = data => {
+  private def parameterRuleValidation: CreateAmendNonPayeEmploymentRawData => List[List[MtdError]] = data => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
-  private def bodyFormatValidator: CreateAmendNonPayeEmploymentIncomeRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: CreateAmendNonPayeEmploymentRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[CreateAmendNonPayeEmploymentIncomeRequestBody](data.body.json)
+      JsonFormatValidation.validate[CreateAmendNonPayeEmploymentRequestBody](data.body.json)
     )
   }
 
-  private def bodyValueValidator: CreateAmendNonPayeEmploymentIncomeRawData => List[List[MtdError]] = { data =>
-    val requestBody = data.body.json.as[CreateAmendNonPayeEmploymentIncomeRequestBody]
+  private def bodyValueValidator: CreateAmendNonPayeEmploymentRawData => List[List[MtdError]] = { data =>
+    val requestBody = data.body.json.as[CreateAmendNonPayeEmploymentRequestBody]
 
     List(
       TipsValidation.validate(amount = requestBody.tips)

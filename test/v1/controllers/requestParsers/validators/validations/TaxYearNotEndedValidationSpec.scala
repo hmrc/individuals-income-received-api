@@ -31,7 +31,7 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     def setupTimeProvider(date: String): CallHandler[DateTime] =
-      MockCurrentDateTime.getCurrentDate
+      MockCurrentDateTime.getDateTime
         .returns(DateTime.parse(date, dateTimeFormatter))
   }
 

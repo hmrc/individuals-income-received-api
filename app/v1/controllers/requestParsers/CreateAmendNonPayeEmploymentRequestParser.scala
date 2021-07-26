@@ -16,16 +16,16 @@
 
 package v1.controllers.requestParsers
 
-import v1.controllers.requestParsers.validators.CreateAmendNonPayeEmploymentIncomeValidator
+import v1.controllers.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
 import v1.models.domain.Nino
-import v1.models.request.createAmendNonPayeEmploymentIncome._
+import v1.models.request.createAmendNonPayeEmployment._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendNonPayeEmploymentIncomeRequestParser @Inject()(val validator: CreateAmendNonPayeEmploymentIncomeValidator)
-    extends RequestParser[CreateAmendNonPayeEmploymentIncomeRawData, CreateAmendNonPayeEmploymentIncomeRequest] {
+class CreateAmendNonPayeEmploymentRequestParser @Inject()(val validator: CreateAmendNonPayeEmploymentValidator)
+    extends RequestParser[CreateAmendNonPayeEmploymentRawData, CreateAmendNonPayeEmploymentRequest] {
 
-  override protected def requestFor(data: CreateAmendNonPayeEmploymentIncomeRawData): CreateAmendNonPayeEmploymentIncomeRequest =
-    CreateAmendNonPayeEmploymentIncomeRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendNonPayeEmploymentIncomeRequestBody])
+  override protected def requestFor(data: CreateAmendNonPayeEmploymentRawData): CreateAmendNonPayeEmploymentRequest =
+    CreateAmendNonPayeEmploymentRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendNonPayeEmploymentRequestBody])
 }

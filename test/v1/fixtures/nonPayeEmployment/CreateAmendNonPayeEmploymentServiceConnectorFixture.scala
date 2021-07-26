@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.request.createAmendNonPayeEmploymentIncome
+package v1.fixtures.nonPayeEmployment
 
-import play.api.mvc.AnyContentAsJson
-import v1.models.request.RawData
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequestBody
 
-case class CreateAmendNonPayeEmploymentIncomeRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+object CreateAmendNonPayeEmploymentServiceConnectorFixture {
+
+  val requestBodyModel: CreateAmendNonPayeEmploymentRequestBody =
+    CreateAmendNonPayeEmploymentRequestBody(tips = 100.23)
+}

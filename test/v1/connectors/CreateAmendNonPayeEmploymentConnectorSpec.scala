@@ -18,20 +18,20 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.nonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeServiceConnectorFixture._
+import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture._
 import v1.mocks.MockHttpClient
 import v1.models.domain.Nino
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createAmendNonPayeEmploymentIncome._
+import v1.models.request.createAmendNonPayeEmployment._
 
 import scala.concurrent.Future
 
-class CreateAmendNonPayeEmploymentIncomeConnectorSpec extends ConnectorSpec {
+class CreateAmendNonPayeEmploymentConnectorSpec extends ConnectorSpec {
 
   private val nino: String = "AA111111A"
   private val taxYear: String = "2019-20"
 
-  private val createAmendNonPayeEmploymentIncomeRequest = CreateAmendNonPayeEmploymentIncomeRequest(
+  private val request = CreateAmendNonPayeEmploymentRequest(
     nino = Nino(nino),
     taxYear = taxYear,
     body = requestBodyModel
@@ -39,7 +39,7 @@ class CreateAmendNonPayeEmploymentIncomeConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: CreateAmendNonPayeEmploymentIncomeConnector = new CreateAmendNonPayeEmploymentIncomeConnector(
+    val connector: CreateAmendNonPayeEmploymentConnector = new CreateAmendNonPayeEmploymentConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -66,7 +66,7 @@ class CreateAmendNonPayeEmploymentIncomeConnectorSpec extends ConnectorSpec {
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 
-        await(connector.createAndAmend(createAmendNonPayeEmploymentIncomeRequest)) shouldBe outcome
+        await(connector.createAndAmend(request)) shouldBe outcome
       }
     }
   }

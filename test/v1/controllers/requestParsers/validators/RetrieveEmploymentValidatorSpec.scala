@@ -41,7 +41,7 @@ class RetrieveEmploymentValidatorSpec extends UnitSpec {
 
     val validator = new RetrieveEmploymentValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

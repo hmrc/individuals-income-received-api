@@ -153,4 +153,14 @@ trait AmendHateoasBody extends HateoasLinks {
 
     Json.obj("links" -> links)
   }
+
+  def amendNonPayeEmploymentHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+    val links = Seq(
+      createAmendNonPayeEmployment(appConfig, nino, taxYear),
+      retrieveNonPayeEmployment(appConfig, nino, taxYear),
+      deleteNonPayeEmployment(appConfig, nino, taxYear)
+    )
+
+    Json.obj("links" -> links)
+  }
 }

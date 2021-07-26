@@ -40,17 +40,17 @@ case class VersionRoutingMapImpl @Inject()(appConfig: AppConfig,
                                            defaultRouter: Router,
                                            v1Router: v1.Routes,
                                            v1RouterWithForeign: v1WithForeign.Routes,
-                                           v1RouterWithCgt: v1WithCgt.Routes,
+                                           v1RouterWithRelease6: v1WithRelease6.Routes,
                                            v1RouterWithAll: v1WithAll.Routes) extends VersionRoutingMap {
 
   val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
 
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
-      (featureSwitch.isForeignRoutingEnabled, featureSwitch.isCgtRoutingEnabled) match {
+      (featureSwitch.isForeignRoutingEnabled, featureSwitch.isRelease6RoutingEnabled) match {
         case (true, true) => v1RouterWithAll
         case (true, false) => v1RouterWithForeign
-        case (false, true) => v1RouterWithCgt
+        case (false, true) => v1RouterWithRelease6
         case (false, false) => v1Router
       }
     }

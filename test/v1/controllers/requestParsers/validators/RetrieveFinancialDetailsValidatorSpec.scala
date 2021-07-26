@@ -43,7 +43,7 @@ class RetrieveFinancialDetailsValidatorSpec extends UnitSpec {
 
     val validator = new RetrieveFinancialDetailsValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

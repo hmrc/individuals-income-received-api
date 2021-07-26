@@ -21,6 +21,7 @@ import v1.models.hateoas.Link
 import v1.models.hateoas.Method._
 import v1.models.hateoas.RelType._
 
+//noinspection ScalaStyle
 trait HateoasLinks {
 
   private def savingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
@@ -55,6 +56,9 @@ trait HateoasLinks {
 
   private def cgtPpdOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear/ppd"
+
+  private def nonPayeEmploymentUri(appConfig: AppConfig, nino: String, taxYear: String) =
+    s"/${appConfig.apiGatewayContext}/employments/non-paye/$nino/$taxYear"
 
   private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
@@ -345,5 +349,27 @@ trait HateoasLinks {
       href = cgtPpdOverridesUri(appConfig, nino,taxYear),
       method = DELETE,
       rel = DELETE_CGT_PPD_OVERRIDES
+    )
+
+  // Non-PAYE Employment Income
+  def retrieveNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = nonPayeEmploymentUri(appConfig, nino,taxYear),
+      method = GET,
+      rel = SELF
+    )
+
+  def createAmendNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = nonPayeEmploymentUri(appConfig, nino,taxYear),
+      method = PUT,
+      rel = CREATE_AND_AMEND_NON_PAYE_EMPLOYMENT
+    )
+
+  def deleteNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = nonPayeEmploymentUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_NON_PAYE_EMPLOYMENT
     )
 }

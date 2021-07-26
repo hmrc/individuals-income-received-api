@@ -18,20 +18,20 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.CreateAmendNonPayeEmploymentIncomeValidator
+import v1.controllers.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
 import v1.models.errors.MtdError
-import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRawData
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 
-trait MockCreateAmendNonPayeEmploymentIncomeValidator extends MockFactory {
+trait MockCreateAmendNonPayeEmploymentValidator extends MockFactory {
 
-  val mockCreateAmendNonPayeEmploymentIncomeValidator: CreateAmendNonPayeEmploymentIncomeValidator =
-    mock[CreateAmendNonPayeEmploymentIncomeValidator]
+  val mockValidator: CreateAmendNonPayeEmploymentValidator =
+    mock[CreateAmendNonPayeEmploymentValidator]
 
-  object MockCreateAmendNonPayeEmploymentIncomeValidator {
+  object MockCreateAmendNonPayeEmploymentValidator {
 
-    def validate(data: CreateAmendNonPayeEmploymentIncomeRawData): CallHandler1[CreateAmendNonPayeEmploymentIncomeRawData, List[MtdError]] = {
-      (mockCreateAmendNonPayeEmploymentIncomeValidator
-        .validate(_: CreateAmendNonPayeEmploymentIncomeRawData))
+    def validate(data: CreateAmendNonPayeEmploymentRawData): CallHandler1[CreateAmendNonPayeEmploymentRawData, List[MtdError]] = {
+      (mockValidator
+        .validate(_: CreateAmendNonPayeEmploymentRawData))
         .expects(data)
     }
   }

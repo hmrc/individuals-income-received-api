@@ -14,12 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.createAmendNonPayeEmploymentIncome
+package v1.models.request.createAmendNonPayeEmployment
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.mvc.AnyContentAsJson
+import v1.models.request.RawData
 
-case class CreateAmendNonPayeEmploymentIncomeRequestBody(tips: BigDecimal)
-
-object CreateAmendNonPayeEmploymentIncomeRequestBody {
-  implicit val format: OFormat[CreateAmendNonPayeEmploymentIncomeRequestBody] = Json.format[CreateAmendNonPayeEmploymentIncomeRequestBody]
-}
+case class CreateAmendNonPayeEmploymentRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
