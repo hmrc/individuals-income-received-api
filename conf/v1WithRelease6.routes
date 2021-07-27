@@ -1,5 +1,6 @@
 # Non-PAYE endpoints
 PUT           /employments/non-paye/:nino/:taxYear                               v1.controllers.CreateAmendNonPayeEmploymentController.createAmendNonPayeEmployment(nino: String, taxYear: String)
+GET           /employments/non-paye/:nino/:taxYear                               v1.controllers.RetrieveNonPayeEmploymentController.retrieveNonPayeEmployment(nino: String, taxYear: String, source: Option[String])
 
 # Additional Income endpoints
 PUT           /savings/:nino/:taxYear                                            v1.controllers.AmendSavingsController.amendSaving(nino: String, taxYear: String)
