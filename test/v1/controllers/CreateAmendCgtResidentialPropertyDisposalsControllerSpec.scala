@@ -44,7 +44,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
   with MockIdGenerator {
 
   val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val taxYear: String = "2020-21"
   val correlationId: String = "X-123"
 
   val validRequestJson: JsValue = Json.parse(
@@ -53,10 +53,10 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
       |   "disposals":[
       |      {
       |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "2021-05-07",
-      |         "completionDate": "2021-05-07",
+      |         "disposalDate": "2021-03-24",
+      |         "completionDate": "2021-03-26",
       |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "2021-05-07",
+      |         "acquisitionDate": "2021-03-22",
       |         "acquisitionAmount": 1999.99,
       |         "improvementCosts": 1999.99,
       |         "additionalCosts": 1999.99,
@@ -82,10 +82,10 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
     disposals = Seq(
       Disposal(
         customerReference = Some("CGTDISPOSAL01"),
-        disposalDate = "2021-05-07",
-        completionDate = "2021-05-07",
+        disposalDate = "2021-03-24",
+        completionDate = "2021-03-26",
         disposalProceeds = 1999.99,
-        acquisitionDate = "2021-05-07",
+        acquisitionDate = "2021-03-22",
         acquisitionAmount = 1999.99,
         improvementCosts = Some(1999.99),
         additionalCosts = Some(1999.99),
@@ -157,7 +157,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
           .returns(Right(requestData))
 
         MockCreateAmendCgtResidentialPropertyDisposalsService
-          .createAmend(requestData)
+          .createAndAmend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
 
         val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
@@ -215,7 +215,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
               .returns(Right(requestData))
 
             MockCreateAmendCgtResidentialPropertyDisposalsService
-              .createAmend(requestData)
+              .createAndAmend(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
