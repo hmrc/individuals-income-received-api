@@ -142,4 +142,15 @@ trait AmendHateoasBody extends HateoasLinks {
 
     Json.obj("links" -> links)
   }
+
+  def amendCgtResidentialPropertyDisposalsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
+
+    val links = Seq(
+      createAmendNonPpdCgt(appConfig, nino, taxYear),
+      retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear),
+      deleteNonPpdCgt(appConfig, nino, taxYear)
+    )
+
+    Json.obj("links" -> links)
+  }
 }

@@ -347,4 +347,3 @@ trait HateoasLinks {
       rel = DELETE_CGT_PPD_OVERRIDES
     )
 }
-

@@ -199,16 +199,20 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
 
   private def validateLossOrGains(disposal: Disposal, index: Int): List[MtdError] = {
     List(
-      if(disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors,
-      ValueGreaterThanValueValidation.validateOptional(
-        valueWhichShouldBeLowerOrEqualO = disposal.lossesFromThisYear,
-        valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
-        path = s"/disposals/$index/lossesFromThisYear"
-      ),
-      ValueGreaterThanValueValidation.validateOptional(
-        valueWhichShouldBeLowerOrEqualO = disposal.lossesFromPreviousYear,
-        valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
-        path = s"/disposals/$index/lossesFromPreviousYear"
+      Validator.flattenErrors(
+        List(
+          if (disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors,
+          ValueGreaterThanValueValidation.validateOptional(
+            valueWhichShouldBeLowerOrEqualO = disposal.lossesFromThisYear,
+            valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
+            path = s"/disposals/$index/lossesFromThisYear"
+          ),
+          ValueGreaterThanValueValidation.validateOptional(
+            valueWhichShouldBeLowerOrEqualO = disposal.lossesFromPreviousYear,
+            valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
+            path = s"/disposals/$index/lossesFromPreviousYear"
+          )
+        )
       )
     ).flatten
   }
