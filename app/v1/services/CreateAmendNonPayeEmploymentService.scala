@@ -52,7 +52,7 @@ class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPay
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,
       "INVALID_CORRELATIONID"           -> DownstreamError,
       "INVALID_PAYLOAD"                 -> DownstreamError,
-      "NO_DATA_FOUND"                   -> DownstreamError,
+      "NO_DATA_FOUND"                   -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "SERVER_ERROR"                    -> DownstreamError,
       "SERVICE_UNAVAILABLE"             -> DownstreamError
