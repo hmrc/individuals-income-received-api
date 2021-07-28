@@ -41,7 +41,7 @@ class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
     val validator = new RetrieveAllResidentialPropertyCgtValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

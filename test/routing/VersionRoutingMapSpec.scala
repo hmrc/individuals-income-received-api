@@ -29,19 +29,19 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
   val defaultRouter: Router = mock[Router]
   val v1Routes: v1.Routes = app.injector.instanceOf[v1.Routes]
   val v1WithAllRoutes: v1WithAll.Routes = app.injector.instanceOf[v1WithAll.Routes]
-  val v1WithCgtRoutes: v1WithCgt.Routes = app.injector.instanceOf[v1WithCgt.Routes]
+  val v1WithRelease6Routes: v1WithRelease6.Routes = app.injector.instanceOf[v1WithRelease6.Routes]
   val v1WithForeignRoutes: v1WithForeign.Routes = app.injector.instanceOf[v1WithForeign.Routes]
 
   "map" when {
     "routing to v1" when {
-      def test(isForeignEnabled: Boolean, isCgtEnabled: Boolean, routes: Any): Unit = {
+      def test(isForeignEnabled: Boolean, isRelease6Enabled: Boolean, routes: Any): Unit = {
 
-        s"foreign feature switch is set to - $isForeignEnabled, and, cgt feature switch is set to - $isCgtEnabled" should {
+        s"foreign feature switch is set to - $isForeignEnabled, and, release 6 feature switch is set to - $isRelease6Enabled" should {
           s"route to ${routes.toString}" in {
 
             MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
               |foreign-endpoints.enabled = $isForeignEnabled,
-              |cgt-endpoints.enabled = $isCgtEnabled
+              |release-6.enabled = $isRelease6Enabled
               |""".stripMargin))))
 
             val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(
@@ -49,7 +49,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
               defaultRouter = defaultRouter,
               v1Router = v1Routes,
               v1RouterWithForeign = v1WithForeignRoutes,
-              v1RouterWithCgt = v1WithCgtRoutes,
+              v1RouterWithRelease6 = v1WithRelease6Routes,
               v1RouterWithAll = v1WithAllRoutes
             )
 
@@ -61,7 +61,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       Seq(
         (true, true,  v1WithAllRoutes),
         (true, false, v1WithForeignRoutes),
-        (false, true, v1WithCgtRoutes),
+        (false, true, v1WithRelease6Routes),
         (false, false, v1Routes),
       ).foreach(args => (test _).tupled(args))
     }

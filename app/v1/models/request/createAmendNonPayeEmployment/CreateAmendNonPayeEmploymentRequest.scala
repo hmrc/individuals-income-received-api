@@ -14,26 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.createAmendNonPayeEmploymentIncome
+package v1.models.request.createAmendNonPayeEmployment
 
-import play.api.libs.json.Json
-import support.UnitSpec
+import v1.models.domain.Nino
 
-class CreateAmendNonPayeEmploymentIncomeRequestBodySpec extends UnitSpec {
-
-  private val json = Json.obj("tips" -> 1000.12)
-
-  private val model = CreateAmendNonPayeEmploymentIncomeRequestBody(1000.12)
-
-  "reads" should {
-    "turn JSON into a model" in {
-      json.as[CreateAmendNonPayeEmploymentIncomeRequestBody] shouldBe model
-    }
-  }
-
-  "writes" should {
-    "turn a model into JSON" in {
-      Json.toJson(model) shouldBe json
-    }
-  }
-}
+case class CreateAmendNonPayeEmploymentRequest(nino: Nino, taxYear: String, body: CreateAmendNonPayeEmploymentRequestBody)

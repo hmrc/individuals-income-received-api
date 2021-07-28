@@ -386,7 +386,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
-    "return a 204 status code" when {
+    "return a 200 status code" when {
       "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {

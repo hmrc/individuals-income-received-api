@@ -41,7 +41,7 @@ class DeleteCustomEmploymentValidatorSpec extends UnitSpec {
 
     val validator = new DeleteCustomEmploymentValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

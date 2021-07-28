@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.fixtures.nonPayeEmploymentIncome
+package v1.models.request.createAmendNonPayeEmployment
 
-import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRequestBody
+import play.api.libs.json.{Json, OFormat}
 
-object CreateAmendNonPayeEmploymentIncomeServiceConnectorFixture {
+case class CreateAmendNonPayeEmploymentRequestBody(tips: BigDecimal)
 
-  val requestBodyModel: CreateAmendNonPayeEmploymentIncomeRequestBody =
-    CreateAmendNonPayeEmploymentIncomeRequestBody(tips = 100.23)
+object CreateAmendNonPayeEmploymentRequestBody {
+  implicit val format: OFormat[CreateAmendNonPayeEmploymentRequestBody] = Json.format[CreateAmendNonPayeEmploymentRequestBody]
 }

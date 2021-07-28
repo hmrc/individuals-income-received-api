@@ -18,13 +18,17 @@ package v1.controllers.requestParsers.validators
 
 import config.AppConfig
 import mocks.MockAppConfig
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import utils.CurrentDateTime
+import v1.mocks.MockCurrentDateTime
 import v1.models.errors._
-import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRawData
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 
-class CreateAmendNonPayeEmploymentIncomeValidatorSpec extends UnitSpec with MockAppConfig {
+class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
     val validNino    = "AA123456A"
@@ -65,11 +69,17 @@ class CreateAmendNonPayeEmploymentIncomeValidatorSpec extends UnitSpec with Mock
 
   import Data._
 
-  class Test extends MockAppConfig {
+  class Test extends MockAppConfig with MockCurrentDateTime {
 
     implicit val appConfig: AppConfig = mockAppConfig
+    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    val validator = new CreateAmendNonPayeEmploymentIncomeValidator(appConfig)
+    val validator = new CreateAmendNonPayeEmploymentValidator()
+
+    MockCurrentDateTime.getDateTime
+      .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
+      .anyNumberOfTimes()
 
     private val MINIMUM_YEAR = 2020
     MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR
@@ -78,46 +88,53 @@ class CreateAmendNonPayeEmploymentIncomeValidatorSpec extends UnitSpec with Mock
   "running validation" should {
     "return no errors" when {
       "passed a valid raw request model" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "passed an invalid nino" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "passed an invalid taxYear" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, "201920", validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, "201920", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, "2017-18", validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, "2017-18", validRawRequestBody)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, "2019-23", validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, "2019-23", validRawRequestBody)) shouldBe
           List(RuleTaxYearRangeInvalidError)
+      }
+    }
+
+    "return RuleTaxYearNotEnded error" when {
+      "a tax year in the current year is supplied" in new Test {
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, "2021-22", validRawRequestBody)) shouldBe
+          List(RuleTaxYearNotEndedError)
       }
     }
 
     "return RuleIncorrectOrEmptyBodyError error" when {
       "an empty JSON body is submitted" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
       "a non-empty JSON body is submitted without any expected fields" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(
             RuleIncorrectOrEmptyBodyError.copy(
               paths = Some(Seq("/tips"))
@@ -125,7 +142,7 @@ class CreateAmendNonPayeEmploymentIncomeValidatorSpec extends UnitSpec with Mock
       }
 
       "the submitted request body is not in the correct format" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
           List(
             RuleIncorrectOrEmptyBodyError.copy(
               paths = Some(Seq(
@@ -137,7 +154,7 @@ class CreateAmendNonPayeEmploymentIncomeValidatorSpec extends UnitSpec with Mock
 
     "return TipsFormatError" when {
       "passed invalid tips" in new Test {
-        validator.validate(CreateAmendNonPayeEmploymentIncomeRawData(validNino, validTaxYear, invalidTipsRawRequestBody)) shouldBe
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, validTaxYear, invalidTipsRawRequestBody)) shouldBe
           List(TipsFormatError)
       }
     }

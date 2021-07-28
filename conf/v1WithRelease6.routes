@@ -10,10 +10,6 @@ PUT           /insurance-policies/:nino/:taxYear                                
 DELETE        /insurance-policies/:nino/:taxYear                                 v1.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
 GET           /insurance-policies/:nino/:taxYear                                 v1.controllers.RetrieveInsurancePoliciesController.retrieveInsurancePolicies(nino: String, taxYear: String)
 
-PUT           /foreign/:nino/:taxYear                                            v1.controllers.AmendForeignController.amendForeign(nino: String, taxYear: String)
-DELETE        /foreign/:nino/:taxYear                                            v1.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
-GET           /foreign/:nino/:taxYear                                            v1.controllers.RetrieveForeignController.retrieveForeign(nino: String, taxYear: String)
-
 PUT           /pensions/:nino/:taxYear                                           v1.controllers.AmendPensionsController.amendPensions(nino: String, taxYear: String)
 DELETE        /pensions/:nino/:taxYear                                           v1.controllers.DeletePensionsController.deletePensions(nino: String, taxYear: String)
 GET           /pensions/:nino/:taxYear                                           v1.controllers.RetrievePensionsController.retrievePensions(nino: String, taxYear: String)

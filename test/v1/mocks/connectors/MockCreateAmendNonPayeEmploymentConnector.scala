@@ -19,20 +19,20 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{CreateAmendNonPayeEmploymentIncomeConnector, DesOutcome}
-import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRequest
+import v1.connectors.{CreateAmendNonPayeEmploymentConnector, DesOutcome}
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendNonPayeEmploymentIncomeConnector extends MockFactory {
+trait MockCreateAmendNonPayeEmploymentConnector extends MockFactory {
 
-  val mockCreateAmendNonPayeEmploymentIncomeConnector: CreateAmendNonPayeEmploymentIncomeConnector = mock[CreateAmendNonPayeEmploymentIncomeConnector]
+  val mockConnector: CreateAmendNonPayeEmploymentConnector = mock[CreateAmendNonPayeEmploymentConnector]
 
-  object MockCreateAmendNonPayeEmploymentIncomeConnector {
+  object MockCreateAmendNonPayeEmploymentConnector {
 
-    def createAndAmend(request: CreateAmendNonPayeEmploymentIncomeRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (mockCreateAmendNonPayeEmploymentIncomeConnector
-        .createAndAmend(_: CreateAmendNonPayeEmploymentIncomeRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def createAndAmend(request: CreateAmendNonPayeEmploymentRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (mockConnector
+        .createAndAmend(_: CreateAmendNonPayeEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
   }

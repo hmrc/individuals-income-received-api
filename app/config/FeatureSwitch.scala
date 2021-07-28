@@ -50,8 +50,8 @@ case class FeatureSwitch(value: Option[Configuration]) {
     case None => true
   }
 
-  def isCgtRoutingEnabled: Boolean = value match {
-    case Some(config) => config.getOptional[Boolean] ("cgt-endpoints.enabled").getOrElse(true)
+  def isRelease6RoutingEnabled: Boolean = value match {
+    case Some(config) => config.getOptional[Boolean] ("release-6.enabled").getOrElse(true)
     case None => true
   }
 }

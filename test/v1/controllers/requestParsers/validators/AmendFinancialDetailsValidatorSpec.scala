@@ -196,7 +196,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
     val validator = new AmendFinancialDetailsValidator()
 
-    MockCurrentDateTime.getCurrentDate
+    MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 

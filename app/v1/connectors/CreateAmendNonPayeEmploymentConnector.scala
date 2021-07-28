@@ -19,15 +19,15 @@ package v1.connectors
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.IfsUri
-import v1.models.request.createAmendNonPayeEmploymentIncome.CreateAmendNonPayeEmploymentIncomeRequest
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendNonPayeEmploymentIncomeConnector @Inject()(val http: HttpClient,
-                                                            val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendNonPayeEmploymentConnector @Inject()(val http: HttpClient,
+                                                      val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAndAmend(request: CreateAmendNonPayeEmploymentIncomeRequest)(
+  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[Unit]] = {
