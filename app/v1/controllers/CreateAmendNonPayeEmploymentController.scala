@@ -94,6 +94,7 @@ class CreateAmendNonPayeEmploymentController @Inject()(val authService: Enrolmen
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
           RuleTaxYearNotEndedError | TipsFormatError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson((errorWrapper)))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
