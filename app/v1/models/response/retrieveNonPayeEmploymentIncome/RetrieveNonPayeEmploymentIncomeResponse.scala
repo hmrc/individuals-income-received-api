@@ -16,16 +16,20 @@
 
 package v1.models.response.retrieveNonPayeEmploymentIncome
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.domain.MtdSourceEnum
+import v1.models.hateoas.{HateoasData, Link}
+
 
 case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: String,
                                                    source: MtdSourceEnum,
                                                    totalNonPayeIncome: Option[BigDecimal],
                                                    nonPayeIncome: Option[NonPayeIncome])
 
-object RetrieveNonPayeEmploymentIncomeResponse {
+object RetrieveNonPayeEmploymentIncomeResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveNonPayeEmploymentIncomeResponse] = (
     (JsPath \ "submittedOn").read[String] and
@@ -35,4 +39,19 @@ object RetrieveNonPayeEmploymentIncomeResponse {
     ) (RetrieveNonPayeEmploymentIncomeResponse.apply _)
   implicit val writes: OWrites[RetrieveNonPayeEmploymentIncomeResponse] = Json.writes[RetrieveNonPayeEmploymentIncomeResponse]
 
+  implicit object RetrieveOtherEmploymentLinksFactory extends
+    HateoasLinksFactory[RetrieveNonPayeEmploymentIncomeResponse, RetrieveNonPayeEmploymentIncomeHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveNonPayeEmploymentIncomeHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        createAmendNonPayeEmployment(appConfig, nino, taxYear),
+        retrieveNonPayeEmployment(appConfig, nino, taxYear),
+        deleteNonPayeEmployment(appConfig, nino, taxYear)
+      )
+    }
+  }
+
 }
+
+
+case class RetrieveNonPayeEmploymentIncomeHateoasData(nino: String, taxYear: String) extends HateoasData
