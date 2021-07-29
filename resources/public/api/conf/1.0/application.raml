@@ -65,6 +65,7 @@ uses:
           uriParameters:
             taxYear: !include pathParameters/taxYearMinimum2021.raml
           put: !include endpoints/nonPayeEmployments/createAmend.raml
+          get: !include endpoints/nonPayeEmployments/retrieve.raml
           delete: !include endpoints/nonPayeEmployments/delete.raml
     /other:
       (annotations.group):
