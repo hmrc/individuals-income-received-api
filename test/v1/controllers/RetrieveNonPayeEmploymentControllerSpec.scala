@@ -19,6 +19,7 @@ package v1.controllers
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.connectors.DownstreamUri.IfsUri
 import v1.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
@@ -86,7 +87,7 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_VIEW" -> SourceFormatError,
+      "INVALID_VIEW" -> DownstreamError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
@@ -120,9 +121,9 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve[RetrieveNonPayeEmploymentIncomeResponse](
-            desErrorMap,
-            s"income-tax/income/employments/non-paye/$nino/$taxYear?view=LATEST")
+          .retrieve(
+            IfsUri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=LATEST"),
+            desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
         MockHateoasFactory
@@ -149,9 +150,9 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
             .returns(Right(requestData))
 
           MockDeleteRetrieveService
-            .retrieve[RetrieveNonPayeEmploymentIncomeResponse](
-              desErrorMap,
-              s"income-tax/income/employments/non-paye/$nino/$taxYear?view=$desSource")
+            .retrieve(
+              IfsUri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=$desSource"),
+              desErrorMap)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
           MockHateoasFactory
@@ -233,7 +234,6 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (SourceFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR),
           (MtdError("OTHER", "other"), INTERNAL_SERVER_ERROR)

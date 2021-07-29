@@ -21,7 +21,6 @@ import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.{Format, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.DownstreamUri
-import v1.connectors.DownstreamUri.DesUri
 import v1.controllers.EndpointLogContext
 import v1.models.errors.{ErrorWrapper, MtdError}
 import v1.models.outcomes.ResponseWrapper
@@ -48,11 +47,11 @@ trait MockDeleteRetrieveService extends MockFactory {
         .expects(downstreamErrorMap, *, *, *, *, *, *)
     }
 
-    def retrieve[Resp: Reads](downstreamErrorMap: Map[String, MtdError], downstreamUri: String):
+    def retrieve[Resp: Reads](downstreamUri: DownstreamUri[Resp], downstreamErrorMap: Map[String, MtdError]):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
       (mockDeleteRetrieveService
         .retrieve[Resp](_: Map[String, MtdError])(_: Format[Resp], _: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DownstreamUri[Resp], _: String))
-        .expects(downstreamErrorMap, *, *, *, *, DownstreamUri.DesUri[Resp](downstreamUri), *)
+        .expects(downstreamErrorMap, *, *, *, *, downstreamUri, *)
     }
   }
 

@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.DownstreamUri.IfsUri
 import v1.controllers.requestParsers.RetrieveNonPayeEmploymentRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.domain.MtdSourceEnum
@@ -65,7 +65,7 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
         source = source
       )
 
-      implicit val desUri: DesUri[RetrieveNonPayeEmploymentIncomeResponse] = DesUri[RetrieveNonPayeEmploymentIncomeResponse](
+      implicit val ifsUri: IfsUri[RetrieveNonPayeEmploymentIncomeResponse] = IfsUri[RetrieveNonPayeEmploymentIncomeResponse](
         s"income-tax/income/employments/non-paye/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
@@ -113,7 +113,7 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_VIEW" -> SourceFormatError,
+      "INVALID_VIEW" -> DownstreamError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
