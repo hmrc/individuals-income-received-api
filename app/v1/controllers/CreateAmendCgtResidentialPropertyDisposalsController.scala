@@ -22,12 +22,14 @@ import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.hateoas.AmendHateoasBody
+import v1.models.audit.{AuditEvent, AuditResponse, CreateAmendCgtResidentialPropertyDisposalsAuditDetail}
 import v1.models.errors._
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
-import v1.services.{CreateAmendCgtResidentialPropertyDisposalsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AuditService, CreateAmendCgtResidentialPropertyDisposalsService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,6 +38,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
                                             appConfig: AppConfig,
                                             requestParser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
                                             service: CreateAmendCgtResidentialPropertyDisposalsService,
+                                            auditService: AuditService,
                                             cc: ControllerComponents,
                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
@@ -68,6 +71,12 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+
+
+          val response = Json.toJson(serviceResponse)
+
+          auditSubmission(CreateAmendCgtResidentialPropertyDisposalsAuditDetail(request.userDetails, nino, taxYear, request.body,
+            serviceResponse.correlationId, AuditResponse(OK, Right(Some(response)))))
 
           Ok(amendCgtResidentialPropertyDisposalsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
@@ -102,5 +111,12 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext) = {
+    val event = AuditEvent("CreateAmendForeignPropertyAnnualSummary", "Create-Amend-Foreign-Property-Annual-Summary", details)
+    auditService.auditEvent(event)
   }
 }
