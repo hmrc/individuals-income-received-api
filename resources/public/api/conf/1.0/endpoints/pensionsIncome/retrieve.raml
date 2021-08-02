@@ -8,7 +8,7 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: Retrieve Pensions Income
-description: "This endpoint allows the developer to retrieve previously populated foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided."
+description: "This endpoint allows the developer to retrieve foreign pensions and overseas pension contributions. A National Insurance number and tax year must be provided."
 (annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
