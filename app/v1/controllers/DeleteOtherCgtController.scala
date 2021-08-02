@@ -22,12 +22,14 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import v1.connectors.DownstreamUri.IfsUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1.models.audit.{AuditEvent, AuditResponse, DeleteOtherCgtAuditDetail}
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
-import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,6 +38,7 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
                                          val lookupService: MtdIdLookupService,
                                          requestParser: DeleteRetrieveRequestParser,
                                          service: DeleteRetrieveService,
+                                         auditService: AuditService,
                                          cc: ControllerComponents,
                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
@@ -72,6 +75,9 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
+          auditSubmission(DeleteOtherCgtAuditDetail(request.userDetails, nino, taxYear,
+            serviceResponse.correlationId, AuditResponse(NO_CONTENT, Right(None))))
+
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -83,6 +89,9 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
+
+        auditSubmission(DeleteOtherCgtAuditDetail(request.userDetails, nino, taxYear,
+          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -96,5 +105,12 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: DeleteOtherCgtAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext) = {
+    val event = AuditEvent("DeleteOtherCgt", "Delete-Other-Cgt", details)
+    auditService.auditEvent(event)
   }
 }

@@ -21,7 +21,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -35,6 +35,7 @@ class DeleteCgtPpdOverridesControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
+    with MockAuditService
     with MockDeleteRetrieveRequestParser
     with MockIdGenerator {
 
@@ -60,6 +61,7 @@ class DeleteCgtPpdOverridesControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteRetrieveRequestParser,
       service = mockDeleteRetrieveService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )

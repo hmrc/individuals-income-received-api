@@ -24,7 +24,7 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
-import v1.mocks.services.{MockCreateAmendCgtResidentialPropertyDisposalsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockCreateAmendCgtResidentialPropertyDisposalsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -38,6 +38,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
   with MockMtdIdLookupService
   with MockAppConfig
   with MockCreateAmendCgtResidentialPropertyDisposalsService
+  with MockAuditService
   with MockHateoasFactory
   with MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
   with HateoasLinks
@@ -138,6 +139,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
       appConfig = mockAppConfig,
       requestParser = mockCreateAmendCgtResidentialPropertyDisposalsRequestParser,
       service = mockCreateAmendCgtResidentialPropertyDisposalsService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )

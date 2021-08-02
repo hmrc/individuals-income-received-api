@@ -24,7 +24,7 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
-import v1.mocks.services.{MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -38,6 +38,7 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockAppConfig
   with MockCreateAmendOtherCgtService
+  with MockAuditService
   with MockHateoasFactory
   with MockCreateAmendOtherCgtRequestParser
   with HateoasLinks
@@ -168,6 +169,7 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
       appConfig = mockAppConfig,
       requestParser = mockCreateAmendOtherCgtRequestParser,
       service = mockCreateAmendOtherCgtService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )

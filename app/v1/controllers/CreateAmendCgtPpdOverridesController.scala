@@ -77,11 +77,8 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
           )
 
 
-
-          val response = Json.toJson(serviceResponse)
-
           auditSubmission(CreateAmendCgtPpdOverridesAuditDetail(request.userDetails, nino, taxYear, request.body,
-            serviceResponse.correlationId, AuditResponse(OK, Right(Some(response)))))
+            serviceResponse.correlationId, AuditResponse(OK, Right(None))))
 
           Ok(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
@@ -95,6 +92,9 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId: $resCorrelationId")
+
+        auditSubmission(CreateAmendCgtPpdOverridesAuditDetail(request.userDetails, nino, taxYear, request.body,
+          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -120,7 +120,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
   private def auditSubmission(details: CreateAmendCgtPpdOverridesAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext) = {
-    val event = AuditEvent("CreateAmendForeignPropertyAnnualSummary", "Create-Amend-Foreign-Property-Annual-Summary", details)
+    val event = AuditEvent("CreateAmendCgtPpdOverrides", "Create-Amend-Cgt-Ppd-Overrides", details)
     auditService.auditEvent(event)
   }
 

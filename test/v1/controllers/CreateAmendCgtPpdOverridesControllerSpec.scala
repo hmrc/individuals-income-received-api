@@ -24,7 +24,8 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
-import v1.mocks.services.{MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -38,6 +39,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockAppConfig
   with MockCreateAmendCgtPpdOverridesService
+  with MockAuditService
   with MockHateoasFactory
   with MockCreateAmendCgtPpdOverridesRequestParser
   with HateoasLinks
@@ -187,6 +189,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
       appConfig = mockAppConfig,
       requestParser = mockCreateAmendCgtPpdOverridesRequestParser,
       service = mockCreateAmendCgtPpdOverridesService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -196,6 +199,21 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent[CreateAmendCgtPpdOverridesAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendForeignPropertyAnnualSummary",
+      transactionName = "Create-Amend-Foreign-Property-Annual-Summary",
+      detail = CreateAmendCgtPpdOverridesAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino,
+        taxYear,
+        validRequestJson,
+        correlationId,
+        response = auditResponse
+      )
+    )
 
   "CreateAmendCgtPpdOverridesController" should {
     "return OK" when {
@@ -214,6 +232,9 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, Right(None))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -231,6 +252,9 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -269,6 +293,10 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

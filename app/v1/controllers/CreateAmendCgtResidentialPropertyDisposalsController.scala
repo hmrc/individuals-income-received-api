@@ -73,10 +73,8 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
 
-          val response = Json.toJson(serviceResponse)
-
           auditSubmission(CreateAmendCgtResidentialPropertyDisposalsAuditDetail(request.userDetails, nino, taxYear, request.body,
-            serviceResponse.correlationId, AuditResponse(OK, Right(Some(response)))))
+            serviceResponse.correlationId, AuditResponse(OK, Right(None))))
 
           Ok(amendCgtResidentialPropertyDisposalsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
@@ -89,6 +87,9 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
+
+        auditSubmission(CreateAmendCgtResidentialPropertyDisposalsAuditDetail(request.userDetails, nino, taxYear, request.body,
+          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -116,7 +117,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
   private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext) = {
-    val event = AuditEvent("CreateAmendForeignPropertyAnnualSummary", "Create-Amend-Foreign-Property-Annual-Summary", details)
+    val event = AuditEvent("CreateAmendCgtResidentialPropertyDisposals", "Create-Amend-Cgt-Residential-Property-Disposals", details)
     auditService.auditEvent(event)
   }
 }
