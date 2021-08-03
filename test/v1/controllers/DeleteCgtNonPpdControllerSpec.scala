@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, DeleteCgtNonPpdAuditDetail}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -71,6 +72,20 @@ class DeleteCgtNonPpdControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
+  def event(auditResponse: AuditResponse): AuditEvent[DeleteCgtNonPpdAuditDetail] =
+    AuditEvent(
+      auditType = "DeleteCgtNonPpd",
+      transactionName = "Delete-Cgt-Non-Ppd",
+      detail = DeleteCgtNonPpdAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino,
+        taxYear,
+        correlationId,
+        response = auditResponse
+      )
+    )
+
   "DeleteCgtNonPpdController" should {
     "return NO_CONTENT" when {
       "happy path" in new Test {
@@ -88,6 +103,9 @@ class DeleteCgtNonPpdControllerSpec
         status(result) shouldBe NO_CONTENT
         contentAsString(result) shouldBe ""
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, Right(None))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -105,6 +123,9 @@ class DeleteCgtNonPpdControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -136,6 +157,9 @@ class DeleteCgtNonPpdControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

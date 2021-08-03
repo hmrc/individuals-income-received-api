@@ -25,6 +25,7 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
 import v1.mocks.services.{MockAuditService, MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -180,6 +181,21 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
+  def event(auditResponse: AuditResponse): AuditEvent[CreateAmendOtherCgtAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendOtherCgt",
+      transactionName = "Create-Amend-Other-Cgt",
+      detail = CreateAmendOtherCgtAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino,
+        taxYear,
+        validRequestJson,
+        correlationId,
+        response = auditResponse
+      )
+    )
+
   "CreateAmendOtherCgtController" should {
     "return OK" when {
       "happy path" in new Test {
@@ -197,6 +213,9 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, Right(None))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -214,6 +233,9 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -255,6 +277,9 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

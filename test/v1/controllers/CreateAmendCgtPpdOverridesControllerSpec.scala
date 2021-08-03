@@ -202,8 +202,8 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[CreateAmendCgtPpdOverridesAuditDetail] =
     AuditEvent(
-      auditType = "CreateAmendForeignPropertyAnnualSummary",
-      transactionName = "Create-Amend-Foreign-Property-Annual-Summary",
+      auditType = "CreateAmendCgtPpdOverrides",
+      transactionName = "Create-Amend-Cgt-Ppd-Overrides",
       detail = CreateAmendCgtPpdOverridesAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
@@ -293,7 +293,6 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
             MockedAuditService.verifyAuditEvent(event(auditResponse)).once
