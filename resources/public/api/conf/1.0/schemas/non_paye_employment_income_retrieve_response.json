@@ -6,8 +6,8 @@
   "properties": {
     "submittedOn": {
       "type": "string",
-      "description": "The date the non-PAYE employment income was submitted. It must be provided in the format YYYY-MM-DDThh:mm:ssZ.",
-      "example": "2020-07-06T09:37:17Z"
+      "description": "The date the non-PAYE employment income was submitted. It must be provided in the format YYYY-MM-DDThh:mm:ss.SSSZ.",
+      "example": "2020-07-06T09:37:17.542Z"
     },
     "source": {
       "type": "string",
