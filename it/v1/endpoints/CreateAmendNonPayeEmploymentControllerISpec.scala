@@ -63,7 +63,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
       |""".stripMargin
   )
 
-  val invalidTipsError: MtdError = TipsFormatError
+  val invalidTipsError: MtdError = ValueFormatError.copy(paths = Some(Seq("/tips")))
 
   val validNino: String = "AA123456A"
   val validTaxYear: String = "2020-21"
