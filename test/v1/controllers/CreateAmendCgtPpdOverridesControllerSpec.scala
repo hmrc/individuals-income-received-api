@@ -233,7 +233,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(None))
+        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(mtdResponse)))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
