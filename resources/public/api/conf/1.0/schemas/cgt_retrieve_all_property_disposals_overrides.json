@@ -227,7 +227,6 @@
             "required": [
               "source",
               "ppdSubmissionId",
-              "disposalDate",
               "completionDate",
               "disposalProceeds",
               "acquisitionDate",
