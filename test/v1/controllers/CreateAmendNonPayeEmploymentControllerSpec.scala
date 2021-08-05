@@ -159,7 +159,7 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (TipsFormatError, BAD_REQUEST)
+          (ValueFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

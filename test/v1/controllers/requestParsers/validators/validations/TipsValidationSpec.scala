@@ -17,42 +17,53 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.TipsFormatError
+import v1.models.errors.ValueFormatError
 
 class TipsValidationSpec extends UnitSpec {
 
   "validate" should {
     "return an empty list" when {
       "passed the maximum valid decimal value" in {
-        TipsValidation.validate(
-          amount = 99999999999.99
+        TipsValidation.validateWithPath(
+          amount = 99999999999.99,
+          path = s"/tips"
         ) shouldBe NoValidationErrors
       }
 
       "passed the minimum valid decimal value" in {
-        TipsValidation.validate(
-          amount = 0.00
+        TipsValidation.validateWithPath(
+          amount = 0.00,
+          path = s"/tips"
         ) shouldBe NoValidationErrors
       }
     }
 
     "return a TipsFormatError" when {
       "passed a value too large" in {
-        TipsValidation.validate(
-          amount = 100000000000.00
-        ) shouldBe List(TipsFormatError)
+        TipsValidation.validateWithPath(
+          amount = 100000000000.00,
+          path = s"/tips"
+        ) shouldBe List(ValueFormatError.copy(
+          paths = Some(Seq("/tips"))
+        ))
       }
 
       "passed a value too small" in {
-        TipsValidation.validate(
-          amount = -0.01
-        ) shouldBe List(TipsFormatError)
+        TipsValidation.validateWithPath(
+          amount = -0.01,
+          path = s"/tips"
+        ) shouldBe List(ValueFormatError.copy(
+          paths = Some(Seq("/tips"))
+        ))
       }
 
       "passed a value with the wrong scale" in {
-        TipsValidation.validate(
-          amount = 123.456
-        ) shouldBe List(TipsFormatError)
+        TipsValidation.validateWithPath(
+          amount = 123.456,
+          path = s"/tips"
+        ) shouldBe List(ValueFormatError.copy(
+          paths = Some(Seq("/tips"))
+        ))
       }
     }
   }

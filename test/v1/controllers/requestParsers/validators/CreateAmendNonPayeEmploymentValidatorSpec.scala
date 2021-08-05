@@ -31,16 +31,17 @@ import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmployme
 class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
-    val validNino    = "AA123456A"
+    val validNino = "AA123456A"
     val validTaxYear = "2019-20"
 
     val validTips = 100.23
 
-    private val validRequestBodyJson: JsValue = Json.parse(s"""
-        |{
-        |  "tips": $validTips
-        |}
-        |""".stripMargin)
+    private val validRequestBodyJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "tips": $validTips
+         |}
+         |""".stripMargin)
 
     private val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
 
@@ -54,16 +55,17 @@ class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppCon
     """.stripMargin
     )
 
-    private val invalidTipsJson: JsValue = Json.parse("""
+    private val invalidTipsJson: JsValue = Json.parse(
+      """
         |{
         |  "tips": 100.234
         |}
         |""".stripMargin)
 
-    val validRawRequestBody: AnyContentAsJson       = AnyContentAsJson(validRequestBodyJson)
-    val emptyRawRequestBody: AnyContentAsJson       = AnyContentAsJson(emptyRequestBodyJson)
-    val nonsenseRawRequestBody: AnyContentAsJson    = AnyContentAsJson(nonsenseRequestBodyJson)
-    val nonValidRawRequestBody: AnyContentAsJson    = AnyContentAsJson(nonValidRequestBodyJson)
+    val validRawRequestBody: AnyContentAsJson = AnyContentAsJson(validRequestBodyJson)
+    val emptyRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyRequestBodyJson)
+    val nonsenseRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonsenseRequestBodyJson)
+    val nonValidRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonValidRequestBodyJson)
     val invalidTipsRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidTipsJson)
   }
 
@@ -155,7 +157,10 @@ class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppCon
     "return TipsFormatError" when {
       "passed invalid tips" in new Test {
         validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, validTaxYear, invalidTipsRawRequestBody)) shouldBe
-          List(TipsFormatError)
+          List(ValueFormatError.copy(paths = Some(Seq(
+            "/tips"
+          ))
+          ))
       }
     }
   }

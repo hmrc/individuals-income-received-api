@@ -62,7 +62,10 @@ class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: 
     val requestBody = data.body.json.as[CreateAmendNonPayeEmploymentRequestBody]
 
     List(
-      TipsValidation.validate(amount = requestBody.tips)
+      TipsValidation.validateWithPath(
+        amount = requestBody.tips,
+        path = s"/tips"
+      )
     )
   }
 }

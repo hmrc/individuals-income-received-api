@@ -16,10 +16,10 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, TipsFormatError}
+import v1.models.errors.{MtdError, ValueFormatError}
 
 object TipsValidation {
-  def validate(amount: BigDecimal): List[MtdError] = {
+  def validateWithPath(amount: BigDecimal, path: String): List[MtdError] = {
 
     val maxScale: Int = 2
     val minValue: BigDecimal = 0
@@ -28,6 +28,6 @@ object TipsValidation {
     val scaleCheck = checkAmountScale(amount = amount, maxScale = maxScale)
     val rangeCheck = checkAmountRange(amount = amount, minValue = minValue, maxValue = maxValue)
 
-    if (rangeCheck && scaleCheck) NoValidationErrors else List(TipsFormatError)
+    if (rangeCheck && scaleCheck) NoValidationErrors else List(ValueFormatError.copy(paths = Some(Seq(path))))
   }
 }
