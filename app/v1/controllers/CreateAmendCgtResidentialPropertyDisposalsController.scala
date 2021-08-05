@@ -74,7 +74,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
 
 
           auditSubmission(CreateAmendCgtResidentialPropertyDisposalsAuditDetail(request.userDetails, nino, taxYear, request.body,
-            serviceResponse.correlationId, AuditResponse(OK, Right(None))))
+            serviceResponse.correlationId, AuditResponse(OK, Right(Some(amendCgtResidentialPropertyDisposalsHateoasBody(appConfig, nino, taxYear))))))
 
           Ok(amendCgtResidentialPropertyDisposalsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)

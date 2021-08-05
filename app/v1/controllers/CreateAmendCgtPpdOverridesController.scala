@@ -78,7 +78,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
 
 
           auditSubmission(CreateAmendCgtPpdOverridesAuditDetail(request.userDetails, nino, taxYear, request.body,
-            serviceResponse.correlationId, AuditResponse(OK, Right(None))))
+            serviceResponse.correlationId, AuditResponse(OK, Right(Some(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))))))
 
           Ok(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)

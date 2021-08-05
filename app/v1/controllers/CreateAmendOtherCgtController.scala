@@ -73,7 +73,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
           auditSubmission(CreateAmendOtherCgtAuditDetail(request.userDetails, nino, taxYear, request.body,
-            serviceResponse.correlationId, AuditResponse(OK, Right(None))))
+            serviceResponse.correlationId, AuditResponse(OK, Right(Some(amendOtherCgtHateoasBody(appConfig, nino, taxYear))))))
 
           Ok(amendOtherCgtHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
