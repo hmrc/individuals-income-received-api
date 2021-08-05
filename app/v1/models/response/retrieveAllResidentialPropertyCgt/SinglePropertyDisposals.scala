@@ -24,7 +24,7 @@ case class SinglePropertyDisposals(source: MtdSourceEnum,
                                    submittedOn: Option[String],
                                    ppdSubmissionId: String,
                                    ppdSubmissionDate: Option[String],
-                                   disposalDate: String,
+                                   disposalDate: Option[String],
                                    completionDate: String,
                                    disposalProceeds: BigDecimal,
                                    acquisitionDate: String,
@@ -46,7 +46,7 @@ object SinglePropertyDisposals {
       (JsPath \ "submittedOn").readNullable[String] and
       (JsPath \ "ppdSubmissionId").read[String] and
       (JsPath \ "ppdSubmissionDate").readNullable[String] and
-      (JsPath \ "disposalDate").read[String] and
+      (JsPath \ "disposalDate").readNullable[String] and
       (JsPath \ "completionDate").read[String] and
       (JsPath \ "disposalProceeds").read[BigDecimal] and
       (JsPath \ "acquisitionDate").read[String] and
