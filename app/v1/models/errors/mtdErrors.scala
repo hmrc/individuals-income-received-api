@@ -42,7 +42,7 @@ object EmploymentIdFormatError          extends MtdError("FORMAT_EMPLOYMENT_ID",
 object PpdSubmissionIdFormatError       extends MtdError("FORMAT_PPD_SUBMISSION_ID", "The provided ppdSubmissionId is invalid")
 object CountryCodeFormatError           extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
 object CountryCodeRuleError             extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
-object ValueFormatError                 extends MtdError("FORMAT_VALUE", "")
+object ValueFormatError                 extends MtdError("FORMAT_VALUE", "The value must be between 0.00 and 99999999999.99")
 object CustomerRefFormatError           extends MtdError("FORMAT_CUSTOMER_REF", "The provided customer reference is invalid")
 object EventFormatError                 extends MtdError("FORMAT_EVENT", "The provided policy event is invalid")
 object QOPSRefFormatError               extends MtdError("FORMAT_QOPS_REF", "The provided QOPS reference number is invalid")
