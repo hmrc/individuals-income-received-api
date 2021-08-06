@@ -52,6 +52,7 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: Cre
       "INVALID_PAYLOAD" -> DownstreamError,
       "INVALID_DISPOSAL_DATE" -> DownstreamError,
       "INVALID_COMPLETION_DATE" -> DownstreamError,
+      "INVALID_ACQUISITION_DATE" -> DownstreamError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
