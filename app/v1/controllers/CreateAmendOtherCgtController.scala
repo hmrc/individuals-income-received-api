@@ -116,7 +116,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
   private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext) = {
-    val event = AuditEvent("CreateAmendOtherCgt", "Create-Amend-Other-Cgt", details)
+    val event = AuditEvent("CreateAmendOtherCgtDisposalsAndGains", "Create-Amend-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }
 }

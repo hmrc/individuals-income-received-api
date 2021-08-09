@@ -110,7 +110,7 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
   private def auditSubmission(details: DeleteOtherCgtAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext) = {
-    val event = AuditEvent("DeleteOtherCgt", "Delete-Other-Cgt", details)
+    val event = AuditEvent("DeleteOtherCgtDisposalsAndGains", "Delete-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }
 }
