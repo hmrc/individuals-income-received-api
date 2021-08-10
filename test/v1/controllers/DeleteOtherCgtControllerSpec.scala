@@ -74,8 +74,8 @@ class DeleteOtherCgtControllerSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[DeleteOtherCgtAuditDetail] =
     AuditEvent(
-      auditType = "DeleteOtherCgt",
-      transactionName = "Delete-Other-Cgt",
+      auditType = "DeleteOtherCgtDisposalsAndGains",
+      transactionName = "Delete-Other-Cgt-Disposals-And-Gains",
       detail = DeleteOtherCgtAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

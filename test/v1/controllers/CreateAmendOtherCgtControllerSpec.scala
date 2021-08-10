@@ -183,8 +183,8 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[CreateAmendOtherCgtAuditDetail] =
     AuditEvent(
-      auditType = "CreateAmendOtherCgt",
-      transactionName = "Create-Amend-Other-Cgt",
+      auditType = "CreateAmendOtherCgtDisposalsAndGains",
+      transactionName = "Create-Amend-Other-Cgt-Disposals-And-Gains",
       detail = CreateAmendOtherCgtAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
