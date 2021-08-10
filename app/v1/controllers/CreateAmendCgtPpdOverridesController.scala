@@ -22,12 +22,14 @@ import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.hateoas.AmendHateoasBody
+import v1.models.audit.{AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail}
 import v1.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
-import v1.services.{CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AuditService, CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,6 +38,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
                                                      appConfig: AppConfig,
                                                      requestParser: CreateAmendCgtPpdOverridesRequestParser,
                                                      service: CreateAmendCgtPpdOverridesService,
+                                                     auditService: AuditService,
                                                      cc: ControllerComponents,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -73,6 +76,10 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
           )
 
+
+          auditSubmission(CreateAmendCgtPpdOverridesAuditDetail(request.userDetails, nino, taxYear, request.body,
+            serviceResponse.correlationId, AuditResponse(OK, Right(Some(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))))))
+
           Ok(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -85,6 +92,9 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId: $resCorrelationId")
+
+        auditSubmission(CreateAmendCgtPpdOverridesAuditDetail(request.userDetails, nino, taxYear, request.body,
+          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -106,5 +116,12 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
         }
       }
+
+  private def auditSubmission(details: CreateAmendCgtPpdOverridesAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext) = {
+    val event = AuditEvent("CreateAmendCgtPpdOverrides", "Create-Amend-Cgt-Ppd-Overrides", details)
+    auditService.auditEvent(event)
+  }
 
 }

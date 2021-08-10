@@ -26,9 +26,11 @@ import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
 import v1.hateoas.AmendHateoasBody
 import v1.models.errors._
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
-import v1.services.{ CreateAmendOtherCgtService, EnrolmentsAuthService, MtdIdLookupService}
-
+import v1.services.{AuditService, CreateAmendOtherCgtService, EnrolmentsAuthService, MtdIdLookupService}
 import javax.inject.Inject
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.audit.{AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
@@ -36,6 +38,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
                                               appConfig: AppConfig,
                                               requestParser: CreateAmendOtherCgtRequestParser,
                                               service: CreateAmendOtherCgtService,
+                                              auditService: AuditService,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
@@ -69,6 +72,9 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
+          auditSubmission(CreateAmendOtherCgtAuditDetail(request.userDetails, nino, taxYear, request.body,
+            serviceResponse.correlationId, AuditResponse(OK, Right(Some(amendOtherCgtHateoasBody(appConfig, nino, taxYear))))))
+
           Ok(amendOtherCgtHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -80,6 +86,9 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
+
+        auditSubmission(CreateAmendOtherCgtAuditDetail(request.userDetails, nino, taxYear, request.body,
+          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -102,5 +111,12 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext) = {
+    val event = AuditEvent("CreateAmendOtherCgtDisposalsAndGains", "Create-Amend-Other-Cgt-Disposals-And-Gains", details)
+    auditService.auditEvent(event)
   }
 }
