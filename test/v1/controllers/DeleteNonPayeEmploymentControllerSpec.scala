@@ -21,8 +21,9 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.domain.Nino
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
@@ -36,11 +37,26 @@ class DeleteNonPayeEmploymentControllerSpec
     with MockMtdIdLookupService
     with MockDeleteRetrieveRequestParser
     with MockDeleteRetrieveService
+    with MockAuditService
     with MockIdGenerator {
 
   val nino: String = "AC203948B"
   val taxYear: String = "2020-21"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f0123456"
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "DeleteNonPayeEmployment",
+      transactionName = "delete-non-paye-employment",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
+        correlationId,
+        response = auditResponse
+      )
+    )
 
   val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
@@ -60,6 +76,7 @@ class DeleteNonPayeEmploymentControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteRetrieveRequestParser,
       service = mockDeleteRetrieveService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -86,6 +103,9 @@ class DeleteNonPayeEmploymentControllerSpec
         status(result) shouldBe NO_CONTENT
         contentAsString(result) shouldBe ""
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
 
       "return the error as per spec" when {
@@ -102,6 +122,9 @@ class DeleteNonPayeEmploymentControllerSpec
               status(result) shouldBe expectedStatus
               contentAsJson(result) shouldBe Json.toJson(error)
               header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+              val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+              MockedAuditService.verifyAuditEvent(event(auditResponse)).once
             }
           }
 
@@ -133,6 +156,9 @@ class DeleteNonPayeEmploymentControllerSpec
               status(result) shouldBe expectedStatus
               contentAsJson(result) shouldBe Json.toJson(mtdError)
               header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+              val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+              MockedAuditService.verifyAuditEvent(event(auditResponse)).once
             }
           }
 

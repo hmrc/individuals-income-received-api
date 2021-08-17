@@ -20,12 +20,15 @@ import cats.data.EitherT
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.connectors.DownstreamUri.IfsUri
 import v1.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
-import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,6 +37,7 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
                                                   val lookupService: MtdIdLookupService,
                                                   requestParser: DeleteRetrieveRequestParser,
                                                   service: DeleteRetrieveService,
+                                                  auditService: AuditService,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
@@ -70,6 +74,16 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
+          auditSubmission(
+            GenericAuditDetail(
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
+              serviceResponse.correlationId,
+              AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+            )
+          )
+
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -82,6 +96,16 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
+        auditSubmission(
+          GenericAuditDetail(
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
+
         result
       }.merge
     }
@@ -93,5 +117,10 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("DeleteNonPayeEmployment", "delete-non-paye-employment", details)
+    auditService.auditEvent(event)
   }
 }
