@@ -24,7 +24,8 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendNonPayeEmploymentRequestParser
-import v1.mocks.services.{MockCreateAmendNonPayeEmploymentService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockCreateAmendNonPayeEmploymentService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -38,6 +39,7 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockAppConfig
   with MockCreateAmendNonPayeEmploymentService
+  with MockAuditService
   with MockHateoasFactory
   with MockCreateAmendNonPayeEmploymentRequestParser
   with HateoasLinks
@@ -46,6 +48,20 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
   val correlationId: String = "X-123"
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendNonPayeEmployment",
+      transactionName = "create-amend-non-paye-employment",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = Some(validRequestJson),
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
 
   val validRequestJson: JsValue = Json.parse(
     """
@@ -104,6 +120,7 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
       appConfig = mockAppConfig,
       requestParser = mockRequestParser,
       service = mockService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -131,6 +148,9 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(mtdResponse))
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -148,6 +168,9 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -182,6 +205,9 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
