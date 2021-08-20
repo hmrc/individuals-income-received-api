@@ -21,7 +21,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r6.connectors.DownstreamUri.DesUri
+import v1r6.connectors.DownstreamUri.IfsUri
 import v1r6.models.request.EmptyBody
 import v1r6.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
@@ -44,6 +44,6 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
-    put(EmptyBody, DesUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
+    put(EmptyBody, IfsUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
   }
 }

@@ -71,9 +71,11 @@ class IgnoreEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
-          ("INVALID_REQUEST_BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
+          ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
           ("NOT_HMRC_EMPLOYMENT", RuleCustomEmploymentError),
+          ("CANNOT_IGNORE", RuleCustomEmploymentError),
           ("NO_DATA_FOUND", NotFoundError),
+          ("INVALID_CORRELATIONID", DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

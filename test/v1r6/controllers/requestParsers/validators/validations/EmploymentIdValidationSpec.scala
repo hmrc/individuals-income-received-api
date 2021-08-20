@@ -27,6 +27,10 @@ class EmploymentIdValidationSpec extends UnitSpec {
         EmploymentIdValidation.validate("4557ecb5-fd32-48cc-81f5-e6acd1099f3c") shouldBe NoValidationErrors
       }
 
+      "return an empty list for a valid employment ID (updated regex)" in {
+        EmploymentIdValidation.validate("4557ecb5-fd32-18cc-81f5-e6acd1099f3c") shouldBe NoValidationErrors
+      }
+
       "return an EmploymentIdFormatError error for an invalid employment ID" in {
         EmploymentIdValidation.validate("") shouldBe List(EmploymentIdFormatError)
       }
