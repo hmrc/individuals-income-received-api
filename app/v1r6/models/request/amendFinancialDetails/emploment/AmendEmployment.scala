@@ -20,7 +20,14 @@ import play.api.libs.json.{Json, OFormat}
 
 case class AmendEmployment(pay: AmendPay,
                            deductions: Option[AmendDeductions],
-                           benefitsInKind: Option[AmendBenefitsInKind])
+                           benefitsInKind: Option[AmendBenefitsInKind]){
+
+  def isEmpty: Boolean = deductions.isEmpty && benefitsInKind.isEmpty
+
+  def isIncorrectOrEmptyBodyError: Boolean =
+    isEmpty || (deductions.isDefined && deductions.get.isEmpty ||
+      benefitsInKind.isDefined && benefitsInKind.get.isEmpty )
+}
 
 object AmendEmployment {
   implicit val format: OFormat[AmendEmployment] = Json.format[AmendEmployment]

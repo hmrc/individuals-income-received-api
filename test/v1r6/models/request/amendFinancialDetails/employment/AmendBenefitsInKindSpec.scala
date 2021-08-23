@@ -95,14 +95,6 @@ class AmendBenefitsInKindSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
-      "produce an empty AmendBenefitsInKind object" in {
-        val emptyJson = JsObject.empty
-
-        emptyJson.as[AmendBenefitsInKind] shouldBe AmendBenefitsInKind.empty
-      }
-    }
-
     "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = Json.parse(
