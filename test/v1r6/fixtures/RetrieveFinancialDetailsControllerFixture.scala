@@ -51,7 +51,7 @@ object RetrieveFinancialDetailsControllerFixture {
       |      "taxWeekNo": 32,
       |      "taxMonthNo": 8
       |    },
-      |    "customerEstimatedPay": {
+      |    "estimatedPay": {
       |      "amount": 1500.99
       |    },
       |    "deductions": {
@@ -124,7 +124,7 @@ object RetrieveFinancialDetailsControllerFixture {
       |      "taxWeekNo": 32,
       |      "taxMonthNo": 8
       |    },
-      |    "customerEstimatedPay": {
+      |    "estimatedPay": {
       |      "amount": 1500.99
       |    },
       |    "deductions": {
@@ -190,7 +190,7 @@ object RetrieveFinancialDetailsControllerFixture {
       taxWeekNo = Some(32),
       taxMonthNo = Some(8)
     )),
-    customerEstimatedPay = Some(CustomerEstimatedPay(
+    estimatedPay = Some(EstimatedPay(
       amount = Some(1500.99)
     )),
     deductions = Some(Deductions(
