@@ -3,8 +3,8 @@
     "employmentId": {
       "type": "string",
       "description": "The unique identifier for the employment.",
-      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
-      "example": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "example": "01e378e7-6321-2c71-88b2-a433f3ef0ceb"
     },
     "employerRef": {
       "type": "string",
@@ -31,8 +31,8 @@
     "payrollId": {
       "type": "string",
       "description": "The unique identifier used by the employer to identify the employee.",
-      "pattern": "^[A-Za-z0-9.,\\-()/=!\"%&*;<>'+:\\?]{0,38}$",
-      "example": "124214112412"
+      "pattern": "^[A-Za-z0-9.,\\\\-()/=!\\\"%&*; <>'+:\\\\?]{0,38}$",
+      "example": "YDIAHPcYFQbOXLCKQ"
     },
     "dateIgnored": {
       "type": "string",
