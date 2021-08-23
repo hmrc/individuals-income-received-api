@@ -48,7 +48,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
-  val correlationId: String = "X-123"
+  val correlationId: String = "1e8057e-fbbc-47a8-a8b4-78d9f015c253"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val rawData: RetrieveEmploymentRawData = RetrieveEmploymentRawData(
@@ -108,7 +108,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val hmrcEnteredEmploymentWithoutDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = None,
@@ -118,7 +118,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val hmrcEnteredEmploymentWithDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
@@ -128,7 +128,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val customEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = None,
@@ -163,7 +163,8 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR" -> TaxYearFormatError,
         "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-        "NOT_FOUND" -> NotFoundError,
+        "INVALID_CORRELATIONID" -> DownstreamError,
+        "NO_DATA_FOUND" -> NotFoundError,
         "SERVER_ERROR" -> DownstreamError,
         "SERVICE_UNAVAILABLE" -> DownstreamError
       )

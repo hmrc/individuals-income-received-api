@@ -111,7 +111,8 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "NOT_FOUND" -> NotFoundError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
+      "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
