@@ -30,7 +30,7 @@ case class Employment(employmentSequenceNumber: Option[String],
                       disguisedRemuneration: Option[Boolean],
                       employer: Employer,
                       pay: Option[Pay],
-                      customerEstimatedPay: Option[CustomerEstimatedPay],
+                      estimatedPay: Option[EstimatedPay],
                       deductions: Option[Deductions],
                       benefitsInKind: Option[BenefitsInKind])
 
@@ -49,8 +49,8 @@ object Employment {
       (JsPath \ "disguisedRemuneration").readNullable[Boolean] and
       (JsPath \ "employer").read[Employer] and
       (JsPath \ "pay").readNullable[Pay] and
-      (JsPath \ "customerEstimatedPay").readNullable[CustomerEstimatedPay].map {
-        case Some(CustomerEstimatedPay.empty) => None
+      (JsPath \ "estimatedPay").readNullable[EstimatedPay].map {
+        case Some(EstimatedPay.empty) => None
         case other => other
       } and
       (JsPath \ "deductions").readNullable[Deductions].map {
