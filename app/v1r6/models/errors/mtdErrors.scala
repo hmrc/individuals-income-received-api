@@ -16,7 +16,7 @@
 
 package v1r6.models.errors
 
-import play.api.libs.json.{ Json, OWrites }
+import play.api.libs.json.{Json, OWrites}
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
 
@@ -62,6 +62,7 @@ object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The p
 object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
   extends MtdError(
@@ -161,6 +162,8 @@ object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLET
 object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
 
 object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be on or after 7th March of the specified tax year and not a date in the future")
+
+object RuleUpdateForbiddenError extends MtdError("RULE_UPDATE_FORBIDDEN", "An update for a HMRC held benefit is not permitted")
 
 // Not found errors
 object PpdSubmissionIdNotFoundError
