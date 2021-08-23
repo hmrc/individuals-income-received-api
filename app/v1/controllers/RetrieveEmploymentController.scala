@@ -24,7 +24,7 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.DownstreamUri.IfsUri
 import v1.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
@@ -64,7 +64,7 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[RetrieveEmploymentResponse] = DesUri[RetrieveEmploymentResponse](
+      implicit val ifsUri: IfsUri[RetrieveEmploymentResponse] = IfsUri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 
