@@ -24,7 +24,7 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.DesUri
+import v1r6.connectors.DownstreamUri.IfsUri
 import v1r6.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.errors._
@@ -64,7 +64,7 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[RetrieveEmploymentResponse] = DesUri[RetrieveEmploymentResponse](
+      implicit val desUri: IfsUri[RetrieveEmploymentResponse] = IfsUri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 
@@ -111,7 +111,8 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "NOT_FOUND" -> NotFoundError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
+      "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
