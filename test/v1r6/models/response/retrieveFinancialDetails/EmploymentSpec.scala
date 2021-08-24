@@ -111,7 +111,7 @@ class EmploymentSpec extends UnitSpec {
       |    "taxWeekNo": 32,
       |    "taxMonthNo": 8
       |  },
-      |  "estimatedPay": {
+      |  "customerEstimatedPay": {
       |    "amount": 1500.99
       |  },
       |  "deductions": {
@@ -176,7 +176,7 @@ class EmploymentSpec extends UnitSpec {
       taxWeekNo = Some(32),
       taxMonthNo = Some(8)
     )),
-    estimatedPay = Some(EstimatedPay(
+    customerEstimatedPay = Some(CustomerEstimatedPay(
       amount = Some(1500.99)
     )),
     deductions = Some(Deductions(
@@ -250,7 +250,7 @@ class EmploymentSpec extends UnitSpec {
             |    "taxWeekNo": 32,
             |    "taxMonthNo": 8
             |  },
-            |  "estimatedPay": {
+            |  "customerEstimatedPay": {
             |  },
             |  "deductions": {
             |    "studentLoans": {
@@ -263,7 +263,7 @@ class EmploymentSpec extends UnitSpec {
         )
 
         json.as[Employment] shouldBe model.copy(
-          estimatedPay = None,
+          customerEstimatedPay = None,
           deductions = None,
           benefitsInKind = None
         )
