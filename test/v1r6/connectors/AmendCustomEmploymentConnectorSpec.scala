@@ -54,9 +54,9 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
     )
 
     MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "des-token"
-    MockedAppConfig.ifsEnvironment returns "des-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AmendCustomEmploymentConnector" when {
@@ -69,7 +69,7 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyIfsHeaderCarrierConfig,
             body = amendCustomEmploymentRequestBody,
             requiredHeaders
               = requiredIfsHeadersPut,
