@@ -292,6 +292,25 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
+  private val missingMultipleObjectBodies: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+
   private val validRawBody = AnyContentAsJson(validRequestJson)
   private val emptyRawBody = AnyContentAsJson(emptyRequestJson)
   private val missingMandatoryEmploymentRawRequestBody = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
@@ -302,6 +321,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
   private val missingStudentLoansRawRequestBody = AnyContentAsJson(missingStudentLoansBody)
   private val missingBenefitsInKindRawRequestBody = AnyContentAsJson(missingBenefitsInKindBody)
   private val missingDeductionsRawRequestBody = AnyContentAsJson(missingDeductionsBody)
+  private val missingMultipleObjectBodiesRequestBody = AnyContentAsJson(missingMultipleObjectBodies)
 
   class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
@@ -409,6 +429,13 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       "return RuleIncorrectOrEmptyBodyError error when benefitsInKind object is provided with no fields" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingBenefitsInKindRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/benefitsInKind"))))
+      }
+
+      "return RuleIncorrectOrEmptyBodyError error when multiple object bodies are not provided" in new Test {
+        val paths: Seq[String] = Seq("/employment/benefitsInKind", "/employment/deductions/studentLoans")
+
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingMultipleObjectBodiesRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
       }
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect formatted request body" in new Test {
