@@ -33,18 +33,18 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    val desEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
+    val ifsEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
-    val desHmrcEnteredResponseWithoutDateIgnored: JsValue = hmrcEnteredResponseWithoutDateIgnored
-    val desHmrcEnteredResponseWithDateIgnored: JsValue = hmrcEnteredResponseWithDateIgnored
-    val desCustomEnteredResponse: JsValue = customEnteredResponse
+    val ifsHmrcEnteredResponseWithoutDateIgnored: JsValue = hmrcEnteredResponseWithoutDateIgnored
+    val ifsHmrcEnteredResponseWithDateIgnored: JsValue = hmrcEnteredResponseWithDateIgnored
+    val ifsCustomEnteredResponse: JsValue = customEnteredResponse
     val mtdHmrcEnteredResponseWithoutDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino, taxYear, employmentId)
     val mtdHmrcEnteredResponseWithDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino, taxYear, employmentId)
     val mtdCustomEnteredResponse: JsValue = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -59,13 +59,13 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve hmrc entered employment with no date ignored present" in new Test {
 
-        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+        val ifsQueryParam: Map[String, String] = Map("employmentId" -> ifsEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithoutDateIgnored)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsHmrcEnteredResponseWithoutDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
@@ -78,13 +78,13 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve hmrc entered employment with date ignored present" in new Test {
 
-        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+        val ifsQueryParam: Map[String, String] = Map("employmentId" -> ifsEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithDateIgnored)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsHmrcEnteredResponseWithDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
@@ -97,13 +97,13 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve custom entered employment" in new Test {
 
-        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+        val ifsQueryParam: Map[String, String] = Map("employmentId" -> ifsEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desCustomEnteredResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsCustomEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -146,15 +146,15 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -168,7 +168,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
