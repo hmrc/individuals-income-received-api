@@ -24,7 +24,5 @@ case class AmendDeductions(studentLoans: Option[AmendStudentLoans]) {
 }
 
 object AmendDeductions {
-  val empty: AmendDeductions = AmendDeductions(None)
-
   implicit val format: OFormat[AmendDeductions] = Json.format[AmendDeductions]
 }

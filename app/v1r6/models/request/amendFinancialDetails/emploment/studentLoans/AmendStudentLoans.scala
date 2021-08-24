@@ -25,7 +25,5 @@ case class AmendStudentLoans(uglDeductionAmount: Option[BigDecimal],
 }
 
 object AmendStudentLoans {
-  val empty: AmendStudentLoans = AmendStudentLoans(None, None)
-
   implicit val format: OFormat[AmendStudentLoans] = Json.format[AmendStudentLoans]
 }
