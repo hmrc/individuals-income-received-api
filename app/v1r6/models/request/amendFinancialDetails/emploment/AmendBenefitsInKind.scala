@@ -49,35 +49,22 @@ case class AmendBenefitsInKind(accommodation: Option[BigDecimal],
                                nonCash: Option[BigDecimal]) {
 
   def isEmpty: Boolean =
-    accommodation.isEmpty &&
-      assets.isEmpty &&
-      assetTransfer.isEmpty &&
-      beneficialLoan.isEmpty &&
-      car.isEmpty &&
-      carFuel.isEmpty &&
-      educationalServices.isEmpty &&
-      entertaining.isEmpty &&
-      expenses.isEmpty &&
-      medicalInsurance.isEmpty &&
-      telephone.isEmpty &&
-      service.isEmpty &&
-      taxableExpenses.isEmpty &&
-      van.isEmpty &&
-      vanFuel.isEmpty &&
-      mileage.isEmpty &&
-      nonQualifyingRelocationExpenses.isEmpty &&
-      nurseryPlaces.isEmpty &&
-      otherItems.isEmpty &&
-      paymentsOnEmployeesBehalf.isEmpty &&
-      personalIncidentalExpenses.isEmpty &&
-      qualifyingRelocationExpenses.isEmpty &&
-      employerProvidedProfessionalSubscriptions.isEmpty &&
-      employerProvidedServices.isEmpty &&
-      incomeTaxPaidByDirector.isEmpty &&
-      travelAndSubsistence.isEmpty &&
-      vouchersAndCreditCards.isEmpty &&
-      nonCash.isEmpty
+    accommodation.isEmpty && assets.isEmpty &&
+    assetTransfer.isEmpty && beneficialLoan.isEmpty &&
+    car.isEmpty && carFuel.isEmpty &&
+    educationalServices.isEmpty && entertaining.isEmpty &&
+    expenses.isEmpty && medicalInsurance.isEmpty &&
+    telephone.isEmpty && service.isEmpty &&
+    taxableExpenses.isEmpty && van.isEmpty &&
+    vanFuel.isEmpty && mileage.isEmpty &&
+    nonQualifyingRelocationExpenses.isEmpty && nurseryPlaces.isEmpty &&
+    otherItems.isEmpty && paymentsOnEmployeesBehalf.isEmpty &&
+    personalIncidentalExpenses.isEmpty && qualifyingRelocationExpenses.isEmpty &&
+    employerProvidedProfessionalSubscriptions.isEmpty && employerProvidedServices.isEmpty &&
+    incomeTaxPaidByDirector.isEmpty && travelAndSubsistence.isEmpty &&
+    vouchersAndCreditCards.isEmpty && nonCash.isEmpty
 }
+
 object AmendBenefitsInKind {
 
   val firstSegment: OFormat[(

@@ -20,11 +20,10 @@ import play.api.libs.json.{Json, OFormat}
 
 case class AmendStudentLoans(uglDeductionAmount: Option[BigDecimal],
                              pglDeductionAmount: Option[BigDecimal]) {
-
   def isEmpty: Boolean =
-    uglDeductionAmount.isEmpty &&
-      pglDeductionAmount.isEmpty
+    uglDeductionAmount.isEmpty && pglDeductionAmount.isEmpty
 }
+
 object AmendStudentLoans {
   val empty: AmendStudentLoans = AmendStudentLoans(None, None)
 

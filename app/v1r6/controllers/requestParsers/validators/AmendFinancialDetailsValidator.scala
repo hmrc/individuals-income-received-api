@@ -28,7 +28,7 @@ import v1r6.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, 
 class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
   extends Validator[AmendFinancialDetailsRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, incorrectOrEmptyBodyValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
   override def validate(data: AmendFinancialDetailsRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -52,20 +52,29 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
   }
 
   private def bodyFormatValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
-    List(
+    val jsonFormatError = List(
       JsonFormatValidation.validate[AmendFinancialDetailsRequestBody](data.body.json)
     )
-  }
 
-  private def incorrectOrEmptyBodyValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
-    val model: AmendEmployment = data.body.json.as[AmendEmployment]
-    List(
-      if (model.isIncorrectOrEmptyBody) {
-        List(RuleIncorrectOrEmptyBodyError)
-      } else {
-        NoValidationErrors
-      }
-    )
+    val requestBodyObj = data.body.json.asOpt[AmendFinancialDetailsRequestBody]
+    val emptyObjectValidation: List[List[MtdError]] = List(
+      requestBodyObj
+        .map { body =>
+          val emptyDeductionsError: List[String] =
+            if(body.employment.deductions.exists(_.isEmpty)) List("/employment/deductions") else NoValidationErrors
+
+          val emptyBenefitsInKindError: List[String] =
+            if(body.employment.benefitsInKind.exists(_.isEmpty)) List("/employment/benefitsInKind") else NoValidationErrors
+
+          val emptyStudentLoansError: List[String] =
+            if(body.employment.deductions.exists(_.studentLoans.exists(_.isEmpty))) List("/employment/deductions/studentLoans") else NoValidationErrors
+
+          val minimumFieldsError = emptyDeductionsError ++ emptyBenefitsInKindError ++ emptyStudentLoansError
+          if(minimumFieldsError.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(minimumFieldsError)))
+
+        }.getOrElse(NoValidationErrors))
+
+    jsonFormatError ++ emptyObjectValidation
   }
 
   private def bodyValueValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
