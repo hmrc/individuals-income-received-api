@@ -64,14 +64,14 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
         employmentId = employmentId
       )
 
-      implicit val desUri: IfsUri[RetrieveEmploymentResponse] = IfsUri[RetrieveEmploymentResponse](
+      implicit val ifsUri: IfsUri[RetrieveEmploymentResponse] = IfsUri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 
       val result =
         for {
           _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](desErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](ifsErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, serviceResponse.responseData))
@@ -106,7 +106,7 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
     }
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private def ifsErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
