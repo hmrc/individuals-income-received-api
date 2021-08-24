@@ -27,6 +27,8 @@ import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
+  override lazy val release6Enabled = false
+
   private trait Test {
 
     val nino: String = "AA123456A"
