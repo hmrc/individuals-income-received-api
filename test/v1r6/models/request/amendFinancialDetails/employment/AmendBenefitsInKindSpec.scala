@@ -16,7 +16,7 @@
 
 package v1r6.models.request.amendFinancialDetails.employment
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1r6.models.request.amendFinancialDetails.emploment.AmendBenefitsInKind
 
