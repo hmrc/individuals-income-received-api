@@ -103,6 +103,12 @@ object RuleCessationDateBeforeTaxYearStartError
     message = "The cessation date cannot be before the tax year starts"
   )
 
+object RuleUpdateForbiddenError
+  extends MtdError(
+    code = "RULE_UPDATE_FORBIDDEN",
+    message = "An update for a HMRC held benefit is not permitted"
+  )
+
 object RuleCustomEmploymentError
   extends MtdError(
     code = "RULE_CUSTOM_EMPLOYMENT",
@@ -162,8 +168,6 @@ object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLET
 object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
 
 object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be on or after 7th March of the specified tax year and not a date in the future")
-
-object RuleUpdateForbiddenError extends MtdError("RULE_UPDATE_FORBIDDEN", "An update for a HMRC held benefit is not permitted")
 
 // Not found errors
 object PpdSubmissionIdNotFoundError
