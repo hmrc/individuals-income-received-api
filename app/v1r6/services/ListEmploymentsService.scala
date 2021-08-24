@@ -50,8 +50,9 @@ class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) exte
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"  -> NinoFormatError,
     "INVALID_TAX_YEAR"           -> TaxYearFormatError,
-    "NOT_FOUND"                 -> NotFoundError,
-    "SERVER_ERROR"              -> DownstreamError,
-    "SERVICE_UNAVAILABLE"       -> DownstreamError
+    "NO_DATA_FOUND"              -> NotFoundError,
+    "SERVER_ERROR"               -> DownstreamError,
+    "INVALID_CORRELATIONID"      -> DownstreamError,
+    "SERVICE_UNAVAILABLE"        -> DownstreamError
   )
 }
