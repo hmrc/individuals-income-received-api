@@ -21,7 +21,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1r6.connectors.DownstreamUri.DesUri
+import v1r6.connectors.DownstreamUri.IfsUri
 import v1r6.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1r6.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
@@ -41,7 +41,7 @@ class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val taxYear = request.taxYear
 
-    post(request.body, DesUri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))
+    post(request.body, IfsUri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))
   }
 
 }
