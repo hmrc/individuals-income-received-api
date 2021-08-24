@@ -576,3 +576,14 @@ traits:
                 description: 'The acquisitionDate must not be later than disposalDate.'
                 value:
                   code: RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE
+  ruleUpdateForbidden:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleUpdateForbidden:
+                description: 'TBA'
+                value:
+                  code: RULE_UPDATE_FORBIDDEN
