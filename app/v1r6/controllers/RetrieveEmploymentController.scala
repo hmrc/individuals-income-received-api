@@ -24,7 +24,7 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.DesUri
+import v1r6.connectors.DownstreamUri.IfsUri
 import v1r6.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.errors._
@@ -64,14 +64,14 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[RetrieveEmploymentResponse] = DesUri[RetrieveEmploymentResponse](
+      implicit val ifsUri: IfsUri[RetrieveEmploymentResponse] = IfsUri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 
       val result =
         for {
           _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](desErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](ifsErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, serviceResponse.responseData))
@@ -106,12 +106,13 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
     }
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private def ifsErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "NOT_FOUND" -> NotFoundError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
+      "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
