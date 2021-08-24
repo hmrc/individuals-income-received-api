@@ -17,11 +17,10 @@
 package v1r6.controllers.requestParsers.validators
 
 import config.{AppConfig, FeatureSwitch}
-
 import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
 import v1r6.controllers.requestParsers.validators.validations._
-import v1r6.models.errors.MtdError
+import v1r6.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1r6.models.request.amendFinancialDetails.emploment.AmendEmployment
 import v1r6.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
 
@@ -29,7 +28,7 @@ import v1r6.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, 
 class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
   extends Validator[AmendFinancialDetailsRawData] with ValueFormatErrorMessages {
 
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, incorrectOrEmptyBodyValidator, bodyValueValidator)
 
   override def validate(data: AmendFinancialDetailsRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -55,6 +54,17 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
   private def bodyFormatValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
     List(
       JsonFormatValidation.validate[AmendFinancialDetailsRequestBody](data.body.json)
+    )
+  }
+
+  private def incorrectOrEmptyBodyValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
+    val model: AmendEmployment = data.body.json.as[AmendEmployment]
+    List(
+      if (model.isIncorrectOrEmptyBody) {
+        List(RuleIncorrectOrEmptyBodyError)
+      } else {
+        NoValidationErrors
+      }
     )
   }
 

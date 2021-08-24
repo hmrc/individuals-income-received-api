@@ -179,6 +179,119 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
+    private val missingStudentLoansBody: JsValue = Json.parse(
+      """
+        |{
+        |    "employment": {
+        |        "pay": {
+        |            "taxablePayToDate": 3500.75,
+        |            "totalTaxToDate": 6782.92
+        |        },
+        |        "deductions": {
+        |            "studentLoans": {
+        |            }
+        |        },
+        |        "benefitsInKind": {
+        |            "accommodation": 455.67,
+        |            "assets": 435.54,
+        |            "assetTransfer": 24.58,
+        |            "beneficialLoan": 33.89,
+        |            "car": 3434.78,
+        |            "carFuel": 34.56,
+        |            "educationalServices": 445.67,
+        |            "entertaining": 434.45,
+        |            "expenses": 3444.32,
+        |            "medicalInsurance": 4542.47,
+        |            "telephone": 243.43,
+        |            "service": 45.67,
+        |            "taxableExpenses": 24.56,
+        |            "van": 56.29,
+        |            "vanFuel": 14.56,
+        |            "mileage": 34.23,
+        |            "nonQualifyingRelocationExpenses": 54.62,
+        |            "nurseryPlaces": 84.29,
+        |            "otherItems": 67.67,
+        |            "paymentsOnEmployeesBehalf": 67.23,
+        |            "personalIncidentalExpenses": 74.29,
+        |            "qualifyingRelocationExpenses": 78.24,
+        |            "employerProvidedProfessionalSubscriptions": 84.56,
+        |            "employerProvidedServices": 56.34,
+        |            "incomeTaxPaidByDirector": 67.34,
+        |            "travelAndSubsistence": 56.89,
+        |            "vouchersAndCreditCards": 34.90,
+        |            "nonCash": 23.89
+        |        }
+        |    }
+        |}
+        |""".stripMargin
+    )
+
+  private val missingDeductionsBody: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": 455.67,
+      |            "assets": 435.54,
+      |            "assetTransfer": 24.58,
+      |            "beneficialLoan": 33.89,
+      |            "car": 3434.78,
+      |            "carFuel": 34.56,
+      |            "educationalServices": 445.67,
+      |            "entertaining": 434.45,
+      |            "expenses": 3444.32,
+      |            "medicalInsurance": 4542.47,
+      |            "telephone": 243.43,
+      |            "service": 45.67,
+      |            "taxableExpenses": 24.56,
+      |            "van": 56.29,
+      |            "vanFuel": 14.56,
+      |            "mileage": 34.23,
+      |            "nonQualifyingRelocationExpenses": 54.62,
+      |            "nurseryPlaces": 84.29,
+      |            "otherItems": 67.67,
+      |            "paymentsOnEmployeesBehalf": 67.23,
+      |            "personalIncidentalExpenses": 74.29,
+      |            "qualifyingRelocationExpenses": 78.24,
+      |            "employerProvidedProfessionalSubscriptions": 84.56,
+      |            "employerProvidedServices": 56.34,
+      |            "incomeTaxPaidByDirector": 67.34,
+      |            "travelAndSubsistence": 56.89,
+      |            "vouchersAndCreditCards": 34.90,
+      |            "nonCash": 23.89
+      |        }
+      |    }
+      |}
+      |""".stripMargin
+  )
+
+  private val missingBenefitsInKindBody: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": 13343.45,
+      |                "pglDeductionAmount": 24242.56
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+
   private val validRawBody = AnyContentAsJson(validRequestJson)
   private val emptyRawBody = AnyContentAsJson(emptyRequestJson)
   private val missingMandatoryEmploymentRawRequestBody = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
@@ -186,6 +299,9 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
   private val missingMandatoryFieldsRawRequestBody = AnyContentAsJson(missingMandatoryFieldsJson)
   private val incorrectFormatRawBody = AnyContentAsJson(incorrectFormatRequestJson)
   private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val missingStudentLoansRawRequestBody = AnyContentAsJson(missingStudentLoansBody)
+  private val missingBenefitsInKindRawRequestBody = AnyContentAsJson(missingBenefitsInKindBody)
+  private val missingDeductionsRawRequestBody = AnyContentAsJson(missingDeductionsBody)
 
   class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
@@ -278,6 +394,21 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingMandatoryFieldsRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
+      }
+
+      "return RuleIncorrectOrEmptyBodyError error when studentLoans object is provided with no fields" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingStudentLoansRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/deductions/studentLoans"))))
+      }
+
+      "return RuleIncorrectOrEmptyBodyError error when deductions object is provided with no fields" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingDeductionsRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/deductions"))))
+      }
+
+      "return RuleIncorrectOrEmptyBodyError error when benefitsInKind object is provided with no fields" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingBenefitsInKindRawRequestBody)) shouldBe
+          List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/benefitsInKind"))))
       }
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect formatted request body" in new Test {

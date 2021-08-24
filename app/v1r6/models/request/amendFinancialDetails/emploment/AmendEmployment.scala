@@ -24,7 +24,7 @@ case class AmendEmployment(pay: AmendPay,
 
   def isEmpty: Boolean = deductions.isEmpty && benefitsInKind.isEmpty
 
-  def isIncorrectOrEmptyBodyError: Boolean =
+  def isIncorrectOrEmptyBody: Boolean =
     isEmpty || (deductions.isDefined && deductions.get.isEmpty ||
       benefitsInKind.isDefined && benefitsInKind.get.isEmpty )
 }
