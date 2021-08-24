@@ -19,7 +19,7 @@ package v1r6.models.response.retrieveFinancialDetails
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
-class EstimatedPaySpec extends UnitSpec {
+class CustomerEstimatedPaySpec extends UnitSpec {
   val json: JsValue = Json.parse(
     """
       |{
@@ -28,20 +28,20 @@ class EstimatedPaySpec extends UnitSpec {
     """.stripMargin
   )
 
-  val model: EstimatedPay = EstimatedPay(
+  val model: CustomerEstimatedPay = CustomerEstimatedPay(
     amount = Some(200.33)
   )
 
-  "EstimatedPay" when {
+  "customerEstimatedPay" when {
     "read from valid JSON" should {
-      "produce the expected 'EstimatedPay' object" in{
-        json.as[EstimatedPay] shouldBe model
+      "produce the expected 'customerEstimatedPay' object" in{
+        json.as[CustomerEstimatedPay] shouldBe model
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty 'EstimatedPay' object" in{
-        JsObject.empty.as[EstimatedPay] shouldBe EstimatedPay.empty
+      "produce an empty 'customerEstimatedPay' object" in{
+        JsObject.empty.as[CustomerEstimatedPay] shouldBe CustomerEstimatedPay.empty
       }
     }
 
@@ -55,7 +55,7 @@ class EstimatedPaySpec extends UnitSpec {
           """.stripMargin
         )
 
-        invalidJson.validate[EstimatedPay] shouldBe a[JsError]
+        invalidJson.validate[CustomerEstimatedPay] shouldBe a[JsError]
       }
     }
 

@@ -22,7 +22,7 @@ import v1r6.models.response.retrieveFinancialDetails._
 
 object RetrieveFinancialDetailsControllerFixture {
 
-  val desJson: JsValue = Json.parse(
+  val ifsJson: JsValue = Json.parse(
     """
       |{
       |  "submittedOn": "2020-01-04T05:01:01Z",
@@ -124,7 +124,7 @@ object RetrieveFinancialDetailsControllerFixture {
       |      "taxWeekNo": 32,
       |      "taxMonthNo": 8
       |    },
-      |    "estimatedPay": {
+      |    "customerEstimatedPay": {
       |      "amount": 1500.99
       |    },
       |    "deductions": {
@@ -183,14 +183,14 @@ object RetrieveFinancialDetailsControllerFixture {
       employerName = "maggie"
     ),
     pay = Some(Pay(
-      taxablePayToDate = 34234.15,
-      totalTaxToDate = 6782.92,
+      taxablePayToDate = Some(34234.15),
+      totalTaxToDate = Some(6782.92),
       payFrequency = Some("CALENDAR MONTHLY"),
       paymentDate = Some("2020-04-23"),
       taxWeekNo = Some(32),
       taxMonthNo = Some(8)
     )),
-    estimatedPay = Some(EstimatedPay(
+    customerEstimatedPay = Some(CustomerEstimatedPay(
       amount = Some(1500.99)
     )),
     deductions = Some(Deductions(

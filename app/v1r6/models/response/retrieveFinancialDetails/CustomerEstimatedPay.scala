@@ -18,9 +18,9 @@ package v1r6.models.response.retrieveFinancialDetails
 
 import play.api.libs.json.{Json, OFormat}
 
-case class EstimatedPay(amount: Option[BigDecimal])
+case class CustomerEstimatedPay(amount: Option[BigDecimal])
 
-object EstimatedPay {
-  val empty: EstimatedPay = EstimatedPay(None)
-  implicit val format: OFormat[EstimatedPay] = Json.format[EstimatedPay]
+object CustomerEstimatedPay {
+  val empty: CustomerEstimatedPay = CustomerEstimatedPay(None)
+  implicit val format: OFormat[CustomerEstimatedPay] = Json.format[CustomerEstimatedPay]
 }
