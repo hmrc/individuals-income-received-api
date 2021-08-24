@@ -85,7 +85,7 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/$nino/$taxYear"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/custom"
+    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/custom"
 
     def setupStubs(): StubMapping
 
@@ -104,7 +104,7 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.POST, desUri, OK, responseJson)
+          DownstreamStub.onSuccess(DownstreamStub.POST, ifsUri, OK, responseJson)
         }
 
         val response: WSResponse = await(request().post(requestBodyJson))
@@ -306,15 +306,15 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.POST, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.POST, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().post(requestBodyJson))
@@ -327,7 +327,7 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
