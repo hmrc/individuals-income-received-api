@@ -54,7 +54,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/ignore"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"
+    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"
 
     def setupStubs(): StubMapping
 
@@ -73,7 +73,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUri, CREATED)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, CREATED)
         }
 
         val response: WSResponse = await(request().post(JsObject.empty))
@@ -118,15 +118,15 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().post(JsObject.empty))
@@ -139,7 +139,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
@@ -149,7 +149,6 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "CANNOT_IGNORE", FORBIDDEN, RuleCustomEmploymentError),
-          (FORBIDDEN, "NOT_HMRC_EMPLOYMENT", FORBIDDEN, RuleCustomEmploymentError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
