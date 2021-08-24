@@ -48,7 +48,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
 
   val nino: String = "AA123456A"
   val taxYear: String = "2019-20"
-  val correlationId: String = "1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val correlationId: String = "X-123"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val rawData: RetrieveEmploymentRawData = RetrieveEmploymentRawData(
