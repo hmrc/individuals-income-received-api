@@ -51,7 +51,7 @@ object RetrieveFinancialDetailsControllerFixture {
       |      "taxWeekNo": 32,
       |      "taxMonthNo": 8
       |    },
-      |    "estimatedPay": {
+      |    "customerEstimatedPay": {
       |      "amount": 1500.99
       |    },
       |    "deductions": {
