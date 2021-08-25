@@ -13,5 +13,5 @@
     "submittedOn": {"$ref": "employments_definitions.json#/definitions/submittedOn"},
     "links": {"$ref": "employments_definitions.json#/definitions/linksForRetrieve"}
   },
-  "required": ["employerName","startDate"]
+  "required": ["employerName"]
 }

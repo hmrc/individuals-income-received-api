@@ -127,7 +127,7 @@
             }
           }
         },
-        "estimatedPay": {
+        "customerEstimatedPay": {
           "type": "object",
           "description": "Object containing estimated pay details for a single employment.",
           "properties": {
@@ -158,7 +158,11 @@
           "properties": {
             "taxablePayToDate": {"$ref": "#/definitions/taxablePayToDate"},
             "totalTaxToDate": {"$ref": "#/definitions/totalTaxToDate"}
-          }
+          },
+          "required": [
+            "taxablePayToDate",
+            "totalTaxToDate"
+          ]
         },
         "deductions": {"$ref": "#/definitions/deductions"},
         "benefitsInKind": {"$ref": "#/definitions/benefitsInKind"}

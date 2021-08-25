@@ -31,7 +31,7 @@
     "payrollId": {
       "type": "string",
       "description": "The unique identifier used by the employer to identify the employee.",
-      "pattern": "^[A-Za-z0-9.,\\\\ -()\/=!\\\"%&*;<>'+:\\\\?]{0,38}$",
+      "pattern": "^[A-Za-z0-9.,\\-()/=!\"%&*; <>'+:\\?]{0,38}$",
       "example": "YDIAHPcYFQbOXLCKQ"
     },
     "dateIgnored": {
