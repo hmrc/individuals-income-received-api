@@ -106,7 +106,7 @@ object RuleCessationDateBeforeTaxYearStartError
 object RuleUpdateForbiddenError
   extends MtdError(
     code = "RULE_UPDATE_FORBIDDEN",
-    message = "An update for a HMRC held benefit is not permitted"
+    message = "The update for a HMRC held employment is not permitted"
   )
 
 object RuleCustomEmploymentError
