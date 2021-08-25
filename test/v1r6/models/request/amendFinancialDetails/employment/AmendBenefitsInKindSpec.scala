@@ -16,7 +16,7 @@
 
 package v1r6.models.request.amendFinancialDetails.employment
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1r6.models.request.amendFinancialDetails.emploment.AmendBenefitsInKind
 
@@ -88,6 +88,11 @@ class AmendBenefitsInKindSpec extends UnitSpec {
     nonCash = Some(23.89)
   )
 
+  val emptyJson = Json.parse("""{}""")
+
+  val emptyModel = AmendBenefitsInKind(None, None, None, None, None, None, None, None, None, None, None, None,
+    None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+
   "AmendBenefitsInKind" when {
     "read from valid JSON" should {
       "produce the expected AmendBenefitsInKind object" in {
@@ -95,15 +100,13 @@ class AmendBenefitsInKindSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
+    "read from empty object" should {
       "produce an empty AmendBenefitsInKind object" in {
-        val emptyJson = JsObject.empty
-
-        emptyJson.as[AmendBenefitsInKind] shouldBe AmendBenefitsInKind.empty
+        emptyJson.as[AmendBenefitsInKind] shouldBe emptyModel
       }
     }
 
-    "read from invalid JSON" should {
+        "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = Json.parse(
           """
