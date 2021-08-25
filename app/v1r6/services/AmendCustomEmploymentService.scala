@@ -55,6 +55,7 @@ class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentCon
       "NOT_SUPPORTED_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "INVALID_DATE_RANGE" -> RuleStartDateAfterTaxYearEndError,
       "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
+      "CANNOT_UPDATE" -> RuleUpdateForbiddenError,
       "NO_DATA_FOUND" -> NotFoundError,
       "INVALID_PAYLOAD" -> DownstreamError,
       "INVALID_CORRELATIONID" -> DownstreamError,
