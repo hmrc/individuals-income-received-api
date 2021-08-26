@@ -54,10 +54,10 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "ListEmploymentsConnector" when {
@@ -69,8 +69,8 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

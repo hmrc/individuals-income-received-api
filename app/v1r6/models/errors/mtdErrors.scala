@@ -16,7 +16,7 @@
 
 package v1r6.models.errors
 
-import play.api.libs.json.{ Json, OWrites }
+import play.api.libs.json.{Json, OWrites}
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
 
@@ -62,6 +62,7 @@ object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The p
 object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
   extends MtdError(
@@ -100,6 +101,12 @@ object RuleCessationDateBeforeTaxYearStartError
   extends MtdError(
     code = "RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START",
     message = "The cessation date cannot be before the tax year starts"
+  )
+
+object RuleUpdateForbiddenError
+  extends MtdError(
+    code = "RULE_UPDATE_FORBIDDEN",
+    message = "The update for an HMRC held employment is not permitted"
   )
 
 object RuleCustomEmploymentError

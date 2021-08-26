@@ -80,7 +80,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
   private val hmrcEnteredEmployment = RetrieveEmploymentResponse(
     employerRef = Some("123/abc"),
     employerName = "Vera Lynn",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
@@ -90,7 +90,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
   private val customEnteredEmployment = RetrieveEmploymentResponse(
     employerRef = Some("123/abc"),
     employerName = "Vera Lynn",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     None,

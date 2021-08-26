@@ -129,6 +129,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
           ("INVALID_EMPLOYMENT_ID", NotFoundError),
           ("INVALID_PAYLOAD", DownstreamError),
           ("BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
+          ("INVALID_CORRELATIONID", DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

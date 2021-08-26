@@ -47,7 +47,7 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/custom/$employmentId"
+    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/custom/$employmentId"
 
     def setupStubs(): StubMapping
 
@@ -66,7 +66,7 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, desUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
         }
 
         val hateoasResponse: JsValue = Json.parse(
@@ -349,15 +349,15 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().put(requestBodyJson))
@@ -370,7 +370,7 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
@@ -380,6 +380,7 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           (UNPROCESSABLE_ENTITY, "NOT_SUPPORTED_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "INVALID_DATE_RANGE", BAD_REQUEST, RuleStartDateAfterTaxYearEndError),
           (UNPROCESSABLE_ENTITY, "INVALID_CESSATION_DATE", BAD_REQUEST, RuleCessationDateBeforeTaxYearStartError),
+          (UNPROCESSABLE_ENTITY, "CANNOT_UPDATE", FORBIDDEN, RuleUpdateForbiddenError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),

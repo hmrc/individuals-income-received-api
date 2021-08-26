@@ -19,10 +19,11 @@ package v1r6.models.request.amendFinancialDetails.emploment.studentLoans
 import play.api.libs.json.{Json, OFormat}
 
 case class AmendStudentLoans(uglDeductionAmount: Option[BigDecimal],
-                             pglDeductionAmount: Option[BigDecimal])
+                             pglDeductionAmount: Option[BigDecimal]) {
+  def isEmpty: Boolean =
+    uglDeductionAmount.isEmpty && pglDeductionAmount.isEmpty
+}
 
 object AmendStudentLoans {
-  val empty: AmendStudentLoans = AmendStudentLoans(None, None)
-
   implicit val format: OFormat[AmendStudentLoans] = Json.format[AmendStudentLoans]
 }
