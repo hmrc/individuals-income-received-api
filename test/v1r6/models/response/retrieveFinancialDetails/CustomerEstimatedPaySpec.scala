@@ -32,15 +32,15 @@ class CustomerEstimatedPaySpec extends UnitSpec {
     amount = Some(200.33)
   )
 
-  "CustomerEstimatedPay" when {
+  "customerEstimatedPay" when {
     "read from valid JSON" should {
-      "produce the expected 'CustomerEstimatedPay' object" in{
+      "produce the expected 'customerEstimatedPay' object" in{
         json.as[CustomerEstimatedPay] shouldBe model
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty 'CustomerEstimatedPay' object" in{
+      "produce an empty 'customerEstimatedPay' object" in{
         JsObject.empty.as[CustomerEstimatedPay] shouldBe CustomerEstimatedPay.empty
       }
     }
