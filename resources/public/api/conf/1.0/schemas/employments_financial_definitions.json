@@ -125,11 +125,7 @@
               "maximum": 12,
               "multipleOf": 1
             }
-          },
-          "required": [
-            "taxablePayToDate",
-            "totalTaxToDate"
-          ]
+          }
         },
         "customerEstimatedPay": {
           "type": "object",

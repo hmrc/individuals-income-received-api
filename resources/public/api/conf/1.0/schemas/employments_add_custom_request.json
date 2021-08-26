@@ -10,5 +10,5 @@
     "cessationDate": {"$ref": "employments_definitions.json#/definitions/cessationDate"},
     "payrollId": {"$ref": "employments_definitions.json#/definitions/payrollId"}
   },
-  "required": ["employerName","startDate"]
+  "required": ["employerName", "startDate"]
 }
