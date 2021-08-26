@@ -13,7 +13,7 @@
         </tr>
         <tr>
              <td><p>HMRC_HELD</p></td>
-             <td><p>Simulates the scenario in which an update of a HMRC held employment is not permitted.</p></td>
+             <td><p>Simulates the scenario in which an update of an HMRC held employment is not permitted.</p></td>
         </tr>
         <tr>
             <td><p>NOT_FOUND</p></td>
