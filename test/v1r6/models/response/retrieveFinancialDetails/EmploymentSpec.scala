@@ -169,8 +169,8 @@ class EmploymentSpec extends UnitSpec {
       employerName = "maggie"
     ),
     pay = Some(Pay(
-      taxablePayToDate = 34234.15,
-      totalTaxToDate = 6782.92,
+      taxablePayToDate = Some(34234.15),
+      totalTaxToDate = Some(6782.92),
       payFrequency = Some("CALENDAR MONTHLY"),
       paymentDate = Some("2020-04-23"),
       taxWeekNo = Some(32),
