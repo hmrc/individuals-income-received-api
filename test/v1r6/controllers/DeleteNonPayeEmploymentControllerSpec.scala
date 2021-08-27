@@ -46,8 +46,8 @@ class DeleteNonPayeEmploymentControllerSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
-      auditType = "DeleteNonPayeEmployment",
-      transactionName = "delete-non-paye-employment",
+      auditType = "DeleteNonPayeEmploymentIncome",
+      transactionName = "delete-non-paye-employment-income",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
