@@ -51,8 +51,8 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
-      auditType = "CreateAmendNonPayeEmployment",
-      transactionName = "create-amend-non-paye-employment",
+      auditType = "CreateAmendNonPayeEmploymentIncome",
+      transactionName = "create-amend-non-paye-employment-income",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
