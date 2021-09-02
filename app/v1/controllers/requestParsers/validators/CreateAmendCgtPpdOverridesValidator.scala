@@ -171,7 +171,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
         amount = singlePropertyDisposals.disposalProceeds,
         path = s"/singlePropertyDisposals/$arrayIndex/disposalProceeds"
       ),
-      DateFormatValidation.validateWithPath(singlePropertyDisposals.acquisitionDate,
+      DateFormatValidation.validateOptionalWithPath(singlePropertyDisposals.acquisitionDate,
         path = s"/singlePropertyDisposals/$arrayIndex/acquisitionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.acquisitionAmount,

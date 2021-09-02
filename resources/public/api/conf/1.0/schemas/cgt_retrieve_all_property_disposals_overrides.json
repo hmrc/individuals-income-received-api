@@ -229,7 +229,6 @@
               "ppdSubmissionId",
               "completionDate",
               "disposalProceeds",
-              "acquisitionDate",
               "acquisitionAmount"
             ]
           }

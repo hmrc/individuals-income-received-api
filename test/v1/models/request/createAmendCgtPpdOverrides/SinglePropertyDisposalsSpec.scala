@@ -45,7 +45,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       "AB0000000098",
       "2020-02-28",
       454.24,
-      "2020-03-29",
+      Some("2020-03-29"),
       3434.45,
       233.45,
       423.34,

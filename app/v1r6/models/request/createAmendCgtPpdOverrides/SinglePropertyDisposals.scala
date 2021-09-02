@@ -22,7 +22,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class SinglePropertyDisposals(ppdSubmissionId: String,
                                    completionDate: String,
                                    disposalProceeds: BigDecimal,
-                                   acquisitionDate: String,
+                                   acquisitionDate: Option[String],
                                    acquisitionAmount: BigDecimal,
                                    improvementCosts: BigDecimal,
                                    additionalCosts: BigDecimal,
@@ -46,7 +46,7 @@ object SinglePropertyDisposals {
     (JsPath \ "ppdSubmissionId").write[String] and
       (JsPath \ "completionDate").write[String] and
       (JsPath \ "disposalProceeds").write[BigDecimal] and
-      (JsPath \ "acquisitionDate").write[String] and
+      (JsPath \ "acquisitionDate").writeNullable[String] and
       (JsPath \ "acquisitionAmount").write[BigDecimal] and
       (JsPath \ "improvementCosts").write[BigDecimal] and
       (JsPath \ "additionalCosts").write[BigDecimal] and

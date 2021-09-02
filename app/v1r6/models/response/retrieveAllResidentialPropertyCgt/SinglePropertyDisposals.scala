@@ -27,7 +27,7 @@ case class SinglePropertyDisposals(source: MtdSourceEnum,
                                    disposalDate: Option[String],
                                    completionDate: String,
                                    disposalProceeds: BigDecimal,
-                                   acquisitionDate: String,
+                                   acquisitionDate: Option[String],
                                    acquisitionAmount: BigDecimal,
                                    improvementCosts: Option[BigDecimal],
                                    additionalCosts : Option[BigDecimal],
@@ -49,7 +49,7 @@ object SinglePropertyDisposals {
       (JsPath \ "disposalDate").readNullable[String] and
       (JsPath \ "completionDate").read[String] and
       (JsPath \ "disposalProceeds").read[BigDecimal] and
-      (JsPath \ "acquisitionDate").read[String] and
+      (JsPath \ "acquisitionDate").readNullable[String] and
       (JsPath \ "acquisitionAmount").read[BigDecimal] and
       (JsPath \ "improvementCosts").readNullable[BigDecimal] and
       (JsPath \ "additionalCosts").readNullable[BigDecimal] and
