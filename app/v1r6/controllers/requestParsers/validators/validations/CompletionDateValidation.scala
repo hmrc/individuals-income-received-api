@@ -19,8 +19,10 @@ package v1r6.controllers.requestParsers.validators.validations
 import utils.CurrentDateTime
 import v1r6.models.domain.DesTaxYear
 import v1r6.models.errors.{MtdError, RuleCompletionDateError}
-
 import java.time.LocalDate
+
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 object CompletionDateValidation {
   private val MARCH = 3
@@ -32,11 +34,22 @@ object CompletionDateValidation {
 
     val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
+    val currentTaxYear: Int = {
+      val date = currentDateTime.getDateTime
+      lazy val taxYearStartDate: DateTime = DateTime.parse(
+        date.getYear + "-04-06",
+        DateTimeFormat.forPattern("yyyy-MM-dd")
+      )
+
+      if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
+    }
+
     val dateIsBefore7thMarch = formattedDate.isBefore(march7th)
     val dateIsAfterToday = formattedDate.isAfter(currentDateTime.getLocalDate)
     val dateIsInTaxYear = formattedDate.isAfter(fromDate) && formattedDate.isBefore(toDate)
+    val taxYearIsCurrentTaxYear = DesTaxYear.fromMtd(taxYear).value.toInt == currentTaxYear
 
-    if(dateIsBefore7thMarch || dateIsAfterToday || !dateIsInTaxYear) {
+    if(dateIsBefore7thMarch && taxYearIsCurrentTaxYear || dateIsAfterToday || !dateIsInTaxYear) {
       List(RuleCompletionDateError.copy(paths = Some(Seq(path))))
     } else {
       NoValidationErrors
