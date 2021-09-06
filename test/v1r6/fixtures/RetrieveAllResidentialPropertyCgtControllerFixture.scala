@@ -46,7 +46,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       Some("2022-02-04"),
       "2022-03-08",
       1999.99,
-      "2018-04-06",
+      Some("2018-04-06"),
       1999.99,
       Some(1999.99),
       Some(5000.99),

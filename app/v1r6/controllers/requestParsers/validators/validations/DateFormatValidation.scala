@@ -35,6 +35,12 @@ object DateFormatValidation {
     )
   }
 
+  def validateOptionalWithPath(date: Option[String],
+                               path: String): List[MtdError] = date match {
+    case None => NoValidationErrors
+    case Some(date) => validateWithPath(date, path)
+  }
+
   def validate(date: String, error: MtdError): List[MtdError] = Try {
     LocalDate.parse(date, dateFormat)
   } match {

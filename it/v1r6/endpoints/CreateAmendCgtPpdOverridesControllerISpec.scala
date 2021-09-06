@@ -111,7 +111,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
     paths = Some(Seq(
       "/singlePropertyDisposals/0/otherReliefAmount",
       "/singlePropertyDisposals/0/disposalProceeds",
-      "/singlePropertyDisposals/0/acquisitionDate",
       "/singlePropertyDisposals/0/prfAmount",
       "/multiplePropertyDisposals/0/ppdSubmissionId",
       "/singlePropertyDisposals/0/improvementCosts",

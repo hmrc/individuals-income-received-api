@@ -38,6 +38,29 @@ class DateFormatValidationSpec extends UnitSpec {
       }
     }
 
+    "validateOptionalWithPath" must {
+      "return an empty list for a value of 'None'" in {
+        DateFormatValidation.validateOptionalWithPath(
+          date = None,
+          path = "/path"
+        ) shouldBe NoValidationErrors
+      }
+
+      "return an empty list for some valid date" in {
+        DateFormatValidation.validateOptionalWithPath(
+          date = Some("2019-04-20"),
+          path = "/path"
+        ) shouldBe NoValidationErrors
+      }
+
+      "return a DateFormatError for some invalid date" in {
+        DateFormatValidation.validateOptionalWithPath(
+          date = Some("20-04-2017"),
+          path = "/path",
+        ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
+      }
+    }
+
     "validate" must {
 
       object DummyError extends MtdError("ERROR_CODE", "Error message")
