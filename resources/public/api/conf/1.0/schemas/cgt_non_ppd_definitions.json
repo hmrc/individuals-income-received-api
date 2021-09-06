@@ -13,7 +13,7 @@
     },
     "completionDate": {
       "type": "string",
-      "description": "The completion date of the sale or disposal of the property, in the format YYYY-MM-DD. It must be on or after 7th March of the specified tax year and must not be a date in the future.",
+      "description": "The completion date of the sale or disposal of the property, in the format YYYY-MM-DD. The completion date must be within the specific tax year and not in the future. If the specified tax year has not ended, the completion date must be between 7th March and 5th April.",
       "example": "2022-03-08"
     },
     "disposalProceeds": {
