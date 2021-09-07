@@ -43,7 +43,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     private val validCustomerReference = "CGTDISPOSAL01"
     private val validDisposalDate = "2020-03-01"
-    private val validCompletionDate = "2020-04-02"
+    private val validCompletionDate = "2020-03-29"
     private val validAcquisitionDate = "2020-02-01"
     private val validValue = 1000.12
 
