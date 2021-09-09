@@ -334,6 +334,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
   )
 
   val completionDateError: MtdError = RuleCompletionDateError.copy(
+    message = "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April",
     paths = Some(Seq(
       "/disposals/0"
     ))
