@@ -26,7 +26,6 @@ import v1r6.controllers.requestParsers.validators.validations.{DisposalDateError
 import v1r6.mocks.MockCurrentDateTime
 import v1r6.models.errors._
 import v1r6.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
-
 import java.time.LocalDate
 
 class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
@@ -42,7 +41,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     private val validCustomerReference = "CGTDISPOSAL01"
     private val validDisposalDate = "2020-03-01"
-    private val validCompletionDate = "2020-04-02"
+    private val validCompletionDate = "2020-03-29"
     private val validAcquisitionDate = "2020-02-01"
     private val validValue = 1000.12
 
@@ -538,9 +537,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     val validator = new CreateAmendCgtResidentialPropertyDisposalsValidator()
 
-    MockCurrentDateTime.getLocalDate
-      .returns(LocalDate.parse("2021-07-29"))
-      .anyNumberOfTimes()
+    MockCurrentDateTime.getLocalDate.returns(LocalDate.parse("2020-04-01")).anyNumberOfTimes()
 
     private val MINIMUM_YEAR = 2020
     MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR

@@ -316,7 +316,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
       |      {
       |         "customerReference": "CGTDISPOSAL01",
       |         "disposalDate": "2020-02-27",
-      |         "completionDate": "2020-02-29",
+      |         "completionDate": "2021-02-28",
       |         "disposalProceeds": 1999.99,
       |         "acquisitionDate": "2020-02-25",
       |         "acquisitionAmount": 1999.99,
@@ -334,7 +334,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
   )
 
   val completionDateError: MtdError = RuleCompletionDateError.copy(
-    message = "The completionDate must be on or after 7th March of the specified tax year and not a date in the future",
+    message = "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April",
     paths = Some(Seq(
       "/disposals/0"
     ))

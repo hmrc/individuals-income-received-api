@@ -32,11 +32,19 @@ object CompletionDateValidation {
 
     val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
+    val currentTaxYear: Int = {
+      val date = currentDateTime.getLocalDate
+      lazy val taxYearStartDate: LocalDate = LocalDate.of(date.getYear,4,6)
+
+      if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
+    }
+
     val dateIsBefore7thMarch = formattedDate.isBefore(march7th)
     val dateIsAfterToday = formattedDate.isAfter(currentDateTime.getLocalDate)
-    val dateIsInTaxYear = formattedDate.isAfter(fromDate) && formattedDate.isBefore(toDate)
+    val dateIsInTaxYear = !formattedDate.isBefore(fromDate) && !formattedDate.isAfter(toDate)
+    val taxYearIsCurrentTaxYear = DesTaxYear.fromMtd(taxYear).value.toInt == currentTaxYear
 
-    if(dateIsBefore7thMarch || dateIsAfterToday || !dateIsInTaxYear) {
+    if(dateIsBefore7thMarch && taxYearIsCurrentTaxYear || dateIsAfterToday || !dateIsInTaxYear) {
       List(RuleCompletionDateError.copy(paths = Some(Seq(path))))
     } else {
       NoValidationErrors
