@@ -28,8 +28,6 @@ import v1r6.models.errors._
 import v1r6.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
 import java.time.LocalDate
 
-import org.joda.time.DateTime
-
 class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     extends UnitSpec
     with ValueFormatErrorMessages
@@ -540,7 +538,6 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val validator = new CreateAmendCgtResidentialPropertyDisposalsValidator()
 
     MockCurrentDateTime.getLocalDate.returns(LocalDate.parse("2020-04-01")).anyNumberOfTimes()
-    MockCurrentDateTime.getDateTime.returns(DateTime.parse("2020-04-01"))
 
     private val MINIMUM_YEAR = 2020
     MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR

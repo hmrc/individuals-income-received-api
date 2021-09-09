@@ -16,8 +16,6 @@
 
 package v1r6.controllers.requestParsers.validators.validations
 
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import utils.CurrentDateTime
 import v1r6.models.domain.DesTaxYear
 import v1r6.models.errors.{MtdError, RuleCompletionDateError}
@@ -35,11 +33,8 @@ object CompletionDateValidation {
     val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
     val currentTaxYear: Int = {
-      val date = currentDateTime.getDateTime
-      lazy val taxYearStartDate: DateTime = DateTime.parse(
-        date.getYear + "-04-06",
-        DateTimeFormat.forPattern("yyyy-MM-dd")
-      )
+      val date = currentDateTime.getLocalDate
+      lazy val taxYearStartDate: LocalDate = LocalDate.of(date.getYear,4,6)
 
       if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
     }

@@ -21,12 +21,9 @@ import v1r6.mocks.MockCurrentDateTime
 import v1r6.models.errors.RuleCompletionDateError
 import java.time.LocalDate
 
-import org.joda.time.DateTime
-
 class CompletionDateValidationSpec extends UnitSpec with MockCurrentDateTime {
   def stubNow(date: String): Unit = {
-    MockCurrentDateTime.getLocalDate.returns(LocalDate.parse(date))
-    MockCurrentDateTime.getDateTime.returns(DateTime.parse(date))
+    MockCurrentDateTime.getLocalDate.returns(LocalDate.parse(date)).anyNumberOfTimes()
   }
 
   "validate" should {
