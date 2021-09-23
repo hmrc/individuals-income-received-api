@@ -329,12 +329,6 @@ trait HateoasLinks {
       rel = CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS
     )
 
-  def deleteNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
-      method = DELETE,
-      rel = DELETE_NON_PPD_CGT_AND_DISPOSALS
-    )
 
   // 'Report and Pay Capital Gains Tax on Property' Overrides
   def createAmendCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =

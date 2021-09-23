@@ -35,7 +35,6 @@ object RetrieveAllResidentialPropertyCgtResponse extends HateoasLinks {
       Seq(
         createAmendCgtPpdOverrides(appConfig, nino, taxYear),
         createAmendNonPpdCgt(appConfig, nino, taxYear),
-        deleteNonPpdCgt(appConfig, nino, taxYear),
         retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear)
       )
     }
