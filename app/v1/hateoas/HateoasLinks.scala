@@ -344,6 +344,13 @@ trait HateoasLinks {
       rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
     )
 
+  def deleteCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
+      method = DELETE,
+      rel = DELETE_CGT_PPD_OVERRIDES
+    )
+
   // Non-PAYE Employment Income
   def retrieveNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
