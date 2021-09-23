@@ -53,19 +53,5 @@ object RelType {
   val AMEND_EMPLOYMENT_FINANCIAL_DETAILS = "create-and-amend-employment-financial-details"
   val DELETE_EMPLOYMENT_FINANCIAL_DETAILS = "delete-employment-financial-details"
 
-  val CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS = "create-and-amend-other-capital-gains-and-disposals"
-  val DELETE_OTHER_CGT_AND_DISPOSALS = "delete-other-capital-gains-and-disposals"
-
-  val CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS = "create-and-amend-cgt-residential-property-disposals"
-  val DELETE_NON_PPD_CGT_AND_DISPOSALS = "delete-cgt-residential-property-disposals"
-
-  val CREATE_AND_AMEND_CGT_PPD_OVERRIDES = "create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
-  val DELETE_CGT_PPD_OVERRIDES = "delete-report-and-pay-capital-gains-tax-on-property-overrides"
-
-  val CREATE_AND_AMEND_NON_PAYE_EMPLOYMENT = "create-and-amend-non-paye-employment-income"
-  val DELETE_NON_PAYE_EMPLOYMENT = "delete-non-paye-employment-income"
-
-  val RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS = "retrieve-all-cgt-residential-property-disposals-and-overrides"
-
   val SELF = "self"
 }

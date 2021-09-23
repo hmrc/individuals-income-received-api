@@ -120,35 +120,4 @@ trait AmendHateoasBody extends HateoasLinks {
 
     Json.obj("links" -> links)
   }
-
-  def amendOtherCgtHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      createAmendOtherCgt(appConfig, nino, taxYear),
-      retrieveOtherCgt(appConfig, nino, taxYear),
-      deleteOtherCgt(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendCgtResidentialPropertyDisposalsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      createAmendNonPpdCgt(appConfig, nino, taxYear),
-      retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear),
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendNonPayeEmploymentHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-    val links = Seq(
-      createAmendNonPayeEmployment(appConfig, nino, taxYear),
-      retrieveNonPayeEmployment(appConfig, nino, taxYear),
-      deleteNonPayeEmployment(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
 }

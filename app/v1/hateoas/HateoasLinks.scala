@@ -51,18 +51,6 @@ trait HateoasLinks {
   private def employmentUriWithId(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String) =
     s"/${appConfig.apiGatewayContext}/employments/$nino/$taxYear/$employmentId"
 
-  private def otherCgtAndDisposalsUri(appConfig: AppConfig, nino: String, taxYear: String) =
-    s"/${appConfig.apiGatewayContext}/disposals/other-gains/$nino/$taxYear"
-
-  private def cgtPpdOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
-    s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear/ppd"
-
-  private def nonPayeEmploymentUri(appConfig: AppConfig, nino: String, taxYear: String) =
-    s"/${appConfig.apiGatewayContext}/employments/non-paye/$nino/$taxYear"
-
-  private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
-    s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
-
   //API resource links
 
   //Savings Income
@@ -290,73 +278,5 @@ trait HateoasLinks {
       href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",
       method = DELETE,
       rel = DELETE_EMPLOYMENT_FINANCIAL_DETAILS
-    )
-
-  // Other CGT and Disposals
-  def retrieveOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
-      method = GET,
-      rel = SELF
-    )
-
-  def createAmendOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
-      method = PUT,
-      rel = CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS
-    )
-
-  def deleteOtherCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = otherCgtAndDisposalsUri(appConfig, nino,taxYear),
-      method = DELETE,
-      rel = DELETE_OTHER_CGT_AND_DISPOSALS
-    )
-
-  // Retrieve All CGT Residential Property Disposals and Overrides
-  def retrieveAllCgtPpdDisposalsOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
-      method = GET,
-      rel = SELF
-    )
-
-  def createAmendNonPpdCgt(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtResidentialPropertyDisposalsAndOverridesUri(appConfig, nino,taxYear),
-      method = PUT,
-      rel = CREATE_AND_AMEND_NON_PPD_CGT_AND_DISPOSALS
-    )
-
-
-  // 'Report and Pay Capital Gains Tax on Property' Overrides
-  def deleteCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
-      method = DELETE,
-      rel = DELETE_CGT_PPD_OVERRIDES
-    )
-
-  // Non-PAYE Employment Income
-  def retrieveNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = nonPayeEmploymentUri(appConfig, nino,taxYear),
-      method = GET,
-      rel = SELF
-    )
-
-  def createAmendNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = nonPayeEmploymentUri(appConfig, nino,taxYear),
-      method = PUT,
-      rel = CREATE_AND_AMEND_NON_PAYE_EMPLOYMENT
-    )
-
-  def deleteNonPayeEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = nonPayeEmploymentUri(appConfig, nino,taxYear),
-      method = DELETE,
-      rel = DELETE_NON_PAYE_EMPLOYMENT
     )
 }

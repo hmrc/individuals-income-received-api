@@ -58,9 +58,7 @@ object PayrollIdFormatError             extends MtdError("FORMAT_PAYROLL_ID", "T
 object StartDateFormatError             extends MtdError("FORMAT_START_DATE", "The provided start date is invalid")
 object CessationDateFormatError         extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
 object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The provided source is invalid")
-object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
-object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
-object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
   extends MtdError(
@@ -118,42 +116,6 @@ object RuleLumpSumsError
     code = "RULE_LUMP_SUMS",
     message = "At least one child object is required when lumpSums are provided"
   )
-
-object RuleLossesGreaterThanGainError
-  extends MtdError(
-    code = "RULE_LOSSES_GREATER_THAN_GAIN",
-    message = "The total losses from this year or the previous year must not be greater than the gain"
-  )
-
-object RuleGainLossError
-    extends MtdError(
-      code = "RULE_GAIN_LOSS",
-      message = "Only one of gain or loss values can be provided"
-    )
-
-object RuleDisposalDateError
-    extends MtdError(
-      code = "RULE_DISPOSAL_DATE",
-      message = ""
-    )
-
-object RuleAcquisitionDateError
-    extends MtdError(
-      code = "RULE_ACQUISITION_DATE",
-      message = "The acquisitionDate must not be later than disposalDate"
-    )
-
-object RuleGainAfterReliefLossAfterReliefError
-    extends MtdError(
-      code = "RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF",
-      message = "Only one of gainAfterRelief or lossAfterRelief values can be provided"
-    )
-
-object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE", "The completionDate must not be earlier than the disposalDate")
-
-object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
-
-object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be on or after 7th March of the specified tax year and not a date in the future")
 
 // Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
