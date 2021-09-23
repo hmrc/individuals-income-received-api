@@ -331,13 +331,6 @@ trait HateoasLinks {
 
 
   // 'Report and Pay Capital Gains Tax on Property' Overrides
-  def createAmendCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
-      href = cgtPpdOverridesUri(appConfig, nino,taxYear),
-      method = PUT,
-      rel = CREATE_AND_AMEND_CGT_PPD_OVERRIDES
-    )
-
   def deleteCgtPpdOverrides(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = cgtPpdOverridesUri(appConfig, nino,taxYear),
