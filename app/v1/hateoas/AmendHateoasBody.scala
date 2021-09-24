@@ -148,7 +148,6 @@ trait AmendHateoasBody extends HateoasLinks {
     val links = Seq(
       createAmendNonPpdCgt(appConfig, nino, taxYear),
       retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear),
-      deleteNonPpdCgt(appConfig, nino, taxYear)
     )
 
     Json.obj("links" -> links)
