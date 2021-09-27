@@ -18,6 +18,7 @@ package v1r6.controllers
 
 import cats.data.EitherT
 import config.AppConfig
+
 import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
@@ -29,18 +30,19 @@ import v1r6.hateoas.AmendHateoasBody
 import v1r6.models.audit.{AuditEvent, AuditResponse, CreateAmendCgtResidentialPropertyDisposalsAuditDetail}
 import v1r6.models.errors._
 import v1r6.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
-import v1r6.services.{AuditService, CreateAmendCgtResidentialPropertyDisposalsService, EnrolmentsAuthService, MtdIdLookupService}
+import v1r6.services.{AuditService, CreateAmendCgtResidentialPropertyDisposalsService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authService: EnrolmentsAuthService,
-                                            val lookupService: MtdIdLookupService,
-                                            appConfig: AppConfig,
-                                            requestParser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
-                                            service: CreateAmendCgtResidentialPropertyDisposalsService,
-                                            auditService: AuditService,
-                                            cc: ControllerComponents,
-                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                                     val lookupService: MtdIdLookupService,
+                                                                     appConfig: AppConfig,
+                                                                     requestParser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
+                                                                     service: CreateAmendCgtResidentialPropertyDisposalsService,
+                                                                     auditService: AuditService,
+                                                                     nrsProxyService: NrsProxyService,
+                                                                     cc: ControllerComponents,
+                                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -66,7 +68,10 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.createAndAmend(parsedRequest))
+          serviceResponse <- {
+            nrsProxyService.submitAsync(nino, "itsa-cgt-disposal", request.body)
+            EitherT(service.createAndAmend(parsedRequest))
+          }
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

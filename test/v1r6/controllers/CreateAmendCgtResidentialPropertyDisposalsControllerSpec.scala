@@ -24,7 +24,7 @@ import v1r6.hateoas.HateoasLinks
 import v1r6.mocks.MockIdGenerator
 import v1r6.mocks.hateoas.MockHateoasFactory
 import v1r6.mocks.requestParsers.MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
-import v1r6.mocks.services.{MockAuditService, MockCreateAmendCgtResidentialPropertyDisposalsService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1r6.mocks.services._
 import v1r6.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtResidentialPropertyDisposalsAuditDetail}
 import v1r6.models.domain.Nino
 import v1r6.models.errors._
@@ -40,6 +40,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
   with MockAppConfig
   with MockCreateAmendCgtResidentialPropertyDisposalsService
   with MockAuditService
+  with MockNrsProxyService
   with MockHateoasFactory
   with MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
   with HateoasLinks
@@ -141,6 +142,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
       requestParser = mockCreateAmendCgtResidentialPropertyDisposalsRequestParser,
       service = mockCreateAmendCgtResidentialPropertyDisposalsService,
       auditService = mockAuditService,
+      nrsProxyService = mockNrsProxyService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -177,6 +179,8 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
         MockCreateAmendCgtResidentialPropertyDisposalsService
           .createAndAmend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+
+        MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal", validRequestJson)
 
         val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
 
@@ -241,6 +245,8 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec extends Controlle
             MockCreateAmendCgtResidentialPropertyDisposalsService
               .createAndAmend(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+            MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal", validRequestJson)
 
             val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
 
