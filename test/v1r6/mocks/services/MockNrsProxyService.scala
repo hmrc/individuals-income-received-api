@@ -22,8 +22,6 @@ import play.api.libs.json.Writes
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r6.services.NrsProxyService
 
-import scala.concurrent.{ExecutionContext, Future}
-
 trait MockNrsProxyService extends MockFactory {
 
   val mockNrsProxyService: NrsProxyService = mock[NrsProxyService]
