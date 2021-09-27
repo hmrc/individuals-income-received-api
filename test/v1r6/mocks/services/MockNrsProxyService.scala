@@ -18,20 +18,18 @@ package v1r6.mocks.services
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.Writes
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r6.services.NrsProxyService
-
-import scala.concurrent.{ExecutionContext, Future}
 
 trait MockNrsProxyService extends MockFactory {
 
   val mockNrsProxyService: NrsProxyService = mock[NrsProxyService]
 
   object MockNrsProxyService {
-    def submitAsync[A](nino: String, notableEvent: String, body: A): CallHandler[Unit] = {
-      (mockNrsProxyService.submitAsync(_: String, _: String, _: A)(_: Writes[A], _: HeaderCarrier))
-        .expects(nino, notableEvent, body, *, *)
+    def submitAsync(nino: String, notableEvent: String, body: JsValue): CallHandler[Unit] = {
+      (mockNrsProxyService.submitAsync(_: String, _: String, _: JsValue)(_: HeaderCarrier))
+        .expects(nino, notableEvent, body, *)
     }
   }
 

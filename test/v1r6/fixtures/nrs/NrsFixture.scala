@@ -16,18 +16,11 @@
 
 package v1r6.fixtures.nrs
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{JsValue, Json}
 
 trait NrsFixture {
   val nino: String = "AA111111A"
   val event = "some-event"
 
-  case class Body(a: String, b: Int)
-
-  object Body {
-    implicit val writes: Writes[Body] = Json.writes
-  }
-
-  val body: Body = Body("A", 1)
-  val bodyJson = """{"a": "A", "b": 1 }"""
+  val body: JsValue = Json.parse("""{"a": "A", "b": 1 }""")
 }

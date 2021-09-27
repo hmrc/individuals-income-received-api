@@ -18,7 +18,7 @@ package v1r6.mocks.connectors
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.Writes
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import v1r6.connectors.NrsProxyConnector
 
@@ -29,8 +29,8 @@ trait MockNrsProxyConnector extends MockFactory {
   val mockNrsProxyConnector: NrsProxyConnector = mock[NrsProxyConnector]
 
   object MockNrsProxyConnector {
-    def submit[A: Writes](nino: String, notableEvent: String, body: A): CallHandler[Future[Either[UpstreamErrorResponse, Unit]]] =
-      (mockNrsProxyConnector.submit(_: String, _: String, _: A)(_: Writes[A], _: HeaderCarrier))
-        .expects(nino, notableEvent, body, *, *)
+    def submit(nino: String, notableEvent: String, body: JsValue): CallHandler[Future[Either[UpstreamErrorResponse, Unit]]] =
+      (mockNrsProxyConnector.submit(_: String, _: String, _: JsValue)(_: HeaderCarrier))
+        .expects(nino, notableEvent, body, *)
   }
 }
