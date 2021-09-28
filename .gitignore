@@ -35,3 +35,4 @@ tmp
 bin
 /.bsp
 !.scalafmt.conf
+!.sbtopts
