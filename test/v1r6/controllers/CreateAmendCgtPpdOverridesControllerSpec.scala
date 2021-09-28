@@ -24,7 +24,7 @@ import v1r6.hateoas.HateoasLinks
 import v1r6.mocks.MockIdGenerator
 import v1r6.mocks.hateoas.MockHateoasFactory
 import v1r6.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
-import v1r6.mocks.services.{MockAuditService, MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1r6.mocks.services.{MockAuditService, MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
 import v1r6.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail}
 import v1r6.models.domain.Nino
 import v1r6.models.errors._
@@ -40,6 +40,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
   with MockAppConfig
   with MockCreateAmendCgtPpdOverridesService
   with MockAuditService
+  with MockNrsProxyService
   with MockHateoasFactory
   with MockCreateAmendCgtPpdOverridesRequestParser
   with HateoasLinks
@@ -190,6 +191,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
       requestParser = mockCreateAmendCgtPpdOverridesRequestParser,
       service = mockCreateAmendCgtPpdOverridesService,
       auditService = mockAuditService,
+      nrsProxyService = mockNrsProxyService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -226,6 +228,8 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
         MockCreateAmendCgtPpdOverridesService
           .createAmend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+
+        MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal-ppd", validRequestJson)
 
         val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
 
@@ -287,6 +291,8 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
             MockCreateAmendCgtPpdOverridesService
               .createAmend(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+            MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal-ppd", validRequestJson)
 
             val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
 

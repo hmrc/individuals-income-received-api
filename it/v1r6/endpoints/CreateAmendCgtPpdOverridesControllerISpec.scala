@@ -16,16 +16,17 @@
 
 package v1r6.endpoints
 
+import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.IntegrationBaseSpec
+import support.{IntegrationBaseSpec, WireMockMethods}
 import v1r6.models.errors._
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
+class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
   val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -382,6 +383,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
+    def verifyNrs(payload: JsValue): Unit =
+      verify(postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-ppd"))
+        .withRequestBody(equalToJson(payload.toString())))
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
@@ -398,6 +403,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
+
+        verifyNrs(validRequestBodyJson)
       }
     }
 

@@ -29,7 +29,7 @@ import v1r6.hateoas.AmendHateoasBody
 import v1r6.models.audit.{AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail}
 import v1r6.models.errors._
 import v1r6.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
-import v1r6.services.{AuditService, CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService}
+import v1r6.services.{AuditService, CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,6 +39,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
                                                      requestParser: CreateAmendCgtPpdOverridesRequestParser,
                                                      service: CreateAmendCgtPpdOverridesService,
                                                      auditService: AuditService,
+                                                     nrsProxyService: NrsProxyService,
                                                      cc: ControllerComponents,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc)
@@ -69,7 +70,10 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.createAmend(parsedRequest))
+          serviceResponse <- {
+            nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", request.body)
+            EitherT(service.createAmend(parsedRequest))
+          }
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
