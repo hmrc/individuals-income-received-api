@@ -29,6 +29,13 @@ Run unit tests: `sbt test`
 
 Run integration tests: `sbt it:test`
 
+Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtops` file to the root of the project with the following contents:
+
+```
+-J-Xmx3G
+-J-XX:+UseG1GC
+```
+
 ## To view the RAML
 To view documentation locally, ensure the Individuals Income Received API is running, and run api-documentation-frontend:
 
