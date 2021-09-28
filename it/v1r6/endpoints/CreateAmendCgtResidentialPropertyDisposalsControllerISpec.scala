@@ -16,16 +16,17 @@
 
 package v1r6.endpoints
 
+import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.IntegrationBaseSpec
+import support.{IntegrationBaseSpec, WireMockMethods}
 import v1r6.models.errors._
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends IntegrationBaseSpec {
+class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
   val validDisposalDate: String = "2020-03-27"
   val validCompletionDate: String = "2020-03-29"
@@ -518,6 +519,10 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
+    def verifyNrs(payload: JsValue): Unit =
+      verify(postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal"))
+        .withRequestBody(equalToJson(payload.toString())))
   }
 
   "Calling the 'create and amend other CGT' endpoint" should {
@@ -535,6 +540,8 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
+
+        verifyNrs(validRequestJson)
       }
     }
 
@@ -608,6 +615,8 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
+
+            verifyNrs(validRequestJson)
           }
         }
 
