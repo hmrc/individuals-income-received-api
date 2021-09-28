@@ -24,7 +24,7 @@ import v1r6.hateoas.HateoasLinks
 import v1r6.mocks.MockIdGenerator
 import v1r6.mocks.hateoas.MockHateoasFactory
 import v1r6.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
-import v1r6.mocks.services.{MockAuditService, MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1r6.mocks.services.{MockAuditService, MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
 import v1r6.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
 import v1r6.models.domain.Nino
 import v1r6.models.errors._
@@ -39,6 +39,7 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
   with MockMtdIdLookupService
   with MockAppConfig
   with MockCreateAmendOtherCgtService
+  with MockNrsProxyService
   with MockAuditService
   with MockHateoasFactory
   with MockCreateAmendOtherCgtRequestParser
@@ -170,6 +171,7 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
       appConfig = mockAppConfig,
       requestParser = mockCreateAmendOtherCgtRequestParser,
       service = mockCreateAmendOtherCgtService,
+      nrsProxyService = mockNrsProxyService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -207,6 +209,10 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
         MockCreateAmendOtherCgtService
           .createAmend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+
+        MockNrsProxyService
+          .submitAsync(nino, "itsa-cgt-disposal-other", validRequestJson)
+          .returns(())
 
         val result: Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
 
@@ -271,6 +277,10 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
             MockCreateAmendOtherCgtService
               .createAmend(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+            MockNrsProxyService
+              .submitAsync(nino, "itsa-cgt-disposal-other", validRequestJson)
+              .returns(())
 
             val result: Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
 
