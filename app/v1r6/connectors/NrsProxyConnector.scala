@@ -17,7 +17,7 @@
 package v1r6.connectors
 
 import config.AppConfig
-import play.api.libs.json.Writes
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, UpstreamErrorResponse}
 
@@ -29,9 +29,9 @@ class NrsProxyConnector @Inject()(http: HttpClient,
                                   appConfig: AppConfig)
                                  (implicit ec: ExecutionContext) {
 
-  def submit[A: Writes](nino: String, notableEvent: String, body: A)
+  def submit(nino: String, notableEvent: String, body: JsValue)
                        (implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, Unit]] =
-    http.POST[A, Either[UpstreamErrorResponse, Unit]](
+    http.POST[JsValue, Either[UpstreamErrorResponse, Unit]](
       s"${appConfig.mtdNrsProxyBaseUrl}/mtd-api-nrs-proxy/$nino/$notableEvent",
       body)
 }

@@ -16,7 +16,7 @@
 
 package v1r6.services
 
-import play.api.libs.json.Writes
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r6.connectors.NrsProxyConnector
 
@@ -25,7 +25,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class NrsProxyService @Inject()(val connector: NrsProxyConnector) {
 
-  def submitAsync[A: Writes](nino: String, notableEvent: String, body: A)
+  def submitAsync(nino: String, notableEvent: String, body: JsValue)
                        (implicit hc: HeaderCarrier): Unit = {
     connector.submit(nino, notableEvent, body)
   }
