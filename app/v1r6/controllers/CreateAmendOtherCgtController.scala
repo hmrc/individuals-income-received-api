@@ -26,7 +26,8 @@ import v1r6.controllers.requestParsers.CreateAmendOtherCgtRequestParser
 import v1r6.hateoas.AmendHateoasBody
 import v1r6.models.errors._
 import v1r6.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
-import v1r6.services.{AuditService, CreateAmendOtherCgtService, EnrolmentsAuthService, MtdIdLookupService}
+import v1r6.services.{AuditService, CreateAmendOtherCgtService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
+
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r6.models.audit.{AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
@@ -38,6 +39,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
                                               appConfig: AppConfig,
                                               requestParser: CreateAmendOtherCgtRequestParser,
                                               service: CreateAmendOtherCgtService,
+                                              nrsProxyService: NrsProxyService,
                                               auditService: AuditService,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -66,7 +68,10 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.createAmend(parsedRequest))
+          serviceResponse <- {
+            nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-other", request.body)
+            EitherT(service.createAmend(parsedRequest))
+          }
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

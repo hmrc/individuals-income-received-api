@@ -29,7 +29,7 @@ Run unit tests: `sbt test`
 
 Run integration tests: `sbt it:test`
 
-Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtops` file to the root of the project with the following contents:
+Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtopts` file to the root of the project with the following contents:
 
 ```
 -J-Xmx3G
