@@ -22,10 +22,10 @@ import play.api.http.Status
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.IntegrationBaseSpec
+import support.V1R6IntegrationSpec
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class AuthISpec extends IntegrationBaseSpec {
+class AuthISpec extends V1R6IntegrationSpec {
 
   private trait Test {
     val nino          = "AA123456A"

@@ -22,11 +22,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.{IntegrationBaseSpec, WireMockMethods}
+import support.{V1R6IntegrationSpec, WireMockMethods}
 import v1r6.models.errors._
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with WireMockMethods {
+class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with WireMockMethods {
 
   val validRequestBodyJson: JsValue = Json.parse(
     """
