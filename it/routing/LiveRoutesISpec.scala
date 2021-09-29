@@ -21,10 +21,10 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.IntegrationBaseSpec
+import support.V1IntegrationSpec
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class LiveRoutesISpec extends IntegrationBaseSpec {
+class LiveRoutesISpec extends V1IntegrationSpec {
 
   override def servicesConfig: Map[String, Any] = Map(
     "microservice.services.des.host" -> mockHost,

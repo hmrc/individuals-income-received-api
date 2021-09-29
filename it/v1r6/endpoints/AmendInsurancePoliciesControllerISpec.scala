@@ -21,11 +21,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.IntegrationBaseSpec
+import support.V1R6IntegrationSpec
 import v1r6.models.errors._
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
+class AmendInsurancePoliciesControllerISpec extends V1R6IntegrationSpec {
 
   private trait Test {
 

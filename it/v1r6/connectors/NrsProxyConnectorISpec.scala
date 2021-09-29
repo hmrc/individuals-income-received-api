@@ -20,11 +20,11 @@ import org.scalatest.Inside
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import play.api.http.Status._
 import play.api.test.Injecting
-import support.{IntegrationBaseSpec, WireMockMethods}
+import support.{V1R6IntegrationSpec, WireMockMethods}
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier, UpstreamErrorResponse}
 import v1r6.fixtures.nrs.NrsFixture
 
-class NrsProxyConnectorISpec extends IntegrationBaseSpec
+class NrsProxyConnectorISpec extends V1R6IntegrationSpec
   with NrsFixture
   with ScalaFutures
   with Inside

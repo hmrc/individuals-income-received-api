@@ -22,12 +22,12 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.{IntegrationBaseSpec, WireMockMethods}
+import support.{V1R6IntegrationSpec, WireMockMethods}
 import v1r6.controllers.requestParsers.validators.validations.DisposalDateErrorMessages
 import v1r6.models.errors._
 import v1r6.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with DisposalDateErrorMessages with WireMockMethods {
+class CreateAmendOtherCgtControllerISpec extends V1R6IntegrationSpec with DisposalDateErrorMessages with WireMockMethods {
 
   val validRequestJson: JsValue = Json.parse(
     """
