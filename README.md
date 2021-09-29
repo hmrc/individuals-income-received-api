@@ -36,6 +36,8 @@ Note: if you run into `java.lang.OutOfMemoryError` errors, add a `.sbtopts` file
 -J-XX:+UseG1GC
 ```
 
+### Alternatively, run one of the scripts in the `./scripts` folder
+
 ## To view the RAML
 To view documentation locally, ensure the Individuals Income Received API is running, and run api-documentation-frontend:
 
