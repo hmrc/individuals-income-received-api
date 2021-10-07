@@ -79,8 +79,9 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NO_DATA_FOUND", NotFoundError),
+          ("INVALID_EMPLOYMENT_ID", DownstreamError),
           ("INVALID_CORRELATIONID", DownstreamError),
+          ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )
