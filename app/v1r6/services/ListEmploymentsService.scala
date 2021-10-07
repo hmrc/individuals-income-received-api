@@ -32,7 +32,7 @@ import v1r6.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends DesResponseMappingSupport with Logging{
+class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends DesResponseMappingSupport with Logging {
 
   def listEmployments(request: ListEmploymentsRequest)(
     implicit hc: HeaderCarrier,
@@ -50,9 +50,10 @@ class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) exte
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"  -> NinoFormatError,
     "INVALID_TAX_YEAR"           -> TaxYearFormatError,
+    "INVALID_EMPLOYMENT_ID"      -> DownstreamError,
+    "INVALID_CORRELATIONID"      -> DownstreamError,
     "NO_DATA_FOUND"              -> NotFoundError,
     "SERVER_ERROR"               -> DownstreamError,
-    "INVALID_CORRELATIONID"      -> DownstreamError,
     "SERVICE_UNAVAILABLE"        -> DownstreamError
   )
 }
