@@ -18,11 +18,10 @@ package v1r6.controllers.requestParsers.validators.validations
 
 import v1r6.models.errors.{EmployerNameFormatError, MtdError}
 
-object EmployerNameValidation {
+object OtherEmployerNameValidation {
 
   def validate(employerName: String, maxLength: Int): List[MtdError] = {
-    val regex = s"^\\S[0-9a-zA-Z{À-˿'}\\- _&():.'^]{0,$maxLength}$$"
-
+    val regex = s"^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,$maxLength}$$"
     if(employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
   }
 }

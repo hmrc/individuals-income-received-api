@@ -19,9 +19,9 @@ package v1.controllers.requestParsers.validators.validations
 import support.UnitSpec
 import v1.models.errors.EmployerNameFormatError
 
-class EmployerNameValidationSpec extends UnitSpec {
+class OtherEmployerNameValidationSpec extends UnitSpec {
 
-  "EmployerNameValidation" when {
+  "OtherEmployerNameValidation" when {
     "validate" must {
       "return an empty list for a valid employer name" in {
         EmployerNameValidation.validate(
@@ -30,10 +30,10 @@ class EmployerNameValidationSpec extends UnitSpec {
         ) shouldBe NoValidationErrors
       }
 
-      "return an EmployerNameFormatError for an invalid employerName" in {
+      "return an OtherEmployerNameFormatError for an invalid employerName" in {
         EmployerNameValidation.validate(
-          employerName = "This employerName string is 75 characters long---------------------------75",
-          73
+          employerName = "This employerName string is 106 characters long--------------------------------------------------------106",
+          105
         ) shouldBe List(EmployerNameFormatError)
       }
     }
