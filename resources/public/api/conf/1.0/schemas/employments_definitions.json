@@ -34,11 +34,6 @@
       "pattern": "^[A-Za-z0-9.,\\-()/=!\"%&*; <>'+:\\?]{0,38}$",
       "example": "YDIAHPcYFQbOXLCKQ"
     },
-    "occupationalPension": {
-      "type": "boolean",
-      "description": "A boolean indicating whether the employment is an occupationalPension.",
-      "example": "false"
-    },
     "dateIgnored": {
       "type": "string",
       "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
