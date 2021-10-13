@@ -37,8 +37,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412",
-      |  "occupationalPension": false
+      |  "payrollId": "124214112412"
       |}
     """.stripMargin
   )
