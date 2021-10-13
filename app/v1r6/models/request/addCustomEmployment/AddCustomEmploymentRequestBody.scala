@@ -22,8 +22,7 @@ case class AddCustomEmploymentRequestBody(employerRef: Option[String],
                                           employerName: String,
                                           startDate: String,
                                           cessationDate: Option[String],
-                                          payrollId: Option[String],
-                                          occupationalPension: Boolean)
+                                          payrollId: Option[String])
 
 object AddCustomEmploymentRequestBody{
   implicit val format: OFormat[AddCustomEmploymentRequestBody] = Json.format[AddCustomEmploymentRequestBody]

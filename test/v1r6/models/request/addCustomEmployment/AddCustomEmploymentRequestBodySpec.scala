@@ -29,8 +29,7 @@ class AddCustomEmploymentRequestBodySpec extends UnitSpec {
         |  "employerName": "AMD infotech Ltd",
         |  "startDate": "2019-01-01",
         |  "cessationDate": "2020-06-01",
-        |  "payrollId": "124214112412",
-        |  "occupationalPension": false
+        |  "payrollId": "124214112412"
         |}
     """.stripMargin
     )
@@ -40,8 +39,7 @@ class AddCustomEmploymentRequestBodySpec extends UnitSpec {
       employerName = "AMD infotech Ltd",
       startDate = "2019-01-01",
       cessationDate = Some("2020-06-01"),
-      payrollId = Some("124214112412"),
-      occupationalPension = false
+      payrollId = Some("124214112412")
     )
 
     "read from valid JSON" should {
@@ -57,8 +55,7 @@ class AddCustomEmploymentRequestBodySpec extends UnitSpec {
             |{
             |  "employerRef": "123/AB56797",
             |  "cessationDate": "2020-06-01",
-            |  "payrollId": "124214112412",
-            |  "occupationalPension": false
+            |  "payrollId": "124214112412"
             |}
           """.stripMargin
         )

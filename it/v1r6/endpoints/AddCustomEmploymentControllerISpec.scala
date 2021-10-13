@@ -40,8 +40,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
         |  "employerName": "AMD infotech Ltd",
         |  "startDate": "2019-01-01",
         |  "cessationDate": "2020-06-01",
-        |  "payrollId": "124214112412",
-        |  "occupationalPension": false
+        |  "payrollId": "124214112412"
         |}
       """.stripMargin
     )
@@ -124,8 +123,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2019-01-01",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": false
+          |  "payrollId": "124214112412"
           |}
       """.stripMargin
       )
@@ -139,8 +137,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": false,
           |  "startDate": false,
           |  "cessationDate": false,
-          |  "payrollId": false,
-          |  "occupationalPension": 13
+          |  "payrollId": false
           |}
         """.stripMargin
       )
@@ -160,8 +157,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2019-01-01",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": false
+          |  "payrollId": "124214112412"
           |}
       """.stripMargin
       )
@@ -173,8 +169,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "${"a" * 100}",
           |  "startDate": "2019-01-01",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": false
+          |  "payrollId": "124214112412"
           |}
       """.stripMargin
       )
@@ -186,8 +181,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
            |  "employerName": "AMD infotech Ltd",
            |  "startDate": "notValid",
            |  "cessationDate": "2020-06-01",
-           |  "payrollId": "124214112412",
-           |  "occupationalPension": false
+           |  "payrollId": "124214112412"
            |}
       """.stripMargin
       )
@@ -199,8 +193,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
            |  "employerName": "AMD infotech Ltd",
            |  "startDate": "2019-01-01",
            |  "cessationDate": "notValid",
-           |  "payrollId": "124214112412",
-           |  "occupationalPension": false
+           |  "payrollId": "124214112412"
            |}
       """.stripMargin
       )
@@ -212,8 +205,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2019-01-01",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "${"a" * 100}",
-          |  "occupationalPension": false
+          |  "payrollId": "${"a" * 100}"
           |}
       """.stripMargin
       )
@@ -225,8 +217,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2020-01-01",
           |  "cessationDate": "2019-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": false
+          |  "payrollId": "124214112412"
           |}
       """.stripMargin
       )
@@ -238,8 +229,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2023-01-01",
           |  "cessationDate": "2023-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": false
+          |  "payrollId": "124214112412"
           |}
       """.stripMargin
       )
@@ -251,8 +241,7 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2018-01-01",
           |  "cessationDate": "2018-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": false
+          |  "payrollId": "124214112412"
           |}
       """.stripMargin
       )
@@ -263,16 +252,14 @@ class AddCustomEmploymentControllerISpec extends V1R6IntegrationSpec {
           "/employerName",
           "/payrollId",
           "/cessationDate",
-          "/startDate",
-          "/occupationalPension"
+          "/startDate"
         ))
       )
 
       val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(List(
           "/employerName",
-          "/startDate",
-          "/occupationalPension"
+          "/startDate"
         ))
       )
 

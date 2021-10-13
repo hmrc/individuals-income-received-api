@@ -56,8 +56,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412"),
-    occupationalPension = false
+    payrollId = Some("124214112412")
   )
 
   private val addCustomEmploymentRequest = AddCustomEmploymentRequest(
@@ -106,8 +105,7 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
              |  "employerName": "${"a" * 75}",
              |  "startDate": "notValid",
              |  "cessationDate": "notValid",
-             |  "payrollId": "${"b" * 75}",
-             |  "occupationalPension": false
+             |  "payrollId": "${"b" * 75}"
              |}
             """.stripMargin
         )
