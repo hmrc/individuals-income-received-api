@@ -51,7 +51,7 @@
     },
     "occupationalPension": {
       "type": "boolean",
-      "description": "A boolean indicating whether the employment is an occupationalPension. The value must be true or false.",
+      "description": "A boolean indicating whether the employment is an occupational pension. The value must be true or false.",
       "example": "true"
     },
     "linksForAddAmend": {
