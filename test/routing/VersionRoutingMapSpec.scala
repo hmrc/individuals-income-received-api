@@ -32,7 +32,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
   val v1WithRelease6Routes: v1WithRelease6.Routes = app.injector.instanceOf[v1WithRelease6.Routes]
   val v1WithRelease6AndForeignRoutes: v1WithRelease6AndForeign.Routes = app.injector.instanceOf[v1WithRelease6AndForeign.Routes]
   val v1WithRelease7Routes: v1WithRelease7.Routes = app.injector.instanceOf[v1WithRelease7.Routes]
-  val v1WithAllRoutes: v1WithAll.Routes = app.injector.instanceOf[v1WithAll.Routes]
+  val v1WithRelease7AndForeignRoutes: v1WithRelease7AndForeign.Routes = app.injector.instanceOf[v1WithRelease7AndForeign.Routes]
 
   "map" when {
     "routing to v1" when {
@@ -57,7 +57,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
               v1RouterWithRelease6 = v1WithRelease6Routes,
               v1RouterWithRelease6AndForeign = v1WithRelease6AndForeignRoutes,
               v1RouterWithRelease7 = v1WithRelease7Routes,
-              v1RouterWithAll = v1WithAllRoutes
+              v1RouterWithRelease7AndForeign = v1WithRelease7AndForeignRoutes
             )
 
             versionRoutingMap.map(Versions.VERSION_1) shouldBe routes
@@ -66,8 +66,8 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       }
 
       Seq(
-        (true, true, true, v1WithAllRoutes),
-        (true, false, true, v1WithAllRoutes),
+        (true, true, true, v1WithRelease7AndForeignRoutes),
+        (true, false, true, v1WithRelease7AndForeignRoutes),
         (false, false, true, v1WithRelease7Routes),
         (false, true, true, v1WithRelease7Routes),
         (true, true, false, v1WithRelease6AndForeignRoutes),
