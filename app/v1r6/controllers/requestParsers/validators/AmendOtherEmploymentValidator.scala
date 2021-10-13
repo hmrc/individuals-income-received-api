@@ -80,7 +80,7 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) ext
 
   private def validateShareOption(shareOptionItem: AmendShareOptionItem, arrayIndex: Int): List[MtdError] = {
     List(
-      EmployerNameValidation.validate(shareOptionItem.employerName, 105).map(
+      EmployerNameValidation.validateOtherEmployment(shareOptionItem.employerName, 105).map(
         _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/employerName")))
       ),
       EmployerRefValidation.validateOptional(shareOptionItem.employerRef).map(
@@ -137,7 +137,7 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) ext
 
   private def validateSharesAwardedOrReceivedItem(sharesAwardedOrReceivedItem: AmendSharesAwardedOrReceivedItem, arrayIndex: Int): List[MtdError] = {
     List(
-      EmployerNameValidation.validate(sharesAwardedOrReceivedItem.employerName, 105).map(
+      EmployerNameValidation.validateOtherEmployment(sharesAwardedOrReceivedItem.employerName, 105).map(
         _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/employerName")))
       ),
       EmployerRefValidation.validateOptional(sharesAwardedOrReceivedItem.employerRef).map(
@@ -198,7 +198,7 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig) ext
 
   private def validateLumpSums(lumpSums: AmendLumpSums, arrayIndex: Int): List[MtdError] = {
     List(
-      EmployerNameValidation.validate(lumpSums.employerName, 105).map(
+      EmployerNameValidation.validateOtherEmployment(lumpSums.employerName, 105).map(
         _.copy(paths = Some(Seq(s"/lumpSums/$arrayIndex/employerName")))
       ),
       EmployerRefValidation.validate(lumpSums.employerRef).map(

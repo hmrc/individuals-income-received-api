@@ -62,7 +62,7 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
 
     List(
       EmployerRefValidation.validateOptional(dataModel.employerRef),
-      EmployerNameValidation.validate(dataModel.employerName, 74),
+      EmployerNameValidation.validateCustomEmployment(dataModel.employerName, 73),
       CustomEmploymentDateValidation.validate(dataModel.startDate, dataModel.cessationDate, data.taxYear),
       PayrollIdValidation.validateOptional(dataModel.payrollId)
     )

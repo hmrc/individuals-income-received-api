@@ -23,17 +23,37 @@ class EmployerNameValidationSpec extends UnitSpec {
 
   "EmployerNameValidation" when {
     "validate" must {
-      "return an empty list for a valid employer name" in {
-        EmployerNameValidation.validate(
+      "return an empty list for a valid employer name for other employment" in {
+        EmployerNameValidation.validateOtherEmployment(
           employerName = "BPDTS Ltd",
           105
         ) shouldBe NoValidationErrors
       }
 
-      "return an EmployerNameFormatError for an invalid employerName" in {
-        EmployerNameValidation.validate(
+      "return an empty list for a valid employer name for custom employment" in {
+        EmployerNameValidation.validateCustomEmployment(
+          employerName = "BPDTS Ltd",
+          73
+        ) shouldBe NoValidationErrors
+      }
+
+      "return an EmployerNameFormatError for an invalid employerName in other employment" in {
+        EmployerNameValidation.validateOtherEmployment(
           employerName = "This employerName string is 106 characters long--------------------------------------------------------106",
           105
+        ) shouldBe List(EmployerNameFormatError)
+      }
+
+      "return an EmployerNameFormatError for an invalid employerName in custom employment" in {
+        EmployerNameValidation.validateCustomEmployment(
+          employerName = "This employerName string is 75 characters long---------------------------75",
+          73
+        ) shouldBe List(EmployerNameFormatError)
+      }
+      "return an EmployerNameFormatError for an an employerName that starts with a whitespace in custom employment" in {
+        EmployerNameValidation.validateCustomEmployment(
+          employerName = " BPDTS Ltd",
+          73
         ) shouldBe List(EmployerNameFormatError)
       }
     }
