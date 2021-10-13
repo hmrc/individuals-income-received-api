@@ -85,7 +85,7 @@
               "type": "string",
               "description": "The name of the employer the employee worked for.",
               "example": "Employer Name Ltd.",
-              "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,74}$"
+              "pattern": "^\\S.{0,73}$"
             }
           },
           "required": [
