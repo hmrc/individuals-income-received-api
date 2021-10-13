@@ -15,7 +15,7 @@
     "employerName": {
       "type": "string",
       "description": "The name of the employer the employee worked for.",
-      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,74}$",
+      "pattern": "^\\S.{0,73}$",
       "example": "Employer Name Ltd."
     },
     "startDate": {
@@ -47,6 +47,11 @@
     "ignoreEmployment": {
       "type": "boolean",
       "description": "A boolean that will instruct HMRC not to consider an employment in the tax calculation, when set to true. The value must be true or false.",
+      "example": "true"
+    },
+    "occupationalPension": {
+      "type": "boolean",
+      "description": "A boolean indicating whether the employment is an occupational pension. The value must be true or false.",
       "example": "true"
     },
     "linksForAddAmend": {
