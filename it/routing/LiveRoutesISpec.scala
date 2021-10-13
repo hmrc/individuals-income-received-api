@@ -38,7 +38,8 @@ class LiveRoutesISpec extends V1IntegrationSpec {
     "auditing.consumer.baseUri.port" -> mockPort,
     "minimumPermittedTaxYear" -> 2020,
     "feature-switch.foreign-endpoints.enabled" -> false,
-    "feature-switch.release-6.enabled" -> false
+    "feature-switch.release-6.enabled" -> false,
+    "feature-switch.release-7.enabled" -> false
   )
 
   private trait Test {

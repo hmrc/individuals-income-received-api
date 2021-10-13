@@ -1,0 +1,56 @@
+# Non-PAYE endpoints
+PUT        /employments/non-paye/:nino/:taxYear                             v1r7.controllers.CreateAmendNonPayeEmploymentController.createAmendNonPayeEmployment(nino: String, taxYear: String)
+GET        /employments/non-paye/:nino/:taxYear                             v1r7.controllers.RetrieveNonPayeEmploymentController.retrieveNonPayeEmployment(nino: String, taxYear: String, source: Option[String])
+DELETE     /employments/non-paye/:nino/:taxYear                             v1r7.controllers.DeleteNonPayeEmploymentController.delete(nino: String, taxYear: String)
+
+# Additional Income endpoints
+PUT        /savings/:nino/:taxYear                                          v1r7.controllers.AmendSavingsController.amendSaving(nino: String, taxYear: String)
+DELETE     /savings/:nino/:taxYear                                          v1r7.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
+GET        /savings/:nino/:taxYear                                          v1r7.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
+
+PUT        /insurance-policies/:nino/:taxYear                               v1r7.controllers.AmendInsurancePoliciesController.amendInsurancePolicies(nino: String, taxYear: String)
+DELETE     /insurance-policies/:nino/:taxYear                               v1r7.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
+GET        /insurance-policies/:nino/:taxYear                               v1r7.controllers.RetrieveInsurancePoliciesController.retrieveInsurancePolicies(nino: String, taxYear: String)
+
+PUT        /pensions/:nino/:taxYear                                         v1r7.controllers.AmendPensionsController.amendPensions(nino: String, taxYear: String)
+DELETE     /pensions/:nino/:taxYear                                         v1r7.controllers.DeletePensionsController.deletePensions(nino: String, taxYear: String)
+GET        /pensions/:nino/:taxYear                                         v1r7.controllers.RetrievePensionsController.retrievePensions(nino: String, taxYear: String)
+
+PUT        /other/:nino/:taxYear                                            v1r7.controllers.AmendOtherController.amendOther(nino: String, taxYear: String)
+DELETE     /other/:nino/:taxYear                                            v1r7.controllers.DeleteOtherController.deleteOther(nino: String, taxYear: String)
+GET        /other/:nino/:taxYear                                            v1r7.controllers.RetrieveOtherController.retrieveOther(nino: String, taxYear: String)
+
+PUT        /employments/other/:nino/:taxYear                                v1r7.controllers.AmendOtherEmploymentController.amendOtherEmployment(nino: String, taxYear: String)
+DELETE     /employments/other/:nino/:taxYear                                v1r7.controllers.DeleteOtherEmploymentController.deleteOtherEmployment(nino: String, taxYear: String)
+GET        /employments/other/:nino/:taxYear                                v1r7.controllers.RetrieveOtherEmploymentController.retrieveOther(nino: String, taxYear: String)
+
+PUT        /dividends/:nino/:taxYear                                        v1r7.controllers.AmendDividendsController.amendDividends(nino: String, taxYear: String)
+DELETE     /dividends/:nino/:taxYear                                        v1r7.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
+GET        /dividends/:nino/:taxYear                                        v1r7.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
+
+# Employment endpoints
+PUT        /employments/:nino/:taxYear/:employmentId                        v1r7.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
+DELETE     /employments/:nino/:taxYear/:employmentId                        v1r7.controllers.DeleteCustomEmploymentController.deleteCustomEmployment(nino: String, taxYear: String, employmentId: String)
+
+POST       /employments/:nino/:taxYear                                      v1r7.controllers.AddCustomEmploymentController.addEmployment(nino: String, taxYear: String)
+GET        /employments/:nino/:taxYear                                      v1r7.controllers.ListEmploymentsController.listEmployments(nino: String, taxYear: String)
+GET        /employments/:nino/:taxYear/:employmentId                        v1r7.controllers.RetrieveEmploymentController.retrieveEmployment(nino: String, taxYear: String, employmentId: String)
+POST       /employments/:nino/:taxYear/:employmentId/ignore                 v1r7.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
+POST       /employments/:nino/:taxYear/:employmentId/unignore               v1r7.controllers.UnignoreEmploymentController.unignoreEmployment(nino: String, taxYear: String, employmentId: String)
+
+PUT        /employments/:nino/:taxYear/:employmentId/financial-details      v1r7.controllers.AmendFinancialDetailsController.amendFinancialDetails(nino: String, taxYear: String, employmentId: String)
+DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1r7.controllers.DeleteEmploymentFinancialDetailsController.deleteEmploymentFinancialDetails(nino: String, taxYear: String, employmentId: String)
+GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1r7.controllers.RetrieveFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
+
+# Capital Gains Tax endpoints
+PUT        /disposals/residential-property/:nino/:taxYear/ppd               v1r7.controllers.CreateAmendCgtPpdOverridesController.createAmendCgtPpdOverrides(nino: String, taxYear: String)
+DELETE     /disposals/residential-property/:nino/:taxYear/ppd               v1r7.controllers.DeleteCgtPpdOverridesController.deleteCgtPpdOverrides(nino: String, taxYear: String)
+GET        /disposals/residential-property/:nino/:taxYear                   v1r7.controllers.RetrieveAllResidentialPropertyCgtController.retrieveAll(nino: String, taxYear: String, source: Option[String])
+
+PUT        /disposals/residential-property/:nino/:taxYear                   v1r7.controllers.CreateAmendCgtResidentialPropertyDisposalsController.createAmendCgtResidentialPropertyDisposals(nino: String, taxYear: String)
+
+PUT        /disposals/other-gains/:nino/:taxYear                            v1r7.controllers.CreateAmendOtherCgtController.createAmendOtherCgt(nino: String, taxYear: String)
+GET        /disposals/other-gains/:nino/:taxYear                            v1r7.controllers.RetrieveOtherCgtController.retrieveOtherCgt(nino: String, taxYear: String)
+DELETE     /disposals/other-gains/:nino/:taxYear                            v1r7.controllers.DeleteOtherCgtController.deleteOtherCgt(nino: String, taxYear: String)
+
+DELETE     /disposals/residential-property/:nino/:taxYear                   v1r7.controllers.DeleteCgtNonPpdController.deleteCgtNonPpd(nino: String, taxYear: String)
