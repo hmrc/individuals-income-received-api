@@ -27,8 +27,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412"),
-    occupationalPension = true
+    payrollId = Some("124214112412")
   )
 
   private val minimumModel = AmendCustomEmploymentRequestBody(
@@ -36,8 +35,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = None,
-    payrollId = None,
-    occupationalPension = true
+    payrollId = None
   )
 
   private val json = Json.parse(
@@ -47,8 +45,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412",
-      |  "occupationalPension": true
+      |  "payrollId": "124214112412"
       |}
     """.stripMargin
   )
@@ -60,8 +57,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412",
-      |  "occupationalPension": true
+      |  "payrollId": "124214112412"
       |}
     """.stripMargin
   )
@@ -73,8 +69,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412",
-      |  "occupationalPension": true
+      |  "payrollId": "124214112412"
       |}
     """.stripMargin
   )
@@ -86,8 +81,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
       |  "employerName": "#123ad",
       |  "startDate": "abc",
       |  "cessationDate": 120.22,
-      |  "payrollId": 124214112412,
-      |  "occupationalPension": true
+      |  "payrollId": 124214112412
       |}
     """.stripMargin
   )
@@ -117,8 +111,7 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
           |{
           |  "employerRef": "123/AB56797",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412",
-          |  "occupationalPension": true
+          |  "payrollId": "124214112412"
           |}
           """.stripMargin
       )

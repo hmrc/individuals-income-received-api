@@ -23,12 +23,12 @@ object EmployerNameValidation {
   def validateOtherEmployment(employerName: String, maxLength: Int): List[MtdError] = {
     val regex = s"^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,$maxLength}$$"
 
-    if(employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
+    if (employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
   }
 
   def validateCustomEmployment(employerName: String, maxLength: Int): List[MtdError] = {
     val regex = s"^\\S.{0,$maxLength}$$"
 
-    if(employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
+    if (employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
   }
 }

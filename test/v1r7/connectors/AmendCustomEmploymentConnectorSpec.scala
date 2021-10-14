@@ -36,7 +36,8 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   val request: AmendCustomEmploymentRequest = AmendCustomEmploymentRequest(
