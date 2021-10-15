@@ -38,7 +38,7 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
 
     import v1r6.connectors.httpparsers.StandardDesHttpParser._
 
-    implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
+    implicit val successCode: SuccessCode = SuccessCode(Status.NO_CONTENT)
 
     val nino = request.nino.nino
     val taxYear = request.taxYear
