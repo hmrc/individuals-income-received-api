@@ -61,7 +61,7 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
 
     List(
       EmployerRefValidation.validateOptional(requestBodyData.employerRef),
-      EmployerNameValidation.validateCustomEmployment(requestBodyData.employerName, 73),
+      EmployerNameValidation.validateCustomEmployment(requestBodyData.employerName),
       CustomEmploymentDateValidation.validate(requestBodyData.startDate, requestBodyData.cessationDate, data.taxYear),
       PayrollIdValidation.validateOptional(requestBodyData.payrollId)
     )
