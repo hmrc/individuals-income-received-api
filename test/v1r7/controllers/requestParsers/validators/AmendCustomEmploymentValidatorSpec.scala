@@ -44,7 +44,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412"
+      |  "payrollId": "124214112412",
+      |  "occupationalPension": false
       |}
     """.stripMargin
   )
@@ -56,7 +57,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       |{
       |  "employerRef": true,
       |  "cessationDate": 400,
-      |  "payrollId": []
+      |  "payrollId": [],
+      |  "occupationalPension": 321
       |}
     """.stripMargin
   )
@@ -68,7 +70,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       |  "employerName": "${"a"*75}",
       |  "startDate": "notValid",
       |  "cessationDate": "notValid",
-      |  "payrollId": "${"b"*75}"
+      |  "payrollId": "${"b"*75}",
+      |  "occupationalPension": false
       |}
     """.stripMargin
   )
@@ -80,7 +83,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
         |  "employerName": "AMD infotech Ltd",
         |  "startDate": "2019-01-01",
         |  "cessationDate": "2018-06-01",
-        |  "payrollId": "124214112412"
+        |  "payrollId": "124214112412",
+        |  "occupationalPension": false
         |}
     """.stripMargin
   )
@@ -92,7 +96,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
        |  "employerName": "AMD infotech Ltd",
        |  "startDate": "2023-01-01",
        |  "cessationDate": "2022-06-01",
-       |  "payrollId": "124214112412"
+       |  "payrollId": "124214112412",
+       |  "occupationalPension": false
        |}
     """.stripMargin
   )
@@ -180,7 +185,7 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect request body" in new Test {
-        val paths = List("/employerRef", "/employerName", "/payrollId", "/cessationDate", "/startDate")
+        val paths = List("/employerRef", "/employerName", "/payrollId", "/cessationDate", "/startDate", "/occupationalPension")
 
         validator.validate(AmendCustomEmploymentRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
