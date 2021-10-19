@@ -310,6 +310,8 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (PpdSubmissionIdNotFoundError, NOT_FOUND),
+          (RuleDuplicatedPpdSubmissionIdError, BAD_REQUEST),
+          (RuleIncorrectDisposalTypeError, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

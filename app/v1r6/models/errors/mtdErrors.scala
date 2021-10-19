@@ -169,6 +169,18 @@ object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISI
 
 object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April")
 
+object RuleDuplicatedPpdSubmissionIdError
+  extends MtdError(
+    code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
+    message = "Occurs when submitting the same ID twice in the same payload"
+  )
+
+object RuleIncorrectDisposalTypeError
+  extends MtdError(
+    code = "RULE_INCORRECT_DISPOSAL_TYPE",
+    message = "Occurs when submitting an ID for the wrong type of disposal"
+  )
+
 // Not found errors
 object PpdSubmissionIdNotFoundError
     extends MtdError(

@@ -51,9 +51,10 @@ class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOv
       "INVALID_CORRELATIONID" -> DownstreamError,
       "INVALID_PAYLOAD" -> DownstreamError,
       "PPD_SUBMISSIONID_NOT_FOUND" -> PpdSubmissionIdNotFoundError,
+      "DUPLICATE_SUBMISSION" -> RuleDuplicatedPpdSubmissionIdError,
       "NO_PPD_SUBMISSIONS_FOUND" -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "INVALID_DISPOSAL_TYPE" -> DownstreamError,
+      "INVALID_DISPOSAL_TYPE" -> RuleIncorrectDisposalTypeError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )

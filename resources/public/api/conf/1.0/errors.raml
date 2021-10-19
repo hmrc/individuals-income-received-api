@@ -587,3 +587,25 @@ traits:
                 description: 'The update for an HMRC held employment is not permitted.'
                 value:
                   code: RULE_UPDATE_FORBIDDEN
+  ruleDuplicatedPpdSubmissionId:
+    responses:
+      400:
+        body:
+         application/json:
+            type: types.errorResponse
+            examples:
+              ruleDuplicatedPpdSubmissionId:
+                description: 'A PPD submission ID must only be used once.'
+                  value:
+                    code: RULE_DUPLICATED_PPD_SUBMISSION_ID
+  ruleIncorrectDisposalType:
+    responses:
+      403:
+        body:
+         application/json:
+            type: types.errorResponse
+            examples:
+              ruleIncorrectDisposalType:
+                description: 'A PPD submission ID in the request is being used for the incorrect disposal type.'
+                  value:
+                    code: RULE_INCORRECT_DISPOSAL_TYPE
