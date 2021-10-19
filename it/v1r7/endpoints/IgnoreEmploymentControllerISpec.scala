@@ -73,7 +73,7 @@ class IgnoreEmploymentControllerISpec extends V1R7IntegrationSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, CREATED)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request().post(JsObject.empty))

@@ -19,7 +19,6 @@ package v1r7.connectors
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
-import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1r7.connectors.DownstreamUri.IfsUri
 import v1r7.models.request.EmptyBody
@@ -37,8 +36,6 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
     correlationId: String): Future[DesOutcome[Unit]] = {
 
     import v1r7.connectors.httpparsers.StandardDesHttpParser._
-
-    implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
 
     val nino = request.nino.nino
     val taxYear = request.taxYear
