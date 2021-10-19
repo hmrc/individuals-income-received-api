@@ -172,13 +172,13 @@ object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The co
 object RuleDuplicatedPpdSubmissionIdError
   extends MtdError(
     code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
-    message = "Occurs when submitting the same ID twice in the same payload"
+    message = "A provided ppdSubmissionId is duplicated"
   )
 
 object RuleIncorrectDisposalTypeError
   extends MtdError(
     code = "RULE_INCORRECT_DISPOSAL_TYPE",
-    message = "Occurs when submitting an ID for the wrong type of disposal"
+    message = "A provided ppdSubmissionId is being used for the incorrect disposal type"
   )
 
 // Not found errors
