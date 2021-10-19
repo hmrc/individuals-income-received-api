@@ -115,7 +115,9 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
            CustomMtdError(RuleTaxYearNotEndedError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError | PpdSubmissionIdNotFoundError
+      case NotFoundError | PpdSubmissionIdNotFoundError | RuleDuplicatedPpdSubmissionIdError
+      => Forbidden(Json.toJson(errorWrapper))
+      case RuleIncorrectDisposalTypeError
       => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
         }
