@@ -17,7 +17,6 @@
 package v1r7.models.errors
 
 import play.api.libs.json.{Json, OWrites}
-import v1r6.models.errors.MtdError
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
 
