@@ -24,7 +24,13 @@ import v1r7.hateoas.HateoasLinks
 import v1r7.mocks.MockIdGenerator
 import v1r7.mocks.hateoas.MockHateoasFactory
 import v1r7.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
-import v1r7.mocks.services._
+import v1r7.mocks.services.{
+  MockAuditService,
+  MockCreateAmendCgtPpdOverridesService,
+  MockEnrolmentsAuthService,
+  MockMtdIdLookupService,
+  MockNrsProxyService
+}
 import v1r7.models.audit.{ AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail }
 import v1r7.models.domain.Nino
 import v1r7.models.errors._
@@ -264,19 +270,22 @@ class CreateAmendCgtPpdOverridesControllerSpec
           }
         }
 
+        def withPath(error: MtdError): MtdError = error.copy(paths = Some(Seq("/somePath")))
+
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (RuleAmountGainLossError, BAD_REQUEST),
-          (DateFormatError, BAD_REQUEST),
-          (PpdSubmissionIdFormatError, BAD_REQUEST),
-          (RuleLossesGreaterThanGainError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST)
+          (withPath(RuleIncorrectOrEmptyBodyError), BAD_REQUEST),
+          (withPath(ValueFormatError), BAD_REQUEST),
+          (withPath(RuleAmountGainLossError), BAD_REQUEST),
+          (withPath(DateFormatError), BAD_REQUEST),
+          (withPath(PpdSubmissionIdFormatError), BAD_REQUEST),
+          (withPath(RuleLossesGreaterThanGainError), BAD_REQUEST),
+          (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (withPath(RuleDuplicatedPpdSubmissionIdError), BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

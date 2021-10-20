@@ -43,7 +43,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -273,18 +273,18 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
       ))
   )
 
-  val ppdSubmissionFormatJson: JsValue = Json.parse(
-    """
+  def jsonWithIds(multipleSubmissionId: String, singleSubmissionId: String): JsValue = Json.parse(
+    s"""
       |{
       |    "multiplePropertyDisposals": [
       |         {
-      |            "ppdSubmissionId": "notAnID",
+      |            "ppdSubmissionId": "$multipleSubmissionId",
       |            "amountOfNetGain": 1234.78
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "notAnID",
+      |             "ppdSubmissionId": "$singleSubmissionId",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -308,6 +308,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
         "/multiplePropertyDisposals/0/ppdSubmissionId",
         "/singlePropertyDisposals/0/ppdSubmissionId",
       ))
+  )
+
+  def ppdDuplicatedIdError(duplicatedId: String): MtdError = RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
+    id = duplicatedId,
+    paths = Seq(
+      "/multiplePropertyDisposals/0/ppdSubmissionId",
+      "/singlePropertyDisposals/0/ppdSubmissionId",
+    )
   )
 
   val invalidDateFormatJson: JsValue = Json.parse(
@@ -349,9 +357,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val taxYear: String       = "2020-21"
-    val correlationId: String = "X-123"
+    val nino: String    = "AA123456A"
+    val taxYear: String = "2020-21"
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -455,7 +462,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", ppdSubmissionFormatJson, BAD_REQUEST, ppdSubmissionFormatError, None, Some("ppdSubmissionIDFormat")),
+          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
+          ("AA123456A",
+           "2020-21",
+           jsonWithIds("DuplicatedId", "DuplicatedId"),
+           BAD_REQUEST,
+           ppdDuplicatedIdError("DuplicatedId"),
+           None,
+           Some("duplicatedIDs")),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

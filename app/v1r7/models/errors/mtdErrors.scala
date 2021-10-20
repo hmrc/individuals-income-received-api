@@ -179,7 +179,11 @@ object RuleDuplicatedPpdSubmissionIdError
     extends MtdError(
       code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
       message = "A provided ppdSubmissionId is duplicated"
-    )
+    ) {
+
+  def forDuplicatedIdAndPaths(id: String, paths: Seq[String]): MtdError =
+    RuleDuplicatedPpdSubmissionIdError.copy(message = s"The ppdSubmissionId '$id' is duplicated", paths = Some(paths))
+}
 
 object RuleIncorrectDisposalTypeError
     extends MtdError(
