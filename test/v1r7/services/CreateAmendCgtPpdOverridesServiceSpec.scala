@@ -83,9 +83,9 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
           ("INVALID_PAYLOAD", DownstreamError),
           ("PPD_SUBMISSIONID_NOT_FOUND", PpdSubmissionIdNotFoundError),
           ("NO_PPD_SUBMISSIONS_FOUND", NotFoundError),
-          ("DUPLICATE_SUBMISSION", DownstreamError),
+          ("DUPLICATE_SUBMISSION", RuleDuplicatedPpdSubmissionIdError),
           ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
-          ("INVALID_DISPOSAL_TYPE", DownstreamError),
+          ("INVALID_DISPOSAL_TYPE", RuleIncorrectDisposalTypeError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )
