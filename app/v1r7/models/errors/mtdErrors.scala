@@ -16,7 +16,7 @@
 
 package v1r7.models.errors
 
-import play.api.libs.json.{Json, OWrites}
+import play.api.libs.json.{ Json, OWrites }
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
 
@@ -65,79 +65,79 @@ object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTI
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
-  extends MtdError(
-    code = "RULE_TAX_YEAR_NOT_SUPPORTED",
-    message = "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value"
-  )
+    extends MtdError(
+      code = "RULE_TAX_YEAR_NOT_SUPPORTED",
+      message = "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value"
+    )
 
 object RuleIncorrectOrEmptyBodyError
-  extends MtdError(code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", message = "An empty or non-matching body was submitted")
+    extends MtdError(code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", message = "An empty or non-matching body was submitted")
 
 object RuleTaxYearRangeInvalidError
-  extends MtdError(
-    code = "RULE_TAX_YEAR_RANGE_INVALID",
-    message = "Tax year range invalid. A tax year range of one year is required"
-  )
+    extends MtdError(
+      code = "RULE_TAX_YEAR_RANGE_INVALID",
+      message = "Tax year range invalid. A tax year range of one year is required"
+    )
 
 object RuleTaxYearNotEndedError
-  extends MtdError(
-    code = "RULE_TAX_YEAR_NOT_ENDED",
-    message = "Tax year not ended"
-  )
+    extends MtdError(
+      code = "RULE_TAX_YEAR_NOT_ENDED",
+      message = "Tax year not ended"
+    )
 
 object RuleCessationDateBeforeStartDateError
-  extends MtdError(
-    code = "RULE_CESSATION_DATE_BEFORE_START_DATE",
-    message = "The cessation date cannot be earlier than the start date"
-  )
+    extends MtdError(
+      code = "RULE_CESSATION_DATE_BEFORE_START_DATE",
+      message = "The cessation date cannot be earlier than the start date"
+    )
 
 object RuleStartDateAfterTaxYearEndError
-  extends MtdError(
-    code = "RULE_START_DATE_AFTER_TAX_YEAR_END",
-    message = "The start date cannot be later than the tax year end"
-  )
+    extends MtdError(
+      code = "RULE_START_DATE_AFTER_TAX_YEAR_END",
+      message = "The start date cannot be later than the tax year end"
+    )
 
 object RuleCessationDateBeforeTaxYearStartError
-  extends MtdError(
-    code = "RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START",
-    message = "The cessation date cannot be before the tax year starts"
-  )
+    extends MtdError(
+      code = "RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START",
+      message = "The cessation date cannot be before the tax year starts"
+    )
 
 object RuleUpdateForbiddenError
-  extends MtdError(
-    code = "RULE_UPDATE_FORBIDDEN",
-    message = "The update for an HMRC held employment is not permitted"
-  )
+    extends MtdError(
+      code = "RULE_UPDATE_FORBIDDEN",
+      message = "The update for an HMRC held employment is not permitted"
+    )
 
 object RuleCustomEmploymentError
-  extends MtdError(
-    code = "RULE_CUSTOM_EMPLOYMENT",
-    message = "A custom employment cannot be ignored"
-  )
+    extends MtdError(
+      code = "RULE_CUSTOM_EMPLOYMENT",
+      message = "A custom employment cannot be ignored"
+    )
 
 object RuleCustomEmploymentUnignoreError
-  extends MtdError(
-    code = "RULE_CUSTOM_EMPLOYMENT",
-    message = "A custom employment cannot be unignored"
-  )
+    extends MtdError(
+      code = "RULE_CUSTOM_EMPLOYMENT",
+      message = "A custom employment cannot be unignored"
+    )
 
 object RuleLumpSumsError
-  extends MtdError(
-    code = "RULE_LUMP_SUMS",
-    message = "At least one child object is required when lumpSums are provided"
-  )
+    extends MtdError(
+      code = "RULE_LUMP_SUMS",
+      message = "At least one child object is required when lumpSums are provided"
+    )
 
 object RuleAmountGainLossError
-  extends MtdError(
-    code = "RULE_AMOUNT_GAIN_LOSS",
-    message = "Either amountOfGain or amountOfLoss, must be provided but not both"
-  )
+    extends MtdError(
+      code = "RULE_AMOUNT_GAIN_LOSS",
+      message = "Either amountOfGain or amountOfLoss, must be provided but not both"
+    )
 
 object RuleLossesGreaterThanGainError
-  extends MtdError(
-    code = "RULE_LOSSES_GREATER_THAN_GAIN",
-    message = "The total losses from this year or the previous year must not be greater than the gain"
-  )
+    extends MtdError(
+      code = "RULE_LOSSES_GREATER_THAN_GAIN",
+      message = "The total losses from this year or the previous year must not be greater than the gain"
+    )
 
 object RuleGainLossError
     extends MtdError(
@@ -163,23 +163,29 @@ object RuleGainAfterReliefLossAfterReliefError
       message = "Only one of gainAfterRelief or lossAfterRelief values can be provided"
     )
 
-object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE", "The completionDate must not be earlier than the disposalDate")
+object RuleCompletionDateBeforeDisposalDateError
+    extends MtdError("RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE", "The completionDate must not be earlier than the disposalDate")
 
-object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
+object RuleAcquisitionDateAfterDisposalDateError
+    extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
 
-object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April")
+object RuleCompletionDateError
+    extends MtdError(
+      "RULE_COMPLETION_DATE",
+      "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April"
+    )
 
 object RuleDuplicatedPpdSubmissionIdError
-  extends MtdError(
-    code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
-    message = "A provided ppdSubmissionId is duplicated"
-  )
+    extends MtdError(
+      code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
+      message = "A provided ppdSubmissionId is duplicated"
+    )
 
 object RuleIncorrectDisposalTypeError
-  extends MtdError(
-    code = "RULE_INCORRECT_DISPOSAL_TYPE",
-    message = "A provided ppdSubmissionId is being used for the incorrect disposal type"
-  )
+    extends MtdError(
+      code = "RULE_INCORRECT_DISPOSAL_TYPE",
+      message = "A provided ppdSubmissionId is being used for the incorrect disposal type"
+    )
 
 // Not found errors
 object PpdSubmissionIdNotFoundError

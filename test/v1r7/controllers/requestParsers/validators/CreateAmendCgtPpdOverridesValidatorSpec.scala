@@ -19,8 +19,8 @@ package v1r7.controllers.requestParsers.validators
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.libs.json.{JsValue, Json}
+import org.joda.time.format.{ DateTimeFormat, DateTimeFormatter }
+import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
@@ -31,7 +31,7 @@ import v1r7.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverrides
 
 class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2019-20"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -600,25 +600,24 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val validRequestBody = AnyContentAsJson(validRequestJson)
-  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
-  private val emptyMultiplePropertyDisposalsRequestBody = AnyContentAsJson(emptyMultiplePropertyDisposalsRequestJson)
-  private val emptySinglePropertyDisposalsRequestBody = AnyContentAsJson(emptySinglePropertyDisposalsRequestJson)
-  private val invalidSubmissionIdRequestBody = AnyContentAsJson(invalidSubmissionIdRequestBodyJson)
-  private val invalidValueRequestBody = AnyContentAsJson(invalidValueRequestBodyJson)
-  private val invalidDateRequestBody = AnyContentAsJson(invalidDateRequestBodyJson)
-  private val bothGainsAndLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson)
-  private val bothGainsAndLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
+  private val validRequestBody                                       = AnyContentAsJson(validRequestJson)
+  private val missingMandatoryFieldRequestBody                       = AnyContentAsJson(missingMandatoryFieldJson)
+  private val emptyMultiplePropertyDisposalsRequestBody              = AnyContentAsJson(emptyMultiplePropertyDisposalsRequestJson)
+  private val emptySinglePropertyDisposalsRequestBody                = AnyContentAsJson(emptySinglePropertyDisposalsRequestJson)
+  private val invalidSubmissionIdRequestBody                         = AnyContentAsJson(invalidSubmissionIdRequestBodyJson)
+  private val invalidValueRequestBody                                = AnyContentAsJson(invalidValueRequestBodyJson)
+  private val invalidDateRequestBody                                 = AnyContentAsJson(invalidDateRequestBodyJson)
+  private val bothGainsAndLossMultiplePropertyDisposalsRequestBody   = AnyContentAsJson(bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson)
+  private val bothGainsAndLossSinglePropertyDisposalsRequestBody     = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
   private val neitherGainsOrLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossMultiplePropertyDisposalsRequestBodyJson)
-  private val neitherGainsOrLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
-  private val currentYearLossesGreaterThanGainsRequestBody = AnyContentAsJson(currentYearLossesGreaterThanGainsJson)
-
+  private val neitherGainsOrLossSinglePropertyDisposalsRequestBody   = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
+  private val currentYearLossesGreaterThanGainsRequestBody           = AnyContentAsJson(currentYearLossesGreaterThanGainsJson)
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
-    implicit val appConfig: AppConfig = mockAppConfig
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    implicit val appConfig: AppConfig              = mockAppConfig
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
 
@@ -640,13 +639,12 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       }
 
       "a valid request contains only multiple disposals is supplied" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear,
-          AnyContentAsJson(validOnlyMultiplePropertyDisposalsRequestJson))) shouldBe Nil
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, AnyContentAsJson(validOnlyMultiplePropertyDisposalsRequestJson))) shouldBe Nil
       }
 
       "a valid request contains only single disposals is supplied" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear,
-          AnyContentAsJson(validOnlySinglePropertyDisposalsRequestJson))) shouldBe Nil
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, AnyContentAsJson(validOnlySinglePropertyDisposalsRequestJson))) shouldBe Nil
       }
     }
 
@@ -688,11 +686,13 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return RuleIncorrectOrEmptyBodyError error" when {
       "an JSON body missing a mandatory field is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(
-            paths = Some(Seq("/multiplePropertyDisposals/0/ppdSubmissionId",
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
+              "/multiplePropertyDisposals/0/ppdSubmissionId",
               "/multiplePropertyDisposals/1/ppdSubmissionId",
               "/singlePropertyDisposals/0/ppdSubmissionId",
-              "/singlePropertyDisposals/1/ppdSubmissionId"))))
+              "/singlePropertyDisposals/1/ppdSubmissionId"
+            ))))
       }
 
       "an JSON body with empty multiplePropertyDisposals array is submitted" in new Test {
@@ -716,32 +716,32 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a valueFormatError" when {
       "a body with incorrect values is submitted" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, invalidValueRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            paths = Some(List(
-              "/multiplePropertyDisposals/0/amountOfNetGain",
-              "/multiplePropertyDisposals/1/amountOfNetLoss",
-              "/singlePropertyDisposals/0/disposalProceeds",
-              "/singlePropertyDisposals/0/acquisitionAmount",
-              "/singlePropertyDisposals/0/improvementCosts",
-              "/singlePropertyDisposals/0/additionalCosts",
-              "/singlePropertyDisposals/0/prfAmount",
-              "/singlePropertyDisposals/0/otherReliefAmount",
-              "/singlePropertyDisposals/0/lossesFromThisYear",
-              "/singlePropertyDisposals/0/lossesFromPreviousYear",
-              "/singlePropertyDisposals/0/amountOfNetGain",
-              "/singlePropertyDisposals/1/disposalProceeds",
-              "/singlePropertyDisposals/1/acquisitionAmount",
-              "/singlePropertyDisposals/1/improvementCosts",
-              "/singlePropertyDisposals/1/additionalCosts",
-              "/singlePropertyDisposals/1/prfAmount",
-              "/singlePropertyDisposals/1/otherReliefAmount",
-              "/singlePropertyDisposals/1/lossesFromThisYear",
-              "/singlePropertyDisposals/1/lossesFromPreviousYear",
-              "/singlePropertyDisposals/1/amountOfNetLoss"
-            )),
-            message = "The value must be between 0 and 99999999999.99"
-          )
-          )
+          List(
+            ValueFormatError.copy(
+              paths = Some(List(
+                "/multiplePropertyDisposals/0/amountOfNetGain",
+                "/multiplePropertyDisposals/1/amountOfNetLoss",
+                "/singlePropertyDisposals/0/disposalProceeds",
+                "/singlePropertyDisposals/0/acquisitionAmount",
+                "/singlePropertyDisposals/0/improvementCosts",
+                "/singlePropertyDisposals/0/additionalCosts",
+                "/singlePropertyDisposals/0/prfAmount",
+                "/singlePropertyDisposals/0/otherReliefAmount",
+                "/singlePropertyDisposals/0/lossesFromThisYear",
+                "/singlePropertyDisposals/0/lossesFromPreviousYear",
+                "/singlePropertyDisposals/0/amountOfNetGain",
+                "/singlePropertyDisposals/1/disposalProceeds",
+                "/singlePropertyDisposals/1/acquisitionAmount",
+                "/singlePropertyDisposals/1/improvementCosts",
+                "/singlePropertyDisposals/1/additionalCosts",
+                "/singlePropertyDisposals/1/prfAmount",
+                "/singlePropertyDisposals/1/otherReliefAmount",
+                "/singlePropertyDisposals/1/lossesFromThisYear",
+                "/singlePropertyDisposals/1/lossesFromPreviousYear",
+                "/singlePropertyDisposals/1/amountOfNetLoss"
+              )),
+              message = "The value must be between 0 and 99999999999.99"
+            ))
       }
     }
 
@@ -777,10 +777,13 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     "return a RuleLossesGreaterThanGainError" when {
       "the losses for this year are larger than the total gains" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, currentYearLossesGreaterThanGainsRequestBody)) shouldBe
-          List(RuleLossesGreaterThanGainError.copy(paths = Some(Seq(
-            "/singlePropertyDisposals/0/lossesFromThisYear",
-            "/singlePropertyDisposals/0/lossesFromPreviousYear"
-          ))))
+          List(
+            RuleLossesGreaterThanGainError.copy(
+              paths = Some(
+                Seq(
+                  "/singlePropertyDisposals/0/lossesFromThisYear",
+                  "/singlePropertyDisposals/0/lossesFromPreviousYear"
+                ))))
       }
     }
   }

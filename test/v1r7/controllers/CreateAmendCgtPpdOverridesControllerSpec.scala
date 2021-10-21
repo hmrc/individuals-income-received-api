@@ -17,15 +17,15 @@
 package v1r7.controllers
 
 import mocks.MockAppConfig
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{AnyContentAsJson, Result}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ AnyContentAsJson, Result }
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.hateoas.HateoasLinks
 import v1r7.mocks.MockIdGenerator
 import v1r7.mocks.hateoas.MockHateoasFactory
 import v1r7.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
-import v1r7.mocks.services.{MockAuditService, MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import v1r7.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail}
+import v1r7.mocks.services._
+import v1r7.models.audit.{ AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail }
 import v1r7.models.domain.Nino
 import v1r7.models.errors._
 import v1r7.models.outcomes.ResponseWrapper
@@ -34,20 +34,21 @@ import v1r7.models.request.createAmendCgtPpdOverrides._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockAppConfig
-  with MockCreateAmendCgtPpdOverridesService
-  with MockAuditService
-  with MockNrsProxyService
-  with MockHateoasFactory
-  with MockCreateAmendCgtPpdOverridesRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class CreateAmendCgtPpdOverridesControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockAppConfig
+    with MockCreateAmendCgtPpdOverridesService
+    with MockAuditService
+    with MockNrsProxyService
+    with MockHateoasFactory
+    with MockCreateAmendCgtPpdOverridesRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   val validRequestJson: JsValue = Json.parse(
@@ -104,19 +105,21 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
   )
 
   val requestModel: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(
-    multiplePropertyDisposals= Some(Seq(
-      MultiplePropertyDisposals(
-        "AB0000000092",
-        Some(1234.78),
-        None
-      ),
-      MultiplePropertyDisposals(
-        "AB0000000098",
-        None,
-        Some(134.99)
-      )
-    )),
-    singlePropertyDisposals = Some(Seq(
+    multiplePropertyDisposals = Some(
+      Seq(
+        MultiplePropertyDisposals(
+          "AB0000000092",
+          Some(1234.78),
+          None
+        ),
+        MultiplePropertyDisposals(
+          "AB0000000098",
+          None,
+          Some(134.99)
+        )
+      )),
+    singlePropertyDisposals = Some(
+      Seq(
         SinglePropertyDisposals(
           "AB0000000098",
           "2020-02-28",
@@ -147,8 +150,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           None,
           Some(4567.89)
         )
-      )
-    )
+      ))
   )
 
   val requestData: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
@@ -229,7 +231,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           .createAmend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
 
-        MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal-ppd", validRequestJson)
+        MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
 
         val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
 
@@ -292,7 +294,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
               .createAmend(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal-ppd", validRequestJson)
+            MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
 
             val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
 
