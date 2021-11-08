@@ -170,10 +170,14 @@ object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISI
 object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April")
 
 object RuleDuplicatedPpdSubmissionIdError
-  extends MtdError(
-    code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
-    message = "A provided ppdSubmissionId is duplicated"
-  )
+    extends MtdError(
+      code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
+      message = "A provided ppdSubmissionId is duplicated"
+    ) {
+
+  def forDuplicatedIdAndPaths(id: String, paths: Seq[String]): MtdError =
+    RuleDuplicatedPpdSubmissionIdError.copy(message = s"The ppdSubmissionId '$id' is duplicated", paths = Some(paths))
+}
 
 object RuleIncorrectDisposalTypeError
   extends MtdError(
