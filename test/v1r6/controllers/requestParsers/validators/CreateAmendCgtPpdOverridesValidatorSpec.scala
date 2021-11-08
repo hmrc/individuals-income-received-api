@@ -19,8 +19,8 @@ package v1r6.controllers.requestParsers.validators
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.libs.json.{JsValue, Json}
+import org.joda.time.format.{ DateTimeFormat, DateTimeFormatter }
+import play.api.libs.json.{ JsObject, JsValue, Json }
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
@@ -49,7 +49,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -333,7 +333,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "20-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -382,7 +382,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -429,7 +429,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -476,7 +476,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -523,7 +523,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -568,7 +568,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -781,6 +781,114 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
             "/singlePropertyDisposals/0/lossesFromThisYear",
             "/singlePropertyDisposals/0/lossesFromPreviousYear"
           ))))
+      }
+    }
+
+    "return RuleDuplicatedPpdSubmissionIdError(s)" when {
+
+      val idDuplicate  = "idDuplicate1"
+      val idDuplicate2 = "idDuplicate2"
+      val idOther1     = "idOther00001"
+      val idOther2     = "idOther00002"
+
+      def jsonBody(multipleIds: Seq[String] = Nil, singleIds: Seq[String] = Nil): AnyContentAsJson = {
+        def ifNotEmpty(field: String, values: Seq[JsValue]) = if (values.nonEmpty) Json.obj(field -> values) else JsObject.empty
+
+        val multiples = multipleIds.map(id => Json.parse(s"""{
+                                                            |   "ppdSubmissionId": "$id",
+                                                            |   "amountOfNetGain": 1
+                                                            |}""".stripMargin))
+
+        val singles = singleIds.map(id => Json.parse(s"""{
+                                                        |   "ppdSubmissionId": "$id",
+                                                        |   "completionDate": "2020-02-28", 
+                                                        |   "disposalProceeds": 1, 
+                                                        |   "acquisitionAmount": 1, 
+                                                        |   "improvementCosts": 1,
+                                                        |   "additionalCosts": 1, 
+                                                        |   "prfAmount": 1, 
+                                                        |   "otherReliefAmount": 1,
+                                                        |   "amountOfNetGain": 1
+                                                        |}""".stripMargin))
+
+        AnyContentAsJson(ifNotEmpty("multiplePropertyDisposals", multiples) ++ ifNotEmpty("singlePropertyDisposals", singles))
+
+      }
+
+      "multiplePropertyDisposals has duplicate ids" in new Test {
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(multipleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
+          contain theSameElementsAs List(
+          RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(idDuplicate,
+                                                                     paths = Seq(
+                                                                       "/multiplePropertyDisposals/0/ppdSubmissionId",
+                                                                       "/multiplePropertyDisposals/2/ppdSubmissionId"
+                                                                     )))
+      }
+
+      "singlePropertyDisposals has duplicate ids" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(singleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
+          contain theSameElementsAs List(
+          RuleDuplicatedPpdSubmissionIdError
+            .forDuplicatedIdAndPaths(idDuplicate,
+                                     paths = Seq(
+                                       "/singlePropertyDisposals/0/ppdSubmissionId",
+                                       "/singlePropertyDisposals/2/ppdSubmissionId"
+                                     )))
+      }
+
+      "an id is duplicated between single and multiplePropertyDisposals" in new Test {
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino,
+                                            validTaxYear,
+                                            jsonBody(multipleIds = Seq(idDuplicate, idOther1), singleIds = Seq(idOther2, idDuplicate)))) should
+          contain theSameElementsAs List(
+          RuleDuplicatedPpdSubmissionIdError
+            .forDuplicatedIdAndPaths(idDuplicate,
+                                     paths = Seq(
+                                       "/multiplePropertyDisposals/0/ppdSubmissionId",
+                                       "/singlePropertyDisposals/1/ppdSubmissionId"
+                                     )))
+      }
+
+      "test more that 2 copies of an id" in new Test {
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino,
+                                            validTaxYear,
+                                            jsonBody(multipleIds = Seq(idDuplicate, idDuplicate), singleIds = Seq(idDuplicate, idDuplicate)))) should
+          contain theSameElementsAs List(
+          RuleDuplicatedPpdSubmissionIdError
+            .forDuplicatedIdAndPaths(
+              idDuplicate,
+              paths = Seq(
+                "/multiplePropertyDisposals/0/ppdSubmissionId",
+                "/multiplePropertyDisposals/1/ppdSubmissionId",
+                "/singlePropertyDisposals/0/ppdSubmissionId",
+                "/singlePropertyDisposals/1/ppdSubmissionId"
+              )
+            ))
+      }
+
+      "multiple duplicates" in new Test {
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(
+            validNino,
+            validTaxYear,
+            jsonBody(multipleIds = Seq(idDuplicate, idDuplicate2), singleIds = Seq(idDuplicate2, idDuplicate)))) should
+          contain theSameElementsAs List(
+          RuleDuplicatedPpdSubmissionIdError
+            .forDuplicatedIdAndPaths(idDuplicate,
+                                     paths = Seq(
+                                       "/multiplePropertyDisposals/0/ppdSubmissionId",
+                                       "/singlePropertyDisposals/1/ppdSubmissionId"
+                                     )),
+          RuleDuplicatedPpdSubmissionIdError
+            .forDuplicatedIdAndPaths(idDuplicate2,
+                                     paths = Seq(
+                                       "/multiplePropertyDisposals/1/ppdSubmissionId",
+                                       "/singlePropertyDisposals/0/ppdSubmissionId"
+                                     ))
+        )
       }
     }
   }

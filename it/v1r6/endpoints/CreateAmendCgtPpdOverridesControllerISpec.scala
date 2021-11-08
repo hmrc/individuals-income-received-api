@@ -37,7 +37,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "ppdSubmissionId": "AB0000000098",
+      |            "ppdSubmissionId": "AB0000000099",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
@@ -268,34 +268,33 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
     ))
   )
 
-
-  val ppdSubmissionFormatJson: JsValue = Json.parse(
-    """
-      |{
-      |    "multiplePropertyDisposals": [
-      |         {
-      |            "ppdSubmissionId": "notAnID",
-      |            "amountOfNetGain": 1234.78
-      |         }
-      |    ],
-      |    "singlePropertyDisposals": [
-      |         {
-      |             "ppdSubmissionId": "notAnID",
-      |             "completionDate": "2020-02-28",
-      |             "disposalProceeds": 454.24,
-      |             "acquisitionDate": "2020-03-29",
-      |             "acquisitionAmount": 3434.45,
-      |             "improvementCosts": 233.45,
-      |             "additionalCosts": 423.34,
-      |             "prfAmount": 2324.67,
-      |             "otherReliefAmount": 3434.23,
-      |             "lossesFromThisYear": 436.23,
-      |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetGain": 4567.89
-      |         }
-      |    ]
-      |}
-      |""".stripMargin
+  def jsonWithIds(multipleSubmissionId: String, singleSubmissionId: String): JsValue = Json.parse(
+    s"""
+       |{
+       |    "multiplePropertyDisposals": [
+       |         {
+       |            "ppdSubmissionId": "$multipleSubmissionId",
+       |            "amountOfNetGain": 1234.78
+       |         }
+       |    ],
+       |    "singlePropertyDisposals": [
+       |         {
+       |             "ppdSubmissionId": "$singleSubmissionId",
+       |             "completionDate": "2020-02-28",
+       |             "disposalProceeds": 454.24,
+       |             "acquisitionDate": "2020-03-29",
+       |             "acquisitionAmount": 3434.45,
+       |             "improvementCosts": 233.45,
+       |             "additionalCosts": 423.34,
+       |             "prfAmount": 2324.67,
+       |             "otherReliefAmount": 3434.23,
+       |             "lossesFromThisYear": 436.23,
+       |             "lossesFromPreviousYear": 234.23,
+       |             "amountOfNetGain": 4567.89
+       |         }
+       |    ]
+       |}
+       |""".stripMargin
   )
 
   val ppdSubmissionFormatError: MtdError = PpdSubmissionIdFormatError.copy(
@@ -303,6 +302,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
       "/multiplePropertyDisposals/0/ppdSubmissionId",
       "/singlePropertyDisposals/0/ppdSubmissionId",
     ))
+  )
+
+  def ppdDuplicatedIdError(duplicatedId: String): MtdError = RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
+    id = duplicatedId,
+    paths = Seq(
+      "/multiplePropertyDisposals/0/ppdSubmissionId",
+      "/singlePropertyDisposals/0/ppdSubmissionId",
+    )
   )
 
   val invalidDateFormatJson: JsValue = Json.parse(
@@ -378,7 +385,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
 
     def setupStubs(): StubMapping
 
-    def request(): WSRequest = {
+    def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
@@ -399,7 +406,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
           DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(validRequestBodyJson))
+        val response: WSResponse = await(request.put(validRequestBodyJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -450,7 +457,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", ppdSubmissionFormatJson, BAD_REQUEST, ppdSubmissionFormatError, None, Some("ppdSubmissionIDFormat")),
+          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("ppdSubmissionIDFormat")),
+          ("AA123456A",
+            "2020-21",
+            jsonWithIds("DuplicatedId", "DuplicatedId"),
+            BAD_REQUEST,
+            ppdDuplicatedIdError("DuplicatedId"),
+            None,
+            Some("duplicatedIDs")),
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -467,7 +481,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R6IntegrationSpec with
               DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
-            val response: WSResponse = await(request().put(validRequestBodyJson))
+            val response: WSResponse = await(request.put(validRequestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
