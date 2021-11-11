@@ -17,10 +17,9 @@
 package v1r6.connectors
 
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Release6Uri
 import v1r6.models.request.EmptyBody
 import v1r6.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
@@ -41,6 +40,6 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
-    put(EmptyBody, IfsUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
+    put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
   }
 }
