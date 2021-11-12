@@ -54,10 +54,10 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.api1661BaseUrl returns baseUrl
+    MockedAppConfig.api1661Token returns "api1661-token"
+    MockedAppConfig.api1661Environment returns "api1661-environment"
+    MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AddCustomEmploymentConnector" when {
@@ -65,14 +65,14 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
       "return a success upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, response))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPost: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredApi1661HeadersPost: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .post(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom",
             config = dummyIfsHeaderCarrierConfig,
             body = addCustomEmploymentRequestBody,
-            requiredHeaders = requiredIfsHeadersPost,
+            requiredHeaders = requiredApi1661HeadersPost,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 

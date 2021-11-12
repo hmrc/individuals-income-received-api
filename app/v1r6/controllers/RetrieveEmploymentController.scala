@@ -18,13 +18,12 @@ package v1r6.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Release6Uri
 import v1r6.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.errors._
@@ -64,7 +63,7 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
         employmentId = employmentId
       )
 
-      implicit val ifsUri: IfsUri[RetrieveEmploymentResponse] = IfsUri[RetrieveEmploymentResponse](
+      implicit val ifsUri: Release6Uri[RetrieveEmploymentResponse] = Release6Uri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 

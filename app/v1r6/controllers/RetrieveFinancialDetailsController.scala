@@ -18,13 +18,12 @@ package v1r6.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Release6Uri
 import v1r6.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.domain.MtdSourceEnum
@@ -67,7 +66,7 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
         source = source
       )
 
-      implicit val desUri: IfsUri[RetrieveFinancialDetailsResponse] = IfsUri[RetrieveFinancialDetailsResponse](
+      implicit val desUri: Release6Uri[RetrieveFinancialDetailsResponse] = Release6Uri[RetrieveFinancialDetailsResponse](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
