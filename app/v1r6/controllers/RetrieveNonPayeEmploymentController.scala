@@ -18,11 +18,12 @@ package v1r6.controllers
 
 import cats.data.EitherT
 import cats.implicits._
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Api1661Uri
 import v1r6.controllers.requestParsers.RetrieveNonPayeEmploymentRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.domain.MtdSourceEnum
@@ -32,7 +33,6 @@ import v1r6.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploy
 import v1r6.models.response.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse}
 import v1r6.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -65,7 +65,7 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
         source = source
       )
 
-      implicit val ifsUri: IfsUri[RetrieveNonPayeEmploymentIncomeResponse] = IfsUri[RetrieveNonPayeEmploymentIncomeResponse](
+      implicit val ifsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
         s"income-tax/income/employments/non-paye/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )

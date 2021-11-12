@@ -18,11 +18,12 @@ package v1r6.controllers
 
 import cats.data.EitherT
 import cats.implicits._
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Api1661Uri
 import v1r6.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.errors._
@@ -30,7 +31,6 @@ import v1r6.models.request.DeleteRetrieveRawData
 import v1r6.models.response.retrieveOtherCgt.{RetrieveOtherCgtHateoasData, RetrieveOtherCgtResponse}
 import v1r6.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -62,7 +62,7 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveOtherCgtResponse] = IfsUri[RetrieveOtherCgtResponse](
+      implicit val ifsUri: Api1661Uri[RetrieveOtherCgtResponse] = Api1661Uri[RetrieveOtherCgtResponse](
         s"income-tax/income/disposals/other-gains/$nino/$taxYear"
       )
 
