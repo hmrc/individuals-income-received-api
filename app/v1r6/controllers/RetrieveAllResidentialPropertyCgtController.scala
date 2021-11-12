@@ -23,7 +23,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Api1661Uri
 import v1r6.controllers.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 import v1r6.hateoas.HateoasFactory
 import v1r6.models.domain.MtdSourceEnum
@@ -65,7 +65,7 @@ class RetrieveAllResidentialPropertyCgtController @Inject()(val authService: Enr
         source = source
       )
 
-      implicit val ifsUri: IfsUri[RetrieveAllResidentialPropertyCgtResponse] = IfsUri[RetrieveAllResidentialPropertyCgtResponse](
+      implicit val ifsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
         s"income-tax/income/disposals/residential-property/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )

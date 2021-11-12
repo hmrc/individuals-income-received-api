@@ -17,10 +17,10 @@
 package v1r6.connectors
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r6.connectors.DownstreamUri.IfsUri
+import v1r6.connectors.DownstreamUri.Api1661Uri
 import v1r6.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
-
 import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient,
@@ -37,7 +37,7 @@ class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"), body = request.body
     )
   }
 }
