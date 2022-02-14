@@ -9,8 +9,7 @@
         "numberOfDisposals": 3,
         "disposalTaxYear": 2021,
         "completionDate": "2020-03-08",
-        "amountOfNetGain": 1999.99,
-        "ppdReturnCharge": 1999.99
+        "amountOfNetGain": 1999.99
       }
     ],
     "singlePropertyDisposals": [
@@ -30,8 +29,7 @@
         "otherReliefAmount": 1999.99,
         "lossesFromThisYear": 1999.99,
         "lossesFromPreviousYear": 1999.99,
-        "amountOfLoss": 1999.99,
-        "ppdReturnCharge": 1999.99
+        "amountOfLoss": 1999.99
       }
     ]
   },
