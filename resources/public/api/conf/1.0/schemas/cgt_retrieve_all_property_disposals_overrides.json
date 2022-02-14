@@ -8,6 +8,14 @@
       "type": "object",
       "description": "An object containing single and multiple property disposal submissions previously reported via the HMRC 'Report and pay Capital Gains Tax on UK property'",
       "properties": {
+        "ppdReturnCharge": {
+          "description": "The total amount of Capital Gains charges on the sale of Residential Properties that has been submitted via the Capital Gains Tax UK property account for the year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": 0.00,
+          "maximum": 99999999999.99,
+          "example": "1999.99"
+        },
         "multiplePropertyDisposals": {
           "type": "array",
           "description": "An array of the multiple property disposals.",
@@ -68,14 +76,6 @@
               },
               "amountOfNetLoss": {
                 "description": "The total amount of net loss from the disposals.  Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                "type": "number",
-                "multipleOf": 0.01,
-                "minimum": 0.00,
-                "maximum": 99999999999.99,
-                "example": "1999.99"
-              },
-              "ppdReturnCharge": {
-                "description": "The residential property charge due on the multiple property disposals. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                 "type": "number",
                 "multipleOf": 0.01,
                 "minimum": 0.00,
@@ -209,14 +209,6 @@
               },
               "amountOfNetLoss": {
                 "description": "The total amount of net loss from the disposal. Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
-                "type": "number",
-                "multipleOf": 0.01,
-                "minimum": 0.00,
-                "maximum": 99999999999.99,
-                "example": "1999.99"
-              },
-              "ppdReturnCharge": {
-                "description": "The residential property charge due on the property disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                 "type": "number",
                 "multipleOf": 0.01,
                 "minimum": 0.00,

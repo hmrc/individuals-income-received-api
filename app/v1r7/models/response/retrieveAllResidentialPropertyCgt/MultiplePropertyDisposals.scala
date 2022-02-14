@@ -28,8 +28,7 @@ case class MultiplePropertyDisposals(source: MtdSourceEnum,
                                      disposalTaxYear: Option[BigInt],
                                      completionDate: Option[String],
                                      amountOfNetGain: Option[BigDecimal],
-                                     amountOfNetLoss: Option[BigDecimal],
-                                     ppdReturnCharge: Option[BigDecimal])
+                                     amountOfNetLoss: Option[BigDecimal])
 
 
 object MultiplePropertyDisposals {
@@ -42,8 +41,7 @@ object MultiplePropertyDisposals {
       (JsPath \ "disposalTaxYear").readNullable[String].map(_.map(BigInt(_))) and
       (JsPath \ "completionDate").readNullable[String] and
       (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
-      (JsPath \ "amountOfLoss").readNullable[BigDecimal] and
-      (JsPath \ "ppdReturnCharge").readNullable[BigDecimal]
+      (JsPath \ "amountOfLoss").readNullable[BigDecimal]
     ) (MultiplePropertyDisposals.apply _)
 
   implicit val writes: OWrites[MultiplePropertyDisposals] = Json.writes[MultiplePropertyDisposals]

@@ -25,6 +25,7 @@ class PpdServiceSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "hmrcHeld",
@@ -67,6 +68,7 @@ class PpdServiceSpec extends UnitSpec {
   val desJson: JsValue = Json.parse(
     """
       |{
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "HMRC HELD",
@@ -116,7 +118,6 @@ class PpdServiceSpec extends UnitSpec {
       Some(2022),
       Some("2022-03-08"),
       None,
-      Some(1999.99),
       Some(1999.99)
     )
 
@@ -138,13 +139,13 @@ class PpdServiceSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      None,
-      Some(1999.99)
+      None
     )
 
 
   val model: PpdService =
     PpdService(
+      Some(143.22),
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
