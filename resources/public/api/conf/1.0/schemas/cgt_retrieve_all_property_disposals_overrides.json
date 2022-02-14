@@ -8,7 +8,7 @@
       "type": "object",
       "description": "An object containing single and multiple property disposal submissions previously reported via the HMRC 'Report and pay Capital Gains Tax on UK property'",
       "properties": {
-        "ppdReturnCharge": {
+        "ppdYearToDate": {
           "description": "The total amount of Capital Gains charges on the sale of Residential Properties that has been submitted via the Capital Gains Tax UK property account for the year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
           "multipleOf": 0.01,
