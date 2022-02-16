@@ -35,8 +35,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetLoss": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -56,8 +55,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  }
@@ -78,8 +76,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfLoss": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -99,8 +96,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  }
