@@ -36,8 +36,7 @@ case class SinglePropertyDisposals(source: MtdSourceEnum,
                                    lossesFromThisYear: Option[BigDecimal],
                                    lossesFromPreviousYear: Option[BigDecimal],
                                    amountOfNetGain : Option[BigDecimal],
-                                   amountOfNetLoss : Option[BigDecimal],
-                                   ppdReturnCharge: Option[BigDecimal]
+                                   amountOfNetLoss : Option[BigDecimal]
                                   )
 
 object SinglePropertyDisposals {
@@ -58,8 +57,7 @@ object SinglePropertyDisposals {
       (JsPath \ "lossesFromThisYear").readNullable[BigDecimal] and
       (JsPath \ "lossesFromPreviousYear").readNullable[BigDecimal] and
       (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
-      (JsPath \ "amountOfLoss").readNullable[BigDecimal] and
-      (JsPath \ "ppdReturnCharge").readNullable[BigDecimal]
+      (JsPath \ "amountOfLoss").readNullable[BigDecimal]
     ) (SinglePropertyDisposals.apply _)
 
   implicit val writes: OWrites[SinglePropertyDisposals] = Json.writes[SinglePropertyDisposals]
