@@ -1,5 +1,6 @@
 {
   "ppdService": {
+    "ppdYearToDate": 1999.99,
     "multiplePropertyDisposals": [
       {
         "source": "hmrcHeld",
