@@ -23,7 +23,7 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.Release6Uri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1r7.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1r7.models.errors._
@@ -61,7 +61,7 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
         taxYear = taxYear
       )
 
-      implicit val IfsUri: Release6Uri[Unit] = Release6Uri[Unit](
+      implicit val IfsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
         s"income-tax/employments/non-paye/$nino/$taxYear"
       )
 

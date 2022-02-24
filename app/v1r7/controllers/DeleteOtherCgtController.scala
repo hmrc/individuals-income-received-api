@@ -24,7 +24,7 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.Release6Uri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1r7.models.audit.{AuditEvent, AuditResponse, DeleteOtherCgtAuditDetail}
 import v1r7.models.errors._
@@ -62,7 +62,7 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
         taxYear = taxYear
       )
 
-      implicit val IfsUri: Release6Uri[Unit] = Release6Uri[Unit](
+      implicit val IfsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
         s"income-tax/income/disposals/other-gains/$nino/$taxYear"
       )
 
