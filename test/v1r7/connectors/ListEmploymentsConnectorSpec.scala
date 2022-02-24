@@ -54,10 +54,10 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.release6BaseUrl returns baseUrl
+    MockedAppConfig.release6Token returns "release6-token"
+    MockedAppConfig.release6Environment returns "release6-environment"
+    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "ListEmploymentsConnector" when {
@@ -70,7 +70,7 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear",
             config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
+            requiredHeaders = requiredRelease6Headers,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

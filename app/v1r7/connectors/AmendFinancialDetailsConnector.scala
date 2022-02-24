@@ -21,7 +21,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Release6Uri
 import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,7 +42,7 @@ class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
     val employmentId = request.employmentId
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"), body = request.body
+      uri = Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"), body = request.body
     )
   }
 }

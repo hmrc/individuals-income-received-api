@@ -45,10 +45,10 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.release6BaseUrl returns baseUrl
+    MockedAppConfig.release6Token returns "release6-token"
+    MockedAppConfig.release6Environment returns "release6-environment"
+    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "IgnoreEmploymentConnector" when {
@@ -56,14 +56,14 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
       "return a 204 status upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredRelease6HeadersPut: Seq[(String, String)] = requiredRelease6Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore",
             config = dummyIfsHeaderCarrierConfig,
             body = EmptyBody,
-            requiredHeaders = requiredIfsHeadersPut,
+            requiredHeaders = requiredRelease6HeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 

@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.controllers.requestParsers.RetrieveNonPayeEmploymentRequestParser
 import v1r7.hateoas.HateoasFactory
 import v1r7.models.domain.MtdSourceEnum
@@ -65,7 +65,7 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
         source = source
       )
 
-      implicit val ifsUri: IfsUri[RetrieveNonPayeEmploymentIncomeResponse] = IfsUri[RetrieveNonPayeEmploymentIncomeResponse](
+      implicit val IfsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
         s"income-tax/income/employments/non-paye/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
