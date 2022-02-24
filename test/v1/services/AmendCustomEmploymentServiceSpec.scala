@@ -16,12 +16,13 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendCustomEmploymentConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
+import v1r6.models.domain.Nino
+import v1r6.controllers.EndpointLogContext
+import v1r6.models.errors._
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.amendCustomEmployment.{AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
+import v1.services.AmendCustomEmploymentService
 
 import scala.concurrent.Future
 
@@ -83,6 +84,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
           ("NOT_SUPPORTED_TAX_YEAR", RuleTaxYearNotEndedError),
           ("INVALID_DATE_RANGE", RuleStartDateAfterTaxYearEndError),
           ("INVALID_CESSATION_DATE", RuleCessationDateBeforeTaxYearStartError),
+          ("CANNOT_UPDATE", RuleUpdateForbiddenError),
           ("NO_DATA_FOUND", NotFoundError),
           ("INVALID_PAYLOAD", DownstreamError),
           ("INVALID_CORRELATIONID", DownstreamError),

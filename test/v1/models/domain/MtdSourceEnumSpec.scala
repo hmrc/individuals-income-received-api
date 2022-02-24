@@ -18,6 +18,7 @@ package v1.models.domain
 
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
+import v1r6.models.domain.MtdSourceEnum
 
 class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 

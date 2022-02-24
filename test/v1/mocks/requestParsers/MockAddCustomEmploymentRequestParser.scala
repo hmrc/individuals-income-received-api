@@ -18,9 +18,9 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.addCustomEmployment.{AddCustomEmploymentRawData, AddCustomEmploymentRequest}
+import v1r6.controllers.requestParsers.AddCustomEmploymentRequestParser
+import v1r6.models.errors.ErrorWrapper
+import v1r6.models.request.addCustomEmployment.{AddCustomEmploymentRawData, AddCustomEmploymentRequest}
 
 trait MockAddCustomEmploymentRequestParser extends MockFactory {
 

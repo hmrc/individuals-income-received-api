@@ -20,9 +20,6 @@ import config.{AppConfig, FeatureSwitch}
 
 import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
-import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors._
-import v1.models.request.addCustomEmployment._
 
 @Singleton
 class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)

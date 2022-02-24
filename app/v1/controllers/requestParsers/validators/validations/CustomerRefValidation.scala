@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{CustomerRefFormatError, MtdError}
-
 object CustomerRefValidation {
 
   private val regex = "^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$"

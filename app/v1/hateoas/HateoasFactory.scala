@@ -21,7 +21,6 @@ import cats.implicits._
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
-import v1.models.hateoas._
 
 import scala.language.higherKinds
 

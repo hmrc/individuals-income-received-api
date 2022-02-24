@@ -18,21 +18,22 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.models.domain.Nino
+import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveEmploymentControllerFixture._
-import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveEmploymentRequestParser
 import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.hateoas.Method._
-import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
-import v1.models.hateoas.RelType._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
+import v1.fixtures.RetrieveEmploymentControllerFixture._
+import v1.hateoas.HateoasLinks
+import v1r6.mocks.services.MockEnrolmentsAuthService
+import v1r6.models.errors._
+import v1r6.models.hateoas.{HateoasWrapper, Link}
+import v1r6.models.hateoas.Method._
+import v1r6.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1r6.models.hateoas.RelType._
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -108,7 +109,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val hmrcEnteredEmploymentWithoutDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = None,
@@ -118,7 +119,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val hmrcEnteredEmploymentWithDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
@@ -128,7 +129,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val customEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = None,
@@ -163,7 +164,8 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR" -> TaxYearFormatError,
         "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-        "NOT_FOUND" -> NotFoundError,
+        "INVALID_CORRELATIONID" -> DownstreamError,
+        "NO_DATA_FOUND" -> NotFoundError,
         "SERVER_ERROR" -> DownstreamError,
         "SERVICE_UNAVAILABLE" -> DownstreamError
       )

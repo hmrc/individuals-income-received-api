@@ -21,18 +21,12 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.ListEmploymentsConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
-import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends DesResponseMappingSupport with Logging{
+class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends DesResponseMappingSupport with Logging {
 
   def listEmployments(request: ListEmploymentsRequest)(
     implicit hc: HeaderCarrier,
@@ -50,8 +44,10 @@ class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) exte
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID"  -> NinoFormatError,
     "INVALID_TAX_YEAR"           -> TaxYearFormatError,
-    "NOT_FOUND"                 -> NotFoundError,
-    "SERVER_ERROR"              -> DownstreamError,
-    "SERVICE_UNAVAILABLE"       -> DownstreamError
+    "INVALID_EMPLOYMENT_ID"      -> DownstreamError,
+    "INVALID_CORRELATIONID"      -> DownstreamError,
+    "NO_DATA_FOUND"              -> NotFoundError,
+    "SERVER_ERROR"               -> DownstreamError,
+    "SERVICE_UNAVAILABLE"        -> DownstreamError
   )
 }

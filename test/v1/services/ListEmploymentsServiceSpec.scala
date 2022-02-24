@@ -16,13 +16,14 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockListEmploymentsConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1r6.models.domain.Nino
+import v1r6.controllers.EndpointLogContext
+import v1r6.models.errors._
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.listEmployments.ListEmploymentsRequest
+import v1r6.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.services.ListEmploymentsService
 
 import scala.concurrent.Future
 
@@ -67,11 +68,11 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(ifsErrorCode: String, error: MtdError): Unit =
+          s"a $ifsErrorCode error is returned from the service" in new Test {
 
             MockListEmploymentsConnector.listEmployments(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(ifsErrorCode))))))
 
             await(service.listEmployments(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -79,7 +80,9 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("NOT_FOUND", NotFoundError),
+          ("INVALID_EMPLOYMENT_ID", DownstreamError),
+          ("INVALID_CORRELATIONID", DownstreamError),
+          ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

@@ -21,15 +21,16 @@ import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 import v1.hateoas.HateoasFactory
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.{HateoasWrapper, Link}
+import v1r6.models.hateoas.Method.{DELETE, GET, PUT}
+import v1r6.models.hateoas.{HateoasWrapper, Link}
+import v1r6.models.response.retrieveFinancialDetails.RetrieveFinancialDetailsResponse
 
 class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
 
   "RetrieveFinancialDetailsResponse" when {
     "read from valid JSON" should {
       "produce the expected 'RetrieveFinancialDetailsResponse' object" in {
-        desJson.as[RetrieveFinancialDetailsResponse] shouldBe model
+        ifsJson.as[RetrieveFinancialDetailsResponse] shouldBe model
       }
     }
 

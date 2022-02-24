@@ -18,6 +18,7 @@ package v1.models.response.retrieveFinancialDetails
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1r6.models.response.retrieveFinancialDetails.Pay
 
 class PaySpec extends UnitSpec {
   val json: JsValue = Json.parse(
@@ -34,8 +35,8 @@ class PaySpec extends UnitSpec {
   )
 
   val model: Pay = Pay(
-    taxablePayToDate = 100.11,
-    totalTaxToDate = 102.11,
+    taxablePayToDate = Some(100.11),
+    totalTaxToDate = Some(102.11),
     payFrequency = Some("CALENDAR MONTHLY"),
     paymentDate = Some("2020-04-23"),
     taxWeekNo = Some(2),
@@ -54,7 +55,7 @@ class PaySpec extends UnitSpec {
         val invalidJson: JsValue = Json.parse(
           """
             |{
-            |  "taxablePayToDate": 100.11
+            |  "taxablePayToDate": "taxablePayToDate"
             |}
           """.stripMargin
         )

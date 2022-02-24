@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{EmployerNameFormatError, MtdError}
-
 object EmployerNameValidation {
 
   def validate(employerName: String, maxLength: Int): List[MtdError] = {

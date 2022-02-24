@@ -19,8 +19,7 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{AmendInsurancePoliciesConnector, DesOutcome}
-import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
+import v1r6.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 

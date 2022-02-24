@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, ValueFormatError}
-
 object IntegerValueValidation extends ValueFormatErrorMessages {
 
   def validateOptional(field: Option[Int],

@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.DoubleTaxationArticleFormatError
+import v1r6.controllers.requestParsers.validators.validations.DoubleTaxationArticleValidation
+import v1r6.models.errors.DoubleTaxationArticleFormatError
 
 class DoubleTaxationArticleValidationSpec extends UnitSpec {
 

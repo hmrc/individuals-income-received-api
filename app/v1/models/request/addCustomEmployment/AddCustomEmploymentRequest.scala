@@ -16,6 +16,4 @@
 
 package v1.models.request.addCustomEmployment
 
-import v1.models.domain.Nino
-
 case class AddCustomEmploymentRequest(nino: Nino, taxYear: String, body: AddCustomEmploymentRequestBody)

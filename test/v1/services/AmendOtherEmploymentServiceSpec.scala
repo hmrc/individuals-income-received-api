@@ -16,12 +16,13 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendOtherEmploymentConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendOtherEmployment._
+import v1r6.models.domain.Nino
+import v1r6.controllers.EndpointLogContext
+import v1r6.models.errors._
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.amendOtherEmployment._
+import v1.services.AmendOtherEmploymentService
 
 import scala.concurrent.Future
 

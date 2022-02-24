@@ -16,9 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
-
 object TaxYearNotSupportedValidation {
 
   // @param taxYear In format YYYY-YY

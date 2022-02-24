@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{DoubleTaxationArticleFormatError, MtdError}
-
 object DoubleTaxationArticleValidation {
 
   def validateOptional(dblTaxationArticle: Option[String], path: String): List[MtdError] = dblTaxationArticle.fold(NoValidationErrors: List[MtdError]) { data =>

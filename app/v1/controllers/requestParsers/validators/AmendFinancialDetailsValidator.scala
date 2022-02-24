@@ -17,13 +17,8 @@
 package v1.controllers.requestParsers.validators
 
 import config.{AppConfig, FeatureSwitch}
-
 import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
-import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.MtdError
-import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
-import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
 
 @Singleton
 class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
@@ -53,9 +48,29 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
   }
 
   private def bodyFormatValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
-    List(
+    val jsonFormatError = List(
       JsonFormatValidation.validate[AmendFinancialDetailsRequestBody](data.body.json)
     )
+
+    val requestBodyObj = data.body.json.asOpt[AmendFinancialDetailsRequestBody]
+    val emptyObjectValidation: List[List[MtdError]] = List(
+      requestBodyObj
+        .map { body =>
+          val emptyDeductionsError: List[String] =
+            if(body.employment.deductions.exists(_.isEmpty)) List("/employment/deductions") else NoValidationErrors
+
+          val emptyBenefitsInKindError: List[String] =
+            if(body.employment.benefitsInKind.exists(_.isEmpty)) List("/employment/benefitsInKind") else NoValidationErrors
+
+          val emptyStudentLoansError: List[String] =
+            if(body.employment.deductions.exists(_.studentLoans.exists(_.isEmpty))) List("/employment/deductions/studentLoans") else NoValidationErrors
+
+          val minimumFieldsError = emptyDeductionsError ++ emptyBenefitsInKindError ++ emptyStudentLoansError
+          if(minimumFieldsError.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(minimumFieldsError)))
+
+        }.getOrElse(NoValidationErrors))
+
+    jsonFormatError ++ emptyObjectValidation
   }
 
   private def bodyValueValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>

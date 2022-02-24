@@ -16,9 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, RuleLumpSumsError}
-import v1.models.request.amendOtherEmployment.AmendLumpSums
-
 object LumpSumsRuleValidation {
   def validate(lumpSum: AmendLumpSums, index: Int): List[MtdError] = {
     lumpSum match {

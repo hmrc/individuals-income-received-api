@@ -17,11 +17,11 @@
 package v1.services
 
 import play.api.libs.json.{Format, Json}
-import v1.connectors.DownstreamUri.DesUri
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockDeleteRetrieveConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import v1r6.controllers.EndpointLogContext
+import v1r6.models.errors._
+import v1r6.models.outcomes.ResponseWrapper
+import v1.services.DeleteRetrieveService
 
 import scala.concurrent.Future
 

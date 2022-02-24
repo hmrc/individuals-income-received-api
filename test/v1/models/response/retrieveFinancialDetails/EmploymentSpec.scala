@@ -18,9 +18,10 @@ package v1.models.response.retrieveFinancialDetails
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1r6.models.response.retrieveFinancialDetails.Employment
 
 class EmploymentSpec extends UnitSpec {
-  val desJson: JsValue = Json.parse(
+  val ifsJson: JsValue = Json.parse(
     """
       |{
       |  "employmentSequenceNumber": "1002",
@@ -44,7 +45,7 @@ class EmploymentSpec extends UnitSpec {
       |    "taxWeekNo": 32,
       |    "taxMonthNo": 8
       |  },
-      |  "customerEstimatedPay": {
+      |  "estimatedPay": {
       |    "amount": 1500.99
       |  },
       |  "deductions": {
@@ -169,8 +170,8 @@ class EmploymentSpec extends UnitSpec {
       employerName = "maggie"
     ),
     pay = Some(Pay(
-      taxablePayToDate = 34234.15,
-      totalTaxToDate = 6782.92,
+      taxablePayToDate = Some(34234.15),
+      totalTaxToDate = Some(6782.92),
       payFrequency = Some("CALENDAR MONTHLY"),
       paymentDate = Some("2020-04-23"),
       taxWeekNo = Some(32),
@@ -220,7 +221,7 @@ class EmploymentSpec extends UnitSpec {
   "Employment" when {
     "read from valid JSON" should {
       "produce the expected 'Employment' object" in {
-        desJson.as[Employment] shouldBe model
+        ifsJson.as[Employment] shouldBe model
       }
     }
 
@@ -250,7 +251,7 @@ class EmploymentSpec extends UnitSpec {
             |    "taxWeekNo": 32,
             |    "taxMonthNo": 8
             |  },
-            |  "customerEstimatedPay": {
+            |  "estimatedPay": {
             |  },
             |  "deductions": {
             |    "studentLoans": {

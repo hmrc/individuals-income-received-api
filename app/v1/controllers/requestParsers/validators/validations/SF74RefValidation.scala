@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, SF74RefFormatError}
-
 object SF74RefValidation {
 
   def validateOptional(sf74Ref: Option[String], path: String): List[MtdError] = sf74Ref.fold(NoValidationErrors: List[MtdError]) { ref =>

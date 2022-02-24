@@ -17,8 +17,6 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
-import v1.models.domain.Nino
-import v1.controllers.requestParsers.validators.ListEmploymentsValidator
 import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmploymentsRequest}
 
 @Singleton

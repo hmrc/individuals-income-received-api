@@ -18,9 +18,9 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.RetrieveFinancialDetailsValidator
-import v1.models.errors.MtdError
-import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
+import v1r6.controllers.requestParsers.validators.RetrieveFinancialDetailsValidator
+import v1r6.models.errors.MtdError
+import v1r6.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
 
 trait MockRetrieveFinancialDetailsValidator extends MockFactory {
 

@@ -16,6 +16,4 @@
 
 package v1.models.request.listEmployments
 
-import v1.models.domain.Nino
-
 case class ListEmploymentsRequest(nino: Nino, taxYear: String)

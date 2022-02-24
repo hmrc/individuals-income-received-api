@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.CustomerRefFormatError
+import v1r6.controllers.requestParsers.validators.validations.CustomerRefInsuranceValidation
+import v1r6.models.errors.CustomerRefFormatError
 
 class CustomerRefInsuranceValidationSpec extends UnitSpec {
 

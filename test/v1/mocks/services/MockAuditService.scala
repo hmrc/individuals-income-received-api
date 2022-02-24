@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import v1.models.audit.AuditEvent
+import v1r6.models.audit.AuditEvent
 import v1.services.AuditService
 
 import scala.concurrent.{ExecutionContext, Future}

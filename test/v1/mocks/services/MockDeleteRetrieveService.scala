@@ -20,10 +20,9 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.{Format, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.DownstreamUri
-import v1.controllers.EndpointLogContext
-import v1.models.errors.{ErrorWrapper, MtdError}
-import v1.models.outcomes.ResponseWrapper
+import v1r6.controllers.EndpointLogContext
+import v1r6.models.errors.{ErrorWrapper, MtdError}
+import v1r6.models.outcomes.ResponseWrapper
 import v1.services.DeleteRetrieveService
 
 import scala.concurrent.{ExecutionContext, Future}

@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.EmployerRefFormatError
+import v1r6.controllers.requestParsers.validators.validations.EmployerRefValidation
+import v1r6.models.errors.EmployerRefFormatError
 
 class EmployerRefValidationSpec extends UnitSpec {
 

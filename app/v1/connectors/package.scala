@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package v1
-
-import v1.models.errors.{DesError, MtdError}
-import v1.models.outcomes.ResponseWrapper
+package v1r6
 
 package object connectors {
 

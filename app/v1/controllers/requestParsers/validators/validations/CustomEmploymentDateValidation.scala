@@ -18,9 +18,6 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
 
-import v1.models.domain.DesTaxYear
-import v1.models.errors._
-
 object CustomEmploymentDateValidation {
 
   def validate(startDate: String, cessationDate: Option[String], taxYear: String): List[MtdError] = {

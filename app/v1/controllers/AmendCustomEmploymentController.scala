@@ -26,12 +26,7 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.AmendCustomEmploymentRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
-import v1.services.{AmendCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -116,6 +111,7 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
            CustomMtdError(EmployerRefFormatError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
+      case RuleUpdateForbiddenError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

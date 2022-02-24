@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors._
+import v1r6.controllers.requestParsers.validators.validations.CustomEmploymentDateValidation
+import v1r6.models.errors._
 
 class CustomEmploymentDateValidationSpec extends UnitSpec {
 

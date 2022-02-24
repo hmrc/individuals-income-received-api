@@ -81,4 +81,16 @@ trait ConnectorSpec extends UnitSpec
     "Authorization" -> s"Bearer ifs-token",
     "CorrelationId" -> s"$correlationId"
   )
+
+  val requiredRelease6Headers: Seq[(String, String)] = Seq(
+    "Environment" -> "release6-environment",
+    "Authorization" -> s"Bearer release6-token",
+    "CorrelationId" -> s"$correlationId"
+  )
+
+  val requiredApi1661Headers: Seq[(String, String)] = Seq(
+    "Environment" -> "api1661-environment",
+    "Authorization" -> s"Bearer api1661-token",
+    "CorrelationId" -> s"$correlationId"
+  )
 }

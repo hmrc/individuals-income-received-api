@@ -18,9 +18,9 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.IgnoreEmploymentRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
+import v1r6.controllers.requestParsers.IgnoreEmploymentRequestParser
+import v1r6.models.errors.ErrorWrapper
+import v1r6.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
 
 trait MockIgnoreEmploymentRequestParser extends MockFactory {
 

@@ -26,10 +26,10 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.mocks.MockCurrentDateTime
-import v1.models.errors._
-import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
+import v1r6.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
+import v1r6.models.errors._
+import v1r6.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
 
 class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 

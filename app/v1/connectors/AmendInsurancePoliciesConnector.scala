@@ -19,8 +19,6 @@ package v1.connectors
 import config.AppConfig
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.IfsUri
-import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,8 +31,6 @@ class AmendInsurancePoliciesConnector @Inject()(val http: HttpClient,
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[Unit]] = {
-
-    import v1.connectors.httpparsers.StandardDesHttpParser._
 
     implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
 

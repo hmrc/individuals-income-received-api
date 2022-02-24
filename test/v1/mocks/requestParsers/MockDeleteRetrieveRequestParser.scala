@@ -18,9 +18,9 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.DeleteRetrieveRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1r6.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1r6.models.errors.ErrorWrapper
+import v1r6.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
 trait MockDeleteRetrieveRequestParser extends MockFactory {
 

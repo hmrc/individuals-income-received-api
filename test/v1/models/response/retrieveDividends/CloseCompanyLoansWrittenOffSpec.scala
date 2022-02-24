@@ -18,6 +18,7 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1r6.models.response.retrieveDividends.CloseCompanyLoansWrittenOff
 
 class CloseCompanyLoansWrittenOffSpec extends UnitSpec {
 

@@ -16,14 +16,15 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendFinancialDetailsConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
-import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
-import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
+import v1r6.models.domain.Nino
+import v1r6.controllers.EndpointLogContext
+import v1r6.models.errors._
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
+import v1r6.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
+import v1r6.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
+import v1.services.AmendFinancialDetailsService
 
 import scala.concurrent.Future
 
@@ -129,6 +130,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
           ("INVALID_EMPLOYMENT_ID", NotFoundError),
           ("INVALID_PAYLOAD", DownstreamError),
           ("BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
+          ("INVALID_CORRELATIONID", DownstreamError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

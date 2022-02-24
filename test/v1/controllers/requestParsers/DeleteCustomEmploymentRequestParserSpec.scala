@@ -17,10 +17,11 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import v1.models.domain.Nino
 import v1.mocks.validators.MockDeleteCustomEmploymentValidator
-import v1.models.errors._
-import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
+import v1r6.controllers.requestParsers.DeleteCustomEmploymentRequestParser
+import v1r6.models.domain.Nino
+import v1r6.models.errors._
+import v1r6.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 class DeleteCustomEmploymentRequestParserSpec extends UnitSpec {
 

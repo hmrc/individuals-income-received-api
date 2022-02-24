@@ -17,11 +17,8 @@
 package v1.connectors
 
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
-import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.DesUri
 import v1.models.request.EmptyBody
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
@@ -36,14 +33,10 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
-
     val nino = request.nino.nino
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
-    put(EmptyBody, DesUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
+    put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
   }
 }

@@ -18,21 +18,22 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.models.domain.Nino
+import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.ListEmploymentsControllerFixture._
-import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListEmploymentsRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListEmploymentsService, MockMtdIdLookupService}
-import v1.models.errors._
-import v1.models.hateoas.Method.{GET, POST}
-import v1.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmploymentsRequest}
-import v1.models.response.listEmployment.{Employment, ListEmploymentHateoasData, ListEmploymentResponse}
+import v1.fixtures.ListEmploymentsControllerFixture._
+import v1.hateoas.HateoasLinks
+import v1r6.mocks.services.MockEnrolmentsAuthService
+import v1r6.models.errors._
+import v1r6.models.hateoas.Method.{GET, POST}
+import v1r6.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
+import v1r6.models.hateoas.{HateoasWrapper, Link}
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.listEmployments.{ListEmploymentsRawData, ListEmploymentsRequest}
+import v1r6.models.response.listEmployment.{Employment, ListEmploymentHateoasData, ListEmploymentResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

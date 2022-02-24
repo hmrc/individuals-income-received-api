@@ -19,9 +19,9 @@ package v1.connectors
 import mocks.MockAppConfig
 import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.DownstreamUri.DesUri
 import v1.mocks.MockHttpClient
-import v1.models.outcomes.ResponseWrapper
+import v1.connectors.DeleteRetrieveConnector
+import v1r6.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 

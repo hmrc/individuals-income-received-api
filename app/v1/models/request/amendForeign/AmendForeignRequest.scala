@@ -16,6 +16,4 @@
 
 package v1.models.request.amendForeign
 
-import v1.models.domain.Nino
-
 case class AmendForeignRequest(nino: Nino, taxYear: String, body: AmendForeignRequestBody)

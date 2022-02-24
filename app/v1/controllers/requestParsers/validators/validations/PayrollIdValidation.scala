@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, PayrollIdFormatError}
-
 object PayrollIdValidation {
 
   def validateOptional(payrollId: Option[String]): List[MtdError] = payrollId match {
@@ -26,7 +24,7 @@ object PayrollIdValidation {
   }
 
   def validate(payrollId: String): List[MtdError] = {
-    val regex = "^[A-Za-z0-9.,\\-()/=!\"%&*;<>'+:\\?]{0,38}$"
+    val regex = "^[A-Za-z0-9.,\\-()/=!\"%&*; <>'+:\\?]{0,38}$"
     if (payrollId.matches(regex)) NoValidationErrors else List(PayrollIdFormatError)
   }
 }

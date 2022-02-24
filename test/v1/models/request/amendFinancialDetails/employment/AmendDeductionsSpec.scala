@@ -16,10 +16,10 @@
 
 package v1.models.request.amendFinancialDetails.employment
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.models.request.amendFinancialDetails.emploment.AmendDeductions
-import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
+import v1r6.models.request.amendFinancialDetails.emploment.AmendDeductions
+import v1r6.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 
 class AmendDeductionsSpec extends UnitSpec {
 
@@ -42,6 +42,10 @@ class AmendDeductionsSpec extends UnitSpec {
     studentLoans = Some(studentLoansModel)
   )
 
+  val emptyJson = Json.parse("""{}""")
+
+  val emptyModel = AmendDeductions(None)
+
   "AmendDeductions" when {
     "read from valid JSON" should {
       "produce the expected AmendDeductions object" in {
@@ -49,11 +53,9 @@ class AmendDeductionsSpec extends UnitSpec {
       }
     }
 
-    "read from empty JSON" should {
+    "read from empty object" should {
       "produce an empty AmendDeductions object" in {
-        val emptyJson = JsObject.empty
-
-        emptyJson.as[AmendDeductions] shouldBe AmendDeductions.empty
+        emptyJson.as[AmendDeductions] shouldBe emptyModel
       }
     }
 

@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.{DateFormatError, MtdError}
+import v1r6.controllers.requestParsers.validators.validations.DateFormatValidation
+import v1r6.models.errors.{DateFormatError, MtdError}
 
 class DateFormatValidationSpec extends UnitSpec {
 

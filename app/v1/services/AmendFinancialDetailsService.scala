@@ -22,12 +22,6 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendFinancialDetailsConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors.{DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, TaxYearFormatError}
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
-import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -54,6 +48,7 @@ class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsCon
       "INVALID_EMPLOYMENT_ID" -> NotFoundError,
       "INVALID_PAYLOAD" -> DownstreamError,
       "BEFORE_TAX_YEAR_END" -> RuleTaxYearNotEndedError,
+      "INVALID_CORRELATIONID" -> DownstreamError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )

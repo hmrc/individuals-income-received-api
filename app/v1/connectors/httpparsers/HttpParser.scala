@@ -19,7 +19,6 @@ package v1.connectors.httpparsers
 import play.api.libs.json._
 import uk.gov.hmrc.http.HttpResponse
 import utils.Logging
-import v1.models.errors._
 
 import scala.util.{Success, Try}
 

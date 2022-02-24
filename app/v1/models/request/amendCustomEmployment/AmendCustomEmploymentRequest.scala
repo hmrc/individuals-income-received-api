@@ -16,6 +16,4 @@
 
 package v1.models.request.amendCustomEmployment
 
-import v1.models.domain.Nino
-
 case class AmendCustomEmploymentRequest(nino: Nino, taxYear: String, employmentId: String, body: AmendCustomEmploymentRequestBody)

@@ -16,9 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.domain.MtdSourceEnum
-import v1.models.errors.{MtdError, SourceFormatError}
-
 import scala.util.{Failure, Success, Try}
 
 object EmploymentSourceValidation {

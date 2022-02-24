@@ -18,8 +18,6 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
 
-import v1.models.errors.{DateFormatError, MtdError}
-
 import scala.util.{Failure, Success, Try}
 
 object DateFormatValidation {

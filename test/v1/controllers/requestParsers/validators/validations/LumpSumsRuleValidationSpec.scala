@@ -17,8 +17,9 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.RuleLumpSumsError
-import v1.models.request.amendOtherEmployment.{AmendLumpSums, AmendTaxableLumpSumsAndCertainIncomeItem}
+import v1r6.controllers.requestParsers.validators.validations.LumpSumsRuleValidation
+import v1r6.models.errors.RuleLumpSumsError
+import v1r6.models.request.amendOtherEmployment.{AmendLumpSums, AmendTaxableLumpSumsAndCertainIncomeItem}
 
 class LumpSumsRuleValidationSpec extends UnitSpec {
 

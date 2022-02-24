@@ -27,8 +27,6 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.models.auth.UserDetails
-import v1.models.errors.{DownstreamError, UnauthorisedError}
-import v1.models.outcomes.AuthOutcome
 
 import scala.concurrent.{ExecutionContext, Future}
 

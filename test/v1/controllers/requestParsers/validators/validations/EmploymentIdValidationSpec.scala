@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.EmploymentIdFormatError
+import v1r6.controllers.requestParsers.validators.validations.EmploymentIdValidation
+import v1r6.models.errors.EmploymentIdFormatError
 
 class EmploymentIdValidationSpec extends UnitSpec {
 
@@ -25,6 +26,10 @@ class EmploymentIdValidationSpec extends UnitSpec {
     "validate" should {
       "return an empty list for a valid employment ID" in {
         EmploymentIdValidation.validate("4557ecb5-fd32-48cc-81f5-e6acd1099f3c") shouldBe NoValidationErrors
+      }
+
+      "return an empty list for a valid employment ID (updated regex)" in {
+        EmploymentIdValidation.validate("4557ecb5-fd32-18cc-81f5-e6acd1099f3c") shouldBe NoValidationErrors
       }
 
       "return an EmploymentIdFormatError error for an invalid employment ID" in {

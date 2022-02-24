@@ -16,7 +16,7 @@
 
 package v1.fixtures.other
 
-import v1.models.request.amendOther._
+import v1r6.models.request.amendOther._
 
 object AmendOtherServiceConnectorFixture {
 

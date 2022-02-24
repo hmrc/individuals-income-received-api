@@ -18,9 +18,9 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.DeleteCustomEmploymentRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
+import v1r6.controllers.requestParsers.DeleteCustomEmploymentRequestParser
+import v1r6.models.errors.ErrorWrapper
+import v1r6.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 trait MockDeleteCustomEmploymentRequestParser extends MockFactory {
 

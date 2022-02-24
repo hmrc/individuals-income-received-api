@@ -16,7 +16,7 @@
 
 package v1.models.errors
 
-import play.api.libs.json.{ Json, OWrites }
+import play.api.libs.json.{Json, OWrites}
 
 case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None) {
 
@@ -39,6 +39,7 @@ object CustomMtdError {
 object NinoFormatError                  extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError               extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object EmploymentIdFormatError          extends MtdError("FORMAT_EMPLOYMENT_ID", "The provided employment ID is invalid")
+object PpdSubmissionIdFormatError       extends MtdError("FORMAT_PPD_SUBMISSION_ID", "The provided ppdSubmissionId is invalid")
 object CountryCodeFormatError           extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
 object CountryCodeRuleError             extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 object ValueFormatError                 extends MtdError("FORMAT_VALUE", "The value must be between 0.00 and 99999999999.99")
@@ -58,6 +59,9 @@ object PayrollIdFormatError             extends MtdError("FORMAT_PAYROLL_ID", "T
 object StartDateFormatError             extends MtdError("FORMAT_START_DATE", "The provided start date is invalid")
 object CessationDateFormatError         extends MtdError("FORMAT_CESSATION_DATE", "The provided cessation date is invalid")
 object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The provided source is invalid")
+object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
+object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
+object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
@@ -99,6 +103,12 @@ object RuleCessationDateBeforeTaxYearStartError
     message = "The cessation date cannot be before the tax year starts"
   )
 
+object RuleUpdateForbiddenError
+  extends MtdError(
+    code = "RULE_UPDATE_FORBIDDEN",
+    message = "The update for an HMRC held employment is not permitted"
+  )
+
 object RuleCustomEmploymentError
   extends MtdError(
     code = "RULE_CUSTOM_EMPLOYMENT",
@@ -116,6 +126,71 @@ object RuleLumpSumsError
     code = "RULE_LUMP_SUMS",
     message = "At least one child object is required when lumpSums are provided"
   )
+
+object RuleAmountGainLossError
+  extends MtdError(
+    code = "RULE_AMOUNT_GAIN_LOSS",
+    message = "Either amountOfGain or amountOfLoss, must be provided but not both"
+  )
+
+object RuleLossesGreaterThanGainError
+  extends MtdError(
+    code = "RULE_LOSSES_GREATER_THAN_GAIN",
+    message = "The total losses from this year or the previous year must not be greater than the gain"
+  )
+
+object RuleGainLossError
+    extends MtdError(
+      code = "RULE_GAIN_LOSS",
+      message = "Only one of gain or loss values can be provided"
+    )
+
+object RuleDisposalDateError
+    extends MtdError(
+      code = "RULE_DISPOSAL_DATE",
+      message = ""
+    )
+
+object RuleAcquisitionDateError
+    extends MtdError(
+      code = "RULE_ACQUISITION_DATE",
+      message = "The acquisitionDate must not be later than disposalDate"
+    )
+
+object RuleGainAfterReliefLossAfterReliefError
+    extends MtdError(
+      code = "RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF",
+      message = "Only one of gainAfterRelief or lossAfterRelief values can be provided"
+    )
+
+object RuleCompletionDateBeforeDisposalDateError  extends MtdError("RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE", "The completionDate must not be earlier than the disposalDate")
+
+object RuleAcquisitionDateAfterDisposalDateError  extends MtdError("RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE", "The acquisitionDate must not be later than disposalDate")
+
+object RuleCompletionDateError  extends MtdError("RULE_COMPLETION_DATE", "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April")
+
+object RuleDuplicatedPpdSubmissionIdError
+    extends MtdError(
+      code = "RULE_DUPLICATED_PPD_SUBMISSION_ID",
+      message = "A provided ppdSubmissionId is duplicated"
+    ) {
+
+  def forDuplicatedIdAndPaths(id: String, paths: Seq[String]): MtdError =
+    RuleDuplicatedPpdSubmissionIdError.copy(message = s"The ppdSubmissionId '$id' is duplicated", paths = Some(paths))
+}
+
+object RuleIncorrectDisposalTypeError
+  extends MtdError(
+    code = "RULE_INCORRECT_DISPOSAL_TYPE",
+    message = "A provided ppdSubmissionId is being used for the incorrect disposal type"
+  )
+
+// Not found errors
+object PpdSubmissionIdNotFoundError
+    extends MtdError(
+      code = "PPD_SUBMISSION_ID_NOT_FOUND",
+      message = "Matching resource not found"
+    )
 
 // Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

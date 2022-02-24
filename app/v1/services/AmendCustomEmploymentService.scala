@@ -21,12 +21,7 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendCustomEmploymentConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
-import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -55,6 +50,7 @@ class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentCon
       "NOT_SUPPORTED_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "INVALID_DATE_RANGE" -> RuleStartDateAfterTaxYearEndError,
       "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
+      "CANNOT_UPDATE" -> RuleUpdateForbiddenError,
       "NO_DATA_FOUND" -> NotFoundError,
       "INVALID_PAYLOAD" -> DownstreamError,
       "INVALID_CORRELATIONID" -> DownstreamError,

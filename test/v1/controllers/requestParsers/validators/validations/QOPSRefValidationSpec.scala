@@ -17,7 +17,8 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.QOPSRefFormatError
+import v1r6.controllers.requestParsers.validators.validations.QOPSRefValidation
+import v1r6.models.errors.QOPSRefFormatError
 
 class QOPSRefValidationSpec extends UnitSpec {
 

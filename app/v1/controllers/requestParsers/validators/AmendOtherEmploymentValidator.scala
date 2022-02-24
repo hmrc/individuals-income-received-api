@@ -17,9 +17,6 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-import v1.controllers.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearValidation, ValueFormatErrorMessages, _}
-import v1.models.errors._
-import v1.models.request.amendOtherEmployment._
 
 import javax.inject.{Inject, Singleton}
 

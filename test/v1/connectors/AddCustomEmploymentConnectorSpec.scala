@@ -17,12 +17,13 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1.models.domain.Nino
+import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
-import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
+import v1.connectors.AddCustomEmploymentConnector
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
+import v1r6.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import scala.concurrent.Future
 
@@ -54,10 +55,10 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.api1661BaseUrl returns baseUrl
+    MockedAppConfig.api1661Token returns "api1661-token"
+    MockedAppConfig.api1661Environment returns "api1661-environment"
+    MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AddCustomEmploymentConnector" when {
@@ -65,14 +66,14 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
       "return a success upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, response))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredDesHeadersPost: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredApi1661HeadersPost: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .post(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyIfsHeaderCarrierConfig,
             body = addCustomEmploymentRequestBody,
-            requiredHeaders = requiredDesHeadersPost,
+            requiredHeaders = requiredApi1661HeadersPost,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 

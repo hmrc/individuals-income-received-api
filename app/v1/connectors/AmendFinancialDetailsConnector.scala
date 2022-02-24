@@ -17,12 +17,9 @@
 package v1.connectors
 
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.DesUri
-import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,14 +32,12 @@ class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
     val nino = request.nino.nino
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
     put(
-      uri = DesUri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"), body = request.body
+      uri = Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"), body = request.body
     )
   }
 }

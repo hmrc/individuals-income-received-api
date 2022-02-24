@@ -21,9 +21,9 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
-import v1.models.errors._
-import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
+import v1r6.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
+import v1r6.models.errors._
+import v1r6.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
 
 class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 

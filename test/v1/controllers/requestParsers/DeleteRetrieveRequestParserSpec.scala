@@ -17,10 +17,11 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import v1.models.domain.Nino
 import v1.mocks.validators.MockDeleteRetrieveValidator
-import v1.models.errors._
-import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1r6.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1r6.models.domain.Nino
+import v1r6.models.errors._
+import v1r6.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 
 class DeleteRetrieveRequestParserSpec extends UnitSpec {
 

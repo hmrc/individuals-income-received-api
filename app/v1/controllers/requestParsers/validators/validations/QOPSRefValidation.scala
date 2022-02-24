@@ -16,8 +16,6 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, QOPSRefFormatError}
-
 object QOPSRefValidation {
 
   def validateOptional(qopsRef: Option[String], path: String): List[MtdError] = qopsRef.fold(NoValidationErrors: List[MtdError]) { ref =>

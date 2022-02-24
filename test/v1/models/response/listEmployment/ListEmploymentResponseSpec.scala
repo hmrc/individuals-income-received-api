@@ -18,6 +18,7 @@ package v1.models.response.listEmployment
 
 import play.api.libs.json.{JsObject, Json}
 import support.UnitSpec
+import v1r6.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 class ListEmploymentResponseSpec extends UnitSpec {
 

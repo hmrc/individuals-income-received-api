@@ -19,15 +19,16 @@ package v1.controllers
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import v1.models.domain.Nino
+import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendPensionsRequestParser
 import v1.mocks.services.{MockAmendPensionsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendPensions._
+import v1r6.mocks.services.MockEnrolmentsAuthService
+import v1r6.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v1r6.models.errors._
+import v1r6.models.outcomes.ResponseWrapper
+import v1r6.models.request.amendPensions._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

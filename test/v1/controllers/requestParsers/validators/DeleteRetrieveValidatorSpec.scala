@@ -19,8 +19,8 @@ package v1.controllers.requestParsers.validators
 import config.AppConfig
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.errors._
-import v1.models.request.DeleteRetrieveRawData
+import v1r6.models.errors._
+import v1r6.models.request.DeleteRetrieveRawData
 
 class DeleteRetrieveValidatorSpec extends UnitSpec {
 

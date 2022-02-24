@@ -21,30 +21,30 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import v1.fixtures.RetrieveEmploymentControllerFixture._
-import v1.models.errors._
+import support.V1R6IntegrationSpec
 import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import v1.fixtures.RetrieveEmploymentControllerFixture._
+import v1r6.stubs.AuthStub
 
-class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
+class RetrieveEmploymentControllerISpec extends V1R6IntegrationSpec {
 
   private trait Test {
 
     val nino: String = "AA123456A"
     val taxYear: String = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    val desEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
+    val ifsEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
-    val desHmrcEnteredResponseWithoutDateIgnored: JsValue = hmrcEnteredResponseWithoutDateIgnored
-    val desHmrcEnteredResponseWithDateIgnored: JsValue = hmrcEnteredResponseWithDateIgnored
-    val desCustomEnteredResponse: JsValue = customEnteredResponse
+    val ifsHmrcEnteredResponseWithoutDateIgnored: JsValue = hmrcEnteredResponseWithoutDateIgnored
+    val ifsHmrcEnteredResponseWithDateIgnored: JsValue = hmrcEnteredResponseWithDateIgnored
+    val ifsCustomEnteredResponse: JsValue = customEnteredResponse
     val mtdHmrcEnteredResponseWithoutDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino, taxYear, employmentId)
     val mtdHmrcEnteredResponseWithDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino, taxYear, employmentId)
     val mtdCustomEnteredResponse: JsValue = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -59,13 +59,13 @@ class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve hmrc entered employment with no date ignored present" in new Test {
 
-        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+        val ifsQueryParam: Map[String, String] = Map("employmentId" -> ifsEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithoutDateIgnored)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsHmrcEnteredResponseWithoutDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
@@ -78,13 +78,13 @@ class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve hmrc entered employment with date ignored present" in new Test {
 
-        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+        val ifsQueryParam: Map[String, String] = Map("employmentId" -> ifsEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desHmrcEnteredResponseWithDateIgnored)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsHmrcEnteredResponseWithDateIgnored)
         }
 
         val response: WSResponse = await(request.get)
@@ -97,13 +97,13 @@ class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
     "return a 200 status code" when {
       "any valid request is made to retrieve custom entered employment" in new Test {
 
-        val desQueryParam: Map[String, String] = Map("employmentId" -> desEmploymentId.get)
+        val ifsQueryParam: Map[String, String] = Map("employmentId" -> ifsEmploymentId.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, desQueryParam, OK, desCustomEnteredResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsCustomEnteredResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -146,15 +146,15 @@ class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -168,7 +168,7 @@ class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
@@ -176,7 +176,8 @@ class RetrieveEmploymentControllerISpec extends V1IntegrationSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
-          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
 
