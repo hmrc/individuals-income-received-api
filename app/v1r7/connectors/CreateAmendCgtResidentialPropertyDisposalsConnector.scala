@@ -19,7 +19,7 @@ package v1r7.connectors
 import config.AppConfig
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,7 +38,7 @@ class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject()(val http: Ht
     val taxYear = request.taxYear
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"), body = request.body
     )
   }
 

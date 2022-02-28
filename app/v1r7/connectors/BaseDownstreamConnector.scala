@@ -20,7 +20,7 @@ import config.AppConfig
 import play.api.Logger
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
-import v1r7.connectors.DownstreamUri.{DesUri, IfsUri}
+import v1r7.connectors.DownstreamUri.{Api1661Uri, DesUri, IfsUri, Release6Uri}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -56,6 +56,34 @@ trait BaseDownstreamConnector {
         ) ++
         // Other headers (i.e Gov-Test-Scenario, Content-Type)
         hc.headers(additionalHeaders ++ appConfig.ifsEnvironmentHeaders.getOrElse(Seq.empty))
+    )
+
+  private def release6HeaderCarrier(additionalHeaders: Seq[String])(implicit hc: HeaderCarrier,
+                                                                    correlationId: String): HeaderCarrier =
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.release6Token}",
+          "Environment" -> appConfig.release6Env,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.release6EnvironmentHeaders.getOrElse(Seq.empty))
+    )
+
+  private def api1661HeaderCarrier(additionalHeaders: Seq[String])(implicit hc: HeaderCarrier,
+                                                                   correlationId: String): HeaderCarrier =
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.api1661Token}",
+          "Environment" -> appConfig.api1661Env,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.api1661EnvironmentHeaders.getOrElse(Seq.empty))
     )
 
   def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
@@ -108,6 +136,8 @@ trait BaseDownstreamConnector {
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String = uri match {
     case DesUri(value) => s"${appConfig.desBaseUrl}/$value"
     case IfsUri(value) => s"${appConfig.ifsBaseUrl}/$value"
+    case Release6Uri(value) => s"${appConfig.release6BaseUrl}/$value"
+    case Api1661Uri(value) => s"${appConfig.api1661BaseUrl}/$value"
   }
 
   private def getBackendHeaders[Resp](uri: DownstreamUri[Resp],
@@ -116,5 +146,7 @@ trait BaseDownstreamConnector {
                                       additionalHeaders: Seq[String] = Seq.empty): HeaderCarrier = uri match {
     case DesUri(_) => desHeaderCarrier(additionalHeaders)(hc, correlationId)
     case IfsUri(_) => ifsHeaderCarrier(additionalHeaders)(hc, correlationId)
+    case Release6Uri(_) => release6HeaderCarrier(additionalHeaders)(hc, correlationId)
+    case Api1661Uri(_) => api1661HeaderCarrier(additionalHeaders)(hc, correlationId)
   }
 }

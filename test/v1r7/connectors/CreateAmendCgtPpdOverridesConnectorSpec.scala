@@ -44,10 +44,10 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.api1661BaseUrl returns baseUrl
+    MockedAppConfig.api1661Token returns "api1661-token"
+    MockedAppConfig.api1661Environment returns "api1661-environment"
+    MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "CreateAmendCgtPpdOverridesConnector" when {
@@ -55,14 +55,14 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
       "return a 204 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredApi1661HeadersPut: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear",
             config =  dummyIfsHeaderCarrierConfig,
             body = requestBodyModel,
-            requiredHeaders = requiredIfsHeadersPut,
+            requiredHeaders = requiredApi1661HeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 

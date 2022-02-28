@@ -19,7 +19,7 @@ package v1r7.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Release6Uri
 import v1r7.models.request.listEmployments.ListEmploymentsRequest
 import v1r7.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
@@ -40,7 +40,7 @@ class ListEmploymentsConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
 
     get(
-      IfsUri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear")
+      Release6Uri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear")
     )
   }
 }

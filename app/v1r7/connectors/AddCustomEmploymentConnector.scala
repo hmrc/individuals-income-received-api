@@ -17,11 +17,10 @@
 package v1r7.connectors
 
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1r7.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
@@ -41,7 +40,7 @@ class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val taxYear = request.taxYear
 
-    post(request.body, IfsUri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))
+    post(request.body, Api1661Uri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))
   }
 
 }

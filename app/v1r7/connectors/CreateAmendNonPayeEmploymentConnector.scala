@@ -18,7 +18,7 @@ package v1r7.connectors
 
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import javax.inject.Inject
@@ -38,7 +38,7 @@ class CreateAmendNonPayeEmploymentConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/employments/non-paye/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/employments/non-paye/$nino/$taxYear"), body = request.body
     )
   }
 

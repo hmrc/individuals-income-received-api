@@ -21,7 +21,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Release6Uri
 import v1r7.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,7 +41,7 @@ class AmendCustomEmploymentConnector @Inject()(val http: HttpClient,
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
-    put(request.body, IfsUri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"))
+    put(request.body, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"))
   }
 
 }

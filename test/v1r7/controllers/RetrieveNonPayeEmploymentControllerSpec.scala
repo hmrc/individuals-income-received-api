@@ -19,7 +19,7 @@ package v1r7.controllers
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1r7.hateoas.HateoasLinks
 import v1r7.mocks.MockIdGenerator
@@ -122,7 +122,7 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
 
         MockDeleteRetrieveService
           .retrieve(
-            IfsUri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=LATEST"),
+            Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=LATEST"),
             desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
@@ -151,7 +151,7 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
 
           MockDeleteRetrieveService
             .retrieve(
-              IfsUri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=$desSource"),
+              Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=$desSource"),
               desErrorMap)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 

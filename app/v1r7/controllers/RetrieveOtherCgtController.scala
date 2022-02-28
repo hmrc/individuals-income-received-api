@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.IfsUri
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.controllers.requestParsers.DeleteRetrieveRequestParser
 import v1r7.hateoas.HateoasFactory
 import v1r7.models.errors._
@@ -62,7 +62,7 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveOtherCgtResponse] = IfsUri[RetrieveOtherCgtResponse](
+      implicit val IfsUri: Api1661Uri[RetrieveOtherCgtResponse] = Api1661Uri[RetrieveOtherCgtResponse](
         s"income-tax/income/disposals/other-gains/$nino/$taxYear"
       )
 
