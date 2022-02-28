@@ -19,7 +19,7 @@ package v1r7.controllers
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.DownstreamUri.{Api1661Uri, IfsUri}
+import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1r7.hateoas.HateoasLinks
 import v1r7.mocks.MockIdGenerator
