@@ -111,6 +111,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = None,
     submittedOn = None
   )
@@ -121,6 +122,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
     submittedOn = None
   )
@@ -131,6 +133,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = None,
     submittedOn = Some("2020-06-17T10:53:38Z")
   )
