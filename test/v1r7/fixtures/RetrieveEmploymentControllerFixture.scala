@@ -28,6 +28,7 @@ object RetrieveEmploymentControllerFixture {
       |      "employerName": "Employer Name Ltd.",
       |      "employerRef": "123/AB56797",
       |      "payrollId": "123345657",
+      |      "occupationalPension": false,
       |      "startDate": "2020-06-17",
       |      "cessationDate": "2020-06-17"
       |   }
@@ -43,6 +44,7 @@ object RetrieveEmploymentControllerFixture {
       |      "employerName": "Employer Name Ltd.",
       |      "employerRef": "123/AB56797",
       |      "payrollId": "123345657",
+      |      "occupationalPension": false,
       |      "startDate": "2020-06-17",
       |      "cessationDate": "2020-06-17",
       |      "dateIgnored": "2020-06-17T10:53:38Z"
@@ -59,6 +61,7 @@ object RetrieveEmploymentControllerFixture {
       |      "employerName": "Employer Name Ltd.",
       |      "employerRef": "123/AB56797",
       |      "payrollId": "123345657",
+      |      "occupationalPension": false,
       |      "startDate": "2020-06-17",
       |      "cessationDate": "2020-06-17",
       |      "submittedOn": "2020-06-17T10:53:38Z"
@@ -75,6 +78,7 @@ object RetrieveEmploymentControllerFixture {
       |   "startDate": "2020-06-17",
       |   "cessationDate": "2020-06-17",
       |   "payrollId": "123345657",
+      |   "occupationalPension": false,
       |   "links":[
       |      {
       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
@@ -104,6 +108,7 @@ object RetrieveEmploymentControllerFixture {
        |   "startDate": "2020-06-17",
        |   "cessationDate": "2020-06-17",
        |   "payrollId": "123345657",
+       |   "occupationalPension": false,
        |   "dateIgnored": "2020-06-17T10:53:38Z",
        |   "links":[
        |      {
@@ -134,6 +139,7 @@ object RetrieveEmploymentControllerFixture {
        |   "startDate": "2020-06-17",
        |   "cessationDate": "2020-06-17",
        |   "payrollId": "123345657",
+       |   "occupationalPension": false,
        |   "submittedOn": "2020-06-17T10:53:38Z",
        |   "links":[
        |      {
