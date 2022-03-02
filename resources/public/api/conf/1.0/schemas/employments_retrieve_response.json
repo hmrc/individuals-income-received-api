@@ -9,7 +9,7 @@
     "startDate": {"$ref": "employments_definitions.json#/definitions/startDate"},
     "cessationDate": {"$ref": "employments_definitions.json#/definitions/cessationDate"},
     "payrollId": {"$ref": "employments_definitions.json#/definitions/payrollId"},
-    "occupationalPension": {"$ref": "employments_definitions.json#/definitions/occupationalPension"},
+    "occupationalPension": {"$ref": "employments_definitions.json#/definitions/occupationalPensionForRetrieveEmployment"},
     "dateIgnored": {"$ref": "employments_definitions.json#/definitions/dateIgnored"},
     "submittedOn": {"$ref": "employments_definitions.json#/definitions/submittedOn"},
     "links": {"$ref": "employments_definitions.json#/definitions/linksForRetrieve"}
