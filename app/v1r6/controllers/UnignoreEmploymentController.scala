@@ -44,7 +44,10 @@ class UnignoreEmploymentController @Inject()(val authService: EnrolmentsAuthServ
                                              auditService: AuditService,
                                              cc: ControllerComponents,
                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with IgnoreHateoasBody {
+  extends AuthorisedController(cc)
+    with BaseController
+    with Logging
+    with IgnoreHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -105,16 +108,16 @@ class UnignoreEmploymentController @Inject()(val authService: EnrolmentsAuthServ
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError |
            RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError
       => BadRequest(Json.toJson(errorWrapper))
       case RuleCustomEmploymentUnignoreError => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case NotFoundError                     => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                   => InternalServerError(Json.toJson(errorWrapper))
+      case _                                 => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,

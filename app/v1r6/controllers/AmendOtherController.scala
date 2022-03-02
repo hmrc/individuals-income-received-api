@@ -44,7 +44,10 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
                                      auditService: AuditService,
                                      cc: ControllerComponents,
                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
+  extends AuthorisedController(cc)
+    with BaseController
+    with Logging
+    with AmendHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -66,7 +69,7 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
       )
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amend(parsedRequest))
         } yield {
           logger.info(
@@ -113,6 +116,7 @@ class AmendOtherController @Inject()(val authService: EnrolmentsAuthService,
            CustomMtdError(CountryCodeRuleError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
   }
 

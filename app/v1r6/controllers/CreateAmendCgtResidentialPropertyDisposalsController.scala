@@ -43,7 +43,10 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
                                                                      nrsProxyService: NrsProxyService,
                                                                      cc: ControllerComponents,
                                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
+  extends AuthorisedController(cc)
+    with BaseController
+    with Logging
+    with AmendHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -67,7 +70,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- {
             nrsProxyService.submitAsync(nino, "itsa-cgt-disposal", request.body)
             EitherT(service.createAndAmend(parsedRequest))
@@ -100,8 +103,8 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError |
            RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
@@ -116,8 +119,8 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
            CustomMtdError(RuleDisposalDateError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)
                              (implicit hc: HeaderCarrier,
