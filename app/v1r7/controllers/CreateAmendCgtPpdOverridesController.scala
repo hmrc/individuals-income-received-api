@@ -114,8 +114,8 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
             RuleAmountGainLossError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(DateFormatError.code) | CustomMtdError(
             PpdSubmissionIdFormatError.code) | CustomMtdError(RuleLossesGreaterThanGainError.code) | CustomMtdError(RuleTaxYearNotEndedError.code) |
@@ -124,8 +124,8 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
       case NotFoundError | PpdSubmissionIdNotFoundError => NotFound(Json.toJson(errorWrapper))
       case RuleIncorrectDisposalTypeError               => Forbidden(Json.toJson(errorWrapper))
       case DownstreamError                              => InternalServerError(Json.toJson(errorWrapper))
+      case _                                            => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: CreateAmendCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     val event = AuditEvent("CreateAmendCgtPpdOverrides", "Create-Amend-Cgt-Ppd-Overrides", details)
