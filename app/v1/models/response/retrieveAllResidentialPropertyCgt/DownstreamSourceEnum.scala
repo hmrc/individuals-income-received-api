@@ -18,6 +18,7 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.Format
 import utils.enums.Enums
+import v1.models.domain.MtdSourceEnum
 
 sealed trait DownstreamSourceEnum {
   def toMtdEnum: MtdSourceEnum

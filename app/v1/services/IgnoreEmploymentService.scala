@@ -21,7 +21,12 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
+import v1.connectors.IgnoreEmploymentConnector
+import v1.controllers.EndpointLogContext
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
+import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 

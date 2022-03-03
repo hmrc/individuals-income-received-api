@@ -17,9 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
-
 import javax.inject.Inject
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.MtdError
+import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
 
 class RetrieveNonPayeEmploymentValidator @Inject()(implicit appConfig: AppConfig)
   extends Validator[RetrieveNonPayeEmploymentIncomeRawData] {

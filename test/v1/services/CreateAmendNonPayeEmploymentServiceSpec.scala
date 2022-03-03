@@ -16,14 +16,13 @@
 
 package v1.services
 
-import v1r6.controllers.EndpointLogContext
+import v1.controllers.EndpointLogContext
 import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture.requestBodyModel
 import v1.mocks.connectors.MockCreateAmendNonPayeEmploymentConnector
-import v1r6.models.domain.Nino
-import v1r6.models.errors._
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
-import v1.services.CreateAmendNonPayeEmploymentService
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import scala.concurrent.Future
 

@@ -20,6 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
+import v1.connectors.NrsProxyConnector
 
 import scala.concurrent.Future
 

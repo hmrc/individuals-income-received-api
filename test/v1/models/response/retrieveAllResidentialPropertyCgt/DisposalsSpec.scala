@@ -18,7 +18,6 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveAllResidentialPropertyCgt.Disposals
 
 class DisposalsSpec extends UnitSpec {
 

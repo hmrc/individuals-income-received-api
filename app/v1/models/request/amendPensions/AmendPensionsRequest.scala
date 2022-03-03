@@ -16,4 +16,6 @@
 
 package v1.models.request.amendPensions
 
+import v1.models.domain.Nino
+
 case class AmendPensionsRequest(nino: Nino, taxYear: String, body: AmendPensionsRequestBody)

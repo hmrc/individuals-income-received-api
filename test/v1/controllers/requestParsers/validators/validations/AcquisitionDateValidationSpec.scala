@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.AcquisitionDateValidation
-import v1r6.models.errors.RuleAcquisitionDateError
+import v1.models.errors.RuleAcquisitionDateError
 
 class AcquisitionDateValidationSpec extends UnitSpec {
 

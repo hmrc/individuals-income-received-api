@@ -20,6 +20,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.connectors.{DeleteRetrieveConnector, DesOutcome, DownstreamUri}
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{CustomerRefFormatError, MtdError}
+
 object CustomerRefInsuranceValidation {
 
   def validateOptional(customerRef: Option[String]): List[MtdError] = customerRef.fold(NoValidationErrors: List[MtdError]) { ref =>

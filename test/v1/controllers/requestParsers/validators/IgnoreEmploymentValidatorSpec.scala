@@ -24,10 +24,10 @@ import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.Configuration
 import support.UnitSpec
 import utils.CurrentDateTime
+import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.mocks.MockCurrentDateTime
-import v1r6.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
-import v1r6.models.errors._
-import v1r6.models.request.ignoreEmployment.IgnoreEmploymentRawData
+import v1.models.errors._
+import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 
 class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 

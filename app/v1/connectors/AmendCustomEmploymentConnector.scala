@@ -18,8 +18,8 @@ package v1.connectors
 
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.connectors.DownstreamUri.IfsUri
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,12 +32,13 @@ class AmendCustomEmploymentConnector @Inject()(val http: HttpClient,
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[Unit]] = {
+    import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
     val taxYear = request.taxYear
     val employmentId = request.employmentId
 
-    put(request.body, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"))
+    put(request.body, IfsUri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"))
   }
 
 }

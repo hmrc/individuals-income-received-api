@@ -19,7 +19,9 @@ package v1.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.connectors.DownstreamUri.IfsUri
 import v1.models.request.listEmployments.ListEmploymentsRequest
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,11 +34,13 @@ class ListEmploymentsConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DesOutcome[ListEmploymentResponse[Employment]]] = {
 
+    import v1.connectors.httpparsers.StandardDesHttpParser._
+
     val nino = request.nino.nino
     val taxYear = request.taxYear
 
     get(
-      Release6Uri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear")
+      IfsUri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear")
     )
   }
 }

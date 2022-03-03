@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.ClassOfSharesValidation
-import v1r6.models.errors.{ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError}
+import v1.models.errors.{ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError}
 
 class ClassOfSharesValidationSpec extends UnitSpec {
   "ClassOfSharesValidation" when {

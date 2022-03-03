@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{EventFormatError, MtdError}
+
 object EventValidation {
 
   def validateOptional(event: Option[String], path: String): List[MtdError] = event match {

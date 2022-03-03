@@ -17,12 +17,11 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
-import v1.connectors.AmendPensionsConnector
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributions, AmendPensionsRequest, AmendPensionsRequestBody}
+import v1.models.domain.Nino
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributions, AmendPensionsRequest, AmendPensionsRequestBody}
 
 import scala.concurrent.Future
 

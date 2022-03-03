@@ -18,7 +18,6 @@ package v1.models.request.amendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v1r6.models.request.amendOther.AmendAllOtherIncomeReceivedWhilstAbroadItem
 
 class AmendAllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
 

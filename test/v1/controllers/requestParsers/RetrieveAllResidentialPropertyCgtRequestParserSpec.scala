@@ -18,10 +18,9 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveAllResidentialPropertyCgtValidator
-import v1r6.controllers.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
-import v1r6.models.domain.{MtdSourceEnum, Nino}
-import v1r6.models.errors._
-import v1r6.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
+import v1.models.domain.{MtdSourceEnum, Nino}
+import v1.models.errors._
+import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 class RetrieveAllResidentialPropertyCgtRequestParserSpec extends UnitSpec {
 

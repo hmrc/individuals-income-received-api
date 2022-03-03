@@ -18,15 +18,22 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import javax.inject.{Inject, Singleton}
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
+import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
+import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.errors._
+import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
+import v1.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
+import v1.services.{AddCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthService,

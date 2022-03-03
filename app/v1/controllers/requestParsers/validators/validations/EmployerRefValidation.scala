@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{EmployerRefFormatError, MtdError}
+
 object EmployerRefValidation {
 
   private val regex = "^[0-9]{3}\\/[^ ].{0,9}$"

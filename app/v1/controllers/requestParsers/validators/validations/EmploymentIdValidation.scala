@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{EmploymentIdFormatError, MtdError}
+
 object EmploymentIdValidation {
 
   def validate(employmentId: String): List[MtdError] = {

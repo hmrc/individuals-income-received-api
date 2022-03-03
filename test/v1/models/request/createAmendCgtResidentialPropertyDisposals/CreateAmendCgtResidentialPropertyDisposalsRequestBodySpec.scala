@@ -18,7 +18,6 @@ package v1.models.request.createAmendCgtResidentialPropertyDisposals
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1r6.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequestBody
 
 class CreateAmendCgtResidentialPropertyDisposalsRequestBodySpec extends UnitSpec {
 

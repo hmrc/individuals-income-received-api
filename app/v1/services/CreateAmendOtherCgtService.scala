@@ -20,6 +20,12 @@ import cats.data.EitherT
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
+import v1.connectors.CreateAmendOtherCgtConnector
+import v1.controllers.EndpointLogContext
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
+import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 

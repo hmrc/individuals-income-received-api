@@ -23,7 +23,15 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.connectors.DownstreamUri.IfsUri
+import v1.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
+import v1.hateoas.HateoasFactory
+import v1.models.domain.MtdSourceEnum
+import v1.models.domain.MtdSourceEnum.latest
+import v1.models.errors._
 import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
+import v1.models.response.retrieveFinancialDetails.{RetrieveFinancialDetailsHateoasData, RetrieveFinancialDetailsResponse}
+import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,7 +66,7 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
         source = source
       )
 
-      implicit val desUri: Release6Uri[RetrieveFinancialDetailsResponse] = Release6Uri[RetrieveFinancialDetailsResponse](
+      implicit val desUri: IfsUri[RetrieveFinancialDetailsResponse] = IfsUri[RetrieveFinancialDetailsResponse](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )

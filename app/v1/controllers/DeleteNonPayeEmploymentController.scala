@@ -24,7 +24,12 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.connectors.DownstreamUri.Api1661Uri
+import v1.controllers.requestParsers.DeleteRetrieveRequestParser
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.errors._
 import v1.models.request.DeleteRetrieveRawData
+import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -18,6 +18,8 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
 
+import v1.models.errors.{MtdError, RuleDisposalDateError}
+
 object DisposalDateValidation {
 
   def validate(date: String, taxYear: String, path: String, validateToday: Boolean, errorMessage: String): List[MtdError] = {

@@ -16,4 +16,6 @@
 
 package v1.models.request.createAmendCgtPpdOverrides
 
+import v1.models.domain.Nino
+
 case class CreateAmendCgtPpdOverridesRequest(nino: Nino, taxYear: String, body: CreateAmendCgtPpdOverridesRequestBody)

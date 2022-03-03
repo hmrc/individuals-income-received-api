@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.ClaimOrElectionCodesValidation
-import v1r6.models.errors.ClaimOrElectionCodesFormatError
+import v1.models.errors.ClaimOrElectionCodesFormatError
 
 class ClaimOrElectionCodesValidationSpec extends UnitSpec {
   "validateOptional" should {

@@ -19,20 +19,19 @@ package v1.controllers
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.hateoas.HateoasLinks
-import v1r6.mocks.services.MockEnrolmentsAuthService
-import v1r6.models.domain.Nino
-import v1r6.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import v1r6.models.hateoas.{HateoasWrapper, Link}
-import v1r6.models.hateoas.Method.{DELETE, GET, PUT}
-import v1r6.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF}
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1r6.models.response.retrieveOtherCgt.{Disposal, Losses, NonStandardGains, RetrieveOtherCgtHateoasData, RetrieveOtherCgtResponse}
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
+import v1.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF}
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import v1.models.response.retrieveOtherCgt._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

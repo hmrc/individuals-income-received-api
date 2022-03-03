@@ -22,8 +22,7 @@ import uk.gov.hmrc.auth.core.Enrolment
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1r6.mocks.services.MockEnrolmentsAuthService
-import v1r6.models.errors._
+import v1.models.errors._
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.ExecutionContext.Implicits.global

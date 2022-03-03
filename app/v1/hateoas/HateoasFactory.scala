@@ -19,8 +19,8 @@ package v1.hateoas
 import cats.Functor
 import cats.implicits._
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
+import v1.models.hateoas.{HateoasData, HateoasWrapper, Link}
 
 import scala.language.higherKinds
 

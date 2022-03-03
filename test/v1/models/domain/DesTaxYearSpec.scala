@@ -17,7 +17,6 @@
 package v1.models.domain
 
 import support.UnitSpec
-import v1r6.models.domain.DesTaxYear
 
 class DesTaxYearSpec extends UnitSpec {
   private val desYear = "2019"

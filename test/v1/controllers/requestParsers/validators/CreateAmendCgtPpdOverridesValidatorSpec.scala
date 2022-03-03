@@ -24,10 +24,10 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
+import v1.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.mocks.MockCurrentDateTime
-import v1r6.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
-import v1r6.models.errors._
-import v1r6.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
+import v1.models.errors._
+import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
 class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 

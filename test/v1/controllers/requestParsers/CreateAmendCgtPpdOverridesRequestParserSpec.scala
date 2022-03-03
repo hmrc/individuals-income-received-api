@@ -20,10 +20,9 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.mocks.validators.MockCreateAmendCgtPpdOverridesValidator
-import v1r6.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
-import v1r6.models.domain.Nino
-import v1r6.models.errors._
-import v1r6.models.request.createAmendCgtPpdOverrides._
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.request.createAmendCgtPpdOverrides._
 
 class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
 

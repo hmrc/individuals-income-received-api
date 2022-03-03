@@ -18,7 +18,6 @@ package v1.models.request.addCustomEmployment
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1r6.models.request.addCustomEmployment.AddCustomEmploymentRequestBody
 
 class AddCustomEmploymentRequestBodySpec extends UnitSpec {
 

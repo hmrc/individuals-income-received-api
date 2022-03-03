@@ -18,14 +18,20 @@ package v1.controllers
 
 import cats.data.EitherT
 import config.AppConfig
+import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendNonPayeEmploymentRequestParser
+import v1.hateoas.AmendHateoasBody
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.errors._
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
+import v1.services.{AuditService, CreateAmendNonPayeEmploymentService, EnrolmentsAuthService, MtdIdLookupService}
 
-import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,

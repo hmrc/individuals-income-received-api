@@ -18,10 +18,9 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveEmploymentValidator
-import v1r6.controllers.requestParsers.RetrieveEmploymentRequestParser
-import v1r6.models.domain.Nino
-import v1r6.models.errors._
-import v1r6.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 
 class RetrieveEmploymentRequestParserSpec extends UnitSpec {
 

@@ -22,8 +22,7 @@ import org.scalamock.handlers.CallHandler
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.mocks.MockCurrentDateTime
-import v1r6.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
-import v1r6.models.errors.RuleTaxYearNotEndedError
+import v1.models.errors.RuleTaxYearNotEndedError
 
 class TaxYearNotEndedValidationSpec extends UnitSpec {
 

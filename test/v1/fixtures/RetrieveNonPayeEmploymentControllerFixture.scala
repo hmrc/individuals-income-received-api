@@ -17,8 +17,8 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v1r6.models.domain.MtdSourceEnum
-import v1r6.models.response.retrieveNonPayeEmploymentIncome.{NonPayeIncome, RetrieveNonPayeEmploymentIncomeResponse}
+import v1.models.domain.MtdSourceEnum
+import v1.models.response.retrieveNonPayeEmploymentIncome.{NonPayeIncome, RetrieveNonPayeEmploymentIncomeResponse}
 
 object RetrieveNonPayeEmploymentControllerFixture {
 

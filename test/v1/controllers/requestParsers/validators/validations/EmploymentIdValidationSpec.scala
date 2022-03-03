@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.EmploymentIdValidation
-import v1r6.models.errors.EmploymentIdFormatError
+import v1.models.errors.EmploymentIdFormatError
 
 class EmploymentIdValidationSpec extends UnitSpec {
 

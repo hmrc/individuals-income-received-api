@@ -17,13 +17,12 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.MockHttpClient
-import v1.connectors.AmendOtherConnector
 import v1.fixtures.other.AmendOtherServiceConnectorFixture.requestBodyModel
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.amendOther.AmendOtherRequest
+import v1.mocks.MockHttpClient
+import v1.models.domain.Nino
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.amendOther.AmendOtherRequest
 
 import scala.concurrent.Future
 

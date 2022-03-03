@@ -18,7 +18,6 @@ package v1.models.request.createAmendCgtPpdOverrides
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1r6.models.request.createAmendCgtPpdOverrides.{CreateAmendCgtPpdOverridesRequestBody, MultiplePropertyDisposals, SinglePropertyDisposals}
 
 class CreateAmendCgtPpdOverridesRequestBodySpec extends UnitSpec {
 

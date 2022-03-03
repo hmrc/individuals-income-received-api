@@ -18,11 +18,9 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveFinancialDetailsValidator
-import v1r6.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
-import v1r6.models.domain.Nino
-import v1r6.models.domain.MtdSourceEnum
-import v1r6.models.errors._
-import v1r6.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
+import v1.models.domain.{MtdSourceEnum, Nino}
+import v1.models.errors._
+import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
 
 class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
 

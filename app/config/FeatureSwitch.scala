@@ -50,11 +50,6 @@ case class FeatureSwitch(value: Option[Configuration]) {
     case None => true
   }
 
-  def isRelease6RoutingEnabled: Boolean = value match {
-    case Some(config) => config.getOptional[Boolean] ("release-6.enabled").getOrElse(true)
-    case None => true
-  }
-
   def isRelease7RoutingEnabled: Boolean = value match {
     case Some(config) => config.getOptional[Boolean] ("release-7.enabled").getOrElse(true)
     case None => true

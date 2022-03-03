@@ -18,7 +18,6 @@ package v1.models.response.retrieveOtherEmployment
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveOtherEmployment.TaxableLumpSumsAndCertainIncomeItem
 
 class TaxableLumpSumsAndCertainIncomeItemSpec extends UnitSpec{
 

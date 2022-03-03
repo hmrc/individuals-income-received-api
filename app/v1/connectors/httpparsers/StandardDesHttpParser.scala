@@ -20,6 +20,9 @@ import play.api.Logger
 import play.api.http.Status._
 import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
+import v1.connectors.DesOutcome
+import v1.models.errors.{DownstreamError, OutboundError}
+import v1.models.outcomes.ResponseWrapper
 
 object StandardDesHttpParser extends HttpParser {
 

@@ -23,8 +23,8 @@ import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.mocks.MockCurrentDateTime
-import v1r6.models.errors._
-import v1r6.models.request.retrieveEmployment.RetrieveEmploymentRawData
+import v1.models.errors._
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 
 class RetrieveEmploymentValidatorSpec extends UnitSpec {
 

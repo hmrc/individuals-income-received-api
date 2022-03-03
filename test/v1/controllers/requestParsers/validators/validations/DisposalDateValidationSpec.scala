@@ -16,12 +16,11 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import support.UnitSpec
-import v1r6.models.domain.DesTaxYear
-import v1r6.models.errors.RuleDisposalDateError
 import java.time.LocalDate
 
-import v1r6.controllers.requestParsers.validators.validations.{DisposalDateErrorMessages, DisposalDateValidation}
+import support.UnitSpec
+import v1.models.domain.DesTaxYear
+import v1.models.errors.RuleDisposalDateError
 
 class DisposalDateValidationSpec extends UnitSpec with DisposalDateErrorMessages {
 

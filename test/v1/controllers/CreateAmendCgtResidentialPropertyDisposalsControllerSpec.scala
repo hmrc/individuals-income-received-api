@@ -20,17 +20,16 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.hateoas.HateoasLinks
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
-import v1.mocks.services.{MockAuditService, MockCreateAmendCgtResidentialPropertyDisposalsService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import v1.hateoas.HateoasLinks
-import v1r6.mocks.services._
-import v1r6.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtResidentialPropertyDisposalsAuditDetail}
-import v1r6.models.domain.Nino
-import v1r6.models.errors._
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.createAmendCgtResidentialPropertyDisposals._
+import v1.mocks.services._
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtResidentialPropertyDisposalsAuditDetail}
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

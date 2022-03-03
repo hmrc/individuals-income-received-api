@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.EmployerNameValidation
-import v1r6.models.errors.EmployerNameFormatError
+import v1.models.errors.EmployerNameFormatError
 
 class EmployerNameValidationSpec extends UnitSpec {
 

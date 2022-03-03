@@ -23,7 +23,15 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.connectors.DownstreamUri.Api1661Uri
+import v1.controllers.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
+import v1.hateoas.HateoasFactory
+import v1.models.domain.MtdSourceEnum
+import v1.models.domain.MtdSourceEnum.latest
+import v1.models.errors._
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
+import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -16,12 +16,12 @@
 
 package v1.mocks
 
+import java.time.LocalDate
+
 import org.joda.time.DateTime
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import utils.CurrentDateTime
-
-import java.time.LocalDate
 
 trait MockCurrentDateTime extends MockFactory {
 

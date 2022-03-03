@@ -16,6 +16,9 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.domain.AssetType
+import v1.models.errors.{AssetTypeFormatError, MtdError}
+
 import scala.util.{Failure, Success, Try}
 
 object AssetTypeValidation {

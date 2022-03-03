@@ -16,9 +16,11 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import utils.CurrentDateTime
-
 import java.time.LocalDate
+
+import utils.CurrentDateTime
+import v1.models.domain.DesTaxYear
+import v1.models.errors.{MtdError, RuleCompletionDateError}
 
 object CompletionDateValidation {
   private val MARCH = 3

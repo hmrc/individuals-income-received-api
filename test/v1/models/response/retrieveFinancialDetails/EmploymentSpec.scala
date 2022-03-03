@@ -18,7 +18,6 @@ package v1.models.response.retrieveFinancialDetails
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveFinancialDetails.Employment
 
 class EmploymentSpec extends UnitSpec {
   val ifsJson: JsValue = Json.parse(

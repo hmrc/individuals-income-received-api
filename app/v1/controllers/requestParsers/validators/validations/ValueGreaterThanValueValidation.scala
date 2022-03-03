@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{MtdError, RuleLossesGreaterThanGainError}
+
 object ValueGreaterThanValueValidation {
 
   def validateOptional(valueWhichShouldBeLowerOrEqualO: Option[BigDecimal],

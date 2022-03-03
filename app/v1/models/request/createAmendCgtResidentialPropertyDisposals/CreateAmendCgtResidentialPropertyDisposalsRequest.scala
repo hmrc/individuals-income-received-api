@@ -16,4 +16,6 @@
 
 package v1.models.request.createAmendCgtResidentialPropertyDisposals
 
+import v1.models.domain.Nino
+
 case class CreateAmendCgtResidentialPropertyDisposalsRequest(nino: Nino, taxYear: String, body: CreateAmendCgtResidentialPropertyDisposalsRequestBody)

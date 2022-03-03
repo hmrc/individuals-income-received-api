@@ -19,7 +19,6 @@ package v1.models.audit
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1r6.models.audit.{AuditError, AuditResponse}
 
 class AuditResponseSpec extends UnitSpec {
 

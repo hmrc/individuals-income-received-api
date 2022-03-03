@@ -21,9 +21,8 @@ import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 import v1.hateoas.HateoasFactory
-import v1r6.models.hateoas.Method.{DELETE, GET, PUT}
-import v1r6.models.hateoas.{HateoasWrapper, Link}
-import v1r6.models.response.retrieveFinancialDetails.RetrieveFinancialDetailsResponse
+import v1.models.hateoas.Method.{DELETE, GET, PUT}
+import v1.models.hateoas.{HateoasWrapper, Link}
 
 class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
 

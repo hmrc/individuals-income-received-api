@@ -16,8 +16,7 @@
 
 package v1.models.request.amendOtherEmployment
 
-import play.api.libs.functional.syntax.unlift
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class AmendSharesAwardedOrReceivedItem(employerName: String,

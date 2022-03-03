@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.{DecimalValueValidation, ValueFormatErrorMessages}
-import v1r6.models.errors.ValueFormatError
+import v1.models.errors.ValueFormatError
 
 class DecimalValueValidationSpec extends UnitSpec with ValueFormatErrorMessages {
 

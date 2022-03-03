@@ -20,6 +20,8 @@ import java.time.LocalDate
 import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
 import java.time.temporal.ChronoField
 
+import v1.models.domain.DesTaxYear
+
 package object validations {
 
   val NoValidationErrors = List()

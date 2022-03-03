@@ -17,8 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.MtdError
+import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequestBody, ForeignEarnings, UnremittableForeignIncomeItem}
 
 @Singleton
 class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)

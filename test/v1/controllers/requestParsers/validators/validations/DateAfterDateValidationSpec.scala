@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.DateAfterDateValidation
-import v1r6.models.errors.MtdError
+import v1.models.errors.MtdError
 
 class DateAfterDateValidationSpec extends UnitSpec {
   private val earlierDate = "2020-01-01"

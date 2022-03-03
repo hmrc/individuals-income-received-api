@@ -19,16 +19,15 @@ package v1.controllers
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockIgnoreEmploymentRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockUnignoreEmploymentService}
-import v1r6.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockUnignoreEmploymentService}
-import v1r6.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r6.models.errors._
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

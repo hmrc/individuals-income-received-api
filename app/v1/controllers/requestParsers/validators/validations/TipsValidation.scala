@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{MtdError, ValueFormatError}
+
 object TipsValidation {
   def validateWithPath(amount: BigDecimal, path: String): List[MtdError] = {
 

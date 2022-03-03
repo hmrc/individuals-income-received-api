@@ -18,6 +18,8 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
 
+import v1.models.errors.MtdError
+
 object DateAfterDateValidation {
 
   def validate(dateWhichShouldBeEarlier: String, dateWhichShouldBeLater: String, path: String, error: MtdError): List[MtdError] = {

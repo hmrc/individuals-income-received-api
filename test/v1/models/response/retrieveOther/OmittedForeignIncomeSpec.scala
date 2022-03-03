@@ -18,7 +18,6 @@ package v1.models.response.retrieveOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveOther.OmittedForeignIncome
 
 class OmittedForeignIncomeSpec extends UnitSpec {
 

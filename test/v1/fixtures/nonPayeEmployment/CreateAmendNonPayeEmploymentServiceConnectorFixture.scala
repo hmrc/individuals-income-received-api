@@ -16,7 +16,7 @@
 
 package v1.fixtures.nonPayeEmployment
 
-import v1r6.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequestBody
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequestBody
 
 object CreateAmendNonPayeEmploymentServiceConnectorFixture {
 

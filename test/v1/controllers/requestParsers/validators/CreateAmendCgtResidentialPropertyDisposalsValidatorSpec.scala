@@ -16,18 +16,18 @@
 
 package v1.controllers.requestParsers.validators
 
+import java.time.LocalDate
+
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1r6.controllers.requestParsers.validators.validations.{DisposalDateErrorMessages, ValueFormatErrorMessages}
-import v1r6.models.errors._
-import v1r6.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
-import java.time.LocalDate
-
+import v1.controllers.requestParsers.validators.validations.{DisposalDateErrorMessages, ValueFormatErrorMessages}
 import v1.mocks.MockCurrentDateTime
+import v1.models.errors._
+import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
 
 class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     extends UnitSpec

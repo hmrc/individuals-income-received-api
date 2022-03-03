@@ -18,12 +18,11 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.MockHttpClient
-import v1.connectors.CreateAmendOtherCgtConnector
-import v1r6.models.domain.Nino
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.createAmendOtherCgt._
 import v1.fixtures.other.CreateAmendOtherCgtConnectorServiceFixture.mtdRequestBody
+import v1.mocks.MockHttpClient
+import v1.models.domain.Nino
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.createAmendOtherCgt._
 
 import scala.concurrent.Future
 

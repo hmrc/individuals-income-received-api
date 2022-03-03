@@ -18,9 +18,9 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1r6.controllers.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
-import v1r6.models.errors.MtdError
-import v1r6.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
+import v1.controllers.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
+import v1.models.errors.MtdError
+import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
 trait MockCreateAmendCgtPpdOverridesValidator extends MockFactory {
 

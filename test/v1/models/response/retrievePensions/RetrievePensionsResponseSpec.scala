@@ -18,7 +18,6 @@ package v1.models.response.retrievePensions
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1r6.models.response.retrievePensions.RetrievePensionsResponse
 
 class RetrievePensionsResponseSpec extends UnitSpec {
 

@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.MtdError
+
 object GainLossValidation {
 
   def validate(gain: Option[BigDecimal], loss: Option[BigDecimal], error: MtdError, path: String): List[MtdError] = (gain, loss) match {

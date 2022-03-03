@@ -21,11 +21,11 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1R6IntegrationSpec
+import support.V1IntegrationSpec
+import v1.models.errors._
 import v1.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
-import v1r6.stubs.AuthStub
 
-class DeleteCgtNonPpdControllerISpec extends V1R6IntegrationSpec {
+class DeleteCgtNonPpdControllerISpec extends V1IntegrationSpec {
 
   private trait Test {
 

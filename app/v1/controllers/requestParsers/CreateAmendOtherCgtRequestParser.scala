@@ -17,6 +17,9 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.CreateAmendOtherCgtValidator
+import v1.models.domain.Nino
+import v1.models.request.createAmendOtherCgt.{CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest, CreateAmendOtherCgtRequestBody}
 
 @Singleton
 class CreateAmendOtherCgtRequestParser @Inject()(val validator: CreateAmendOtherCgtValidator)

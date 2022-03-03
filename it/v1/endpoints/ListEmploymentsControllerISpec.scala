@@ -21,12 +21,12 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1R6IntegrationSpec
-import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.V1IntegrationSpec
 import v1.fixtures.ListEmploymentsControllerFixture._
-import v1r6.stubs.AuthStub
+import v1.models.errors._
+import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class ListEmploymentsControllerISpec extends V1R6IntegrationSpec {
+class ListEmploymentsControllerISpec extends V1IntegrationSpec {
 
   private trait Test {
 

@@ -16,14 +16,13 @@
 
 package v1.services
 
+import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAddCustomEmploymentConnector
-import v1r6.models.domain.Nino
-import v1r6.controllers.EndpointLogContext
-import v1r6.models.errors._
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
-import v1r6.models.response.addCustomEmployment.AddCustomEmploymentResponse
-import v1.services.AddCustomEmploymentService
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
+import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import scala.concurrent.Future
 

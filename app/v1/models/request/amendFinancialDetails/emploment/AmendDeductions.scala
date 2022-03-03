@@ -17,6 +17,7 @@
 package v1.models.request.amendFinancialDetails.emploment
 
 import play.api.libs.json.{Json, OFormat}
+import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 
 case class AmendDeductions(studentLoans: Option[AmendStudentLoans]) {
   def isEmpty: Boolean = studentLoans.isEmpty

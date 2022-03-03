@@ -17,6 +17,9 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
+import v1.models.domain.Nino
+import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 
 @Singleton
 class CreateAmendCgtResidentialPropertyDisposalsRequestParser @Inject()(val validator: CreateAmendCgtResidentialPropertyDisposalsValidator)

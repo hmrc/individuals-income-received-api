@@ -25,8 +25,8 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.mocks.MockCurrentDateTime
-import v1r6.models.errors._
-import v1r6.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
+import v1.models.errors._
+import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 
 class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppConfig {
 

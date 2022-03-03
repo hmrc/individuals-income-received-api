@@ -18,7 +18,6 @@ package v1.models.response.retrieveEmployment
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveEmployment.RetrieveEmploymentResponse
 
 class RetrieveEmploymentResponseSpec extends UnitSpec {
 

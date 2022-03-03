@@ -16,7 +16,10 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import scala.util.{ Failure, Success, Try }
+import v1.models.domain.ClaimOrElectionCodes
+import v1.models.errors.{ClaimOrElectionCodesFormatError, MtdError}
+
+import scala.util.{Failure, Success, Try}
 
 object ClaimOrElectionCodesValidation {
 

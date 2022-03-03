@@ -20,8 +20,9 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import v1r6.models.errors._
-import v1r6.models.outcomes.ResponseWrapper
+import v1.connectors.DesOutcome
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 
 // WLOG if Reads tested elsewhere
 case class SomeModel(data: String)
@@ -36,6 +37,8 @@ class StandardDesHttpParserSpec extends UnitSpec {
   val url = "test-url"
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+
+  import v1.connectors.httpparsers.StandardDesHttpParser._
 
   val httpReads: HttpReads[DesOutcome[Unit]] = implicitly
 

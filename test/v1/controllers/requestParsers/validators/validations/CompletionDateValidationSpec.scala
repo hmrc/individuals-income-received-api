@@ -16,12 +16,11 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import support.UnitSpec
-import v1r6.models.errors.RuleCompletionDateError
 import java.time.LocalDate
 
+import support.UnitSpec
 import v1.mocks.MockCurrentDateTime
-import v1r6.controllers.requestParsers.validators.validations.CompletionDateValidation
+import v1.models.errors.RuleCompletionDateError
 
 class CompletionDateValidationSpec extends UnitSpec with MockCurrentDateTime {
   def stubNow(date: String): Unit = {

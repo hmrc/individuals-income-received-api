@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.MtdError
+
 object PpdSubmissionIdValidation {
 
   private val ppdSubmissionIdRegex = "^[A-Za-z0-9]{12}$"

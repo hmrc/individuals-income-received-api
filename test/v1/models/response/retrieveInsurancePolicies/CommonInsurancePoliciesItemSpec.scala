@@ -18,7 +18,6 @@ package v1.models.response.retrieveInsurancePolicies
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveInsurancePolicies.CommonInsurancePoliciesItem
 
 class CommonInsurancePoliciesItemSpec extends UnitSpec {
 

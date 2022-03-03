@@ -18,9 +18,9 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1r6.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
-import v1r6.models.errors.ErrorWrapper
-import v1r6.models.request.createAmendCgtPpdOverrides.{CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest}
+import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
+import v1.models.errors.ErrorWrapper
+import v1.models.request.createAmendCgtPpdOverrides.{CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest}
 
 trait MockCreateAmendCgtPpdOverridesRequestParser extends MockFactory{
 

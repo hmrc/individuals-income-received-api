@@ -18,10 +18,9 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveNonPayeEmploymentValidator
-import v1r6.controllers.requestParsers.RetrieveNonPayeEmploymentRequestParser
-import v1r6.models.domain.{MtdSourceEnum, Nino}
-import v1r6.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import v1r6.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
+import v1.models.domain.{MtdSourceEnum, Nino}
+import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 
 class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
 

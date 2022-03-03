@@ -17,6 +17,8 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.DeleteCustomEmploymentValidator
+import v1.models.domain.Nino
 import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 @Singleton

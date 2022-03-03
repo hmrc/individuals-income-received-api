@@ -17,6 +17,9 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.AmendDividendsValidator
+import v1.models.domain.Nino
+import v1.models.request.amendDividends.{AmendDividendsRawData, AmendDividendsRequest, AmendDividendsRequestBody}
 
 @Singleton
 class AmendDividendsRequestParser @Inject()(val validator: AmendDividendsValidator)

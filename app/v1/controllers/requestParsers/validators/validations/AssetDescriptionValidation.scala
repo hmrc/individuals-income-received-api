@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{AssetDescriptionFormatError, MtdError}
+
 object AssetDescriptionValidation {
   private val regex = """^[0-9a-zA-Z{À-˿’}\- _&`():.'^]{1,90}$"""
   def validate(description: String, path: String): List[MtdError] = {

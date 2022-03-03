@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{MtdError, SchemePlanTypeFormatError}
+
 object SchemePlanTypeValidation {
 
   val schemeEnumsShareOptions: List[String] = List("EMI","CSOP","SAYE", "Other")

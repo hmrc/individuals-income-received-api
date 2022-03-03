@@ -16,9 +16,10 @@
 
 package v1.controllers.requestParsers
 
-import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
-
 import javax.inject.Inject
+import v1.controllers.requestParsers.validators.RetrieveNonPayeEmploymentValidator
+import v1.models.domain.{MtdSourceEnum, Nino}
+import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 
 class RetrieveNonPayeEmploymentRequestParser @Inject()(val validator: RetrieveNonPayeEmploymentValidator)
   extends RequestParser[RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest] {

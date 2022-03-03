@@ -16,14 +16,13 @@
 
 package v1.services
 
+import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockListEmploymentsConnector
-import v1r6.models.domain.Nino
-import v1r6.controllers.EndpointLogContext
-import v1r6.models.errors._
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.listEmployments.ListEmploymentsRequest
-import v1r6.models.response.listEmployment.{Employment, ListEmploymentResponse}
-import v1.services.ListEmploymentsService
+import v1.models.domain.Nino
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.listEmployments.ListEmploymentsRequest
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import scala.concurrent.Future
 

@@ -16,6 +16,8 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import v1.models.errors.{MtdError, PayrollIdFormatError}
+
 object PayrollIdValidation {
 
   def validateOptional(payrollId: Option[String]): List[MtdError] = payrollId match {

@@ -17,6 +17,8 @@
 package v1.controllers.requestParsers
 
 import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
+import v1.models.domain.{MtdSourceEnum, Nino}
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 @Singleton

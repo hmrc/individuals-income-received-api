@@ -17,8 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
-
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.{MtdError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError}
+import v1.models.request.createAmendOtherCgt._
 
 @Singleton
 class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)

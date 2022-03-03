@@ -16,10 +16,10 @@
 
 package v1.services
 
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HeaderCarrier
-
-import javax.inject.{Inject, Singleton}
+import v1.connectors.NrsProxyConnector
 
 @Singleton
 class NrsProxyService @Inject()(val connector: NrsProxyConnector) {

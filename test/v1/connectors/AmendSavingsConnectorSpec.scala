@@ -17,12 +17,11 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
-import v1.connectors.AmendSavingsConnector
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.domain.Nino
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
 
 import scala.concurrent.Future
 

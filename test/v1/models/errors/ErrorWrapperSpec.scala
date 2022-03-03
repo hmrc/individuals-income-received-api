@@ -18,8 +18,7 @@ package v1.models.errors
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1r6.models.audit.AuditError
-import v1r6.models.errors.{BadRequestError, NinoFormatError, TaxYearFormatError}
+import v1.models.audit.AuditError
 
 class ErrorWrapperSpec extends UnitSpec {
 

@@ -17,13 +17,12 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1r6.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockHttpClient
-import v1.connectors.ListEmploymentsConnector
-import v1r6.models.outcomes.ResponseWrapper
-import v1r6.models.request.listEmployments.ListEmploymentsRequest
-import v1r6.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.models.domain.Nino
+import v1.models.outcomes.ResponseWrapper
+import v1.models.request.listEmployments.ListEmploymentsRequest
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import scala.concurrent.Future
 
@@ -55,10 +54,10 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.release6BaseUrl returns baseUrl
-    MockedAppConfig.release6Token returns "release6-token"
-    MockedAppConfig.release6Environment returns "release6-environment"
-    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "release6-token"
+    MockedAppConfig.ifsEnvironment returns "release6-environment"
+    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "ListEmploymentsConnector" when {

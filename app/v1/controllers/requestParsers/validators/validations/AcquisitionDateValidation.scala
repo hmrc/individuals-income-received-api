@@ -18,6 +18,8 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
 
+import v1.models.errors.{MtdError, RuleAcquisitionDateError}
+
 object AcquisitionDateValidation {
   def validate(disposalDate: String, acquisitionDate: String, path: String): List[MtdError] = {
     if(LocalDate.parse(acquisitionDate).isAfter(LocalDate.parse(disposalDate))) {

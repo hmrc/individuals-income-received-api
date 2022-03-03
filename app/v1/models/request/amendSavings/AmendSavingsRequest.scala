@@ -16,4 +16,6 @@
 
 package v1.models.request.amendSavings
 
+import v1.models.domain.Nino
+
 case class AmendSavingsRequest(nino: Nino, taxYear: String, body: AmendSavingsRequestBody)

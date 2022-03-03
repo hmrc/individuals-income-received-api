@@ -18,13 +18,18 @@ package v1.controllers
 
 import cats.data.EitherT
 import config.AppConfig
+import javax.inject.Inject
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
-import utils.{IdGenerator, Logging}
-
-import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
+import v1.hateoas.AmendHateoasBody
+import v1.models.audit.{AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
+import v1.models.errors._
+import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
+import v1.services._
 
 import scala.concurrent.{ExecutionContext, Future}
 

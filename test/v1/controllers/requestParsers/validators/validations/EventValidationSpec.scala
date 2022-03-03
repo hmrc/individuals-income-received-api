@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.EventValidation
-import v1r6.models.errors.EventFormatError
+import v1.models.errors.EventFormatError
 
 class EventValidationSpec extends UnitSpec {
 

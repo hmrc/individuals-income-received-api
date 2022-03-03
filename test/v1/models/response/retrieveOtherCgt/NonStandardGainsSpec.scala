@@ -18,7 +18,6 @@ package v1.models.response.retrieveOtherCgt
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1r6.models.response.retrieveOtherCgt.NonStandardGains
 
 class NonStandardGainsSpec extends UnitSpec {
 

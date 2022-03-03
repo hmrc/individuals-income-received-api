@@ -16,4 +16,6 @@
 
 package v1.models.request
 
+import v1.models.domain.Nino
+
 case class DeleteRetrieveRequest(nino: Nino, taxYear: String)

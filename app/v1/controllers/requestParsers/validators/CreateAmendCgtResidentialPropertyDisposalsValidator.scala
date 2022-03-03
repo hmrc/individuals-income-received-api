@@ -17,9 +17,11 @@
 package v1.controllers.requestParsers.validators
 
 import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
-
-import javax.inject.{ Inject, Singleton }
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors._
+import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 
 @Singleton
 class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)

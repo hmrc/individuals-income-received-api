@@ -18,7 +18,6 @@ package v1.models.request.amendForeign
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1r6.models.request.amendForeign.AmendForeignRequestBody
 
 class AmendForeignRequestBodySpec extends UnitSpec {
 

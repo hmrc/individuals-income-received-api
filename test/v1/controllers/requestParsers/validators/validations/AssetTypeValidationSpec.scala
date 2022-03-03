@@ -17,8 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1r6.controllers.requestParsers.validators.validations.AssetTypeValidation
-import v1r6.models.errors.AssetTypeFormatError
+import v1.models.errors.AssetTypeFormatError
 
 class AssetTypeValidationSpec extends UnitSpec {
   "validate" should {

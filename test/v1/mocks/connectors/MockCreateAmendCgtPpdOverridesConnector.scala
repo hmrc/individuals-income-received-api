@@ -19,7 +19,8 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r6.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
+import v1.connectors.{CreateAmendCgtPpdOverridesConnector, DesOutcome}
+import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
