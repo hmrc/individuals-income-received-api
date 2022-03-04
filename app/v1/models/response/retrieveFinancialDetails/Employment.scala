@@ -49,7 +49,7 @@ object Employment {
       (JsPath \ "disguisedRemuneration").readNullable[Boolean] and
       (JsPath \ "employer").read[Employer] and
       (JsPath \ "pay").readNullable[Pay] and
-      (JsPath \ "customerEstimatedPay").readNullable[CustomerEstimatedPay].map {
+      (JsPath \ "estimatedPay").readNullable[CustomerEstimatedPay].map {
         case Some(CustomerEstimatedPay.empty) => None
         case other => other
       } and

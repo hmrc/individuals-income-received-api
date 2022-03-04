@@ -239,6 +239,7 @@ class AmendCustomEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (RuleUpdateForbiddenError, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

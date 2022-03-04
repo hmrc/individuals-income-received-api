@@ -24,7 +24,7 @@ import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveEmploymentResponse(employerRef: Option[String],
                                             employerName: String,
-                                            startDate: String,
+                                            startDate: Option[String],
                                             cessationDate: Option[String],
                                             payrollId: Option[String],
                                             dateIgnored: Option[String],
@@ -37,7 +37,7 @@ object RetrieveEmploymentResponse extends HateoasLinks {
   implicit val reads: Reads[RetrieveEmploymentResponse] = (
       (JsPath \\ "employerRef").readNullable[String] and
         (JsPath \\ "employerName").read[String] and
-        (JsPath \\ "startDate").read[String] and
+        (JsPath \\ "startDate").readNullable[String] and
         (JsPath \\ "cessationDate").readNullable[String] and
         (JsPath \\ "payrollId").readNullable[String] and
         (JsPath \\ "dateIgnored").readNullable[String] and

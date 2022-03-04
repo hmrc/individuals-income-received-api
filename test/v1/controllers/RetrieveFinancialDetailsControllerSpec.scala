@@ -113,7 +113,6 @@ class RetrieveFinancialDetailsControllerSpec extends ControllerBaseSpec
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
       "INVALID_VIEW" -> SourceFormatError,
-      "INVALID_DATE_RANGE" -> RuleTaxYearNotSupportedError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,

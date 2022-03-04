@@ -17,6 +17,5 @@
 package support
 
 trait V1R7IntegrationSpec extends IntegrationBaseSpec {
-  override val release6Enabled: Boolean = true
   override val release7Enabled: Boolean = true
 }

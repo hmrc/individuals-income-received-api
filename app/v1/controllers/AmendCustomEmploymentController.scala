@@ -116,7 +116,12 @@ class AmendCustomEmploymentController @Inject()(val authService: EnrolmentsAuthS
            CustomMtdError(EmployerRefFormatError.code) |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code)
       => BadRequest(Json.toJson(errorWrapper))
+<<<<<<< HEAD
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
+=======
+      case RuleUpdateForbiddenError => Forbidden(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+>>>>>>> 8287f3ba (MTDSA-11290 Removing redundant packages for V1)
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _               => unhandledError(errorWrapper)
     }
