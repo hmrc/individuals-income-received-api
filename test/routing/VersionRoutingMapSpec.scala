@@ -33,8 +33,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
   "map" when {
     "routing to v1" when {
       def test(isRelease7Enabled: Boolean, routes: Any): Unit = {
-
-          s"and release 7 feature switch is set to - $isRelease7Enabled" should {
+        s"release 7 feature switch is set to - $isRelease7Enabled" should {
           s"route to ${routes.toString}" in {
 
             MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
