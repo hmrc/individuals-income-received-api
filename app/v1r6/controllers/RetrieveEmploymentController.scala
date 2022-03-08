@@ -41,7 +41,9 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+  extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -96,14 +98,14 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError|
            RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def ifsErrorMap: Map[String, MtdError] =
     Map(

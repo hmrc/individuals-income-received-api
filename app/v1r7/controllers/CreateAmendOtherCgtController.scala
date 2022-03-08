@@ -87,7 +87,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -99,8 +99,8 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError |
            RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
@@ -115,8 +115,8 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
            CustomMtdError(RuleGainAfterReliefLossAfterReliefError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)
                              (implicit hc: HeaderCarrier,

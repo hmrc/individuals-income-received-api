@@ -110,16 +110,16 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
           RuleTaxYearNotEndedError | EmployerRefFormatError | EmployerNameFormatError | PayrollIdFormatError | StartDateFormatError |
           CessationDateFormatError | RuleCessationDateBeforeStartDateError | RuleStartDateAfterTaxYearEndError |
           RuleCessationDateBeforeTaxYearStartError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("AddACustomEmployment", "add-a-custom-employment", details)

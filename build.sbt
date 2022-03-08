@@ -32,7 +32,7 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test(),
     retrieveManaged := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
-    scalaVersion := "2.12.13"
+    scalaVersion := "2.12.15"
   )
   .settings(
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
@@ -56,7 +56,11 @@ lazy val microservice = Project(appName, file("."))
     resolvers += Resolver.jcenterRepo
   )
   .settings(PlayKeys.playDefaultPort := 7794)
-  .settings(SilencerSettings())
+
+scalacOptions ++= Seq(
+  "-Xfatal-warnings",
+  "-Wconf:src=routes/.*:silent"
+)
 
 dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
 dependencyUpdatesFilter -= moduleFilter(name = "simple-reactivemongo")
@@ -65,4 +69,5 @@ dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
 dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")
 dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-play")
 dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-scalacheck")
+
 dependencyUpdatesFailBuild := true

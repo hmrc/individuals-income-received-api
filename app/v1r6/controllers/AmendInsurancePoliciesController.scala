@@ -44,7 +44,10 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
+  extends AuthorisedController(cc)
+    with BaseController
+    with Logging
+    with AmendHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -68,13 +71,12 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendInsurancePolicies(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
 
           auditSubmission(
             GenericAuditDetail(
@@ -93,7 +95,7 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -113,8 +115,8 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
     }
 
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+  private def errorResult(errorWrapper: ErrorWrapper) =
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError |
            RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
            CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
@@ -123,8 +125,8 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
            CustomMtdError(EventFormatError.code)
       => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _               => unhandledError(errorWrapper)
     }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
