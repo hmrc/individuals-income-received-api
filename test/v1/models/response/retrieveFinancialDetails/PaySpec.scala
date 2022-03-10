@@ -34,8 +34,8 @@ class PaySpec extends UnitSpec {
   )
 
   val model: Pay = Pay(
-    taxablePayToDate = 100.11,
-    totalTaxToDate = 102.11,
+    taxablePayToDate = Some(100.11),
+    totalTaxToDate = Some(102.11),
     payFrequency = Some("CALENDAR MONTHLY"),
     paymentDate = Some("2020-04-23"),
     taxWeekNo = Some(2),
@@ -54,7 +54,7 @@ class PaySpec extends UnitSpec {
         val invalidJson: JsValue = Json.parse(
           """
             |{
-            |  "taxablePayToDate": 100.11
+            |  "taxablePayToDate": "taxablePayToDate"
             |}
           """.stripMargin
         )

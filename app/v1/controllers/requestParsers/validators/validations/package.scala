@@ -16,7 +16,11 @@
 
 package v1.controllers.requestParsers.validators
 
-import java.time.format.DateTimeFormatter
+import v1.models.domain.DesTaxYear
+
+import java.time.LocalDate
+import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
+import java.time.temporal.ChronoField
 
 package object validations {
 
@@ -25,6 +29,26 @@ package object validations {
   val datePattern = "yyyy-MM-dd"
   val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern(datePattern)
 
+  def getToDateAndFromDate(taxYear: String): (LocalDate, LocalDate) = {
+    val APRIL = 4
+    val SIX = 6
+    val FIVE = 5
+
+    val year = LocalDate.parse(DesTaxYear.fromMtd(taxYear).value, yearFormat)
+    val fromDate = year.minusYears(1).withMonth(APRIL).withDayOfMonth(SIX)
+    val toDate = year.withMonth(APRIL).withDayOfMonth(FIVE)
+
+    (fromDate, toDate)
+  }
+
   def checkAmountScale(amount: BigDecimal, maxScale: Int): Boolean = !(amount.scale > maxScale)
   def checkAmountRange(amount: BigDecimal, minValue: BigDecimal, maxValue: BigDecimal): Boolean = !(amount > maxValue || amount < minValue)
+
+  val yearFormat: DateTimeFormatter =
+    new DateTimeFormatterBuilder()
+      .appendPattern("yyyy")
+      .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+      .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+      .toFormatter()
+
 }

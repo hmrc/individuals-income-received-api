@@ -28,24 +28,15 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
 
   val defaultRouter: Router = mock[Router]
   val v1Routes: v1.Routes = app.injector.instanceOf[v1.Routes]
-  val v1WithForeignRoutes: v1WithForeign.Routes = app.injector.instanceOf[v1WithForeign.Routes]
-  val v1WithRelease6Routes: v1WithRelease6.Routes = app.injector.instanceOf[v1WithRelease6.Routes]
-  val v1WithRelease6AndForeignRoutes: v1WithRelease6AndForeign.Routes = app.injector.instanceOf[v1WithRelease6AndForeign.Routes]
   val v1WithRelease7Routes: v1WithRelease7.Routes = app.injector.instanceOf[v1WithRelease7.Routes]
-  val v1WithRelease7AndForeignRoutes: v1WithRelease7AndForeign.Routes = app.injector.instanceOf[v1WithRelease7AndForeign.Routes]
 
   "map" when {
     "routing to v1" when {
-      def test(isForeignEnabled: Boolean, isRelease6Enabled: Boolean, isRelease7Enabled: Boolean, routes: Any): Unit = {
-
-        s"foreign feature switch is set to - $isForeignEnabled, " +
-          s"release 6 feature switch is set to - $isRelease6Enabled, " +
-          s"and release 7 feature switch is set to - $isRelease7Enabled" should {
+      def test(isRelease7Enabled: Boolean, routes: Any): Unit = {
+        s"release 7 feature switch is set to - $isRelease7Enabled" should {
           s"route to ${routes.toString}" in {
 
             MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
-              |foreign-endpoints.enabled = $isForeignEnabled,
-              |release-6.enabled = $isRelease6Enabled,
               |release-7.enabled = $isRelease7Enabled
               |""".stripMargin))))
 
@@ -53,11 +44,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
               appConfig = mockAppConfig,
               defaultRouter = defaultRouter,
               v1Router = v1Routes,
-              v1RouterWithForeign = v1WithForeignRoutes,
-              v1RouterWithRelease6 = v1WithRelease6Routes,
-              v1RouterWithRelease6AndForeign = v1WithRelease6AndForeignRoutes,
-              v1RouterWithRelease7 = v1WithRelease7Routes,
-              v1RouterWithRelease7AndForeign = v1WithRelease7AndForeignRoutes
+              v1RouterWithRelease7 = v1WithRelease7Routes
             )
 
             versionRoutingMap.map(Versions.VERSION_1) shouldBe routes
@@ -66,14 +53,8 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       }
 
       Seq(
-        (true, true, true, v1WithRelease7AndForeignRoutes),
-        (true, false, true, v1WithRelease7AndForeignRoutes),
-        (false, false, true, v1WithRelease7Routes),
-        (false, true, true, v1WithRelease7Routes),
-        (true, true, false, v1WithRelease6AndForeignRoutes),
-        (false, true, false, v1WithRelease6Routes),
-        (true, false, false, v1WithForeignRoutes),
-        (false, false, false, v1Routes)
+        (true, v1WithRelease7Routes),
+        (false, v1Routes)
       ).foreach(args => (test _).tupled(args))
     }
   }

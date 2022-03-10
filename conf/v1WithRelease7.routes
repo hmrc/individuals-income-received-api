@@ -1,6 +1,6 @@
 # Non-PAYE endpoints
-PUT        /employments/non-paye/:nino/:taxYear                             v1r7.controllers.CreateAmendNonPayeEmploymentController.createAmendNonPayeEmployment(nino: String, taxYear: String)
 GET        /employments/non-paye/:nino/:taxYear                             v1r7.controllers.RetrieveNonPayeEmploymentController.retrieveNonPayeEmployment(nino: String, taxYear: String, source: Option[String])
+PUT        /employments/non-paye/:nino/:taxYear                             v1r7.controllers.CreateAmendNonPayeEmploymentController.createAmendNonPayeEmployment(nino: String, taxYear: String)
 DELETE     /employments/non-paye/:nino/:taxYear                             v1r7.controllers.DeleteNonPayeEmploymentController.delete(nino: String, taxYear: String)
 
 # Additional Income endpoints
@@ -11,6 +11,10 @@ GET        /savings/:nino/:taxYear                                          v1r7
 PUT        /insurance-policies/:nino/:taxYear                               v1r7.controllers.AmendInsurancePoliciesController.amendInsurancePolicies(nino: String, taxYear: String)
 DELETE     /insurance-policies/:nino/:taxYear                               v1r7.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
 GET        /insurance-policies/:nino/:taxYear                               v1r7.controllers.RetrieveInsurancePoliciesController.retrieveInsurancePolicies(nino: String, taxYear: String)
+
+PUT        /foreign/:nino/:taxYear                                          v1r7.controllers.AmendForeignController.amendForeign(nino: String, taxYear: String)
+DELETE     /foreign/:nino/:taxYear                                          v1r7.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
+GET        /foreign/:nino/:taxYear                                          v1r7.controllers.RetrieveForeignController.retrieveForeign(nino: String, taxYear: String)
 
 PUT        /pensions/:nino/:taxYear                                         v1r7.controllers.AmendPensionsController.amendPensions(nino: String, taxYear: String)
 DELETE     /pensions/:nino/:taxYear                                         v1r7.controllers.DeletePensionsController.deletePensions(nino: String, taxYear: String)

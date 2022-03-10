@@ -108,7 +108,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val hmrcEnteredEmploymentWithoutDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = None,
@@ -118,7 +118,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val hmrcEnteredEmploymentWithDateIgnoredResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
@@ -128,7 +128,7 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
   private val customEnteredEmploymentResponseModel = RetrieveEmploymentResponse(
     employerRef = Some("123/AB56797"),
     employerName = "Employer Name Ltd.",
-    startDate = "2020-06-17",
+    startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     dateIgnored = None,
@@ -163,7 +163,8 @@ class RetrieveEmploymentControllerSpec extends ControllerBaseSpec
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR" -> TaxYearFormatError,
         "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-        "NOT_FOUND" -> NotFoundError,
+        "INVALID_CORRELATIONID" -> DownstreamError,
+        "NO_DATA_FOUND" -> NotFoundError,
         "SERVER_ERROR" -> DownstreamError,
         "SERVICE_UNAVAILABLE" -> DownstreamError
       )

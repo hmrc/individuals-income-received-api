@@ -53,10 +53,10 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.release6BaseUrl returns baseUrl
+    MockedAppConfig.release6Token returns "release6-token"
+    MockedAppConfig.release6Environment returns "release6-environment"
+    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AmendCustomEmploymentConnector" when {
@@ -64,15 +64,15 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
       "return a success upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredDesHeadersPut: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredRelease6HeadersPut: Seq[(String, String)] = requiredRelease6Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
-            config = dummyDesHeaderCarrierConfig,
+            config = dummyIfsHeaderCarrierConfig,
             body = amendCustomEmploymentRequestBody,
             requiredHeaders
-              = requiredDesHeadersPut,
+              = requiredRelease6HeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           ).returns(Future.successful(outcome))
 

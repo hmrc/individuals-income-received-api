@@ -37,7 +37,7 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
 
     def queryParams: Seq[(String, String)] =
       Seq("source" -> source)
@@ -63,7 +63,7 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), OK, ifsJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -80,7 +80,7 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> "LATEST"), OK, desJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), OK, ifsJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -128,15 +128,15 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "ifs service error" when {
+        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, Map("view" -> "LATEST"), desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -150,7 +150,7 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "ifs message"
              |}
             """.stripMargin
 
@@ -159,7 +159,6 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (BAD_REQUEST, "INVALID_VIEW", BAD_REQUEST, SourceFormatError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DATE_RANGE", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),

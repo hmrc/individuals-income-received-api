@@ -18,13 +18,12 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.DownstreamUri.Release6Uri
 import v1.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.domain.MtdSourceEnum
@@ -69,7 +68,7 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
         source = source
       )
 
-      implicit val desUri: DesUri[RetrieveFinancialDetailsResponse] = DesUri[RetrieveFinancialDetailsResponse](
+      implicit val desUri: Release6Uri[RetrieveFinancialDetailsResponse] = Release6Uri[RetrieveFinancialDetailsResponse](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
@@ -77,7 +76,7 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
       val result =
         for {
           _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveFinancialDetailsResponse](desErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveFinancialDetailsResponse](ifsErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveFinancialDetailsHateoasData(nino, taxYear, employmentId))
@@ -114,13 +113,12 @@ class RetrieveFinancialDetailsController @Inject()(val authService: EnrolmentsAu
     }
 
 
-  private def desErrorMap: Map[String, MtdError] =
+  private def ifsErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
       "INVALID_VIEW" -> SourceFormatError,
-      "INVALID_DATE_RANGE" -> RuleTaxYearNotSupportedError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,

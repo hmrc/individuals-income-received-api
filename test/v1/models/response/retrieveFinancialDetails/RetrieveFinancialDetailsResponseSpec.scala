@@ -29,7 +29,7 @@ class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
   "RetrieveFinancialDetailsResponse" when {
     "read from valid JSON" should {
       "produce the expected 'RetrieveFinancialDetailsResponse' object" in {
-        desJson.as[RetrieveFinancialDetailsResponse] shouldBe model
+        ifsJson.as[RetrieveFinancialDetailsResponse] shouldBe model
       }
     }
 
