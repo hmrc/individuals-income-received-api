@@ -16,15 +16,16 @@
 
 package v1.services
 
-import v1.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture.requestBodyModel
 import v1.mocks.connectors.MockCreateAmendNonPayeEmploymentConnector
-import v1.models.domain.Nino
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import scala.concurrent.Future
+import api.services.ServiceSpec
 
 class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 
@@ -63,7 +64,7 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 
           MockCreateAmendNonPayeEmploymentConnector
             .createAndAmend(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.createAndAmend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -73,7 +74,7 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 
           MockCreateAmendNonPayeEmploymentConnector
             .createAndAmend(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
 
           await(service.createAndAmend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -81,12 +82,12 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("INVALID_PAYLOAD", DownstreamError),
+        ("INVALID_CORRELATIONID", StandardDownstreamError),
+        ("INVALID_PAYLOAD", StandardDownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
         ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", StandardDownstreamError),
+        ("SERVICE_UNAVAILABLE", StandardDownstreamError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

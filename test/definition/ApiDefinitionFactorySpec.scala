@@ -16,13 +16,13 @@
 
 package definition
 
+import api.mocks.MockHttpClient
 import config.ConfidenceLevelConfig
-import definition.APIStatus.{ALPHA, BETA}
+import definition.APIStatus.{ ALPHA, BETA }
 import definition.Versions.VERSION_1
 import mocks.MockAppConfig
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
-import v1.mocks.MockHttpClient
 
 class ApiDefinitionFactorySpec extends UnitSpec {
 
@@ -39,9 +39,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.featureSwitch returns None
         MockedAppConfig.apiStatus returns "1.0"
         MockedAppConfig.endpointsEnabled returns true
-        MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true) anyNumberOfTimes()
+        MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true) anyNumberOfTimes ()
 
-        private val readScope = "read:self-assessment"
+        private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"
 
         apiDefinitionFactory.definition shouldBe
@@ -87,7 +87,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
       case (definitionEnabled, cl) =>
         s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
           s"return $cl" in new Test {
-            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
+            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled,
+                                                                                      authValidationEnabled = true)
             apiDefinitionFactory.confidenceLevel shouldBe cl
           }
         }

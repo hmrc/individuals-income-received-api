@@ -16,9 +16,11 @@
 
 package v1r7.connectors
 
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r7.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.IfsUri
 import v1r7.models.request.amendDividends.AmendDividendsRequest
 
 import javax.inject.{Inject, Singleton}
@@ -31,9 +33,9 @@ class AmendDividendsConnector @Inject()(val http: HttpClient,
   def amendDividends(request: AmendDividendsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1r7.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
     val taxYear = request.taxYear

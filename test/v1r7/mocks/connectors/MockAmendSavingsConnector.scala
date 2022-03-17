@@ -16,13 +16,14 @@
 
 package v1r7.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.{AmendSavingsConnector, DesOutcome}
+import v1r7.connectors.AmendSavingsConnector
 import v1r7.models.request.amendSavings.AmendSavingsRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockAmendSavingsConnector extends MockFactory {
 
@@ -30,7 +31,7 @@ trait MockAmendSavingsConnector extends MockFactory {
 
   object MockAmendSavingsConnector {
 
-    def amendSaving(request: AmendSavingsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendSaving(request: AmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendSavingsConnector
         .amendSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

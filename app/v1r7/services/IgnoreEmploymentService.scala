@@ -16,23 +16,24 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{EmploymentIdFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleCustomEmploymentError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.IgnoreEmploymentConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRequest
-import v1r7.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class IgnoreEmploymentService @Inject()(connector: IgnoreEmploymentConnector)
-  extends DesResponseMappingSupport with Logging {
+  extends DownstreamResponseMappingSupport with Logging {
 
   def ignoreEmployment(request: IgnoreEmploymentRequest)(
     implicit hc: HeaderCarrier,
@@ -55,8 +56,8 @@ class IgnoreEmploymentService @Inject()(connector: IgnoreEmploymentConnector)
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "CANNOT_IGNORE" -> RuleCustomEmploymentError,
       "NO_DATA_FOUND" -> NotFoundError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

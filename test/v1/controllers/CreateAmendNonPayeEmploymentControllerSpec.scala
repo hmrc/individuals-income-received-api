@@ -16,37 +16,40 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.hateoas.HateoasLinks
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
+import api.hateoas.HateoasLinks
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendNonPayeEmploymentRequestParser
-import v1.mocks.services.{MockAuditService, MockCreateAmendNonPayeEmploymentService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.domain.Nino
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import v1.mocks.services.MockCreateAmendNonPayeEmploymentService
 import v1.models.request.createAmendNonPayeEmployment._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockAppConfig
-  with MockCreateAmendNonPayeEmploymentService
-  with MockAuditService
-  with MockHateoasFactory
-  with MockCreateAmendNonPayeEmploymentRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class CreateAmendNonPayeEmploymentControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockAppConfig
+    with MockCreateAmendNonPayeEmploymentService
+    with MockAuditService
+    with MockHateoasFactory
+    with MockCreateAmendNonPayeEmploymentRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -216,7 +219,7 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
@@ -224,4 +227,3 @@ class CreateAmendNonPayeEmploymentControllerSpec extends ControllerBaseSpec
     }
   }
 }
-

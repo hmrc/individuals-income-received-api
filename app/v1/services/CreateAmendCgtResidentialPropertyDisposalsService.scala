@@ -21,15 +21,15 @@ import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.controllers.EndpointLogContext
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
-import v1.support.DesResponseMappingSupport
+import api.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector) extends DesResponseMappingSupport with Logging {
+class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(
     implicit hc: HeaderCarrier,
@@ -48,12 +48,12 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: Cre
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "INVALID_DISPOSAL_DATE" -> DownstreamError,
-      "INVALID_COMPLETION_DATE" -> DownstreamError,
-      "INVALID_ACQUISITION_DATE" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "INVALID_DISPOSAL_DATE" -> StandardDownstreamError,
+      "INVALID_COMPLETION_DATE" -> StandardDownstreamError,
+      "INVALID_ACQUISITION_DATE" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

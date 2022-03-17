@@ -16,22 +16,23 @@
 
 package v1.controllers
 
+import api.connectors.DownstreamUri.Release6Uri
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.hateoas.HateoasFactory
+import api.models.errors._
+import api.services.{ DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.Release6Uri
-import v1.controllers.requestParsers.RetrieveEmploymentRequestParser
-import v1.hateoas.HateoasFactory
-import v1.models.errors._
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import utils.{ IdGenerator, Logging }
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
-import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
-import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.response.retrieveEmployment.{ RetrieveEmploymentHateoasData, RetrieveEmploymentResponse }
+import v1.requestParsers.RetrieveEmploymentRequestParser
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthService,
@@ -41,7 +42,7 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -53,7 +54,6 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
 
   def retrieveEmployment(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -71,7 +71,7 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
 
       val result =
         for {
-          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](ifsErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -100,21 +100,22 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError|
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
+          RuleTaxYearRangeInvalidError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def ifsErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
 }

@@ -18,7 +18,7 @@ package v1.models.response.retrieveNonPayeEmploymentIncome
 
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
-import v1.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum
 
 class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 

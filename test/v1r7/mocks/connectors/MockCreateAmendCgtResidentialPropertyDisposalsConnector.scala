@@ -16,13 +16,14 @@
 
 package v1r7.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.{CreateAmendCgtResidentialPropertyDisposalsConnector, DesOutcome}
+import v1r7.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
 import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsConnector extends MockFactory {
 
@@ -31,9 +32,15 @@ trait MockCreateAmendCgtResidentialPropertyDisposalsConnector extends MockFactor
 
   object MockCreateAmendCgtResidentialPropertyDisposalsConnector {
 
-    def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
-      (mockCreateAmendCgtResidentialPropertyDisposalsConnector
-        .createAndAmend(_: CreateAmendCgtResidentialPropertyDisposalsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+      (
+        mockCreateAmendCgtResidentialPropertyDisposalsConnector
+          .createAndAmend(_: CreateAmendCgtResidentialPropertyDisposalsRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *)
     }
   }

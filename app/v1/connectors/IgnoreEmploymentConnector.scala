@@ -16,28 +16,26 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.Release6Uri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.models.request.EmptyBody
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.Release6Uri
-import v1.models.request.EmptyBody
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
-                                          val appConfig: AppConfig) extends BaseDownstreamConnector {
+class IgnoreEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def ignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+  def ignoreEmployment(
+      request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear
+    val nino         = request.nino.nino
+    val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
     put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))

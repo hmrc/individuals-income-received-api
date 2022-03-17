@@ -16,39 +16,42 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListEmploymentsControllerFixture._
-import v1.hateoas.HateoasLinks
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
+import api.hateoas.HateoasLinks
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListEmploymentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListEmploymentsService, MockMtdIdLookupService}
-import v1.models.errors._
-import v1.models.hateoas.Method.{GET, POST}
-import v1.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.outcomes.ResponseWrapper
+import v1.mocks.services.MockListEmploymentsService
+import api.models.hateoas.Method.{GET, POST}
+import api.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmploymentsRequest}
 import v1.models.response.listEmployment.{Employment, ListEmploymentHateoasData, ListEmploymentResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListEmploymentsControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockListEmploymentsService
-  with MockHateoasFactory
-  with MockListEmploymentsRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class ListEmploymentsControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockListEmploymentsService
+    with MockHateoasFactory
+    with MockListEmploymentsRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
+  val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "X-123"
 
   val rawData: ListEmploymentsRawData = ListEmploymentsRawData(
@@ -94,31 +97,33 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
   )
 
   private val listEmploymentsResponseModel = ListEmploymentResponse(
-    Some(Seq(hmrcEmploymentModel,hmrcEmploymentModel)),
-    Some(Seq(customEmploymentModel,customEmploymentModel))
+    Some(Seq(hmrcEmploymentModel, hmrcEmploymentModel)),
+    Some(Seq(customEmploymentModel, customEmploymentModel))
   )
 
   private val hateoasResponse = ListEmploymentResponse(
-    Some(Seq(
-      HateoasWrapper(
-        hmrcEmploymentModel,
-        Seq(retrieveEmploymentLink)
-      ),
-      HateoasWrapper(
-        hmrcEmploymentModel,
-        Seq(retrieveEmploymentLink)
-      )
-    )),
-    Some(Seq(
-      HateoasWrapper(
-        customEmploymentModel,
-        Seq(retrieveEmploymentLink)
-      ),
-      HateoasWrapper(
-        customEmploymentModel,
-        Seq(retrieveEmploymentLink)
-      )
-    ))
+    Some(
+      Seq(
+        HateoasWrapper(
+          hmrcEmploymentModel,
+          Seq(retrieveEmploymentLink)
+        ),
+        HateoasWrapper(
+          hmrcEmploymentModel,
+          Seq(retrieveEmploymentLink)
+        )
+      )),
+    Some(
+      Seq(
+        HateoasWrapper(
+          customEmploymentModel,
+          Seq(retrieveEmploymentLink)
+        ),
+        HateoasWrapper(
+          customEmploymentModel,
+          Seq(retrieveEmploymentLink)
+        )
+      ))
   )
 
   private val mtdResponse = mtdResponseWithCustomHateoas(nino, taxYear, employmentId)
@@ -155,12 +160,12 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrapList(listEmploymentsResponseModel, ListEmploymentHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(hateoasResponse,
-            Seq(
-              addCustomEmploymentLink,
-              listEmploymentsLink
-            )
-          ))
+          .returns(
+            HateoasWrapper(hateoasResponse,
+                           Seq(
+                             addCustomEmploymentLink,
+                             listEmploymentsLink
+                           )))
 
         val result: Future[Result] = controller.listEmployments(nino, taxYear)(fakeGetRequest)
 
@@ -222,7 +227,7 @@ class ListEmploymentsControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

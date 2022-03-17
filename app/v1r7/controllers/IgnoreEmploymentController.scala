@@ -16,23 +16,25 @@
 
 package v1r7.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.IgnoreHateoasBody
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1r7.controllers.requestParsers.IgnoreEmploymentRequestParser
-import v1r7.hateoas.IgnoreHateoasBody
-import v1r7.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
 import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRawData
-import v1r7.services.{AuditService, EnrolmentsAuthService, IgnoreEmploymentService, MtdIdLookupService}
+import v1r7.requestParsers.IgnoreEmploymentRequestParser
+import v1r7.services.IgnoreEmploymentService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -44,7 +46,10 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
                                            auditService: AuditService,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with IgnoreHateoasBody {
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging
+    with IgnoreHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,7 +59,6 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
   def ignoreEmployment(nino: String, taxYear: String, employmentId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -68,7 +72,7 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.ignoreEmployment(parsedRequest))
         } yield {
           logger.info(
@@ -77,7 +81,10 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
           auditSubmission(
             GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), None, serviceResponse.correlationId,
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+              None,
+              serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(ignoreEmploymentHateoasBody(appConfig, nino, taxYear, employmentId))))
             )
           )
@@ -96,8 +103,11 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
         auditSubmission(
           GenericAuditDetail(
-            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), None,
-            resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+            None,
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
@@ -107,18 +117,16 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError |
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError
-      => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
+          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError =>
+        BadRequest(Json.toJson(errorWrapper))
       case RuleCustomEmploymentError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError             => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError           => InternalServerError(Json.toJson(errorWrapper))
+      case StandardDownstreamError   => InternalServerError(Json.toJson(errorWrapper))
       case _                         => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("IgnoreEmployment", "ignore-employment", details)
     auditService.auditEvent(event)
   }

@@ -16,12 +16,12 @@
 
 package v1r7.models.response.retrieveOtherEmployment
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
-import v1r7.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1r7.models.hateoas.{HateoasData, Link}
 
 case class RetrieveOtherEmploymentResponse(submittedOn: String,
                                            shareOption: Option[Seq[ShareOptionItem]],

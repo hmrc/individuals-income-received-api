@@ -16,19 +16,20 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.MockHttpClient
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
+import api.mocks.MockHttpClient
+import v1.models.request.addCustomEmployment.{ AddCustomEmploymentRequest, AddCustomEmploymentRequestBody }
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import scala.concurrent.Future
 
 class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  val nino: String    = "AA111111A"
   val taxYear: String = "2021-22"
 
   val addCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
@@ -63,8 +64,8 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
   "AddCustomEmploymentConnector" when {
     ".addEmployment" should {
       "return a success upon HttpClient success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, response))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val outcome                                           = Right(ResponseWrapper(correlationId, response))
+        implicit val hc: HeaderCarrier                        = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredApi1661HeadersPost: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
@@ -74,7 +75,8 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
             body = addCustomEmploymentRequestBody,
             requiredHeaders = requiredApi1661HeadersPost,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.addEmployment(request)) shouldBe outcome
       }

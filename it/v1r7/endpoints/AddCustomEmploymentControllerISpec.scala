@@ -16,21 +16,21 @@
 
 package v1r7.endpoints
 
+import api.models.errors._
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.V1R7IntegrationSpec
-import v1r7.models.errors._
-import v1r7.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String         = "AA123456A"
+    val taxYear: String      = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -258,31 +258,37 @@ class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/employerRef",
-          "/employerName",
-          "/payrollId",
-          "/cessationDate",
-          "/startDate",
-          "/occupationalPension"
-        ))
+        paths = Some(
+          List(
+            "/employerRef",
+            "/employerName",
+            "/payrollId",
+            "/cessationDate",
+            "/startDate",
+            "/occupationalPension"
+          ))
       )
 
       val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/employerName",
-          "/startDate",
-          "/occupationalPension"
-        ))
+        paths = Some(
+          List(
+            "/employerName",
+            "/startDate",
+            "/occupationalPension"
+          ))
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -299,7 +305,7 @@ class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", validRequestJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", validRequestJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "20177", validRequestJson, BAD_REQUEST, TaxYearFormatError, None),
           ("AA123456A", "2015-17", validRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2015-16", validRequestJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", getCurrentTaxYear, validRequestJson, BAD_REQUEST, RuleTaxYearNotEndedError, None),
@@ -350,10 +356,11 @@ class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
           (UNPROCESSABLE_ENTITY, "NOT_SUPPORTED_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "INVALID_DATE_RANGE", BAD_REQUEST, RuleStartDateAfterTaxYearEndError),
           (UNPROCESSABLE_ENTITY, "INVALID_CESSATION_DATE", BAD_REQUEST, RuleCessationDateBeforeTaxYearStartError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError))
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

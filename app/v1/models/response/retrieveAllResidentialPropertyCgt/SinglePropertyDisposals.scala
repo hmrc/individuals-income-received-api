@@ -18,7 +18,7 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum
 
 case class SinglePropertyDisposals(source: MtdSourceEnum,
                                    submittedOn: Option[String],

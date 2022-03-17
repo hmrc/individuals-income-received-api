@@ -19,9 +19,9 @@ package v1.models.response.retrieveNonPayeEmploymentIncome
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1.models.domain.MtdSourceEnum
-import v1.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.MtdSourceEnum
+import api.models.hateoas.{HateoasData, Link}
 
 
 case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: String,

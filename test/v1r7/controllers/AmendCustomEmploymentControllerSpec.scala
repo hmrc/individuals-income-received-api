@@ -16,24 +16,26 @@
 
 package v1r7.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.mocks.MockIdGenerator
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import v1r7.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.mocks.MockIdGenerator
 import v1r7.mocks.requestParsers.MockAmendCustomEmploymentRequestParser
-import v1r7.mocks.services.{MockAmendCustomEmploymentService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1r7.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
+import v1r7.mocks.services.MockAmendCustomEmploymentService
 import v1r7.models.request.amendCustomEmployment._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendCustomEmploymentControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -42,10 +44,10 @@ class AmendCustomEmploymentControllerSpec
     with MockAmendCustomEmploymentService
     with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val employmentId          = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -80,8 +82,6 @@ class AmendCustomEmploymentControllerSpec
         response = auditResponse
       )
     )
-
-
 
   private val requestBodyJson: JsValue = Json.parse(
     """
@@ -242,7 +242,7 @@ class AmendCustomEmploymentControllerSpec
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (RuleUpdateForbiddenError, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

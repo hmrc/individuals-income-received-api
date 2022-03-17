@@ -18,7 +18,7 @@ package v1.models.request.createAmendOtherCgt
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.models.domain.{AssetType, ClaimOrElectionCodes}
+import api.models.domain.{AssetType, ClaimOrElectionCodes}
 
 class DisposalSpec extends UnitSpec {
 

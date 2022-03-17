@@ -23,8 +23,8 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.V1IntegrationSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
-import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
 
@@ -160,10 +160,10 @@ class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (BAD_REQUEST, "INVALID_VIEW", BAD_REQUEST, SourceFormatError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

@@ -16,23 +16,24 @@
 
 package v1r7.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.mocks.MockIdGenerator
+import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1r7.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.mocks.MockIdGenerator
 import v1r7.mocks.requestParsers.MockDeleteCustomEmploymentRequestParser
-import v1r7.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1r7.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteCustomEmploymentControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
@@ -40,9 +41,9 @@ class DeleteCustomEmploymentControllerSpec
     with MockDeleteCustomEmploymentRequestParser
     with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
+  val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val rawData: DeleteCustomEmploymentRawData = DeleteCustomEmploymentRawData(
@@ -91,12 +92,12 @@ class DeleteCustomEmploymentControllerSpec
     def downstreamErrorMap: Map[String, MtdError] =
       Map(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-        "INVALID_TAX_YEAR" -> TaxYearFormatError,
-        "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-        "INVALID_CORRELATIONID" -> DownstreamError,
-        "NO_DATA_FOUND" -> NotFoundError,
-        "SERVER_ERROR" -> DownstreamError,
-        "SERVICE_UNAVAILABLE" -> DownstreamError
+        "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+        "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
+        "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+        "NO_DATA_FOUND"             -> NotFoundError,
+        "SERVER_ERROR"              -> StandardDownstreamError,
+        "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
   }
 
@@ -183,7 +184,7 @@ class DeleteCustomEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

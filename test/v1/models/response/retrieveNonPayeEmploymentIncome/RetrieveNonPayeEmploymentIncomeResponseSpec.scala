@@ -18,7 +18,7 @@ package v1.models.response.retrieveNonPayeEmploymentIncome
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum
 
 class RetrieveNonPayeEmploymentIncomeResponseSpec extends UnitSpec {
 

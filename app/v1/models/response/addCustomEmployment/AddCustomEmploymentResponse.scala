@@ -18,8 +18,8 @@ package v1.models.response.addCustomEmployment
 
 import config.AppConfig
 import play.api.libs.json.{Json, OFormat}
-import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 
 case class AddCustomEmploymentResponse(employmentId: String)
 

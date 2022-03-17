@@ -18,8 +18,8 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.IgnoreEmploymentValidator
-import v1.models.errors.MtdError
+import v1.requestParsers.validators.IgnoreEmploymentValidator
+import api.models.errors.MtdError
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 
 trait MockIgnoreEmploymentValidator extends MockFactory {

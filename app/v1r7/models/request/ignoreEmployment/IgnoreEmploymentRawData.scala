@@ -16,6 +16,6 @@
 
 package v1r7.models.request.ignoreEmployment
 
-import v1r7.models.request.RawData
+import api.models.request.RawData
 
 case class IgnoreEmploymentRawData(nino: String, taxYear: String, employmentId: String) extends RawData

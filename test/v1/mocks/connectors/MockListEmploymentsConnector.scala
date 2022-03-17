@@ -16,14 +16,15 @@
 
 package v1.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, ListEmploymentsConnector}
+import v1.connectors.ListEmploymentsConnector
 import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.models.response.listEmployment.{ Employment, ListEmploymentResponse }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockListEmploymentsConnector extends MockFactory {
 
@@ -31,7 +32,7 @@ trait MockListEmploymentsConnector extends MockFactory {
 
   object MockListEmploymentsConnector {
 
-    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[DesOutcome[ListEmploymentResponse[Employment]]]] = {
+    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[DownstreamOutcome[ListEmploymentResponse[Employment]]]] = {
       (mockListEmploymentsConnector
         .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

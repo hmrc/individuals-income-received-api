@@ -16,25 +16,22 @@
 
 package v1r7.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.hateoas.HateoasLinks
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ AnyContentAsJson, Result }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.hateoas.HateoasLinks
-import v1r7.mocks.MockIdGenerator
-import v1r7.mocks.hateoas.MockHateoasFactory
 import v1r7.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
-import v1r7.mocks.services.{
-  MockAuditService,
-  MockCreateAmendCgtPpdOverridesService,
-  MockEnrolmentsAuthService,
-  MockMtdIdLookupService,
-  MockNrsProxyService
-}
-import v1r7.models.audit.{ AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail }
-import v1r7.models.domain.Nino
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
+import v1r7.mocks.services._
+import v1r7.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1r7.models.request.createAmendCgtPpdOverrides._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -324,7 +321,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           (RuleDuplicatedPpdSubmissionIdError, BAD_REQUEST),
           (RuleIncorrectDisposalTypeError, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

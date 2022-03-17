@@ -18,8 +18,8 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
-import v1.models.errors.ErrorWrapper
+import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
+import api.models.errors.ErrorWrapper
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 trait MockRetrieveAllResidentialPropertyCgtRequestParser extends MockFactory {

@@ -16,23 +16,24 @@
 
 package v1.controllers
 
+import api.connectors.DownstreamUri.IfsUri
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.errors._
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{ AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.IfsUri
-import v1.controllers.requestParsers.DeleteRetrieveRequestParser
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
-import v1.models.request.DeleteRetrieveRawData
-import v1.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import utils.{ IdGenerator, Logging }
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class DeleteInsurancePoliciesController @Inject()(val authService: EnrolmentsAuthService,
@@ -42,7 +43,7 @@ class DeleteInsurancePoliciesController @Inject()(val authService: EnrolmentsAut
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -53,72 +54,72 @@ class DeleteInsurancePoliciesController @Inject()(val authService: EnrolmentsAut
     )
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
+    implicit val ifsUri: IfsUri[Unit]  = IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear")
+    implicit val correlationId: String = idGenerator.generateCorrelationId
+    val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
 
-      implicit val ifsUri: IfsUri[Unit] = IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear")
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
+    logger.info(
+      s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+        s"with CorrelationId: $correlationId"
+    )
 
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId"
-      )
-
-      val result =
-        for {
-          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete())
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
-          auditSubmission(GenericAuditDetail(
-            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), None,
-            serviceResponse.correlationId, AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
-          ))
-
-          NoContent
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
+    val result =
+      for {
+        _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+        serviceResponse <- EitherT(service.delete())
+      } yield {
+        logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
+            s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
         auditSubmission(
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
             None,
-            resCorrelationId,
-            AuditResponse(
-              httpStatus = result.header.status,
-              response = Left(errorWrapper.auditErrors)
-            )
+            serviceResponse.correlationId,
+            AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+          ))
+
+        NoContent
+          .withApiHeaders(serviceResponse.correlationId)
+          .as(MimeTypes.JSON)
+      }
+
+    result.leftMap { errorWrapper =>
+      val resCorrelationId = errorWrapper.correlationId
+      val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+      logger.warn(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+          s"Error response received with CorrelationId: $resCorrelationId")
+
+      auditSubmission(
+        GenericAuditDetail(
+          request.userDetails,
+          Map("nino" -> nino, "taxYear" -> taxYear),
+          None,
+          resCorrelationId,
+          AuditResponse(
+            httpStatus = result.header.status,
+            response = Left(errorWrapper.auditErrors)
           )
         )
+      )
 
-        result
-      }.merge
-    }
+      result
+    }.merge
+  }
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError
-      => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeleteInsurancePolicies", "delete-insurance-policies", details)
     auditService.auditEvent(event)
   }

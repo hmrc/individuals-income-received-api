@@ -16,6 +16,6 @@
 
 package v1r7.models.request.listEmployments
 
-import v1r7.models.request.RawData
+import api.models.request.RawData
 
 case class ListEmploymentsRawData(nino: String, taxYear: String) extends RawData

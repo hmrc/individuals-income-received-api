@@ -16,7 +16,7 @@
 
 package v1.fixtures.other
 
-import v1.models.domain.{AssetType, ClaimOrElectionCodes}
+import api.models.domain.{AssetType, ClaimOrElectionCodes}
 import v1.models.request.createAmendOtherCgt.{CreateAmendOtherCgtRequestBody, Disposal, Losses, NonStandardGains}
 
 object CreateAmendOtherCgtConnectorServiceFixture {

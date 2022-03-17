@@ -16,9 +16,9 @@
 
 package v1r7.models.response.listEmployment
 
+import api.hateoas.HateoasLinks
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1r7.hateoas.HateoasLinks
 
 case class Employment(employmentId: String,
                       employerName: String,

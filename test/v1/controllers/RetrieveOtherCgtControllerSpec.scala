@@ -16,37 +16,39 @@
 
 package v1.controllers
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import api.controllers.ControllerBaseSpec
+import api.hateoas.HateoasLinks
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
+import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.RelType.{ CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF }
+import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.outcomes.ResponseWrapper
+import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import play.api.libs.json.{ JsObject, JsValue, Json }
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.hateoas.HateoasLinks
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.domain.Nino
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF}
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import v1.models.response.retrieveOtherCgt.{Disposal, Losses, NonStandardGains, RetrieveOtherCgtHateoasData, RetrieveOtherCgtResponse}
+import v1.models.response.retrieveOtherCgt._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveOtherCgtControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockDeleteRetrieveService
-  with MockHateoasFactory
-  with MockDeleteRetrieveRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class RetrieveOtherCgtControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockDeleteRetrieveService
+    with MockHateoasFactory
+    with MockDeleteRetrieveRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
@@ -82,22 +84,23 @@ class RetrieveOtherCgtControllerSpec extends ControllerBaseSpec
 
   val responseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
     submittedOn = "2021-05-07T16:18:44.403Z",
-    disposals = Some(Seq(
-      Disposal(
-        assetType = "otherProperty",
-        assetDescription = "string",
-        acquisitionDate = "2021-05-07",
-        disposalDate = "2021-05-07",
-        disposalProceeds = 59999999999.99,
-        allowableCosts = 59999999999.99,
-        gain = Some(59999999999.99),
-        loss = None,
-        claimOrElectionCodes = Some(Seq("OTH")),
-        gainAfterRelief = Some(59999999999.99),
-        lossAfterRelief = None,
-        rttTaxPaid = Some(59999999999.99)
-      )
-    )),
+    disposals = Some(
+      Seq(
+        Disposal(
+          assetType = "otherProperty",
+          assetDescription = "string",
+          acquisitionDate = "2021-05-07",
+          disposalDate = "2021-05-07",
+          disposalProceeds = 59999999999.99,
+          allowableCosts = 59999999999.99,
+          gain = Some(59999999999.99),
+          loss = None,
+          claimOrElectionCodes = Some(Seq("OTH")),
+          gainAfterRelief = Some(59999999999.99),
+          lossAfterRelief = None,
+          rttTaxPaid = Some(59999999999.99)
+        )
+      )),
     nonStandardGains = Some(
       NonStandardGains(
         carriedInterestGain = Some(19999999999.99),
@@ -158,8 +161,9 @@ class RetrieveOtherCgtControllerSpec extends ControllerBaseSpec
      """.stripMargin
   )
 
-  val mtdResponse: JsObject = validResponseJson.as[JsObject] ++ Json.parse(
-    s"""
+  val mtdResponse: JsObject = validResponseJson.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -180,7 +184,8 @@ class RetrieveOtherCgtControllerSpec extends ControllerBaseSpec
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -214,13 +219,13 @@ class RetrieveOtherCgtControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrap(responseModel, RetrieveOtherCgtHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(responseModel,
-            Seq(
-              amendOtherCgtLink,
-              retrieveOtherCgtLink,
-              deleteOtherCgtLink
-            )
-          ))
+          .returns(
+            HateoasWrapper(responseModel,
+                           Seq(
+                             amendOtherCgtLink,
+                             retrieveOtherCgtLink,
+                             deleteOtherCgtLink
+                           )))
 
         val result: Future[Result] = controller.retrieveOtherCgt(nino, taxYear)(fakeGetRequest)
 
@@ -282,7 +287,7 @@ class RetrieveOtherCgtControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

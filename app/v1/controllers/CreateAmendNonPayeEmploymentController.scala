@@ -16,23 +16,25 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.errors._
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import config.AppConfig
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.CreateAmendNonPayeEmploymentRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
+import utils.{ IdGenerator, Logging }
+import api.hateoas.AmendHateoasBody
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
-import v1.services.{AuditService, CreateAmendNonPayeEmploymentService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.requestParsers.CreateAmendNonPayeEmploymentRequestParser
+import v1.services.CreateAmendNonPayeEmploymentService
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 class CreateAmendNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
                                                        val lookupService: MtdIdLookupService,
@@ -82,7 +84,8 @@ class CreateAmendNonPayeEmploymentController @Inject()(val authService: Enrolmen
               Map("nino" -> nino, "taxYear" -> taxYear),
               Some(request.body),
               serviceResponse.correlationId,
-              AuditResponse(httpStatus = OK, response = Right(Some(amendNonPayeEmploymentHateoasBody(appConfig, nino, taxYear)))))
+              AuditResponse(httpStatus = OK, response = Right(Some(amendNonPayeEmploymentHateoasBody(appConfig, nino, taxYear))))
+            )
           )
 
           Ok(amendNonPayeEmploymentHateoasBody(appConfig, nino, taxYear))
@@ -117,9 +120,9 @@ class CreateAmendNonPayeEmploymentController @Inject()(val authService: Enrolmen
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
           RuleTaxYearNotEndedError | CustomMtdError(ValueFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson((errorWrapper)))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case NotFoundError           => NotFound(Json.toJson((errorWrapper)))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

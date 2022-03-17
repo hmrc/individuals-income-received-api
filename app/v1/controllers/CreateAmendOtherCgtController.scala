@@ -16,23 +16,25 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse }
+import api.models.errors._
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService }
 import cats.data.EitherT
 import config.AppConfig
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
-import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.errors._
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.{ IdGenerator, Logging }
+import api.hateoas.AmendHateoasBody
+import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
-import v1.services.{AuditService, CreateAmendOtherCgtService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
+import v1.requestParsers.CreateAmendOtherCgtRequestParser
+import v1.services._
 
 import javax.inject.Inject
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.audit.{AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
-
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
                                               val lookupService: MtdIdLookupService,
@@ -43,7 +45,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
                                               auditService: AuditService,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging
     with AmendHateoasBody {
@@ -56,7 +58,6 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
 
   def createAmendOtherCgt(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -70,7 +71,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
 
       val result =
         for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- {
             nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-other", request.body)
             EitherT(service.createAmend(parsedRequest))
@@ -80,8 +81,15 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          auditSubmission(CreateAmendOtherCgtAuditDetail(request.userDetails, nino, taxYear, request.body,
-            serviceResponse.correlationId, AuditResponse(OK, Right(Some(amendOtherCgtHateoasBody(appConfig, nino, taxYear))))))
+          auditSubmission(
+            CreateAmendOtherCgtAuditDetail(
+              request.userDetails,
+              nino,
+              taxYear,
+              request.body,
+              serviceResponse.correlationId,
+              AuditResponse(OK, Right(Some(amendOtherCgtHateoasBody(appConfig, nino, taxYear))))
+            ))
 
           Ok(amendOtherCgtHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
@@ -95,8 +103,13 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-        auditSubmission(CreateAmendOtherCgtAuditDetail(request.userDetails, nino, taxYear, request.body,
-          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+        auditSubmission(
+          CreateAmendOtherCgtAuditDetail(request.userDetails,
+                                         nino,
+                                         taxYear,
+                                         request.body,
+                                         correlationId,
+                                         AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -104,26 +117,17 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           CustomMtdError(RuleGainLossError.code) |
-           CustomMtdError(ValueFormatError.code) |
-           CustomMtdError(DateFormatError.code) |
-           CustomMtdError(AssetDescriptionFormatError.code) |
-           CustomMtdError(AssetTypeFormatError.code) |
-           CustomMtdError(ClaimOrElectionCodesFormatError.code) |
-           CustomMtdError(RuleDisposalDateError.code) |
-           CustomMtdError(RuleAcquisitionDateError.code) |
-           CustomMtdError(RuleGainAfterReliefLossAfterReliefError.code)
-      => BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
+            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleGainLossError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(
+            DateFormatError.code) | CustomMtdError(AssetDescriptionFormatError.code) | CustomMtdError(AssetTypeFormatError.code) | CustomMtdError(
+            ClaimOrElectionCodesFormatError.code) | CustomMtdError(RuleDisposalDateError.code) | CustomMtdError(RuleAcquisitionDateError.code) |
+          CustomMtdError(RuleGainAfterReliefLossAfterReliefError.code) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext) = {
+  private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     val event = AuditEvent("CreateAmendOtherCgtDisposalsAndGains", "Create-Amend-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }

@@ -16,24 +16,26 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.errors._
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.AmendOtherEmploymentRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
+import utils.{ IdGenerator, Logging }
+import api.hateoas.AmendHateoasBody
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
-import v1.services.{AmendOtherEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.requestParsers.AmendOtherEmploymentRequestParser
+import v1.services.AmendOtherEmploymentService
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthService,
@@ -44,7 +46,7 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
                                                auditService: AuditService,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging
     with AmendHateoasBody {
@@ -57,7 +59,6 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
 
   def amendOtherEmployment(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -71,7 +72,7 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendOtherEmployment(parsedRequest))
         } yield {
           logger.info(
@@ -114,9 +115,7 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
       }.merge
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
       auditType = "CreateAmendOtherEmployment",
@@ -128,21 +127,14 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
-           CustomMtdError(ValueFormatError.code) |
-           CustomMtdError(CustomerRefFormatError.code) |
-           CustomMtdError(EmployerNameFormatError.code) |
-           CustomMtdError(EmployerRefFormatError.code) |
-           CustomMtdError(DateFormatError.code) |
-           CustomMtdError(ClassOfSharesAwardedFormatError.code) |
-           CustomMtdError(ClassOfSharesAcquiredFormatError.code) |
-           CustomMtdError(SchemePlanTypeFormatError.code) |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           CustomMtdError(RuleLumpSumsError.code)
-      => BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
+            ValueFormatError.code) | CustomMtdError(CustomerRefFormatError.code) | CustomMtdError(EmployerNameFormatError.code) | CustomMtdError(
+            EmployerRefFormatError.code) | CustomMtdError(DateFormatError.code) | CustomMtdError(ClassOfSharesAwardedFormatError.code) |
+          CustomMtdError(ClassOfSharesAcquiredFormatError.code) | CustomMtdError(SchemePlanTypeFormatError.code) | CustomMtdError(
+            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleLumpSumsError.code) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
   }
 }

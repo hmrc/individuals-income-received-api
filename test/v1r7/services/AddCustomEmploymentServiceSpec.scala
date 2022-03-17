@@ -16,11 +16,12 @@
 
 package v1r7.services
 
-import v1r7.models.domain.Nino
-import v1r7.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, RuleCessationDateBeforeTaxYearStartError, RuleStartDateAfterTaxYearEndError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1r7.mocks.connectors.MockAddCustomEmploymentConnector
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
 import v1r7.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
@@ -74,7 +75,7 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
             MockAddCustomEmploymentConnector.addEmployment(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.addEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -85,10 +86,10 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
           ("NOT_SUPPORTED_TAX_YEAR", RuleTaxYearNotEndedError),
           ("INVALID_DATE_RANGE", RuleStartDateAfterTaxYearEndError),
           ("INVALID_CESSATION_DATE", RuleCessationDateBeforeTaxYearStartError),
-          ("INVALID_PAYLOAD", DownstreamError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

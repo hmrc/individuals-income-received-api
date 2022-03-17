@@ -16,32 +16,30 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.DesUri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class AmendOtherEmploymentConnector @Inject()(val http: HttpClient,
-                                              val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AmendOtherEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(implicit hc: HeaderCarrier,
+                                                                 ec: ExecutionContext,
+                                                                 correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
-      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear"), body = request.body
+      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear"),
+      body = request.body
     )
   }
 }

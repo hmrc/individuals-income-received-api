@@ -16,15 +16,15 @@
 
 package v1r7.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{DateFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PpdSubmissionIdFormatError, PpdSubmissionIdNotFoundError, RuleAmountGainLossError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectDisposalTypeError, RuleIncorrectOrEmptyBodyError, RuleLossesGreaterThanGainError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
-import support.{ V1R7IntegrationSpec, WireMockMethods }
-import v1r7.models.errors._
-import v1r7.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
+import support.{V1R7IntegrationSpec, WireMockMethods}
 
 class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with WireMockMethods {
 
@@ -506,15 +506,15 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PpdSubmissionIdNotFoundError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
           (CONFLICT, "DUPLICATE_SUBMISSION", BAD_REQUEST, RuleDuplicatedPpdSubmissionIdError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", FORBIDDEN, RuleIncorrectDisposalTypeError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))

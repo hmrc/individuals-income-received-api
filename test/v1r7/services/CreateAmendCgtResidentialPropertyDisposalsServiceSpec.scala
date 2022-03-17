@@ -16,12 +16,13 @@
 
 package v1r7.services
 
-import v1r7.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1r7.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture.requestBodyModel
 import v1r7.mocks.connectors.MockCreateAmendCgtResidentialPropertyDisposalsConnector
-import v1r7.models.domain.Nino
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
 import scala.concurrent.Future
@@ -62,7 +63,7 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           s"a $desErrorCode error is returned from the connector" in new Test {
 
             MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -71,7 +72,7 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
 
             MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
 
             await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -79,13 +80,13 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("INVALID_PAYLOAD", DownstreamError),
-          ("INVALID_DISPOSAL_DATE", DownstreamError),
-          ("INVALID_COMPLETION_DATE", DownstreamError),
-          ("INVALID_ACQUISITION_DATE", DownstreamError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_DISPOSAL_DATE", StandardDownstreamError),
+          ("INVALID_COMPLETION_DATE", StandardDownstreamError),
+          ("INVALID_ACQUISITION_DATE", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

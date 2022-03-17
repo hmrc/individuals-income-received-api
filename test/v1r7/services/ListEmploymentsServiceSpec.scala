@@ -16,11 +16,12 @@
 
 package v1r7.services
 
-import v1r7.models.domain.Nino
-import v1r7.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1r7.mocks.connectors.MockListEmploymentsConnector
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.listEmployments.ListEmploymentsRequest
 import v1r7.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
@@ -71,7 +72,7 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
           s"a $ifsErrorCode error is returned from the service" in new Test {
 
             MockListEmploymentsConnector.listEmployments(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(ifsErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(ifsErrorCode))))))
 
             await(service.listEmployments(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -79,11 +80,11 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_EMPLOYMENT_ID", DownstreamError),
-          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_EMPLOYMENT_ID", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

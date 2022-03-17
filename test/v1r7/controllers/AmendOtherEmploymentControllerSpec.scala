@@ -16,24 +16,26 @@
 
 package v1r7.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.mocks.MockIdGenerator
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import v1r7.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.mocks.MockIdGenerator
 import v1r7.mocks.requestParsers.MockAmendOtherEmploymentRequestParser
-import v1r7.mocks.services.{MockAmendOtherEmploymentService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1r7.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
+import v1r7.mocks.services.MockAmendOtherEmploymentService
 import v1r7.models.request.amendOtherEmployment._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendOtherEmploymentControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -42,8 +44,8 @@ class AmendOtherEmploymentControllerSpec
     with MockAmendOtherEmploymentService
     with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -418,7 +420,7 @@ class AmendOtherEmploymentControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -16,21 +16,21 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.CreateAmendNonPayeEmploymentConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
-import v1r7.support.DesResponseMappingSupport
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPayeEmploymentConnector)
-    extends DesResponseMappingSupport
+    extends DownstreamResponseMappingSupport
     with Logging {
 
   def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(
@@ -50,11 +50,11 @@ class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPay
     Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"           -> DownstreamError,
-      "INVALID_PAYLOAD"                 -> DownstreamError,
+      "INVALID_CORRELATIONID"           -> StandardDownstreamError,
+      "INVALID_PAYLOAD"                 -> StandardDownstreamError,
       "NO_DATA_FOUND"                   -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "SERVER_ERROR"                    -> DownstreamError,
-      "SERVICE_UNAVAILABLE"             -> DownstreamError
+      "SERVER_ERROR"                    -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
 }

@@ -16,17 +16,19 @@
 
 package v1r7.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.mocks.MockIdGenerator
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import v1r7.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.mocks.MockIdGenerator
 import v1r7.mocks.requestParsers.MockAmendFinancialDetailsRequestParser
-import v1r7.mocks.services.{MockAmendFinancialDetailsService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1r7.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
+import v1r7.mocks.services.MockAmendFinancialDetailsService
 import v1r7.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 import v1r7.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 import v1r7.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
@@ -35,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendFinancialDetailsControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -44,9 +46,9 @@ class AmendFinancialDetailsControllerSpec
     with MockAuditService
     with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
+  val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test {
@@ -311,7 +313,7 @@ class AmendFinancialDetailsControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

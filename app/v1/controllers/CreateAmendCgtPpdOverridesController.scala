@@ -16,21 +16,24 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse }
+import api.models.errors._
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService }
 import cats.data.EitherT
 import config.AppConfig
-import javax.inject.Inject
 import play.api.libs.json.{ JsValue, Json }
 import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ IdGenerator, Logging }
-import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.audit.{ AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail }
-import v1.models.errors._
+import api.hateoas.AmendHateoasBody
+import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
-import v1.services.{ AuditService, CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService }
+import v1.requestParsers.CreateAmendCgtPpdOverridesRequestParser
+import v1.services._
 
+import javax.inject.Inject
 import scala.concurrent.{ ExecutionContext, Future }
 
 class CreateAmendCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
@@ -68,7 +71,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
 
       val result =
         for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- {
             nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", request.body)
             EitherT(service.createAmend(parsedRequest))
@@ -123,7 +126,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError | PpdSubmissionIdNotFoundError => NotFound(Json.toJson(errorWrapper))
       case RuleIncorrectDisposalTypeError               => Forbidden(Json.toJson(errorWrapper))
-      case DownstreamError                              => InternalServerError(Json.toJson(errorWrapper))
+      case StandardDownstreamError                      => InternalServerError(Json.toJson(errorWrapper))
       case _                                            => unhandledError(errorWrapper)
     }
 

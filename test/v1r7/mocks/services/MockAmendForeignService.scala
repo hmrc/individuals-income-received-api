@@ -16,12 +16,12 @@
 
 package v1r7.mocks.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors.ErrorWrapper
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.amendForeign.AmendForeignRequest
 import v1r7.services.AmendForeignService
 

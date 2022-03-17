@@ -16,28 +16,26 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.Api1661Uri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
-                                             val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AddCustomEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def addEmployment(request: AddCustomEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[AddCustomEmploymentResponse]] = {
+  def addEmployment(request: AddCustomEmploymentRequest)(implicit hc: HeaderCarrier,
+                                                         ec: ExecutionContext,
+                                                         correlationId: String): Future[DownstreamOutcome[AddCustomEmploymentResponse]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     post(request.body, Api1661Uri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))

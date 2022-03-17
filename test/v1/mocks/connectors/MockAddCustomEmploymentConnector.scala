@@ -16,14 +16,15 @@
 
 package v1.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{AddCustomEmploymentConnector, DesOutcome}
+import v1.connectors.AddCustomEmploymentConnector
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockAddCustomEmploymentConnector extends MockFactory {
 
@@ -31,7 +32,7 @@ trait MockAddCustomEmploymentConnector extends MockFactory {
 
   object MockAddCustomEmploymentConnector {
 
-    def addEmployment(request: AddCustomEmploymentRequest): CallHandler[Future[DesOutcome[AddCustomEmploymentResponse]]] = {
+    def addEmployment(request: AddCustomEmploymentRequest): CallHandler[Future[DownstreamOutcome[AddCustomEmploymentResponse]]] = {
       (mockAddCustomEmploymentConnector
         .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

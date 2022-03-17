@@ -16,12 +16,12 @@
 
 package v1r7.models.response.addCustomEmployment
 
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.{ HateoasWrapper, Link }
 import mocks.MockAppConfig
-import play.api.libs.json.{JsError, JsObject, JsValue, Json}
+import play.api.libs.json.{ JsError, JsObject, JsValue, Json }
 import support.UnitSpec
-import v1r7.hateoas.HateoasFactory
-import v1r7.models.hateoas.{HateoasWrapper, Link}
-import v1r7.models.hateoas.Method.{DELETE, GET, PUT}
 
 class AddCustomEmploymentResponseSpec extends UnitSpec {
 
@@ -54,9 +54,9 @@ class AddCustomEmploymentResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val taxYear = "2017-18"
-      val employmentId = "anId"
+      val nino           = "someNino"
+      val taxYear        = "2017-18"
+      val employmentId   = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
 

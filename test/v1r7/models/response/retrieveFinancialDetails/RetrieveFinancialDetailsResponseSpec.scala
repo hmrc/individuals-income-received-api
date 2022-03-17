@@ -16,13 +16,13 @@
 
 package v1r7.models.response.retrieveFinancialDetails
 
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.{ HateoasWrapper, Link }
 import mocks.MockAppConfig
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{ JsError, JsObject, Json }
 import support.UnitSpec
 import v1r7.fixtures.RetrieveFinancialDetailsControllerFixture._
-import v1r7.hateoas.HateoasFactory
-import v1r7.models.hateoas.Method.{DELETE, GET, PUT}
-import v1r7.models.hateoas.{HateoasWrapper, Link}
 
 class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
 
@@ -49,9 +49,9 @@ class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val taxYear = "2017-18"
-      val employmentId = "anId"
+      val nino           = "someNino"
+      val taxYear        = "2017-18"
+      val employmentId   = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
 
@@ -62,8 +62,12 @@ class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
             model,
             Seq(
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", GET, "self"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", PUT, "create-and-amend-employment-financial-details"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", DELETE, "delete-employment-financial-details"),
+              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+                   PUT,
+                   "create-and-amend-employment-financial-details"),
+              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+                   DELETE,
+                   "delete-employment-financial-details"),
             )
           )
       }

@@ -16,23 +16,23 @@
 
 package v1r7.controllers
 
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.IfsUri
-import v1r7.controllers.requestParsers.DeleteRetrieveRequestParser
-import v1r7.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
-import v1r7.models.request.DeleteRetrieveRawData
-import v1r7.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.connectors.DownstreamUri.IfsUri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -43,7 +43,9 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
                                          auditService: AuditService,
                                          cc: ControllerComponents,
                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -53,7 +55,6 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
 
   def deletePensions(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -70,7 +71,7 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
 
       val result =
         for {
-          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.delete())
         } yield {
           logger.info(
@@ -121,17 +122,14 @@ class DeletePensionsController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError
-      => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(
       auditType = "DeletePensionsIncome",
       transactionName = "delete-pensions-income",

@@ -16,13 +16,14 @@
 
 package v1r7.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.{AmendDividendsConnector, DesOutcome}
+import v1r7.connectors.AmendDividendsConnector
 import v1r7.models.request.amendDividends.AmendDividendsRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockAmendDividendsConnector extends MockFactory {
 
@@ -30,7 +31,7 @@ trait MockAmendDividendsConnector extends MockFactory {
 
   object MockAmendDividendsConnector {
 
-    def amendDividends(request: AmendDividendsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendDividends(request: AmendDividendsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendDividendsConnector
         .amendDividends(_: AmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

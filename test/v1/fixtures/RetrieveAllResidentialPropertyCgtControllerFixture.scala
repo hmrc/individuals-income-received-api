@@ -17,7 +17,7 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v1.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum
 import v1.models.response.retrieveAllResidentialPropertyCgt._
 
 object RetrieveAllResidentialPropertyCgtControllerFixture {

@@ -16,20 +16,21 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
+
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
-import v1r7.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector) extends DesResponseMappingSupport with Logging {
+class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(
     implicit hc: HeaderCarrier,
@@ -48,12 +49,12 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: Cre
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "INVALID_DISPOSAL_DATE" -> DownstreamError,
-      "INVALID_COMPLETION_DATE" -> DownstreamError,
-      "INVALID_ACQUISITION_DATE" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "INVALID_DISPOSAL_DATE" -> StandardDownstreamError,
+      "INVALID_COMPLETION_DATE" -> StandardDownstreamError,
+      "INVALID_ACQUISITION_DATE" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

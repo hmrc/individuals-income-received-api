@@ -16,6 +16,8 @@
 
 package v1r7.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{AssetDescriptionFormatError, AssetTypeFormatError, BadRequestError, ClaimOrElectionCodesFormatError, DateFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -23,9 +25,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.{V1R7IntegrationSpec, WireMockMethods}
-import v1r7.controllers.requestParsers.validators.validations.DisposalDateErrorMessages
-import v1r7.models.errors._
-import v1r7.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import v1r7.requestParsers.validators.validations.DisposalDateErrorMessages
 
 class CreateAmendOtherCgtControllerISpec extends V1R7IntegrationSpec with DisposalDateErrorMessages with WireMockMethods {
 
@@ -518,11 +518,11 @@ class CreateAmendOtherCgtControllerISpec extends V1R7IntegrationSpec with Dispos
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError))
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

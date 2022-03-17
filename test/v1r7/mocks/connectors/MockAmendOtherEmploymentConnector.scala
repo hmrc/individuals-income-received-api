@@ -16,21 +16,22 @@
 
 package v1r7.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.{AmendOtherEmploymentConnector, DesOutcome}
+import v1r7.connectors.AmendOtherEmploymentConnector
 import v1r7.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockAmendOtherEmploymentConnector extends MockFactory {
 
   val mockAmendOtherEmploymentConnector: AmendOtherEmploymentConnector = mock[AmendOtherEmploymentConnector]
 
-  object MockAmendOtherEmploymentConnector{
+  object MockAmendOtherEmploymentConnector {
 
-    def amendOtherEmployment(request: AmendOtherEmploymentRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendOtherEmployment(request: AmendOtherEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendOtherEmploymentConnector
         .amendOtherEmployment(_: AmendOtherEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

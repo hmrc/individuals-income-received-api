@@ -16,6 +16,6 @@
 
 package v1r7.models.request.deleteCustomEmployment
 
-import v1r7.models.domain.Nino
+import api.models.domain.Nino
 
 case class DeleteCustomEmploymentRequest(nino: Nino, taxYear: String, employmentId: String)

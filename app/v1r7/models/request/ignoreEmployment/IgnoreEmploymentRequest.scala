@@ -16,6 +16,6 @@
 
 package v1r7.models.request.ignoreEmployment
 
-import v1r7.models.domain.Nino
+import api.models.domain.Nino
 
 case class IgnoreEmploymentRequest(nino: Nino, taxYear: String, employmentId: String)

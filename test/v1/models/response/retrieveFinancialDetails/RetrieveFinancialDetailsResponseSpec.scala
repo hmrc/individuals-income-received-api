@@ -20,9 +20,9 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
-import v1.hateoas.HateoasFactory
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 
 class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
 

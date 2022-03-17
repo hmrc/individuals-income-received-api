@@ -16,20 +16,20 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PpdSubmissionIdNotFoundError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectDisposalTypeError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.CreateAmendCgtPpdOverridesConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
-import v1r7.support.DesResponseMappingSupport
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOverridesConnector) extends DesResponseMappingSupport with Logging {
+class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOverridesConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def createAmend(request: CreateAmendCgtPpdOverridesRequest)(
     implicit hc: HeaderCarrier,
@@ -48,14 +48,14 @@ class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOv
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
       "PPD_SUBMISSIONID_NOT_FOUND" -> PpdSubmissionIdNotFoundError,
       "DUPLICATE_SUBMISSION" -> RuleDuplicatedPpdSubmissionIdError,
       "NO_PPD_SUBMISSIONS_FOUND" -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "INVALID_DISPOSAL_TYPE" -> RuleIncorrectDisposalTypeError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

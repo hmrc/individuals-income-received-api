@@ -18,8 +18,8 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.AmendPensionsValidator
-import v1.models.errors.MtdError
+import v1.requestParsers.validators.AmendPensionsValidator
+import api.models.errors.MtdError
 import v1.models.request.amendPensions.AmendPensionsRawData
 
 trait MockAmendPensionsValidator extends MockFactory {

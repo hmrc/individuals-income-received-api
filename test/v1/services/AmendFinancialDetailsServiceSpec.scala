@@ -16,16 +16,17 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendFinancialDetailsConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
 import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 
 import scala.concurrent.Future
+import api.services.ServiceSpec
 
 class AmendFinancialDetailsServiceSpec extends ServiceSpec {
 
@@ -118,7 +119,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
             MockAmendFinancialDetailsConnector.amendFinancialDetails(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -127,11 +128,11 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", NotFoundError),
-          ("INVALID_PAYLOAD", DownstreamError),
+          ("INVALID_PAYLOAD", StandardDownstreamError),
           ("BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

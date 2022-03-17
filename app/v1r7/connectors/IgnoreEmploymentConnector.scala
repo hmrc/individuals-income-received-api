@@ -16,15 +16,17 @@
 
 package v1r7.connectors
 
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1r7.connectors.DownstreamUri.Release6Uri
-import v1r7.models.request.EmptyBody
+import api.connectors.DownstreamUri.Release6Uri
 import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.models.request.EmptyBody
 
 @Singleton
 class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
@@ -33,9 +35,9 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
   def ignoreEmployment(request: IgnoreEmploymentRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1r7.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
     val taxYear = request.taxYear

@@ -16,32 +16,31 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.Release6Uri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.Release6Uri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AmendFinancialDetailsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(implicit hc: HeaderCarrier,
+                                                                   ec: ExecutionContext,
+                                                                   correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear
+    val nino         = request.nino.nino
+    val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
     put(
-      uri = Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"), body = request.body
+      uri = Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"),
+      body = request.body
     )
   }
 }

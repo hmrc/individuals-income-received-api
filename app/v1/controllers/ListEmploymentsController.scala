@@ -16,21 +16,23 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.errors._
+import api.services.{ EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import play.mvc.Http.MimeTypes
-import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.ListEmploymentsRequestParser
-import v1.hateoas.HateoasFactory
-import v1.models.errors._
+import utils.{ IdGenerator, Logging }
+import api.hateoas.HateoasFactory
 import v1.models.request.listEmployments.ListEmploymentsRawData
 import v1.models.response.listEmployment.ListEmploymentHateoasData
-import v1.services.{EnrolmentsAuthService, ListEmploymentsService, MtdIdLookupService}
+import v1.requestParsers.ListEmploymentsRequestParser
+import v1.services.ListEmploymentsService
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class ListEmploymentsController @Inject()(val authService: EnrolmentsAuthService,
@@ -40,7 +42,7 @@ class ListEmploymentsController @Inject()(val authService: EnrolmentsAuthService
                                           hateoasFactory: HateoasFactory,
                                           cc: ControllerComponents,
                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -52,7 +54,6 @@ class ListEmploymentsController @Inject()(val authService: EnrolmentsAuthService
 
   def listEmployments(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -65,7 +66,7 @@ class ListEmploymentsController @Inject()(val authService: EnrolmentsAuthService
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.listEmployments(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -94,10 +95,10 @@ class ListEmploymentsController @Inject()(val authService: EnrolmentsAuthService
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 }

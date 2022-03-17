@@ -17,6 +17,6 @@
 package v1.models.request.amendForeign
 
 import play.api.mvc.AnyContentAsJson
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class AmendForeignRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

@@ -16,9 +16,9 @@
 
 package v1r7.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.MtdSourceEnum
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1r7.models.domain.MtdSourceEnum
 
 class PpdServiceSpec extends UnitSpec {
 

@@ -16,39 +16,42 @@
 
 package v1r7.controllers
 
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.ControllerBaseSpec
+import api.hateoas.HateoasLinks
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_NON_PAYE_EMPLOYMENT_INCOME, DELETE_NON_PAYE_EMPLOYMENT_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.DownstreamUri.Api1661Uri
 import v1r7.fixtures.RetrieveNonPayeEmploymentControllerFixture._
-import v1r7.hateoas.HateoasLinks
-import v1r7.mocks.MockIdGenerator
-import v1r7.mocks.hateoas.MockHateoasFactory
 import v1r7.mocks.requestParsers.MockRetrieveNonPayeEmploymentRequestParser
-import v1r7.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1r7.models.domain.{MtdSourceEnum, Nino}
-import v1r7.models.errors._
-import v1r7.models.hateoas.Method.{DELETE, GET, PUT}
-import v1r7.models.hateoas.RelType._
-import v1r7.models.hateoas.{HateoasWrapper, Link}
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 import v1r7.models.response.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockDeleteRetrieveService
-  with MockHateoasFactory
-  with MockRetrieveNonPayeEmploymentRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class RetrieveNonPayeEmploymentControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockDeleteRetrieveService
+    with MockHateoasFactory
+    with MockRetrieveNonPayeEmploymentRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   def rawData(source: Option[String] = None): RetrieveNonPayeEmploymentIncomeRawData =
@@ -86,13 +89,13 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
   val desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_VIEW" -> DownstreamError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_VIEW"              -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
 
   trait Test {
@@ -121,20 +124,19 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
           .returns(Right(requestData))
 
         MockDeleteRetrieveService
-          .retrieve(
-            Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=LATEST"),
-            desErrorMap)
+          .retrieve(Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=LATEST"),
+                    desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
         MockHateoasFactory
           .wrap(responseModel, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(responseModel,
-            Seq(
-              amendLink,
-              retrieveLink,
-              deleteLink
-            )
-          ))
+          .returns(
+            HateoasWrapper(responseModel,
+                           Seq(
+                             amendLink,
+                             retrieveLink,
+                             deleteLink
+                           )))
 
         val result: Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, None)(fakeGetRequest)
 
@@ -150,20 +152,19 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
             .returns(Right(requestData))
 
           MockDeleteRetrieveService
-            .retrieve(
-              Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=$desSource"),
-              desErrorMap)
+            .retrieve(Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](s"income-tax/income/employments/non-paye/$nino/$taxYear?view=$desSource"),
+                      desErrorMap)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
           MockHateoasFactory
             .wrap(responseModel, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
-            .returns(HateoasWrapper(responseModel,
-              Seq(
-                amendLink,
-                retrieveLink,
-                deleteLink
-              )
-            ))
+            .returns(
+              HateoasWrapper(responseModel,
+                             Seq(
+                               amendLink,
+                               retrieveLink,
+                               deleteLink
+                             )))
 
           val result: Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, Some(source))(fakeGetRequest)
 
@@ -235,7 +236,7 @@ class RetrieveNonPayeEmploymentControllerSpec extends ControllerBaseSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR),
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
           (MtdError("OTHER", "other"), INTERNAL_SERVER_ERROR)
         )
 

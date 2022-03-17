@@ -16,24 +16,26 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.MockIdGenerator
+import api.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockIgnoreEmploymentRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockIgnoreEmploymentService, MockMtdIdLookupService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import v1.mocks.services.MockIgnoreEmploymentService
 import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class IgnoreEmploymentControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -42,9 +44,9 @@ class IgnoreEmploymentControllerSpec
     with MockIgnoreEmploymentRequestParser
     with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
+  val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test {
@@ -198,7 +200,7 @@ class IgnoreEmploymentControllerSpec
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (RuleCustomEmploymentError, FORBIDDEN),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

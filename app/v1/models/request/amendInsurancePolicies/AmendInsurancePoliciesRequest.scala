@@ -16,6 +16,6 @@
 
 package v1.models.request.amendInsurancePolicies
 
-import v1.models.domain.Nino
+import api.models.domain.Nino
 
 case class AmendInsurancePoliciesRequest(nino: Nino, taxYear: String, body: AmendInsurancePoliciesRequestBody)

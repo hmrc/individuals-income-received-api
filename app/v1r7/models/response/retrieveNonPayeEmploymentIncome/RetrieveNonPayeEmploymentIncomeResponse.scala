@@ -16,12 +16,12 @@
 
 package v1r7.models.response.retrieveNonPayeEmploymentIncome
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.MtdSourceEnum
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1r7.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1r7.models.domain.MtdSourceEnum
-import v1r7.models.hateoas.{HateoasData, Link}
 
 
 case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: String,

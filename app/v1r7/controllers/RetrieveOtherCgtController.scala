@@ -16,19 +16,20 @@
 
 package v1r7.controllers
 
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.Api1661Uri
-import v1r7.controllers.requestParsers.DeleteRetrieveRequestParser
-import v1r7.hateoas.HateoasFactory
-import v1r7.models.errors._
-import v1r7.models.request.DeleteRetrieveRawData
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1r7.models.response.retrieveOtherCgt.{RetrieveOtherCgtHateoasData, RetrieveOtherCgtResponse}
-import v1r7.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,7 +42,9 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -51,7 +54,6 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
 
   def retrieveOtherCgt(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -68,7 +70,7 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
 
       val result =
         for {
-          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.retrieve[RetrieveOtherCgtResponse]())
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -97,10 +99,10 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 }

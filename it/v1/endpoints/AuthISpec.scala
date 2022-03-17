@@ -23,7 +23,7 @@ import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.V1IntegrationSpec
-import v1.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AuthISpec extends V1IntegrationSpec {
 
