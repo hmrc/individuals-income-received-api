@@ -26,8 +26,7 @@ trait MockRetrieveNonPayeEmploymentRequestParser extends MockFactory {
 
   val mockRetrieveNonPayeEmploymentRequestParser: RetrieveNonPayeEmploymentRequestParser = mock[RetrieveNonPayeEmploymentRequestParser]
 
-  object MockRetrieveNonPayeEmploymentRequestParser {
-
+  object MockDeleteRetrieveRequestParser {
     def parse(data: RetrieveNonPayeEmploymentIncomeRawData): CallHandler[Either[ErrorWrapper, RetrieveNonPayeEmploymentIncomeRequest]] = {
       (mockRetrieveNonPayeEmploymentRequestParser.parseRequest(_: RetrieveNonPayeEmploymentIncomeRawData)(_: String)).expects(data, *)
     }

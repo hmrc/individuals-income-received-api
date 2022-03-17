@@ -21,7 +21,6 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
 import api.models.domain.{ MtdSourceEnum, Nino }
 import api.models.errors._
@@ -46,7 +45,6 @@ class RetrieveNonPayeEmploymentControllerSpec
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
     with MockHateoasFactory
-    with MockDeleteRetrieveRequestParser
     with MockRetrieveNonPayeEmploymentRequestParser
     with HateoasLinks
     with MockIdGenerator {

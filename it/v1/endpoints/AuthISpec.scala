@@ -16,21 +16,21 @@
 
 package v1.endpoints
 
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.http.Status.NO_CONTENT
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.V1IntegrationSpec
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AuthISpec extends V1IntegrationSpec {
 
   private trait Test {
-    val nino          = "AA123456A"
-    val taxYear       = "2019-20"
-    val data        = "someData"
+    val nino    = "AA123456A"
+    val taxYear = "2019-20"
+    val data    = "someData"
 
     val requestJson: String =
       s"""
@@ -50,8 +50,7 @@ class AuthISpec extends V1IntegrationSpec {
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
 
-    val ifsResponse: JsValue = Json.parse(
-      """
+    val ifsResponse: JsValue = Json.parse("""
         | {
         | "responseData" : "someResponse"
         | }
@@ -110,7 +109,7 @@ class AuthISpec extends V1IntegrationSpec {
     "an MTD ID is successfully retrieve from the NINO and the user is NOT authorised" should {
 
       "return 403" in new Test {
-        override val nino: String = "AA123456A"
+        override val nino = "AA123456A"
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -122,7 +121,5 @@ class AuthISpec extends V1IntegrationSpec {
         response.status shouldBe Status.FORBIDDEN
       }
     }
-
   }
-
 }

@@ -21,21 +21,20 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.models.domain.{ MtdSourceEnum, Nino }
 import api.models.errors._
-import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{AMEND_NON_PAYE_EMPLOYMENT_INCOME, DELETE_NON_PAYE_EMPLOYMENT_INCOME, SELF}
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.RelType.{ AMEND_NON_PAYE_EMPLOYMENT_INCOME, DELETE_NON_PAYE_EMPLOYMENT_INCOME, SELF }
+import api.models.hateoas.{ HateoasWrapper, Link }
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1r7.mocks.requestParsers.MockRetrieveNonPayeEmploymentRequestParser
-import v1r7.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
-import v1r7.models.response.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse}
+import v1r7.models.request.retrieveNonPayeEmploymentIncome.{ RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest }
+import v1r7.models.response.retrieveNonPayeEmploymentIncome.{ RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
