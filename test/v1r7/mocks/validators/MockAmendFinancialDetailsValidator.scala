@@ -16,10 +16,10 @@
 
 package v1r7.mocks.validators
 
+import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1r7.controllers.requestParsers.validators.AmendFinancialDetailsValidator
-import v1r7.models.errors.MtdError
+import v1r7.requestParsers.validators.AmendFinancialDetailsValidator
 import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
 
 trait MockAmendFinancialDetailsValidator extends MockFactory {

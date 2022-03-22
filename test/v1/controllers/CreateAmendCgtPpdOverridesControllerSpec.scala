@@ -16,38 +16,42 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.hateoas.HateoasLinks
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
+import api.hateoas.HateoasLinks
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
-import v1.mocks.services.{MockAuditService, MockCreateAmendCgtPpdOverridesService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail}
-import v1.models.domain.Nino
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import v1.mocks.services._
+import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockAppConfig
-  with MockCreateAmendCgtPpdOverridesService
-  with MockAuditService
-  with MockNrsProxyService
-  with MockHateoasFactory
-  with MockCreateAmendCgtPpdOverridesRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class CreateAmendCgtPpdOverridesControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockAppConfig
+    with MockCreateAmendCgtPpdOverridesService
+    with MockAuditService
+    with MockNrsProxyService
+    with MockHateoasFactory
+    with MockCreateAmendCgtPpdOverridesRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   val validRequestJson: JsValue = Json.parse(
@@ -104,19 +108,21 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
   )
 
   val requestModel: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(
-    multiplePropertyDisposals= Some(Seq(
-      MultiplePropertyDisposals(
-        "AB0000000092",
-        Some(1234.78),
-        None
-      ),
-      MultiplePropertyDisposals(
-        "AB0000000098",
-        None,
-        Some(134.99)
-      )
-    )),
-    singlePropertyDisposals = Some(Seq(
+    multiplePropertyDisposals = Some(
+      Seq(
+        MultiplePropertyDisposals(
+          "AB0000000092",
+          Some(1234.78),
+          None
+        ),
+        MultiplePropertyDisposals(
+          "AB0000000098",
+          None,
+          Some(134.99)
+        )
+      )),
+    singlePropertyDisposals = Some(
+      Seq(
         SinglePropertyDisposals(
           "AB0000000098",
           "2020-02-28",
@@ -147,8 +153,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           None,
           Some(4567.89)
         )
-      )
-    )
+      ))
   )
 
   val requestData: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
@@ -229,7 +234,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           .createAmend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
 
-        MockNrsProxyService.submitAsync(nino,"itsa-cgt-disposal-ppd", validRequestJson)
+        MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
 
         val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
 
@@ -316,7 +321,7 @@ class CreateAmendCgtPpdOverridesControllerSpec extends ControllerBaseSpec
           (RuleDuplicatedPpdSubmissionIdError, BAD_REQUEST),
           (RuleIncorrectDisposalTypeError, FORBIDDEN),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -17,6 +17,6 @@
 package v1.models.request.createAmendNonPayeEmployment
 
 import play.api.mvc.AnyContentAsJson
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class CreateAmendNonPayeEmploymentRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

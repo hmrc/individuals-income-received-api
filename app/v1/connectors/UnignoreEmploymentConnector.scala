@@ -16,27 +16,25 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.IfsUri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.IfsUri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class UnignoreEmploymentConnector @Inject()(val http: HttpClient,
-                                            val appConfig: AppConfig) extends BaseDownstreamConnector {
+class UnignoreEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def unignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+  def unignoreEmployment(
+      request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear
+    val nino         = request.nino.nino
+    val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
     delete(IfsUri[Unit](s"income-tax/employments/$nino/$taxYear/ignore/$employmentId"))

@@ -16,8 +16,9 @@
 
 package v1r7.models.audit
 
+import api.models.audit.AuditResponse
+import api.models.auth.UserDetails
 import play.api.libs.json.{Json, Writes}
-import v1r7.models.auth.UserDetails
 
 case class DeleteOtherCgtAuditDetail(userType: String,
                                      agentReferenceNumber: Option[String],

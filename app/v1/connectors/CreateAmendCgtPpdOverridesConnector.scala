@@ -15,29 +15,30 @@
  */
 
 package v1.connectors
+
+import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.Api1661Uri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
+
 import javax.inject.Inject
+import scala.concurrent.{ ExecutionContext, Future }
 
-import scala.concurrent.{ExecutionContext, Future}
+class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient,
-                                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit hc: HeaderCarrier,
+                                                              ec: ExecutionContext,
+                                                              correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
-      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"),
+      body = request.body
     )
   }
 }

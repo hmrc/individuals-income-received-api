@@ -18,8 +18,8 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.RetrieveNonPayeEmploymentValidator
-import v1.models.errors.MtdError
+import v1.requestParsers.validators.RetrieveNonPayeEmploymentValidator
+import api.models.errors.MtdError
 import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
 
 class MockRetrieveNonPayeEmploymentValidator extends MockFactory {

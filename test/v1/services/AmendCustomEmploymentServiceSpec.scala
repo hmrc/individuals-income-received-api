@@ -16,19 +16,20 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendCustomEmploymentConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
+import v1.models.request.amendCustomEmployment.{ AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody }
 
 import scala.concurrent.Future
 
 class AmendCustomEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
-  private val taxYear = "2021-22"
+  private val nino         = "AA112233A"
+  private val taxYear      = "2021-22"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val amendCustomEmploymentRequestBody: AmendCustomEmploymentRequestBody = AmendCustomEmploymentRequestBody(
@@ -46,7 +47,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
     body = amendCustomEmploymentRequestBody
   )
 
-  trait Test extends MockAmendCustomEmploymentConnector{
+  trait Test extends MockAmendCustomEmploymentConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: AmendCustomEmploymentService = new AmendCustomEmploymentService(
@@ -59,7 +60,8 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendCustomEmploymentConnector.amendEmployment(request)
+        MockAmendCustomEmploymentConnector
+          .amendEmployment(request)
           .returns(Future.successful(outcome))
 
         await(service.amendEmployment(request)) shouldBe outcome
@@ -70,8 +72,9 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendCustomEmploymentConnector.amendEmployment(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            MockAmendCustomEmploymentConnector
+              .amendEmployment(request)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -85,10 +88,10 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_CESSATION_DATE", RuleCessationDateBeforeTaxYearStartError),
           ("CANNOT_UPDATE", RuleUpdateForbiddenError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("INVALID_PAYLOAD", DownstreamError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

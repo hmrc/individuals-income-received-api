@@ -22,16 +22,16 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.AmendPensionsConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.controllers.EndpointLogContext
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.amendPensions.AmendPensionsRequest
-import v1.support.DesResponseMappingSupport
+import api.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends DesResponseMappingSupport with Logging {
+class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def amendPensions(request: AmendPensionsRequest)(
     implicit hc: HeaderCarrier,
@@ -50,10 +50,10 @@ class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends 
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "UNPROCESSABLE_ENTITY" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "UNPROCESSABLE_ENTITY" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

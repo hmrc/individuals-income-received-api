@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveEmployment
 
-import v1.models.domain.Nino
+import api.models.domain.Nino
 
 case class RetrieveEmploymentRequest(nino: Nino, taxYear: String, employmentId: String)

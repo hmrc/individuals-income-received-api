@@ -17,6 +17,6 @@
 package v1.models.request.createAmendOtherCgt
 
 import play.api.mvc.AnyContentAsJson
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class CreateAmendOtherCgtRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

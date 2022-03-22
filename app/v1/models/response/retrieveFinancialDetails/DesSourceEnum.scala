@@ -18,7 +18,7 @@ package v1.models.response.retrieveFinancialDetails
 
 import play.api.libs.json.Format
 import utils.enums.Enums
-import v1.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum
 
 sealed trait DesSourceEnum {
   def toMtdEnum: MtdSourceEnum

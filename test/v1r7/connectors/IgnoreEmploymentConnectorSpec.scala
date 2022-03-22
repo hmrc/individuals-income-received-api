@@ -16,12 +16,13 @@
 
 package v1r7.connectors
 
+import api.connectors.ConnectorSpec
+import api.mocks.MockHttpClient
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import api.models.request.EmptyBody
 import mocks.MockAppConfig
-import v1r7.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.mocks.MockHttpClient
-import v1r7.models.outcomes.ResponseWrapper
-import v1r7.models.request.EmptyBody
 import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future

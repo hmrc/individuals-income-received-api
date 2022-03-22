@@ -16,29 +16,29 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
 import config.AppConfig
-import javax.inject.Inject
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.Api1661Uri
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.Inject
+import scala.concurrent.{ ExecutionContext, Future }
 
-class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject()(val http: HttpClient,
-                                                           val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+  def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit hc: HeaderCarrier,
+                                                                                 ec: ExecutionContext,
+                                                                                 correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+
     put(
-      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"),
+      body = request.body
     )
   }
 

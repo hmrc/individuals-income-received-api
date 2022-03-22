@@ -16,7 +16,7 @@
 
 package v1.models.request.retrieveFinancialDetails
 
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class RetrieveFinancialDetailsRawData(nino: String,
                                            taxYear: String,

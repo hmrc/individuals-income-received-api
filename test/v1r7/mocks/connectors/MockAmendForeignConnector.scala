@@ -16,13 +16,14 @@
 
 package v1r7.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.{AmendForeignConnector, DesOutcome}
+import v1r7.connectors.AmendForeignConnector
 import v1r7.models.request.amendForeign.AmendForeignRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockAmendForeignConnector extends MockFactory {
 
@@ -30,7 +31,7 @@ trait MockAmendForeignConnector extends MockFactory {
 
   object MockAmendForeignConnector {
 
-    def amendForeign(request: AmendForeignRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendForeign(request: AmendForeignRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendForeignConnector
         .amendForeign(_: AmendForeignRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

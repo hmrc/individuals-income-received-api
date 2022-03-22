@@ -16,23 +16,24 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{EmploymentIdFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleCessationDateBeforeTaxYearStartError, RuleStartDateAfterTaxYearEndError, RuleTaxYearNotEndedError, RuleUpdateForbiddenError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.AmendCustomEmploymentConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
-import v1r7.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentConnector)
-  extends DesResponseMappingSupport with Logging {
+  extends DownstreamResponseMappingSupport with Logging {
 
   def amendEmployment(request: AmendCustomEmploymentRequest)(
     implicit hc: HeaderCarrier,
@@ -57,10 +58,10 @@ class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentCon
       "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
       "CANNOT_UPDATE" -> RuleUpdateForbiddenError,
       "NO_DATA_FOUND" -> NotFoundError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 
 }

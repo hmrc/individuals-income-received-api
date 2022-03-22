@@ -16,11 +16,12 @@
 
 package v1r7.services
 
-import v1r7.models.domain.Nino
-import v1r7.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, EmploymentIdFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleCessationDateBeforeTaxYearStartError, RuleStartDateAfterTaxYearEndError, RuleTaxYearNotEndedError, RuleUpdateForbiddenError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1r7.mocks.connectors.MockAmendCustomEmploymentConnector
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.amendCustomEmployment.{AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
 
 import scala.concurrent.Future
@@ -72,7 +73,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
             MockAmendCustomEmploymentConnector.amendEmployment(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -86,10 +87,10 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_CESSATION_DATE", RuleCessationDateBeforeTaxYearStartError),
           ("CANNOT_UPDATE", RuleUpdateForbiddenError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("INVALID_PAYLOAD", DownstreamError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

@@ -22,17 +22,17 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.AmendCustomEmploymentConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.controllers.EndpointLogContext
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
-import v1.support.DesResponseMappingSupport
+import api.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentConnector)
-  extends DesResponseMappingSupport with Logging {
+  extends DownstreamResponseMappingSupport with Logging {
 
   def amendEmployment(request: AmendCustomEmploymentRequest)(
     implicit hc: HeaderCarrier,
@@ -57,10 +57,10 @@ class AmendCustomEmploymentService @Inject()(connector: AmendCustomEmploymentCon
       "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
       "CANNOT_UPDATE" -> RuleUpdateForbiddenError,
       "NO_DATA_FOUND" -> NotFoundError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 
 }

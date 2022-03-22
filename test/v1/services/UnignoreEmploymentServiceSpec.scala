@@ -16,19 +16,20 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1.mocks.connectors.MockUnignoreEmploymentConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
 
 class UnignoreEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
-  private val taxYear = "2021-22"
+  private val nino         = "AA112233A"
+  private val taxYear      = "2021-22"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
@@ -37,7 +38,7 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
     employmentId = employmentId
   )
 
-  trait Test extends MockUnignoreEmploymentConnector{
+  trait Test extends MockUnignoreEmploymentConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: UnignoreEmploymentService = new UnignoreEmploymentService(
@@ -50,7 +51,8 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockUnignoreEmploymentConnector.unignoreEmployment(request)
+        MockUnignoreEmploymentConnector
+          .unignoreEmployment(request)
           .returns(Future.successful(outcome))
 
         await(service.unignoreEmployment(request)) shouldBe outcome
@@ -61,8 +63,9 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockUnignoreEmploymentConnector.unignoreEmployment(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            MockUnignoreEmploymentConnector
+              .unignoreEmployment(request)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.unignoreEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -71,12 +74,12 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
-          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
           ("CUSTOMER_ADDED", RuleCustomEmploymentUnignoreError),
           ("NO_DATA_FOUND", NotFoundError),
           ("BEFORE_TAX_YEAR_ENDED", RuleTaxYearNotEndedError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

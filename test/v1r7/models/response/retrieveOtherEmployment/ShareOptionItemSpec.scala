@@ -16,9 +16,9 @@
 
 package v1r7.models.response.retrieveOtherEmployment
 
+import api.models.domain.ShareOptionSchemeType
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v1r7.models.domain.ShareOptionSchemeType
 
 class ShareOptionItemSpec extends UnitSpec {
 

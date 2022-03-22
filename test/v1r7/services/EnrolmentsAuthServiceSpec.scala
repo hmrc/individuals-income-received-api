@@ -16,6 +16,8 @@
 
 package v1r7.services
 
+import api.models.auth.UserDetails
+import api.models.errors.{StandardDownstreamError, UnauthorisedError}
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
@@ -24,8 +26,8 @@ import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, 
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.models.auth.UserDetails
-import v1r7.models.errors.{DownstreamError, UnauthorisedError}
+import api.models.errors.UnauthorisedError
+import api.services.{EnrolmentsAuthService, ServiceSpec}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -179,7 +181,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
         MockedAppConfig.confidenceLevelCheckEnabled.returns(ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = false))
 
-        val expected = Left(DownstreamError)
+        val expected = Left(StandardDownstreamError)
 
         MockedAuthConnector.authorised(EmptyPredicate, authRetrievals)
           .returns(Future.successful(retrievalsResult))

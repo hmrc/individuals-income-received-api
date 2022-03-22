@@ -18,7 +18,7 @@ package v1.models.response.retrieveOtherEmployment
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.models.domain.SharesAwardedOrReceivedSchemeType
+import api.models.domain.SharesAwardedOrReceivedSchemeType
 
 case class SharesAwardedOrReceivedItem(employerName: String,
                                        employerRef: Option[String],

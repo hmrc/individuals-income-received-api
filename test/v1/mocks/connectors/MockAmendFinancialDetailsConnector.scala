@@ -16,21 +16,22 @@
 
 package v1.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{AmendFinancialDetailsConnector, DesOutcome}
+import v1.connectors.AmendFinancialDetailsConnector
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
-trait MockAmendFinancialDetailsConnector extends MockFactory{
+trait MockAmendFinancialDetailsConnector extends MockFactory {
 
   val mockAmendFinancialDetailsConnector: AmendFinancialDetailsConnector = mock[AmendFinancialDetailsConnector]
 
-  object MockAmendFinancialDetailsConnector  {
+  object MockAmendFinancialDetailsConnector {
 
-    def amendFinancialDetails(request: AmendFinancialDetailsRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendFinancialDetails(request: AmendFinancialDetailsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendFinancialDetailsConnector
         .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

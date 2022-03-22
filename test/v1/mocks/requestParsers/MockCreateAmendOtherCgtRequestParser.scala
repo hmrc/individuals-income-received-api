@@ -18,8 +18,8 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
-import v1.models.errors.ErrorWrapper
+import v1.requestParsers.CreateAmendOtherCgtRequestParser
+import api.models.errors.ErrorWrapper
 import v1.models.request.createAmendOtherCgt.{CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest}
 
 trait MockCreateAmendOtherCgtRequestParser extends MockFactory {

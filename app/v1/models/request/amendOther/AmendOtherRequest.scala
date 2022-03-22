@@ -16,6 +16,6 @@
 
 package v1.models.request.amendOther
 
-import v1.models.domain.Nino
+import api.models.domain.Nino
 
 case class AmendOtherRequest(nino: Nino, taxYear: String, body: AmendOtherRequestBody)

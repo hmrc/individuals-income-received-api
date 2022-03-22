@@ -16,21 +16,23 @@
 
 package v1r7.controllers
 
+import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.errors._
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import v1r7.connectors.DownstreamUri.Api1661Uri
-import v1r7.controllers.requestParsers.DeleteRetrieveRequestParser
-import v1r7.models.audit.{AuditEvent, AuditResponse, DeleteOtherCgtAuditDetail}
-import v1r7.models.errors._
-import v1r7.models.request.DeleteRetrieveRawData
-import v1r7.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1r7.models.audit.DeleteOtherCgtAuditDetail
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -41,7 +43,9 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
                                          auditService: AuditService,
                                          cc: ControllerComponents,
                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -51,7 +55,6 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
 
   def deleteOtherCgt(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -68,15 +71,15 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
 
       val result =
         for {
-          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.delete())
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          auditSubmission(DeleteOtherCgtAuditDetail(request.userDetails, nino, taxYear,
-            serviceResponse.correlationId, AuditResponse(NO_CONTENT, Right(None))))
+          auditSubmission(
+            DeleteOtherCgtAuditDetail(request.userDetails, nino, taxYear, serviceResponse.correlationId, AuditResponse(NO_CONTENT, Right(None))))
 
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
@@ -90,8 +93,12 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-        auditSubmission(DeleteOtherCgtAuditDetail(request.userDetails, nino, taxYear,
-          correlationId, AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+        auditSubmission(
+          DeleteOtherCgtAuditDetail(request.userDetails,
+                                    nino,
+                                    taxYear,
+                                    correlationId,
+                                    AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -99,17 +106,14 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError
-      => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: DeleteOtherCgtAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext) = {
+  private def auditSubmission(details: DeleteOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     val event = AuditEvent("DeleteOtherCgtDisposalsAndGains", "Delete-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }

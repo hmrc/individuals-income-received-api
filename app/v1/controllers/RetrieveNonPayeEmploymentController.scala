@@ -16,24 +16,25 @@
 
 package v1.controllers
 
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.hateoas.HateoasFactory
+import api.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum.latest
+import api.models.errors._
+import api.services.{ DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{ Action, AnyContent, ControllerComponents }
 import play.mvc.Http.MimeTypes
-import utils.{IdGenerator, Logging}
-import v1.connectors.DownstreamUri.Api1661Uri
-import v1.controllers.requestParsers.RetrieveNonPayeEmploymentRequestParser
-import v1.hateoas.HateoasFactory
-import v1.models.domain.MtdSourceEnum
-import v1.models.domain.MtdSourceEnum.latest
-import v1.models.errors._
+import utils.{ IdGenerator, Logging }
 import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
-import v1.models.response.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse}
-import v1.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.response.retrieveNonPayeEmploymentIncome.{ RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse }
+import v1.requestParsers.RetrieveNonPayeEmploymentRequestParser
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
@@ -43,7 +44,7 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
                                                     hateoasFactory: HateoasFactory,
                                                     cc: ControllerComponents,
                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -55,7 +56,6 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
 
   def retrieveNonPayeEmployment(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -74,7 +74,7 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
 
       val result =
         for {
-          _ <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.retrieve[RetrieveNonPayeEmploymentIncomeResponse](desErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -103,23 +103,23 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | SourceFormatError |
-           RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => InternalServerError(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | SourceFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => InternalServerError(Json.toJson(errorWrapper))
     }
   }
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_VIEW" -> DownstreamError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_VIEW"              -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
 }

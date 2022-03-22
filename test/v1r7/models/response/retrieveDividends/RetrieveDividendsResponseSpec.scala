@@ -16,12 +16,12 @@
 
 package v1r7.models.response.retrieveDividends
 
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.{ HateoasWrapper, Link }
 import mocks.MockAppConfig
-import play.api.libs.json.{JsError, Json}
+import play.api.libs.json.{ JsError, Json }
 import support.UnitSpec
-import v1r7.hateoas.HateoasFactory
-import v1r7.models.hateoas.{HateoasWrapper, Link}
-import v1r7.models.hateoas.Method.{DELETE, GET, PUT}
 
 class RetrieveDividendsResponseSpec extends UnitSpec {
 
@@ -91,13 +91,13 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
     )
   )
 
-  private val stockDividendModel = StockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val stockDividendModel = StockDividend(customerReference = Some("my divs"), grossAmount = 12321.22)
 
-  private val redeemableSharesModel = RedeemableShares(customerReference = Some ("my shares"), grossAmount = 12321.22)
+  private val redeemableSharesModel = RedeemableShares(customerReference = Some("my shares"), grossAmount = 12321.22)
 
-  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some ("my secs"), grossAmount = 12321.22)
+  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some("my secs"), grossAmount = 12321.22)
 
-  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 12321.22)
+  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some("write off"), grossAmount = 12321.22)
 
   private val responseModel = RetrieveDividendsResponse(
     "2020-07-06T09:37:17Z",
@@ -146,8 +146,8 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val taxYear = "2019-20"
+      val nino           = "someNino"
+      val taxYear        = "2019-20"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
 

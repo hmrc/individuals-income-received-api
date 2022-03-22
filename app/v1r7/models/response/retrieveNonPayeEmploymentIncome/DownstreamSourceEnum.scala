@@ -16,9 +16,9 @@
 
 package v1r7.models.response.retrieveNonPayeEmploymentIncome
 
+import api.models.domain.MtdSourceEnum
 import play.api.libs.json.Format
 import utils.enums.Enums
-import v1r7.models.domain.MtdSourceEnum
 
 sealed trait DownstreamSourceEnum {
   def toMtdEnum: MtdSourceEnum

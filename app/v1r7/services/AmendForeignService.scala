@@ -16,22 +16,23 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.AmendForeignConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.amendForeign.AmendForeignRequest
-import v1r7.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendForeignService @Inject()(connector: AmendForeignConnector) extends DesResponseMappingSupport with Logging {
+class AmendForeignService @Inject()(connector: AmendForeignConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def amendForeign(request: AmendForeignRequest)(
     implicit hc: HeaderCarrier,
@@ -50,10 +51,10 @@ class AmendForeignService @Inject()(connector: AmendForeignConnector) extends De
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "UNPROCESSABLE_ENTITY" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "UNPROCESSABLE_ENTITY" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

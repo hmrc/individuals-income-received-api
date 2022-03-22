@@ -16,6 +16,6 @@
 
 package v1r7.models.request.createAmendOtherCgt
 
-import v1r7.models.domain.Nino
+import api.models.domain.Nino
 
 case class CreateAmendOtherCgtRequest(nino: Nino, taxYear: String, body: CreateAmendOtherCgtRequestBody)

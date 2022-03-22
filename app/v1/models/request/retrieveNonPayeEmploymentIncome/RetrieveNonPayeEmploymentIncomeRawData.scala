@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveNonPayeEmploymentIncome
 
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class RetrieveNonPayeEmploymentIncomeRawData(nino: String, taxYear: String, source:Option[String]) extends RawData

@@ -16,12 +16,13 @@
 
 package v1r7.services
 
-import v1r7.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1r7.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture.requestBodyModel
 import v1r7.mocks.connectors.MockCreateAmendNonPayeEmploymentConnector
-import v1r7.models.domain.Nino
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import scala.concurrent.Future
@@ -63,7 +64,7 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 
           MockCreateAmendNonPayeEmploymentConnector
             .createAndAmend(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.createAndAmend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -73,7 +74,7 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 
           MockCreateAmendNonPayeEmploymentConnector
             .createAndAmend(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode(desErrorCode)))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
 
           await(service.createAndAmend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
@@ -81,12 +82,12 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("INVALID_PAYLOAD", DownstreamError),
+        ("INVALID_CORRELATIONID", StandardDownstreamError),
+        ("INVALID_PAYLOAD", StandardDownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
         ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", StandardDownstreamError),
+        ("SERVICE_UNAVAILABLE", StandardDownstreamError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

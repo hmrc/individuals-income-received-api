@@ -16,15 +16,17 @@
 
 package v1r7.connectors
 
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1r7.connectors.DownstreamUri.Release6Uri
+import api.connectors.DownstreamUri.Release6Uri
 import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
 class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
@@ -33,9 +35,9 @@ class AmendFinancialDetailsConnector @Inject()(val http: HttpClient,
   def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1r7.connectors.httpparsers.StandardDesHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
     val taxYear = request.taxYear

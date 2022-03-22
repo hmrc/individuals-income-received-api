@@ -16,38 +16,42 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.hateoas.HateoasLinks
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
+import api.hateoas.HateoasLinks
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
-import v1.mocks.services.{MockAuditService, MockCreateAmendOtherCgtService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import v1.models.audit.{AuditError, AuditEvent, AuditResponse, CreateAmendOtherCgtAuditDetail}
-import v1.models.domain.Nino
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import v1.mocks.services._
+import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockAppConfig
-  with MockCreateAmendOtherCgtService
-  with MockNrsProxyService
-  with MockAuditService
-  with MockHateoasFactory
-  with MockCreateAmendOtherCgtRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class CreateAmendOtherCgtControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockAppConfig
+    with MockCreateAmendOtherCgtService
+    with MockNrsProxyService
+    with MockAuditService
+    with MockHateoasFactory
+    with MockCreateAmendOtherCgtRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   val validRequestJson: JsValue = Json.parse(
@@ -95,22 +99,23 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
   )
 
   val requestModel: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
-    disposals = Some(Seq(
-      Disposal(
-        assetType = "otherProperty",
-        assetDescription = "string",
-        acquisitionDate = "2021-05-07",
-        disposalDate = "2021-05-07",
-        disposalProceeds = 59999999999.99,
-        allowableCosts = 59999999999.99,
-        gain = Some(59999999999.99),
-        loss = None,
-        claimOrElectionCodes = Some(Seq("OTH")),
-        gainAfterRelief = Some(59999999999.99),
-        lossAfterRelief = None,
-        rttTaxPaid = Some(59999999999.99)
-      )
-    )),
+    disposals = Some(
+      Seq(
+        Disposal(
+          assetType = "otherProperty",
+          assetDescription = "string",
+          acquisitionDate = "2021-05-07",
+          disposalDate = "2021-05-07",
+          disposalProceeds = 59999999999.99,
+          allowableCosts = 59999999999.99,
+          gain = Some(59999999999.99),
+          loss = None,
+          claimOrElectionCodes = Some(Seq("OTH")),
+          gainAfterRelief = Some(59999999999.99),
+          lossAfterRelief = None,
+          rttTaxPaid = Some(59999999999.99)
+        )
+      )),
     nonStandardGains = Some(
       NonStandardGains(
         carriedInterestGain = Some(19999999999.99),
@@ -296,7 +301,7 @@ class CreateAmendOtherCgtControllerSpec extends ControllerBaseSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

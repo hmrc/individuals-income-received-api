@@ -18,8 +18,8 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.AmendFinancialDetailsRequestParser
-import v1.models.errors.ErrorWrapper
+import v1.requestParsers.AmendFinancialDetailsRequestParser
+import api.models.errors.ErrorWrapper
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequest}
 
 trait MockAmendFinancialDetailsRequestParser extends MockFactory {

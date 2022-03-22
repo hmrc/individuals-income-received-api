@@ -16,8 +16,8 @@
 
 package v1r7.fixtures.other
 
-import v1r7.models.domain.{AssetType, ClaimOrElectionCodes}
-import v1r7.models.request.createAmendOtherCgt.{CreateAmendOtherCgtRequestBody, Disposal, Losses, NonStandardGains}
+import api.models.domain.{ AssetType, ClaimOrElectionCodes }
+import v1r7.models.request.createAmendOtherCgt.{ CreateAmendOtherCgtRequestBody, Disposal, Losses, NonStandardGains }
 
 object CreateAmendOtherCgtConnectorServiceFixture {
 
@@ -52,9 +52,6 @@ object CreateAmendOtherCgtConnectorServiceFixture {
     Some(150.99)
   )
 
-  val mtdRequestBody: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
-    Some(Seq(disposal)),
-    Some(nonStandardGains),
-    Some(losses),
-    Some(160.99))
+  val mtdRequestBody: CreateAmendOtherCgtRequestBody =
+    CreateAmendOtherCgtRequestBody(Some(Seq(disposal)), Some(nonStandardGains), Some(losses), Some(160.99))
 }

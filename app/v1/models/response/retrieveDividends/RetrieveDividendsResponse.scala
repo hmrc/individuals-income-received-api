@@ -20,8 +20,8 @@ import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 import play.api.libs.functional.syntax._
-import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 
 case class RetrieveDividendsResponse(submittedOn: String,
                                      foreignDividend: Option[Seq[ForeignDividendItem]],

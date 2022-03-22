@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveEmployment
 
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class RetrieveEmploymentRawData(nino: String, taxYear: String, employmentId: String) extends RawData

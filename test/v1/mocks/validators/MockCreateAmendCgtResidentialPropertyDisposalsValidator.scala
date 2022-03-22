@@ -18,8 +18,8 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
-import v1.models.errors.MtdError
+import v1.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
+import api.models.errors.MtdError
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsValidator extends MockFactory {

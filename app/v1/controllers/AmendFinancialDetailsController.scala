@@ -16,24 +16,26 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.errors._
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.AmendFinancialDetailsRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
+import utils.{ IdGenerator, Logging }
+import api.hateoas.AmendHateoasBody
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
-import v1.services.{AmendFinancialDetailsService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.requestParsers.AmendFinancialDetailsRequestParser
+import v1.services.AmendFinancialDetailsService
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthService,
@@ -44,7 +46,7 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
                                                 auditService: AuditService,
                                                 cc: ControllerComponents,
                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging
     with AmendHateoasBody {
@@ -57,7 +59,6 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
 
   def amendFinancialDetails(nino: String, taxYear: String, employmentId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -72,7 +73,7 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendFinancialDetails(parsedRequest))
         } yield {
           logger.info(
@@ -81,7 +82,10 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
 
           auditSubmission(
             GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body), serviceResponse.correlationId,
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+              Some(request.body),
+              serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendFinancialDetailsHateoasBody(appConfig, nino, taxYear, employmentId))))
             )
           )
@@ -100,8 +104,11 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
 
         auditSubmission(
           GenericAuditDetail(
-            request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId), Some(request.body),
-            resCorrelationId, AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+            Some(request.body),
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
@@ -111,18 +118,15 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError |
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           CustomMtdError(ValueFormatError.code)
-      => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
+          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(
+            ValueFormatError.code) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("AmendEmploymentFinancialDetails", "amend-employment-financial-details", details)
     auditService.auditEvent(event)
   }

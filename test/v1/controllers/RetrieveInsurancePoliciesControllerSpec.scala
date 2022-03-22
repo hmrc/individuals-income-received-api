@@ -16,38 +16,40 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.hateoas.HateoasLinks
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
+import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.RelType._
+import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.outcomes.ResponseWrapper
+import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveInsurancePoliciesControllerFixture
-import v1.hateoas.HateoasLinks
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import v1.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.errors._
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType._
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import v1.models.response.retrieveInsurancePolicies._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockDeleteRetrieveService
-  with MockHateoasFactory
-  with MockDeleteRetrieveRequestParser
-  with HateoasLinks
-  with MockIdGenerator {
+class RetrieveInsurancePoliciesControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockDeleteRetrieveService
+    with MockHateoasFactory
+    with MockDeleteRetrieveRequestParser
+    with HateoasLinks
+    with MockIdGenerator {
 
-  val nino: String = "AA123456A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA123456A"
+  val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
   private val rawData = DeleteRetrieveRawData(
@@ -170,13 +172,13 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrap(retrieveInsurancePoliciesResponseModel, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveInsurancePoliciesResponseModel,
-            Seq(
-              amendInsurancePoliciesLink,
-              retrieveInsurancePoliciesLink,
-              deleteInsurancePoliciesLink
-            )
-          ))
+          .returns(
+            HateoasWrapper(retrieveInsurancePoliciesResponseModel,
+                           Seq(
+                             amendInsurancePoliciesLink,
+                             retrieveInsurancePoliciesLink,
+                             deleteInsurancePoliciesLink
+                           )))
 
         val result: Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)
 
@@ -238,7 +240,7 @@ class RetrieveInsurancePoliciesControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -16,23 +16,25 @@
 
 package v1r7.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.AmendHateoasBody
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1r7.controllers.requestParsers.AmendInsurancePoliciesRequestParser
-import v1r7.hateoas.AmendHateoasBody
-import v1r7.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1r7.models.errors._
 import v1r7.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
-import v1r7.services.{AmendInsurancePoliciesService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1r7.requestParsers.AmendInsurancePoliciesRequestParser
+import v1r7.services.AmendInsurancePoliciesService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -44,7 +46,10 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging with AmendHateoasBody {
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging
+    with AmendHateoasBody {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,7 +59,6 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
 
   def amendInsurancePolicies(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -68,13 +72,12 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendInsurancePolicies(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
 
           auditSubmission(
             GenericAuditDetail(
@@ -112,23 +115,17 @@ class AmendInsurancePoliciesController @Inject()(val authService: EnrolmentsAuth
       }.merge
     }
 
-
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError |
-           RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           CustomMtdError(ValueFormatError.code) |
-           CustomMtdError(CustomerRefFormatError.code) |
-           CustomMtdError(EventFormatError.code)
-      => BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
+            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CustomerRefFormatError.code) |
+          CustomMtdError(EventFormatError.code) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
       auditType = "CreateAmendInsurancePolicies",

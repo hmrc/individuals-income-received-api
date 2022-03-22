@@ -16,13 +16,14 @@
 
 package v1.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{AmendInsurancePoliciesConnector, DesOutcome}
+import v1.connectors.AmendInsurancePoliciesConnector
 import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockAmendInsurancePoliciesConnector extends MockFactory {
 
@@ -30,7 +31,7 @@ trait MockAmendInsurancePoliciesConnector extends MockFactory {
 
   object MockAmendInsurancePoliciesConnector {
 
-    def amendInsurancePolicies(request: AmendInsurancePoliciesRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def amendInsurancePolicies(request: AmendInsurancePoliciesRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendInsurancePoliciesConnector
         .amendInsurancePolicies(_: AmendInsurancePoliciesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

@@ -18,7 +18,7 @@ package v1.models.response.retrieveFinancialDetails
 
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
-import v1.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum
 
 class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
 

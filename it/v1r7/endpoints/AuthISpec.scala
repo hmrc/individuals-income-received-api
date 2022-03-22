@@ -16,21 +16,21 @@
 
 package v1r7.endpoints
 
+import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.http.Status.NO_CONTENT
-import play.api.libs.json.{JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.V1R7IntegrationSpec
-import v1r7.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
 class AuthISpec extends V1R7IntegrationSpec {
 
   private trait Test {
-    val nino          = "AA123456A"
-    val taxYear       = "2019-20"
-    val data        = "someData"
+    val nino    = "AA123456A"
+    val taxYear = "2019-20"
+    val data    = "someData"
 
     val requestJson: String =
       s"""
@@ -50,8 +50,7 @@ class AuthISpec extends V1R7IntegrationSpec {
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
 
-    val ifsResponse: JsValue = Json.parse(
-      """
+    val ifsResponse: JsValue = Json.parse("""
         | {
         | "responseData" : "someResponse"
         | }

@@ -16,11 +16,12 @@
 
 package v1r7.services
 
-import v1r7.models.domain.Nino
-import v1r7.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, EmploymentIdFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleCustomEmploymentUnignoreError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1r7.mocks.connectors.MockUnignoreEmploymentConnector
-import v1r7.models.errors._
-import v1r7.models.outcomes.ResponseWrapper
 import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
@@ -62,7 +63,7 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
             MockUnignoreEmploymentConnector.unignoreEmployment(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.unignoreEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -71,12 +72,12 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
-          ("INVALID_CORRELATIONID", DownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
           ("CUSTOMER_ADDED", RuleCustomEmploymentUnignoreError),
           ("NO_DATA_FOUND", NotFoundError),
           ("BEFORE_TAX_YEAR_ENDED", RuleTaxYearNotEndedError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

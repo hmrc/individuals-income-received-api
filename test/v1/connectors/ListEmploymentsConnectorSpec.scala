@@ -16,11 +16,12 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
 import mocks.MockAppConfig
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.MockHttpClient
-import v1.models.outcomes.ResponseWrapper
+import api.mocks.MockHttpClient
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.listEmployments.ListEmploymentsRequest
 import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 

@@ -16,24 +16,26 @@
 
 package v1.controllers
 
+import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.models.errors._
+import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import play.api.libs.json.{ JsValue, Json }
+import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.AmendForeignRequestParser
-import v1.hateoas.AmendHateoasBody
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
+import utils.{ IdGenerator, Logging }
+import api.hateoas.AmendHateoasBody
 import v1.models.request.amendForeign.AmendForeignRawData
-import v1.services.{AmendForeignService, AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.requestParsers.AmendForeignRequestParser
+import v1.services.AmendForeignService
 
-import scala.concurrent.{ExecutionContext, Future}
+import javax.inject.{ Inject, Singleton }
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
 class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
@@ -44,7 +46,7 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
                                        auditService: AuditService,
                                        cc: ControllerComponents,
                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging
     with AmendHateoasBody {
@@ -57,7 +59,6 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
 
   def amendForeign(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -71,7 +72,7 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amendForeign(parsedRequest))
         } yield {
           logger.info(
@@ -80,7 +81,10 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
 
           auditSubmission(
             GenericAuditDetail(
-              request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body), serviceResponse.correlationId,
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              Some(request.body),
+              serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendForeignHateoasBody(appConfig, nino, taxYear))))
             )
           )
@@ -98,7 +102,11 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          GenericAuditDetail(request.userDetails, Map("nino" -> nino, "taxYear" -> taxYear), Some(request.body), resCorrelationId,
+          GenericAuditDetail(
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            Some(request.body),
+            resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
@@ -110,20 +118,14 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           CustomMtdError(ValueFormatError.code) |
-           CustomMtdError(CountryCodeFormatError.code) |
-           CustomMtdError(CountryCodeRuleError.code) |
-           CustomMtdError(CustomerRefFormatError.code) |
-           RuleTaxYearNotSupportedError
-      => BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+          CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
+          CustomMtdError(CountryCodeRuleError.code) | CustomMtdError(CustomerRefFormatError.code) | RuleTaxYearNotSupportedError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendForeignIncome", "create-amend-foreign-income", details)
     auditService.auditEvent(event)
   }

@@ -16,22 +16,25 @@
 
 package v1r7.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.AmendHateoasBody
+import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import cats.data.EitherT
 import config.AppConfig
-import javax.inject.Inject
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ IdGenerator, Logging }
-import v1r7.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
-import v1r7.hateoas.AmendHateoasBody
-import v1r7.models.audit.{ AuditEvent, AuditResponse, CreateAmendCgtPpdOverridesAuditDetail }
-import v1r7.models.errors._
+import utils.{IdGenerator, Logging}
+import v1r7.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1r7.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
-import v1r7.services.{ AuditService, CreateAmendCgtPpdOverridesService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService }
+import v1r7.requestParsers.CreateAmendCgtPpdOverridesRequestParser
+import v1r7.services._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
@@ -123,7 +126,7 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError | PpdSubmissionIdNotFoundError => NotFound(Json.toJson(errorWrapper))
       case RuleIncorrectDisposalTypeError               => Forbidden(Json.toJson(errorWrapper))
-      case DownstreamError                              => InternalServerError(Json.toJson(errorWrapper))
+      case StandardDownstreamError                      => InternalServerError(Json.toJson(errorWrapper))
       case _                                            => unhandledError(errorWrapper)
     }
 

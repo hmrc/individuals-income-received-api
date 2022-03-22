@@ -16,14 +16,15 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.controllers.EndpointLogContext
 import v1.mocks.connectors.MockAmendOtherEmploymentConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.amendOtherEmployment._
 
 import scala.concurrent.Future
+import api.services.ServiceSpec
 
 class AmendOtherEmploymentServiceSpec extends ServiceSpec {
 
@@ -183,7 +184,7 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
             MockAmendOtherEmploymentConnector.amendOtherEmployment(amendOtherEmploymentRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendOtherEmployment(amendOtherEmploymentRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -191,11 +192,11 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("INVALID_PAYLOAD", DownstreamError),
-          ("UNPROCESSABLE_ENTITY", DownstreamError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("UNPROCESSABLE_ENTITY", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

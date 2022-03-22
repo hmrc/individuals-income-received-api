@@ -16,7 +16,7 @@
 
 package v1r7.models.request.amendFinancialDetails
 
+import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
-import v1r7.models.request.RawData
 
 case class AmendFinancialDetailsRawData(nino: String, taxYear: String, employmentId: String, body: AnyContentAsJson) extends RawData

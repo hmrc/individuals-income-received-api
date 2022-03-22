@@ -22,16 +22,16 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.UnignoreEmploymentConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.controllers.EndpointLogContext
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
-import v1.support.DesResponseMappingSupport
+import api.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UnignoreEmploymentService @Inject()(connector: UnignoreEmploymentConnector) extends DesResponseMappingSupport with Logging {
+class UnignoreEmploymentService @Inject()(connector: UnignoreEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def unignoreEmployment(request: IgnoreEmploymentRequest)(
     implicit hc: HeaderCarrier,
@@ -51,11 +51,11 @@ class UnignoreEmploymentService @Inject()(connector: UnignoreEmploymentConnector
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
       "CUSTOMER_ADDED" -> RuleCustomEmploymentUnignoreError,
       "NO_DATA_FOUND" -> NotFoundError,
       "BEFORE_TAX_YEAR_ENDED" -> RuleTaxYearNotEndedError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

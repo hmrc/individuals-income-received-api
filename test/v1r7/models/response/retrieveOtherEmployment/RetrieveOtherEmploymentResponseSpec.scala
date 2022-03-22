@@ -16,9 +16,9 @@
 
 package v1r7.models.response.retrieveOtherEmployment
 
-import play.api.libs.json.{JsError, Json}
+import api.models.domain.{ ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType }
+import play.api.libs.json.{ JsError, Json }
 import support.UnitSpec
-import v1r7.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
 
 class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
 
@@ -242,14 +242,15 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
     amount = Some(5000.99)
   )
 
-  private val lumpSumsModel = Seq(LumpSums(
-    employerName = "BPDTS Ltd",
-    employerRef = "123/AB456",
-    taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
-    benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
-    redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
-    redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
-  ))
+  private val lumpSumsModel = Seq(
+    LumpSums(
+      employerName = "BPDTS Ltd",
+      employerRef = "123/AB456",
+      taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
+      benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
+      redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
+      redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
+    ))
 
   private val responseModel = RetrieveOtherEmploymentResponse(
     "2020-07-06T09:37:17Z",

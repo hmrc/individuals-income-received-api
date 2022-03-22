@@ -16,6 +16,8 @@
 
 package v1r7.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
 import cats.data.EitherT
 import cats.implicits._
 
@@ -23,16 +25,15 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1r7.connectors.AmendFinancialDetailsConnector
-import v1r7.controllers.EndpointLogContext
-import v1r7.models.errors.{DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, TaxYearFormatError}
-import v1r7.models.outcomes.ResponseWrapper
+import api.models.errors.StandardDownstreamError
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
-import v1r7.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsConnector) extends DesResponseMappingSupport with Logging {
+class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
     implicit hc: HeaderCarrier,
@@ -52,10 +53,10 @@ class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsCon
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID" -> NotFoundError,
-      "INVALID_PAYLOAD" -> DownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
       "BEFORE_TAX_YEAR_END" -> RuleTaxYearNotEndedError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
 }

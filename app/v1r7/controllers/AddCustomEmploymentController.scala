@@ -16,24 +16,26 @@
 
 package v1r7.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{ Inject, Singleton }
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
-import v1r7.controllers.requestParsers.AddCustomEmploymentRequestParser
-import v1r7.hateoas.HateoasFactory
-import v1r7.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
-import v1r7.models.errors._
+import utils.{IdGenerator, Logging}
 import v1r7.models.request.addCustomEmployment.AddCustomEmploymentRawData
 import v1r7.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
-import v1r7.services.{ AddCustomEmploymentService, AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import v1r7.requestParsers.AddCustomEmploymentRequestParser
+import v1r7.services.AddCustomEmploymentService
 
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthService,
@@ -117,8 +119,8 @@ class AddCustomEmploymentController @Inject()(val authService: EnrolmentsAuthSer
           CessationDateFormatError | RuleCessationDateBeforeStartDateError | RuleStartDateAfterTaxYearEndError |
           RuleCessationDateBeforeTaxYearStartError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

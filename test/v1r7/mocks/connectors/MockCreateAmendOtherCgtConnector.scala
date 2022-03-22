@@ -16,13 +16,14 @@
 
 package v1r7.mocks.connectors
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1r7.connectors.{CreateAmendOtherCgtConnector, DesOutcome}
+import v1r7.connectors.CreateAmendOtherCgtConnector
 import v1r7.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait MockCreateAmendOtherCgtConnector extends MockFactory {
 
@@ -30,7 +31,7 @@ trait MockCreateAmendOtherCgtConnector extends MockFactory {
 
   object MockCreateAmendOtherCgtConnector {
 
-    def createAndAmend(request: CreateAmendOtherCgtRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def createAndAmend(request: CreateAmendOtherCgtRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockCreateAmendOtherCgtDisposalsAndGainsConnector
         .createAndAmend(_: CreateAmendOtherCgtRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
