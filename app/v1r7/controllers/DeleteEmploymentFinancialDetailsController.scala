@@ -16,8 +16,11 @@
 
 package v1r7.controllers
 
+import api.connectors.DownstreamUri.Release6Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -26,9 +29,6 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.DesUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1r7.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 import v1r7.requestParsers.DeleteCustomEmploymentRequestParser
 
@@ -66,7 +66,7 @@ class DeleteEmploymentFinancialDetailsController @Inject()(val authService: Enro
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[Unit] = DesUri[Unit](
+      implicit val downstreamUri: Release6Uri[Unit] = Release6Uri[Unit](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId"
       )
 
