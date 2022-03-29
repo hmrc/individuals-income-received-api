@@ -609,3 +609,14 @@ traits:
                 description: 'A PPD submission ID in the request is being used for the incorrect disposal type.'
                 value:
                   code: RULE_INCORRECT_DISPOSAL_TYPE
+  ruleDeleteForbidden:
+    responses:
+      403:
+        body:
+         application/json:
+            type: types.errorResponse
+            examples:
+              ruleDeleteForbidden:
+                description: ' A deletion for an HMRC held employment is not permitted.'
+                value:
+                  code: RULE_INCORRECT_DISPOSAL_TYPE
