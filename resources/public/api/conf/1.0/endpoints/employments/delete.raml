@@ -8,9 +8,10 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
+  - errors.ruleDeleteForbidden
 displayName: Delete a Custom Employment
 description: "This endpoint allows the developer to delete a custom employment from the list of employments for this user. A National Insurance number, Tax year and Employment ID are required."
-(annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
+(annotations.sandboxData): !include ../../scenarios/employments/delete.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:
