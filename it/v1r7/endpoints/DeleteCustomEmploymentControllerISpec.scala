@@ -17,7 +17,7 @@
 package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleDeleteForbiddenError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -129,6 +129,7 @@ class DeleteCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "CANNOT_DELETE", FORBIDDEN, RuleDeleteForbiddenError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
 

@@ -120,9 +120,10 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
           RuleTaxYearRangeInvalidError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError            => NotFound(Json.toJson(errorWrapper))
+      case RuleDeleteForbiddenError => Forbidden(Json.toJson(errorWrapper))
+      case StandardDownstreamError  => InternalServerError(Json.toJson(errorWrapper))
+      case _                        => unhandledError(errorWrapper)
     }
 
   private def desErrorMap: Map[String, MtdError] =
@@ -132,6 +133,7 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
       "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
       "NO_DATA_FOUND"             -> NotFoundError,
+      "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
