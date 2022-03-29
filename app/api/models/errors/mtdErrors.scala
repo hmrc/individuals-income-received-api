@@ -191,6 +191,12 @@ object RuleIncorrectDisposalTypeError
       message = "A provided ppdSubmissionId is being used for the incorrect disposal type"
     )
 
+object RuleDeleteForbiddenError
+  extends MtdError(
+    code = "RULE_DELETE_FORBIDDEN",
+    message = "A deletion of an HMRC held employment is not permitted"
+  )
+
 // Not found errors
 object PpdSubmissionIdNotFoundError
     extends MtdError(

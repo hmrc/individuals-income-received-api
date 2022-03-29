@@ -35,7 +35,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1R7IntegrationSpe
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+    def downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
 
     def setupStubs(): StubMapping
 
@@ -54,7 +54,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1R7IntegrationSpe
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, desUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request().delete)
@@ -98,15 +98,15 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1R7IntegrationSpe
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.DELETE, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().delete)
@@ -120,7 +120,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1R7IntegrationSpe
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "downstream message"
              |}
             """.stripMargin
 

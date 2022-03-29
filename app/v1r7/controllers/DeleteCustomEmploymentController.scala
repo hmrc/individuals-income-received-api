@@ -16,8 +16,11 @@
 
 package v1r7.controllers
 
+import api.connectors.DownstreamUri.Release6Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -26,9 +29,6 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.DesUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1r7.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 import v1r7.requestParsers.DeleteCustomEmploymentRequestParser
 
@@ -66,7 +66,7 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[Unit] = DesUri[Unit](
+      implicit val downstreamUri: Release6Uri[Unit] = Release6Uri[Unit](
         s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"
       )
 
@@ -120,9 +120,10 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
           RuleTaxYearRangeInvalidError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError            => NotFound(Json.toJson(errorWrapper))
+      case RuleDeleteForbiddenError => Forbidden(Json.toJson(errorWrapper))
+      case StandardDownstreamError  => InternalServerError(Json.toJson(errorWrapper))
+      case _                        => unhandledError(errorWrapper)
     }
 
   private def desErrorMap: Map[String, MtdError] =
@@ -132,6 +133,7 @@ class DeleteCustomEmploymentController @Inject()(val authService: EnrolmentsAuth
       "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
       "NO_DATA_FOUND"             -> NotFoundError,
+      "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )

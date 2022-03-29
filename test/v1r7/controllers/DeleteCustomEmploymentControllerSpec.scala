@@ -96,6 +96,7 @@ class DeleteCustomEmploymentControllerSpec
         "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
         "INVALID_CORRELATIONID"     -> StandardDownstreamError,
         "NO_DATA_FOUND"             -> NotFoundError,
+        "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
         "SERVER_ERROR"              -> StandardDownstreamError,
         "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
@@ -184,6 +185,7 @@ class DeleteCustomEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
+          (RuleDeleteForbiddenError, FORBIDDEN),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
