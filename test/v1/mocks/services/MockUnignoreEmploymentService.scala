@@ -38,6 +38,7 @@ trait MockUnignoreEmploymentService extends MockFactory {
         .unignoreEmployment(_: IgnoreEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

@@ -20,12 +20,12 @@ import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1.requestParsers.validators.validations.{ EmploymentSourceValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation }
+import v1.requestParsers.validators.validations.{EmploymentSourceValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: AppConfig)
+class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[RetrieveAllResidentialPropertyCgtRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
@@ -49,4 +49,5 @@ class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: A
         TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
       )
     }
+
 }

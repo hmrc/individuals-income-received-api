@@ -86,22 +86,23 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
 
   val responseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
     submittedOn = "2021-05-07T16:18:44.403Z",
-    disposals = Some(Seq(
-      Disposal(
-        assetType = "otherProperty",
-        assetDescription = "string",
-        acquisitionDate = "2021-05-07",
-        disposalDate = "2021-05-07",
-        disposalProceeds = 59999999999.99,
-        allowableCosts = 59999999999.99,
-        gain = Some(59999999999.99),
-        loss = None,
-        claimOrElectionCodes = Some(Seq("OTH")),
-        gainAfterRelief = Some(59999999999.99),
-        lossAfterRelief = None,
-        rttTaxPaid = Some(59999999999.99)
-      )
-    )),
+    disposals = Some(
+      Seq(
+        Disposal(
+          assetType = "otherProperty",
+          assetDescription = "string",
+          acquisitionDate = "2021-05-07",
+          disposalDate = "2021-05-07",
+          disposalProceeds = 59999999999.99,
+          allowableCosts = 59999999999.99,
+          gain = Some(59999999999.99),
+          loss = None,
+          claimOrElectionCodes = Some(Seq("OTH")),
+          gainAfterRelief = Some(59999999999.99),
+          lossAfterRelief = None,
+          rttTaxPaid = Some(59999999999.99)
+        )
+      )),
     nonStandardGains = Some(
       NonStandardGains(
         carriedInterestGain = Some(19999999999.99),
@@ -125,22 +126,23 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
 
   val minimumResponseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
     submittedOn = "2021-05-07T16:18:44.403Z",
-    disposals = Some(Seq(
-      Disposal(
-        assetType = "otherProperty",
-        assetDescription = "string",
-        acquisitionDate = "2021-05-07",
-        disposalDate = "2021-05-07",
-        disposalProceeds = 59999999999.99,
-        allowableCosts = 59999999999.99,
-        gain = None,
-        loss = None,
-        claimOrElectionCodes = None,
-        gainAfterRelief = None,
-        lossAfterRelief = None,
-        rttTaxPaid = None
-      )
-    )),
+    disposals = Some(
+      Seq(
+        Disposal(
+          assetType = "otherProperty",
+          assetDescription = "string",
+          acquisitionDate = "2021-05-07",
+          disposalDate = "2021-05-07",
+          disposalProceeds = 59999999999.99,
+          allowableCosts = 59999999999.99,
+          gain = None,
+          loss = None,
+          claimOrElectionCodes = None,
+          gainAfterRelief = None,
+          lossAfterRelief = None,
+          rttTaxPaid = None
+        )
+      )),
     nonStandardGains = None,
     losses = None,
     adjustments = None
@@ -174,8 +176,8 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
 
   "RetrieveOtherCgtLinksFactory" when {
     class Test extends MockAppConfig {
-      val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "AA111111A"
+      val hateoasFactory  = new HateoasFactory(mockAppConfig)
+      val nino            = "AA111111A"
       val taxYear: String = "2020-21"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
@@ -194,4 +196,5 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

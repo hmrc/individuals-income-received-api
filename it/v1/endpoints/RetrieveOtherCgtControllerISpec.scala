@@ -29,7 +29,7 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
 
     val ifsResponse: JsValue = Json.parse(
@@ -71,8 +71,9 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
      """.stripMargin
     )
 
-    val mtdResponse: JsValue = ifsResponse.as[JsObject] ++ Json.parse(
-      s"""
+    val mtdResponse: JsValue = ifsResponse.as[JsObject] ++ Json
+      .parse(
+        s"""
          |{
          |   "links":[
          |      {
@@ -93,7 +94,8 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
          |   ]
          |}
        """.stripMargin
-    ).as[JsObject]
+      )
+      .as[JsObject]
 
     def uri: String = s"/disposals/other-gains/$nino/$taxYear"
 
@@ -106,6 +108,7 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'retrieve other CGT' endpoint" should {
@@ -131,7 +134,7 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -151,7 +154,8 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
           ("AA1123A", "2019-20", BAD_REQUEST, NinoFormatError),
           ("AA123456A", "20177", BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError))
+          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -188,10 +192,12 @@ class RetrieveOtherCgtControllerISpec extends V1IntegrationSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

@@ -31,4 +31,5 @@ object AssetTypeValidation {
       case Success(_) => NoValidationErrors
     }
   }
+
 }

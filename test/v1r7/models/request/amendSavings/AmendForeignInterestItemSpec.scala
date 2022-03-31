@@ -80,7 +80,7 @@ class AmendForeignInterestItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val minimumModel: AmendForeignInterestItem =  AmendForeignInterestItem(
+  val minimumModel: AmendForeignInterestItem = AmendForeignInterestItem(
     amountBeforeTax = None,
     countryCode = "GER",
     taxTakenOff = None,
@@ -128,5 +128,5 @@ class AmendForeignInterestItemSpec extends UnitSpec {
       }
     }
   }
-}
 
+}

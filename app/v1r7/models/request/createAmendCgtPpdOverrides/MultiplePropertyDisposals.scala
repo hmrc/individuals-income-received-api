@@ -19,9 +19,7 @@ package v1r7.models.request.createAmendCgtPpdOverrides
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class MultiplePropertyDisposals(ppdSubmissionId: String,
-                                     amountOfNetGain: Option[BigDecimal],
-                                     amountOfNetLoss: Option[BigDecimal]) {
+case class MultiplePropertyDisposals(ppdSubmissionId: String, amountOfNetGain: Option[BigDecimal], amountOfNetLoss: Option[BigDecimal]) {
 
   def isAmountOfGainEmpty: Boolean = amountOfNetGain.isEmpty
 
@@ -39,5 +37,6 @@ object MultiplePropertyDisposals {
     (JsPath \ "ppdSubmissionId").write[String] and
       (JsPath \ "amountOfNetGain").writeNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").writeNullable[BigDecimal]
-  ) (unlift(MultiplePropertyDisposals.unapply))
+  )(unlift(MultiplePropertyDisposals.unapply))
+
 }

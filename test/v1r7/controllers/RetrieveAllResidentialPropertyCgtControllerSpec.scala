@@ -32,7 +32,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.fixtures.RetrieveAllResidentialPropertyCgtControllerFixture._
 import v1r7.mocks.requestParsers.MockRetrieveAllResidentialPropertyCgtRequestParser
 import v1r7.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
-import v1r7.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1r7.models.response.retrieveAllResidentialPropertyCgt.{
+  RetrieveAllResidentialPropertyCgtHateoasData,
+  RetrieveAllResidentialPropertyCgtResponse
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -127,6 +130,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
         "SERVER_ERROR"              -> StandardDownstreamError,
         "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
+
   }
 
   "retrieveAll" should {
@@ -144,14 +148,15 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
         MockHateoasFactory
           .wrap(model, RetrieveAllResidentialPropertyCgtHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(model,
-                           Seq(
-                             createAndAmendPpdCgtLink,
-                             deletePpdCgtLink,
-                             createAndAmendNonPpdCgtLink,
-                             deleteNonPpdCgtLink,
-                             retrieveAllCgtLink
-                           )))
+            HateoasWrapper(
+              model,
+              Seq(
+                createAndAmendPpdCgtLink,
+                deletePpdCgtLink,
+                createAndAmendNonPpdCgtLink,
+                deleteNonPpdCgtLink,
+                retrieveAllCgtLink
+              )))
 
         val result: Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)
 
@@ -223,4 +228,5 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
       }
     }
   }
+
 }

@@ -105,4 +105,5 @@ class AmendLumpSumsSpec extends UnitSpec {
       }
     }
   }
+
 }

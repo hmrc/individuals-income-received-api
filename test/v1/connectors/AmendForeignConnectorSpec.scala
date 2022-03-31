@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendForeignConnectorSpec extends ConnectorSpec {
 
-  private val nino: String = "AA111111A"
+  private val nino: String    = "AA111111A"
   private val taxYear: String = "2019-20"
 
   private val foreignEarningsModel = ForeignEarnings(
@@ -76,8 +76,8 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
   "AmendForeignConnector" when {
     "amendForeign" must {
       "return a 204 status for a success scenario" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
+        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
@@ -87,10 +87,12 @@ class AmendForeignConnectorSpec extends ConnectorSpec {
             body = amendForeignRequestBody,
             requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.amendForeign(amendForeignRequest)) shouldBe outcome
       }
     }
   }
+
 }

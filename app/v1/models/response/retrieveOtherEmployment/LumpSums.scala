@@ -27,6 +27,7 @@ case class LumpSums(employerName: String,
                     redundancyCompensationPaymentsUnderExemption: Option[RedundancyCompensationPaymentsUnderExemptionItem])
 
 object LumpSums {
+
   implicit val reads: Reads[LumpSums] = (
     (JsPath \ "employerName").read[String] and
       (JsPath \ "employerRef").read[String] and
@@ -34,7 +35,7 @@ object LumpSums {
       (JsPath \ "benefitFromEmployerFinancedRetirementScheme").readNullable[BenefitFromEmployerFinancedRetirementSchemeItem] and
       (JsPath \ "redundancyCompensationPaymentsOverExemption").readNullable[RedundancyCompensationPaymentsOverExemptionItem] and
       (JsPath \ "redundancyCompensationPaymentsUnderExemption").readNullable[RedundancyCompensationPaymentsUnderExemptionItem]
-    ) (LumpSums.apply _)
+  )(LumpSums.apply _)
 
   implicit val writes: OWrites[LumpSums] = Json.writes[LumpSums]
 }

@@ -16,36 +16,36 @@
 
 package v1.controllers
 
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
+import utils.{IdGenerator, Logging}
 import api.hateoas.AmendHateoasBody
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 import v1.requestParsers.AmendOtherEmploymentRequestParser
 import v1.services.AmendOtherEmploymentService
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                               val lookupService: MtdIdLookupService,
-                                               appConfig: AppConfig,
-                                               requestParser: AmendOtherEmploymentRequestParser,
-                                               service: AmendOtherEmploymentService,
-                                               auditService: AuditService,
-                                               cc: ControllerComponents,
-                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                appConfig: AppConfig,
+                                                requestParser: AmendOtherEmploymentRequestParser,
+                                                service: AmendOtherEmploymentService,
+                                                auditService: AuditService,
+                                                cc: ControllerComponents,
+                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -137,4 +137,5 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
       case _                       => unhandledError(errorWrapper)
     }
   }
+
 }

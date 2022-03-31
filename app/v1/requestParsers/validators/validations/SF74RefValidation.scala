@@ -21,7 +21,7 @@ import api.models.errors.{MtdError, SF74RefFormatError}
 object SF74RefValidation {
 
   def validateOptional(sf74Ref: Option[String], path: String): List[MtdError] = sf74Ref.fold(NoValidationErrors: List[MtdError]) { ref =>
-    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
-      SF74RefFormatError.copy(paths = Some(Seq(path))))
+    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(SF74RefFormatError.copy(paths = Some(Seq(path))))
   }
+
 }

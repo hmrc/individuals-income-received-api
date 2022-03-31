@@ -16,7 +16,7 @@
 
 package api.models.request
 
-import play.api.libs.json.{ JsObject, Writes }
+import play.api.libs.json.{JsObject, Writes}
 
 object EmptyBody {
   implicit val writes: Writes[EmptyBody.type] = (_: EmptyBody.type) => JsObject.empty

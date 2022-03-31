@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import api.mocks.MockHttpClient
-import v1.models.request.addCustomEmployment.{ AddCustomEmploymentRequest, AddCustomEmploymentRequestBody }
+import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import scala.concurrent.Future
@@ -64,8 +64,8 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
   "AddCustomEmploymentConnector" when {
     ".addEmployment" should {
       "return a success upon HttpClient success" in new Test {
-        val outcome                                           = Right(ResponseWrapper(correlationId, response))
-        implicit val hc: HeaderCarrier                        = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val outcome                    = Right(ResponseWrapper(correlationId, response))
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredApi1661HeadersPost: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
@@ -82,4 +82,5 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
 }

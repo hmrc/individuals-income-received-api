@@ -24,8 +24,8 @@ import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmployment
 
 class ListEmploymentsRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2020-21"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2020-21"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val listEmploymentsRawData: ListEmploymentsRawData = ListEmploymentsRawData(
@@ -34,9 +34,11 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockListEmploymentsValidator {
+
     lazy val parser: ListEmploymentsRequestParser = new ListEmploymentsRequestParser(
       validator = mockListEmploymentsValidator
     )
+
   }
 
   "parse" should {
@@ -51,7 +53,8 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockListEmploymentsValidator.validate(listEmploymentsRawData)
+        MockListEmploymentsValidator
+          .validate(listEmploymentsRawData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(listEmploymentsRawData) shouldBe
@@ -59,7 +62,8 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
-        MockListEmploymentsValidator.validate(listEmploymentsRawData)
+        MockListEmploymentsValidator
+          .validate(listEmploymentsRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(listEmploymentsRawData) shouldBe
@@ -67,4 +71,5 @@ class ListEmploymentsRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

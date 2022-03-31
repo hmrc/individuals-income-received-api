@@ -16,7 +16,7 @@
 
 package api.models.hateoas
 
-import api.models.hateoas.Method.{ DELETE, GET, POST }
+import api.models.hateoas.Method.{DELETE, GET, POST}
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
 

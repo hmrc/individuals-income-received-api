@@ -93,10 +93,11 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
   )
 
   val emptyFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-    paths = Some(Seq(
-      "/multiplePropertyDisposals",
-      "/singlePropertyDisposals"
-    ))
+    paths = Some(
+      Seq(
+        "/multiplePropertyDisposals",
+        "/singlePropertyDisposals"
+      ))
   )
 
   val missingFieldsJson: JsValue = Json.parse(
@@ -109,17 +110,18 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
   )
 
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-    paths = Some(Seq(
-      "/singlePropertyDisposals/0/otherReliefAmount",
-      "/singlePropertyDisposals/0/disposalProceeds",
-      "/singlePropertyDisposals/0/prfAmount",
-      "/multiplePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/improvementCosts",
-      "/singlePropertyDisposals/0/completionDate",
-      "/singlePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/additionalCosts",
-      "/singlePropertyDisposals/0/acquisitionAmount"
-    ))
+    paths = Some(
+      Seq(
+        "/singlePropertyDisposals/0/otherReliefAmount",
+        "/singlePropertyDisposals/0/disposalProceeds",
+        "/singlePropertyDisposals/0/prfAmount",
+        "/multiplePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/improvementCosts",
+        "/singlePropertyDisposals/0/completionDate",
+        "/singlePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/additionalCosts",
+        "/singlePropertyDisposals/0/acquisitionAmount"
+      ))
   )
 
   val gainAndLossJson: JsValue = Json.parse(
@@ -154,10 +156,11 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
   )
 
   val amountGainLossError: MtdError = RuleAmountGainLossError.copy(
-    paths = Some(Seq(
-      "/multiplePropertyDisposals/0",
-      "/singlePropertyDisposals/0"
-    ))
+    paths = Some(
+      Seq(
+        "/multiplePropertyDisposals/0",
+        "/singlePropertyDisposals/0"
+      ))
   )
 
   val lossGreaterThanGainJson: JsValue = Json.parse(
@@ -190,9 +193,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
   )
 
   val lossesGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
-    paths = Some(Seq(
-      "/singlePropertyDisposals/0/lossesFromThisYear"
-    ))
+    paths = Some(
+      Seq(
+        "/singlePropertyDisposals/0/lossesFromThisYear"
+      ))
   )
 
   private val invalidValueRequestBodyJson: JsValue = Json.parse(
@@ -244,28 +248,29 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
 
   val invalidValueErrors: MtdError = ValueFormatError.copy(
     message = "The value must be between 0 and 99999999999.99",
-    paths = Some(Seq(
-      "/multiplePropertyDisposals/0/amountOfNetGain",
-      "/multiplePropertyDisposals/1/amountOfNetLoss",
-      "/singlePropertyDisposals/0/disposalProceeds",
-      "/singlePropertyDisposals/0/acquisitionAmount",
-      "/singlePropertyDisposals/0/improvementCosts",
-      "/singlePropertyDisposals/0/additionalCosts",
-      "/singlePropertyDisposals/0/prfAmount",
-      "/singlePropertyDisposals/0/otherReliefAmount",
-      "/singlePropertyDisposals/0/lossesFromThisYear",
-      "/singlePropertyDisposals/0/lossesFromPreviousYear",
-      "/singlePropertyDisposals/0/amountOfNetGain",
-      "/singlePropertyDisposals/1/disposalProceeds",
-      "/singlePropertyDisposals/1/acquisitionAmount",
-      "/singlePropertyDisposals/1/improvementCosts",
-      "/singlePropertyDisposals/1/additionalCosts",
-      "/singlePropertyDisposals/1/prfAmount",
-      "/singlePropertyDisposals/1/otherReliefAmount",
-      "/singlePropertyDisposals/1/lossesFromThisYear",
-      "/singlePropertyDisposals/1/lossesFromPreviousYear",
-      "/singlePropertyDisposals/1/amountOfNetLoss"
-    ))
+    paths = Some(
+      Seq(
+        "/multiplePropertyDisposals/0/amountOfNetGain",
+        "/multiplePropertyDisposals/1/amountOfNetLoss",
+        "/singlePropertyDisposals/0/disposalProceeds",
+        "/singlePropertyDisposals/0/acquisitionAmount",
+        "/singlePropertyDisposals/0/improvementCosts",
+        "/singlePropertyDisposals/0/additionalCosts",
+        "/singlePropertyDisposals/0/prfAmount",
+        "/singlePropertyDisposals/0/otherReliefAmount",
+        "/singlePropertyDisposals/0/lossesFromThisYear",
+        "/singlePropertyDisposals/0/lossesFromPreviousYear",
+        "/singlePropertyDisposals/0/amountOfNetGain",
+        "/singlePropertyDisposals/1/disposalProceeds",
+        "/singlePropertyDisposals/1/acquisitionAmount",
+        "/singlePropertyDisposals/1/improvementCosts",
+        "/singlePropertyDisposals/1/additionalCosts",
+        "/singlePropertyDisposals/1/prfAmount",
+        "/singlePropertyDisposals/1/otherReliefAmount",
+        "/singlePropertyDisposals/1/lossesFromThisYear",
+        "/singlePropertyDisposals/1/lossesFromPreviousYear",
+        "/singlePropertyDisposals/1/amountOfNetLoss"
+      ))
   )
 
   def jsonWithIds(multipleSubmissionId: String, singleSubmissionId: String): JsValue = Json.parse(
@@ -298,17 +303,18 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
   )
 
   val ppdSubmissionFormatError: MtdError = PpdSubmissionIdFormatError.copy(
-    paths = Some(Seq(
-      "/multiplePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/ppdSubmissionId",
-    ))
+    paths = Some(
+      Seq(
+        "/multiplePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/ppdSubmissionId"
+      ))
   )
 
   def ppdDuplicatedIdError(duplicatedId: String): MtdError = RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
     id = duplicatedId,
     paths = Seq(
       "/multiplePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/ppdSubmissionId",
+      "/singlePropertyDisposals/0/ppdSubmissionId"
     )
   )
 
@@ -342,17 +348,17 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
   )
 
   val dateFormatError: MtdError = DateFormatError.copy(
-    paths = Some(Seq(
-      "/singlePropertyDisposals/0/completionDate",
-      "/singlePropertyDisposals/0/acquisitionDate"
-    ))
+    paths = Some(
+      Seq(
+        "/singlePropertyDisposals/0/completionDate",
+        "/singlePropertyDisposals/0/acquisitionDate"
+      ))
   )
-
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2020-21"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2020-21"
     val correlationId: String = "X-123"
 
     val hateoasResponse: JsValue = Json.parse(
@@ -392,8 +398,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
     }
 
     def verifyNrs(payload: JsValue): Unit =
-      verify(postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-ppd"))
-        .withRequestBody(equalToJson(payload.toString())))
+      verify(
+        postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-ppd"))
+          .withRequestBody(equalToJson(payload.toString())))
+
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
@@ -425,7 +433,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
                                 expectedErrors: Option[ErrorWrapper],
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -458,13 +466,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
           ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("ppdSubmissionIDFormat")),
-          ("AA123456A",
+          (
+            "AA123456A",
             "2020-21",
             jsonWithIds("DuplicatedId", "DuplicatedId"),
             BAD_REQUEST,
             ppdDuplicatedIdError("DuplicatedId"),
             None,
-            Some("duplicatedIDs")),
+            Some("duplicatedIDs"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -485,7 +494,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
-
 
             verifyNrs(validRequestBodyJson)
           }
@@ -510,10 +518,12 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", FORBIDDEN, RuleIncorrectDisposalTypeError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

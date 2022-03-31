@@ -22,13 +22,21 @@ import config.AppConfig
 import utils.CurrentDateTime
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.createAmendNonPayeEmployment._
-import v1r7.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearNotEndedValidation, TaxYearNotSupportedValidation, TaxYearValidation, TipsValidation}
+import v1r7.requestParsers.validators.validations.{
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  TipsValidation
+}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendNonPayeEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[CreateAmendNonPayeEmploymentRawData] {
+
   private val validationSet = List(
     parameterFormatValidation,
     parameterRuleValidation,
@@ -70,4 +78,5 @@ class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: 
       )
     )
   }
+
 }

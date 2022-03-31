@@ -18,7 +18,21 @@ package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +44,8 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -128,6 +142,7 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'amend dividends' endpoint" should {
@@ -152,7 +167,7 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
       "all field value validations fail on the request body" in new Test {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-           """
+          """
              |{
              |   "foreignDividend": [
              |      {
@@ -212,49 +227,53 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
 
         val allInvalidValueRequestError: List[MtdError] = List(
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignDividend/0/countryCode",
-              "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignDividend/0/countryCode",
+                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
+              ))
           ),
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/foreignDividend/0/amountBeforeTax",
-              "/foreignDividend/0/taxTakenOff",
-              "/foreignDividend/0/specialWithholdingTax",
-              "/foreignDividend/0/taxableAmount",
-              "/foreignDividend/1/amountBeforeTax",
-              "/foreignDividend/1/taxTakenOff",
-              "/foreignDividend/1/specialWithholdingTax",
-              "/foreignDividend/1/taxableAmount",
-              "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-              "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
-              "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-              "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
-              "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-              "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
-              "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-              "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
-              "/stockDividend/grossAmount",
-              "/redeemableShares/grossAmount",
-              "/bonusIssuesOfSecurities/grossAmount",
-              "/closeCompanyLoansWrittenOff/grossAmount"
-            ))
+            paths = Some(
+              List(
+                "/foreignDividend/0/amountBeforeTax",
+                "/foreignDividend/0/taxTakenOff",
+                "/foreignDividend/0/specialWithholdingTax",
+                "/foreignDividend/0/taxableAmount",
+                "/foreignDividend/1/amountBeforeTax",
+                "/foreignDividend/1/taxTakenOff",
+                "/foreignDividend/1/specialWithholdingTax",
+                "/foreignDividend/1/taxableAmount",
+                "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+                "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
+                "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+                "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
+                "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+                "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
+                "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+                "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
+                "/stockDividend/grossAmount",
+                "/redeemableShares/grossAmount",
+                "/bonusIssuesOfSecurities/grossAmount",
+                "/closeCompanyLoansWrittenOff/grossAmount"
+              ))
           ),
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/foreignDividend/1/countryCode",
-              "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignDividend/1/countryCode",
+                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+              ))
           ),
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/stockDividend/customerReference",
-              "/redeemableShares/customerReference",
-              "/bonusIssuesOfSecurities/customerReference",
-              "/closeCompanyLoansWrittenOff/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/stockDividend/customerReference",
+                "/redeemableShares/customerReference",
+                "/bonusIssuesOfSecurities/customerReference",
+                "/closeCompanyLoansWrittenOff/customerReference"
+              ))
           )
         )
 
@@ -277,8 +296,7 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
 
       "complex error scenario" in new Test {
 
-        val iirDividendsIncomeAmendErrorsRequest: JsValue = Json.parse(
-          """
+        val iirDividendsIncomeAmendErrorsRequest: JsValue = Json.parse("""
             |{
             |   "foreignDividend": [
             |      {
@@ -335,8 +353,7 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
             |}
             |""".stripMargin)
 
-        val iirDividendsIncomeAmendErrorsResponse: JsValue = Json.parse(
-          """
+        val iirDividendsIncomeAmendErrorsResponse: JsValue = Json.parse("""
             |{
             |   "code":"INVALID_REQUEST",
             |   "message":"Invalid request",
@@ -513,7 +530,7 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
-         """
+        """
           |{
           |   "stockDividend": {
           |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
@@ -622,68 +639,78 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
-        paths = Some(Seq(
-          "/foreignDividend/0/countryCode",
-          "/foreignDividend/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/foreignDividend/0/countryCode",
+            "/foreignDividend/1/countryCode"
+          ))
       )
 
       val countryCodeRuleError: MtdError = CountryCodeRuleError.copy(
-        paths = Some(Seq(
-          "/dividendIncomeReceivedWhilstAbroad/0/countryCode",
-          "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/dividendIncomeReceivedWhilstAbroad/0/countryCode",
+            "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+          ))
       )
 
       val customerRefError: MtdError = CustomerRefFormatError.copy(
-        paths = Some(Seq(
-          "/stockDividend/customerReference",
-          "/redeemableShares/customerReference"
-        ))
+        paths = Some(
+          Seq(
+            "/stockDividend/customerReference",
+            "/redeemableShares/customerReference"
+          ))
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
         message = "The value must be between 0 and 99999999999.99",
-        paths = Some(List(
-          "/foreignDividend/0/amountBeforeTax",
-          "/foreignDividend/0/taxTakenOff",
-          "/foreignDividend/0/specialWithholdingTax",
-          "/foreignDividend/0/taxableAmount",
-          "/foreignDividend/1/amountBeforeTax",
-          "/foreignDividend/1/taxTakenOff",
-          "/foreignDividend/1/specialWithholdingTax",
-          "/foreignDividend/1/taxableAmount",
-          "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-          "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
-          "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-          "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
-          "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-          "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
-          "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-          "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
-          "/stockDividend/grossAmount",
-          "/redeemableShares/grossAmount",
-          "/bonusIssuesOfSecurities/grossAmount",
-          "/closeCompanyLoansWrittenOff/grossAmount"
-        ))
+        paths = Some(
+          List(
+            "/foreignDividend/0/amountBeforeTax",
+            "/foreignDividend/0/taxTakenOff",
+            "/foreignDividend/0/specialWithholdingTax",
+            "/foreignDividend/0/taxableAmount",
+            "/foreignDividend/1/amountBeforeTax",
+            "/foreignDividend/1/taxTakenOff",
+            "/foreignDividend/1/specialWithholdingTax",
+            "/foreignDividend/1/taxableAmount",
+            "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+            "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
+            "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+            "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
+            "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+            "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
+            "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+            "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
+            "/stockDividend/grossAmount",
+            "/redeemableShares/grossAmount",
+            "/bonusIssuesOfSecurities/grossAmount",
+            "/closeCompanyLoansWrittenOff/grossAmount"
+          ))
       )
 
-      val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-        "/foreignDividend/0/taxTakenOff",
-        "/foreignDividend/1/taxTakenOff"
-      )))
+      val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+        Seq(
+          "/foreignDividend/0/taxTakenOff",
+          "/foreignDividend/1/taxTakenOff"
+        )))
 
-      val missingFieldRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-        "/redeemableShares/grossAmount"
-      )))
+      val missingFieldRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+        Seq(
+          "/redeemableShares/grossAmount"
+        )))
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -700,7 +727,7 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", "2019-20", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
@@ -745,10 +772,12 @@ class AmendDividendsControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

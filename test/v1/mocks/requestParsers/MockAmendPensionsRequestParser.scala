@@ -22,15 +22,16 @@ import v1.requestParsers.AmendPensionsRequestParser
 import api.models.errors.ErrorWrapper
 import v1.models.request.amendPensions.{AmendPensionsRawData, AmendPensionsRequest}
 
-
 trait MockAmendPensionsRequestParser extends MockFactory {
 
   val mockAmendPensionsRequestParser: AmendPensionsRequestParser = mock[AmendPensionsRequestParser]
 
   object MockAmendPensionsRequestParser {
+
     def parse(data: AmendPensionsRawData): CallHandler[Either[ErrorWrapper, AmendPensionsRequest]] = {
       (mockAmendPensionsRequestParser.parseRequest(_: AmendPensionsRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

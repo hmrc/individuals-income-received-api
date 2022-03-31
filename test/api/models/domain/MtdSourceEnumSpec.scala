@@ -24,7 +24,7 @@ class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
   testRoundTrip[MtdSourceEnum](
     ("hmrcHeld", MtdSourceEnum.hmrcHeld),
     ("user", MtdSourceEnum.user),
-    ("latest", MtdSourceEnum.latest),
+    ("latest", MtdSourceEnum.latest)
   )
 
   "toDesViewString" must {
@@ -34,4 +34,5 @@ class MtdSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
       MtdSourceEnum.user.toDesViewString shouldBe "CUSTOMER"
     }
   }
+
 }

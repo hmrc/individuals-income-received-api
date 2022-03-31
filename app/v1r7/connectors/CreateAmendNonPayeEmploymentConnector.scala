@@ -26,21 +26,21 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
-class CreateAmendNonPayeEmploymentConnector @Inject()(val http: HttpClient,
-                                                      val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendNonPayeEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
-      uri = Api1661Uri[Unit](s"income-tax/income/employments/non-paye/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/employments/non-paye/$nino/$taxYear"),
+      body = request.body
     )
   }
 

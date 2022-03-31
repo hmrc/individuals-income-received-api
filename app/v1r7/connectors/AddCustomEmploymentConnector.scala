@@ -29,17 +29,16 @@ import v1r7.models.response.addCustomEmployment.AddCustomEmploymentResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddCustomEmploymentConnector @Inject()(val http: HttpClient,
-                                             val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AddCustomEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def addEmployment(request: AddCustomEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[AddCustomEmploymentResponse]] = {
+  def addEmployment(request: AddCustomEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[AddCustomEmploymentResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     post(request.body, Api1661Uri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))

@@ -36,15 +36,15 @@ import v1r7.services._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
-                                                     val lookupService: MtdIdLookupService,
-                                                     appConfig: AppConfig,
-                                                     requestParser: CreateAmendCgtPpdOverridesRequestParser,
-                                                     service: CreateAmendCgtPpdOverridesService,
-                                                     auditService: AuditService,
-                                                     nrsProxyService: NrsProxyService,
-                                                     cc: ControllerComponents,
-                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
+                                                      val lookupService: MtdIdLookupService,
+                                                      appConfig: AppConfig,
+                                                      requestParser: CreateAmendCgtPpdOverridesRequestParser,
+                                                      service: CreateAmendCgtPpdOverridesService,
+                                                      auditService: AuditService,
+                                                      nrsProxyService: NrsProxyService,
+                                                      cc: ControllerComponents,
+                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -106,12 +106,13 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          CreateAmendCgtPpdOverridesAuditDetail(request.userDetails,
-                                                nino,
-                                                taxYear,
-                                                request.body,
-                                                correlationId,
-                                                AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+          CreateAmendCgtPpdOverridesAuditDetail(
+            request.userDetails,
+            nino,
+            taxYear,
+            request.body,
+            correlationId,
+            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge

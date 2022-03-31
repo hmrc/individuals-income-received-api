@@ -27,7 +27,7 @@ import v1.models.request.amendPensions.AmendPensionsRawData
 
 class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -320,21 +320,21 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
     """.stripMargin
   )
 
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
-  private val invalidQOPSRefRawRequestBody = AnyContentAsJson(invalidQOPSRefRequestBodyJson)
-  private val invalidSF74RefRawRequestBody = AnyContentAsJson(invalidSF74RefRequestBodyJson)
-  private val invalidDoubleTaxationArticleRawRequestBody = AnyContentAsJson(invalidDoubleTaxationArticleRequestBodyJson)
-  private val invalidDoubleTaxationTreatyRawRequestBody = AnyContentAsJson(invalidDoubleTaxationTreatyRequestBodyJson)
-  private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
-  private val invalidForeignPensionsRawRequestBody = AnyContentAsJson(invalidForeignPensionsRequestBodyJson)
+  private val validRawRequestBody                               = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody                               = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody                            = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody                            = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody                  = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidCustomerRefRawRequestBody                  = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
+  private val invalidQOPSRefRawRequestBody                      = AnyContentAsJson(invalidQOPSRefRequestBodyJson)
+  private val invalidSF74RefRawRequestBody                      = AnyContentAsJson(invalidSF74RefRequestBodyJson)
+  private val invalidDoubleTaxationArticleRawRequestBody        = AnyContentAsJson(invalidDoubleTaxationArticleRequestBodyJson)
+  private val invalidDoubleTaxationTreatyRawRequestBody         = AnyContentAsJson(invalidDoubleTaxationTreatyRequestBodyJson)
+  private val invalidCountryCodeRawRequestBody                  = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidCountryCodeRuleRawRequestBody              = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
+  private val invalidForeignPensionsRawRequestBody              = AnyContentAsJson(invalidForeignPensionsRequestBodyJson)
   private val invalidOverseasPensionContributionsRawRequestBody = AnyContentAsJson(invalidOverseasPensionContributionsRequestBodyJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val allInvalidValueRawRequestBody                     = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
 
@@ -345,6 +345,7 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -404,11 +405,13 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
 
       "the submitted request body has missing mandatory fields" in new Test {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-            "/foreignPensions/0/countryCode",
-            "/foreignPensions/0/foreignTaxCreditRelief",
-            "/foreignPensions/0/taxableAmount"
-          ))))
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+              Seq(
+                "/foreignPensions/0/countryCode",
+                "/foreignPensions/0/foreignTaxCreditRelief",
+                "/foreignPensions/0/taxableAmount"
+              ))))
       }
     }
 
@@ -465,18 +468,20 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (foreign pensions)" in new Test {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidForeignPensionsRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/foreignPensions/0/amountBeforeTax"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/foreignPensions/0/amountBeforeTax"))
+            ))
       }
 
       "one field fails value validation (Overseas Pension Contributions)" in new Test {
         validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidOverseasPensionContributionsRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/overseasPensionContributions/0/exemptEmployersPensionContribs"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/overseasPensionContributions/0/exemptEmployersPensionContribs"))
+            ))
       }
     }
 
@@ -502,46 +507,53 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
               ))
             ),
             CustomerRefFormatError.copy(
-              paths = Some(List(
-                "/overseasPensionContributions/0/customerReference",
-                "/overseasPensionContributions/1/customerReference"
-              ))
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/customerReference",
+                  "/overseasPensionContributions/1/customerReference"
+                ))
             ),
             QOPSRefFormatError.copy(
-              paths = Some(List(
-                "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
-                "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
-              ))
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
+                  "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+                ))
             ),
             SF74RefFormatError.copy(
-              paths = Some(List(
-                "/overseasPensionContributions/0/sf74reference",
-                "/overseasPensionContributions/1/sf74reference"
-              ))
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/sf74reference",
+                  "/overseasPensionContributions/1/sf74reference"
+                ))
             ),
             DoubleTaxationTreatyFormatError.copy(
-              paths = Some(List(
-                "/overseasPensionContributions/0/dblTaxationTreaty",
-                "/overseasPensionContributions/1/dblTaxationTreaty"
-              ))
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/dblTaxationTreaty",
+                  "/overseasPensionContributions/1/dblTaxationTreaty"
+                ))
             ),
             CountryCodeRuleError.copy(
-              paths = Some(List(
-                "/foreignPensions/0/countryCode",
-                "/overseasPensionContributions/0/dblTaxationCountryCode"
-              ))
+              paths = Some(
+                List(
+                  "/foreignPensions/0/countryCode",
+                  "/overseasPensionContributions/0/dblTaxationCountryCode"
+                ))
             ),
             DoubleTaxationArticleFormatError.copy(
-              paths = Some(List(
-                "/overseasPensionContributions/0/dblTaxationArticle",
-                "/overseasPensionContributions/1/dblTaxationArticle"
-              ))
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/dblTaxationArticle",
+                  "/overseasPensionContributions/1/dblTaxationArticle"
+                ))
             ),
             CountryCodeFormatError.copy(
-              paths = Some(List(
-                "/foreignPensions/1/countryCode",
-                "/overseasPensionContributions/1/dblTaxationCountryCode"
-              ))
+              paths = Some(
+                List(
+                  "/foreignPensions/1/countryCode",
+                  "/overseasPensionContributions/1/dblTaxationCountryCode"
+                ))
             )
           )
       }
@@ -554,4 +566,5 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
       }
     }
   }
+
 }

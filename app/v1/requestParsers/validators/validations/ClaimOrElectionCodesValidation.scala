@@ -17,9 +17,9 @@
 package v1.requestParsers.validators.validations
 
 import api.models.domain.ClaimOrElectionCodes
-import api.models.errors.{ ClaimOrElectionCodesFormatError, MtdError }
+import api.models.errors.{ClaimOrElectionCodesFormatError, MtdError}
 
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 object ClaimOrElectionCodesValidation {
 
@@ -31,17 +31,17 @@ object ClaimOrElectionCodesValidation {
   }
 
   private def validate(claimOrElectionCodes: Seq[String], disposalsIndex: Int): List[MtdError] = {
-    claimOrElectionCodes.zipWithIndex.flatMap {
-      case (claimOrElectionCode, claimOrElectionCodesIndex) =>
-        Try {
-          Option(claimOrElectionCode).map(ClaimOrElectionCodes.parser)
-        } match {
-          case Failure(_) => List(s"/disposals/$disposalsIndex/claimOrElectionCodes/$claimOrElectionCodesIndex")
-          case Success(_) => List()
-        }
+    claimOrElectionCodes.zipWithIndex.flatMap { case (claimOrElectionCode, claimOrElectionCodesIndex) =>
+      Try {
+        Option(claimOrElectionCode).map(ClaimOrElectionCodes.parser)
+      } match {
+        case Failure(_) => List(s"/disposals/$disposalsIndex/claimOrElectionCodes/$claimOrElectionCodesIndex")
+        case Success(_) => List()
+      }
     }.toList match {
       case Nil  => NoValidationErrors
       case list => List(ClaimOrElectionCodesFormatError.copy(paths = Some(list)))
     }
   }
+
 }

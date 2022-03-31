@@ -28,4 +28,5 @@ object TaxYearNotSupportedValidation {
     if (desTaxYear < minimumTaxYear) List(RuleTaxYearNotSupportedError)
     else NoValidationErrors
   }
+
 }

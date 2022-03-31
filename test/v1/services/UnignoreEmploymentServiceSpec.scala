@@ -44,6 +44,7 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
     val service: UnignoreEmploymentService = new UnignoreEmploymentService(
       connector = mockUnignoreEmploymentConnector
     )
+
   }
 
   "UnignoreEmploymentService" when {
@@ -86,4 +87,5 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

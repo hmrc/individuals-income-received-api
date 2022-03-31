@@ -52,4 +52,5 @@ class OverseasIncomeAndGainsSpec extends UnitSpec {
       }
     }
   }
+
 }

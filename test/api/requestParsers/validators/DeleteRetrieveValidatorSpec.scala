@@ -16,7 +16,7 @@
 
 package api.requestParsers.validators
 
-import api.models.errors.{ NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError }
+import api.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import api.models.request.DeleteRetrieveRawData
 import config.AppConfig
 import mocks.MockAppConfig
@@ -36,6 +36,7 @@ class DeleteRetrieveValidatorSpec extends UnitSpec {
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -80,4 +81,5 @@ class DeleteRetrieveValidatorSpec extends UnitSpec {
       }
     }
   }
+
 }

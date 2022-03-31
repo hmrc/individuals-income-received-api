@@ -98,4 +98,5 @@ class AmendSecuritiesSpec extends UnitSpec {
       }
     }
   }
+
 }

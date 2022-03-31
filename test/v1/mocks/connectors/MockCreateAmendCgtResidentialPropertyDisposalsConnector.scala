@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsConnector extends MockFactory {
 
@@ -43,6 +43,7 @@ trait MockCreateAmendCgtResidentialPropertyDisposalsConnector extends MockFactor
         )
         .expects(request, *, *, *)
     }
+
   }
 
 }

@@ -28,7 +28,7 @@ import api.services.ServiceSpec
 
 class AmendForeignServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val foreignEarningsModel = ForeignEarnings(
@@ -66,6 +66,7 @@ class AmendForeignServiceSpec extends ServiceSpec {
     val service: AmendForeignService = new AmendForeignService(
       connector = mockAmendForeignConnector
     )
+
   }
 
   "AmendForeignService" when {
@@ -73,7 +74,8 @@ class AmendForeignServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendForeignConnector.amendForeign(amendForeignRequest)
+        MockAmendForeignConnector
+          .amendForeign(amendForeignRequest)
           .returns(Future.successful(outcome))
 
         await(service.amendForeign(amendForeignRequest)) shouldBe outcome
@@ -84,7 +86,8 @@ class AmendForeignServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendForeignConnector.amendForeign(amendForeignRequest)
+            MockAmendForeignConnector
+              .amendForeign(amendForeignRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -104,4 +107,5 @@ class AmendForeignServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

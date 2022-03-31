@@ -29,14 +29,15 @@ import scala.concurrent.Future
 
 class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
-  val createAmendCgtResidentialPropertyDisposalsRequest: CreateAmendCgtResidentialPropertyDisposalsRequest = CreateAmendCgtResidentialPropertyDisposalsRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = requestBodyModel
-  )
+  val createAmendCgtResidentialPropertyDisposalsRequest: CreateAmendCgtResidentialPropertyDisposalsRequest =
+    CreateAmendCgtResidentialPropertyDisposalsRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      body = requestBodyModel
+    )
 
   trait Test extends MockCreateAmendCgtResidentialPropertyDisposalsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "amend")
@@ -44,6 +45,7 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
     val service: CreateAmendCgtResidentialPropertyDisposalsService = new CreateAmendCgtResidentialPropertyDisposalsService(
       connector = mockCreateAmendCgtResidentialPropertyDisposalsConnector
     )
+
   }
 
   "CreateAmendCgtResidentialPropertyDisposalsService" when {
@@ -51,7 +53,8 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
+        MockCreateAmendCgtResidentialPropertyDisposalsConnector
+          .createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
           .returns(Future.successful(outcome))
 
         await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe outcome
@@ -62,7 +65,8 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector" in new Test {
 
-            MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
+            MockCreateAmendCgtResidentialPropertyDisposalsConnector
+              .createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -71,7 +75,8 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
         def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
 
-            MockCreateAmendCgtResidentialPropertyDisposalsConnector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
+            MockCreateAmendCgtResidentialPropertyDisposalsConnector
+              .createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
 
             await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -94,4 +99,5 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
       }
     }
   }
+
 }

@@ -35,5 +35,5 @@ class DownstreamSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
       DownstreamSourceEnum.LATEST.toMtdEnum shouldBe MtdSourceEnum.latest
     }
   }
-}
 
+}

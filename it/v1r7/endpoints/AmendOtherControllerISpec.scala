@@ -18,7 +18,20 @@ package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +43,8 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -121,6 +134,7 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'amend other income' endpoint" should {
@@ -201,13 +215,14 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
 
         val response: WSResponse = await(request().put(invalidRequestBodyJson))
         response.status shouldBe BAD_REQUEST
-        response.json shouldBe Json.toJson(ErrorWrapper(
-          correlationId = correlationId,
-          error = TaxYearFormatError.copy(
-            paths = Some(List("/businessReceipts/0/taxYear"))
-          ),
-          errors = None
-        ))
+        response.json shouldBe Json.toJson(
+          ErrorWrapper(
+            correlationId = correlationId,
+            error = TaxYearFormatError.copy(
+              paths = Some(List("/businessReceipts/0/taxYear"))
+            ),
+            errors = None
+          ))
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }
@@ -272,13 +287,14 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
 
         val response: WSResponse = await(request().put(invalidRequestBodyJson))
         response.status shouldBe BAD_REQUEST
-        response.json shouldBe Json.toJson(ErrorWrapper(
-          correlationId = correlationId,
-          error = RuleTaxYearRangeInvalidError.copy(
-            paths = Some(List("/businessReceipts/0/taxYear"))
-          ),
-          errors = None
-        ))
+        response.json shouldBe Json.toJson(
+          ErrorWrapper(
+            correlationId = correlationId,
+            error = RuleTaxYearRangeInvalidError.copy(
+              paths = Some(List("/businessReceipts/0/taxYear"))
+            ),
+            errors = None
+          ))
 
         response.header("Content-Type") shouldBe Some("application/json")
       }
@@ -342,29 +358,30 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
         val allInvalidValueRequestError: List[MtdError] = List(
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/businessReceipts/0/grossAmount",
-              "/businessReceipts/1/grossAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-              "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
-              "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-              "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-              "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
-              "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-              "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
-              "/overseasIncomeAndGains/gainAmount",
-              "/chargeableForeignBenefitsAndGifts/transactionBenefit",
-              "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
-              "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
-              "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
-              "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
-              "/omittedForeignIncome/amount"
-            ))
+            paths = Some(
+              List(
+                "/businessReceipts/0/grossAmount",
+                "/businessReceipts/1/grossAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+                "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
+                "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+                "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+                "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
+                "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+                "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
+                "/overseasIncomeAndGains/gainAmount",
+                "/chargeableForeignBenefitsAndGifts/transactionBenefit",
+                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
+                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
+                "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
+                "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
+                "/omittedForeignIncome/amount"
+              ))
           ),
           TaxYearFormatError.copy(
             paths = Some(List("/businessReceipts/0/taxYear"))
@@ -722,44 +739,47 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
       )
 
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
-        paths = Some(Seq(
-          "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
-          "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
+            "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
+          ))
       )
 
       val countryCodeRuleError: MtdError = CountryCodeRuleError.copy(
-        paths = Some(Seq(
-          "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
-          "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
+            "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
+          ))
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
         message = "The value must be between 0 and 99999999999.99",
-        paths = Some(List(
-          "/businessReceipts/0/grossAmount",
-          "/businessReceipts/1/grossAmount",
-          "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-          "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
-          "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-          "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
-          "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
-          "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
-          "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-          "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
-          "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-          "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
-          "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
-          "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
-          "/overseasIncomeAndGains/gainAmount",
-          "/chargeableForeignBenefitsAndGifts/transactionBenefit",
-          "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
-          "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
-          "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
-          "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
-          "/omittedForeignIncome/amount"
-        ))
+        paths = Some(
+          List(
+            "/businessReceipts/0/grossAmount",
+            "/businessReceipts/1/grossAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+            "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
+            "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+            "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+            "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
+            "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+            "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
+            "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
+            "/overseasIncomeAndGains/gainAmount",
+            "/chargeableForeignBenefitsAndGifts/transactionBenefit",
+            "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
+            "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
+            "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
+            "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
+            "/omittedForeignIncome/amount"
+          ))
       )
 
       val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
@@ -771,12 +791,16 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -793,7 +817,7 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None),
           ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", "2019-20", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
@@ -839,10 +863,12 @@ class AmendOtherControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

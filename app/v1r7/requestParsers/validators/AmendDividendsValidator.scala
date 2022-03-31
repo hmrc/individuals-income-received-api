@@ -23,11 +23,19 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendDividends._
-import v1r7.requestParsers.validators.validations.{CountryCodeValidation, CustomerRefInsuranceValidation, DecimalValueValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  CustomerRefInsuranceValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
+class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -55,30 +63,42 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig)
   }
 
   private def bodyValueValidator: AmendDividendsRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendDividendsRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.foreignDividend.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateForeignDividend(data, index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.dividendIncomeReceivedWhilstAbroad.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateDividendIncomeReceivedWhilstAbroad(data, index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.stockDividend.map { data => validateCommonDividends(data, "stockDividend")}.getOrElse(NoValidationErrors),
-        requestBodyData.redeemableShares.map { data => validateCommonDividends(data, "redeemableShares")}.getOrElse(NoValidationErrors),
-        requestBodyData.bonusIssuesOfSecurities.map { data => validateCommonDividends(data, "bonusIssuesOfSecurities")}.getOrElse(NoValidationErrors),
-        requestBodyData.closeCompanyLoansWrittenOff.map { data => validateCommonDividends(data, "closeCompanyLoansWrittenOff")}.getOrElse(NoValidationErrors)
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          requestBodyData.foreignDividend
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeignDividend(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.dividendIncomeReceivedWhilstAbroad
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateDividendIncomeReceivedWhilstAbroad(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.stockDividend.map { data => validateCommonDividends(data, "stockDividend") }.getOrElse(NoValidationErrors),
+          requestBodyData.redeemableShares.map { data => validateCommonDividends(data, "redeemableShares") }.getOrElse(NoValidationErrors),
+          requestBodyData.bonusIssuesOfSecurities
+            .map { data => validateCommonDividends(data, "bonusIssuesOfSecurities") }
+            .getOrElse(NoValidationErrors),
+          requestBodyData.closeCompanyLoansWrittenOff
+            .map { data => validateCommonDividends(data, "closeCompanyLoansWrittenOff") }
+            .getOrElse(NoValidationErrors)
+        )
+      ))
   }
 
   private def validateForeignDividend(foreignDividend: AmendForeignDividendItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CountryCodeValidation.validate(foreignDividend.countryCode).map(
-        _.copy(paths = Some(Seq(s"/foreignDividend/$arrayIndex/countryCode")))
-      ),
+      CountryCodeValidation
+        .validate(foreignDividend.countryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/foreignDividend/$arrayIndex/countryCode")))
+        ),
       DecimalValueValidation.validateOptional(
         amount = foreignDividend.amountBeforeTax,
         path = s"/foreignDividend/$arrayIndex/amountBeforeTax"
@@ -101,9 +121,11 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig)
   private def validateDividendIncomeReceivedWhilstAbroad(dividendIncomeReceivedWhilstAbroad: AmendDividendIncomeReceivedWhilstAbroadItem,
                                                          arrayIndex: Int): List[MtdError] = {
     List(
-      CountryCodeValidation.validate(dividendIncomeReceivedWhilstAbroad.countryCode).map(
-        _.copy(paths = Some(Seq(s"/dividendIncomeReceivedWhilstAbroad/$arrayIndex/countryCode")))
-      ),
+      CountryCodeValidation
+        .validate(dividendIncomeReceivedWhilstAbroad.countryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/dividendIncomeReceivedWhilstAbroad/$arrayIndex/countryCode")))
+        ),
       DecimalValueValidation.validateOptional(
         amount = dividendIncomeReceivedWhilstAbroad.amountBeforeTax,
         path = s"/dividendIncomeReceivedWhilstAbroad/$arrayIndex/amountBeforeTax"
@@ -125,13 +147,16 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig)
 
   private def validateCommonDividends(commonDividends: AmendCommonDividends, fieldName: String): List[MtdError] = {
     List(
-      CustomerRefInsuranceValidation.validateOptional(commonDividends.customerReference).map(
-        _.copy(paths = Some(Seq(s"/$fieldName/customerReference")))
-      ),
+      CustomerRefInsuranceValidation
+        .validateOptional(commonDividends.customerReference)
+        .map(
+          _.copy(paths = Some(Seq(s"/$fieldName/customerReference")))
+        ),
       DecimalValueValidation.validate(
         amount = commonDividends.grossAmount,
         path = s"/$fieldName/grossAmount"
       )
     ).flatten
   }
+
 }

@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   val createAmendOtherCgtRequest: CreateAmendOtherCgtRequest = CreateAmendOtherCgtRequest(
@@ -44,13 +44,15 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
     val service: CreateAmendOtherCgtService = new CreateAmendOtherCgtService(
       connector = mockCreateAmendOtherCgtDisposalsAndGainsConnector
     )
+
   }
 
   "createAndAmend" should {
     "return a success response" when {
       "a valid request is made" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
-        MockCreateAmendOtherCgtConnector.createAndAmend(createAmendOtherCgtRequest)
+        MockCreateAmendOtherCgtConnector
+          .createAndAmend(createAmendOtherCgtRequest)
           .returns(Future.successful(outcome))
 
         await(service.createAmend(createAmendOtherCgtRequest)) shouldBe outcome
@@ -62,7 +64,8 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the connector" in new Test {
 
-          MockCreateAmendOtherCgtConnector.createAndAmend(createAmendOtherCgtRequest)
+          MockCreateAmendOtherCgtConnector
+            .createAndAmend(createAmendOtherCgtRequest)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -71,7 +74,8 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
       def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error inside 'failures' array element is returned from the connector " in new Test {
 
-          MockCreateAmendOtherCgtConnector.createAndAmend(createAmendOtherCgtRequest)
+          MockCreateAmendOtherCgtConnector
+            .createAndAmend(createAmendOtherCgtRequest)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
 
           await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -92,4 +96,5 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
       input.foreach(args => (failuresArrayError _).tupled(args))
     }
   }
+
 }

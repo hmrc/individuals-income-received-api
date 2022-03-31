@@ -27,5 +27,6 @@ object ForeignEarnings {
   implicit val writes: OWrites[ForeignEarnings] = (
     (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "earningsNotTaxableUK").write[BigDecimal]
-    ) (unlift(ForeignEarnings.unapply))
+  )(unlift(ForeignEarnings.unapply))
+
 }

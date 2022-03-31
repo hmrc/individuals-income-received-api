@@ -53,4 +53,5 @@ class AmendRedundancyCompensationPaymentsUnderExemptionItemSpec extends UnitSpec
       }
     }
   }
+
 }

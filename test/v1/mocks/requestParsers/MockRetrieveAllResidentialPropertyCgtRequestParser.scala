@@ -28,10 +28,11 @@ trait MockRetrieveAllResidentialPropertyCgtRequestParser extends MockFactory {
     mock[RetrieveAllResidentialPropertyCgtRequestParser]
 
   object MockRetrieveAllResidentialPropertyCgtRequestParser {
+
     def parse(data: RetrieveAllResidentialPropertyCgtRawData): CallHandler[Either[ErrorWrapper, RetrieveAllResidentialPropertyCgtRequest]] = {
-      (mockRetrieveAllResidentialPropertyCgtRequestParser.
-        parseRequest(_: RetrieveAllResidentialPropertyCgtRawData)(_: String)).expects(data, *)
+      (mockRetrieveAllResidentialPropertyCgtRequestParser.parseRequest(_: RetrieveAllResidentialPropertyCgtRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

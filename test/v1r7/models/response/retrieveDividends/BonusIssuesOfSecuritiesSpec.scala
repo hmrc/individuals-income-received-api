@@ -30,7 +30,7 @@ class BonusIssuesOfSecuritiesSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = BonusIssuesOfSecurities(customerReference = Some ("my secs"), grossAmount = 12321.22)
+  private val model = BonusIssuesOfSecurities(customerReference = Some("my secs"), grossAmount = 12321.22)
 
   "BonusIssuesOfSecurities" when {
     "read from valid JSON" should {
@@ -53,4 +53,5 @@ class BonusIssuesOfSecuritiesSpec extends UnitSpec {
       }
     }
   }
+
 }

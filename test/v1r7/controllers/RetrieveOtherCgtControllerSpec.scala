@@ -221,12 +221,13 @@ class RetrieveOtherCgtControllerSpec
         MockHateoasFactory
           .wrap(responseModel, RetrieveOtherCgtHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(responseModel,
-                           Seq(
-                             amendOtherCgtLink,
-                             retrieveOtherCgtLink,
-                             deleteOtherCgtLink
-                           )))
+            HateoasWrapper(
+              responseModel,
+              Seq(
+                amendOtherCgtLink,
+                retrieveOtherCgtLink,
+                deleteOtherCgtLink
+              )))
 
         val result: Future[Result] = controller.retrieveOtherCgt(nino, taxYear)(fakeGetRequest)
 
@@ -295,4 +296,5 @@ class RetrieveOtherCgtControllerSpec
       }
     }
   }
+
 }

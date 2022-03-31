@@ -439,7 +439,6 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
     """.stripMargin
     )
 
-
     val validRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(validRequestBodyJson)
     val emptyRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(emptyRequestBodyJson)
     val nonsenseRawRequestBody: AnyContentAsJson                           = AnyContentAsJson(nonsenseRequestBodyJson)
@@ -523,16 +522,17 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
       "the submitted request body is not in the correct format" in new Test {
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(
-            paths = Some(Seq(
-              "/disposals/0/disposalDate",
-              "/disposals/0/acquisitionDate",
-              "/disposals/0/assetDescription",
-              "/disposals/0/disposalProceeds",
-              "/disposals/0/assetType",
-              "/disposals/0/allowableCosts"
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(
+              paths = Some(Seq(
+                "/disposals/0/disposalDate",
+                "/disposals/0/acquisitionDate",
+                "/disposals/0/assetDescription",
+                "/disposals/0/disposalProceeds",
+                "/disposals/0/assetType",
+                "/disposals/0/allowableCosts"
+              ))
             ))
-          ))
       }
 
       "the submitted request body contains empty objects" in new Test {
@@ -556,17 +556,18 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
               "/disposals/0/assetDescription",
               "/disposals/0/disposalProceeds",
               "/disposals/0/assetType",
-              "/disposals/0/allowableCosts",
+              "/disposals/0/allowableCosts"
             ))))
       }
 
       "the submitted body is missing carriedInterestGain, attributedGains, and otherGains " in new Test {
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, allThreeGainsMissingRequestBody)) shouldBe
-        List(
-          RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-            "/nonStandardGains"
-          )))
-        )
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+              Seq(
+                "/nonStandardGains"
+              )))
+          )
       }
     }
 
@@ -750,7 +751,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
                 "/disposals/0/claimOrElectionCodes/0",
                 "/disposals/0/claimOrElectionCodes/1",
                 "/disposals/0/claimOrElectionCodes/2",
-                "/disposals/0/claimOrElectionCodes/3",
+                "/disposals/0/claimOrElectionCodes/3"
               ))
             ))
       }
@@ -803,4 +804,5 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
       }
     }
   }
+
 }

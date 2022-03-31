@@ -18,8 +18,8 @@ package v1r7.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CustomerAddedDisposals(submittedOn: String,
-                                  disposals: Seq[Disposals])
+case class CustomerAddedDisposals(submittedOn: String, disposals: Seq[Disposals])
+
 object CustomerAddedDisposals {
   implicit val format: OFormat[CustomerAddedDisposals] = Json.format[CustomerAddedDisposals]
 }

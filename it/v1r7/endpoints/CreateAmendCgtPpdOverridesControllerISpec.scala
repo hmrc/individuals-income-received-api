@@ -17,7 +17,26 @@
 package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{DateFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PpdSubmissionIdFormatError, PpdSubmissionIdNotFoundError, RuleAmountGainLossError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectDisposalTypeError, RuleIncorrectOrEmptyBodyError, RuleLossesGreaterThanGainError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  DateFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  PpdSubmissionIdFormatError,
+  PpdSubmissionIdNotFoundError,
+  RuleAmountGainLossError,
+  RuleDuplicatedPpdSubmissionIdError,
+  RuleIncorrectDisposalTypeError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleLossesGreaterThanGainError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -306,7 +325,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
     paths = Some(
       Seq(
         "/multiplePropertyDisposals/0/ppdSubmissionId",
-        "/singlePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/ppdSubmissionId"
       ))
   )
 
@@ -314,7 +333,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
     id = duplicatedId,
     paths = Seq(
       "/multiplePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/ppdSubmissionId",
+      "/singlePropertyDisposals/0/ppdSubmissionId"
     )
   )
 
@@ -400,6 +419,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
       verify(
         postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-ppd"))
           .withRequestBody(equalToJson(payload.toString())))
+
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
@@ -463,13 +483,14 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
           ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
-          ("AA123456A",
-           "2020-21",
-           jsonWithIds("DuplicatedId", "DuplicatedId"),
-           BAD_REQUEST,
-           ppdDuplicatedIdError("DuplicatedId"),
-           None,
-           Some("duplicatedIDs")),
+          (
+            "AA123456A",
+            "2020-21",
+            jsonWithIds("DuplicatedId", "DuplicatedId"),
+            BAD_REQUEST,
+            ppdDuplicatedIdError("DuplicatedId"),
+            None,
+            Some("duplicatedIDs"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -521,4 +542,5 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec with
       }
     }
   }
+
 }

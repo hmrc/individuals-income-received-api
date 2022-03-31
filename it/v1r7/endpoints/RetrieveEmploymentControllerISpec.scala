@@ -17,7 +17,16 @@
 package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  EmploymentIdFormatError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,17 +39,17 @@ class RetrieveEmploymentControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
-    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val nino: String                    = "AA123456A"
+    val taxYear: String                 = "2019-20"
+    val employmentId: String            = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val ifsEmploymentId: Option[String] = Some("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
     val ifsHmrcEnteredResponseWithoutDateIgnored: JsValue = hmrcEnteredResponseWithoutDateIgnored
-    val ifsHmrcEnteredResponseWithDateIgnored: JsValue = hmrcEnteredResponseWithDateIgnored
-    val ifsCustomEnteredResponse: JsValue = customEnteredResponse
+    val ifsHmrcEnteredResponseWithDateIgnored: JsValue    = hmrcEnteredResponseWithDateIgnored
+    val ifsCustomEnteredResponse: JsValue                 = customEnteredResponse
     val mtdHmrcEnteredResponseWithoutDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino, taxYear, employmentId)
-    val mtdHmrcEnteredResponseWithDateIgnored: JsValue = mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino, taxYear, employmentId)
-    val mtdCustomEnteredResponse: JsValue = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
+    val mtdHmrcEnteredResponseWithDateIgnored: JsValue    = mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino, taxYear, employmentId)
+    val mtdCustomEnteredResponse: JsValue                 = mtdCustomEnteredResponseWithHateoas(nino, taxYear, employmentId)
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId"
 
@@ -53,6 +62,7 @@ class RetrieveEmploymentControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'retrieve employment' endpoint" should {
@@ -116,11 +126,15 @@ class RetrieveEmploymentControllerISpec extends V1R7IntegrationSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestEmploymentId: String,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String         = requestNino
+            override val taxYear: String      = requestTaxYear
             override val employmentId: String = requestEmploymentId
 
             override def setupStubs(): StubMapping = {
@@ -141,7 +155,8 @@ class RetrieveEmploymentControllerISpec extends V1R7IntegrationSpec {
           ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, TaxYearFormatError),
           ("AA123456A", "2019-20", "ABCDE12345FG", BAD_REQUEST, EmploymentIdFormatError),
           ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError))
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError)
+        )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -179,10 +194,12 @@ class RetrieveEmploymentControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

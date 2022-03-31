@@ -30,12 +30,12 @@ object AmendOtherEmploymentRequestBody extends JsonUtils {
   val empty: AmendOtherEmploymentRequestBody = AmendOtherEmploymentRequestBody(None, None, None, None, None)
 
   implicit val reads: Reads[AmendOtherEmploymentRequestBody] = (
-  (JsPath \ "shareOption").readNullable[Seq[AmendShareOptionItem]].mapEmptySeqToNone and
-    (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[AmendSharesAwardedOrReceivedItem]].mapEmptySeqToNone and
-    (JsPath \ "disability").readNullable[AmendCommonOtherEmployment] and
-    (JsPath \ "foreignService").readNullable[AmendCommonOtherEmployment] and
-    (JsPath \ "lumpSums").readNullable[Seq[AmendLumpSums]].mapEmptySeqToNone
-    ) (AmendOtherEmploymentRequestBody.apply _)
+    (JsPath \ "shareOption").readNullable[Seq[AmendShareOptionItem]].mapEmptySeqToNone and
+      (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[AmendSharesAwardedOrReceivedItem]].mapEmptySeqToNone and
+      (JsPath \ "disability").readNullable[AmendCommonOtherEmployment] and
+      (JsPath \ "foreignService").readNullable[AmendCommonOtherEmployment] and
+      (JsPath \ "lumpSums").readNullable[Seq[AmendLumpSums]].mapEmptySeqToNone
+  )(AmendOtherEmploymentRequestBody.apply _)
 
   implicit val writes: OWrites[AmendOtherEmploymentRequestBody] = (
     (JsPath \ "shareOption").writeNullable[Seq[AmendShareOptionItem]] and
@@ -43,5 +43,6 @@ object AmendOtherEmploymentRequestBody extends JsonUtils {
       (JsPath \ "disability").writeNullable[AmendCommonOtherEmployment] and
       (JsPath \ "foreignService").writeNullable[AmendCommonOtherEmployment] and
       (JsPath \ "lumpSums").writeNullable[Seq[AmendLumpSums]]
-    ) (unlift(AmendOtherEmploymentRequestBody.unapply))
+  )(unlift(AmendOtherEmploymentRequestBody.unapply))
+
 }

@@ -26,7 +26,7 @@ sealed trait DesSourceEnum {
 
 object DesSourceEnum {
   val parser: PartialFunction[String, DesSourceEnum] = Enums.parser[DesSourceEnum]
-  implicit val format: Format[DesSourceEnum] = Enums.format[DesSourceEnum]
+  implicit val format: Format[DesSourceEnum]         = Enums.format[DesSourceEnum]
 
   case object `HMRC HELD` extends DesSourceEnum {
     override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.hmrcHeld
@@ -39,4 +39,5 @@ object DesSourceEnum {
   case object LATEST extends DesSourceEnum {
     override def toMtdEnum: MtdSourceEnum = MtdSourceEnum.latest
   }
+
 }

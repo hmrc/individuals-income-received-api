@@ -49,9 +49,9 @@ class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val taxYear = "2017-18"
-      val employmentId = "anId"
+      val nino           = "someNino"
+      val taxYear        = "2017-18"
+      val employmentId   = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
 
@@ -62,11 +62,18 @@ class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
             model,
             Seq(
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", GET, "self"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", PUT, "create-and-amend-employment-financial-details"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details", DELETE, "delete-employment-financial-details"),
+              Link(
+                s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+                PUT,
+                "create-and-amend-employment-financial-details"),
+              Link(
+                s"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+                DELETE,
+                "delete-employment-financial-details")
             )
           )
       }
     }
   }
+
 }

@@ -53,8 +53,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val hmrcEnteredMtdJson = Json.parse(
-    """
+  private val hmrcEnteredMtdJson = Json.parse("""
       |{
       |    "employerRef": "123/abc",
       |    "employerName": "Vera Lynn",
@@ -65,8 +64,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val customEnteredMtdJson = Json.parse(
-    """
+  private val customEnteredMtdJson = Json.parse("""
       |{
       |    "employerRef": "123/abc",
       |    "employerName": "Vera Lynn",
@@ -140,4 +138,5 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
       Json.toJson(customEnteredEmployment) shouldBe customEnteredMtdJson
     }
   }
+
 }

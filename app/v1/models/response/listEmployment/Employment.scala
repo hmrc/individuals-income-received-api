@@ -20,17 +20,16 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import api.hateoas.HateoasLinks
 
-case class Employment(employmentId: String,
-                      employerName: String,
-                      dateIgnored: Option[String] = None)
+case class Employment(employmentId: String, employerName: String, dateIgnored: Option[String] = None)
 
 object Employment extends HateoasLinks {
 
   implicit val writes: OWrites[Employment] = Json.writes[Employment]
 
   implicit val reads: Reads[Employment] = (
-      (JsPath \ "employmentId").read[String] and
-        (JsPath \ "employerName").read[String] and
-        (JsPath \ "dateIgnored").readNullable[String]
-      )(Employment.apply _)
+    (JsPath \ "employmentId").read[String] and
+      (JsPath \ "employerName").read[String] and
+      (JsPath \ "dateIgnored").readNullable[String]
+  )(Employment.apply _)
+
 }

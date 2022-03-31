@@ -27,14 +27,15 @@ object DecimalValueValidation extends ValueFormatErrorMessages {
                        path: String,
                        message: String = ZERO_MINIMUM_INCLUSIVE): List[MtdError] = amount match {
     case None => NoValidationErrors
-    case Some(value) => validate(
-      amount = value,
-      maxScale = maxScale,
-      minValue = minValue,
-      maxValue = maxValue,
-      path = path,
-      message = message
-    )
+    case Some(value) =>
+      validate(
+        amount = value,
+        maxScale = maxScale,
+        minValue = minValue,
+        maxValue = maxValue,
+        path = path,
+        message = message
+      )
   }
 
   def validate(amount: BigDecimal,
@@ -47,11 +48,14 @@ object DecimalValueValidation extends ValueFormatErrorMessages {
     val scaleCheck = checkAmountScale(amount = amount, maxScale = maxScale)
     val rangeCheck = checkAmountRange(amount = amount, minValue = minValue, maxValue = maxValue)
 
-    if (rangeCheck && scaleCheck) NoValidationErrors else List(
-      ValueFormatError.copy(
-        message = message,
-        paths = Some(Seq(path))
+    if (rangeCheck && scaleCheck) NoValidationErrors
+    else
+      List(
+        ValueFormatError.copy(
+          message = message,
+          paths = Some(Seq(path))
+        )
       )
-    )
   }
+
 }

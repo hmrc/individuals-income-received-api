@@ -36,13 +36,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
-                                         val lookupService: MtdIdLookupService,
-                                         requestParser: DeleteRetrieveRequestParser,
-                                         service: DeleteRetrieveService,
-                                         auditService: AuditService,
-                                         cc: ControllerComponents,
-                                         val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteOtherCgtController @Inject() (val authService: EnrolmentsAuthService,
+                                          val lookupService: MtdIdLookupService,
+                                          requestParser: DeleteRetrieveRequestParser,
+                                          service: DeleteRetrieveService,
+                                          auditService: AuditService,
+                                          cc: ControllerComponents,
+                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -94,11 +94,12 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          DeleteOtherCgtAuditDetail(request.userDetails,
-                                    nino,
-                                    taxYear,
-                                    correlationId,
-                                    AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+          DeleteOtherCgtAuditDetail(
+            request.userDetails,
+            nino,
+            taxYear,
+            correlationId,
+            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -117,4 +118,5 @@ class DeleteOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
     val event = AuditEvent("DeleteOtherCgtDisposalsAndGains", "Delete-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }
+
 }

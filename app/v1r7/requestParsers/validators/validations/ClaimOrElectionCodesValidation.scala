@@ -32,17 +32,17 @@ object ClaimOrElectionCodesValidation {
   }
 
   private def validate(claimOrElectionCodes: Seq[String], disposalsIndex: Int): List[MtdError] = {
-    claimOrElectionCodes.zipWithIndex.flatMap {
-      case (claimOrElectionCode, claimOrElectionCodesIndex) =>
-        Try {
-          Option(claimOrElectionCode).map(ClaimOrElectionCodes.parser)
-        } match {
-          case Failure(_) => List(s"/disposals/$disposalsIndex/claimOrElectionCodes/$claimOrElectionCodesIndex")
-          case Success(_) => List()
-        }
+    claimOrElectionCodes.zipWithIndex.flatMap { case (claimOrElectionCode, claimOrElectionCodesIndex) =>
+      Try {
+        Option(claimOrElectionCode).map(ClaimOrElectionCodes.parser)
+      } match {
+        case Failure(_) => List(s"/disposals/$disposalsIndex/claimOrElectionCodes/$claimOrElectionCodesIndex")
+        case Success(_) => List()
+      }
     }.toList match {
       case Nil  => NoValidationErrors
       case list => List(ClaimOrElectionCodesFormatError.copy(paths = Some(list)))
     }
   }
+
 }

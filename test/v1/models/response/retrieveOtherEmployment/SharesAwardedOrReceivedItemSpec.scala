@@ -81,4 +81,5 @@ class SharesAwardedOrReceivedItemSpec extends UnitSpec {
       }
     }
   }
+
 }

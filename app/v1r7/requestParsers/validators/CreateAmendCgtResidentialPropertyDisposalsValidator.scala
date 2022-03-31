@@ -16,19 +16,39 @@
 
 package v1r7.requestParsers.validators
 
-import api.models.errors.{MtdError, RuleAcquisitionDateAfterDisposalDateError, RuleCompletionDateBeforeDisposalDateError, RuleGainLossError, RuleIncorrectOrEmptyBodyError}
+import api.models.errors.{
+  MtdError,
+  RuleAcquisitionDateAfterDisposalDateError,
+  RuleCompletionDateBeforeDisposalDateError,
+  RuleGainLossError,
+  RuleIncorrectOrEmptyBodyError
+}
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.createAmendCgtResidentialPropertyDisposals._
-import v1r7.requestParsers.validators.validations.{CompletionDateValidation, CustomerRefValidation, DateAfterDateValidation, DateFormatValidation, DecimalValueValidation, DisposalDateErrorMessages, DisposalDateValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueGreaterThanValueValidation}
+import v1r7.requestParsers.validators.validations.{
+  CompletionDateValidation,
+  CustomerRefValidation,
+  DateAfterDateValidation,
+  DateFormatValidation,
+  DecimalValueValidation,
+  DisposalDateErrorMessages,
+  DisposalDateValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueGreaterThanValueValidation
+}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-    extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData] with DisposalDateErrorMessages {
+class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData]
+    with DisposalDateErrorMessages {
 
   private val validationSet = List(
     parameterFormatValidation,
@@ -79,8 +99,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
     List(
       Validator.flattenErrors(
         List(
-          requestBodyData.disposals.zipWithIndex.flatMap {
-            case (disposal, index) => validateDisposalFormat(disposal, index)
+          requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
+            validateDisposalFormat(disposal, index)
           }
         ).map(_.toList)
       )
@@ -154,8 +174,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
     List(
       Validator.flattenErrors(
         List(
-          requestBodyData.disposals.zipWithIndex.flatMap {
-            case (disposal, index) => validateDisposalRule(disposal, index, data.taxYear)
+          requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
+            validateDisposalRule(disposal, index, data.taxYear)
           }
         ).map(_.toList)
       )
@@ -194,8 +214,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
   private def lossOrGainsValidator: CreateAmendCgtResidentialPropertyDisposalsRawData => List[List[MtdError]] = { data =>
     val requestBodyData = data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
 
-    requestBodyData.disposals.zipWithIndex.map {
-      case (disposal, index) => validateLossOrGains(disposal, index)
+    requestBodyData.disposals.zipWithIndex.map { case (disposal, index) =>
+      validateLossOrGains(disposal, index)
     }.toList
   }
 
@@ -218,4 +238,5 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
       )
     ).flatten
   }
+
 }

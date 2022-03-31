@@ -33,7 +33,7 @@ import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 
 class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -64,10 +64,10 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
     s"""
        |{
        |  "employerRef": "notValid",
-       |  "employerName": "${"a"*75}",
+       |  "employerName": "${"a" * 75}",
        |  "startDate": "notValid",
        |  "cessationDate": "notValid",
-       |  "payrollId": "${"b"*75}"
+       |  "payrollId": "${"b" * 75}"
        |}
     """.stripMargin
   )
@@ -96,17 +96,17 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
     """.stripMargin
   )
 
-  private val validRawBody = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody = AnyContentAsJson(emptyRequestJson)
+  private val validRawBody           = AnyContentAsJson(validRequestJson)
+  private val emptyRawBody           = AnyContentAsJson(emptyRequestJson)
   private val incorrectFormatRawBody = AnyContentAsJson(incorrectFormatRequestJson)
-  private val incorrectValueRawBody = AnyContentAsJson(invalidValueRequestJson)
+  private val incorrectValueRawBody  = AnyContentAsJson(invalidValueRequestJson)
   private val incorrectDatesRawBody1 = AnyContentAsJson(invalidDatesRequestJson1)
   private val incorrectDatesRawBody2 = AnyContentAsJson(invalidDatesRequestJson2)
 
-  class Test(errorFeatureSwitch: Boolean = true)  extends MockCurrentDateTime with MockAppConfig {
+  class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -119,11 +119,10 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
 
-
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
-      s"""
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
          |taxYearNotEndedRule.enabled = $errorFeatureSwitch
       """.stripMargin))))
+
   }
 
   "AddCustomEmploymentValidator" when {
@@ -198,4 +197,5 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
       }
     }
   }
+
 }

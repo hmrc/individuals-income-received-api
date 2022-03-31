@@ -52,4 +52,5 @@ class OmittedForeignIncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

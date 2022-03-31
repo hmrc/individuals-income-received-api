@@ -28,8 +28,8 @@ import scala.concurrent.Future
 
 class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
-  val taxYear: String = "2021-22"
+  val nino: String         = "AA111111A"
+  val taxYear: String      = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val amendCustomEmploymentRequestBody: AmendCustomEmploymentRequestBody = AmendCustomEmploymentRequestBody(
@@ -63,7 +63,7 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
   "AmendCustomEmploymentConnector" when {
     ".amendEmployment" should {
       "return a success upon HttpClient success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome                    = Right(ResponseWrapper(correlationId, ()))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredRelease6HeadersPut: Seq[(String, String)] = requiredRelease6Headers ++ Seq("Content-Type" -> "application/json")
 
@@ -72,13 +72,14 @@ class AmendCustomEmploymentConnectorSpec extends ConnectorSpec {
             url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId",
             config = dummyIfsHeaderCarrierConfig,
             body = amendCustomEmploymentRequestBody,
-            requiredHeaders
-              = requiredRelease6HeadersPut,
+            requiredHeaders = requiredRelease6HeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.amendEmployment(request)) shouldBe outcome
       }
     }
   }
+
 }

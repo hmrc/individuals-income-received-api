@@ -24,10 +24,10 @@ import v1r7.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRaw
 
 class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2021-22"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  val validSource: String = "latest"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2021-22"
+  val employmentId: String           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val validSource: String            = "latest"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val retrieveFinancialDetailsRawData: RetrieveFinancialDetailsRawData = RetrieveFinancialDetailsRawData(
@@ -38,9 +38,11 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockRetrieveFinancialDetailsValidator {
+
     lazy val parser: RetrieveFinancialDetailsRequestParser = new RetrieveFinancialDetailsRequestParser(
       validator = mockRetrieveFinancialDetailsValidator
     )
+
   }
 
   "parse" should {
@@ -62,7 +64,8 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData)
+        MockRetrieveFinancialDetailsValidator
+          .validate(retrieveFinancialDetailsRawData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
@@ -70,7 +73,8 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
-        MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData)
+        MockRetrieveFinancialDetailsValidator
+          .validate(retrieveFinancialDetailsRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
@@ -78,12 +82,15 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur (NinoFormatError, TaxYearFormatError, EmploymentIdFormatError and SourceFormatError errors)" in new Test {
-        MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData)
+        MockRetrieveFinancialDetailsValidator
+          .validate(retrieveFinancialDetailsRawData)
           .returns(List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError, SourceFormatError))
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError, SourceFormatError))))
+          Left(
+            ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError, SourceFormatError))))
       }
     }
   }
+
 }

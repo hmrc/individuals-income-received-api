@@ -36,5 +36,6 @@ object AmendForeignInterestItem {
       (JsPath \ "specialWithholdingTax").writeNullable[BigDecimal] and
       (JsPath \ "taxableAmount").write[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").write[Boolean]
-    ) (unlift(AmendForeignInterestItem.unapply))
+  )(unlift(AmendForeignInterestItem.unapply))
+
 }

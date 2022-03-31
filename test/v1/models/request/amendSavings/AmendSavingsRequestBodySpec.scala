@@ -146,4 +146,5 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

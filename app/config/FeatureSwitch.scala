@@ -25,7 +25,7 @@ case class FeatureSwitch(value: Option[Configuration]) {
   def isTaxYearNotEndedRuleEnabled: Boolean = {
     value match {
       case Some(config) => config.getOptional[Boolean]("taxYearNotEndedRule.enabled").getOrElse(true)
-      case _ => true
+      case _            => true
     }
   }
 
@@ -33,20 +33,21 @@ case class FeatureSwitch(value: Option[Configuration]) {
     val versionNoIfPresent: Option[String] =
       version match {
         case versionRegex(v) => Some(v)
-        case _ => None
+        case _               => None
       }
 
     val enabled = for {
       versionNo <- versionNoIfPresent
-      config <- value
-      enabled <- config.getOptional[Boolean](s"version-$versionNo.enabled")
+      config    <- value
+      enabled   <- config.getOptional[Boolean](s"version-$versionNo.enabled")
     } yield enabled
 
     enabled.getOrElse(false)
   }
 
   def isRelease7RoutingEnabled: Boolean = value match {
-    case Some(config) => config.getOptional[Boolean] ("release-7.enabled").getOrElse(true)
-    case None => true
+    case Some(config) => config.getOptional[Boolean]("release-7.enabled").getOrElse(true)
+    case None         => true
   }
+
 }

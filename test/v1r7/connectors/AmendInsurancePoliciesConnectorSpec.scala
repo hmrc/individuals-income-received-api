@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  val nino: String    = "AA111111A"
   val taxYear: String = "2019-20"
 
   private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
@@ -107,21 +107,23 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
   "AmendInsurancePoliciesConnector" when {
     "amendInsurancePolicies" must {
       "return a 201 status for a success scenario" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
+        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/insurance-policies/income/$nino/$taxYear",
-            config =  dummyIfsHeaderCarrierConfig,
+            config = dummyIfsHeaderCarrierConfig,
             body = amendInsurancePoliciesBody,
             requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe outcome
       }
     }
   }
+
 }

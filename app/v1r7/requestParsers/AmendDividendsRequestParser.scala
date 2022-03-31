@@ -24,9 +24,10 @@ import v1r7.models.request.amendDividends.{AmendDividendsRawData, AmendDividends
 import v1r7.requestParsers.validators.AmendDividendsValidator
 
 @Singleton
-class AmendDividendsRequestParser @Inject()(val validator: AmendDividendsValidator)
-  extends RequestParser[AmendDividendsRawData, AmendDividendsRequest] {
+class AmendDividendsRequestParser @Inject() (val validator: AmendDividendsValidator)
+    extends RequestParser[AmendDividendsRawData, AmendDividendsRequest] {
 
   override protected def requestFor(data: AmendDividendsRawData): AmendDividendsRequest =
     AmendDividendsRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendDividendsRequestBody])
+
 }

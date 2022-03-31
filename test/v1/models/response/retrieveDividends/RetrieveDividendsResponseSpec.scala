@@ -91,13 +91,13 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
     )
   )
 
-  private val stockDividendModel = StockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val stockDividendModel = StockDividend(customerReference = Some("my divs"), grossAmount = 12321.22)
 
-  private val redeemableSharesModel = RedeemableShares(customerReference = Some ("my shares"), grossAmount = 12321.22)
+  private val redeemableSharesModel = RedeemableShares(customerReference = Some("my shares"), grossAmount = 12321.22)
 
-  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some ("my secs"), grossAmount = 12321.22)
+  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some("my secs"), grossAmount = 12321.22)
 
-  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 12321.22)
+  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some("write off"), grossAmount = 12321.22)
 
   private val responseModel = RetrieveDividendsResponse(
     "2020-07-06T09:37:17Z",
@@ -143,11 +143,12 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       }
     }
   }
+
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val taxYear = "2019-20"
+      val nino           = "someNino"
+      val taxYear        = "2019-20"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
 
@@ -165,4 +166,5 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

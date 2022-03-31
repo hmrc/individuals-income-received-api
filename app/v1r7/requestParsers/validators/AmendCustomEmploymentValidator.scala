@@ -24,11 +24,22 @@ import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
-import v1r7.requestParsers.validators.validations.{CustomEmploymentDateValidation, EmployerNameValidation, EmployerRefValidation, EmploymentIdValidation, JsonFormatValidation, NinoValidation, PayrollIdValidation, TaxYearNotEndedValidation, TaxYearNotSupportedValidation, TaxYearValidation}
+import v1r7.requestParsers.validators.validations.{
+  CustomEmploymentDateValidation,
+  EmployerNameValidation,
+  EmployerRefValidation,
+  EmploymentIdValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  PayrollIdValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
-class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-  extends Validator[AmendCustomEmploymentRawData] {
+class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[AmendCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -49,7 +60,7 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
 
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear)  else List.empty[MtdError]
+      if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
     )
   }
 
@@ -69,4 +80,5 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
       PayrollIdValidation.validateOptional(dataModel.payrollId)
     )
   }
+
 }

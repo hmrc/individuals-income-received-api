@@ -22,7 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendCustomEmploymentConnector
-import v1.models.request.amendCustomEmployment.{ AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody }
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
 
 import scala.concurrent.Future
 
@@ -53,6 +53,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
     val service: AmendCustomEmploymentService = new AmendCustomEmploymentService(
       connector = mockAmendCustomEmploymentConnector
     )
+
   }
 
   "AmendCustomEmploymentService" when {
@@ -98,4 +99,5 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

@@ -182,53 +182,58 @@ object RetrieveFinancialDetailsControllerFixture {
       employerRef = Some("223/AB12399"),
       employerName = "maggie"
     ),
-    pay = Some(Pay(
-      taxablePayToDate = Some(34234.15),
-      totalTaxToDate = Some(6782.92),
-      payFrequency = Some("CALENDAR MONTHLY"),
-      paymentDate = Some("2020-04-23"),
-      taxWeekNo = Some(32),
-      taxMonthNo = Some(8)
-    )),
-    customerEstimatedPay = Some(CustomerEstimatedPay(
-      amount = Some(1500.99)
-    )),
-    deductions = Some(Deductions(
-      Some(StudentLoans(
-        uglDeductionAmount = Some(13343.45),
-        pglDeductionAmount = Some(24242.56)
+    pay = Some(
+      Pay(
+        taxablePayToDate = Some(34234.15),
+        totalTaxToDate = Some(6782.92),
+        payFrequency = Some("CALENDAR MONTHLY"),
+        paymentDate = Some("2020-04-23"),
+        taxWeekNo = Some(32),
+        taxMonthNo = Some(8)
+      )),
+    customerEstimatedPay = Some(
+      CustomerEstimatedPay(
+        amount = Some(1500.99)
+      )),
+    deductions = Some(
+      Deductions(
+        Some(
+          StudentLoans(
+            uglDeductionAmount = Some(13343.45),
+            pglDeductionAmount = Some(24242.56)
+          ))
+      )),
+    benefitsInKind = Some(
+      BenefitsInKind(
+        accommodation = Some(455.67),
+        assets = Some(435.54),
+        assetTransfer = Some(24.58),
+        beneficialLoan = Some(33.89),
+        car = Some(3434.78),
+        carFuel = Some(34.56),
+        educationalServices = Some(445.67),
+        entertaining = Some(434.45),
+        expenses = Some(3444.32),
+        medicalInsurance = Some(4542.47),
+        telephone = Some(243.43),
+        service = Some(45.67),
+        taxableExpenses = Some(24.56),
+        van = Some(56.29),
+        vanFuel = Some(14.56),
+        mileage = Some(34.23),
+        nonQualifyingRelocationExpenses = Some(54.62),
+        nurseryPlaces = Some(84.29),
+        otherItems = Some(67.67),
+        paymentsOnEmployeesBehalf = Some(67.23),
+        personalIncidentalExpenses = Some(74.29),
+        qualifyingRelocationExpenses = Some(78.24),
+        employerProvidedProfessionalSubscriptions = Some(84.56),
+        employerProvidedServices = Some(56.34),
+        incomeTaxPaidByDirector = Some(67.34),
+        travelAndSubsistence = Some(56.89),
+        vouchersAndCreditCards = Some(34.90),
+        nonCash = Some(23.89)
       ))
-    )),
-    benefitsInKind = Some(BenefitsInKind(
-      accommodation = Some(455.67),
-      assets = Some(435.54),
-      assetTransfer = Some(24.58),
-      beneficialLoan = Some(33.89),
-      car = Some(3434.78),
-      carFuel = Some(34.56),
-      educationalServices = Some(445.67),
-      entertaining = Some(434.45),
-      expenses = Some(3444.32),
-      medicalInsurance = Some(4542.47),
-      telephone = Some(243.43),
-      service = Some(45.67),
-      taxableExpenses = Some(24.56),
-      van = Some(56.29),
-      vanFuel = Some(14.56),
-      mileage = Some(34.23),
-      nonQualifyingRelocationExpenses = Some(54.62),
-      nurseryPlaces = Some(84.29),
-      otherItems = Some(67.67),
-      paymentsOnEmployeesBehalf = Some(67.23),
-      personalIncidentalExpenses = Some(74.29),
-      qualifyingRelocationExpenses = Some(78.24),
-      employerProvidedProfessionalSubscriptions = Some(84.56),
-      employerProvidedServices = Some(56.34),
-      incomeTaxPaidByDirector = Some(67.34),
-      travelAndSubsistence = Some(56.89),
-      vouchersAndCreditCards = Some(34.90),
-      nonCash = Some(23.89)
-    ))
   )
 
   val model: RetrieveFinancialDetailsResponse = RetrieveFinancialDetailsResponse(
@@ -239,8 +244,9 @@ object RetrieveFinancialDetailsControllerFixture {
     employment = employmentModel
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = mtdJson.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = mtdJson.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -261,5 +267,7 @@ object RetrieveFinancialDetailsControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

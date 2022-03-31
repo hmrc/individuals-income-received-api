@@ -24,12 +24,14 @@ import v1r7.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRaw
 import v1r7.requestParsers.validators.RetrieveFinancialDetailsValidator
 
 @Singleton
-class RetrieveFinancialDetailsRequestParser @Inject()(val validator: RetrieveFinancialDetailsValidator)
-  extends RequestParser[RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest] {
+class RetrieveFinancialDetailsRequestParser @Inject() (val validator: RetrieveFinancialDetailsValidator)
+    extends RequestParser[RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest] {
 
   override protected def requestFor(data: RetrieveFinancialDetailsRawData): RetrieveFinancialDetailsRequest =
-    RetrieveFinancialDetailsRequest(Nino(data.nino),
-                                    data.taxYear,
-                                    data.employmentId,
-                                    data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+    RetrieveFinancialDetailsRequest(
+      Nino(data.nino),
+      data.taxYear,
+      data.employmentId,
+      data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+
 }

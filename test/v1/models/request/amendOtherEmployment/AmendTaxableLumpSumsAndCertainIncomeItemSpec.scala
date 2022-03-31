@@ -57,4 +57,5 @@ class AmendTaxableLumpSumsAndCertainIncomeItemSpec extends UnitSpec {
       }
     }
   }
+
 }

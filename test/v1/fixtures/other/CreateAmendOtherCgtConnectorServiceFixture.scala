@@ -52,9 +52,7 @@ object CreateAmendOtherCgtConnectorServiceFixture {
     Some(150.99)
   )
 
-  val mtdRequestBody: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
-    Some(Seq(disposal)),
-    Some(nonStandardGains),
-    Some(losses),
-    Some(160.99))
+  val mtdRequestBody: CreateAmendOtherCgtRequestBody =
+    CreateAmendOtherCgtRequestBody(Some(Seq(disposal)), Some(nonStandardGains), Some(losses), Some(160.99))
+
 }

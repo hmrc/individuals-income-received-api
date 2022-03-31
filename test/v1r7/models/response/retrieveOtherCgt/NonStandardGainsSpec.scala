@@ -87,4 +87,5 @@ class NonStandardGainsSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -33,6 +33,7 @@ trait MockIgnoreEmploymentValidator extends MockFactory {
         .validate(_: IgnoreEmploymentRawData))
         .expects(data)
     }
+
   }
 
 }

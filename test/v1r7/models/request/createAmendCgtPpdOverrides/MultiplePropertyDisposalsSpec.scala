@@ -74,4 +74,5 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -29,9 +29,9 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
-    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
+    val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -94,6 +94,7 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the amend employment financial details endpoint" should {
@@ -193,39 +194,40 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
         val allInvalidValueRequestError: List[MtdError] = List(
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/employment/pay/taxablePayToDate",
-              "/employment/deductions/studentLoans/uglDeductionAmount",
-              "/employment/deductions/studentLoans/pglDeductionAmount",
-              "/employment/benefitsInKind/accommodation",
-              "/employment/benefitsInKind/assets",
-              "/employment/benefitsInKind/assetTransfer",
-              "/employment/benefitsInKind/beneficialLoan",
-              "/employment/benefitsInKind/car",
-              "/employment/benefitsInKind/carFuel",
-              "/employment/benefitsInKind/educationalServices",
-              "/employment/benefitsInKind/entertaining",
-              "/employment/benefitsInKind/expenses",
-              "/employment/benefitsInKind/medicalInsurance",
-              "/employment/benefitsInKind/telephone",
-              "/employment/benefitsInKind/service",
-              "/employment/benefitsInKind/taxableExpenses",
-              "/employment/benefitsInKind/van",
-              "/employment/benefitsInKind/vanFuel",
-              "/employment/benefitsInKind/mileage",
-              "/employment/benefitsInKind/nonQualifyingRelocationExpenses",
-              "/employment/benefitsInKind/nurseryPlaces",
-              "/employment/benefitsInKind/otherItems",
-              "/employment/benefitsInKind/paymentsOnEmployeesBehalf",
-              "/employment/benefitsInKind/personalIncidentalExpenses",
-              "/employment/benefitsInKind/qualifyingRelocationExpenses",
-              "/employment/benefitsInKind/employerProvidedProfessionalSubscriptions",
-              "/employment/benefitsInKind/employerProvidedServices",
-              "/employment/benefitsInKind/incomeTaxPaidByDirector",
-              "/employment/benefitsInKind/travelAndSubsistence",
-              "/employment/benefitsInKind/vouchersAndCreditCards",
-              "/employment/benefitsInKind/nonCash"
-            ))
+            paths = Some(
+              List(
+                "/employment/pay/taxablePayToDate",
+                "/employment/deductions/studentLoans/uglDeductionAmount",
+                "/employment/deductions/studentLoans/pglDeductionAmount",
+                "/employment/benefitsInKind/accommodation",
+                "/employment/benefitsInKind/assets",
+                "/employment/benefitsInKind/assetTransfer",
+                "/employment/benefitsInKind/beneficialLoan",
+                "/employment/benefitsInKind/car",
+                "/employment/benefitsInKind/carFuel",
+                "/employment/benefitsInKind/educationalServices",
+                "/employment/benefitsInKind/entertaining",
+                "/employment/benefitsInKind/expenses",
+                "/employment/benefitsInKind/medicalInsurance",
+                "/employment/benefitsInKind/telephone",
+                "/employment/benefitsInKind/service",
+                "/employment/benefitsInKind/taxableExpenses",
+                "/employment/benefitsInKind/van",
+                "/employment/benefitsInKind/vanFuel",
+                "/employment/benefitsInKind/mileage",
+                "/employment/benefitsInKind/nonQualifyingRelocationExpenses",
+                "/employment/benefitsInKind/nurseryPlaces",
+                "/employment/benefitsInKind/otherItems",
+                "/employment/benefitsInKind/paymentsOnEmployeesBehalf",
+                "/employment/benefitsInKind/personalIncidentalExpenses",
+                "/employment/benefitsInKind/qualifyingRelocationExpenses",
+                "/employment/benefitsInKind/employerProvidedProfessionalSubscriptions",
+                "/employment/benefitsInKind/employerProvidedServices",
+                "/employment/benefitsInKind/incomeTaxPaidByDirector",
+                "/employment/benefitsInKind/travelAndSubsistence",
+                "/employment/benefitsInKind/vouchersAndCreditCards",
+                "/employment/benefitsInKind/nonCash"
+              ))
           ),
           ValueFormatError.copy(
             message = "The value must be between -99999999999.99 and 99999999999.99",
@@ -497,12 +499,13 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
       )
 
       val invalidFieldTypeErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/employment/pay/taxablePayToDate",
-          "/employment/pay/totalTaxToDate",
-          "/employment/deductions/studentLoans/uglDeductionAmount",
-          "/employment/benefitsInKind/accommodation"
-        ))
+        paths = Some(
+          List(
+            "/employment/pay/taxablePayToDate",
+            "/employment/pay/totalTaxToDate",
+            "/employment/deductions/studentLoans/uglDeductionAmount",
+            "/employment/benefitsInKind/accommodation"
+          ))
       )
 
       val missingMandatoryEmploymentObjectError: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/employment")))
@@ -510,48 +513,50 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
       val missingMandatoryPayObjectError: MtdError = RuleIncorrectOrEmptyBodyError.copy(paths = Some(List("/employment/pay")))
 
       val missingMandatoryFieldsErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/employment/pay/taxablePayToDate",
-          "/employment/pay/totalTaxToDate"
-        ))
+        paths = Some(
+          List(
+            "/employment/pay/taxablePayToDate",
+            "/employment/pay/totalTaxToDate"
+          ))
       )
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
           message = "The value must be between 0 and 99999999999.99",
-          paths = Some(List(
-            "/employment/pay/taxablePayToDate",
-            "/employment/deductions/studentLoans/uglDeductionAmount",
-            "/employment/deductions/studentLoans/pglDeductionAmount",
-            "/employment/benefitsInKind/accommodation",
-            "/employment/benefitsInKind/assets",
-            "/employment/benefitsInKind/assetTransfer",
-            "/employment/benefitsInKind/beneficialLoan",
-            "/employment/benefitsInKind/car",
-            "/employment/benefitsInKind/carFuel",
-            "/employment/benefitsInKind/educationalServices",
-            "/employment/benefitsInKind/entertaining",
-            "/employment/benefitsInKind/expenses",
-            "/employment/benefitsInKind/medicalInsurance",
-            "/employment/benefitsInKind/telephone",
-            "/employment/benefitsInKind/service",
-            "/employment/benefitsInKind/taxableExpenses",
-            "/employment/benefitsInKind/van",
-            "/employment/benefitsInKind/vanFuel",
-            "/employment/benefitsInKind/mileage",
-            "/employment/benefitsInKind/nonQualifyingRelocationExpenses",
-            "/employment/benefitsInKind/nurseryPlaces",
-            "/employment/benefitsInKind/otherItems",
-            "/employment/benefitsInKind/paymentsOnEmployeesBehalf",
-            "/employment/benefitsInKind/personalIncidentalExpenses",
-            "/employment/benefitsInKind/qualifyingRelocationExpenses",
-            "/employment/benefitsInKind/employerProvidedProfessionalSubscriptions",
-            "/employment/benefitsInKind/employerProvidedServices",
-            "/employment/benefitsInKind/incomeTaxPaidByDirector",
-            "/employment/benefitsInKind/travelAndSubsistence",
-            "/employment/benefitsInKind/vouchersAndCreditCards",
-            "/employment/benefitsInKind/nonCash"
-          ))
+          paths = Some(
+            List(
+              "/employment/pay/taxablePayToDate",
+              "/employment/deductions/studentLoans/uglDeductionAmount",
+              "/employment/deductions/studentLoans/pglDeductionAmount",
+              "/employment/benefitsInKind/accommodation",
+              "/employment/benefitsInKind/assets",
+              "/employment/benefitsInKind/assetTransfer",
+              "/employment/benefitsInKind/beneficialLoan",
+              "/employment/benefitsInKind/car",
+              "/employment/benefitsInKind/carFuel",
+              "/employment/benefitsInKind/educationalServices",
+              "/employment/benefitsInKind/entertaining",
+              "/employment/benefitsInKind/expenses",
+              "/employment/benefitsInKind/medicalInsurance",
+              "/employment/benefitsInKind/telephone",
+              "/employment/benefitsInKind/service",
+              "/employment/benefitsInKind/taxableExpenses",
+              "/employment/benefitsInKind/van",
+              "/employment/benefitsInKind/vanFuel",
+              "/employment/benefitsInKind/mileage",
+              "/employment/benefitsInKind/nonQualifyingRelocationExpenses",
+              "/employment/benefitsInKind/nurseryPlaces",
+              "/employment/benefitsInKind/otherItems",
+              "/employment/benefitsInKind/paymentsOnEmployeesBehalf",
+              "/employment/benefitsInKind/personalIncidentalExpenses",
+              "/employment/benefitsInKind/qualifyingRelocationExpenses",
+              "/employment/benefitsInKind/employerProvidedProfessionalSubscriptions",
+              "/employment/benefitsInKind/employerProvidedServices",
+              "/employment/benefitsInKind/incomeTaxPaidByDirector",
+              "/employment/benefitsInKind/travelAndSubsistence",
+              "/employment/benefitsInKind/vouchersAndCreditCards",
+              "/employment/benefitsInKind/nonCash"
+            ))
         ),
         ValueFormatError.copy(
           message = "The value must be between -99999999999.99 and 99999999999.99",
@@ -560,13 +565,18 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: ErrorWrapper, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestEmploymentId: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: ErrorWrapper,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.error} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
-            override val employmentId: String = requestEmploymentId
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
+            override val employmentId: String     = requestEmploymentId
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -582,18 +592,95 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None), None),
-          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None), None),
+          (
+            "AA1123A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", NinoFormatError, None),
+            None),
+          (
+            "AA123456A",
+            "20199",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", TaxYearFormatError, None),
+            None),
           ("AA123456A", "2019-20", "ABCDE12345FG", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
-          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None), None),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None), None),
-          ("AA123456A", getCurrentTaxYear, "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotEndedError, None), None),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None), None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", invalidFieldTypeErrors, None), Some("(invalid field type)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingEmploymentObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None), Some("(missing mandatory employment object)")),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", missingPayObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryPayObjectError, None), Some("(missing mandatory pay object)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldsRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldsErrors, None), Some("(missing mandatory fields)")),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)), None)
+          (
+            "AA123456A",
+            "2018-19",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None),
+            None),
+          (
+            "AA123456A",
+            "2019-21",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None),
+            None),
+          (
+            "AA123456A",
+            getCurrentTaxYear,
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleTaxYearNotEndedError, None),
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            emptyRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None),
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            nonValidRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", invalidFieldTypeErrors, None),
+            Some("(invalid field type)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            missingEmploymentObjectRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None),
+            Some("(missing mandatory employment object)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            missingPayObjectRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", missingMandatoryPayObjectError, None),
+            Some("(missing mandatory pay object)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            missingFieldsRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", missingMandatoryFieldsErrors, None),
+            Some("(missing mandatory fields)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            allInvalidValueRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
+            None)
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -632,10 +719,12 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
           (FORBIDDEN, "BEFORE_TAX_YEAR_END", BAD_REQUEST, RuleTaxYearNotEndedError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

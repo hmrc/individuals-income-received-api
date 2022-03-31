@@ -27,14 +27,14 @@ import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmployme
 import api.support.DownstreamResponseMappingSupport
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPayeEmploymentConnector)
+class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPayeEmploymentConnector)
     extends DownstreamResponseMappingSupport
     with Logging {
 
-  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(
-      implicit hc: HeaderCarrier,
+  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit
+      hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
@@ -57,4 +57,5 @@ class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPay
       "SERVER_ERROR"                    -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
+
 }

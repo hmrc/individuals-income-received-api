@@ -29,9 +29,9 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
-    val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
     val requestBodyJson: JsValue = Json.parse(
       """
@@ -56,6 +56,7 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the amend custom employment endpoint" should {
@@ -108,8 +109,7 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
     "return a 400 with multiple errors" when {
       "all field value validations fail on the request body" in new Test {
 
-        private val amendCustomEmploymentInvalidRequest = Json.parse(
-          s"""
+        private val amendCustomEmploymentInvalidRequest = Json.parse(s"""
              |{
              |  "employerRef": "1234/AB56797",
              |  "employerName": "asasfdsgdgdsgdffdhfhgfjghjhgkhkhjgkfgdsfsfsfasfsafsesgsdgdsgdfgsdgdsgdsgdsgsdgsdgsdgdsgsdgsdgdsgsdgs",
@@ -119,8 +119,7 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
              |}
              |""".stripMargin)
 
-        private val responseJson = Json.parse(
-          """
+        private val responseJson = Json.parse("""
             |{
             |	"code": "INVALID_REQUEST",
             |	"message": "Invalid request",
@@ -288,30 +287,37 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
       )
 
       val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/employerRef",
-          "/employerName",
-          "/payrollId",
-          "/cessationDate",
-          "/startDate"
-        ))
+        paths = Some(
+          List(
+            "/employerRef",
+            "/employerName",
+            "/payrollId",
+            "/cessationDate",
+            "/startDate"
+          ))
       )
 
       val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/employerName",
-          "/startDate"
-        ))
+        paths = Some(
+          List(
+            "/employerName",
+            "/startDate"
+          ))
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestEmploymentId: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
-            override val employmentId: String = requestEmploymentId
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
+            override val employmentId: String     = requestEmploymentId
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -328,22 +334,71 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson,  BAD_REQUEST, TaxYearFormatError, None),
-          ("AA123456A", "2019-20", "ABCDEFG", validRequestJson,  BAD_REQUEST, EmploymentIdFormatError, None),
+          ("AA123456A", "20177", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "2019-20", "ABCDEFG", validRequestJson, BAD_REQUEST, EmploymentIdFormatError, None),
           ("AA123456A", "2015-17", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2015-16", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", getCurrentTaxYear, "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, RuleTaxYearNotEndedError, None),
           ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", invalidEmployerRefRequestJson, BAD_REQUEST, EmployerRefFormatError, None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", invalidEmployerNameRequestJson, BAD_REQUEST, EmployerNameFormatError, None),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            invalidEmployerNameRequestJson,
+            BAD_REQUEST,
+            EmployerNameFormatError,
+            None),
           ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", invalidPayrollIdRequestJson, BAD_REQUEST, PayrollIdFormatError, None),
           ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", invalidStartDateRequestJson, BAD_REQUEST, StartDateFormatError, None),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", invalidCessationDateRequestJson, BAD_REQUEST, CessationDateFormatError, None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", invalidDateOrderRequestJson, BAD_REQUEST, RuleCessationDateBeforeStartDateError, None),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", startDateLateRequestJson, BAD_REQUEST, RuleStartDateAfterTaxYearEndError, None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", cessationDateEarlyRequestJson, BAD_REQUEST, RuleCessationDateBeforeTaxYearStartError, None),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            invalidCessationDateRequestJson,
+            BAD_REQUEST,
+            CessationDateFormatError,
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            invalidDateOrderRequestJson,
+            BAD_REQUEST,
+            RuleCessationDateBeforeStartDateError,
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            startDateLateRequestJson,
+            BAD_REQUEST,
+            RuleStartDateAfterTaxYearEndError,
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            cessationDateEarlyRequestJson,
+            BAD_REQUEST,
+            RuleCessationDateBeforeTaxYearStartError,
+            None),
           ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson, BAD_REQUEST, invalidFieldType, Some("(invalid field type)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldRequestBodyJson, BAD_REQUEST, missingMandatoryFieldErrors, Some("(missing mandatory fields)"))
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            nonValidRequestBodyJson,
+            BAD_REQUEST,
+            invalidFieldType,
+            Some("(invalid field type)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            missingFieldRequestBodyJson,
+            BAD_REQUEST,
+            missingMandatoryFieldErrors,
+            Some("(missing mandatory fields)"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -386,10 +441,12 @@ class AmendCustomEmploymentControllerISpec extends V1IntegrationSpec {
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

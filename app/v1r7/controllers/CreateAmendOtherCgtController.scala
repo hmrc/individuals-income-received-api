@@ -36,15 +36,15 @@ import v1r7.services._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              appConfig: AppConfig,
-                                              requestParser: CreateAmendOtherCgtRequestParser,
-                                              service: CreateAmendOtherCgtService,
-                                              nrsProxyService: NrsProxyService,
-                                              auditService: AuditService,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthService,
+                                               val lookupService: MtdIdLookupService,
+                                               appConfig: AppConfig,
+                                               requestParser: CreateAmendOtherCgtRequestParser,
+                                               service: CreateAmendOtherCgtService,
+                                               nrsProxyService: NrsProxyService,
+                                               auditService: AuditService,
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -104,12 +104,13 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          CreateAmendOtherCgtAuditDetail(request.userDetails,
-                                         nino,
-                                         taxYear,
-                                         request.body,
-                                         correlationId,
-                                         AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+          CreateAmendOtherCgtAuditDetail(
+            request.userDetails,
+            nino,
+            taxYear,
+            request.body,
+            correlationId,
+            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -131,4 +132,5 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
     val event = AuditEvent("CreateAmendOtherCgtDisposalsAndGains", "Create-Amend-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }
+
 }

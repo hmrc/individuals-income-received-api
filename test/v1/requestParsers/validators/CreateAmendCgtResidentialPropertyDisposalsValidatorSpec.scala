@@ -40,10 +40,10 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val validTaxYear = "2019-20"
 
     private val validCustomerReference = "CGTDISPOSAL01"
-    private val validDisposalDate = "2020-03-01"
-    private val validCompletionDate = "2020-03-29"
-    private val validAcquisitionDate = "2020-02-01"
-    private val validValue = 1000.12
+    private val validDisposalDate      = "2020-03-01"
+    private val validCompletionDate    = "2020-03-29"
+    private val validAcquisitionDate   = "2020-02-01"
+    private val validValue             = 1000.12
 
     private val validRequestBodyJson: JsValue = Json.parse(
       s"""
@@ -525,7 +525,10 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val gainAndLossRawRequestBody: AnyContentAsJson                         = AnyContentAsJson(gainAndLossJson)
     val lossFromThisYearGreaterThanGainRawRequestBody: AnyContentAsJson     = AnyContentAsJson(lossFromThisYearGreaterThanGainJson)
     val lossFromPreviousYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(lossFromPreviousYearGreaterThanGainJson)
-    val lossFromPreviousYearAndThisYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(lossFromPreviousYearAndThisYearGreaterThanGainJson)
+
+    val lossFromPreviousYearAndThisYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(
+      lossFromPreviousYearAndThisYearGreaterThanGainJson)
+
   }
 
   import Data._
@@ -639,7 +642,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
       }
 
       "all fields fail value validation (gains)" in new Test {
-        validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, allBadValueFieldsWithGainsRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, allBadValueFieldsWithGainsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -659,7 +663,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
       }
 
       "all fields fail value validation (losses)" in new Test {
-        validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, allBadValueFieldsWithLossesRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, allBadValueFieldsWithLossesRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -757,7 +762,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     "return RuleCompletionDateBeforeDisposalDateError error" when {
       "supplied completion date is before supplied disposal date" in new Test {
-        validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, completionDateBeforeDisposalDateRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, completionDateBeforeDisposalDateRawRequestBody)) shouldBe
           List(
             RuleCompletionDateBeforeDisposalDateError.copy(
               paths = Some(
@@ -794,7 +800,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
             ))
       }
       "supplied completion date before 7th March" in new Test {
-        validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, completionDateBefore7thMarchRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, completionDateBefore7thMarchRawRequestBody)) shouldBe
           List(
             RuleCompletionDateError.copy(
               paths = Some(
@@ -807,7 +814,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     "return RuleDisposalDateError error" when {
       "supplied disposal date is invalid" in new Test {
-        validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, disposalDateNotInTaxYearRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, disposalDateNotInTaxYearRawRequestBody)) shouldBe
           List(
             RuleDisposalDateError.copy(
               paths = Some(
@@ -828,7 +836,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     "return RuleLossesGreaterThanGainError error" when {
       "loss from this year is greater than gain" in new Test {
-        validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, lossFromThisYearGreaterThanGainRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, lossFromThisYearGreaterThanGainRawRequestBody)) shouldBe
           List(RuleLossesGreaterThanGainError.copy(paths = Some(List("/disposals/0/lossesFromThisYear"))))
       }
       "loss from previous year is greater than gain" in new Test {
@@ -838,8 +847,11 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
       }
       "both loss from previous year and loss from this year are greater than gain" in new Test {
         validator.validate(
-          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, lossFromPreviousYearAndThisYearGreaterThanGainRawRequestBody)) shouldBe
-          List(RuleLossesGreaterThanGainError.copy(paths = Some(List("/disposals/0/lossesFromThisYear","/disposals/0/lossesFromPreviousYear"))))
+          CreateAmendCgtResidentialPropertyDisposalsRawData(
+            validNino,
+            validTaxYear,
+            lossFromPreviousYearAndThisYearGreaterThanGainRawRequestBody)) shouldBe
+          List(RuleLossesGreaterThanGainError.copy(paths = Some(List("/disposals/0/lossesFromThisYear", "/disposals/0/lossesFromPreviousYear"))))
       }
     }
 
@@ -850,4 +862,5 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
       }
     }
   }
+
 }

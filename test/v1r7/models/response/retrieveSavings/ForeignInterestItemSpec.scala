@@ -128,4 +128,5 @@ class ForeignInterestItemSpec extends UnitSpec {
       }
     }
   }
+
 }

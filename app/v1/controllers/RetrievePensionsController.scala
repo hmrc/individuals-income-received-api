@@ -17,31 +17,31 @@
 package v1.controllers
 
 import api.connectors.DownstreamUri.IfsUri
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors._
 import api.models.request.DeleteRetrieveRawData
 import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{ DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
-import utils.{ IdGenerator, Logging }
-import v1.models.response.retrievePensions.{ RetrievePensionsHateoasData, RetrievePensionsResponse }
+import utils.{IdGenerator, Logging}
+import v1.models.response.retrievePensions.{RetrievePensionsHateoasData, RetrievePensionsResponse}
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionsController @Inject()(val authService: EnrolmentsAuthService,
-                                           val lookupService: MtdIdLookupService,
-                                           requestParser: DeleteRetrieveRequestParser,
-                                           service: DeleteRetrieveService,
-                                           hateoasFactory: HateoasFactory,
-                                           cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrievePensionsController @Inject() (val authService: EnrolmentsAuthService,
+                                            val lookupService: MtdIdLookupService,
+                                            requestParser: DeleteRetrieveRequestParser,
+                                            service: DeleteRetrieveService,
+                                            hateoasFactory: HateoasFactory,
+                                            cc: ControllerComponents,
+                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -105,4 +105,5 @@ class RetrievePensionsController @Inject()(val authService: EnrolmentsAuthServic
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+
 }

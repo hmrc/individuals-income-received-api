@@ -148,4 +148,5 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
       Json.toJson(customEnteredEmployment) shouldBe customEnteredMtdJson
     }
   }
+
 }

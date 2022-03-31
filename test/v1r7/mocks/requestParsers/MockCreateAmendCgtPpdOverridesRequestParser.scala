@@ -22,14 +22,16 @@ import org.scalamock.scalatest.MockFactory
 import v1r7.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1r7.models.request.createAmendCgtPpdOverrides.{CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest}
 
-trait MockCreateAmendCgtPpdOverridesRequestParser extends MockFactory{
+trait MockCreateAmendCgtPpdOverridesRequestParser extends MockFactory {
 
   val mockCreateAmendCgtPpdOverridesRequestParser: CreateAmendCgtPpdOverridesRequestParser = mock[CreateAmendCgtPpdOverridesRequestParser]
 
   object MockCreateAmendCgtPpdOverridesRequestParser {
+
     def parse(data: CreateAmendCgtPpdOverridesRawData): CallHandler[Either[ErrorWrapper, CreateAmendCgtPpdOverridesRequest]] = {
       (mockCreateAmendCgtPpdOverridesRequestParser.parseRequest(_: CreateAmendCgtPpdOverridesRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

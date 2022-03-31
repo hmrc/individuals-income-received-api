@@ -20,7 +20,7 @@ import api.controllers.EndpointLogContext
 import api.models.errors
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.{ JsObject, Json, Writes }
+import play.api.libs.json.{JsObject, Json, Writes}
 import utils.Logging
 
 trait DownstreamResponseMappingSupport {
@@ -34,8 +34,8 @@ trait DownstreamResponseMappingSupport {
     }
   }
 
-  final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DownstreamError])(
-      implicit logContext: EndpointLogContext): ErrorWrapper = {
+  final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DownstreamError])(implicit
+      logContext: EndpointLogContext): ErrorWrapper = {
 
     lazy val defaultErrorCodeMapping: String => MtdError = { code =>
       logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
@@ -62,4 +62,5 @@ trait DownstreamResponseMappingSupport {
         ErrorWrapper(correlationId, error, errors)
     }
   }
+
 }

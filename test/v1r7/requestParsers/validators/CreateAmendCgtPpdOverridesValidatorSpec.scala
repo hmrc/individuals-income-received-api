@@ -17,7 +17,20 @@
 package v1r7.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{DateFormatError, NinoFormatError, PpdSubmissionIdFormatError, RuleAmountGainLossError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectOrEmptyBodyError, RuleLossesGreaterThanGainError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  DateFormatError,
+  NinoFormatError,
+  PpdSubmissionIdFormatError,
+  RuleAmountGainLossError,
+  RuleDuplicatedPpdSubmissionIdError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleLossesGreaterThanGainError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -630,6 +643,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
     MockedAppConfig.minimumPermittedTaxYear
       .returns(MINIMUM_PERMITTED_TAX_YEAR)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -644,7 +658,8 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       }
 
       "a valid request contains only single disposals is supplied" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, AnyContentAsJson(validOnlySinglePropertyDisposalsRequestJson))) shouldBe Nil
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, AnyContentAsJson(validOnlySinglePropertyDisposalsRequestJson))) shouldBe Nil
       }
     }
 
@@ -759,7 +774,8 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       }
 
       "neither amountOfNetGain or amountOfNetLoss are provided for multiplePropertyDisposals" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, neitherGainsOrLossMultiplePropertyDisposalsRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, neitherGainsOrLossMultiplePropertyDisposalsRequestBody)) shouldBe
           List(RuleAmountGainLossError.copy(paths = Some(Seq("/multiplePropertyDisposals/0", "/multiplePropertyDisposals/1"))))
       }
 
@@ -822,54 +838,60 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
         validator.validate(
           CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(multipleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
           contain theSameElementsAs List(
-          RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(idDuplicate,
-                                                                     paths = Seq(
-                                                                       "/multiplePropertyDisposals/0/ppdSubmissionId",
-                                                                       "/multiplePropertyDisposals/2/ppdSubmissionId"
-                                                                     )))
+            RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
+              idDuplicate,
+              paths = Seq(
+                "/multiplePropertyDisposals/0/ppdSubmissionId",
+                "/multiplePropertyDisposals/2/ppdSubmissionId"
+              )))
       }
 
       "singlePropertyDisposals has duplicate ids" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(singleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
+        validator.validate(
+          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(singleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
           contain theSameElementsAs List(
-          RuleDuplicatedPpdSubmissionIdError
-            .forDuplicatedIdAndPaths(idDuplicate,
-                                     paths = Seq(
-                                       "/singlePropertyDisposals/0/ppdSubmissionId",
-                                       "/singlePropertyDisposals/2/ppdSubmissionId"
-                                     )))
+            RuleDuplicatedPpdSubmissionIdError
+              .forDuplicatedIdAndPaths(
+                idDuplicate,
+                paths = Seq(
+                  "/singlePropertyDisposals/0/ppdSubmissionId",
+                  "/singlePropertyDisposals/2/ppdSubmissionId"
+                )))
       }
 
       "an id is duplicated between single and multiplePropertyDisposals" in new Test {
         validator.validate(
-          CreateAmendCgtPpdOverridesRawData(validNino,
-                                            validTaxYear,
-                                            jsonBody(multipleIds = Seq(idDuplicate, idOther1), singleIds = Seq(idOther2, idDuplicate)))) should
+          CreateAmendCgtPpdOverridesRawData(
+            validNino,
+            validTaxYear,
+            jsonBody(multipleIds = Seq(idDuplicate, idOther1), singleIds = Seq(idOther2, idDuplicate)))) should
           contain theSameElementsAs List(
-          RuleDuplicatedPpdSubmissionIdError
-            .forDuplicatedIdAndPaths(idDuplicate,
-                                     paths = Seq(
-                                       "/multiplePropertyDisposals/0/ppdSubmissionId",
-                                       "/singlePropertyDisposals/1/ppdSubmissionId"
-                                     )))
+            RuleDuplicatedPpdSubmissionIdError
+              .forDuplicatedIdAndPaths(
+                idDuplicate,
+                paths = Seq(
+                  "/multiplePropertyDisposals/0/ppdSubmissionId",
+                  "/singlePropertyDisposals/1/ppdSubmissionId"
+                )))
       }
 
       "test more that 2 copies of an id" in new Test {
         validator.validate(
-          CreateAmendCgtPpdOverridesRawData(validNino,
-                                            validTaxYear,
-                                            jsonBody(multipleIds = Seq(idDuplicate, idDuplicate), singleIds = Seq(idDuplicate, idDuplicate)))) should
+          CreateAmendCgtPpdOverridesRawData(
+            validNino,
+            validTaxYear,
+            jsonBody(multipleIds = Seq(idDuplicate, idDuplicate), singleIds = Seq(idDuplicate, idDuplicate)))) should
           contain theSameElementsAs List(
-          RuleDuplicatedPpdSubmissionIdError
-            .forDuplicatedIdAndPaths(
-              idDuplicate,
-              paths = Seq(
-                "/multiplePropertyDisposals/0/ppdSubmissionId",
-                "/multiplePropertyDisposals/1/ppdSubmissionId",
-                "/singlePropertyDisposals/0/ppdSubmissionId",
-                "/singlePropertyDisposals/1/ppdSubmissionId"
-              )
-            ))
+            RuleDuplicatedPpdSubmissionIdError
+              .forDuplicatedIdAndPaths(
+                idDuplicate,
+                paths = Seq(
+                  "/multiplePropertyDisposals/0/ppdSubmissionId",
+                  "/multiplePropertyDisposals/1/ppdSubmissionId",
+                  "/singlePropertyDisposals/0/ppdSubmissionId",
+                  "/singlePropertyDisposals/1/ppdSubmissionId"
+                )
+              ))
       }
 
       "multiple duplicates" in new Test {
@@ -879,20 +901,23 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
             validTaxYear,
             jsonBody(multipleIds = Seq(idDuplicate, idDuplicate2), singleIds = Seq(idDuplicate2, idDuplicate)))) should
           contain theSameElementsAs List(
-          RuleDuplicatedPpdSubmissionIdError
-            .forDuplicatedIdAndPaths(idDuplicate,
-                                     paths = Seq(
-                                       "/multiplePropertyDisposals/0/ppdSubmissionId",
-                                       "/singlePropertyDisposals/1/ppdSubmissionId"
-                                     )),
-          RuleDuplicatedPpdSubmissionIdError
-            .forDuplicatedIdAndPaths(idDuplicate2,
-                                     paths = Seq(
-                                       "/multiplePropertyDisposals/1/ppdSubmissionId",
-                                       "/singlePropertyDisposals/0/ppdSubmissionId"
-                                     ))
-        )
+            RuleDuplicatedPpdSubmissionIdError
+              .forDuplicatedIdAndPaths(
+                idDuplicate,
+                paths = Seq(
+                  "/multiplePropertyDisposals/0/ppdSubmissionId",
+                  "/singlePropertyDisposals/1/ppdSubmissionId"
+                )),
+            RuleDuplicatedPpdSubmissionIdError
+              .forDuplicatedIdAndPaths(
+                idDuplicate2,
+                paths = Seq(
+                  "/multiplePropertyDisposals/1/ppdSubmissionId",
+                  "/singlePropertyDisposals/0/ppdSubmissionId"
+                ))
+          )
       }
     }
   }
+
 }

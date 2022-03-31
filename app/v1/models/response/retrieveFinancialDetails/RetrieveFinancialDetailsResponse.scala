@@ -38,9 +38,11 @@ object RetrieveFinancialDetailsResponse extends HateoasLinks {
       (JsPath \ "customerAdded").readNullable[String] and
       (JsPath \ "dateIgnored").readNullable[String] and
       (JsPath \ "employment").read[Employment]
-  ) (RetrieveFinancialDetailsResponse.apply _)
+  )(RetrieveFinancialDetailsResponse.apply _)
 
-  implicit object RetrieveFinancialDetailsLinksFactory extends HateoasLinksFactory[RetrieveFinancialDetailsResponse, RetrieveFinancialDetailsHateoasData] {
+  implicit object RetrieveFinancialDetailsLinksFactory
+      extends HateoasLinksFactory[RetrieveFinancialDetailsResponse, RetrieveFinancialDetailsHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveFinancialDetailsHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -49,7 +51,9 @@ object RetrieveFinancialDetailsResponse extends HateoasLinks {
         deleteFinancialDetails(appConfig, nino, taxYear, employmentId)
       )
     }
+
   }
+
 }
 
 case class RetrieveFinancialDetailsHateoasData(nino: String, taxYear: String, employmentId: String) extends HateoasData

@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
@@ -97,6 +97,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
     val service: AmendInsurancePoliciesService = new AmendInsurancePoliciesService(
       connector = mockAmendInsurancePoliciesConnector
     )
+
   }
 
   "AmendInsurancePoliciesService" when {
@@ -104,7 +105,8 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePoliciesRequest)
+        MockAmendInsurancePoliciesConnector
+          .amendInsurancePolicies(amendInsurancePoliciesRequest)
           .returns(Future.successful(outcome))
 
         await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe outcome
@@ -115,7 +117,8 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendInsurancePoliciesConnector.amendInsurancePolicies(amendInsurancePoliciesRequest)
+            MockAmendInsurancePoliciesConnector
+              .amendInsurancePolicies(amendInsurancePoliciesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -125,7 +128,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("INVALID_PAYLOAD",  StandardDownstreamError),
+          ("INVALID_PAYLOAD", StandardDownstreamError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
@@ -134,4 +137,5 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

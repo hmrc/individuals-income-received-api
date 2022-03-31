@@ -19,9 +19,7 @@ package v1r7.models.request.amendSavings
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
-case class AmendSecurities(taxTakenOff: Option[BigDecimal],
-                           grossAmount: BigDecimal,
-                           netAmount: Option[BigDecimal])
+case class AmendSecurities(taxTakenOff: Option[BigDecimal], grossAmount: BigDecimal, netAmount: Option[BigDecimal])
 
 object AmendSecurities {
   implicit val reads: Reads[AmendSecurities] = Json.reads[AmendSecurities]
@@ -30,5 +28,6 @@ object AmendSecurities {
     (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "grossAmount").write[BigDecimal] and
       (JsPath \ "netAmount").writeNullable[BigDecimal]
-    ) (unlift(AmendSecurities.unapply))
+  )(unlift(AmendSecurities.unapply))
+
 }

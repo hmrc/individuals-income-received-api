@@ -28,6 +28,7 @@ case class CommonInsurancePoliciesItem(customerReference: Option[String],
                                        deficiencyRelief: Option[BigDecimal])
 
 object CommonInsurancePoliciesItem {
+
   implicit val reads: Reads[CommonInsurancePoliciesItem] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "event").readNullable[String] and
@@ -36,7 +37,7 @@ object CommonInsurancePoliciesItem {
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int] and
       (JsPath \ "deficiencyRelief").readNullable[BigDecimal]
-    ) (CommonInsurancePoliciesItem.apply _)
+  )(CommonInsurancePoliciesItem.apply _)
 
   implicit val writes: OWrites[CommonInsurancePoliciesItem] = Json.writes[CommonInsurancePoliciesItem]
 }

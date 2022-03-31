@@ -20,6 +20,7 @@ import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class BenefitsInKindSpec extends UnitSpec {
+
   val json: JsValue = Json.parse(
     """
       |{
@@ -88,7 +89,7 @@ class BenefitsInKindSpec extends UnitSpec {
 
   "BenefitsInKind" when {
     "read from valid JSON" should {
-      "produce the expected 'BenefitsInKind' object" in{
+      "produce the expected 'BenefitsInKind' object" in {
         json.as[BenefitsInKind] shouldBe model
       }
     }
@@ -119,4 +120,5 @@ class BenefitsInKindSpec extends UnitSpec {
       }
     }
   }
+
 }

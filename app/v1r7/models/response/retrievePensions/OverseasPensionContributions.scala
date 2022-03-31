@@ -29,6 +29,7 @@ case class OverseasPensionContributions(customerReference: Option[String],
                                         sf74reference: Option[String])
 
 object OverseasPensionContributions {
+
   implicit val reads: Reads[OverseasPensionContributions] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "exemptEmployersPensionContribs").read[BigDecimal] and
@@ -38,8 +39,7 @@ object OverseasPensionContributions {
       (JsPath \ "dblTaxationArticle").readNullable[String] and
       (JsPath \ "dblTaxationTreaty").readNullable[String] and
       (JsPath \ "sf74Reference").readNullable[String]
-    ) (OverseasPensionContributions.apply _)
+  )(OverseasPensionContributions.apply _)
 
   implicit val writes: OWrites[OverseasPensionContributions] = Json.writes[OverseasPensionContributions]
 }
-

@@ -20,6 +20,7 @@ import api.models.errors.AssetTypeFormatError
 import support.UnitSpec
 
 class AssetTypeValidationSpec extends UnitSpec {
+
   "validate" should {
     "return an empty List" when {
       Seq(
@@ -27,12 +28,10 @@ class AssetTypeValidationSpec extends UnitSpec {
         "unlistedShares",
         "listedShares",
         "otherAsset"
-      ).foreach (
-        assetType =>
-          s"$assetType is supplied" in {
-            AssetTypeValidation.validate(assetType, "path") shouldBe NoValidationErrors
-          }
-      )
+      ).foreach(assetType =>
+        s"$assetType is supplied" in {
+          AssetTypeValidation.validate(assetType, "path") shouldBe NoValidationErrors
+        })
     }
 
     "return an error" when {

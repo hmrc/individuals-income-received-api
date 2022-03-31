@@ -64,7 +64,6 @@ class AmendDividendsRequestBodySpec extends UnitSpec {
     """.stripMargin
   )
 
-
   private val foreignDividendModel = Seq(
     AmendForeignDividendItem(
       countryCode = "DEU",
@@ -85,17 +84,15 @@ class AmendDividendsRequestBodySpec extends UnitSpec {
       foreignTaxCreditRelief = true,
       taxableAmount = 2321.22
     )
-
   )
 
-  private val stockDividend = AmendCommonDividends(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val stockDividend = AmendCommonDividends(customerReference = Some("my divs"), grossAmount = 12321.22)
 
-  private val redeemableShares = AmendCommonDividends(customerReference = Some ("my shares"), grossAmount = 12321.22)
+  private val redeemableShares = AmendCommonDividends(customerReference = Some("my shares"), grossAmount = 12321.22)
 
-  private val bonusIssuesOfSecurities = AmendCommonDividends(customerReference = Some ("my secs"), grossAmount = 12321.22)
+  private val bonusIssuesOfSecurities = AmendCommonDividends(customerReference = Some("my secs"), grossAmount = 12321.22)
 
-  private val closeCompanyLoansWrittenOff = AmendCommonDividends(customerReference = Some ("write off"), grossAmount = 12321.22)
-
+  private val closeCompanyLoansWrittenOff = AmendCommonDividends(customerReference = Some("write off"), grossAmount = 12321.22)
 
   private val requestBodyModel = AmendDividendsRequestBody(
     Some(foreignDividendModel),
@@ -165,4 +162,5 @@ class AmendDividendsRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

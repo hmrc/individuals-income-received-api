@@ -59,4 +59,5 @@ class AmendBenefitFromEmployerFinancedRetirementSchemeItemSpec extends UnitSpec 
       }
     }
   }
+
 }

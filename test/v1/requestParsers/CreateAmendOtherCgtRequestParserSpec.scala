@@ -26,8 +26,8 @@ import v1.models.request.createAmendOtherCgt._
 
 class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2021-22"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2021-22"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -70,8 +70,6 @@ class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
 
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
-
-
   private val validRequestBodyModel = CreateAmendOtherCgtRequestBody(
     disposals = Some(
       Seq(
@@ -108,7 +106,7 @@ class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
         setAgainstInYearGeneralIncome = Some(1000.12),
         setAgainstEarlierYear = Some(1000.12)
       )
-    )   ,
+    ),
     adjustments = Some(1000.12)
   )
 
@@ -119,9 +117,11 @@ class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockCreateAmendOtherCgtValidator {
+
     lazy val parser: CreateAmendOtherCgtRequestParser = new CreateAmendOtherCgtRequestParser(
       validator = mockCreateAmendOtherCgtValidator
     )
+
   }
 
   "parse" should {
@@ -136,7 +136,8 @@ class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockCreateAmendOtherCgtValidator.validate(createAmendOtherCgtRawData)
+        MockCreateAmendOtherCgtValidator
+          .validate(createAmendOtherCgtRawData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(createAmendOtherCgtRawData) shouldBe
@@ -144,7 +145,8 @@ class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockCreateAmendOtherCgtValidator.validate(createAmendOtherCgtRawData)
+        MockCreateAmendOtherCgtValidator
+          .validate(createAmendOtherCgtRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(createAmendOtherCgtRawData) shouldBe
@@ -152,4 +154,5 @@ class CreateAmendOtherCgtRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

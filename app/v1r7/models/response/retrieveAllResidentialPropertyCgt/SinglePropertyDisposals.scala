@@ -30,16 +30,16 @@ case class SinglePropertyDisposals(source: MtdSourceEnum,
                                    acquisitionDate: Option[String],
                                    acquisitionAmount: BigDecimal,
                                    improvementCosts: Option[BigDecimal],
-                                   additionalCosts : Option[BigDecimal],
+                                   additionalCosts: Option[BigDecimal],
                                    prfAmount: Option[BigDecimal],
                                    otherReliefAmount: Option[BigDecimal],
                                    lossesFromThisYear: Option[BigDecimal],
                                    lossesFromPreviousYear: Option[BigDecimal],
-                                   amountOfNetGain : Option[BigDecimal],
-                                   amountOfNetLoss : Option[BigDecimal]
-                                  )
+                                   amountOfNetGain: Option[BigDecimal],
+                                   amountOfNetLoss: Option[BigDecimal])
 
 object SinglePropertyDisposals {
+
   implicit val reads: Reads[SinglePropertyDisposals] = (
     (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "submittedOn").readNullable[String] and
@@ -58,7 +58,7 @@ object SinglePropertyDisposals {
       (JsPath \ "lossesFromPreviousYear").readNullable[BigDecimal] and
       (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").readNullable[BigDecimal]
-    ) (SinglePropertyDisposals.apply _)
+  )(SinglePropertyDisposals.apply _)
 
   implicit val writes: OWrites[SinglePropertyDisposals] = Json.writes[SinglePropertyDisposals]
 }

@@ -24,9 +24,10 @@ import v1r7.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendNonPayeEmploymentRequestParser @Inject()(val validator: CreateAmendNonPayeEmploymentValidator)
+class CreateAmendNonPayeEmploymentRequestParser @Inject() (val validator: CreateAmendNonPayeEmploymentValidator)
     extends RequestParser[CreateAmendNonPayeEmploymentRawData, CreateAmendNonPayeEmploymentRequest] {
 
   override protected def requestFor(data: CreateAmendNonPayeEmploymentRawData): CreateAmendNonPayeEmploymentRequest =
     CreateAmendNonPayeEmploymentRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendNonPayeEmploymentRequestBody])
+
 }

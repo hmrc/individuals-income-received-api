@@ -18,15 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.retrieveEmployment.{ RetrieveEmploymentRawData, RetrieveEmploymentRequest }
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 import v1.requestParsers.validators.RetrieveEmploymentValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveEmploymentRequestParser @Inject()(val validator: RetrieveEmploymentValidator)
+class RetrieveEmploymentRequestParser @Inject() (val validator: RetrieveEmploymentValidator)
     extends RequestParser[RetrieveEmploymentRawData, RetrieveEmploymentRequest] {
 
   override protected def requestFor(data: RetrieveEmploymentRawData): RetrieveEmploymentRequest =
     RetrieveEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId)
+
 }

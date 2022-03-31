@@ -21,6 +21,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class RedundancyCompensationPaymentsUnderExemptionItem(amount: Option[BigDecimal])
 
 object RedundancyCompensationPaymentsUnderExemptionItem {
+
   implicit val reads: Reads[RedundancyCompensationPaymentsUnderExemptionItem] =
     (JsPath \ "amount").readNullable[BigDecimal].map(RedundancyCompensationPaymentsUnderExemptionItem(_))
 

@@ -59,4 +59,5 @@ class ForeignPoliciesItemSpec extends UnitSpec {
       }
     }
   }
+
 }

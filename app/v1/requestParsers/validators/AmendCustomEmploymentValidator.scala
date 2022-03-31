@@ -18,15 +18,15 @@ package v1.requestParsers.validators
 
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
-import config.{ AppConfig, FeatureSwitch }
+import config.{AppConfig, FeatureSwitch}
 import utils.CurrentDateTime
-import v1.models.request.amendCustomEmployment.{ AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody }
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[AmendCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
@@ -68,4 +68,5 @@ class AmendCustomEmploymentValidator @Inject()(implicit currentDateTime: Current
       PayrollIdValidation.validateOptional(dataModel.payrollId)
     )
   }
+
 }

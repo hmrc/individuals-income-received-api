@@ -33,6 +33,7 @@ trait MockAmendSavingsValidator extends MockFactory {
         .validate(_: AmendSavingsRawData))
         .expects(data)
     }
+
   }
 
 }

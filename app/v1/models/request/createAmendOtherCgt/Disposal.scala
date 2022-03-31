@@ -32,5 +32,5 @@ case class Disposal(assetType: String,
                     rttTaxPaid: Option[BigDecimal])
 
 object Disposal {
-  implicit val format: OFormat[Disposal] =  Json.format[Disposal]
+  implicit val format: OFormat[Disposal] = Json.format[Disposal]
 }

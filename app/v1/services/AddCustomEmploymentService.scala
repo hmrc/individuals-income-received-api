@@ -28,14 +28,14 @@ import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 import api.support.DownstreamResponseMappingSupport
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddCustomEmploymentService @Inject()(connector: AddCustomEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def addEmployment(request: AddCustomEmploymentRequest)(
-      implicit hc: HeaderCarrier,
+  def addEmployment(request: AddCustomEmploymentRequest)(implicit
+      hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]] = {

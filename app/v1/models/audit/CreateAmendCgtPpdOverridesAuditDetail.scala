@@ -28,7 +28,6 @@ case class CreateAmendCgtPpdOverridesAuditDetail(userType: String,
                                                  `X-CorrelationId`: String,
                                                  response: AuditResponse)
 
-
 object CreateAmendCgtPpdOverridesAuditDetail {
   implicit val writes: Writes[CreateAmendCgtPpdOverridesAuditDetail] = Json.writes[CreateAmendCgtPpdOverridesAuditDetail]
 
@@ -49,4 +48,5 @@ object CreateAmendCgtPpdOverridesAuditDetail {
       auditResponse
     )
   }
+
 }

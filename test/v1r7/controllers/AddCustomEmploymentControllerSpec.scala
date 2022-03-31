@@ -80,6 +80,7 @@ class AddCustomEmploymentControllerSpec
       amendCustomEmployment(mockAppConfig, nino, taxYear, employmentId),
       deleteCustomEmployment(mockAppConfig, nino, taxYear, employmentId)
     )
+
   }
 
   val requestBodyJson: JsValue = Json.parse(
@@ -266,4 +267,5 @@ class AddCustomEmploymentControllerSpec
       }
     }
   }
+
 }

@@ -55,13 +55,13 @@ class RetrieveForeignResponseSpec extends UnitSpec {
   )
 
   val fullUnremittableForeignIncomeModel1: UnremittableForeignIncome = UnremittableForeignIncome(
-    countryCode =  "FRA",
+    countryCode = "FRA",
     amountInForeignCurrency = 1999.99,
     amountTaxPaid = Some(1999.99)
   )
 
   val fullUnremittableForeignIncomeModel2: UnremittableForeignIncome = UnremittableForeignIncome(
-    countryCode =  "IND",
+    countryCode = "IND",
     amountInForeignCurrency = 2999.99,
     amountTaxPaid = Some(2999.99)
   )
@@ -69,10 +69,11 @@ class RetrieveForeignResponseSpec extends UnitSpec {
   private val fullRetrieveResponseBodyModel = RetrieveForeignResponse(
     submittedOn = "2019-04-04T01:01:01Z",
     foreignEarnings = Some(fullForeignEarningsModel),
-    unremittableForeignIncome = Some(Seq(
-      fullUnremittableForeignIncomeModel1,
-      fullUnremittableForeignIncomeModel2
-    ))
+    unremittableForeignIncome = Some(
+      Seq(
+        fullUnremittableForeignIncomeModel1,
+        fullUnremittableForeignIncomeModel2
+      ))
   )
 
   private val minRetrieveResponseBodyModel = RetrieveForeignResponse("2019-04-04T01:01:01Z", None, None)
@@ -119,8 +120,8 @@ class RetrieveForeignResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino = "someNino"
-      val taxYear = "2019-20"
+      val nino           = "someNino"
+      val taxYear        = "2019-20"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
     }
 
@@ -138,4 +139,5 @@ class RetrieveForeignResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

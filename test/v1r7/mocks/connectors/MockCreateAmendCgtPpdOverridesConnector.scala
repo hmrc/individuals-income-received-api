@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.connectors.CreateAmendCgtPpdOverridesConnector
 import v1r7.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendCgtPpdOverridesConnector extends MockFactory {
 
@@ -36,6 +36,7 @@ trait MockCreateAmendCgtPpdOverridesConnector extends MockFactory {
         .createAmend(_: CreateAmendCgtPpdOverridesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
 
 }

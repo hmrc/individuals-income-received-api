@@ -24,11 +24,21 @@ import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.addCustomEmployment._
-import v1r7.requestParsers.validators.validations.{CustomEmploymentDateValidation, EmployerNameValidation, EmployerRefValidation, JsonFormatValidation, NinoValidation, PayrollIdValidation, TaxYearNotEndedValidation, TaxYearNotSupportedValidation, TaxYearValidation}
+import v1r7.requestParsers.validators.validations.{
+  CustomEmploymentDateValidation,
+  EmployerNameValidation,
+  EmployerRefValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  PayrollIdValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
-class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-  extends Validator[AddCustomEmploymentRawData] {
+class AddCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[AddCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -39,7 +49,7 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
   private def parameterFormatValidation: AddCustomEmploymentRawData => List[List[MtdError]] = (data: AddCustomEmploymentRawData) => {
     List(
       NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear),
+      TaxYearValidation.validate(data.taxYear)
     )
   }
 
@@ -68,4 +78,5 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
       PayrollIdValidation.validateOptional(requestBodyData.payrollId)
     )
   }
+
 }

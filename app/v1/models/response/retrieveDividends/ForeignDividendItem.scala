@@ -24,10 +24,10 @@ case class ForeignDividendItem(countryCode: String,
                                taxTakenOff: Option[BigDecimal],
                                specialWithholdingTax: Option[BigDecimal],
                                foreignTaxCreditRelief: Boolean,
-                               taxableAmount: BigDecimal
-                              )
+                               taxableAmount: BigDecimal)
 
 object ForeignDividendItem {
+
   implicit val reads: Reads[ForeignDividendItem] = (
     (JsPath \ "countryCode").read[String] and
       (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
@@ -35,7 +35,7 @@ object ForeignDividendItem {
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").read[Boolean] and
       (JsPath \ "taxableAmount").read[BigDecimal]
-    ) (ForeignDividendItem.apply _)
+  )(ForeignDividendItem.apply _)
 
   implicit val writes: OWrites[ForeignDividendItem] = Json.writes[ForeignDividendItem]
 

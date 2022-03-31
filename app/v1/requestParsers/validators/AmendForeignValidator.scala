@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.amendForeign._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
+class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -64,8 +64,8 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig) extends
             }
             .getOrElse(NoValidationErrors),
           requestBodyData.unremittableForeignIncome
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateUnremittableForeignIncome(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateUnremittableForeignIncome(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList
@@ -93,10 +93,13 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig) extends
         .map(
           _.copy(paths = Some(Seq(s"/unremittableForeignIncome/$arrayIndex/countryCode")))
         ),
-      DecimalValueValidation.validate(amount = unremittableForeignIncome.amountInForeignCurrency,
-                                      path = s"/unremittableForeignIncome/$arrayIndex/amountInForeignCurrency"),
-      DecimalValueValidation.validateOptional(amount = unremittableForeignIncome.amountTaxPaid,
-                                              path = s"/unremittableForeignIncome/$arrayIndex/amountTaxPaid")
+      DecimalValueValidation.validate(
+        amount = unremittableForeignIncome.amountInForeignCurrency,
+        path = s"/unremittableForeignIncome/$arrayIndex/amountInForeignCurrency"),
+      DecimalValueValidation.validateOptional(
+        amount = unremittableForeignIncome.amountTaxPaid,
+        path = s"/unremittableForeignIncome/$arrayIndex/amountTaxPaid")
     ).flatten
   }
+
 }

@@ -117,4 +117,5 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

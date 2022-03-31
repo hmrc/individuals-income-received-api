@@ -34,11 +34,13 @@ trait MockAddCustomEmploymentService extends MockFactory {
 
   object MockAddCustomEmploymentService {
 
-    def addEmployment(requestData: AddCustomEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]]] = {
+    def addEmployment(
+        requestData: AddCustomEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]]] = {
       (mockAddCustomEmploymentService
         .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

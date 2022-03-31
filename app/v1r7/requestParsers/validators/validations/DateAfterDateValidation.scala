@@ -27,4 +27,5 @@ object DateAfterDateValidation {
     val formattedDateWhichShouldBeLater   = LocalDate.parse(dateWhichShouldBeLater)
     if (formattedDateWhichShouldBeEarlier isAfter formattedDateWhichShouldBeLater) List(error.copy(paths = Some(Seq(path)))) else NoValidationErrors
   }
+
 }

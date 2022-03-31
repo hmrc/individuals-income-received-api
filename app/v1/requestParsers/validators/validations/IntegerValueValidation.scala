@@ -26,26 +26,26 @@ object IntegerValueValidation extends ValueFormatErrorMessages {
                        path: String,
                        message: String = ZERO_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = field match {
     case None => NoValidationErrors
-    case Some(value) => validate(
-      field = value,
-      minValue = minValue,
-      maxValue = maxValue,
-      path = path,
-      message = message
-    )
-  }
-
-  def validate(field: Int,
-               minValue: Int = 0,
-               maxValue: Int = 99,
-               path: String,
-               message: String = ZERO_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = {
-
-    if (field >= minValue && field <= maxValue) NoValidationErrors else List(
-      ValueFormatError.copy(
-        message = message,
-        paths = Some(Seq(path))
+    case Some(value) =>
+      validate(
+        field = value,
+        minValue = minValue,
+        maxValue = maxValue,
+        path = path,
+        message = message
       )
-    )
   }
+
+  def validate(field: Int, minValue: Int = 0, maxValue: Int = 99, path: String, message: String = ZERO_MINIMUM_INTEGER_INCLUSIVE): List[MtdError] = {
+
+    if (field >= minValue && field <= maxValue) NoValidationErrors
+    else
+      List(
+        ValueFormatError.copy(
+          message = message,
+          paths = Some(Seq(path))
+        )
+      )
+  }
+
 }

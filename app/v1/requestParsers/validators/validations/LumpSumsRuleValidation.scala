@@ -20,10 +20,12 @@ import api.models.errors.{MtdError, RuleLumpSumsError}
 import v1.models.request.amendOtherEmployment.AmendLumpSums
 
 object LumpSumsRuleValidation {
+
   def validate(lumpSum: AmendLumpSums, index: Int): List[MtdError] = {
     lumpSum match {
       case AmendLumpSums(_, _, None, None, None, None) => List(RuleLumpSumsError.withExtraPath(newPath = s"/lumpSums/$index"))
-      case _ => NoValidationErrors
+      case _                                           => NoValidationErrors
     }
   }
+
 }

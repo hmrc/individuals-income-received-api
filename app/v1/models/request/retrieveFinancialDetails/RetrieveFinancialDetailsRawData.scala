@@ -18,7 +18,4 @@ package v1.models.request.retrieveFinancialDetails
 
 import api.models.request.RawData
 
-case class RetrieveFinancialDetailsRawData(nino: String,
-                                           taxYear: String,
-                                           employmentId: String,
-                                           source: Option[String]) extends RawData
+case class RetrieveFinancialDetailsRawData(nino: String, taxYear: String, employmentId: String, source: Option[String]) extends RawData

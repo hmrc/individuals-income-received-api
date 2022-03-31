@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.createAmendOtherCgt._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
+class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendOtherCgtRawData]
     with ValueFormatErrorMessages
     with DisposalDateErrorMessages {
@@ -84,8 +84,8 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
         List(
           requestBodyData.disposals
             .map(_.toList)
-            .map(_.zipWithIndex.flatMap {
-              case (disposal, index) => validateDisposalFormat(disposal, index)
+            .map(_.zipWithIndex.flatMap { case (disposal, index) =>
+              validateDisposalFormat(disposal, index)
             })
             .getOrElse(NoValidationErrors),
           requestBodyData.nonStandardGains
@@ -113,8 +113,8 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
         List(
           requestBodyData.disposals
             .map(_.toList)
-            .map(_.zipWithIndex.flatMap {
-              case (disposal, index) => validateDisposalRules(disposal, data.taxYear, index)
+            .map(_.zipWithIndex.flatMap { case (disposal, index) =>
+              validateDisposalRules(disposal, data.taxYear, index)
             })
             .getOrElse(NoValidationErrors),
           requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation).getOrElse(NoValidationErrors)
@@ -222,7 +222,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
       DecimalValueValidation.validateOptional(
         amount = losses.setAgainstEarlierYear,
         path = "/losses/setAgainstEarlierYear"
-      ),
+      )
     ).flatten
   }
 
@@ -249,4 +249,5 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
       )
     ).flatten
   }
+
 }

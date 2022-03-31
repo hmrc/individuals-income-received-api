@@ -73,4 +73,5 @@ class AddCustomEmploymentRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class CreateAmendNonPayeEmploymentConnectorSpec extends ConnectorSpec {
 
-  private val nino: String = "AA111111A"
+  private val nino: String    = "AA111111A"
   private val taxYear: String = "2019-20"
 
   private val request = CreateAmendNonPayeEmploymentRequest(
@@ -54,21 +54,23 @@ class CreateAmendNonPayeEmploymentConnectorSpec extends ConnectorSpec {
   "createAndAmend" should {
     "return a 204 status" when {
       "a valid request is made" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val outcome                                          = Right(ResponseWrapper(correlationId, ()))
+        implicit val hc: HeaderCarrier                       = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredApi1661HeadersPut: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/income/employments/non-paye/$nino/$taxYear",
-            config =  dummyIfsHeaderCarrierConfig,
+            config = dummyIfsHeaderCarrierConfig,
             body = requestBodyModel,
             requiredHeaders = requiredApi1661HeadersPut,
             excludedHeaders = Seq("AnAmendCustomEmploymentConnectorotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.createAndAmend(request)) shouldBe outcome
       }
     }
   }
+
 }

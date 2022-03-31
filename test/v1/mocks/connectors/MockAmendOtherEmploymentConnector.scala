@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.AmendOtherEmploymentConnector
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAmendOtherEmploymentConnector extends MockFactory {
 
@@ -36,5 +36,7 @@ trait MockAmendOtherEmploymentConnector extends MockFactory {
         .amendOtherEmployment(_: AmendOtherEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
+
 }

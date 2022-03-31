@@ -19,9 +19,7 @@ package v1r7.models.request.amendOtherEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendRedundancyCompensationPaymentsOverExemptionItem(amount: BigDecimal,
-                                                                taxPaid: Option[BigDecimal],
-                                                                taxTakenOffInEmployment: Boolean)
+case class AmendRedundancyCompensationPaymentsOverExemptionItem(amount: BigDecimal, taxPaid: Option[BigDecimal], taxTakenOffInEmployment: Boolean)
 
 object AmendRedundancyCompensationPaymentsOverExemptionItem {
   implicit val reads: Reads[AmendRedundancyCompensationPaymentsOverExemptionItem] = Json.reads[AmendRedundancyCompensationPaymentsOverExemptionItem]
@@ -30,6 +28,6 @@ object AmendRedundancyCompensationPaymentsOverExemptionItem {
     (JsPath \ "amount").write[BigDecimal] and
       (JsPath \ "taxPaid").writeNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").write[Boolean]
-    ) (unlift(AmendRedundancyCompensationPaymentsOverExemptionItem.unapply))
+  )(unlift(AmendRedundancyCompensationPaymentsOverExemptionItem.unapply))
 
 }

@@ -110,6 +110,7 @@ class RetrieveForeignControllerSpec
         fullUnremittableForeignIncomeModel2
       ))
   )
+
   private val mtdResponse = RetrieveForeignFixture.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
@@ -145,12 +146,13 @@ class RetrieveForeignControllerSpec
         MockHateoasFactory
           .wrap(retrieveForeignResponse, RetrieveForeignHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveForeignResponse,
-                           Seq(
-                             retrieveForeignLink,
-                             amendForeignLink,
-                             deleteForeignLink
-                           )))
+            HateoasWrapper(
+              retrieveForeignResponse,
+              Seq(
+                retrieveForeignLink,
+                amendForeignLink,
+                deleteForeignLink
+              )))
 
         val result: Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)
 
@@ -219,4 +221,5 @@ class RetrieveForeignControllerSpec
       }
     }
   }
+
 }

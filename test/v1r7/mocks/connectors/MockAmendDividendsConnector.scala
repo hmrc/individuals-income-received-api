@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.connectors.AmendDividendsConnector
 import v1r7.models.request.amendDividends.AmendDividendsRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAmendDividendsConnector extends MockFactory {
 
@@ -36,6 +36,7 @@ trait MockAmendDividendsConnector extends MockFactory {
         .amendDividends(_: AmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
 
 }

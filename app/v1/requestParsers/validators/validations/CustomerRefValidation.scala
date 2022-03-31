@@ -23,12 +23,12 @@ object CustomerRefValidation {
   private val regex = "^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$"
 
   def validateOptional(customerRef: Option[String], path: Option[String] = None): List[MtdError] = customerRef match {
-    case None => NoValidationErrors
+    case None        => NoValidationErrors
     case Some(value) => validate(value, path)
   }
 
   def validate(customerRef: String, path: Option[String] = None): List[MtdError] = {
-    if(customerRef.matches(regex)) NoValidationErrors else List(CustomerRefFormatError.copy(paths = path.map(List(_))))
+    if (customerRef.matches(regex)) NoValidationErrors else List(CustomerRefFormatError.copy(paths = path.map(List(_))))
   }
 
 }

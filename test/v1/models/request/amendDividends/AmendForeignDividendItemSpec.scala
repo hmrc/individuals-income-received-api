@@ -64,4 +64,5 @@ class AmendForeignDividendItemSpec extends UnitSpec {
       }
     }
   }
+
 }

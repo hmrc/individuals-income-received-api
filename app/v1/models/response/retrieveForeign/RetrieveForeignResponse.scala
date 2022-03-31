@@ -33,11 +33,12 @@ object RetrieveForeignResponse extends HateoasLinks with JsonUtils {
     (JsPath \ "submittedOn").read[String] and
       (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].mapEmptySeqToNone
-    ) (RetrieveForeignResponse.apply _)
+  )(RetrieveForeignResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignResponse] = Json.writes[RetrieveForeignResponse]
 
   implicit object RetrieveForeignLinksFactory extends HateoasLinksFactory[RetrieveForeignResponse, RetrieveForeignHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveForeignHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -46,6 +47,7 @@ object RetrieveForeignResponse extends HateoasLinks with JsonUtils {
         deleteForeign(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }

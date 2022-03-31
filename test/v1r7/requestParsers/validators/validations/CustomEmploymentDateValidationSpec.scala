@@ -16,7 +16,13 @@
 
 package v1r7.requestParsers.validators.validations
 
-import api.models.errors.{CessationDateFormatError, RuleCessationDateBeforeStartDateError, RuleCessationDateBeforeTaxYearStartError, RuleStartDateAfterTaxYearEndError, StartDateFormatError}
+import api.models.errors.{
+  CessationDateFormatError,
+  RuleCessationDateBeforeStartDateError,
+  RuleCessationDateBeforeTaxYearStartError,
+  RuleStartDateAfterTaxYearEndError,
+  StartDateFormatError
+}
 import support.UnitSpec
 
 class CustomEmploymentDateValidationSpec extends UnitSpec {
@@ -117,4 +123,5 @@ class CustomEmploymentDateValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

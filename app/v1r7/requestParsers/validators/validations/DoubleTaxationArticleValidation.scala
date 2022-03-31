@@ -21,8 +21,10 @@ import api.models.errors.DoubleTaxationArticleFormatError
 
 object DoubleTaxationArticleValidation {
 
-  def validateOptional(dblTaxationArticle: Option[String], path: String): List[MtdError] = dblTaxationArticle.fold(NoValidationErrors: List[MtdError]) { data =>
-    if (data.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
-      DoubleTaxationArticleFormatError.copy(paths = Some(Seq(path))))
-  }
+  def validateOptional(dblTaxationArticle: Option[String], path: String): List[MtdError] =
+    dblTaxationArticle.fold(NoValidationErrors: List[MtdError]) { data =>
+      if (data.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors
+      else List(DoubleTaxationArticleFormatError.copy(paths = Some(Seq(path))))
+    }
+
 }

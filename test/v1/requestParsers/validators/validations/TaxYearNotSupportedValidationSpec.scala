@@ -56,4 +56,5 @@ class TaxYearNotSupportedValidationSpec extends UnitSpec with JsonErrorValidator
       }
     }
   }
+
 }

@@ -33,6 +33,7 @@ class MockRetrieveEmploymentValidator extends MockFactory {
         .validate(_: RetrieveEmploymentRawData))
         .expects(data)
     }
+
   }
 
 }

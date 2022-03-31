@@ -24,7 +24,7 @@ import play.api.libs.json.Writes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAuditService extends MockFactory {
 
@@ -38,6 +38,7 @@ trait MockAuditService extends MockFactory {
         .verify(event, *, *, *)
         .returning(Future.successful(AuditResult.Success))
     }
+
   }
 
 }

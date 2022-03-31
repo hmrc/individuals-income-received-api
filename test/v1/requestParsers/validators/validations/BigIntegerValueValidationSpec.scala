@@ -78,4 +78,5 @@ class BigIntegerValueValidationSpec extends UnitSpec with ValueFormatErrorMessag
       }
     }
   }
+
 }

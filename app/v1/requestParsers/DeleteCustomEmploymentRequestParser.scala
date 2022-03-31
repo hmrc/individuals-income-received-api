@@ -18,15 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.deleteCustomEmployment.{ DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest }
+import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 import v1.requestParsers.validators.DeleteCustomEmploymentValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCustomEmploymentRequestParser @Inject()(val validator: DeleteCustomEmploymentValidator)
+class DeleteCustomEmploymentRequestParser @Inject() (val validator: DeleteCustomEmploymentValidator)
     extends RequestParser[DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest] {
 
   override protected def requestFor(data: DeleteCustomEmploymentRawData): DeleteCustomEmploymentRequest =
     DeleteCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId)
+
 }

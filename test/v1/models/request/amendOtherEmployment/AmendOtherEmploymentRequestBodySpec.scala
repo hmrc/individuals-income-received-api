@@ -104,50 +104,48 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
     """.stripMargin
   )
 
-
   private val shareOptionModel = Seq(
     AmendShareOptionItem(
-    employerName = "Company Ltd",
-    employerRef = Some ("AB1321/123"),
-    schemePlanType = "EMI",
-    dateOfOptionGrant = "2019-11-20",
-    dateOfEvent = "2019-11-20",
-    optionNotExercisedButConsiderationReceived = true,
-    amountOfConsiderationReceived = 23122.22,
-    noOfSharesAcquired = 1,
-    classOfSharesAcquired = "FIRST",
-    exercisePrice = 12.22,
-    amountPaidForOption = 123.22,
-    marketValueOfSharesOnExcise = 1232.22,
-    profitOnOptionExercised = 1232.33,
-    employersNicPaid = 2312.22,
-    taxableAmount =  2132.22
+      employerName = "Company Ltd",
+      employerRef = Some("AB1321/123"),
+      schemePlanType = "EMI",
+      dateOfOptionGrant = "2019-11-20",
+      dateOfEvent = "2019-11-20",
+      optionNotExercisedButConsiderationReceived = true,
+      amountOfConsiderationReceived = 23122.22,
+      noOfSharesAcquired = 1,
+      classOfSharesAcquired = "FIRST",
+      exercisePrice = 12.22,
+      amountPaidForOption = 123.22,
+      marketValueOfSharesOnExcise = 1232.22,
+      profitOnOptionExercised = 1232.33,
+      employersNicPaid = 2312.22,
+      taxableAmount = 2132.22
     )
   )
 
   private val sharesAwardedOrReceivedModel = Seq(
-
     AmendSharesAwardedOrReceivedItem(
-    employerName = "Company Ltd",
-    employerRef = Some ("AB1321/123"),
-    schemePlanType = "SIP",
-    dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
-    noOfShareSecuritiesAwarded = 11,
-    classOfShareAwarded = "FIRST",
-    dateSharesAwarded = "2019-11-20",
-    sharesSubjectToRestrictions = true,
-    electionEnteredIgnoreRestrictions = false,
-    actualMarketValueOfSharesOnAward = 2123.22,
-    unrestrictedMarketValueOfSharesOnAward = 123.22,
-    amountPaidForSharesOnAward = 123.22,
-    marketValueAfterRestrictionsLifted = 1232.22,
-    taxableAmount = 12321.22
+      employerName = "Company Ltd",
+      employerRef = Some("AB1321/123"),
+      schemePlanType = "SIP",
+      dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
+      noOfShareSecuritiesAwarded = 11,
+      classOfShareAwarded = "FIRST",
+      dateSharesAwarded = "2019-11-20",
+      sharesSubjectToRestrictions = true,
+      electionEnteredIgnoreRestrictions = false,
+      actualMarketValueOfSharesOnAward = 2123.22,
+      unrestrictedMarketValueOfSharesOnAward = 123.22,
+      amountPaidForSharesOnAward = 123.22,
+      marketValueAfterRestrictionsLifted = 1232.22,
+      taxableAmount = 12321.22
     )
   )
 
-  private val disability = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val disability = AmendCommonOtherEmployment(customerReference = Some("cust ref"), amountDeducted = 1223.22)
 
-  private val foreignService = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val foreignService = AmendCommonOtherEmployment(customerReference = Some("cust ref"), amountDeducted = 1223.22)
 
   private val taxableLumpSumsAndCertainIncome = AmendTaxableLumpSumsAndCertainIncomeItem(
     amount = 5000.99,
@@ -198,28 +196,28 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
       }
     }
 
-  "read from empty JSON" should {
-    "produce an empty AmendOtherEmploymentRequestBody object" in {
-      val emptyJson = JsObject.empty
+    "read from empty JSON" should {
+      "produce an empty AmendOtherEmploymentRequestBody object" in {
+        val emptyJson = JsObject.empty
 
-      emptyJson.as[AmendOtherEmploymentRequestBody] shouldBe AmendOtherEmploymentRequestBody.empty
+        emptyJson.as[AmendOtherEmploymentRequestBody] shouldBe AmendOtherEmploymentRequestBody.empty
+      }
     }
-  }
 
-  "read from valid JSON with empty shareOption and sharesAwardedOrReceived arrays" should {
-    "produce an empty AmendOtherEmploymentRequestBody object" in {
-      val json = Json.parse(
-        """
+    "read from valid JSON with empty shareOption and sharesAwardedOrReceived arrays" should {
+      "produce an empty AmendOtherEmploymentRequestBody object" in {
+        val json = Json.parse(
+          """
           |{
           |   "shareOption": [ ],
           |   "sharesAwardedOrReceived": [ ]
           |}
         """.stripMargin
-      )
+        )
 
-      json.as[AmendOtherEmploymentRequestBody] shouldBe AmendOtherEmploymentRequestBody.empty
+        json.as[AmendOtherEmploymentRequestBody] shouldBe AmendOtherEmploymentRequestBody.empty
+      }
     }
-  }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
@@ -259,4 +257,5 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

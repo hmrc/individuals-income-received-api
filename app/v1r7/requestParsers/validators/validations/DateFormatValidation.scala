@@ -29,16 +29,16 @@ object DateFormatValidation {
     LocalDate.parse(date, dateFormat)
   } match {
     case Success(_) => NoValidationErrors
-    case Failure(_) => List(
-      DateFormatError.copy(
-        paths = Some(Seq(path))
+    case Failure(_) =>
+      List(
+        DateFormatError.copy(
+          paths = Some(Seq(path))
+        )
       )
-    )
   }
 
-  def validateOptionalWithPath(date: Option[String],
-                               path: String): List[MtdError] = date match {
-    case None => NoValidationErrors
+  def validateOptionalWithPath(date: Option[String], path: String): List[MtdError] = date match {
+    case None       => NoValidationErrors
     case Some(date) => validateWithPath(date, path)
   }
 
@@ -48,5 +48,5 @@ object DateFormatValidation {
     case Success(_) => NoValidationErrors
     case Failure(_) => List(error)
   }
-}
 
+}

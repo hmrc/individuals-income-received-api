@@ -20,6 +20,7 @@ import support.UnitSpec
 import api.models.errors.{ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError}
 
 class ClassOfSharesValidationSpec extends UnitSpec {
+
   "ClassOfSharesValidation" when {
     "validate" must {
       "return an empty list for a valid ClassOfShares Acquired" in {
@@ -51,4 +52,5 @@ class ClassOfSharesValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

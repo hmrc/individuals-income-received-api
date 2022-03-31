@@ -23,6 +23,7 @@ case class MtdError(code: String, message: String, paths: Option[Seq[String]] = 
   def withExtraPath(newPath: String): MtdError = paths.fold(this.copy(paths = Some(Seq(newPath)))) { existingPaths =>
     this.copy(paths = Some(existingPaths :+ newPath))
   }
+
 }
 
 object MtdError {
@@ -30,6 +31,7 @@ object MtdError {
 
   implicit def genericWrites[T <: MtdError]: OWrites[T] =
     writes.contramap[T](c => c: MtdError)
+
 }
 
 object CustomMtdError {
@@ -183,6 +185,7 @@ object RuleDuplicatedPpdSubmissionIdError
 
   def forDuplicatedIdAndPaths(id: String, paths: Seq[String]): MtdError =
     RuleDuplicatedPpdSubmissionIdError.copy(message = s"The ppdSubmissionId '$id' is duplicated", paths = Some(paths))
+
 }
 
 object RuleIncorrectDisposalTypeError
@@ -192,10 +195,10 @@ object RuleIncorrectDisposalTypeError
     )
 
 object RuleDeleteForbiddenError
-  extends MtdError(
-    code = "RULE_DELETE_FORBIDDEN",
-    message = "A deletion of an HMRC held employment is not permitted"
-  )
+    extends MtdError(
+      code = "RULE_DELETE_FORBIDDEN",
+      message = "A deletion of an HMRC held employment is not permitted"
+    )
 
 // Not found errors
 object PpdSubmissionIdNotFoundError

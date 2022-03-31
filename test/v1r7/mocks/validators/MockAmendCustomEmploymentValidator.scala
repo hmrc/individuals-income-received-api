@@ -33,6 +33,7 @@ trait MockAmendCustomEmploymentValidator extends MockFactory {
         .validate(_: AmendCustomEmploymentRawData))
         .expects(data)
     }
+
   }
 
 }

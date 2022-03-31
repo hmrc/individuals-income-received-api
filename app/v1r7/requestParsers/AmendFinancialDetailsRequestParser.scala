@@ -24,9 +24,10 @@ import v1r7.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, 
 import v1r7.requestParsers.validators.AmendFinancialDetailsValidator
 
 @Singleton
-class AmendFinancialDetailsRequestParser @Inject()(val validator: AmendFinancialDetailsValidator)
-  extends RequestParser[AmendFinancialDetailsRawData, AmendFinancialDetailsRequest] {
+class AmendFinancialDetailsRequestParser @Inject() (val validator: AmendFinancialDetailsValidator)
+    extends RequestParser[AmendFinancialDetailsRawData, AmendFinancialDetailsRequest] {
 
   override protected def requestFor(data: AmendFinancialDetailsRawData): AmendFinancialDetailsRequest =
     AmendFinancialDetailsRequest(Nino(data.nino), data.taxYear, data.employmentId, data.body.json.as[AmendFinancialDetailsRequestBody])
+
 }

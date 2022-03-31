@@ -17,17 +17,26 @@
 package v1r7.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, ErrorWrapper, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  ErrorWrapper,
+  NinoFormatError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1r7.mocks.validators.MockAmendOtherValidator
 import v1r7.models.request.amendOther._
 
-class AmendOtherRequestParserSpec extends UnitSpec{
+class AmendOtherRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -145,9 +154,11 @@ class AmendOtherRequestParserSpec extends UnitSpec{
   )
 
   trait Test extends MockAmendOtherValidator {
+
     lazy val parser: AmendOtherRequestParser = new AmendOtherRequestParser(
       validator = mockAmendOtherValidator
     )
+
   }
 
   "parse" should {
@@ -162,7 +173,8 @@ class AmendOtherRequestParserSpec extends UnitSpec{
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendOtherValidator.validate(amendOtherRawData.copy(nino = "notANino"))
+        MockAmendOtherValidator
+          .validate(amendOtherRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendOtherRawData.copy(nino = "notANino")) shouldBe
@@ -170,7 +182,8 @@ class AmendOtherRequestParserSpec extends UnitSpec{
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendOtherValidator.validate(amendOtherRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendOtherValidator
+          .validate(amendOtherRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendOtherRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -235,54 +248,60 @@ class AmendOtherRequestParserSpec extends UnitSpec{
 
         private val allInvalidValueErrors = List(
           TaxYearFormatError.copy(
-            paths = Some(List(
-              "/businessReceipts/0/taxYear"
-            ))
+            paths = Some(
+              List(
+                "/businessReceipts/0/taxYear"
+              ))
           ),
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
+              ))
           ),
           RuleTaxYearRangeInvalidError.copy(
-            paths = Some(List(
-              "/businessReceipts/1/taxYear"
-            ))
+            paths = Some(
+              List(
+                "/businessReceipts/1/taxYear"
+              ))
           ),
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
+              ))
           ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/businessReceipts/0/grossAmount",
-              "/businessReceipts/1/grossAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-              "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
-              "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-              "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-              "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
-              "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-              "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
-              "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
-              "/overseasIncomeAndGains/gainAmount",
-              "/chargeableForeignBenefitsAndGifts/transactionBenefit",
-              "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
-              "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
-              "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
-              "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
-              "/omittedForeignIncome/amount"
-            ))
+            paths = Some(
+              List(
+                "/businessReceipts/0/grossAmount",
+                "/businessReceipts/1/grossAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+                "/allOtherIncomeReceivedWhilstAbroad/0/taxTakenOff",
+                "/allOtherIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+                "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/0/residentialFinancialCostAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/0/broughtFwdResidentialFinancialCostAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+                "/allOtherIncomeReceivedWhilstAbroad/1/taxTakenOff",
+                "/allOtherIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+                "/allOtherIncomeReceivedWhilstAbroad/1/taxableAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/1/residentialFinancialCostAmount",
+                "/allOtherIncomeReceivedWhilstAbroad/1/broughtFwdResidentialFinancialCostAmount",
+                "/overseasIncomeAndGains/gainAmount",
+                "/chargeableForeignBenefitsAndGifts/transactionBenefit",
+                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeSourceBenefit",
+                "/chargeableForeignBenefitsAndGifts/protectedForeignIncomeOnwardGift",
+                "/chargeableForeignBenefitsAndGifts/benefitReceivedAsASettler",
+                "/chargeableForeignBenefitsAndGifts/onwardGiftReceivedAsASettler",
+                "/omittedForeignIncome/amount"
+              ))
           )
         )
 
-        MockAmendOtherValidator.validate(amendOtherRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendOtherValidator
+          .validate(amendOtherRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendOtherRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -290,4 +309,5 @@ class AmendOtherRequestParserSpec extends UnitSpec{
       }
     }
   }
+
 }

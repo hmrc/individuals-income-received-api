@@ -24,9 +24,10 @@ import v1r7.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData
 import v1r7.requestParsers.validators.DeleteCustomEmploymentValidator
 
 @Singleton
-class DeleteCustomEmploymentRequestParser @Inject()(val validator: DeleteCustomEmploymentValidator)
-  extends RequestParser[DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest] {
+class DeleteCustomEmploymentRequestParser @Inject() (val validator: DeleteCustomEmploymentValidator)
+    extends RequestParser[DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest] {
 
   override protected def requestFor(data: DeleteCustomEmploymentRawData): DeleteCustomEmploymentRequest =
     DeleteCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId)
+
 }

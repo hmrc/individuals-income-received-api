@@ -15,6 +15,7 @@
  */
 
 package v1.models.request.amendOtherEmployment
+
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
@@ -26,5 +27,6 @@ object AmendCommonOtherEmployment {
   implicit val writes: OWrites[AmendCommonOtherEmployment] = (
     (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "amountDeducted").write[BigDecimal]
-    ) (unlift(AmendCommonOtherEmployment.unapply))
+  )(unlift(AmendCommonOtherEmployment.unapply))
+
 }

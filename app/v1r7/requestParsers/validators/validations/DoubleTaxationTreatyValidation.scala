@@ -21,8 +21,10 @@ import api.models.errors.DoubleTaxationTreatyFormatError
 
 object DoubleTaxationTreatyValidation {
 
-  def validateOptional(dblTaxationTreaty: Option[String], path: String): List[MtdError] = dblTaxationTreaty.fold(NoValidationErrors: List[MtdError]) { data =>
-    if (data.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
-      DoubleTaxationTreatyFormatError.copy(paths = Some(Seq(path))))
+  def validateOptional(dblTaxationTreaty: Option[String], path: String): List[MtdError] = dblTaxationTreaty.fold(NoValidationErrors: List[MtdError]) {
+    data =>
+      if (data.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors
+      else List(DoubleTaxationTreatyFormatError.copy(paths = Some(Seq(path))))
   }
+
 }

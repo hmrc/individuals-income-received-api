@@ -37,16 +37,19 @@ object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
       (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "overseasIncomeAndGains").readNullable[OverseasIncomeAndGains] and
-      (JsPath \ "chargeableForeignBenefitsAndGifts").readNullable[ChargeableForeignBenefitsAndGifts].map(_.flatMap {
-        case ChargeableForeignBenefitsAndGifts.empty => None
-        case chargeableForeignBenefitsAndGifts => Some(chargeableForeignBenefitsAndGifts)
-      }) and
+      (JsPath \ "chargeableForeignBenefitsAndGifts")
+        .readNullable[ChargeableForeignBenefitsAndGifts]
+        .map(_.flatMap {
+          case ChargeableForeignBenefitsAndGifts.empty => None
+          case chargeableForeignBenefitsAndGifts       => Some(chargeableForeignBenefitsAndGifts)
+        }) and
       (JsPath \ "omittedForeignIncome").readNullable[OmittedForeignIncome]
-    ) (RetrieveOtherResponse.apply _)
+  )(RetrieveOtherResponse.apply _)
 
   implicit val writes: OWrites[RetrieveOtherResponse] = Json.writes[RetrieveOtherResponse]
 
   implicit object RetrieveOtherLinksFactory extends HateoasLinksFactory[RetrieveOtherResponse, RetrieveOtherHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveOtherHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -55,6 +58,7 @@ object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
         deleteOther(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }

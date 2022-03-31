@@ -27,9 +27,11 @@ trait MockRetrieveFinancialDetailsRequestParser extends MockFactory {
   val mockRetrieveFinancialDetailsRequestParser: RetrieveFinancialDetailsRequestParser = mock[RetrieveFinancialDetailsRequestParser]
 
   object MockRetrieveFinancialDetailsRequestParser {
+
     def parse(data: RetrieveFinancialDetailsRawData): CallHandler[Either[ErrorWrapper, RetrieveFinancialDetailsRequest]] = {
       (mockRetrieveFinancialDetailsRequestParser.parseRequest(_: RetrieveFinancialDetailsRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

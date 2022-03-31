@@ -17,7 +17,7 @@
 package api.hateoas
 
 import config.AppConfig
-import play.api.libs.json.{ JsValue, Json }
+import play.api.libs.json.{JsValue, Json}
 
 trait IgnoreHateoasBody extends HateoasLinks {
 
@@ -29,4 +29,5 @@ trait IgnoreHateoasBody extends HateoasLinks {
 
     Json.obj("links" -> links)
   }
+
 }

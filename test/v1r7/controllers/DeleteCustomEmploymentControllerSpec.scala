@@ -100,6 +100,7 @@ class DeleteCustomEmploymentControllerSpec
         "SERVER_ERROR"              -> StandardDownstreamError,
         "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
+
   }
 
   "DeleteCustomEmploymentController" should {
@@ -193,4 +194,5 @@ class DeleteCustomEmploymentControllerSpec
       }
     }
   }
+
 }

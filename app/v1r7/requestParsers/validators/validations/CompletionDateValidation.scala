@@ -29,26 +29,27 @@ object CompletionDateValidation {
 
   def validate(date: String, path: String, taxYear: String)(implicit currentDateTime: CurrentDateTime): List[MtdError] = {
     val formattedDate = LocalDate.parse(date)
-    val march7th = LocalDate.parse(DesTaxYear.fromMtd(taxYear).value, yearFormat).withMonth(MARCH).withDayOfMonth(SEVEN)
+    val march7th      = LocalDate.parse(DesTaxYear.fromMtd(taxYear).value, yearFormat).withMonth(MARCH).withDayOfMonth(SEVEN)
 
     val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
     val currentTaxYear: Int = {
-      val date = currentDateTime.getLocalDate
-      lazy val taxYearStartDate: LocalDate = LocalDate.of(date.getYear,4,6)
+      val date                             = currentDateTime.getLocalDate
+      lazy val taxYearStartDate: LocalDate = LocalDate.of(date.getYear, 4, 6)
 
       if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
     }
 
-    val dateIsBefore7thMarch = formattedDate.isBefore(march7th)
-    val dateIsAfterToday = formattedDate.isAfter(currentDateTime.getLocalDate)
-    val dateIsInTaxYear = !formattedDate.isBefore(fromDate) && !formattedDate.isAfter(toDate)
+    val dateIsBefore7thMarch    = formattedDate.isBefore(march7th)
+    val dateIsAfterToday        = formattedDate.isAfter(currentDateTime.getLocalDate)
+    val dateIsInTaxYear         = !formattedDate.isBefore(fromDate) && !formattedDate.isAfter(toDate)
     val taxYearIsCurrentTaxYear = DesTaxYear.fromMtd(taxYear).value.toInt == currentTaxYear
 
-    if(dateIsBefore7thMarch && taxYearIsCurrentTaxYear || dateIsAfterToday || !dateIsInTaxYear) {
+    if (dateIsBefore7thMarch && taxYearIsCurrentTaxYear || dateIsAfterToday || !dateIsInTaxYear) {
       List(RuleCompletionDateError.copy(paths = Some(Seq(path))))
     } else {
       NoValidationErrors
     }
   }
+
 }

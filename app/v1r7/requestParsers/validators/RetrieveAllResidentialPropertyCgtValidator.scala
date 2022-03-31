@@ -26,8 +26,8 @@ import v1r7.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResident
 import v1r7.requestParsers.validators.validations.{EmploymentSourceValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveAllResidentialPropertyCgtRawData] {
+class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: AppConfig)
+    extends Validator[RetrieveAllResidentialPropertyCgtRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -37,17 +37,18 @@ class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: A
 
   private def parameterFormatValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] =
     (data: RetrieveAllResidentialPropertyCgtRawData) => {
-    List(
-      NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear),
-      data.source.map(EmploymentSourceValidation.validate).getOrElse(Nil)
-    )
-  }
+      List(
+        NinoValidation.validate(data.nino),
+        TaxYearValidation.validate(data.taxYear),
+        data.source.map(EmploymentSourceValidation.validate).getOrElse(Nil)
+      )
+    }
 
   private def parameterRuleValidation: RetrieveAllResidentialPropertyCgtRawData => List[List[MtdError]] =
     (data: RetrieveAllResidentialPropertyCgtRawData) => {
-    List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
-    )
-  }
+      List(
+        TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      )
+    }
+
 }

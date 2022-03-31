@@ -37,6 +37,7 @@ case class ShareOptionItem(employerName: String,
                            taxableAmount: BigDecimal)
 
 object ShareOptionItem {
+
   implicit val reads: Reads[ShareOptionItem] = (
     (JsPath \ "employerName").read[String] and
       (JsPath \ "employerRef").readNullable[String] and
@@ -53,7 +54,7 @@ object ShareOptionItem {
       (JsPath \ "profitOnOptionExercised").read[BigDecimal] and
       (JsPath \ "employersNicPaid").read[BigDecimal] and
       (JsPath \ "taxableAmount").read[BigDecimal]
-    ) (ShareOptionItem.apply _)
+  )(ShareOptionItem.apply _)
 
   implicit val writes: OWrites[ShareOptionItem] = Json.writes[ShareOptionItem]
 }

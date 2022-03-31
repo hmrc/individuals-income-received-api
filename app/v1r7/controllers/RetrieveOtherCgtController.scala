@@ -35,13 +35,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
-                                           val lookupService: MtdIdLookupService,
-                                           requestParser: DeleteRetrieveRequestParser,
-                                           service: DeleteRetrieveService,
-                                           hateoasFactory: HateoasFactory,
-                                           cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveOtherCgtController @Inject() (val authService: EnrolmentsAuthService,
+                                            val lookupService: MtdIdLookupService,
+                                            requestParser: DeleteRetrieveRequestParser,
+                                            service: DeleteRetrieveService,
+                                            hateoasFactory: HateoasFactory,
+                                            cc: ControllerComponents,
+                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -105,4 +105,5 @@ class RetrieveOtherCgtController @Inject()(val authService: EnrolmentsAuthServic
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+
 }

@@ -120,6 +120,7 @@ class RetrieveFinancialDetailsControllerSpec
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
   }
 
   "MockRetrieveFinancialDetailsController" should {
@@ -137,12 +138,13 @@ class RetrieveFinancialDetailsControllerSpec
         MockHateoasFactory
           .wrap(model, RetrieveFinancialDetailsHateoasData(nino, taxYear, employmentId))
           .returns(
-            HateoasWrapper(model,
-                           Seq(
-                             retrieveLink,
-                             amendLink,
-                             deleteLink
-                           )))
+            HateoasWrapper(
+              model,
+              Seq(
+                retrieveLink,
+                amendLink,
+                deleteLink
+              )))
 
         val result: Future[Result] = controller.retrieve(nino, taxYear, employmentId, Some(source))(fakeGetRequest)
 
@@ -216,4 +218,5 @@ class RetrieveFinancialDetailsControllerSpec
       }
     }
   }
+
 }

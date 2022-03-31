@@ -57,4 +57,5 @@ class UnremittableForeignIncomeItemSpec extends UnitSpec {
       }
     }
   }
+
 }

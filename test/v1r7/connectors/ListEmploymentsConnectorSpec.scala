@@ -29,23 +29,22 @@ import scala.concurrent.Future
 
 class ListEmploymentsConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  val nino: String    = "AA111111A"
   val taxYear: String = "2019"
 
   val request: ListEmploymentsRequest = ListEmploymentsRequest(Nino(nino), taxYear)
 
   private val validResponse = ListEmploymentResponse(
-    employments = Some(Seq(Employment(employmentId = "00000000-0000-1000-8000-000000000000",
-      employerName = "Vera Lynn",
-      dateIgnored = Some("2020-06-17T10:53:38Z")),
-      Employment(employmentId = "00000000-0000-1000-8000-000000000001",
-        employerName = "Vera Lynn",
-        dateIgnored = Some("2020-06-17T10:53:38Z")))),
-    customEmployments =
-      Some(Seq(Employment(employmentId = "00000000-0000-1000-8000-000000000002",
-        employerName = "Vera Lynn"),
-        Employment(employmentId = "00000000-0000-1000-8000-000000000003",
-          employerName = "Vera Lynn")))
+    employments = Some(
+      Seq(
+        Employment(employmentId = "00000000-0000-1000-8000-000000000000", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z")),
+        Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z"))
+      )),
+    customEmployments = Some(
+      Seq(
+        Employment(employmentId = "00000000-0000-1000-8000-000000000002", employerName = "Vera Lynn"),
+        Employment(employmentId = "00000000-0000-1000-8000-000000000003", employerName = "Vera Lynn")
+      ))
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -64,7 +63,7 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
   "ListEmploymentsConnector" when {
     "listEmployments" must {
       "return a 200 status for a success scenario" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, validResponse))
+        val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
@@ -80,4 +79,5 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
 }

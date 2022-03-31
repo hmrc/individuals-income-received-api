@@ -33,6 +33,7 @@ trait MockCreateAmendOtherCgtValidator extends MockFactory {
         .validate(_: CreateAmendOtherCgtRawData))
         .expects(data)
     }
+
   }
 
 }

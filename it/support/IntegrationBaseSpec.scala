@@ -25,8 +25,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.{Application, Environment, Mode}
 
-trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServerPerSuite
-  with BeforeAndAfterEach with BeforeAndAfterAll {
+trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServerPerSuite with BeforeAndAfterEach with BeforeAndAfterAll {
 
   val mockHost: String = WireMockHelper.host
   val mockPort: String = WireMockHelper.wireMockPort.toString
@@ -36,23 +35,23 @@ trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServ
   val release7Enabled: Boolean
 
   def servicesConfig: Map[String, Any] = Map(
-    "microservice.services.des.host" -> mockHost,
-    "microservice.services.des.port" -> mockPort,
-    "microservice.services.ifs.host" -> mockHost,
-    "microservice.services.ifs.port" -> mockPort,
-    "microservice.services.release6.host" -> mockHost,
-    "microservice.services.release6.port" -> mockPort,
-    "microservice.services.api1661.host" -> mockHost,
-    "microservice.services.api1661.port" -> mockPort,
-    "microservice.services.mtd-id-lookup.host" -> mockHost,
-    "microservice.services.mtd-id-lookup.port" -> mockPort,
+    "microservice.services.des.host"               -> mockHost,
+    "microservice.services.des.port"               -> mockPort,
+    "microservice.services.ifs.host"               -> mockHost,
+    "microservice.services.ifs.port"               -> mockPort,
+    "microservice.services.release6.host"          -> mockHost,
+    "microservice.services.release6.port"          -> mockPort,
+    "microservice.services.api1661.host"           -> mockHost,
+    "microservice.services.api1661.port"           -> mockPort,
+    "microservice.services.mtd-id-lookup.host"     -> mockHost,
+    "microservice.services.mtd-id-lookup.port"     -> mockPort,
     "microservice.services.mtd-api-nrs-proxy.host" -> mockHost,
     "microservice.services.mtd-api-nrs-proxy.port" -> mockPort,
-    "microservice.services.auth.host" -> mockHost,
-    "microservice.services.auth.port" -> mockPort,
-    "auditing.consumer.baseUri.port" -> mockPort,
-    "feature-switch.release-7.enabled" -> release7Enabled,
-    "minimumPermittedTaxYear" -> 2020
+    "microservice.services.auth.host"              -> mockHost,
+    "microservice.services.auth.port"              -> mockPort,
+    "auditing.consumer.baseUri.port"               -> mockPort,
+    "feature-switch.release-7.enabled"             -> release7Enabled,
+    "minimumPermittedTaxYear"                      -> 2020
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
@@ -87,9 +86,9 @@ trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServ
 
     if (currentDate.isBefore(taxYearStartDate)) {
       fromDesIntToString(currentDate.getYear)
-    }
-    else {
+    } else {
       fromDesIntToString(currentDate.getYear + 1)
     }
   }
+
 }

@@ -33,6 +33,7 @@ trait MockAmendForeignValidator extends MockFactory {
         .validate(_: AmendForeignRawData))
         .expects(data)
     }
+
   }
 
 }

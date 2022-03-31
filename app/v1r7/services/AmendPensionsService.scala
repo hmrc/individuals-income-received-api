@@ -32,13 +32,13 @@ import v1r7.models.request.amendPensions.AmendPensionsRequest
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendPensionsService @Inject() (connector: AmendPensionsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendPensions(request: AmendPensionsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendPensions(request: AmendPensionsRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendPensions(request)).leftMap(mapDesErrors(desErrorMap))
@@ -50,11 +50,12 @@ class AmendPensionsService @Inject()(connector: AmendPensionsConnector) extends 
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "INVALID_PAYLOAD" -> StandardDownstreamError,
-      "UNPROCESSABLE_ENTITY" -> StandardDownstreamError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "UNPROCESSABLE_ENTITY"      -> StandardDownstreamError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

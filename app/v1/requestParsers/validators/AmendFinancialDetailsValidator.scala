@@ -16,18 +16,18 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors.{ MtdError, RuleIncorrectOrEmptyBodyError }
+import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import api.requestParsers.validators.Validator
-import config.{ AppConfig, FeatureSwitch }
+import config.{AppConfig, FeatureSwitch}
 import utils.CurrentDateTime
 import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
-import v1.models.request.amendFinancialDetails.{ AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody }
+import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[AmendFinancialDetailsRawData]
     with ValueFormatErrorMessages {
 
@@ -227,4 +227,5 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
       )
     ).flatten
   }
+
 }

@@ -29,24 +29,24 @@ case class RetrieveDividendsResponse(submittedOn: String,
                                      stockDividend: Option[StockDividend],
                                      redeemableShares: Option[RedeemableShares],
                                      bonusIssuesOfSecurities: Option[BonusIssuesOfSecurities],
-                                     closeCompanyLoansWrittenOff: Option[CloseCompanyLoansWrittenOff]
-                                    )
+                                     closeCompanyLoansWrittenOff: Option[CloseCompanyLoansWrittenOff])
 
 object RetrieveDividendsResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveDividendsResponse] = (
     (JsPath \ "submittedOn").read[String] and
-    (JsPath \ "foreignDividend").readNullable[Seq[ForeignDividendItem]].mapEmptySeqToNone and
+      (JsPath \ "foreignDividend").readNullable[Seq[ForeignDividendItem]].mapEmptySeqToNone and
       (JsPath \ "dividendIncomeReceivedWhilstAbroad").readNullable[Seq[DividendIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "stockDividend").readNullable[StockDividend] and
       (JsPath \ "redeemableShares").readNullable[RedeemableShares] and
       (JsPath \ "bonusIssuesOfSecurities").readNullable[BonusIssuesOfSecurities] and
       (JsPath \ "closeCompanyLoansWrittenOff").readNullable[CloseCompanyLoansWrittenOff]
-    ) (RetrieveDividendsResponse.apply _)
+  )(RetrieveDividendsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveDividendsResponse] = Json.writes[RetrieveDividendsResponse]
 
   implicit object RetrieveDividendsLinksFactory extends HateoasLinksFactory[RetrieveDividendsResponse, RetrieveDividendsHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveDividendsHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -55,7 +55,9 @@ object RetrieveDividendsResponse extends HateoasLinks with JsonUtils {
         deleteDividends(appConfig, nino, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveDividendsHateoasData(nino: String, taxYear: String) extends HateoasData

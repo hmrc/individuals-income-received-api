@@ -39,9 +39,10 @@ class DisposalDateValidationSpec extends UnitSpec with DisposalDateErrorMessages
         DisposalDateValidation.validate(validDate, validTaxYear, "path", validateToday = true, IN_YEAR_NO_LATER_THAN_TODAY) shouldBe List()
       }
       "the supplied date is within the supplied tax year and validateToday is false" in {
-        val year = now.plusYears(1).getYear.toString
+        val year    = now.plusYears(1).getYear.toString
         val taxYear = DesTaxYear.toMtd(DesTaxYear(year))
-        val date = LocalDate.parse(year, yearFormat)
+        val date = LocalDate
+          .parse(year, yearFormat)
           .withMonth(4)
           .withDayOfMonth(4)
           .format(dateFormat)
@@ -66,4 +67,5 @@ class DisposalDateValidationSpec extends UnitSpec with DisposalDateErrorMessages
       }
     }
   }
+
 }

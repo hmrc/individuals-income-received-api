@@ -23,11 +23,12 @@ import utils.CurrentDateTime
 import v1.models.request.createAmendNonPayeEmployment._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendNonPayeEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[CreateAmendNonPayeEmploymentRawData] {
+
   private val validationSet = List(
     parameterFormatValidation,
     parameterRuleValidation,
@@ -69,4 +70,5 @@ class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: 
       )
     )
   }
+
 }

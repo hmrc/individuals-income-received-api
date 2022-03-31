@@ -38,6 +38,7 @@ class AmendDeductionsSpec extends UnitSpec {
     uglDeductionAmount = Some(13343.45),
     pglDeductionAmount = Some(24242.56)
   )
+
   private val deductionsModel = AmendDeductions(
     studentLoans = Some(studentLoansModel)
   )
@@ -82,4 +83,5 @@ class AmendDeductionsSpec extends UnitSpec {
       }
     }
   }
+
 }

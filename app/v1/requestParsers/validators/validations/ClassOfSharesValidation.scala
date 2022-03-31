@@ -22,8 +22,9 @@ object ClassOfSharesValidation {
   private val regex = "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
 
   def validate(classOfShares: String, acquired: Boolean): List[MtdError] = {
-    if(classOfShares.matches(regex)) {NoValidationErrors}
-    else if (!classOfShares.matches(regex) && acquired) {List(ClassOfSharesAcquiredFormatError)}
-    else {List(ClassOfSharesAwardedFormatError)}
+    if (classOfShares.matches(regex)) { NoValidationErrors }
+    else if (!classOfShares.matches(regex) && acquired) { List(ClassOfSharesAcquiredFormatError) }
+    else { List(ClassOfSharesAwardedFormatError) }
   }
+
 }

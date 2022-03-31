@@ -43,28 +43,32 @@ class TipsValidationSpec extends UnitSpec {
         TipsValidation.validateWithPath(
           amount = 100000000000.00,
           path = s"/tips"
-        ) shouldBe List(ValueFormatError.copy(
-          paths = Some(Seq("/tips"))
-        ))
+        ) shouldBe List(
+          ValueFormatError.copy(
+            paths = Some(Seq("/tips"))
+          ))
       }
 
       "passed a value too small" in {
         TipsValidation.validateWithPath(
           amount = -0.01,
           path = s"/tips"
-        ) shouldBe List(ValueFormatError.copy(
-          paths = Some(Seq("/tips"))
-        ))
+        ) shouldBe List(
+          ValueFormatError.copy(
+            paths = Some(Seq("/tips"))
+          ))
       }
 
       "passed a value with the wrong scale" in {
         TipsValidation.validateWithPath(
           amount = 123.456,
           path = s"/tips"
-        ) shouldBe List(ValueFormatError.copy(
-          paths = Some(Seq("/tips"))
-        ))
+        ) shouldBe List(
+          ValueFormatError.copy(
+            paths = Some(Seq("/tips"))
+          ))
       }
     }
   }
+
 }

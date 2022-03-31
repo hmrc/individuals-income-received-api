@@ -28,14 +28,14 @@ import v1r7.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResident
 
 class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
-  private val validSource = Some("hmrcHeld")
+  private val validSource  = Some("hmrcHeld")
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -47,6 +47,7 @@ class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
+
   }
 
   "running a validation" should {
@@ -94,4 +95,5 @@ class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
       }
     }
   }
+
 }

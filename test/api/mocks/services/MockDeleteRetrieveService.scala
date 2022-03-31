@@ -18,15 +18,15 @@ package api.mocks.services
 
 import api.connectors.DownstreamUri
 import api.controllers.EndpointLogContext
-import api.models.errors.{ ErrorWrapper, MtdError }
+import api.models.errors.{ErrorWrapper, MtdError}
 import api.models.outcomes.ResponseWrapper
 import api.services.DeleteRetrieveService
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.{ Format, Reads }
+import play.api.libs.json.{Format, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockDeleteRetrieveService extends MockFactory {
 
@@ -70,6 +70,7 @@ trait MockDeleteRetrieveService extends MockFactory {
         )
         .expects(downstreamErrorMap, *, *, *, *, downstreamUri, *)
     }
+
   }
 
 }

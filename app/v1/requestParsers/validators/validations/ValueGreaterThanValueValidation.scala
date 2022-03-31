@@ -16,7 +16,7 @@
 
 package v1.requestParsers.validators.validations
 
-import api.models.errors.{ MtdError, RuleLossesGreaterThanGainError }
+import api.models.errors.{MtdError, RuleLossesGreaterThanGainError}
 
 object ValueGreaterThanValueValidation {
 
@@ -33,4 +33,5 @@ object ValueGreaterThanValueValidation {
       case _ => NoValidationErrors
     }
   }
+
 }

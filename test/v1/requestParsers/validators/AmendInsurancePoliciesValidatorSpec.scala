@@ -27,7 +27,7 @@ import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
 
 class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -195,7 +195,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
        |   "lifeAnnuity":[
        |       {
        |           "customerReference": "INPOLY123A",
-       |           "event": "${"a"*91} ",
+       |           "event": "${"a" * 91} ",
        |           "gainAmount": 2000.99,
        |           "taxPaid": true,
        |           "yearsHeld": 15,
@@ -392,19 +392,19 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     """.stripMargin
   )
 
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
-  private val invalidEventRawRequestBody = AnyContentAsJson(invalidEventRequestBodyJson)
-  private val invalidLifeInsuranceRawRequestBody = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
+  private val validRawRequestBody                    = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody                    = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody                 = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody                 = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody       = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidCustomerRefRawRequestBody       = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
+  private val invalidEventRawRequestBody             = AnyContentAsJson(invalidEventRequestBodyJson)
+  private val invalidLifeInsuranceRawRequestBody     = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
   private val invalidCapitalRedemptionRawRequestBody = AnyContentAsJson(invalidCapitalRedemptionRequestBodyJson)
-  private val invalidLifeAnnuityRawRequestBody = AnyContentAsJson(invalidLifeAnnuityRequestBodyJson)
-  private val invalidVoidedIsaRawRequestBody = AnyContentAsJson(invalidVoidedIsaRequestBodyJson)
-  private val invalidForeignRawRequestBody = AnyContentAsJson(invalidForeignRequestBodyJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val invalidLifeAnnuityRawRequestBody       = AnyContentAsJson(invalidLifeAnnuityRequestBodyJson)
+  private val invalidVoidedIsaRawRequestBody         = AnyContentAsJson(invalidVoidedIsaRequestBodyJson)
+  private val invalidForeignRawRequestBody           = AnyContentAsJson(invalidForeignRequestBodyJson)
+  private val allInvalidValueRawRequestBody          = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
 
@@ -415,6 +415,7 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -496,42 +497,47 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (life insurance)" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidLifeInsuranceRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/lifeInsurance/0/gainAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/lifeInsurance/0/gainAmount"))
+            ))
       }
 
       "one field fails value validation (capital redemption)" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidCapitalRedemptionRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/capitalRedemption/0/deficiencyRelief"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/capitalRedemption/0/deficiencyRelief"))
+            ))
       }
 
       "one field fails value validation (life annuity)" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidLifeAnnuityRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/lifeAnnuity/0/gainAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/lifeAnnuity/0/gainAmount"))
+            ))
       }
 
       "one field fails value validation (voidedIsa)" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidVoidedIsaRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
-            paths = Some(Seq("/voidedIsa/0/yearsHeldSinceLastGain"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
+              paths = Some(Seq("/voidedIsa/0/yearsHeldSinceLastGain"))
+            ))
       }
 
       "one field fails value validation (foreign)" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, invalidForeignRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
-            paths = Some(Seq("/foreign/0/yearsHeld"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INTEGER_INCLUSIVE,
+              paths = Some(Seq("/foreign/0/yearsHeld"))
+            ))
       }
     }
 
@@ -539,7 +545,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendInsurancePoliciesRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
-
             CustomerRefFormatError.copy(
               paths = Some(List(
                 "/lifeInsurance/0/customerReference",
@@ -576,10 +581,11 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
               ))
             ),
             EventFormatError.copy(
-              paths = Some(List(
-                "/lifeInsurance/1/event",
-                "/lifeAnnuity/1/event"
-              ))
+              paths = Some(
+                List(
+                  "/lifeInsurance/1/event",
+                  "/lifeAnnuity/1/event"
+                ))
             )
           )
       }
@@ -592,4 +598,5 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
       }
     }
   }
+
 }

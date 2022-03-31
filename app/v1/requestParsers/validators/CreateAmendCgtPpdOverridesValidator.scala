@@ -23,10 +23,10 @@ import utils.CurrentDateTime
 import v1.models.request.createAmendCgtPpdOverrides._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[CreateAmendCgtPpdOverridesRawData]
     with ValueFormatErrorMessages {
 
@@ -80,14 +80,14 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
     List(
       Validator.flattenErrors(
         List(
-          multipleDisposalsIndexed.flatMap {
-            case (data, index) => validateBothSuppliedMultipleDisposals(data, index)
+          multipleDisposalsIndexed.flatMap { case (data, index) =>
+            validateBothSuppliedMultipleDisposals(data, index)
           },
-          singleDisposalsIndexed.flatMap {
-            case (data, index) => validateBothSuppliedSingleDisposals(data, index)
+          singleDisposalsIndexed.flatMap { case (data, index) =>
+            validateBothSuppliedSingleDisposals(data, index)
           },
-          singleDisposalsIndexed.flatMap {
-            case (data, index) => validateGainGreaterThanLoss(data, index)
+          singleDisposalsIndexed.flatMap { case (data, index) =>
+            validateGainGreaterThanLoss(data, index)
           },
           validateDuplicatedIds(multipleDisposalsIndexed, singleDisposalsIndexed)
         )
@@ -138,14 +138,14 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
       Validator.flattenErrors(
         List(
           requestBodyData.multiplePropertyDisposals
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateMultiplePropertyDisposals(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateMultiplePropertyDisposals(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.singlePropertyDisposals
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateSinglePropertyDisposals(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateSinglePropertyDisposals(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList
@@ -173,15 +173,17 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   private def validateSinglePropertyDisposals(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
 
     List(
-      PpdSubmissionIdValidation.validate(singlePropertyDisposals.ppdSubmissionId,
-                                         PpdSubmissionIdFormatError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
+      PpdSubmissionIdValidation.validate(
+        singlePropertyDisposals.ppdSubmissionId,
+        PpdSubmissionIdFormatError.copy(paths = Some(Seq(s"/singlePropertyDisposals/$arrayIndex/ppdSubmissionId")))),
       DateFormatValidation.validateWithPath(singlePropertyDisposals.completionDate, path = s"/singlePropertyDisposals/$arrayIndex/completionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.disposalProceeds,
         path = s"/singlePropertyDisposals/$arrayIndex/disposalProceeds"
       ),
-      DateFormatValidation.validateOptionalWithPath(singlePropertyDisposals.acquisitionDate,
-                                                    path = s"/singlePropertyDisposals/$arrayIndex/acquisitionDate"),
+      DateFormatValidation.validateOptionalWithPath(
+        singlePropertyDisposals.acquisitionDate,
+        path = s"/singlePropertyDisposals/$arrayIndex/acquisitionDate"),
       DecimalValueValidation.validate(
         amount = singlePropertyDisposals.acquisitionAmount,
         path = s"/singlePropertyDisposals/$arrayIndex/acquisitionAmount"
@@ -224,12 +226,12 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
   private def validateDuplicatedIds(multipleDisposalsIndexed: Seq[(MultiplePropertyDisposals, Int)],
                                     singleDisposalsIndexed: Seq[(SinglePropertyDisposals, Int)]): List[MtdError] = {
 
-    val multipleIdsWithPaths = multipleDisposalsIndexed.map {
-      case (disposal, idx) => (disposal.ppdSubmissionId, s"/multiplePropertyDisposals/$idx/ppdSubmissionId")
+    val multipleIdsWithPaths = multipleDisposalsIndexed.map { case (disposal, idx) =>
+      (disposal.ppdSubmissionId, s"/multiplePropertyDisposals/$idx/ppdSubmissionId")
     }
 
-    val singleIdsWithPaths = singleDisposalsIndexed.map {
-      case (disposal, idx) => (disposal.ppdSubmissionId, s"/singlePropertyDisposals/$idx/ppdSubmissionId")
+    val singleIdsWithPaths = singleDisposalsIndexed.map { case (disposal, idx) =>
+      (disposal.ppdSubmissionId, s"/singlePropertyDisposals/$idx/ppdSubmissionId")
     }
 
     val duplicates: Map[String, Seq[String]] =
@@ -239,8 +241,8 @@ class CreateAmendCgtPpdOverridesValidator @Inject()(implicit currentDateTime: Cu
           case (id, idsAndPaths) if idsAndPaths.size >= 2 => (id, idsAndPaths.map(_._2))
         }
 
-    duplicates.map {
-      case (id, paths) => RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(id, paths = paths)
+    duplicates.map { case (id, paths) =>
+      RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(id, paths = paths)
     }.toList
   }
 

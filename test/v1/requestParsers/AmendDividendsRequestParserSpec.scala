@@ -24,10 +24,10 @@ import v1.mocks.validators.MockAmendDividendsValidator
 import api.models.errors._
 import v1.models.request.amendDividends._
 
-class AmendDividendsRequestParserSpec extends UnitSpec{
+class AmendDividendsRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -130,22 +130,22 @@ class AmendDividendsRequestParserSpec extends UnitSpec{
   )
 
   private val fullStockDividendModel = AmendCommonDividends(
-    customerReference = Some ("my divs"),
+    customerReference = Some("my divs"),
     grossAmount = 12321.22
   )
 
   private val fullRedeemableSharesModel = AmendCommonDividends(
-    customerReference = Some ("my shares"),
+    customerReference = Some("my shares"),
     grossAmount = 12345.75
   )
 
   private val fullBonusIssuesOfSecuritiesModel = AmendCommonDividends(
-    customerReference = Some ("my secs"),
+    customerReference = Some("my secs"),
     grossAmount = 12500.89
   )
 
   private val fullCloseCompanyLoansWrittenOffModel = AmendCommonDividends(
-    customerReference = Some ("write off"),
+    customerReference = Some("write off"),
     grossAmount = 13700.55
   )
 
@@ -165,9 +165,11 @@ class AmendDividendsRequestParserSpec extends UnitSpec{
   )
 
   trait Test extends MockAmendDividendsValidator {
+
     lazy val parser: AmendDividendsRequestParser = new AmendDividendsRequestParser(
       validator = mockAmendDividendsValidator
     )
+
   }
 
   "parse" should {
@@ -182,7 +184,8 @@ class AmendDividendsRequestParserSpec extends UnitSpec{
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendDividendsValidator.validate(amendDividendsRawData.copy(nino = "notANino"))
+        MockAmendDividendsValidator
+          .validate(amendDividendsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendDividendsRawData.copy(nino = "notANino")) shouldBe
@@ -190,7 +193,8 @@ class AmendDividendsRequestParserSpec extends UnitSpec{
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendDividendsValidator.validate(amendDividendsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendDividendsValidator
+          .validate(amendDividendsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendDividendsRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -262,53 +266,58 @@ class AmendDividendsRequestParserSpec extends UnitSpec{
 
         private val allInvalidValueErrors = List(
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/foreignDividend/1/countryCode",
-              "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignDividend/1/countryCode",
+                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+              ))
           ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/foreignDividend/0/amountBeforeTax",
-              "/foreignDividend/0/taxTakenOff",
-              "/foreignDividend/0/specialWithholdingTax",
-              "/foreignDividend/0/taxableAmount",
-              "/foreignDividend/1/amountBeforeTax",
-              "/foreignDividend/1/taxTakenOff",
-              "/foreignDividend/1/specialWithholdingTax",
-              "/foreignDividend/1/taxableAmount",
-              "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-              "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
-              "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-              "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
-              "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-              "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
-              "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-              "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
-              "/stockDividend/grossAmount",
-              "/redeemableShares/grossAmount",
-              "/bonusIssuesOfSecurities/grossAmount",
-              "/closeCompanyLoansWrittenOff/grossAmount"
-            ))
+            paths = Some(
+              List(
+                "/foreignDividend/0/amountBeforeTax",
+                "/foreignDividend/0/taxTakenOff",
+                "/foreignDividend/0/specialWithholdingTax",
+                "/foreignDividend/0/taxableAmount",
+                "/foreignDividend/1/amountBeforeTax",
+                "/foreignDividend/1/taxTakenOff",
+                "/foreignDividend/1/specialWithholdingTax",
+                "/foreignDividend/1/taxableAmount",
+                "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
+                "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
+                "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
+                "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
+                "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
+                "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
+                "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
+                "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
+                "/stockDividend/grossAmount",
+                "/redeemableShares/grossAmount",
+                "/bonusIssuesOfSecurities/grossAmount",
+                "/closeCompanyLoansWrittenOff/grossAmount"
+              ))
           ),
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/stockDividend/customerReference",
-              "/redeemableShares/customerReference",
-              "/bonusIssuesOfSecurities/customerReference",
-              "/closeCompanyLoansWrittenOff/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/stockDividend/customerReference",
+                "/redeemableShares/customerReference",
+                "/bonusIssuesOfSecurities/customerReference",
+                "/closeCompanyLoansWrittenOff/customerReference"
+              ))
           ),
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignDividend/0/countryCode",
-              "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignDividend/0/countryCode",
+                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
+              ))
           )
         )
 
-        MockAmendDividendsValidator.validate(amendDividendsRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendDividendsValidator
+          .validate(amendDividendsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendDividendsRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -316,4 +325,5 @@ class AmendDividendsRequestParserSpec extends UnitSpec{
       }
     }
   }
+
 }

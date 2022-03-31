@@ -48,8 +48,9 @@ class MtdErrorSpec extends UnitSpec {
         val dummyErrorWithPaths: MtdError = dummyError.copy(paths = Some(Seq("aPath")))
 
         dummyErrorWithPaths.withExtraPath("aPath2") shouldBe
-          dummyErrorWithPaths.copy(paths = Some(Seq("aPath","aPath2")))
+          dummyErrorWithPaths.copy(paths = Some(Seq("aPath", "aPath2")))
       }
     }
   }
+
 }

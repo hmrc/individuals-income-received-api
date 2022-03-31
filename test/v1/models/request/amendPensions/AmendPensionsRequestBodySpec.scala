@@ -220,4 +220,5 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

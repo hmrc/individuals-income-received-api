@@ -21,6 +21,7 @@ import support.UnitSpec
 import api.models.errors.CountryCodeRuleError
 
 class CountryCodeValidationSpec extends UnitSpec {
+
   "CountryCodeValidation" when {
     "validate" must {
       "return an empty list for a valid country code" in {
@@ -58,4 +59,5 @@ class CountryCodeValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

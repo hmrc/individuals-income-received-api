@@ -44,9 +44,10 @@ class CreateAmendNonPayeEmploymentControllerISpec extends V1IntegrationSpec {
   )
 
   val nonsenseBodyError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-    paths = Some(Seq(
-      "/tips"
-    ))
+    paths = Some(
+      Seq(
+        "/tips"
+      ))
   )
 
   val missingFieldsJson: JsValue = Json.parse(
@@ -65,12 +66,12 @@ class CreateAmendNonPayeEmploymentControllerISpec extends V1IntegrationSpec {
 
   val invalidTipsError: MtdError = ValueFormatError.copy(paths = Some(Seq("/tips")))
 
-  val validNino: String = "AA123456A"
+  val validNino: String    = "AA123456A"
   val validTaxYear: String = "2020-21"
 
   private trait Test {
 
-    val nino: String = validNino
+    val nino: String    = validNino
     val taxYear: String = validTaxYear
 
     val hateoasResponse: JsValue = Json.parse(
@@ -108,6 +109,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends V1IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling Create and amend Non-PAYE employment income endpoint" should {
@@ -137,7 +139,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends V1IntegrationSpec {
                                 expectedErrors: Option[ErrorWrapper],
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -165,7 +167,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends V1IntegrationSpec {
           (validNino, validTaxYear, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
           (validNino, validTaxYear, nonsenseBodyJson, BAD_REQUEST, nonsenseBodyError, None, Some("nonsenseBody")),
           (validNino, validTaxYear, missingFieldsJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("missingFields")),
-          (validNino, validTaxYear, invalidTipsRequestBodyJson, BAD_REQUEST, invalidTipsError, None, Some("tipsRule")),
+          (validNino, validTaxYear, invalidTipsRequestBodyJson, BAD_REQUEST, invalidTipsError, None, Some("tipsRule"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -212,4 +214,5 @@ class CreateAmendNonPayeEmploymentControllerISpec extends V1IntegrationSpec {
       }
     }
   }
+
 }

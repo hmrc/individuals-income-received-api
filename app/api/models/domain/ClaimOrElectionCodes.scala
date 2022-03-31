@@ -45,6 +45,6 @@ object ClaimOrElectionCodes {
 
   case object INV extends ClaimOrElectionCodes
 
-  implicit val format: Format[ClaimOrElectionCodes] = Enums.format[ClaimOrElectionCodes]
+  implicit val format: Format[ClaimOrElectionCodes]         = Enums.format[ClaimOrElectionCodes]
   val parser: PartialFunction[String, ClaimOrElectionCodes] = Enums.parser[ClaimOrElectionCodes]
 }

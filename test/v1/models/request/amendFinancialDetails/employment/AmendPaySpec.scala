@@ -57,4 +57,5 @@ class AmendPaySpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -27,4 +27,5 @@ trait MockIdGenerator extends MockFactory {
   object MockIdGenerator {
     def generateCorrelationId: CallHandler[String] = (mockIdGenerator.generateCorrelationId _).expects()
   }
+
 }

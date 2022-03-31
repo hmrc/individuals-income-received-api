@@ -161,11 +161,12 @@ class ListEmploymentsControllerSpec
         MockHateoasFactory
           .wrapList(listEmploymentsResponseModel, ListEmploymentHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(hateoasResponse,
-                           Seq(
-                             addCustomEmploymentLink,
-                             listEmploymentsLink
-                           )))
+            HateoasWrapper(
+              hateoasResponse,
+              Seq(
+                addCustomEmploymentLink,
+                listEmploymentsLink
+              )))
 
         val result: Future[Result] = controller.listEmployments(nino, taxYear)(fakeGetRequest)
 
@@ -234,4 +235,5 @@ class ListEmploymentsControllerSpec
       }
     }
   }
+
 }

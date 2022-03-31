@@ -17,30 +17,30 @@
 package v1.controllers
 
 import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
 import api.models.request.DeleteRetrieveRawData
 import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{ AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import play.api.libs.json.Json
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
+import utils.{IdGenerator, Logging}
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                                  val lookupService: MtdIdLookupService,
-                                                  requestParser: DeleteRetrieveRequestParser,
-                                                  service: DeleteRetrieveService,
-                                                  auditService: AuditService,
-                                                  cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                   val lookupService: MtdIdLookupService,
+                                                   requestParser: DeleteRetrieveRequestParser,
+                                                   service: DeleteRetrieveService,
+                                                   auditService: AuditService,
+                                                   cc: ControllerComponents,
+                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -125,4 +125,5 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
     val event = AuditEvent("DeleteNonPayeEmploymentIncome", "delete-non-paye-employment-income", details)
     auditService.auditEvent(event)
   }
+
 }

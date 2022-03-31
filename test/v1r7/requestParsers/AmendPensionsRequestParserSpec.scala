@@ -17,17 +17,30 @@
 package v1r7.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, DoubleTaxationArticleFormatError, DoubleTaxationTreatyFormatError, ErrorWrapper, NinoFormatError, QOPSRefFormatError, SF74RefFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  DoubleTaxationArticleFormatError,
+  DoubleTaxationTreatyFormatError,
+  ErrorWrapper,
+  NinoFormatError,
+  QOPSRefFormatError,
+  SF74RefFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1r7.mocks.validators.MockAmendPensionsValidator
 import v1r7.models.request.amendPensions._
 
-class AmendPensionsRequestParserSpec extends UnitSpec{
+class AmendPensionsRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2020-21"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2020-21"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -133,9 +146,11 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
   )
 
   trait Test extends MockAmendPensionsValidator {
+
     lazy val parser: AmendPensionsRequestParser = new AmendPensionsRequestParser(
       validator = mockAmendPensionsValidator
     )
+
   }
 
   "parse" should {
@@ -150,7 +165,8 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendPensionsValidator.validate(amendPensionsRawData.copy(nino = "notANino"))
+        MockAmendPensionsValidator
+          .validate(amendPensionsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendPensionsRawData.copy(nino = "notANino")) shouldBe
@@ -158,7 +174,8 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendPensionsValidator.validate(amendPensionsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendPensionsValidator
+          .validate(amendPensionsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendPensionsRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -218,67 +235,76 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
 
         private val allInvalidValueErrors = List(
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/customerReference",
-              "/overseasPensionContributions/1/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/customerReference",
+                "/overseasPensionContributions/1/customerReference"
+              ))
           ),
           QOPSRefFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
-              "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
+                "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+              ))
           ),
           SF74RefFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/sf74reference",
-              "/overseasPensionContributions/1/sf74reference"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/sf74reference",
+                "/overseasPensionContributions/1/sf74reference"
+              ))
           ),
           DoubleTaxationTreatyFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/dblTaxationTreaty",
-              "/overseasPensionContributions/1/dblTaxationTreaty"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/dblTaxationTreaty",
+                "/overseasPensionContributions/1/dblTaxationTreaty"
+              ))
           ),
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/foreignPensions/0/countryCode",
-              "/overseasPensionContributions/0/dblTaxationCountryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignPensions/0/countryCode",
+                "/overseasPensionContributions/0/dblTaxationCountryCode"
+              ))
           ),
           DoubleTaxationArticleFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/dblTaxationArticle",
-              "/overseasPensionContributions/1/dblTaxationArticle"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/dblTaxationArticle",
+                "/overseasPensionContributions/1/dblTaxationArticle"
+              ))
           ),
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignPensions/1/countryCode",
-              "/overseasPensionContributions/1/dblTaxationCountryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignPensions/1/countryCode",
+                "/overseasPensionContributions/1/dblTaxationCountryCode"
+              ))
           ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/foreignPensions/0/amountBeforeTax",
-              "/foreignPensions/0/taxTakenOff",
-              "/foreignPensions/0/specialWithholdingTax",
-              "/foreignPensions/0/taxableAmount",
-              "/foreignPensions/1/amountBeforeTax",
-              "/foreignPensions/1/taxTakenOff",
-              "/foreignPensions/1/specialWithholdingTax",
-              "/foreignPensions/1/taxableAmount",
-              "/overseasPensionContributions/0/exemptEmployersPensionContribs",
-              "/overseasPensionContributions/0/dblTaxationRelief",
-              "/overseasPensionContributions/1/exemptEmployersPensionContribs",
-              "/overseasPensionContributions/1/dblTaxationRelief"
-            ))
+            paths = Some(
+              List(
+                "/foreignPensions/0/amountBeforeTax",
+                "/foreignPensions/0/taxTakenOff",
+                "/foreignPensions/0/specialWithholdingTax",
+                "/foreignPensions/0/taxableAmount",
+                "/foreignPensions/1/amountBeforeTax",
+                "/foreignPensions/1/taxTakenOff",
+                "/foreignPensions/1/specialWithholdingTax",
+                "/foreignPensions/1/taxableAmount",
+                "/overseasPensionContributions/0/exemptEmployersPensionContribs",
+                "/overseasPensionContributions/0/dblTaxationRelief",
+                "/overseasPensionContributions/1/exemptEmployersPensionContribs",
+                "/overseasPensionContributions/1/dblTaxationRelief"
+              ))
           )
         )
 
-        MockAmendPensionsValidator.validate(amendPensionsRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendPensionsValidator
+          .validate(amendPensionsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendPensionsRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -286,4 +312,5 @@ class AmendPensionsRequestParserSpec extends UnitSpec{
       }
     }
   }
+
 }

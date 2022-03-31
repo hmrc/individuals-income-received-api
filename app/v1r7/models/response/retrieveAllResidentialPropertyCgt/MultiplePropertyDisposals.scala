@@ -30,8 +30,8 @@ case class MultiplePropertyDisposals(source: MtdSourceEnum,
                                      amountOfNetGain: Option[BigDecimal],
                                      amountOfNetLoss: Option[BigDecimal])
 
-
 object MultiplePropertyDisposals {
+
   implicit val reads: Reads[MultiplePropertyDisposals] = (
     (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "submittedOn").readNullable[String] and
@@ -42,7 +42,7 @@ object MultiplePropertyDisposals {
       (JsPath \ "completionDate").readNullable[String] and
       (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").readNullable[BigDecimal]
-    ) (MultiplePropertyDisposals.apply _)
+  )(MultiplePropertyDisposals.apply _)
 
   implicit val writes: OWrites[MultiplePropertyDisposals] = Json.writes[MultiplePropertyDisposals]
 

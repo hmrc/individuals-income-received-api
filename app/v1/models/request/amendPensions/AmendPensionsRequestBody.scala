@@ -29,10 +29,11 @@ object AmendPensionsRequestBody extends JsonUtils {
   implicit val reads: Reads[AmendPensionsRequestBody] = (
     (JsPath \ "foreignPensions").readNullable[Seq[AmendForeignPensionsItem]].mapEmptySeqToNone and
       (JsPath \ "overseasPensionContributions").readNullable[Seq[AmendOverseasPensionContributions]].mapEmptySeqToNone
-    ) (AmendPensionsRequestBody.apply _)
+  )(AmendPensionsRequestBody.apply _)
 
   implicit val writes: OWrites[AmendPensionsRequestBody] = (
     (JsPath \ "foreignPension").writeNullable[Seq[AmendForeignPensionsItem]] and
       (JsPath \ "overseasPensionContribution").writeNullable[Seq[AmendOverseasPensionContributions]]
-    ) (unlift(AmendPensionsRequestBody.unapply))
+  )(unlift(AmendPensionsRequestBody.unapply))
+
 }

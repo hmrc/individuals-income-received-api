@@ -33,11 +33,12 @@ object RetrievePensionsResponse extends HateoasLinks with JsonUtils {
     (JsPath \ "submittedOn").read[String] and
       (JsPath \ "foreignPension").readNullable[Seq[ForeignPensionsItem]].mapEmptySeqToNone and
       (JsPath \ "overseasPensionContribution").readNullable[Seq[OverseasPensionContributions]].mapEmptySeqToNone
-    ) (RetrievePensionsResponse.apply _)
+  )(RetrievePensionsResponse.apply _)
 
   implicit val writes: OWrites[RetrievePensionsResponse] = Json.writes[RetrievePensionsResponse]
 
   implicit object RetrievePensionsLinksFactory extends HateoasLinksFactory[RetrievePensionsResponse, RetrievePensionsHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrievePensionsHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -46,6 +47,7 @@ object RetrievePensionsResponse extends HateoasLinks with JsonUtils {
         deletePensions(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }

@@ -32,11 +32,13 @@ trait MockCreateAmendOtherCgtService extends MockFactory {
   val mockCreateAmendOtherCgtService: CreateAmendOtherCgtService = mock[CreateAmendOtherCgtService]
 
   object MockCreateAmendOtherCgtService {
+
     def createAmend(requestData: CreateAmendOtherCgtRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockCreateAmendOtherCgtService
         .createAmend(_: CreateAmendOtherCgtRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

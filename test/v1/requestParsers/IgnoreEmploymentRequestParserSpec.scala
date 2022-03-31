@@ -24,9 +24,9 @@ import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploy
 
 class IgnoreEmploymentRequestParserSpec extends UnitSpec {
 
-  private val nino: String = "AA123456B"
-  private val taxYear: String = "2021-22"
-  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  private val nino: String           = "AA123456B"
+  private val taxYear: String        = "2021-22"
+  private val employmentId           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val ignoreCustomEmploymentRawData = IgnoreEmploymentRawData(
@@ -42,9 +42,11 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockIgnoreEmploymentValidator {
+
     lazy val parser: IgnoreEmploymentRequestParser = new IgnoreEmploymentRequestParser(
       validator = mockIgnoreEmploymentValidator
     )
+
   }
 
   "parse" should {
@@ -57,7 +59,8 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockIgnoreEmploymentValidator.validate(ignoreCustomEmploymentRawData.copy(nino = "notANino"))
+        MockIgnoreEmploymentValidator
+          .validate(ignoreCustomEmploymentRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(ignoreCustomEmploymentRawData.copy(nino = "notANino")) shouldBe
@@ -65,7 +68,8 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockIgnoreEmploymentValidator.validate(ignoreCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockIgnoreEmploymentValidator
+          .validate(ignoreCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(ignoreCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -73,4 +77,5 @@ class IgnoreEmploymentRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

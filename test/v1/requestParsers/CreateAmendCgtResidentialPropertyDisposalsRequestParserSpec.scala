@@ -26,8 +26,8 @@ import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 
 class CreateAmendCgtResidentialPropertyDisposalsRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val requestBodyJson: JsValue = Json.parse(
@@ -52,9 +52,11 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestParserSpec extends UnitSp
   )
 
   trait Test extends MockCreateAmendCgtResidentialPropertyDisposalsValidator {
+
     lazy val parser: CreateAmendCgtResidentialPropertyDisposalsRequestParser = new CreateAmendCgtResidentialPropertyDisposalsRequestParser(
       validator = mockCreateAmendCgtResidentialPropertyDisposalsValidator
     )
+
   }
 
   "parse" should {
@@ -63,14 +65,14 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestParserSpec extends UnitSp
         MockCreateAmendCgtResidentialPropertyDisposalsValidator.validate(createAmendCgtPpdOverridesRawData).returns(Nil)
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData) shouldBe
-        Right(CreateAmendCgtResidentialPropertyDisposalsRequest(Nino(nino), taxYear, requestBody))
+          Right(CreateAmendCgtResidentialPropertyDisposalsRequest(Nino(nino), taxYear, requestBody))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation occurs" in new Test {
-        MockCreateAmendCgtResidentialPropertyDisposalsValidator.validate(
-          createAmendCgtPpdOverridesRawData.copy(nino = "notANino"))
+        MockCreateAmendCgtResidentialPropertyDisposalsValidator
+          .validate(createAmendCgtPpdOverridesRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData.copy(nino = "notANino")) shouldBe
@@ -79,8 +81,8 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestParserSpec extends UnitSp
       }
 
       "multiple validation errors occur" in new Test {
-        MockCreateAmendCgtResidentialPropertyDisposalsValidator.validate(
-          createAmendCgtPpdOverridesRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockCreateAmendCgtResidentialPropertyDisposalsValidator
+          .validate(createAmendCgtPpdOverridesRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -88,4 +90,5 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestParserSpec extends UnitSp
       }
     }
   }
+
 }

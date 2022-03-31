@@ -183,4 +183,5 @@ class AmendOtherRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

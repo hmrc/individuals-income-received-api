@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendPensionsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val foreignPensionsModel = Seq(
@@ -74,20 +74,21 @@ class AmendPensionsServiceSpec extends ServiceSpec {
   )
 
   val amendPensionsRequest: AmendPensionsRequest = AmendPensionsRequest(
-      nino = Nino(nino),
-      taxYear = taxYear,
-      body = AmendPensionsRequestBody(
-        foreignPensions = Some(foreignPensionsModel),
-        overseasPensionContributions = Some(overseasPensionContributionsModel)
-      )
+    nino = Nino(nino),
+    taxYear = taxYear,
+    body = AmendPensionsRequestBody(
+      foreignPensions = Some(foreignPensionsModel),
+      overseasPensionContributions = Some(overseasPensionContributionsModel)
+    )
   )
 
-  trait Test extends MockAmendPensionsConnector{
+  trait Test extends MockAmendPensionsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: AmendPensionsService = new AmendPensionsService(
       connector = mockAmendPensionsConnector
     )
+
   }
 
   "AmendPensionsService" when {
@@ -95,7 +96,8 @@ class AmendPensionsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendPensionsConnector.amendPensions(amendPensionsRequest)
+        MockAmendPensionsConnector
+          .amendPensions(amendPensionsRequest)
           .returns(Future.successful(outcome))
 
         await(service.amendPensions(amendPensionsRequest)) shouldBe outcome
@@ -106,7 +108,8 @@ class AmendPensionsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendPensionsConnector.amendPensions(amendPensionsRequest)
+            MockAmendPensionsConnector
+              .amendPensions(amendPensionsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -126,4 +129,5 @@ class AmendPensionsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

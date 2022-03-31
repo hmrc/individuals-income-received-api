@@ -36,13 +36,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
-                                                val lookupService: MtdIdLookupService,
-                                                requestParser: DeleteRetrieveRequestParser,
-                                                service: DeleteRetrieveService,
-                                                auditService: AuditService,
-                                                cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
+                                                 val lookupService: MtdIdLookupService,
+                                                 requestParser: DeleteRetrieveRequestParser,
+                                                 service: DeleteRetrieveService,
+                                                 auditService: AuditService,
+                                                 cc: ControllerComponents,
+                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -79,11 +79,12 @@ class DeleteCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthS
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
           auditSubmission(
-            DeleteCgtPpdOverridesAuditDetail(request.userDetails,
-                                             nino,
-                                             taxYear,
-                                             serviceResponse.correlationId,
-                                             AuditResponse(NO_CONTENT, Right(None))))
+            DeleteCgtPpdOverridesAuditDetail(
+              request.userDetails,
+              nino,
+              taxYear,
+              serviceResponse.correlationId,
+              AuditResponse(NO_CONTENT, Right(None))))
 
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
@@ -98,11 +99,12 @@ class DeleteCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthS
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          DeleteCgtPpdOverridesAuditDetail(request.userDetails,
-                                           nino,
-                                           taxYear,
-                                           correlationId,
-                                           AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+          DeleteCgtPpdOverridesAuditDetail(
+            request.userDetails,
+            nino,
+            taxYear,
+            correlationId,
+            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge
@@ -121,4 +123,5 @@ class DeleteCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthS
     val event = AuditEvent("DeleteCgtPpdOverrides", "Delete-Cgt-Ppd-Overrides", details)
     auditService.auditEvent(event)
   }
+
 }

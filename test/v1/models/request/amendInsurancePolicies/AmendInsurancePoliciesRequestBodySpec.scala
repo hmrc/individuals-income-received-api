@@ -168,4 +168,5 @@ class AmendInsurancePoliciesRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

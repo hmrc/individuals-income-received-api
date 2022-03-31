@@ -62,7 +62,6 @@ class PpdServiceSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val desJson: JsValue = Json.parse(
     """
       |{
@@ -103,7 +102,6 @@ class PpdServiceSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
@@ -138,14 +136,12 @@ class PpdServiceSpec extends UnitSpec {
       None
     )
 
-
   val model: PpdService =
     PpdService(
       Some(143.22),
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
-
 
   "PpdService" when {
     "Reads" should {
@@ -162,4 +158,5 @@ class PpdServiceSpec extends UnitSpec {
       }
     }
   }
+
 }

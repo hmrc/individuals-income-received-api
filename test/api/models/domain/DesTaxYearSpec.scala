@@ -33,4 +33,5 @@ class DesTaxYearSpec extends UnitSpec {
       DesTaxYear.toMtd(DesTaxYear(desYear)) shouldBe mtdYear
     }
   }
+
 }

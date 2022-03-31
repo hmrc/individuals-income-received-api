@@ -23,7 +23,6 @@ import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-
 case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: String,
                                                    source: MtdSourceEnum,
                                                    totalNonPayeIncome: Option[BigDecimal],
@@ -36,11 +35,13 @@ object RetrieveNonPayeEmploymentIncomeResponse extends HateoasLinks {
       (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "totalNonPayeIncome").readNullable[BigDecimal] and
       (JsPath \ "nonPayeIncome").readNullable[NonPayeIncome]
-    ) (RetrieveNonPayeEmploymentIncomeResponse.apply _)
+  )(RetrieveNonPayeEmploymentIncomeResponse.apply _)
+
   implicit val writes: OWrites[RetrieveNonPayeEmploymentIncomeResponse] = Json.writes[RetrieveNonPayeEmploymentIncomeResponse]
 
-  implicit object RetrieveOtherEmploymentLinksFactory extends
-    HateoasLinksFactory[RetrieveNonPayeEmploymentIncomeResponse, RetrieveNonPayeEmploymentIncomeHateoasData] {
+  implicit object RetrieveOtherEmploymentLinksFactory
+      extends HateoasLinksFactory[RetrieveNonPayeEmploymentIncomeResponse, RetrieveNonPayeEmploymentIncomeHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveNonPayeEmploymentIncomeHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -49,9 +50,9 @@ object RetrieveNonPayeEmploymentIncomeResponse extends HateoasLinks {
         deleteNonPayeEmployment(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }
-
 
 case class RetrieveNonPayeEmploymentIncomeHateoasData(nino: String, taxYear: String) extends HateoasData

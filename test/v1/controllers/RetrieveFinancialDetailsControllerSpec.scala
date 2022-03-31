@@ -20,19 +20,19 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.domain.{ MtdSourceEnum, Nino }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.{MtdSourceEnum, Nino}
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.RelType.{ AMEND_EMPLOYMENT_FINANCIAL_DETAILS, DELETE_EMPLOYMENT_FINANCIAL_DETAILS, SELF }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_EMPLOYMENT_FINANCIAL_DETAILS, DELETE_EMPLOYMENT_FINANCIAL_DETAILS, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveFinancialDetailsRequestParser
-import v1.models.request.retrieveFinancialDetails.{ RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest }
+import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
 import v1.models.response.retrieveFinancialDetails._
 import v1.models.response.retrieveOther._
 
@@ -120,6 +120,7 @@ class RetrieveFinancialDetailsControllerSpec
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
   }
 
   "MockRetrieveFinancialDetailsController" should {
@@ -137,12 +138,13 @@ class RetrieveFinancialDetailsControllerSpec
         MockHateoasFactory
           .wrap(model, RetrieveFinancialDetailsHateoasData(nino, taxYear, employmentId))
           .returns(
-            HateoasWrapper(model,
-                           Seq(
-                             retrieveLink,
-                             amendLink,
-                             deleteLink
-                           )))
+            HateoasWrapper(
+              model,
+              Seq(
+                retrieveLink,
+                amendLink,
+                deleteLink
+              )))
 
         val result: Future[Result] = controller.retrieve(nino, taxYear, employmentId, Some(source))(fakeGetRequest)
 
@@ -216,4 +218,5 @@ class RetrieveFinancialDetailsControllerSpec
       }
     }
   }
+
 }

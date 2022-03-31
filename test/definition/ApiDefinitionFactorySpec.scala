@@ -18,7 +18,7 @@ package definition
 
 import api.mocks.MockHttpClient
 import config.ConfidenceLevelConfig
-import definition.APIStatus.{ ALPHA, BETA }
+import definition.APIStatus.{ALPHA, BETA}
 import definition.Versions.VERSION_1
 import mocks.MockAppConfig
 import support.UnitSpec
@@ -39,7 +39,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.featureSwitch returns None
         MockedAppConfig.apiStatus returns "1.0"
         MockedAppConfig.endpointsEnabled returns true
-        MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true) anyNumberOfTimes ()
+        MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+          definitionEnabled = true,
+          authValidationEnabled = true) anyNumberOfTimes ()
 
         private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"
@@ -83,15 +85,15 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     Seq(
       (true, ConfidenceLevel.L200),
       (false, ConfidenceLevel.L50)
-    ).foreach {
-      case (definitionEnabled, cl) =>
-        s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
-          s"return $cl" in new Test {
-            MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled,
-                                                                                      authValidationEnabled = true)
-            apiDefinitionFactory.confidenceLevel shouldBe cl
-          }
+    ).foreach { case (definitionEnabled, cl) =>
+      s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
+        s"return $cl" in new Test {
+          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+            definitionEnabled = definitionEnabled,
+            authValidationEnabled = true)
+          apiDefinitionFactory.confidenceLevel shouldBe cl
         }
+      }
     }
   }
 
@@ -110,4 +112,5 @@ class ApiDefinitionFactorySpec extends UnitSpec {
       }
     }
   }
+
 }

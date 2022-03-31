@@ -17,7 +17,17 @@
 package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  EmploymentIdFormatError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SourceFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,9 +40,9 @@ class RetrieveFinancialDetailsControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
-    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val nino: String           = "AA123456A"
+    val taxYear: String        = "2019-20"
+    val employmentId: String   = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val source: Option[String] = Some("latest")
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
@@ -41,8 +51,8 @@ class RetrieveFinancialDetailsControllerISpec extends V1R7IntegrationSpec {
 
     def queryParams: Seq[(String, String)] =
       Seq("source" -> source)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
 
     def setupStubs(): StubMapping
@@ -53,6 +63,7 @@ class RetrieveFinancialDetailsControllerISpec extends V1R7IntegrationSpec {
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling retrieve financial details endpoint" should {
@@ -93,14 +104,17 @@ class RetrieveFinancialDetailsControllerISpec extends V1R7IntegrationSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String,
-                                requestEmploymentId: String, empSource: Option[String],
-                                expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestEmploymentId: String,
+                                empSource: Option[String],
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
-            override val employmentId: String = requestEmploymentId
+            override val nino: String           = requestNino
+            override val taxYear: String        = requestTaxYear
+            override val employmentId: String   = requestEmploymentId
             override val source: Option[String] = empSource
 
             override def setupStubs(): StubMapping = {
@@ -163,10 +177,12 @@ class RetrieveFinancialDetailsControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

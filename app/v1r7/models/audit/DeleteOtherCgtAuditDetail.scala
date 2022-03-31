@@ -45,5 +45,5 @@ object DeleteOtherCgtAuditDetail {
       auditResponse
     )
   }
-}
 
+}

@@ -63,4 +63,5 @@ class ForeignEarningsSpec extends UnitSpec {
       }
     }
   }
+
 }

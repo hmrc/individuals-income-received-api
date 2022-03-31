@@ -20,7 +20,7 @@ import api.connectors.NrsProxyConnector
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
-import uk.gov.hmrc.http.{ HeaderCarrier, UpstreamErrorResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 
 import scala.concurrent.Future
 
@@ -34,5 +34,7 @@ trait MockNrsProxyConnector extends MockFactory {
       (mockNrsProxyConnector
         .submit(_: String, _: String, _: JsValue)(_: HeaderCarrier))
         .expects(nino, notableEvent, body, *)
+
   }
+
 }

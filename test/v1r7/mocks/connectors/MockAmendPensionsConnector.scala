@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.connectors.AmendPensionsConnector
 import v1r7.models.request.amendPensions.AmendPensionsRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAmendPensionsConnector extends MockFactory {
 
@@ -36,5 +36,7 @@ trait MockAmendPensionsConnector extends MockFactory {
         .amendPensions(_: AmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
+
 }

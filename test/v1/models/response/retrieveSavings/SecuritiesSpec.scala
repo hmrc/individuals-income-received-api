@@ -98,4 +98,5 @@ class SecuritiesSpec extends UnitSpec {
       }
     }
   }
+
 }

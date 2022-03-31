@@ -44,6 +44,7 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
     val service: CreateAmendNonPayeEmploymentService = new CreateAmendNonPayeEmploymentService(
       connector = mockConnector
     )
+
   }
 
   "createAndAmend" must {
@@ -94,4 +95,5 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
       input.foreach(args => (failuresArrayError _).tupled(args))
     }
   }
+
 }

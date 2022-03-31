@@ -62,21 +62,21 @@ class DisposalSpec extends UnitSpec {
   )
 
   private val validModel = Disposal(
-      customerReference = Some("ABC-2345"),
-      disposalDate = "2021-01-29",
-      completionDate = "2021-04-25",
-      disposalProceeds = 2345.67,
-      acquisitionDate = "2021-03-22",
-      acquisitionAmount = 2341.45,
-      improvementCosts = Some(345.34),
-      additionalCosts = Some(234.89),
-      prfAmount = Some(67.9),
-      otherReliefAmount = Some(123.89),
-      lossesFromThisYear = Some(456.89),
-      lossesFromPreviousYear = Some(124.87),
-      amountOfNetGain = None,
-      amountOfNetLoss = Some(567.9)
-    )
+    customerReference = Some("ABC-2345"),
+    disposalDate = "2021-01-29",
+    completionDate = "2021-04-25",
+    disposalProceeds = 2345.67,
+    acquisitionDate = "2021-03-22",
+    acquisitionAmount = 2341.45,
+    improvementCosts = Some(345.34),
+    additionalCosts = Some(234.89),
+    prfAmount = Some(67.9),
+    otherReliefAmount = Some(123.89),
+    lossesFromThisYear = Some(456.89),
+    lossesFromPreviousYear = Some(124.87),
+    amountOfNetGain = None,
+    amountOfNetLoss = Some(567.9)
+  )
 
   "reads" should {
     "read to a case class" when {
@@ -93,4 +93,5 @@ class DisposalSpec extends UnitSpec {
       }
     }
   }
+
 }

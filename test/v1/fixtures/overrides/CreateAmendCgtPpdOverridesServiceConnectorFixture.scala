@@ -19,6 +19,7 @@ package v1.fixtures.overrides
 import v1.models.request.createAmendCgtPpdOverrides.{CreateAmendCgtPpdOverridesRequestBody, MultiplePropertyDisposals, SinglePropertyDisposals}
 
 object CreateAmendCgtPpdOverridesServiceConnectorFixture {
+
   val multiplePropertyDisposalsModels: Seq[MultiplePropertyDisposals] =
     Seq(
       MultiplePropertyDisposals(
@@ -72,4 +73,5 @@ object CreateAmendCgtPpdOverridesServiceConnectorFixture {
       Some(multiplePropertyDisposalsModels),
       Some(singlePropertyDisposalsModels)
     )
+
 }

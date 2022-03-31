@@ -24,9 +24,10 @@ import v1r7.requestParsers.validators.CreateAmendOtherCgtValidator
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherCgtRequestParser @Inject()(val validator: CreateAmendOtherCgtValidator)
-  extends RequestParser[CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest] {
+class CreateAmendOtherCgtRequestParser @Inject() (val validator: CreateAmendOtherCgtValidator)
+    extends RequestParser[CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest] {
 
   override protected def requestFor(data: CreateAmendOtherCgtRawData): CreateAmendOtherCgtRequest =
     CreateAmendOtherCgtRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendOtherCgtRequestBody])
+
 }

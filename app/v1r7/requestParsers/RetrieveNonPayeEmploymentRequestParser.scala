@@ -23,10 +23,13 @@ import v1r7.requestParsers.validators.RetrieveNonPayeEmploymentValidator
 
 import javax.inject.Inject
 
-class RetrieveNonPayeEmploymentRequestParser @Inject()(val validator: RetrieveNonPayeEmploymentValidator)
-  extends RequestParser[RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest] {
+class RetrieveNonPayeEmploymentRequestParser @Inject() (val validator: RetrieveNonPayeEmploymentValidator)
+    extends RequestParser[RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest] {
+
   override protected def requestFor(data: RetrieveNonPayeEmploymentIncomeRawData): RetrieveNonPayeEmploymentIncomeRequest =
-    RetrieveNonPayeEmploymentIncomeRequest(Nino(data.nino),
-    data.taxYear,
-    data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+    RetrieveNonPayeEmploymentIncomeRequest(
+      Nino(data.nino),
+      data.taxYear,
+      data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+
 }

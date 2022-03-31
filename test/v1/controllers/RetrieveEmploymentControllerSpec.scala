@@ -20,20 +20,20 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.Method._
 import api.models.hateoas.RelType._
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveEmploymentRequestParser
-import v1.models.request.retrieveEmployment.{ RetrieveEmploymentRawData, RetrieveEmploymentRequest }
-import v1.models.response.retrieveEmployment.{ RetrieveEmploymentHateoasData, RetrieveEmploymentResponse }
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -170,6 +170,7 @@ class RetrieveEmploymentControllerSpec
         "SERVER_ERROR"              -> StandardDownstreamError,
         "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
+
   }
 
   "RetrieveEmploymentController" should {
@@ -190,12 +191,13 @@ class RetrieveEmploymentControllerSpec
             RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithoutDateIgnoredResponseModel)
           )
           .returns(
-            HateoasWrapper(hmrcEnteredEmploymentWithoutDateIgnoredResponseModel,
-                           Seq(
-                             listEmploymentLink,
-                             retrieveEmploymentLink,
-                             ignoreEmploymentLink
-                           )))
+            HateoasWrapper(
+              hmrcEnteredEmploymentWithoutDateIgnoredResponseModel,
+              Seq(
+                listEmploymentLink,
+                retrieveEmploymentLink,
+                ignoreEmploymentLink
+              )))
 
         val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
@@ -222,12 +224,13 @@ class RetrieveEmploymentControllerSpec
             RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithDateIgnoredResponseModel)
           )
           .returns(
-            HateoasWrapper(hmrcEnteredEmploymentWithDateIgnoredResponseModel,
-                           Seq(
-                             listEmploymentLink,
-                             retrieveEmploymentLink,
-                             unignoreEmploymentLink
-                           )))
+            HateoasWrapper(
+              hmrcEnteredEmploymentWithDateIgnoredResponseModel,
+              Seq(
+                listEmploymentLink,
+                retrieveEmploymentLink,
+                unignoreEmploymentLink
+              )))
 
         val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
@@ -249,16 +252,18 @@ class RetrieveEmploymentControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
 
         MockHateoasFactory
-          .wrap(customEnteredEmploymentResponseModel,
-                RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
+          .wrap(
+            customEnteredEmploymentResponseModel,
+            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
           .returns(
-            HateoasWrapper(customEnteredEmploymentResponseModel,
-                           Seq(
-                             listEmploymentLink,
-                             retrieveEmploymentLink,
-                             amendCustomEmploymentLink,
-                             deleteCustomEmploymentLink
-                           )))
+            HateoasWrapper(
+              customEnteredEmploymentResponseModel,
+              Seq(
+                listEmploymentLink,
+                retrieveEmploymentLink,
+                amendCustomEmploymentLink,
+                deleteCustomEmploymentLink
+              )))
 
         val result: Future[Result] = controller.retrieveEmployment(nino, taxYear, employmentId)(fakeGetRequest)
 
@@ -329,4 +334,5 @@ class RetrieveEmploymentControllerSpec
       }
     }
   }
+
 }

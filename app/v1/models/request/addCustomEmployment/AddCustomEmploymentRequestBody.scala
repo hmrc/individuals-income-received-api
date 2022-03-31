@@ -24,6 +24,6 @@ case class AddCustomEmploymentRequestBody(employerRef: Option[String],
                                           cessationDate: Option[String],
                                           payrollId: Option[String])
 
-object AddCustomEmploymentRequestBody{
+object AddCustomEmploymentRequestBody {
   implicit val format: OFormat[AddCustomEmploymentRequestBody] = Json.format[AddCustomEmploymentRequestBody]
 }

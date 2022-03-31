@@ -33,6 +33,7 @@ trait MockRetrieveAllResidentialPropertyCgtValidator extends MockFactory {
         .validate(_: RetrieveAllResidentialPropertyCgtRawData))
         .expects(data)
     }
+
   }
 
 }

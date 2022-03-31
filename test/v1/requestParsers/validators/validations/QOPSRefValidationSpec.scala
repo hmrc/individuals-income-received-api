@@ -45,5 +45,5 @@ class QOPSRefValidationSpec extends UnitSpec {
       }
     }
   }
-}
 
+}

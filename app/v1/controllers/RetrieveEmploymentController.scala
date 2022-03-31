@@ -17,31 +17,31 @@
 package v1.controllers
 
 import api.connectors.DownstreamUri.Release6Uri
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors._
-import api.services.{ DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
-import utils.{ IdGenerator, Logging }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import utils.{IdGenerator, Logging}
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
-import v1.models.response.retrieveEmployment.{ RetrieveEmploymentHateoasData, RetrieveEmploymentResponse }
+import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 import v1.requestParsers.RetrieveEmploymentRequestParser
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                             val lookupService: MtdIdLookupService,
-                                             requestParser: RetrieveEmploymentRequestParser,
-                                             service: DeleteRetrieveService,
-                                             hateoasFactory: HateoasFactory,
-                                             cc: ControllerComponents,
-                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                              val lookupService: MtdIdLookupService,
+                                              requestParser: RetrieveEmploymentRequestParser,
+                                              service: DeleteRetrieveService,
+                                              hateoasFactory: HateoasFactory,
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -118,4 +118,5 @@ class RetrieveEmploymentController @Inject()(val authService: EnrolmentsAuthServ
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

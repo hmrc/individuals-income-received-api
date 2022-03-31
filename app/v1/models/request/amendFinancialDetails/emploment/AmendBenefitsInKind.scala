@@ -50,27 +50,40 @@ case class AmendBenefitsInKind(accommodation: Option[BigDecimal],
 
   def isEmpty: Boolean =
     accommodation.isEmpty && assets.isEmpty &&
-    assetTransfer.isEmpty && beneficialLoan.isEmpty &&
-    car.isEmpty && carFuel.isEmpty &&
-    educationalServices.isEmpty && entertaining.isEmpty &&
-    expenses.isEmpty && medicalInsurance.isEmpty &&
-    telephone.isEmpty && service.isEmpty &&
-    taxableExpenses.isEmpty && van.isEmpty &&
-    vanFuel.isEmpty && mileage.isEmpty &&
-    nonQualifyingRelocationExpenses.isEmpty && nurseryPlaces.isEmpty &&
-    otherItems.isEmpty && paymentsOnEmployeesBehalf.isEmpty &&
-    personalIncidentalExpenses.isEmpty && qualifyingRelocationExpenses.isEmpty &&
-    employerProvidedProfessionalSubscriptions.isEmpty && employerProvidedServices.isEmpty &&
-    incomeTaxPaidByDirector.isEmpty && travelAndSubsistence.isEmpty &&
-    vouchersAndCreditCards.isEmpty && nonCash.isEmpty
+      assetTransfer.isEmpty && beneficialLoan.isEmpty &&
+      car.isEmpty && carFuel.isEmpty &&
+      educationalServices.isEmpty && entertaining.isEmpty &&
+      expenses.isEmpty && medicalInsurance.isEmpty &&
+      telephone.isEmpty && service.isEmpty &&
+      taxableExpenses.isEmpty && van.isEmpty &&
+      vanFuel.isEmpty && mileage.isEmpty &&
+      nonQualifyingRelocationExpenses.isEmpty && nurseryPlaces.isEmpty &&
+      otherItems.isEmpty && paymentsOnEmployeesBehalf.isEmpty &&
+      personalIncidentalExpenses.isEmpty && qualifyingRelocationExpenses.isEmpty &&
+      employerProvidedProfessionalSubscriptions.isEmpty && employerProvidedServices.isEmpty &&
+      incomeTaxPaidByDirector.isEmpty && travelAndSubsistence.isEmpty &&
+      vouchersAndCreditCards.isEmpty && nonCash.isEmpty
+
 }
 
 object AmendBenefitsInKind {
 
   val firstSegment: OFormat[(
-    Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal],
-      Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal]
-    )] =
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal]
+  )] =
     ((JsPath \ "accommodation").formatNullable[BigDecimal] and
       (JsPath \ "assets").formatNullable[BigDecimal] and
       (JsPath \ "assetTransfer").formatNullable[BigDecimal] and
@@ -87,9 +100,21 @@ object AmendBenefitsInKind {
       (JsPath \ "van").formatNullable[BigDecimal]).tupled
 
   val secondSegment: OFormat[(
-    Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal],
-      Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal], Option[BigDecimal]
-    )] =
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal],
+      Option[BigDecimal]
+  )] =
     ((JsPath \ "vanFuel").formatNullable[BigDecimal] and
       (JsPath \ "mileage").formatNullable[BigDecimal] and
       (JsPath \ "nonQualifyingRelocationExpenses").formatNullable[BigDecimal] and
@@ -98,37 +123,110 @@ object AmendBenefitsInKind {
       (JsPath \ "paymentsOnEmployeesBehalf").formatNullable[BigDecimal] and
       (JsPath \ "personalIncidentalExpenses").formatNullable[BigDecimal] and
       (JsPath \ "qualifyingRelocationExpenses").formatNullable[BigDecimal] and
-      (JsPath \ "employerProvidedProfessionalSubscriptions").formatNullable[BigDecimal]  and
+      (JsPath \ "employerProvidedProfessionalSubscriptions").formatNullable[BigDecimal] and
       (JsPath \ "employerProvidedServices").formatNullable[BigDecimal] and
       (JsPath \ "incomeTaxPaidByDirector").formatNullable[BigDecimal] and
       (JsPath \ "travelAndSubsistence").formatNullable[BigDecimal] and
       (JsPath \ "vouchersAndCreditCards").formatNullable[BigDecimal] and
       (JsPath \ "nonCash").formatNullable[BigDecimal]).tupled
 
-  implicit val format: Format[AmendBenefitsInKind] = (firstSegment and secondSegment)({
-    case ((accommodation, assets, assetTransfer, beneficialLoan, car, carFuel, educationalServices,
-    entertaining, expenses, medicalInsurance, telephone, service, taxableExpenses, van),
-    (vanFuel, mileage, nonQualifyingRelocationExpenses, nurseryPlaces, otherItems,
-    paymentsOnEmployeesBehalf, personalIncidentalExpenses, qualifyingRelocationExpenses, employerProvidedProfessionalSubscriptions,
-    employerProvidedServices, incomeTaxPaidByDirector, travelAndSubsistence, vouchersAndCreditCards, nonCash)) =>
-
-      AmendBenefitsInKind(accommodation, assets, assetTransfer, beneficialLoan, car, carFuel, educationalServices, entertaining, expenses,
-        medicalInsurance, telephone, service, taxableExpenses, van, vanFuel, mileage, nonQualifyingRelocationExpenses, nurseryPlaces, otherItems,
-        paymentsOnEmployeesBehalf, personalIncidentalExpenses, qualifyingRelocationExpenses, employerProvidedProfessionalSubscriptions,
-        employerProvidedServices, incomeTaxPaidByDirector, travelAndSubsistence, vouchersAndCreditCards, nonCash)},
-
-    (amendBenefitsInKind: AmendBenefitsInKind) => (
-      (amendBenefitsInKind.accommodation, amendBenefitsInKind.assets, amendBenefitsInKind.assetTransfer,
-        amendBenefitsInKind.beneficialLoan, amendBenefitsInKind.car, amendBenefitsInKind.carFuel, amendBenefitsInKind.educationalServices,
-        amendBenefitsInKind.entertaining, amendBenefitsInKind.expenses, amendBenefitsInKind.medicalInsurance, amendBenefitsInKind.telephone,
-        amendBenefitsInKind.service, amendBenefitsInKind.taxableExpenses, amendBenefitsInKind.van
-      ),
-        (amendBenefitsInKind.vanFuel, amendBenefitsInKind.mileage, amendBenefitsInKind.nonQualifyingRelocationExpenses, amendBenefitsInKind.nurseryPlaces,
-          amendBenefitsInKind.otherItems, amendBenefitsInKind.paymentsOnEmployeesBehalf, amendBenefitsInKind.personalIncidentalExpenses,
-          amendBenefitsInKind.qualifyingRelocationExpenses, amendBenefitsInKind.employerProvidedProfessionalSubscriptions,
-          amendBenefitsInKind.employerProvidedServices, amendBenefitsInKind.incomeTaxPaidByDirector, amendBenefitsInKind.travelAndSubsistence,
-          amendBenefitsInKind.vouchersAndCreditCards, amendBenefitsInKind.nonCash
+  implicit val format: Format[AmendBenefitsInKind] = (firstSegment and secondSegment)(
+    {
+      case (
+            (
+              accommodation,
+              assets,
+              assetTransfer,
+              beneficialLoan,
+              car,
+              carFuel,
+              educationalServices,
+              entertaining,
+              expenses,
+              medicalInsurance,
+              telephone,
+              service,
+              taxableExpenses,
+              van),
+            (
+              vanFuel,
+              mileage,
+              nonQualifyingRelocationExpenses,
+              nurseryPlaces,
+              otherItems,
+              paymentsOnEmployeesBehalf,
+              personalIncidentalExpenses,
+              qualifyingRelocationExpenses,
+              employerProvidedProfessionalSubscriptions,
+              employerProvidedServices,
+              incomeTaxPaidByDirector,
+              travelAndSubsistence,
+              vouchersAndCreditCards,
+              nonCash)) =>
+        AmendBenefitsInKind(
+          accommodation,
+          assets,
+          assetTransfer,
+          beneficialLoan,
+          car,
+          carFuel,
+          educationalServices,
+          entertaining,
+          expenses,
+          medicalInsurance,
+          telephone,
+          service,
+          taxableExpenses,
+          van,
+          vanFuel,
+          mileage,
+          nonQualifyingRelocationExpenses,
+          nurseryPlaces,
+          otherItems,
+          paymentsOnEmployeesBehalf,
+          personalIncidentalExpenses,
+          qualifyingRelocationExpenses,
+          employerProvidedProfessionalSubscriptions,
+          employerProvidedServices,
+          incomeTaxPaidByDirector,
+          travelAndSubsistence,
+          vouchersAndCreditCards,
+          nonCash
         )
-    )
+    },
+    (amendBenefitsInKind: AmendBenefitsInKind) =>
+      (
+        (
+          amendBenefitsInKind.accommodation,
+          amendBenefitsInKind.assets,
+          amendBenefitsInKind.assetTransfer,
+          amendBenefitsInKind.beneficialLoan,
+          amendBenefitsInKind.car,
+          amendBenefitsInKind.carFuel,
+          amendBenefitsInKind.educationalServices,
+          amendBenefitsInKind.entertaining,
+          amendBenefitsInKind.expenses,
+          amendBenefitsInKind.medicalInsurance,
+          amendBenefitsInKind.telephone,
+          amendBenefitsInKind.service,
+          amendBenefitsInKind.taxableExpenses,
+          amendBenefitsInKind.van),
+        (
+          amendBenefitsInKind.vanFuel,
+          amendBenefitsInKind.mileage,
+          amendBenefitsInKind.nonQualifyingRelocationExpenses,
+          amendBenefitsInKind.nurseryPlaces,
+          amendBenefitsInKind.otherItems,
+          amendBenefitsInKind.paymentsOnEmployeesBehalf,
+          amendBenefitsInKind.personalIncidentalExpenses,
+          amendBenefitsInKind.qualifyingRelocationExpenses,
+          amendBenefitsInKind.employerProvidedProfessionalSubscriptions,
+          amendBenefitsInKind.employerProvidedServices,
+          amendBenefitsInKind.incomeTaxPaidByDirector,
+          amendBenefitsInKind.travelAndSubsistence,
+          amendBenefitsInKind.vouchersAndCreditCards,
+          amendBenefitsInKind.nonCash)
+      )
   )
+
 }

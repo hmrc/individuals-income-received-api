@@ -17,12 +17,12 @@
 package v1r7.endpoints
 
 import api.models.errors._
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import support.V1R7IntegrationSpec
 
 class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
@@ -95,6 +95,7 @@ class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'add custom employment' endpoint" should {
@@ -366,4 +367,5 @@ class AddCustomEmploymentControllerISpec extends V1R7IntegrationSpec {
       }
     }
   }
+
 }

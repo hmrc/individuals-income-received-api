@@ -17,7 +17,15 @@
 package v1r7.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, CustomerRefFormatError, ErrorWrapper, EventFormatError, NinoFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  EventFormatError,
+  NinoFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -26,8 +34,8 @@ import v1r7.models.request.amendInsurancePolicies._
 
 class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2020-21"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2020-21"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -199,6 +207,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
       deficiencyRelief = Some(5000.99)
     )
   )
+
   val voidedIsa: Seq[AmendVoidedIsaPoliciesItem] = Seq(
     AmendVoidedIsaPoliciesItem(
       customerReference = Some("INPOLY123A"),
@@ -248,9 +257,11 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockAmendInsurancePoliciesValidator {
+
     lazy val parser: AmendInsurancePoliciesRequestParser = new AmendInsurancePoliciesRequestParser(
       validator = mockAmendInsurancePoliciesValidator
     )
+
   }
 
   "parse" should {
@@ -264,7 +275,8 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendInsurancePoliciesValidator.validate(rawData.copy(nino = "notANino"))
+        MockAmendInsurancePoliciesValidator
+          .validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(rawData.copy(nino = "notANino")) shouldBe
@@ -272,7 +284,8 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendInsurancePoliciesValidator.validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendInsurancePoliciesValidator
+          .validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(rawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -385,48 +398,53 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
         private val allInvalidValueErrors = List(
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/lifeInsurance/0/gainAmount",
-              "/lifeInsurance/0/deficiencyRelief",
-              "/capitalRedemption/0/gainAmount",
-              "/capitalRedemption/1/deficiencyRelief",
-              "/lifeAnnuity/0/deficiencyRelief",
-              "/voidedIsa/1/gainAmount",
-              "/voidedIsa/1/taxPaidAmount",
-              "/foreign/0/taxPaidAmount",
-              "/foreign/1/gainAmount"
-            ))
+            paths = Some(
+              List(
+                "/lifeInsurance/0/gainAmount",
+                "/lifeInsurance/0/deficiencyRelief",
+                "/capitalRedemption/0/gainAmount",
+                "/capitalRedemption/1/deficiencyRelief",
+                "/lifeAnnuity/0/deficiencyRelief",
+                "/voidedIsa/1/gainAmount",
+                "/voidedIsa/1/taxPaidAmount",
+                "/foreign/0/taxPaidAmount",
+                "/foreign/1/gainAmount"
+              ))
           ),
           EventFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/1/event",
-              "/lifeAnnuity/1/event"
-            ))
+            paths = Some(
+              List(
+                "/lifeInsurance/1/event",
+                "/lifeAnnuity/1/event"
+              ))
           ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99",
-            paths = Some(List(
-              "/lifeInsurance/0/yearsHeld",
-              "/capitalRedemption/0/yearsHeld",
-              "/capitalRedemption/1/yearsHeldSinceLastGain",
-              "/lifeAnnuity/0/yearsHeld",
-              "/voidedIsa/0/yearsHeld",
-              "/voidedIsa/0/yearsHeldSinceLastGain",
-              "/foreign/1/yearsHeld"
-            ))
+            paths = Some(
+              List(
+                "/lifeInsurance/0/yearsHeld",
+                "/capitalRedemption/0/yearsHeld",
+                "/capitalRedemption/1/yearsHeldSinceLastGain",
+                "/lifeAnnuity/0/yearsHeld",
+                "/voidedIsa/0/yearsHeld",
+                "/voidedIsa/0/yearsHeldSinceLastGain",
+                "/foreign/1/yearsHeld"
+              ))
           ),
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/lifeInsurance/0/customerReference",
-              "/capitalRedemption/0/customerReference",
-              "/lifeAnnuity/1/customerReference",
-              "/voidedIsa/1/customerReference",
-              "/foreign/0/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/lifeInsurance/0/customerReference",
+                "/capitalRedemption/0/customerReference",
+                "/lifeAnnuity/1/customerReference",
+                "/voidedIsa/1/customerReference",
+                "/foreign/0/customerReference"
+              ))
           )
         )
 
-        MockAmendInsurancePoliciesValidator.validate(rawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendInsurancePoliciesValidator
+          .validate(rawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(rawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -434,4 +452,5 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -22,13 +22,14 @@ import api.models.errors.{CountryCodeFormatError, CountryCodeRuleError, MtdError
 object CountryCodeValidation {
 
   def validateOptional(data: Option[String]): List[MtdError] = data match {
-    case None => NoValidationErrors
+    case None        => NoValidationErrors
     case Some(value) => validate(value)
   }
 
-  def validate(data: String): List[MtdError] = (CountryCode.getByAlpha3Code(data),data) match {
-    case (_: CountryCode,_) => NoValidationErrors
+  def validate(data: String): List[MtdError] = (CountryCode.getByAlpha3Code(data), data) match {
+    case (_: CountryCode, _)           => NoValidationErrors
     case (_, code) if code.length == 3 => List(CountryCodeRuleError)
-    case _ => List(CountryCodeFormatError)
+    case _                             => List(CountryCodeFormatError)
   }
+
 }

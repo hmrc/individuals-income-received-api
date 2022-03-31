@@ -38,14 +38,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthService,
-                                                val lookupService: MtdIdLookupService,
-                                                appConfig: AppConfig,
-                                                requestParser: AmendFinancialDetailsRequestParser,
-                                                service: AmendFinancialDetailsService,
-                                                auditService: AuditService,
-                                                cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuthService,
+                                                 val lookupService: MtdIdLookupService,
+                                                 appConfig: AppConfig,
+                                                 requestParser: AmendFinancialDetailsRequestParser,
+                                                 service: AmendFinancialDetailsService,
+                                                 auditService: AuditService,
+                                                 cc: ControllerComponents,
+                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -131,4 +131,5 @@ class AmendFinancialDetailsController @Inject()(val authService: EnrolmentsAuthS
     val event = AuditEvent("AmendEmploymentFinancialDetails", "amend-employment-financial-details", details)
     auditService.auditEvent(event)
   }
+
 }

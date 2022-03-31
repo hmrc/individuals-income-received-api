@@ -23,10 +23,10 @@ import utils.CurrentDateTime
 import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData]
     with DisposalDateErrorMessages {
 
@@ -79,8 +79,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
     List(
       Validator.flattenErrors(
         List(
-          requestBodyData.disposals.zipWithIndex.flatMap {
-            case (disposal, index) => validateDisposalFormat(disposal, index)
+          requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
+            validateDisposalFormat(disposal, index)
           }
         ).map(_.toList)
       )
@@ -154,8 +154,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
     List(
       Validator.flattenErrors(
         List(
-          requestBodyData.disposals.zipWithIndex.flatMap {
-            case (disposal, index) => validateDisposalRule(disposal, index, data.taxYear)
+          requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
+            validateDisposalRule(disposal, index, data.taxYear)
           }
         ).map(_.toList)
       )
@@ -194,8 +194,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
   private def lossOrGainsValidator: CreateAmendCgtResidentialPropertyDisposalsRawData => List[List[MtdError]] = { data =>
     val requestBodyData = data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
 
-    requestBodyData.disposals.zipWithIndex.map {
-      case (disposal, index) => validateLossOrGains(disposal, index)
+    requestBodyData.disposals.zipWithIndex.map { case (disposal, index) =>
+      validateLossOrGains(disposal, index)
     }.toList
   }
 
@@ -218,4 +218,5 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit cur
       )
     ).flatten
   }
+
 }

@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.amendOtherEmployment._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig)
+class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[AmendOtherEmploymentRawData]
     with ValueFormatErrorMessages {
 
@@ -67,14 +67,14 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig)
       Validator.flattenErrors(
         List(
           requestBodyData.shareOption
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateShareOption(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateShareOption(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.sharesAwardedOrReceived
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateSharesAwardedOrReceivedItem(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateSharesAwardedOrReceivedItem(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
@@ -89,11 +89,11 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig)
             }
             .getOrElse(NoValidationErrors),
           requestBodyData.lumpSums
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateLumpSums(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateLumpSums(data, index)
             })
             .getOrElse(NoValidationErrors)
-            .toList,
+            .toList
         )
       ))
   }
@@ -291,4 +291,5 @@ class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig)
         }
       ))
   }
+
 }

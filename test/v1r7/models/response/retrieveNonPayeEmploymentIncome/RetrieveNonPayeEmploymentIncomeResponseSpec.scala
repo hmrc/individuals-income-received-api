@@ -56,7 +56,6 @@ class RetrieveNonPayeEmploymentIncomeResponseSpec extends UnitSpec {
       Some(NonPayeIncome(Some(653.34)))
     )
 
-
   "RetrieveAllResidentialPropertyCgtResponse" when {
     "Reads" should {
       "return a valid object" when {
@@ -72,4 +71,5 @@ class RetrieveNonPayeEmploymentIncomeResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

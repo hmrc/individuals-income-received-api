@@ -53,4 +53,5 @@ class EmployerNameValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -20,12 +20,12 @@ import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
-import v1.requestParsers.validators.validations.{ EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation }
+import v1.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveEmploymentRawData] {
+class RetrieveEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -46,4 +46,5 @@ class RetrieveEmploymentValidator @Inject()(implicit appConfig: AppConfig) exten
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
+
 }

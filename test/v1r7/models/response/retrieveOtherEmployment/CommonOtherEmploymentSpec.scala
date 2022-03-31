@@ -56,4 +56,5 @@ class CommonOtherEmploymentSpec extends UnitSpec {
       }
     }
   }
+
 }

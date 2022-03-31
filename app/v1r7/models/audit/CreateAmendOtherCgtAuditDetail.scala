@@ -28,7 +28,6 @@ case class CreateAmendOtherCgtAuditDetail(userType: String,
                                           `X-CorrelationId`: String,
                                           response: AuditResponse)
 
-
 object CreateAmendOtherCgtAuditDetail {
   implicit val writes: Writes[CreateAmendOtherCgtAuditDetail] = Json.writes[CreateAmendOtherCgtAuditDetail]
 
@@ -49,4 +48,5 @@ object CreateAmendOtherCgtAuditDetail {
       auditResponse
     )
   }
+
 }

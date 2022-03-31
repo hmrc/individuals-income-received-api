@@ -26,10 +26,11 @@ case class CreateAmendCgtPpdOverridesRequestBody(multiplePropertyDisposals: Opti
 object CreateAmendCgtPpdOverridesRequestBody extends JsonUtils {
   val empty: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(None, None)
 
-  implicit val reads: Reads[CreateAmendCgtPpdOverridesRequestBody] =  Json.format[CreateAmendCgtPpdOverridesRequestBody]
+  implicit val reads: Reads[CreateAmendCgtPpdOverridesRequestBody] = Json.format[CreateAmendCgtPpdOverridesRequestBody]
 
   implicit val writes: OWrites[CreateAmendCgtPpdOverridesRequestBody] = (
     (JsPath \ "multiplePropertyDisposals").writeNullable[Seq[MultiplePropertyDisposals]] and
       (JsPath \ "singlePropertyDisposals").writeNullable[Seq[SinglePropertyDisposals]]
-    ) (unlift(CreateAmendCgtPpdOverridesRequestBody.unapply))
+  )(unlift(CreateAmendCgtPpdOverridesRequestBody.unapply))
+
 }

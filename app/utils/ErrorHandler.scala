@@ -33,11 +33,12 @@ import api.models.errors._
 import scala.concurrent._
 
 @Singleton
-class ErrorHandler @Inject()(
-                              config: Configuration,
-                              auditConnector: AuditConnector,
-                              httpAuditEvent: HttpAuditEvent
-                            )(implicit ec: ExecutionContext) extends JsonErrorHandler(auditConnector, httpAuditEvent, config) {
+class ErrorHandler @Inject() (
+    config: Configuration,
+    auditConnector: AuditConnector,
+    httpAuditEvent: HttpAuditEvent
+)(implicit ec: ExecutionContext)
+    extends JsonErrorHandler(auditConnector, httpAuditEvent, config) {
 
   import httpAuditEvent.dataEvent
 
@@ -47,22 +48,21 @@ class ErrorHandler @Inject()(
 
     implicit val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    logger.warn(s"[ErrorHandler][onClientError] error in version 1, for (${request.method}) [${request.uri}] with status:" +
-      s" $statusCode and message: $message")
+    logger.warn(
+      s"[ErrorHandler][onClientError] error in version 1, for (${request.method}) [${request.uri}] with status:" +
+        s" $statusCode and message: $message")
     statusCode match {
       case BAD_REQUEST =>
-        auditConnector.sendEvent(dataEvent("ServerValidationError",
-          "Request bad format exception", request))
+        auditConnector.sendEvent(dataEvent("ServerValidationError", "Request bad format exception", request))
         Future.successful(BadRequest(Json.toJson(BadRequestError)))
       case NOT_FOUND =>
-        auditConnector.sendEvent(dataEvent("ResourceNotFound",
-          "Resource Endpoint Not Found", request))
+        auditConnector.sendEvent(dataEvent("ResourceNotFound", "Resource Endpoint Not Found", request))
         Future.successful(NotFound(Json.toJson(NotFoundError)))
       case _ =>
         val errorCode = statusCode match {
-          case UNAUTHORIZED => UnauthorisedError
+          case UNAUTHORIZED           => UnauthorisedError
           case UNSUPPORTED_MEDIA_TYPE => InvalidBodyTypeError
-          case _ => MtdError("INVALID_REQUEST", message)
+          case _                      => MtdError("INVALID_REQUEST", message)
         }
 
         auditConnector.sendEvent(
@@ -84,12 +84,14 @@ class ErrorHandler @Inject()(
     logger.warn(s"[ErrorHandler][onServerError] Internal server error in version 1, for (${request.method}) [${request.uri}] -> ", ex)
 
     val (status, errorCode, eventType) = ex match {
-      case _: NotFoundException => (NOT_FOUND, NotFoundError, "ResourceNotFound")
+      case _: NotFoundException      => (NOT_FOUND, NotFoundError, "ResourceNotFound")
       case _: AuthorisationException => (UNAUTHORIZED, UnauthorisedError, "ClientError")
-      case _: JsValidationException => (BAD_REQUEST, BadRequestError, "ServerValidationError")
-      case e: HttpException => (e.responseCode, BadRequestError, "ServerValidationError")
-      case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream4xxResponse.unapply(e).isDefined => (e.reportAs, BadRequestError, "ServerValidationError")
-      case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream5xxResponse.unapply(e).isDefined => (e.reportAs, StandardDownstreamError, "ServerInternalError")
+      case _: JsValidationException  => (BAD_REQUEST, BadRequestError, "ServerValidationError")
+      case e: HttpException          => (e.responseCode, BadRequestError, "ServerValidationError")
+      case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream4xxResponse.unapply(e).isDefined =>
+        (e.reportAs, BadRequestError, "ServerValidationError")
+      case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream5xxResponse.unapply(e).isDefined =>
+        (e.reportAs, StandardDownstreamError, "ServerInternalError")
       case _ => (INTERNAL_SERVER_ERROR, StandardDownstreamError, "ServerInternalError")
     }
 
@@ -104,5 +106,5 @@ class ErrorHandler @Inject()(
 
     Future.successful(Status(status)(Json.toJson(errorCode)))
   }
-}
 
+}

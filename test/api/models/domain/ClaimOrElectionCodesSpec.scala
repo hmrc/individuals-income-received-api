@@ -34,4 +34,5 @@ class ClaimOrElectionCodesSpec extends UnitSpec with EnumJsonSpecSupport {
     ("BAD", ClaimOrElectionCodes.BAD),
     ("INV", ClaimOrElectionCodes.INV)
   )
+
 }

@@ -163,4 +163,5 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

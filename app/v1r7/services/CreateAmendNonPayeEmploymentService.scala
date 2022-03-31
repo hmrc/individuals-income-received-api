@@ -17,7 +17,15 @@
 package v1r7.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -29,12 +37,12 @@ import v1r7.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploy
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPayeEmploymentConnector)
+class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPayeEmploymentConnector)
     extends DownstreamResponseMappingSupport
     with Logging {
 
-  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(
-      implicit hc: HeaderCarrier,
+  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit
+      hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
@@ -57,4 +65,5 @@ class CreateAmendNonPayeEmploymentService @Inject()(connector: CreateAmendNonPay
       "SERVER_ERROR"                    -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
+
 }

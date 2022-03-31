@@ -18,14 +18,15 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.amendSavings.{ AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody }
+import v1.models.request.amendSavings.{AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody}
 import v1.requestParsers.validators.AmendSavingsValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendSavingsRequestParser @Inject()(val validator: AmendSavingsValidator) extends RequestParser[AmendSavingsRawData, AmendSavingsRequest] {
+class AmendSavingsRequestParser @Inject() (val validator: AmendSavingsValidator) extends RequestParser[AmendSavingsRawData, AmendSavingsRequest] {
 
   override protected def requestFor(data: AmendSavingsRawData): AmendSavingsRequest =
     AmendSavingsRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendSavingsRequestBody])
+
 }

@@ -28,11 +28,12 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
 
   class Test extends MockCurrentDateTime {
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     def setupTimeProvider(date: String): CallHandler[DateTime] =
       MockCurrentDateTime.getDateTime
         .returns(DateTime.parse(date, dateTimeFormatter))
+
   }
 
   "validate" should {
@@ -41,7 +42,7 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
 
         setupTimeProvider("2022-04-06")
 
-        private val validTaxYear = "2021-22"
+        private val validTaxYear     = "2021-22"
         private val validationResult = TaxYearNotEndedValidation.validate(validTaxYear)
 
         validationResult.isEmpty shouldBe true
@@ -53,7 +54,7 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
 
         setupTimeProvider("2022-04-04")
 
-        private val invalidTaxYear = "2021-22"
+        private val invalidTaxYear   = "2021-22"
         private val validationResult = TaxYearNotEndedValidation.validate(invalidTaxYear)
 
         validationResult.isEmpty shouldBe false
@@ -62,4 +63,5 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

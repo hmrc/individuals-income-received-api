@@ -30,7 +30,7 @@ class RedeemableSharesSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = RedeemableShares(customerReference = Some ("my shares"), grossAmount = 12321.22)
+  private val model = RedeemableShares(customerReference = Some("my shares"), grossAmount = 12321.22)
 
   "RedeemableShares" when {
     "read from valid JSON" should {
@@ -53,4 +53,5 @@ class RedeemableSharesSpec extends UnitSpec {
       }
     }
   }
+
 }

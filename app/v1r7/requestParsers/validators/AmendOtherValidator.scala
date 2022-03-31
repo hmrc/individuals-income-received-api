@@ -23,10 +23,18 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendOther._
-import v1r7.requestParsers.validators.validations.{CountryCodeValidation, DecimalValueValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendOtherRawData] with ValueFormatErrorMessages {
+class AmendOtherValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendOtherRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -54,22 +62,28 @@ class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Valid
   }
 
   private def bodyValueValidator: AmendOtherRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendOtherRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.businessReceipts.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateBusinessReceipts(data, index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.allOtherIncomeReceivedWhilstAbroad.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateAllOtherIncomeReceivedWhilstAbroad(data, index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.overseasIncomeAndGains.map(validateOverseasIncomeAndGains).getOrElse(NoValidationErrors),
-        requestBodyData.chargeableForeignBenefitsAndGifts.map(validateChargeableForeignBenefitsAndGifts).getOrElse(NoValidationErrors),
-        requestBodyData.omittedForeignIncome.map(validateOmittedForeignIncome).getOrElse(NoValidationErrors)
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          requestBodyData.businessReceipts
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateBusinessReceipts(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.allOtherIncomeReceivedWhilstAbroad
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateAllOtherIncomeReceivedWhilstAbroad(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.overseasIncomeAndGains.map(validateOverseasIncomeAndGains).getOrElse(NoValidationErrors),
+          requestBodyData.chargeableForeignBenefitsAndGifts.map(validateChargeableForeignBenefitsAndGifts).getOrElse(NoValidationErrors),
+          requestBodyData.omittedForeignIncome.map(validateOmittedForeignIncome).getOrElse(NoValidationErrors)
+        )
+      ))
   }
 
   private def validateBusinessReceipts(businessReceipts: AmendBusinessReceiptsItem, arrayIndex: Int): List[MtdError] = {
@@ -78,17 +92,22 @@ class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Valid
         amount = businessReceipts.grossAmount,
         path = s"/businessReceipts/$arrayIndex/grossAmount"
       ),
-      TaxYearValidation.validate(businessReceipts.taxYear).map(
-        _.copy(paths = Some(Seq(s"/businessReceipts/$arrayIndex/taxYear")))
-      )
+      TaxYearValidation
+        .validate(businessReceipts.taxYear)
+        .map(
+          _.copy(paths = Some(Seq(s"/businessReceipts/$arrayIndex/taxYear")))
+        )
     ).flatten
   }
 
-  private def validateAllOtherIncomeReceivedWhilstAbroad(allOtherIncomeReceivedWhilstAbroad: AmendAllOtherIncomeReceivedWhilstAbroadItem, arrayIndex: Int): List[MtdError] = {
+  private def validateAllOtherIncomeReceivedWhilstAbroad(allOtherIncomeReceivedWhilstAbroad: AmendAllOtherIncomeReceivedWhilstAbroadItem,
+                                                         arrayIndex: Int): List[MtdError] = {
     List(
-      CountryCodeValidation.validate(allOtherIncomeReceivedWhilstAbroad.countryCode).map(
-        _.copy(paths = Some(Seq(s"/allOtherIncomeReceivedWhilstAbroad/$arrayIndex/countryCode")))
-      ),
+      CountryCodeValidation
+        .validate(allOtherIncomeReceivedWhilstAbroad.countryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/allOtherIncomeReceivedWhilstAbroad/$arrayIndex/countryCode")))
+        ),
       DecimalValueValidation.validateOptional(
         amount = allOtherIncomeReceivedWhilstAbroad.amountBeforeTax,
         path = s"/allOtherIncomeReceivedWhilstAbroad/$arrayIndex/amountBeforeTax"
@@ -158,5 +177,5 @@ class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Valid
       )
     ).flatten
   }
-}
 
+}

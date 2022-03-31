@@ -25,12 +25,13 @@ case class BenefitFromEmployerFinancedRetirementSchemeItem(amount: BigDecimal,
                                                            taxTakenOffInEmployment: Boolean)
 
 object BenefitFromEmployerFinancedRetirementSchemeItem {
+
   implicit val reads: Reads[BenefitFromEmployerFinancedRetirementSchemeItem] = (
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "exemptAmount").readNullable[BigDecimal] and
       (JsPath \ "taxPaid").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").read[Boolean]
-    ) (BenefitFromEmployerFinancedRetirementSchemeItem.apply _)
+  )(BenefitFromEmployerFinancedRetirementSchemeItem.apply _)
 
   implicit val writes: OWrites[BenefitFromEmployerFinancedRetirementSchemeItem] = Json.writes[BenefitFromEmployerFinancedRetirementSchemeItem]
 }

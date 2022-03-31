@@ -80,4 +80,5 @@ class ChargeableForeignBenefitsAndGiftsSpec extends UnitSpec {
       }
     }
   }
+
 }

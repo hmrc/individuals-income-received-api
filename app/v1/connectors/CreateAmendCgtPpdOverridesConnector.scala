@@ -17,19 +17,20 @@
 package v1.connectors
 
 import api.connectors.DownstreamUri.Api1661Uri
-import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit hc: HeaderCarrier,
-                                                              ec: ExecutionContext,
-                                                              correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
@@ -41,4 +42,5 @@ class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient, val ap
       body = request.body
     )
   }
+
 }

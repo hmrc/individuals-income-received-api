@@ -32,5 +32,7 @@ trait MockNrsProxyService extends MockFactory {
       (mockNrsProxyService
         .submitAsync(_: String, _: String, _: JsValue)(_: HeaderCarrier))
         .expects(nino, notableEvent, body, *)
+
   }
+
 }

@@ -16,8 +16,8 @@
 
 package v1r7.models.response.retrieveOtherEmployment
 
-import api.models.domain.{ ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType }
-import play.api.libs.json.{ JsError, Json }
+import api.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
@@ -291,4 +291,5 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

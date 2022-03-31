@@ -23,18 +23,19 @@ import java.time.LocalDate
 object DisposalDateValidation {
 
   def validate(date: String, taxYear: String, path: String, validateToday: Boolean, errorMessage: String): List[MtdError] = {
-    val now = LocalDate.now()
+    val now        = LocalDate.now()
     val parsedDate = LocalDate.parse(date)
-    if(validateToday && parsedDate.isAfter(now)) {
+    if (validateToday && parsedDate.isAfter(now)) {
       List(RuleDisposalDateError.copy(paths = Some(Seq(path)), message = errorMessage))
     } else {
       val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
-      if(parsedDate.isBefore(fromDate) || parsedDate.isAfter(toDate)) {
+      if (parsedDate.isBefore(fromDate) || parsedDate.isAfter(toDate)) {
         List(RuleDisposalDateError.copy(paths = Some(Seq(path)), message = errorMessage))
       } else {
         NoValidationErrors
       }
     }
   }
+
 }

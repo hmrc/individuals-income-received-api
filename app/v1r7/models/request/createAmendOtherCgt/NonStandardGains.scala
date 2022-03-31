@@ -23,7 +23,7 @@ case class NonStandardGains(carriedInterestGain: Option[BigDecimal],
                             attributedGains: Option[BigDecimal],
                             attributedGainsRttTaxPaid: Option[BigDecimal],
                             otherGains: Option[BigDecimal],
-                            otherGainsRttTaxPaid: Option[BigDecimal]){
+                            otherGainsRttTaxPaid: Option[BigDecimal]) {
 
   def isThreeFieldsEmpty: Boolean = carriedInterestGain.isEmpty && attributedGains.isEmpty && otherGains.isEmpty
 }
@@ -31,5 +31,5 @@ case class NonStandardGains(carriedInterestGain: Option[BigDecimal],
 object NonStandardGains {
   val empty: NonStandardGains = NonStandardGains(None, None, None, None, None, None)
 
-  implicit val format: OFormat[NonStandardGains] =  Json.format[NonStandardGains]
+  implicit val format: OFormat[NonStandardGains] = Json.format[NonStandardGains]
 }

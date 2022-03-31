@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class DeleteRetrieveConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  val nino: String    = "AA111111A"
   val taxYear: String = "2019-20"
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -47,9 +47,9 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
     "delete" must {
       "return a 204 status for a success scenario" in new Test {
 
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome                       = Right(ResponseWrapper(correlationId, ()))
         implicit val desUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .delete(
@@ -73,9 +73,9 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
           implicit val reads: Reads[Data] = Json.reads[Data]
         }
 
-        val outcome = Right(ResponseWrapper(correlationId, Data("value")))
+        val outcome                       = Right(ResponseWrapper(correlationId, Data("value")))
         implicit val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .get(
@@ -90,4 +90,5 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
 }

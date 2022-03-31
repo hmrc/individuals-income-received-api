@@ -19,14 +19,14 @@ package v1.models.response.retrieveOtherEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class CommonOtherEmployment(customerReference: Option[String],
-                                 amountDeducted: BigDecimal)
+case class CommonOtherEmployment(customerReference: Option[String], amountDeducted: BigDecimal)
 
 object CommonOtherEmployment {
+
   implicit val reads: Reads[CommonOtherEmployment] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "amountDeducted").read[BigDecimal]
-    ) (CommonOtherEmployment.apply _)
+  )(CommonOtherEmployment.apply _)
 
   implicit val writes: OWrites[CommonOtherEmployment] = Json.writes[CommonOtherEmployment]
 }

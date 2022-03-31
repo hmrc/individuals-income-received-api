@@ -30,7 +30,8 @@ case class RetrieveOtherCgtResponse(submittedOn: String,
 object RetrieveOtherCgtResponse extends HateoasLinks {
   implicit val format: OFormat[RetrieveOtherCgtResponse] = Json.format[RetrieveOtherCgtResponse]
 
-  implicit object RetrieveOtherCgtLinksFactory extends HateoasLinksFactory[RetrieveOtherCgtResponse, RetrieveOtherCgtHateoasData]{
+  implicit object RetrieveOtherCgtLinksFactory extends HateoasLinksFactory[RetrieveOtherCgtResponse, RetrieveOtherCgtHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveOtherCgtHateoasData): Seq[Link] = {
       Seq(
         createAmendOtherCgt(appConfig, data.nino, data.taxYear),
@@ -38,7 +39,9 @@ object RetrieveOtherCgtResponse extends HateoasLinks {
         retrieveOtherCgt(appConfig, data.nino, data.taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveOtherCgtHateoasData(nino: String, taxYear: String) extends HateoasData
