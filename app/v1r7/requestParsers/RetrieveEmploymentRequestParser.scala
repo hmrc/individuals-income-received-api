@@ -24,9 +24,10 @@ import v1r7.models.request.retrieveEmployment.{RetrieveEmploymentRawData, Retrie
 import v1r7.requestParsers.validators.RetrieveEmploymentValidator
 
 @Singleton
-class RetrieveEmploymentRequestParser @Inject()(val validator: RetrieveEmploymentValidator)
-  extends RequestParser[RetrieveEmploymentRawData, RetrieveEmploymentRequest] {
+class RetrieveEmploymentRequestParser @Inject() (val validator: RetrieveEmploymentValidator)
+    extends RequestParser[RetrieveEmploymentRawData, RetrieveEmploymentRequest] {
 
   override protected def requestFor(data: RetrieveEmploymentRawData): RetrieveEmploymentRequest =
     RetrieveEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId)
+
 }

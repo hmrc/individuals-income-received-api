@@ -37,13 +37,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                                    val lookupService: MtdIdLookupService,
-                                                    requestParser: RetrieveNonPayeEmploymentRequestParser,
-                                                    service: DeleteRetrieveService,
-                                                    hateoasFactory: HateoasFactory,
-                                                    cc: ControllerComponents,
-                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                     val lookupService: MtdIdLookupService,
+                                                     requestParser: RetrieveNonPayeEmploymentRequestParser,
+                                                     service: DeleteRetrieveService,
+                                                     hateoasFactory: HateoasFactory,
+                                                     cc: ControllerComponents,
+                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -121,4 +121,5 @@ class RetrieveNonPayeEmploymentController @Inject()(val authService: EnrolmentsA
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

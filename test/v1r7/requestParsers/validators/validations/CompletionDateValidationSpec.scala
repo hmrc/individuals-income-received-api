@@ -23,6 +23,7 @@ import support.UnitSpec
 import java.time.LocalDate
 
 class CompletionDateValidationSpec extends UnitSpec with MockCurrentDateTime {
+
   def stubNow(date: String): Unit = {
     MockCurrentDateTime.getLocalDate.returns(LocalDate.parse(date)).anyNumberOfTimes()
   }
@@ -93,4 +94,5 @@ class CompletionDateValidationSpec extends UnitSpec with MockCurrentDateTime {
       }
     }
   }
+
 }

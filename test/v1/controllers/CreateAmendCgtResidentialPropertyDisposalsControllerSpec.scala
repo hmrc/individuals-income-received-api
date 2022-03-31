@@ -273,4 +273,5 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
       }
     }
   }
+
 }

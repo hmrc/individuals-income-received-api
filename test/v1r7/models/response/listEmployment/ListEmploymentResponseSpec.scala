@@ -97,18 +97,17 @@ class ListEmploymentResponseSpec extends UnitSpec {
 
   private val listEmploymentResponseModel =
     ListEmploymentResponse(
-      employments = Some(Seq(Employment(employmentId = "00000000-0000-1000-8000-000000000000",
-        employerName= "Vera Lynn",
-        dateIgnored= Some("2020-06-17T10:53:38Z")),
-        Employment(employmentId = "00000000-0000-1000-8000-000000000001",
-          employerName= "Vera Lynn",
-          dateIgnored= Some("2020-06-17T10:53:38Z")))),
-      customEmployments =
-        Some(Seq(Employment(employmentId = "00000000-0000-1000-8000-000000000002",
-          employerName= "Vera Lynn"),
-        Employment(employmentId = "00000000-0000-1000-8000-000000000003",
-          employerName= "Vera Lynn")))
-  )
+      employments = Some(
+        Seq(
+          Employment(employmentId = "00000000-0000-1000-8000-000000000000", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z")),
+          Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z"))
+        )),
+      customEmployments = Some(
+        Seq(
+          Employment(employmentId = "00000000-0000-1000-8000-000000000002", employerName = "Vera Lynn"),
+          Employment(employmentId = "00000000-0000-1000-8000-000000000003", employerName = "Vera Lynn")
+        ))
+    )
 
   "ListEmploymentResponse" should {
     "the expected ListEmploymentResponse object" when {
@@ -189,4 +188,5 @@ class ListEmploymentResponseSpec extends UnitSpec {
       Json.toJson(listEmploymentResponseModel) shouldBe mtdJson
     }
   }
+
 }

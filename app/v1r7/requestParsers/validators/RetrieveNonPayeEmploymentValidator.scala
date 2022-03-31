@@ -25,8 +25,7 @@ import v1r7.requestParsers.validators.validations.{EmploymentSourceValidation, N
 
 import javax.inject.Inject
 
-class RetrieveNonPayeEmploymentValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveNonPayeEmploymentIncomeRawData] {
+class RetrieveNonPayeEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveNonPayeEmploymentIncomeRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -34,17 +33,20 @@ class RetrieveNonPayeEmploymentValidator @Inject()(implicit appConfig: AppConfig
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: RetrieveNonPayeEmploymentIncomeRawData => List[List[MtdError]] = (data: RetrieveNonPayeEmploymentIncomeRawData) => {
-    List(
-      NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear),
-      data.source.map(EmploymentSourceValidation.validate).getOrElse(Nil)
-    )
-  }
+  private def parameterFormatValidation: RetrieveNonPayeEmploymentIncomeRawData => List[List[MtdError]] =
+    (data: RetrieveNonPayeEmploymentIncomeRawData) => {
+      List(
+        NinoValidation.validate(data.nino),
+        TaxYearValidation.validate(data.taxYear),
+        data.source.map(EmploymentSourceValidation.validate).getOrElse(Nil)
+      )
+    }
 
-  private def parameterRuleValidation: RetrieveNonPayeEmploymentIncomeRawData => List[List[MtdError]] = (data: RetrieveNonPayeEmploymentIncomeRawData) => {
-    List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
-    )
-  }
+  private def parameterRuleValidation: RetrieveNonPayeEmploymentIncomeRawData => List[List[MtdError]] =
+    (data: RetrieveNonPayeEmploymentIncomeRawData) => {
+      List(
+        TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      )
+    }
+
 }

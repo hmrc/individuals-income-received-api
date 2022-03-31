@@ -19,16 +19,15 @@ package v1r7.models.response.retrieveOtherEmployment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class RedundancyCompensationPaymentsOverExemptionItem(amount: BigDecimal,
-                                                            taxPaid: Option[BigDecimal],
-                                                            taxTakenOffInEmployment: Boolean)
+case class RedundancyCompensationPaymentsOverExemptionItem(amount: BigDecimal, taxPaid: Option[BigDecimal], taxTakenOffInEmployment: Boolean)
 
 object RedundancyCompensationPaymentsOverExemptionItem {
+
   implicit val reads: Reads[RedundancyCompensationPaymentsOverExemptionItem] = (
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "taxPaid").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").read[Boolean]
-    ) (RedundancyCompensationPaymentsOverExemptionItem.apply _)
+  )(RedundancyCompensationPaymentsOverExemptionItem.apply _)
 
   implicit val writes: OWrites[RedundancyCompensationPaymentsOverExemptionItem] = Json.writes[RedundancyCompensationPaymentsOverExemptionItem]
 }

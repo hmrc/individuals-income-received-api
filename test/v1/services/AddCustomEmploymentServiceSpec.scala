@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class AddCustomEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2021-22"
 
   val addCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
@@ -48,13 +48,13 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
 
   val response: AddCustomEmploymentResponse = AddCustomEmploymentResponse("4557ecb5-fd32-48cc-81f5-e6acd1099f3c")
 
-
-  trait Test extends MockAddCustomEmploymentConnector{
+  trait Test extends MockAddCustomEmploymentConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: AddCustomEmploymentService = new AddCustomEmploymentService(
       connector = mockAddCustomEmploymentConnector
     )
+
   }
 
   "AddCustomEmploymentService" when {
@@ -62,7 +62,8 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, response))
 
-        MockAddCustomEmploymentConnector.addEmployment(request)
+        MockAddCustomEmploymentConnector
+          .addEmployment(request)
           .returns(Future.successful(outcome))
 
         await(service.addEmployment(request)) shouldBe outcome
@@ -73,7 +74,8 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAddCustomEmploymentConnector.addEmployment(request)
+            MockAddCustomEmploymentConnector
+              .addEmployment(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.addEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -95,4 +97,5 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

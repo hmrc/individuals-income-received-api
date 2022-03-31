@@ -21,7 +21,7 @@ import api.models.errors.{MtdError, QOPSRefFormatError}
 object QOPSRefValidation {
 
   def validateOptional(qopsRef: Option[String], path: String): List[MtdError] = qopsRef.fold(NoValidationErrors: List[MtdError]) { ref =>
-    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(
-      QOPSRefFormatError.copy(paths = Some(Seq(path))))
+    if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) NoValidationErrors else List(QOPSRefFormatError.copy(paths = Some(Seq(path))))
   }
+
 }

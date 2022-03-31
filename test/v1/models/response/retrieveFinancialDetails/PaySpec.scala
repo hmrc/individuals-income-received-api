@@ -20,6 +20,7 @@ import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class PaySpec extends UnitSpec {
+
   val json: JsValue = Json.parse(
     """
       |{
@@ -69,4 +70,5 @@ class PaySpec extends UnitSpec {
       }
     }
   }
+
 }

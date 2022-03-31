@@ -16,7 +16,17 @@
 
 package v1r7.requestParsers.validators
 
-import api.models.errors.{CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -27,7 +37,7 @@ import v1r7.models.request.amendDividends.AmendDividendsRawData
 
 class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -329,29 +339,30 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
     """.stripMargin
   )
 
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
-  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
-  private val invalidForeignDividendRawRequestBody = AnyContentAsJson(invalidForeignDividendRequestBodyJson)
+  private val validRawRequestBody                                     = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody                                     = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody                                  = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody                                  = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody                        = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidCountryCodeRawRequestBody                        = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidCountryCodeRuleRawRequestBody                    = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
+  private val invalidCustomerRefRawRequestBody                        = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
+  private val invalidForeignDividendRawRequestBody                    = AnyContentAsJson(invalidForeignDividendRequestBodyJson)
   private val invalidDividendIncomeReceivedWhilstAbroadRawRequestBody = AnyContentAsJson(invalidDividendIncomeReceivedWhilstAbroadRequestBodyJson)
-  private val invalidStockDividendRawRequestBody = AnyContentAsJson(invalidStockDividendRequestBodyJson)
-  private val invalidRedeemableSharesRawRequestBody = AnyContentAsJson(invalidRedeemableSharesRequestBodyJson)
-  private val invalidBonusIssuesOfSecuritiesRawRequestBody = AnyContentAsJson(invalidBonusIssuesOfSecuritiesRequestBodyJson)
-  private val invalidCloseCompanyLoansWrittenOffRawRequestBody = AnyContentAsJson(invalidCloseCompanyLoansWrittenOffRequestBodyJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val invalidStockDividendRawRequestBody                      = AnyContentAsJson(invalidStockDividendRequestBodyJson)
+  private val invalidRedeemableSharesRawRequestBody                   = AnyContentAsJson(invalidRedeemableSharesRequestBodyJson)
+  private val invalidBonusIssuesOfSecuritiesRawRequestBody            = AnyContentAsJson(invalidBonusIssuesOfSecuritiesRequestBodyJson)
+  private val invalidCloseCompanyLoansWrittenOffRawRequestBody        = AnyContentAsJson(invalidCloseCompanyLoansWrittenOffRequestBodyJson)
+  private val allInvalidValueRawRequestBody                           = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
     implicit val appConfig: AppConfig = mockAppConfig
-    val validator = new AmendDividendsValidator()
+    val validator                     = new AmendDividendsValidator()
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -380,7 +391,6 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
-
 
       "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
@@ -455,50 +465,56 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (foreign dividend)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidForeignDividendRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/foreignDividend/0/amountBeforeTax"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/foreignDividend/0/amountBeforeTax"))
+            ))
       }
 
       "one field fails value validation (dividend income received whilst abroad)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidDividendIncomeReceivedWhilstAbroadRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff"))
+            ))
       }
 
       "one field fails value validation (stock dividend)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidStockDividendRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/stockDividend/grossAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/stockDividend/grossAmount"))
+            ))
       }
 
       "one field fails value validation (redeemable shares)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidRedeemableSharesRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/redeemableShares/grossAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/redeemableShares/grossAmount"))
+            ))
       }
 
       "one field fails value validation (bonus issues of securities)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidBonusIssuesOfSecuritiesRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/bonusIssuesOfSecurities/grossAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/bonusIssuesOfSecurities/grossAmount"))
+            ))
       }
 
       "one field fails value validation (close company loans written off)" in new Test {
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, invalidCloseCompanyLoansWrittenOffRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/closeCompanyLoansWrittenOff/grossAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/closeCompanyLoansWrittenOff/grossAmount"))
+            ))
       }
     }
 
@@ -507,10 +523,11 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
             CountryCodeFormatError.copy(
-              paths = Some(List(
-                "/foreignDividend/0/countryCode",
-                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
-              ))
+              paths = Some(
+                List(
+                  "/foreignDividend/0/countryCode",
+                  "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
+                ))
             ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -538,10 +555,11 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
               ))
             ),
             CountryCodeRuleError.copy(
-              paths = Some(List(
-                "/foreignDividend/1/countryCode",
-                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
-              ))
+              paths = Some(
+                List(
+                  "/foreignDividend/1/countryCode",
+                  "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
+                ))
             ),
             CustomerRefFormatError.copy(
               paths = Some(List(
@@ -562,4 +580,5 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
       }
     }
   }
+
 }

@@ -24,9 +24,9 @@ import v1r7.models.request.amendSavings.{AmendSavingsRawData, AmendSavingsReques
 import v1r7.requestParsers.validators.AmendSavingsValidator
 
 @Singleton
-class AmendSavingsRequestParser @Inject()(val validator: AmendSavingsValidator)
-  extends RequestParser[AmendSavingsRawData, AmendSavingsRequest] {
+class AmendSavingsRequestParser @Inject() (val validator: AmendSavingsValidator) extends RequestParser[AmendSavingsRawData, AmendSavingsRequest] {
 
   override protected def requestFor(data: AmendSavingsRawData): AmendSavingsRequest =
     AmendSavingsRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendSavingsRequestBody])
+
 }

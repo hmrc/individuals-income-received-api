@@ -42,9 +42,9 @@ class AmendSharesAwardedOrReceivedItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = AmendSharesAwardedOrReceivedItem (
+  private val model = AmendSharesAwardedOrReceivedItem(
     employerName = "Company Ltd",
-    employerRef = Some ("AB1321/123"),
+    employerRef = Some("AB1321/123"),
     schemePlanType = "SIP",
     dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
     noOfShareSecuritiesAwarded = 11,
@@ -79,4 +79,5 @@ class AmendSharesAwardedOrReceivedItemSpec extends UnitSpec {
       }
     }
   }
+
 }

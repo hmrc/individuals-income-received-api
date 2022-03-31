@@ -21,15 +21,15 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.RelType.{ CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
-import play.api.libs.json.{ JsObject, JsValue, Json }
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.response.retrieveOtherCgt._
@@ -220,12 +220,13 @@ class RetrieveOtherCgtControllerSpec
         MockHateoasFactory
           .wrap(responseModel, RetrieveOtherCgtHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(responseModel,
-                           Seq(
-                             amendOtherCgtLink,
-                             retrieveOtherCgtLink,
-                             deleteOtherCgtLink
-                           )))
+            HateoasWrapper(
+              responseModel,
+              Seq(
+                amendOtherCgtLink,
+                retrieveOtherCgtLink,
+                deleteOtherCgtLink
+              )))
 
         val result: Future[Result] = controller.retrieveOtherCgt(nino, taxYear)(fakeGetRequest)
 
@@ -294,4 +295,5 @@ class RetrieveOtherCgtControllerSpec
       }
     }
   }
+
 }

@@ -28,9 +28,10 @@ case class CreateAmendCgtResidentialPropertyDisposalsAuditDetail(userType: Strin
                                                                  `X-CorrelationId`: String,
                                                                  response: AuditResponse)
 
-
 object CreateAmendCgtResidentialPropertyDisposalsAuditDetail {
-  implicit val writes: Writes[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] = Json.writes[CreateAmendCgtResidentialPropertyDisposalsAuditDetail]
+
+  implicit val writes: Writes[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] =
+    Json.writes[CreateAmendCgtResidentialPropertyDisposalsAuditDetail]
 
   def apply(userDetails: UserDetails,
             nino: String,
@@ -49,4 +50,5 @@ object CreateAmendCgtResidentialPropertyDisposalsAuditDetail {
       auditResponse
     )
   }
+
 }

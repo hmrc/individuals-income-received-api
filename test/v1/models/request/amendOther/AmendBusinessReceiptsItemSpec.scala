@@ -56,4 +56,5 @@ class AmendBusinessReceiptsItemSpec extends UnitSpec {
       }
     }
   }
+
 }

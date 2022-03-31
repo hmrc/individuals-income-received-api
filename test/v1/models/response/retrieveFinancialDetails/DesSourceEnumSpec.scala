@@ -25,7 +25,7 @@ class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
   testRoundTrip[DesSourceEnum](
     ("HMRC HELD", DesSourceEnum.`HMRC HELD`),
     ("CUSTOMER", DesSourceEnum.CUSTOMER),
-    ("LATEST", DesSourceEnum.LATEST),
+    ("LATEST", DesSourceEnum.LATEST)
   )
 
   "toMtdEnum" must {
@@ -35,4 +35,5 @@ class DesSourceEnumSpec extends UnitSpec with EnumJsonSpecSupport {
       DesSourceEnum.CUSTOMER.toMtdEnum shouldBe MtdSourceEnum.user
     }
   }
+
 }

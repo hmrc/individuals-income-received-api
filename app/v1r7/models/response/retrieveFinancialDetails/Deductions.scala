@@ -25,8 +25,12 @@ object Deductions {
 
   implicit val writes: OWrites[Deductions] = Json.writes[Deductions]
 
-  implicit val reads: Reads[Deductions] = (JsPath \ "studentLoans").readNullable[StudentLoans].map {
-    case Some(StudentLoans.empty) => None
-    case other => other
-  }.map(Deductions.apply)
+  implicit val reads: Reads[Deductions] = (JsPath \ "studentLoans")
+    .readNullable[StudentLoans]
+    .map {
+      case Some(StudentLoans.empty) => None
+      case other                    => other
+    }
+    .map(Deductions.apply)
+
 }

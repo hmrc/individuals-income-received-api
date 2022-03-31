@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.amendPensions._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
+class AmendPensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -59,14 +59,14 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig) extends Va
       Validator.flattenErrors(
         List(
           requestBodyData.foreignPensions
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateForeignPensions(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeignPensions(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.overseasPensionContributions
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateOverseasPensionContributions(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateOverseasPensionContributions(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList
@@ -110,7 +110,7 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig) extends Va
         ),
       DecimalValueValidation.validate(
         amount = overseasPensionContributions.exemptEmployersPensionContribs,
-        path = s"/overseasPensionContributions/$arrayIndex/exemptEmployersPensionContribs",
+        path = s"/overseasPensionContributions/$arrayIndex/exemptEmployersPensionContribs"
       ),
       QOPSRefValidation.validateOptional(
         qopsRef = overseasPensionContributions.migrantMemReliefQopsRefNo,
@@ -139,4 +139,5 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig) extends Va
       )
     ).flatten
   }
+
 }

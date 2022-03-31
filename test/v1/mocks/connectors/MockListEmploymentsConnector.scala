@@ -22,9 +22,9 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.ListEmploymentsConnector
 import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{ Employment, ListEmploymentResponse }
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockListEmploymentsConnector extends MockFactory {
 
@@ -37,5 +37,7 @@ trait MockListEmploymentsConnector extends MockFactory {
         .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

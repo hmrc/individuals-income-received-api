@@ -30,7 +30,7 @@ class StockDividendSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = StockDividend(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val model = StockDividend(customerReference = Some("my divs"), grossAmount = 12321.22)
 
   "StockDividend" when {
     "read from valid JSON" should {
@@ -53,4 +53,5 @@ class StockDividendSpec extends UnitSpec {
       }
     }
   }
+
 }

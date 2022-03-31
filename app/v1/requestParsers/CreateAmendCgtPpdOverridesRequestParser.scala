@@ -21,12 +21,13 @@ import api.requestParsers.RequestParser
 import v1.models.request.createAmendCgtPpdOverrides._
 import v1.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtPpdOverridesRequestParser @Inject()(val validator: CreateAmendCgtPpdOverridesValidator)
+class CreateAmendCgtPpdOverridesRequestParser @Inject() (val validator: CreateAmendCgtPpdOverridesValidator)
     extends RequestParser[CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest] {
 
   override protected def requestFor(data: CreateAmendCgtPpdOverridesRawData): CreateAmendCgtPpdOverridesRequest =
     CreateAmendCgtPpdOverridesRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendCgtPpdOverridesRequestBody])
+
 }

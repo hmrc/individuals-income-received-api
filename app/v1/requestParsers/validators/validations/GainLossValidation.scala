@@ -24,4 +24,5 @@ object GainLossValidation {
     case (Some(_), Some(_)) => List(error.copy(paths = Some(Seq(path))))
     case _                  => NoValidationErrors
   }
+
 }

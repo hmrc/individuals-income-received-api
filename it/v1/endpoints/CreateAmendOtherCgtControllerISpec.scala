@@ -98,14 +98,15 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
   )
 
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-    paths = Some(Seq(
-      "/disposals/0/disposalDate",
-      "/disposals/0/acquisitionDate",
-      "/disposals/0/assetDescription",
-      "/disposals/0/disposalProceeds",
-      "/disposals/0/assetType",
-      "/disposals/0/allowableCosts"
-    ))
+    paths = Some(
+      Seq(
+        "/disposals/0/disposalDate",
+        "/disposals/0/acquisitionDate",
+        "/disposals/0/assetDescription",
+        "/disposals/0/disposalProceeds",
+        "/disposals/0/assetType",
+        "/disposals/0/allowableCosts"
+      ))
   )
 
   val gainAndLossJson: JsValue = Json.parse(
@@ -136,18 +137,20 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
   val gainAndLossErrors: ErrorWrapper = ErrorWrapper(
     correlationId = "",
     BadRequestError,
-    Some(Seq(
-      RuleGainLossError.copy(
-        paths = Some(Seq(
-          "/disposals/0"
-        ))
-      ),
-      RuleGainAfterReliefLossAfterReliefError.copy(
-        paths = Some(Seq(
-          "/disposals/0"
-        ))
-      ))
-    )
+    Some(
+      Seq(
+        RuleGainLossError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0"
+            ))
+        ),
+        RuleGainAfterReliefLossAfterReliefError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0"
+            ))
+        )))
   )
 
   val decimalsTooBigJson: JsValue = Json.parse(
@@ -228,37 +231,40 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
 
   val positiveDecimalsOutOfRangeError: MtdError = ValueFormatError.copy(
     message = "The value must be between 0 and 99999999999.99",
-    paths = Some(Seq(
-      "/disposals/0/disposalProceeds",
-      "/disposals/0/allowableCosts",
-      "/disposals/0/gain",
-      "/disposals/0/gainAfterRelief",
-      "/disposals/0/rttTaxPaid",
-      "/nonStandardGains/carriedInterestGain",
-      "/nonStandardGains/carriedInterestRttTaxPaid",
-      "/nonStandardGains/attributedGains",
-      "/nonStandardGains/attributedGainsRttTaxPaid",
-      "/nonStandardGains/otherGains",
-      "/nonStandardGains/otherGainsRttTaxPaid",
-      "/losses/broughtForwardLossesUsedInCurrentYear",
-      "/losses/setAgainstInYearGains",
-      "/losses/setAgainstInYearGeneralIncome",
-      "/losses/setAgainstEarlierYear"
-    ))
+    paths = Some(
+      Seq(
+        "/disposals/0/disposalProceeds",
+        "/disposals/0/allowableCosts",
+        "/disposals/0/gain",
+        "/disposals/0/gainAfterRelief",
+        "/disposals/0/rttTaxPaid",
+        "/nonStandardGains/carriedInterestGain",
+        "/nonStandardGains/carriedInterestRttTaxPaid",
+        "/nonStandardGains/attributedGains",
+        "/nonStandardGains/attributedGainsRttTaxPaid",
+        "/nonStandardGains/otherGains",
+        "/nonStandardGains/otherGainsRttTaxPaid",
+        "/losses/broughtForwardLossesUsedInCurrentYear",
+        "/losses/setAgainstInYearGains",
+        "/losses/setAgainstInYearGeneralIncome",
+        "/losses/setAgainstEarlierYear"
+      ))
   )
 
   val decimalsOutOfRangeErrors: ErrorWrapper = ErrorWrapper(
     correlationId = "",
     BadRequestError,
-    Some(Seq(
-      positiveDecimalsOutOfRangeError,
-      ValueFormatError.copy(
-        message = "The value must be between -99999999999.99 and 99999999999.99",
-        paths = Some(Seq(
-          "/adjustments"
-        ))
-      )
-    ))
+    Some(
+      Seq(
+        positiveDecimalsOutOfRangeError,
+        ValueFormatError.copy(
+          message = "The value must be between -99999999999.99 and 99999999999.99",
+          paths = Some(
+            Seq(
+              "/adjustments"
+            ))
+        )
+      ))
   )
 
   val formatDisposalsJson: JsValue = Json.parse(
@@ -288,30 +294,35 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
   val formatDisposalsErrors: ErrorWrapper = ErrorWrapper(
     correlationId = "",
     BadRequestError,
-    Some(Seq(
-      DateFormatError.copy(
-        paths = Some(Seq(
-          "/disposals/0/acquisitionDate",
-          "/disposals/0/disposalDate"
-        ))
-      ),
-      AssetDescriptionFormatError.copy(
-        paths = Some(Seq(
-          "/disposals/0/assetDescription"
-        ))
-      ),
-      AssetTypeFormatError.copy(
-        paths = Some(Seq(
-          "/disposals/0/assetType"
-        ))
-      ),
-      ClaimOrElectionCodesFormatError.copy(
-        paths = Some(Seq(
-          "/disposals/0/claimOrElectionCodes/0",
-          "/disposals/0/claimOrElectionCodes/1"
-        ))
-      )
-    ))
+    Some(
+      Seq(
+        DateFormatError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0/acquisitionDate",
+              "/disposals/0/disposalDate"
+            ))
+        ),
+        AssetDescriptionFormatError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0/assetDescription"
+            ))
+        ),
+        AssetTypeFormatError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0/assetType"
+            ))
+        ),
+        ClaimOrElectionCodesFormatError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0/claimOrElectionCodes/0",
+              "/disposals/0/claimOrElectionCodes/1"
+            ))
+        )
+      ))
   )
 
   val ruleDateJson: JsValue = Json.parse(
@@ -340,19 +351,22 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
   val ruleDateErrors: ErrorWrapper = ErrorWrapper(
     correlationId = "",
     BadRequestError,
-    Some(Seq(
-      RuleDisposalDateError.copy(
-        paths = Some(Seq(
-          "/disposals/0"
-        )),
-        message = IN_YEAR_NO_LATER_THAN_TODAY
-      ),
-      RuleAcquisitionDateError.copy(
-        paths = Some(Seq(
-          "/disposals/0"
-        ))
-      )
-    ))
+    Some(
+      Seq(
+        RuleDisposalDateError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0"
+            )),
+          message = IN_YEAR_NO_LATER_THAN_TODAY
+        ),
+        RuleAcquisitionDateError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0"
+            ))
+        )
+      ))
   )
 
   val formatNonStandardGainsJson: JsValue = Json.parse(
@@ -373,7 +387,7 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String    = "AA123456A"
     val taxYear: String = "2021-22"
 
     val mtdResponse: JsValue = Json.parse(
@@ -413,8 +427,10 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
     }
 
     def verifyNrs(payload: JsValue): Unit =
-      verify(postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
-        .withRequestBody(equalToJson(payload.toString())))
+      verify(
+        postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
+          .withRequestBody(equalToJson(payload.toString())))
+
   }
 
   "Calling the 'create and amend other CGT' endpoint" should {
@@ -448,7 +464,7 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -522,10 +538,12 @@ class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with Disposal
           (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

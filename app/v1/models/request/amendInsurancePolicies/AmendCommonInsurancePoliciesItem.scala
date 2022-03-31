@@ -38,5 +38,6 @@ object AmendCommonInsurancePoliciesItem {
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int] and
       (JsPath \ "deficiencyRelief").writeNullable[BigDecimal]
-    ) (unlift(AmendCommonInsurancePoliciesItem.unapply))
+  )(unlift(AmendCommonInsurancePoliciesItem.unapply))
+
 }

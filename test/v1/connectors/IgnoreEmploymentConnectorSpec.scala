@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
-  val taxYear: String = "2021-22"
+  val nino: String         = "AA111111A"
+  val taxYear: String      = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
@@ -55,7 +55,7 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
   "IgnoreEmploymentConnector" when {
     "ignoreEmployment" should {
       "return a 204 status upon HttpClient success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome                    = Right(ResponseWrapper(correlationId, ()))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredRelease6HeadersPut: Seq[(String, String)] = requiredRelease6Headers ++ Seq("Content-Type" -> "application/json")
 
@@ -66,10 +66,12 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
             body = EmptyBody,
             requiredHeaders = requiredRelease6HeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.ignoreEmployment(request)) shouldBe outcome
       }
     }
   }
+
 }

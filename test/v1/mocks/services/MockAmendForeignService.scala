@@ -38,6 +38,7 @@ trait MockAmendForeignService extends MockFactory {
         .amendForeign(_: AmendForeignRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

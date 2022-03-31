@@ -38,14 +38,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                               val lookupService: MtdIdLookupService,
-                                               appConfig: AppConfig,
-                                               requestParser: AmendOtherEmploymentRequestParser,
-                                               service: AmendOtherEmploymentService,
-                                               auditService: AuditService,
-                                               cc: ControllerComponents,
-                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                appConfig: AppConfig,
+                                                requestParser: AmendOtherEmploymentRequestParser,
+                                                service: AmendOtherEmploymentService,
+                                                auditService: AuditService,
+                                                cc: ControllerComponents,
+                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -136,4 +136,5 @@ class AmendOtherEmploymentController @Inject()(val authService: EnrolmentsAuthSe
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+
 }

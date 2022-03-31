@@ -17,19 +17,19 @@
 package v1.services
 
 import api.models.auth.UserDetails
-import api.models.errors.{ StandardDownstreamError, UnauthorisedError }
+import api.models.errors.{StandardDownstreamError, UnauthorisedError}
 import api.services.EnrolmentsAuthService
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.authorise.{ AlternatePredicate, CompositePredicate, EmptyPredicate, Predicate }
+import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, EmptyPredicate, Predicate}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
-import uk.gov.hmrc.auth.core.retrieve.{ Retrieval, ~ }
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 import api.services.ServiceSpec
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
@@ -45,6 +45,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
           .authorise[A](_: Predicate, _: Retrieval[A])(_: HeaderCarrier, _: ExecutionContext))
           .expects(predicate, retrievals, *, *)
       }
+
     }
 
     lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
@@ -53,8 +54,9 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
   private val extraPredicatesAnd =
     CompositePredicate(
       _,
-      AlternatePredicate(AlternatePredicate(CompositePredicate(AffinityGroup.Individual, ConfidenceLevel.L200), AffinityGroup.Organisation),
-                         AffinityGroup.Agent)
+      AlternatePredicate(
+        AlternatePredicate(CompositePredicate(AffinityGroup.Individual, ConfidenceLevel.L200), AffinityGroup.Organisation),
+        AffinityGroup.Agent)
     )
 
   "calling .buildPredicate" when {
@@ -257,4 +259,5 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
     }
 
   }
+
 }

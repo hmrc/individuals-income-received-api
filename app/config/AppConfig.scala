@@ -25,25 +25,25 @@ trait AppConfig {
 
   def mtdIdBaseUrl: String
 
-  //DES Config
+  // DES Config
   def desBaseUrl: String
   def desEnv: String
   def desToken: String
   def desEnvironmentHeaders: Option[Seq[String]]
 
-  //IFS Config
+  // IFS Config
   def ifsBaseUrl: String
   def ifsEnv: String
   def ifsToken: String
   def ifsEnvironmentHeaders: Option[Seq[String]]
 
-  //release6 Config
+  // release6 Config
   def release6BaseUrl: String
   def release6Env: String
   def release6Token: String
   def release6EnvironmentHeaders: Option[Seq[String]]
 
-  //Api1661 Config
+  // Api1661 Config
   def api1661BaseUrl: String
   def api1661Env: String
   def api1661Token: String
@@ -52,7 +52,7 @@ trait AppConfig {
   def apiGatewayContext: String
   def minimumPermittedTaxYear: Int
 
-  //API Config
+  // API Config
   def apiStatus(version: String): String
   def featureSwitch: Option[Configuration]
   def endpointsEnabled(version: String): Boolean
@@ -64,40 +64,40 @@ trait AppConfig {
 }
 
 @Singleton
-class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configuration) extends AppConfig {
+class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configuration) extends AppConfig {
 
   val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
 
-  //DES Config
-  val desBaseUrl: String = config.baseUrl("des")
-  val desEnv: String = config.getString("microservice.services.des.env")
-  val desToken: String = config.getString("microservice.services.des.token")
+  // DES Config
+  val desBaseUrl: String                         = config.baseUrl("des")
+  val desEnv: String                             = config.getString("microservice.services.des.env")
+  val desToken: String                           = config.getString("microservice.services.des.token")
   val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
-  //IFS Config
-  val ifsBaseUrl: String = config.baseUrl("ifs")
-  val ifsEnv: String = config.getString("microservice.services.ifs.env")
-  val ifsToken: String = config.getString("microservice.services.ifs.token")
+  // IFS Config
+  val ifsBaseUrl: String                         = config.baseUrl("ifs")
+  val ifsEnv: String                             = config.getString("microservice.services.ifs.env")
+  val ifsToken: String                           = config.getString("microservice.services.ifs.token")
   val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
 
-  //Release6 Config
-  val release6BaseUrl: String = config.baseUrl("release6")
-  val release6Env: String = config.getString("microservice.services.release6.env")
-  val release6Token: String = config.getString("microservice.services.release6.token")
+  // Release6 Config
+  val release6BaseUrl: String                         = config.baseUrl("release6")
+  val release6Env: String                             = config.getString("microservice.services.release6.env")
+  val release6Token: String                           = config.getString("microservice.services.release6.token")
   val release6EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.release6.environmentHeaders")
 
-  //API1661 Config
-  val api1661BaseUrl: String = config.baseUrl("api1661")
-  val api1661Env: String = config.getString("microservice.services.api1661.env")
-  val api1661Token: String = config.getString("microservice.services.api1661.token")
+  // API1661 Config
+  val api1661BaseUrl: String                         = config.baseUrl("api1661")
+  val api1661Env: String                             = config.getString("microservice.services.api1661.env")
+  val api1661Token: String                           = config.getString("microservice.services.api1661.token")
   val api1661EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.api1661.environmentHeaders")
 
-  val apiGatewayContext: String = config.getString("api.gateway.context")
+  val apiGatewayContext: String    = config.getString("api.gateway.context")
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 
-  //API Config
-  def apiStatus(version: String): String = config.getString(s"api.$version.status")
-  def featureSwitch: Option[Configuration] = configuration.getOptional[Configuration](s"feature-switch")
+  // API Config
+  def apiStatus(version: String): String         = config.getString(s"api.$version.status")
+  def featureSwitch: Option[Configuration]       = configuration.getOptional[Configuration](s"feature-switch")
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
@@ -107,7 +107,9 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
 }
 
 case class ConfidenceLevelConfig(definitionEnabled: Boolean, authValidationEnabled: Boolean)
+
 object ConfidenceLevelConfig {
+
   implicit val configLoader: ConfigLoader[ConfidenceLevelConfig] = (rootConfig: Config, path: String) => {
     val config = rootConfig.getConfig(path)
     ConfidenceLevelConfig(
@@ -115,4 +117,5 @@ object ConfidenceLevelConfig {
       authValidationEnabled = config.getBoolean("auth-validation.enabled")
     )
   }
+
 }

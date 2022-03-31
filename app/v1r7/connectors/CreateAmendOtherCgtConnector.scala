@@ -27,21 +27,21 @@ import v1r7.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
-class CreateAmendOtherCgtConnector @Inject()(val http: HttpClient,
-                                             val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendOtherCgtConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAndAmend(request: CreateAmendOtherCgtRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def createAndAmend(request: CreateAmendOtherCgtRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
-      uri = Api1661Uri[Unit](s"income-tax/income/disposals/other-gains/$nino/$taxYear"), body = request.body
+      uri = Api1661Uri[Unit](s"income-tax/income/disposals/other-gains/$nino/$taxYear"),
+      body = request.body
     )
   }
 

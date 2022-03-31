@@ -24,7 +24,7 @@ import v1r7.connectors.AddCustomEmploymentConnector
 import v1r7.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1r7.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAddCustomEmploymentConnector extends MockFactory {
 
@@ -37,6 +37,7 @@ trait MockAddCustomEmploymentConnector extends MockFactory {
         .addEmployment(_: AddCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
 
 }

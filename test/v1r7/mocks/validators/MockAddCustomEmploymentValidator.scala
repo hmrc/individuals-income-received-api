@@ -27,10 +27,13 @@ trait MockAddCustomEmploymentValidator extends MockFactory {
   val mockAddCustomEmploymentValidator: AddCustomEmploymentValidator = mock[AddCustomEmploymentValidator]
 
   object MockAddCustomEmploymentValidator {
+
     def validate(data: AddCustomEmploymentRawData): CallHandler1[AddCustomEmploymentRawData, List[MtdError]] = {
       (mockAddCustomEmploymentValidator
         .validate(_: AddCustomEmploymentRawData))
         .expects(data)
     }
+
   }
+
 }

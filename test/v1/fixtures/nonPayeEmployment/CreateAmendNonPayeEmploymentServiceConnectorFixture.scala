@@ -22,4 +22,5 @@ object CreateAmendNonPayeEmploymentServiceConnectorFixture {
 
   val requestBodyModel: CreateAmendNonPayeEmploymentRequestBody =
     CreateAmendNonPayeEmploymentRequestBody(tips = 100.23)
+
 }

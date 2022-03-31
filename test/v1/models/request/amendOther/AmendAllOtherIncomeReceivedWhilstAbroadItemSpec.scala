@@ -68,4 +68,5 @@ class AmendAllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
       }
     }
   }
+
 }

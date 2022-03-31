@@ -34,4 +34,5 @@ class NrsProxyServiceSpec extends ServiceSpec with NrsFixture with MockNrsProxyC
       }
     }
   }
+
 }

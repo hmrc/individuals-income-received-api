@@ -21,14 +21,14 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.RelType.{ AMEND_OTHER_INCOME, DELETE_OTHER_INCOME, SELF }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_OTHER_INCOME, DELETE_OTHER_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -173,12 +173,13 @@ class RetrieveOtherControllerSpec
         MockHateoasFactory
           .wrap(retrieveOtherResponseModel, RetrieveOtherHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveOtherResponseModel,
-                           Seq(
-                             amendOtherLink,
-                             retrieveOtherLink,
-                             deleteOtherLink
-                           )))
+            HateoasWrapper(
+              retrieveOtherResponseModel,
+              Seq(
+                amendOtherLink,
+                retrieveOtherLink,
+                deleteOtherLink
+              )))
 
         val result: Future[Result] = controller.retrieveOther(nino, taxYear)(fakeGetRequest)
 
@@ -247,4 +248,5 @@ class RetrieveOtherControllerSpec
       }
     }
   }
+
 }

@@ -20,16 +20,25 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1r7.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
-import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.{CreateAmendCgtResidentialPropertyDisposalsRawData, CreateAmendCgtResidentialPropertyDisposalsRequest}
+import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.{
+  CreateAmendCgtResidentialPropertyDisposalsRawData,
+  CreateAmendCgtResidentialPropertyDisposalsRequest
+}
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsRequestParser extends MockFactory {
 
-  val mockCreateAmendCgtResidentialPropertyDisposalsRequestParser: CreateAmendCgtResidentialPropertyDisposalsRequestParser = mock[CreateAmendCgtResidentialPropertyDisposalsRequestParser]
+  val mockCreateAmendCgtResidentialPropertyDisposalsRequestParser: CreateAmendCgtResidentialPropertyDisposalsRequestParser =
+    mock[CreateAmendCgtResidentialPropertyDisposalsRequestParser]
 
   object MockCreateAmendCgtResidentialPropertyDisposalsRequestParser {
-    def parse(data: CreateAmendCgtResidentialPropertyDisposalsRawData): CallHandler[Either[ErrorWrapper, CreateAmendCgtResidentialPropertyDisposalsRequest]] = {
-      (mockCreateAmendCgtResidentialPropertyDisposalsRequestParser.parseRequest(_: CreateAmendCgtResidentialPropertyDisposalsRawData)(_: String)).expects(data, *)
+
+    def parse(data: CreateAmendCgtResidentialPropertyDisposalsRawData)
+        : CallHandler[Either[ErrorWrapper, CreateAmendCgtResidentialPropertyDisposalsRequest]] = {
+      (mockCreateAmendCgtResidentialPropertyDisposalsRequestParser
+        .parseRequest(_: CreateAmendCgtResidentialPropertyDisposalsRawData)(_: String))
+        .expects(data, *)
     }
+
   }
 
 }

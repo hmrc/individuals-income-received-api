@@ -174,12 +174,13 @@ class RetrieveInsurancePoliciesControllerSpec
         MockHateoasFactory
           .wrap(retrieveInsurancePoliciesResponseModel, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveInsurancePoliciesResponseModel,
-                           Seq(
-                             amendInsurancePoliciesLink,
-                             retrieveInsurancePoliciesLink,
-                             deleteInsurancePoliciesLink
-                           )))
+            HateoasWrapper(
+              retrieveInsurancePoliciesResponseModel,
+              Seq(
+                amendInsurancePoliciesLink,
+                retrieveInsurancePoliciesLink,
+                deleteInsurancePoliciesLink
+              )))
 
         val result: Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)
 
@@ -248,4 +249,5 @@ class RetrieveInsurancePoliciesControllerSpec
       }
     }
   }
+
 }

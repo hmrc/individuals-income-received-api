@@ -64,4 +64,5 @@ class ForeignPensionsItemSpec extends UnitSpec {
       }
     }
   }
+
 }

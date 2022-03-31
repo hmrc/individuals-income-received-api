@@ -38,6 +38,7 @@ trait MockAmendPensionsService extends MockFactory {
         .amendPensions(_: AmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

@@ -28,18 +28,17 @@ import v1r7.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendCustomEmploymentConnector @Inject()(val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AmendCustomEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendEmployment(request: AmendCustomEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def amendEmployment(request: AmendCustomEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear
+    val nino         = request.nino.nino
+    val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
     put(request.body, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId"))

@@ -27,4 +27,5 @@ class AssetTypeSpec extends UnitSpec with EnumJsonSpecSupport {
     ("listedShares", AssetType.listedShares),
     ("otherAsset", AssetType.otherAsset)
   )
+
 }

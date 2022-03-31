@@ -29,13 +29,15 @@ import api.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
-  def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDesErrors(desErrorMap))
@@ -47,13 +49,14 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: Cre
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "INVALID_PAYLOAD" -> StandardDownstreamError,
-      "INVALID_DISPOSAL_DATE" -> StandardDownstreamError,
-      "INVALID_COMPLETION_DATE" -> StandardDownstreamError,
-      "INVALID_ACQUISITION_DATE" -> StandardDownstreamError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "INVALID_DISPOSAL_DATE"     -> StandardDownstreamError,
+      "INVALID_COMPLETION_DATE"   -> StandardDownstreamError,
+      "INVALID_ACQUISITION_DATE"  -> StandardDownstreamError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

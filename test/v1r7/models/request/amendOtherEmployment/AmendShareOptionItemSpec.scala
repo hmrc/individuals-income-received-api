@@ -44,21 +44,21 @@ class AmendShareOptionItemSpec extends UnitSpec {
   )
 
   private val model = AmendShareOptionItem(
-      employerName = ("Company Ltd"),
-      employerRef = Some ("AB1321/123"),
-      schemePlanType = "EMI",
-      dateOfOptionGrant = "2019-11-20",
-      dateOfEvent = "2019-11-20",
-      optionNotExercisedButConsiderationReceived = true,
-      amountOfConsiderationReceived = 23122.22,
-      noOfSharesAcquired = 1,
-      classOfSharesAcquired = "FIRST",
-      exercisePrice = 12.22,
-      amountPaidForOption = 123.22,
-      marketValueOfSharesOnExcise = 1232.22,
-      profitOnOptionExercised = 1232.33,
-      employersNicPaid = 2312.22,
-      taxableAmount =  2132.22
+    employerName = ("Company Ltd"),
+    employerRef = Some("AB1321/123"),
+    schemePlanType = "EMI",
+    dateOfOptionGrant = "2019-11-20",
+    dateOfEvent = "2019-11-20",
+    optionNotExercisedButConsiderationReceived = true,
+    amountOfConsiderationReceived = 23122.22,
+    noOfSharesAcquired = 1,
+    classOfSharesAcquired = "FIRST",
+    exercisePrice = 12.22,
+    amountPaidForOption = 123.22,
+    marketValueOfSharesOnExcise = 1232.22,
+    profitOnOptionExercised = 1232.33,
+    employersNicPaid = 2312.22,
+    taxableAmount = 2132.22
   )
 
   "AmendShareOptionItem" when {
@@ -81,4 +81,5 @@ class AmendShareOptionItemSpec extends UnitSpec {
       }
     }
   }
+
 }

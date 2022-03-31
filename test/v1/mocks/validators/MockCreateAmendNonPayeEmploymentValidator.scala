@@ -34,6 +34,7 @@ trait MockCreateAmendNonPayeEmploymentValidator extends MockFactory {
         .validate(_: CreateAmendNonPayeEmploymentRawData))
         .expects(data)
     }
+
   }
 
 }

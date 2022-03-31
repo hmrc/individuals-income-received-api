@@ -80,8 +80,9 @@ object RetrieveDividendsControllerFixture {
     """.stripMargin
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveDividendsResponse.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveDividendsResponse.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -102,5 +103,7 @@ object RetrieveDividendsControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

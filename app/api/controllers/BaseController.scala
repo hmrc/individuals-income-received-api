@@ -44,5 +44,7 @@ trait BaseController {
 
       result.copy(header = result.header.copy(headers = result.header.headers ++ newHeaders))
     }
+
   }
+
 }

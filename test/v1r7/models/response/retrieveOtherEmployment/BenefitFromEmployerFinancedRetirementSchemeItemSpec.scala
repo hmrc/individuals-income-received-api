@@ -19,7 +19,7 @@ package v1r7.models.response.retrieveOtherEmployment
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class BenefitFromEmployerFinancedRetirementSchemeItemSpec extends UnitSpec{
+class BenefitFromEmployerFinancedRetirementSchemeItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -59,4 +59,5 @@ class BenefitFromEmployerFinancedRetirementSchemeItemSpec extends UnitSpec{
       }
     }
   }
+
 }

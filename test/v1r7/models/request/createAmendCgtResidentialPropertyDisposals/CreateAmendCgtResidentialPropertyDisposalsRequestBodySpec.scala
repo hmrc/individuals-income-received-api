@@ -165,4 +165,5 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestBodySpec extends UnitSpec
       }
     }
   }
+
 }

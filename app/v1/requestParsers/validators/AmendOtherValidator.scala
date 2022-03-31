@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.amendOther._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendOtherRawData] with ValueFormatErrorMessages {
+class AmendOtherValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendOtherRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -59,14 +59,14 @@ class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Valid
       Validator.flattenErrors(
         List(
           requestBodyData.businessReceipts
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateBusinessReceipts(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateBusinessReceipts(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.allOtherIncomeReceivedWhilstAbroad
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateAllOtherIncomeReceivedWhilstAbroad(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateAllOtherIncomeReceivedWhilstAbroad(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
@@ -168,4 +168,5 @@ class AmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Valid
       )
     ).flatten
   }
+
 }

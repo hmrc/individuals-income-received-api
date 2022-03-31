@@ -15,6 +15,7 @@
  */
 
 package v1.models.request.amendOtherEmployment
+
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
@@ -53,5 +54,6 @@ object AmendShareOptionItem {
       (JsPath \ "profitOnOptionExercised").write[BigDecimal] and
       (JsPath \ "employersNicPaid").write[BigDecimal] and
       (JsPath \ "taxableAmount").write[BigDecimal]
-    )(unlift(AmendShareOptionItem.unapply))
+  )(unlift(AmendShareOptionItem.unapply))
+
 }

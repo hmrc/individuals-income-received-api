@@ -30,20 +30,23 @@ import api.models.domain.MtdSourceEnum
 import api.models.domain.MtdSourceEnum.latest
 import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1r7.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1r7.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1r7.models.response.retrieveAllResidentialPropertyCgt.{
+  RetrieveAllResidentialPropertyCgtHateoasData,
+  RetrieveAllResidentialPropertyCgtResponse
+}
 import v1r7.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtController @Inject()(val authService: EnrolmentsAuthService,
-                                                            val lookupService: MtdIdLookupService,
-                                                            requestParser: RetrieveAllResidentialPropertyCgtRequestParser,
-                                                            service: DeleteRetrieveService,
-                                                            hateoasFactory: HateoasFactory,
-                                                            cc: ControllerComponents,
-                                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: EnrolmentsAuthService,
+                                                             val lookupService: MtdIdLookupService,
+                                                             requestParser: RetrieveAllResidentialPropertyCgtRequestParser,
+                                                             service: DeleteRetrieveService,
+                                                             hateoasFactory: HateoasFactory,
+                                                             cc: ControllerComponents,
+                                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -121,4 +124,5 @@ class RetrieveAllResidentialPropertyCgtController @Inject()(val authService: Enr
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

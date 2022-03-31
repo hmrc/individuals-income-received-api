@@ -18,14 +18,15 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.amendOther.{ AmendOtherRawData, AmendOtherRequest, AmendOtherRequestBody }
+import v1.models.request.amendOther.{AmendOtherRawData, AmendOtherRequest, AmendOtherRequestBody}
 import v1.requestParsers.validators.AmendOtherValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendOtherRequestParser @Inject()(val validator: AmendOtherValidator) extends RequestParser[AmendOtherRawData, AmendOtherRequest] {
+class AmendOtherRequestParser @Inject() (val validator: AmendOtherValidator) extends RequestParser[AmendOtherRawData, AmendOtherRequest] {
 
   override protected def requestFor(data: AmendOtherRawData): AmendOtherRequest =
     AmendOtherRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendOtherRequestBody])
+
 }

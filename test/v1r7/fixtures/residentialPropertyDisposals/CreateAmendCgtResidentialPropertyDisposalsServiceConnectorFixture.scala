@@ -19,6 +19,7 @@ package v1r7.fixtures.residentialPropertyDisposals
 import v1r7.models.request.createAmendCgtResidentialPropertyDisposals.{Disposal, CreateAmendCgtResidentialPropertyDisposalsRequestBody}
 
 object CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture {
+
   val disposalsModels: Seq[Disposal] =
     Seq(
       Disposal(
@@ -56,7 +57,8 @@ object CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture {
     )
 
   val requestBodyModel: CreateAmendCgtResidentialPropertyDisposalsRequestBody =
-  CreateAmendCgtResidentialPropertyDisposalsRequestBody(
+    CreateAmendCgtResidentialPropertyDisposalsRequestBody(
       disposalsModels
     )
+
 }

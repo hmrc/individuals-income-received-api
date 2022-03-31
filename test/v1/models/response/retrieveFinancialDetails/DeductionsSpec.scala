@@ -20,6 +20,7 @@ import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class DeductionsSpec extends UnitSpec {
+
   val json: JsValue = Json.parse(
     """
       |{
@@ -42,7 +43,7 @@ class DeductionsSpec extends UnitSpec {
 
   "Deductions" when {
     "read from valid JSON" should {
-      "produce the expected 'Deductions' object" in{
+      "produce the expected 'Deductions' object" in {
         json.as[Deductions] shouldBe model
       }
     }
@@ -85,4 +86,5 @@ class DeductionsSpec extends UnitSpec {
       }
     }
   }
+
 }

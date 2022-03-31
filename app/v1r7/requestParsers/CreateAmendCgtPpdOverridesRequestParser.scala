@@ -24,9 +24,10 @@ import v1r7.models.request.createAmendCgtPpdOverrides._
 import v1r7.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
 
 @Singleton
-class CreateAmendCgtPpdOverridesRequestParser @Inject()(val validator: CreateAmendCgtPpdOverridesValidator)
-  extends RequestParser[CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest] {
+class CreateAmendCgtPpdOverridesRequestParser @Inject() (val validator: CreateAmendCgtPpdOverridesValidator)
+    extends RequestParser[CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest] {
 
   override protected def requestFor(data: CreateAmendCgtPpdOverridesRawData): CreateAmendCgtPpdOverridesRequest =
     CreateAmendCgtPpdOverridesRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendCgtPpdOverridesRequestBody])
+
 }

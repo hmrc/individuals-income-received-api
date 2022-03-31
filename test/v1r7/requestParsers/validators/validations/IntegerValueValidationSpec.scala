@@ -80,4 +80,5 @@ class IntegerValueValidationSpec extends UnitSpec with ValueFormatErrorMessages 
       }
     }
   }
+
 }

@@ -18,8 +18,7 @@ package v1r7.models.request.amendFinancialDetails.emploment
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendPay(taxablePayToDate: BigDecimal,
-                    totalTaxToDate: BigDecimal)
+case class AmendPay(taxablePayToDate: BigDecimal, totalTaxToDate: BigDecimal)
 
 object AmendPay {
   implicit val format: OFormat[AmendPay] = Json.format[AmendPay]

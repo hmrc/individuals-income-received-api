@@ -40,7 +40,6 @@ class NonPayeIncomeSpec extends UnitSpec {
   val model: NonPayeIncome =
     NonPayeIncome(Some(7654.32))
 
-
   "RetrieveAllResidentialPropertyCgtResponse" when {
     "Reads" should {
       "return a valid object" when {
@@ -56,4 +55,5 @@ class NonPayeIncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

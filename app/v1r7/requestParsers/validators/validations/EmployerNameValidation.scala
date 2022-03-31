@@ -32,4 +32,5 @@ object EmployerNameValidation {
 
     if (employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
   }
+
 }

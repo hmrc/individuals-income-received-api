@@ -23,21 +23,20 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
-case class RetrieveSavingsResponse(submittedOn: String,
-                                   securities: Option[Securities],
-                                   foreignInterest: Option[Seq[ForeignInterestItem]])
+case class RetrieveSavingsResponse(submittedOn: String, securities: Option[Securities], foreignInterest: Option[Seq[ForeignInterestItem]])
 
 object RetrieveSavingsResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveSavingsResponse] = (
     (JsPath \ "submittedOn").read[String] and
-    (JsPath \ "securities").readNullable[Securities] and
+      (JsPath \ "securities").readNullable[Securities] and
       (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterestItem]].mapEmptySeqToNone
-    ) (RetrieveSavingsResponse.apply _)
+  )(RetrieveSavingsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSavingsResponse] = Json.writes[RetrieveSavingsResponse]
 
   implicit object RetrieveSavingsLinksFactory extends HateoasLinksFactory[RetrieveSavingsResponse, RetrieveSavingsHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveSavingsHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -46,6 +45,7 @@ object RetrieveSavingsResponse extends HateoasLinks with JsonUtils {
         deleteSavings(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }

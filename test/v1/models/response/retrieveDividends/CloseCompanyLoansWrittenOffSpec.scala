@@ -30,7 +30,7 @@ class CloseCompanyLoansWrittenOffSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = CloseCompanyLoansWrittenOff(customerReference = Some ("write off"), grossAmount = 12321.22)
+  private val model = CloseCompanyLoansWrittenOff(customerReference = Some("write off"), grossAmount = 12321.22)
 
   "CloseCompanyLoansWrittenOff" when {
     "read from valid JSON" should {
@@ -53,4 +53,5 @@ class CloseCompanyLoansWrittenOffSpec extends UnitSpec {
       }
     }
   }
+
 }

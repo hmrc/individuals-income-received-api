@@ -21,19 +21,19 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.RelType.{ AMEND_FOREIGN_INCOME, DELETE_FOREIGN_INCOME, SELF }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_FOREIGN_INCOME, DELETE_FOREIGN_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.foreign.RetrieveForeignFixture
-import v1.models.response.retrieveForeign.{ ForeignEarnings, RetrieveForeignHateoasData, RetrieveForeignResponse, UnremittableForeignIncome }
+import v1.models.response.retrieveForeign.{ForeignEarnings, RetrieveForeignHateoasData, RetrieveForeignResponse, UnremittableForeignIncome}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -109,6 +109,7 @@ class RetrieveForeignControllerSpec
         fullUnremittableForeignIncomeModel2
       ))
   )
+
   private val mtdResponse = RetrieveForeignFixture.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
@@ -144,12 +145,13 @@ class RetrieveForeignControllerSpec
         MockHateoasFactory
           .wrap(retrieveForeignResponse, RetrieveForeignHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveForeignResponse,
-                           Seq(
-                             retrieveForeignLink,
-                             amendForeignLink,
-                             deleteForeignLink
-                           )))
+            HateoasWrapper(
+              retrieveForeignResponse,
+              Seq(
+                retrieveForeignLink,
+                amendForeignLink,
+                deleteForeignLink
+              )))
 
         val result: Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)
 
@@ -218,4 +220,5 @@ class RetrieveForeignControllerSpec
       }
     }
   }
+
 }

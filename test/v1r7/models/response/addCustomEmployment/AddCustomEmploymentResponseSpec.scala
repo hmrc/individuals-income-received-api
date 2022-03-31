@@ -17,10 +17,10 @@
 package v1r7.models.response.addCustomEmployment
 
 import api.hateoas.HateoasFactory
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsError, JsObject, JsValue, Json }
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class AddCustomEmploymentResponseSpec extends UnitSpec {
@@ -69,10 +69,11 @@ class AddCustomEmploymentResponseSpec extends UnitSpec {
               Link(s"/individuals/income-received/employments/$nino/$taxYear", GET, "list-employments"),
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", GET, "self"),
               Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", PUT, "amend-custom-employment"),
-              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", DELETE, "delete-custom-employment"),
+              Link(s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", DELETE, "delete-custom-employment")
             )
           )
       }
     }
   }
+
 }

@@ -98,7 +98,7 @@ class CreateAmendCgtPpdOverridesRequestBodySpec extends UnitSpec {
         Some(234.23),
         Some(4567.89),
         None
-    ),
+      ),
       SinglePropertyDisposals(
         "AB0000000091",
         "2020-02-28",
@@ -249,4 +249,5 @@ class CreateAmendCgtPpdOverridesRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

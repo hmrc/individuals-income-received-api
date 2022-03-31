@@ -24,8 +24,8 @@ import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploym
 
 class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2021-22"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2021-22"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   def rawData(sourceString: Option[String] = None): RetrieveNonPayeEmploymentIncomeRawData = RetrieveNonPayeEmploymentIncomeRawData(
@@ -35,9 +35,11 @@ class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockRetrieveNonPayeEmploymentValidator {
+
     lazy val parser: RetrieveNonPayeEmploymentRequestParser = new RetrieveNonPayeEmploymentRequestParser(
       validator = mockRetrieveNonPayeEmploymentValidator
     )
+
   }
 
   "parse" should {
@@ -66,7 +68,8 @@ class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockRetrieveNonPayeEmploymentValidator.validate(rawData())
+        MockRetrieveNonPayeEmploymentValidator
+          .validate(rawData())
           .returns(List(NinoFormatError))
 
         parser.parseRequest(rawData()) shouldBe
@@ -74,7 +77,8 @@ class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur" in new Test {
-        MockRetrieveNonPayeEmploymentValidator.validate(rawData())
+        MockRetrieveNonPayeEmploymentValidator
+          .validate(rawData())
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(rawData()) shouldBe
@@ -82,4 +86,5 @@ class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

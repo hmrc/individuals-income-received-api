@@ -21,8 +21,8 @@ trait DownstreamUri[Resp] {
 }
 
 object DownstreamUri {
-  case class DesUri[Resp](value: String) extends DownstreamUri[Resp]
-  case class IfsUri[Resp](value: String) extends DownstreamUri[Resp]
+  case class DesUri[Resp](value: String)      extends DownstreamUri[Resp]
+  case class IfsUri[Resp](value: String)      extends DownstreamUri[Resp]
   case class Release6Uri[Resp](value: String) extends DownstreamUri[Resp]
-  case class Api1661Uri[Resp](value: String) extends DownstreamUri[Resp]
+  case class Api1661Uri[Resp](value: String)  extends DownstreamUri[Resp]
 }

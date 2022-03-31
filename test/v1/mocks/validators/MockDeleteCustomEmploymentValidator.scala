@@ -33,6 +33,7 @@ trait MockDeleteCustomEmploymentValidator extends MockFactory {
         .validate(_: DeleteCustomEmploymentRawData))
         .expects(data)
     }
+
   }
 
 }

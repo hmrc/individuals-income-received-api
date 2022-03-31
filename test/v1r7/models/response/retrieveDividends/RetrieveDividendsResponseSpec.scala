@@ -17,10 +17,10 @@
 package v1r7.models.response.retrieveDividends
 
 import api.hateoas.HateoasFactory
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsError, Json }
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class RetrieveDividendsResponseSpec extends UnitSpec {
@@ -143,6 +143,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       }
     }
   }
+
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
@@ -165,4 +166,5 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

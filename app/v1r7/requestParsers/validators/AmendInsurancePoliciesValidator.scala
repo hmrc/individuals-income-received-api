@@ -23,11 +23,22 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendInsurancePolicies._
-import v1r7.requestParsers.validators.validations.{CustomerRefInsuranceValidation, DecimalValueValidation, EventValidation, IntegerValueValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  CustomerRefInsuranceValidation,
+  DecimalValueValidation,
+  EventValidation,
+  IntegerValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[AmendInsurancePoliciesRawData] with ValueFormatErrorMessages {
+class AmendInsurancePoliciesValidator @Inject() (implicit appConfig: AppConfig)
+    extends Validator[AmendInsurancePoliciesRawData]
+    with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -55,35 +66,52 @@ class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
   }
 
   private def bodyValueValidator: AmendInsurancePoliciesRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendInsurancePoliciesRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.lifeInsurance.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.capitalRedemption.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCommonItem(data, itemName = "capitalRedemption", arrayIndex = index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.lifeAnnuity.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateCommonItem(data, itemName = "lifeAnnuity", arrayIndex = index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.voidedIsa.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateVoidedIsa(data, index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.foreign.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateForeign(data, index)
-        }).getOrElse(NoValidationErrors).toList
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          requestBodyData.lifeInsurance
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.capitalRedemption
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateCommonItem(data, itemName = "capitalRedemption", arrayIndex = index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.lifeAnnuity
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateCommonItem(data, itemName = "lifeAnnuity", arrayIndex = index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.voidedIsa
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateVoidedIsa(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.foreign
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeign(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList
+        )
+      ))
   }
 
   private def validateCommonItem(commonItem: AmendCommonInsurancePoliciesItem, itemName: String, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefInsuranceValidation.validateOptional(commonItem.customerReference).map(
-        _.copy(paths = Some(Seq(s"/$itemName/$arrayIndex/customerReference")))
-      ),
+      CustomerRefInsuranceValidation
+        .validateOptional(commonItem.customerReference)
+        .map(
+          _.copy(paths = Some(Seq(s"/$itemName/$arrayIndex/customerReference")))
+        ),
       EventValidation.validateOptional(
         event = commonItem.event,
         path = s"/$itemName/$arrayIndex/event"
@@ -109,9 +137,11 @@ class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
 
   private def validateVoidedIsa(voidedIsa: AmendVoidedIsaPoliciesItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefInsuranceValidation.validateOptional(voidedIsa.customerReference).map(
-        _.copy(paths = Some(Seq(s"/voidedIsa/$arrayIndex/customerReference")))
-      ),
+      CustomerRefInsuranceValidation
+        .validateOptional(voidedIsa.customerReference)
+        .map(
+          _.copy(paths = Some(Seq(s"/voidedIsa/$arrayIndex/customerReference")))
+        ),
       EventValidation.validateOptional(
         event = voidedIsa.event,
         path = s"/voidedIsa/$arrayIndex/event"
@@ -137,9 +167,11 @@ class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
 
   private def validateForeign(foreign: AmendForeignPoliciesItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefInsuranceValidation.validateOptional(foreign.customerReference).map(
-        _.copy(paths = Some(Seq(s"/foreign/$arrayIndex/customerReference")))
-      ),
+      CustomerRefInsuranceValidation
+        .validateOptional(foreign.customerReference)
+        .map(
+          _.copy(paths = Some(Seq(s"/foreign/$arrayIndex/customerReference")))
+        ),
       DecimalValueValidation.validate(
         amount = foreign.gainAmount,
         path = s"/foreign/$arrayIndex/gainAmount"
@@ -154,4 +186,5 @@ class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
       )
     ).flatten
   }
+
 }

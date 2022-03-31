@@ -37,7 +37,6 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val desJson: JsValue = Json.parse(
     """
       |{
@@ -53,7 +52,6 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val model: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
@@ -66,7 +64,6 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       None,
       Some(1999.99)
     )
-
 
   "MultiplePropertyDisposals" when {
     "Reads" should {

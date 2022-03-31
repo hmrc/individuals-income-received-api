@@ -17,7 +17,16 @@
 package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SourceFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +39,8 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends V1R7IntegrationSp
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String           = "AA123456A"
+    val taxYear: String        = "2019-20"
     val source: Option[String] = Some("latest")
 
     val ifsResponse: JsValue = RetrieveAllResidentialPropertyCgtControllerFixture.ifsJson
@@ -43,8 +52,8 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends V1R7IntegrationSp
 
     def queryParams: Seq[(String, String)] =
       Seq("source" -> source)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
 
     def setupStubs(): StubMapping
@@ -55,6 +64,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends V1R7IntegrationSp
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'retrieve all residential property cgt' endpoint" should {
@@ -78,11 +88,15 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends V1R7IntegrationSp
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestSource: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestSource: String,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String           = requestNino
+            override val taxYear: String        = requestTaxYear
             override val source: Option[String] = Some(requestSource)
 
             override def setupStubs(): StubMapping = {
@@ -143,10 +157,12 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends V1R7IntegrationSp
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

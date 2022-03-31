@@ -22,7 +22,7 @@ import api.models.errors.PayrollIdFormatError
 object PayrollIdValidation {
 
   def validateOptional(payrollId: Option[String]): List[MtdError] = payrollId match {
-    case None => NoValidationErrors
+    case None        => NoValidationErrors
     case Some(value) => validate(value)
   }
 
@@ -30,4 +30,5 @@ object PayrollIdValidation {
     val regex = "^[A-Za-z0-9.,\\-()/=!\"%&*; <>'+:\\?]{0,38}$"
     if (payrollId.matches(regex)) NoValidationErrors else List(PayrollIdFormatError)
   }
+
 }

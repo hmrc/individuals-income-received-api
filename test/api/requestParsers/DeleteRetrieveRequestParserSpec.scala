@@ -18,8 +18,8 @@ package api.requestParsers
 
 import api.mocks.validators.MockDeleteRetrieveValidator
 import api.models.domain.Nino
-import api.models.errors.{ BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError }
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import support.UnitSpec
 
 class DeleteRetrieveRequestParserSpec extends UnitSpec {
@@ -34,9 +34,11 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockDeleteRetrieveValidator {
+
     lazy val parser: DeleteRetrieveRequestParser = new DeleteRetrieveRequestParser(
       validator = mockDeleteRetrieveValidator
     )
+
   }
 
   "parse" should {
@@ -69,4 +71,5 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

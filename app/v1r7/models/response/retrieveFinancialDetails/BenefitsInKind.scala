@@ -49,9 +49,36 @@ case class BenefitsInKind(accommodation: Option[BigDecimal],
                           nonCash: Option[BigDecimal])
 
 object BenefitsInKind {
+
   val empty: BenefitsInKind = BenefitsInKind(
-    None, None, None, None, None, None, None, None, None, None, None, None, None, None,
-    None, None, None, None, None, None, None, None, None, None, None, None, None, None
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None
   )
 
   private case class BenefitsInKindPart1(accommodation: Option[BigDecimal],
@@ -169,6 +196,7 @@ object BenefitsInKind {
 
   implicit val reads: Reads[BenefitsInKind] = (
     JsPath.read[BenefitsInKindPart1](formatPt1) and
-    JsPath.read[BenefitsInKindPart2](formatPt2)
+      JsPath.read[BenefitsInKindPart2](formatPt2)
   )(BenefitsInKind.buildBenefitsObject _)
+
 }

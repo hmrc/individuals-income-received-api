@@ -27,15 +27,18 @@ import v1r7.services.CreateAmendNonPayeEmploymentService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendNonPayeEmploymentService extends MockFactory{
+trait MockCreateAmendNonPayeEmploymentService extends MockFactory {
 
   val mockService: CreateAmendNonPayeEmploymentService = mock[CreateAmendNonPayeEmploymentService]
 
   object MockCreateAmendNonPayeEmploymentService {
+
     def createAndAmend(requestData: CreateAmendNonPayeEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockService
         .createAndAmend(_: CreateAmendNonPayeEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
+
 }

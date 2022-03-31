@@ -63,9 +63,9 @@ trait HateoasLinks {
   private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
 
-  //API resource links
+  // API resource links
 
-  //Savings Income
+  // Savings Income
   def amendSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = savingsUri(appConfig, nino, taxYear),
@@ -87,7 +87,7 @@ trait HateoasLinks {
       rel = DELETE_SAVINGS_INCOME
     )
 
-  //Insurance Policies Income
+  // Insurance Policies Income
   def amendInsurancePolicies(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = insurancePoliciesUri(appConfig, nino, taxYear),
@@ -109,7 +109,7 @@ trait HateoasLinks {
       rel = DELETE_INSURANCE_POLICIES_INCOME
     )
 
-  //Foreign Income
+  // Foreign Income
   def amendForeign(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = foreignUri(appConfig, nino, taxYear),
@@ -131,7 +131,7 @@ trait HateoasLinks {
       rel = DELETE_FOREIGN_INCOME
     )
 
-  //Pensions Income
+  // Pensions Income
   def amendPensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = pensionsUri(appConfig, nino, taxYear),
@@ -153,7 +153,7 @@ trait HateoasLinks {
       rel = DELETE_PENSIONS_INCOME
     )
 
-  //Other Income
+  // Other Income
   def amendOther(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = otherUri(appConfig, nino, taxYear),
@@ -175,7 +175,7 @@ trait HateoasLinks {
       rel = DELETE_OTHER_INCOME
     )
 
-  //Other Employment Income
+  // Other Employment Income
   def amendOtherEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = otherEmploymentUri(appConfig, nino, taxYear),
@@ -197,7 +197,7 @@ trait HateoasLinks {
       rel = DELETE_OTHER_EMPLOYMENT_INCOME
     )
 
-  //Dividends Income
+  // Dividends Income
   def amendDividends(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = dividendsUri(appConfig, nino, taxYear),
@@ -219,7 +219,7 @@ trait HateoasLinks {
       rel = DELETE_DIVIDENDS_INCOME
     )
 
-  //Employments
+  // Employments
   def listEmployment(appConfig: AppConfig, nino: String, taxYear: String, isSelf: Boolean): Link =
     Link(
       href = employmentUri(appConfig, nino, taxYear),
@@ -248,7 +248,7 @@ trait HateoasLinks {
       rel = UNIGNORE_EMPLOYMENT
     )
 
-  //Employment
+  // Employment
   def addCustomEmployment(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = employmentUri(appConfig, nino, taxYear),
@@ -270,7 +270,7 @@ trait HateoasLinks {
       rel = DELETE_CUSTOM_EMPLOYMENT
     )
 
-  //Financial Details
+  // Financial Details
   def retrieveFinancialDetails(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): Link =
     Link(
       href = s"${employmentUriWithId(appConfig, nino, taxYear, employmentId)}/financial-details",
@@ -372,4 +372,5 @@ trait HateoasLinks {
       method = DELETE,
       rel = DELETE_NON_PAYE_EMPLOYMENT
     )
+
 }

@@ -21,14 +21,16 @@ import api.requestParsers.RequestParser
 import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 import v1.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsRequestParser @Inject()(val validator: CreateAmendCgtResidentialPropertyDisposalsValidator)
+class CreateAmendCgtResidentialPropertyDisposalsRequestParser @Inject() (val validator: CreateAmendCgtResidentialPropertyDisposalsValidator)
     extends RequestParser[CreateAmendCgtResidentialPropertyDisposalsRawData, CreateAmendCgtResidentialPropertyDisposalsRequest] {
 
   override protected def requestFor(data: CreateAmendCgtResidentialPropertyDisposalsRawData): CreateAmendCgtResidentialPropertyDisposalsRequest =
-    CreateAmendCgtResidentialPropertyDisposalsRequest(Nino(data.nino),
-                                                      data.taxYear,
-                                                      data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody])
+    CreateAmendCgtResidentialPropertyDisposalsRequest(
+      Nino(data.nino),
+      data.taxYear,
+      data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody])
+
 }

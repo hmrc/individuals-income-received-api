@@ -18,7 +18,21 @@ package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +44,8 @@ class AmendForeignControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -92,6 +106,7 @@ class AmendForeignControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'amend foreign' endpoint" should {
@@ -143,13 +158,14 @@ class AmendForeignControllerISpec extends V1R7IntegrationSpec {
             paths = Some(List("/foreignEarnings/customerReference"))
           ),
           ValueFormatError.copy(
-            paths = Some(List(
-              "/foreignEarnings/earningsNotTaxableUK",
-              "/unremittableForeignIncome/0/amountInForeignCurrency",
-              "/unremittableForeignIncome/0/amountTaxPaid",
-              "/unremittableForeignIncome/1/amountInForeignCurrency",
-              "/unremittableForeignIncome/1/amountTaxPaid"
-            )),
+            paths = Some(
+              List(
+                "/foreignEarnings/earningsNotTaxableUK",
+                "/unremittableForeignIncome/0/amountInForeignCurrency",
+                "/unremittableForeignIncome/0/amountTaxPaid",
+                "/unremittableForeignIncome/1/amountInForeignCurrency",
+                "/unremittableForeignIncome/1/amountTaxPaid"
+              )),
             message = "The value must be between 0 and 99999999999.99"
           ),
           CountryCodeFormatError.copy(
@@ -325,56 +341,66 @@ class AmendForeignControllerISpec extends V1R7IntegrationSpec {
       )
 
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
-        paths = Some(Seq(
-        "/unremittableForeignIncome/0/countryCode",
-        "/unremittableForeignIncome/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/unremittableForeignIncome/0/countryCode",
+            "/unremittableForeignIncome/1/countryCode"
+          ))
       )
 
       val countryCodeRuleError: MtdError = CountryCodeRuleError.copy(
-        paths = Some(Seq(
-          "/unremittableForeignIncome/0/countryCode",
-          "/unremittableForeignIncome/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/unremittableForeignIncome/0/countryCode",
+            "/unremittableForeignIncome/1/countryCode"
+          ))
       )
 
       val customerRefError = CustomerRefFormatError.copy(
-        paths = Some(Seq(
-          "/foreignEarnings/customerReference"
-        ))
+        paths = Some(
+          Seq(
+            "/foreignEarnings/customerReference"
+          ))
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
         message = "The value must be between 0 and 99999999999.99",
-        paths = Some(List(
-          "/foreignEarnings/earningsNotTaxableUK",
-          "/unremittableForeignIncome/0/amountInForeignCurrency",
-          "/unremittableForeignIncome/0/amountTaxPaid",
-          "/unremittableForeignIncome/1/amountInForeignCurrency",
-          "/unremittableForeignIncome/1/amountTaxPaid"
-        ))
+        paths = Some(
+          List(
+            "/foreignEarnings/earningsNotTaxableUK",
+            "/unremittableForeignIncome/0/amountInForeignCurrency",
+            "/unremittableForeignIncome/0/amountTaxPaid",
+            "/unremittableForeignIncome/1/amountInForeignCurrency",
+            "/unremittableForeignIncome/1/amountTaxPaid"
+          ))
       )
 
       val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(Seq(
-        "/unremittableForeignIncome/0/amountTaxPaid",
-        "/unremittableForeignIncome/1/amountTaxPaid"
-        ))
+        paths = Some(
+          Seq(
+            "/unremittableForeignIncome/0/amountTaxPaid",
+            "/unremittableForeignIncome/1/amountTaxPaid"
+          ))
       )
 
       val missingFieldRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(Seq(
-        "/unremittableForeignIncome/0/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/unremittableForeignIncome/0/countryCode"
+          ))
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String,requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -389,12 +415,12 @@ class AmendForeignControllerISpec extends V1R7IntegrationSpec {
           }
         }
 
-        val validNino = "AA123456A"
+        val validNino    = "AA123456A"
         val validTaxYear = "2019-20"
 
         val input = Seq(
           ("AA1123A", validTaxYear, validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          (validNino, "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          (validNino, "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None),
           (validNino, "2018-20", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           (validNino, "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           (validNino, validTaxYear, invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
@@ -441,10 +467,12 @@ class AmendForeignControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

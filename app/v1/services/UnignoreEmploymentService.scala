@@ -31,13 +31,13 @@ import api.support.DownstreamResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UnignoreEmploymentService @Inject()(connector: UnignoreEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class UnignoreEmploymentService @Inject() (connector: UnignoreEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def unignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def unignoreEmployment(request: IgnoreEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.unignoreEmployment(request)).leftMap(mapDesErrors(desErrorMap))
@@ -49,13 +49,14 @@ class UnignoreEmploymentService @Inject()(connector: UnignoreEmploymentConnector
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "CUSTOMER_ADDED" -> RuleCustomEmploymentUnignoreError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "BEFORE_TAX_YEAR_ENDED" -> RuleTaxYearNotEndedError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "CUSTOMER_ADDED"            -> RuleCustomEmploymentUnignoreError,
+      "NO_DATA_FOUND"             -> NotFoundError,
+      "BEFORE_TAX_YEAR_ENDED"     -> RuleTaxYearNotEndedError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

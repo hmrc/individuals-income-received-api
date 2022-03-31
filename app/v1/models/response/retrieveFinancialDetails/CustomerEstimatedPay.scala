@@ -21,6 +21,6 @@ import play.api.libs.json.{Json, OFormat}
 case class CustomerEstimatedPay(amount: Option[BigDecimal])
 
 object CustomerEstimatedPay {
-  val empty: CustomerEstimatedPay = CustomerEstimatedPay(None)
+  val empty: CustomerEstimatedPay                    = CustomerEstimatedPay(None)
   implicit val format: OFormat[CustomerEstimatedPay] = Json.format[CustomerEstimatedPay]
 }

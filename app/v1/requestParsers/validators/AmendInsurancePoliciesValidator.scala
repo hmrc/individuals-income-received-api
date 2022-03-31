@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.amendInsurancePolicies._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
+class AmendInsurancePoliciesValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[AmendInsurancePoliciesRawData]
     with ValueFormatErrorMessages {
 
@@ -61,32 +61,32 @@ class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
       Validator.flattenErrors(
         List(
           requestBodyData.lifeInsurance
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateCommonItem(data, itemName = "lifeInsurance", arrayIndex = index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.capitalRedemption
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateCommonItem(data, itemName = "capitalRedemption", arrayIndex = index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateCommonItem(data, itemName = "capitalRedemption", arrayIndex = index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.lifeAnnuity
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateCommonItem(data, itemName = "lifeAnnuity", arrayIndex = index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateCommonItem(data, itemName = "lifeAnnuity", arrayIndex = index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.voidedIsa
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateVoidedIsa(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateVoidedIsa(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.foreign
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateForeign(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeign(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList
@@ -175,4 +175,5 @@ class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
       )
     ).flatten
   }
+
 }

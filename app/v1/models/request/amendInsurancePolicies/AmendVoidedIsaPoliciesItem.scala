@@ -36,5 +36,6 @@ object AmendVoidedIsaPoliciesItem {
       (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").writeNullable[Int]
-    ) (unlift(AmendVoidedIsaPoliciesItem.unapply))
+  )(unlift(AmendVoidedIsaPoliciesItem.unapply))
+
 }

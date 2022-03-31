@@ -27,9 +27,11 @@ trait MockAddCustomEmploymentRequestParser extends MockFactory {
   val mockAddCustomEmploymentRequestParser: AddCustomEmploymentRequestParser = mock[AddCustomEmploymentRequestParser]
 
   object MockAddCustomEmploymentRequestParser {
+
     def parse(data: AddCustomEmploymentRawData): CallHandler[Either[ErrorWrapper, AddCustomEmploymentRequest]] = {
       (mockAddCustomEmploymentRequestParser.parseRequest(_: AddCustomEmploymentRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

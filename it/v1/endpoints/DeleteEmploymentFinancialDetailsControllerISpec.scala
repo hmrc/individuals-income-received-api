@@ -29,8 +29,8 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String         = "AA123456A"
+    val taxYear: String      = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
@@ -44,6 +44,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'delete employment financial details' endpoint" should {
@@ -67,11 +68,15 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestEmploymentId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestEmploymentId: String,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String         = requestNino
+            override val taxYear: String      = requestTaxYear
             override val employmentId: String = requestEmploymentId
 
             override def setupStubs(): StubMapping = {
@@ -131,10 +136,12 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

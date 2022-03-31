@@ -39,11 +39,13 @@ object RetrieveOtherEmploymentResponse extends HateoasLinks with JsonUtils {
       (JsPath \ "disability").readNullable[CommonOtherEmployment] and
       (JsPath \ "foreignService").readNullable[CommonOtherEmployment] and
       (JsPath \ "lumpSums").readNullable[Seq[LumpSums]].mapEmptySeqToNone
-    ) (RetrieveOtherEmploymentResponse.apply _)
+  )(RetrieveOtherEmploymentResponse.apply _)
 
   implicit val writes: OWrites[RetrieveOtherEmploymentResponse] = Json.writes[RetrieveOtherEmploymentResponse]
 
-  implicit object RetrieveOtherEmploymentLinksFactory extends HateoasLinksFactory[RetrieveOtherEmploymentResponse, RetrieveOtherEmploymentHateoasData] {
+  implicit object RetrieveOtherEmploymentLinksFactory
+      extends HateoasLinksFactory[RetrieveOtherEmploymentResponse, RetrieveOtherEmploymentHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveOtherEmploymentHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -52,6 +54,7 @@ object RetrieveOtherEmploymentResponse extends HateoasLinks with JsonUtils {
         deleteOtherEmployment(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }

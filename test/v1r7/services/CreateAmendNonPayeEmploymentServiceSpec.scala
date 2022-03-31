@@ -18,7 +18,17 @@ package v1r7.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1r7.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture.requestBodyModel
@@ -44,6 +54,7 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
     val service: CreateAmendNonPayeEmploymentService = new CreateAmendNonPayeEmploymentService(
       connector = mockConnector
     )
+
   }
 
   "createAndAmend" must {
@@ -94,4 +105,5 @@ class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
       input.foreach(args => (failuresArrayError _).tupled(args))
     }
   }
+
 }

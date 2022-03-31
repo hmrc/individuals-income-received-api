@@ -18,7 +18,21 @@ package v1r7.requestParsers
 
 import api.models.domain.Nino
 import api.models.errors
-import api.models.errors.{BadRequestError, ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError, CustomerRefFormatError, DateFormatError, EmployerNameFormatError, EmployerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, SchemePlanTypeFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  ClassOfSharesAcquiredFormatError,
+  ClassOfSharesAwardedFormatError,
+  CustomerRefFormatError,
+  DateFormatError,
+  EmployerNameFormatError,
+  EmployerRefFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  SchemePlanTypeFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -27,8 +41,8 @@ import v1r7.models.request.amendOtherEmployment._
 
 class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -286,9 +300,11 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockAmendOtherEmploymentValidator {
+
     lazy val parser: AmendOtherEmploymentRequestParser = new AmendOtherEmploymentRequestParser(
       validator = mockAmendOtherEmploymentValidator
     )
+
   }
 
   "parse" should {
@@ -302,7 +318,8 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendOtherEmploymentValidator.validate(rawData.copy(nino = "notANino"))
+        MockAmendOtherEmploymentValidator
+          .validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(rawData.copy(nino = "notANino")) shouldBe
@@ -310,7 +327,8 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendOtherEmploymentValidator.validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendOtherEmploymentValidator
+          .validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(rawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -465,120 +483,127 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
 
         val allInvalidValueErrors: List[MtdError] = List(
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/disability/customerReference",
-              "/foreignService/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/disability/customerReference",
+                "/foreignService/customerReference"
+              ))
           ),
           ClassOfSharesAcquiredFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/classOfSharesAcquired",
-              "/shareOption/1/classOfSharesAcquired"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/classOfSharesAcquired",
+                "/shareOption/1/classOfSharesAcquired"
+              ))
           ),
           EmployerRefFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/employerRef",
-              "/shareOption/1/employerRef",
-              "/sharesAwardedOrReceived/0/employerRef",
-              "/sharesAwardedOrReceived/1/employerRef"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/employerRef",
+                "/shareOption/1/employerRef",
+                "/sharesAwardedOrReceived/0/employerRef",
+                "/sharesAwardedOrReceived/1/employerRef"
+              ))
           ),
           SchemePlanTypeFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/schemePlanType",
-              "/shareOption/1/schemePlanType",
-              "/sharesAwardedOrReceived/0/schemePlanType",
-              "/sharesAwardedOrReceived/1/schemePlanType"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/schemePlanType",
+                "/shareOption/1/schemePlanType",
+                "/sharesAwardedOrReceived/0/schemePlanType",
+                "/sharesAwardedOrReceived/1/schemePlanType"
+              ))
           ),
           DateFormatError.copy(
             message = "The field should be in the format YYYY-MM-DD",
-            paths = Some(List(
-              "/shareOption/0/dateOfOptionGrant",
-              "/shareOption/0/dateOfEvent",
-              "/shareOption/1/dateOfOptionGrant",
-              "/shareOption/1/dateOfEvent",
-              "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
-              "/sharesAwardedOrReceived/0/dateSharesAwarded",
-              "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-              "/sharesAwardedOrReceived/1/dateSharesAwarded"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/dateOfOptionGrant",
+                "/shareOption/0/dateOfEvent",
+                "/shareOption/1/dateOfOptionGrant",
+                "/shareOption/1/dateOfEvent",
+                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/0/dateSharesAwarded",
+                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/1/dateSharesAwarded"
+              ))
           ),
           EmployerNameFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/employerName",
-              "/shareOption/1/employerName",
-              "/sharesAwardedOrReceived/0/employerName",
-              "/sharesAwardedOrReceived/1/employerName"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/employerName",
+                "/shareOption/1/employerName",
+                "/sharesAwardedOrReceived/0/employerName",
+                "/sharesAwardedOrReceived/1/employerName"
+              ))
           ),
           ClassOfSharesAwardedFormatError.copy(
-            paths = Some(List(
-              "/sharesAwardedOrReceived/0/classOfShareAwarded",
-              "/sharesAwardedOrReceived/1/classOfShareAwarded"
-            ))
+            paths = Some(
+              List(
+                "/sharesAwardedOrReceived/0/classOfShareAwarded",
+                "/sharesAwardedOrReceived/1/classOfShareAwarded"
+              ))
           ),
           ValueFormatError.copy(
             message = "The field should be 0 or more",
-            paths = Some(List(
-              "/shareOption/0/noOfSharesAcquired",
-              "/shareOption/1/noOfSharesAcquired",
-              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+              ))
           ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/shareOption/0/amountOfConsiderationReceived",
-              "/shareOption/0/exercisePrice",
-              "/shareOption/0/amountPaidForOption",
-              "/shareOption/0/marketValueOfSharesOnExcise",
-              "/shareOption/0/profitOnOptionExercised",
-              "/shareOption/0/employersNicPaid",
-              "/shareOption/0/taxableAmount",
-              "/shareOption/1/amountOfConsiderationReceived",
-              "/shareOption/1/exercisePrice",
-              "/shareOption/1/amountPaidForOption",
-              "/shareOption/1/marketValueOfSharesOnExcise",
-              "/shareOption/1/profitOnOptionExercised",
-              "/shareOption/1/employersNicPaid",
-              "/shareOption/1/taxableAmount",
-
-              "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
-              "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
-              "/sharesAwardedOrReceived/0/taxableAmount",
-              "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
-              "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
-              "/sharesAwardedOrReceived/1/taxableAmount",
-
-              "/disability/amountDeducted",
-              "/foreignService/amountDeducted",
-
-              "/lumpSums/0/taxableLumpSumsAndCertainIncome/amount",
-              "/lumpSums/0/taxableLumpSumsAndCertainIncome/taxPaid",
-              "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
-              "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
-              "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/amount",
-              "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
-              "/lumpSums/0/redundancyCompensationPaymentsUnderExemptionItem/amount",
-              "/lumpSums/1/taxableLumpSumsAndCertainIncome/amount",
-              "/lumpSums/1/taxableLumpSumsAndCertainIncome/taxPaid",
-              "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
-              "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
-              "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/amount",
-              "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
-              "/lumpSums/1/redundancyCompensationPaymentsUnderExemptionItem/amount"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/amountOfConsiderationReceived",
+                "/shareOption/0/exercisePrice",
+                "/shareOption/0/amountPaidForOption",
+                "/shareOption/0/marketValueOfSharesOnExcise",
+                "/shareOption/0/profitOnOptionExercised",
+                "/shareOption/0/employersNicPaid",
+                "/shareOption/0/taxableAmount",
+                "/shareOption/1/amountOfConsiderationReceived",
+                "/shareOption/1/exercisePrice",
+                "/shareOption/1/amountPaidForOption",
+                "/shareOption/1/marketValueOfSharesOnExcise",
+                "/shareOption/1/profitOnOptionExercised",
+                "/shareOption/1/employersNicPaid",
+                "/shareOption/1/taxableAmount",
+                "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
+                "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
+                "/sharesAwardedOrReceived/0/taxableAmount",
+                "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
+                "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
+                "/sharesAwardedOrReceived/1/taxableAmount",
+                "/disability/amountDeducted",
+                "/foreignService/amountDeducted",
+                "/lumpSums/0/taxableLumpSumsAndCertainIncome/amount",
+                "/lumpSums/0/taxableLumpSumsAndCertainIncome/taxPaid",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
+                "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
+                "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/amount",
+                "/lumpSums/0/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
+                "/lumpSums/0/redundancyCompensationPaymentsUnderExemptionItem/amount",
+                "/lumpSums/1/taxableLumpSumsAndCertainIncome/amount",
+                "/lumpSums/1/taxableLumpSumsAndCertainIncome/taxPaid",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/exemptAmount",
+                "/lumpSums/1/benefitFromEmployerFinancedRetirementSchemeItem/taxPaid",
+                "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/amount",
+                "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
+                "/lumpSums/1/redundancyCompensationPaymentsUnderExemptionItem/amount"
+              ))
           )
         )
 
-        MockAmendOtherEmploymentValidator.validate(rawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendOtherEmploymentValidator
+          .validate(rawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(rawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -586,4 +611,5 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -51,15 +51,16 @@ object Employment {
       (JsPath \ "pay").readNullable[Pay] and
       (JsPath \ "estimatedPay").readNullable[CustomerEstimatedPay].map {
         case Some(CustomerEstimatedPay.empty) => None
-        case other => other
+        case other                            => other
       } and
       (JsPath \ "deductions").readNullable[Deductions].map {
         case Some(Deductions.empty) => None
-        case other => other
+        case other                  => other
       } and
       (JsPath \ "benefitsInKind").readNullable[BenefitsInKind].map {
         case Some(BenefitsInKind.empty) => None
-        case other => other
+        case other                      => other
       }
-    ) (Employment.apply _)
+  )(Employment.apply _)
+
 }

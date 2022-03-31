@@ -27,6 +27,7 @@ case class VoidedIsaPoliciesItem(customerReference: Option[String],
                                  yearsHeldSinceLastGain: Option[Int])
 
 object VoidedIsaPoliciesItem {
+
   implicit val reads: Reads[VoidedIsaPoliciesItem] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "event").readNullable[String] and
@@ -34,9 +35,7 @@ object VoidedIsaPoliciesItem {
       (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int]
-    ) (VoidedIsaPoliciesItem.apply _)
+  )(VoidedIsaPoliciesItem.apply _)
 
   implicit val writes: OWrites[VoidedIsaPoliciesItem] = Json.writes[VoidedIsaPoliciesItem]
 }
-
-

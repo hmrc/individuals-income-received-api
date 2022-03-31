@@ -16,36 +16,36 @@
 
 package v1.controllers
 
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
+import utils.{IdGenerator, Logging}
 import api.hateoas.AmendHateoasBody
 import v1.models.request.amendSavings.AmendSavingsRawData
 import v1.requestParsers.AmendSavingsRequestParser
 import v1.services.AmendSavingsService
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
-                                       val lookupService: MtdIdLookupService,
-                                       appConfig: AppConfig,
-                                       requestParser: AmendSavingsRequestParser,
-                                       service: AmendSavingsService,
-                                       auditService: AuditService,
-                                       cc: ControllerComponents,
-                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class AmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
+                                        val lookupService: MtdIdLookupService,
+                                        appConfig: AppConfig,
+                                        requestParser: AmendSavingsRequestParser,
+                                        service: AmendSavingsService,
+                                        auditService: AuditService,
+                                        cc: ControllerComponents,
+                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -127,4 +127,5 @@ class AmendSavingsController @Inject()(val authService: EnrolmentsAuthService,
     )
     auditService.auditEvent(event)
   }
+
 }

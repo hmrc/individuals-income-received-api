@@ -23,11 +23,19 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendForeign._
-import v1r7.requestParsers.validators.validations.{CountryCodeValidation, CustomerRefValidation, DecimalValueValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  CustomerRefValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)
-  extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
+class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -55,36 +63,42 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)
   }
 
   private def bodyValueValidator: AmendForeignRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendForeignRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.foreignEarnings.map { data => validateForeignEarnings(data)}.getOrElse(NoValidationErrors),
-        requestBodyData.unremittableForeignIncome.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateUnremittableForeignIncome(data, index)
-        }).getOrElse(NoValidationErrors).toList
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          requestBodyData.foreignEarnings.map { data => validateForeignEarnings(data) }.getOrElse(NoValidationErrors),
+          requestBodyData.unremittableForeignIncome
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateUnremittableForeignIncome(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList
+        )
+      ))
   }
 
   private def validateForeignEarnings(foreignEarnings: ForeignEarnings): List[MtdError] = {
     List(
-      foreignEarnings.customerReference.fold(NoValidationErrors: List[MtdError]){ ref =>
-      CustomerRefValidation.validate(ref).map(
-        _.copy(paths = Some(Seq(s"/foreignEarnings/customerReference")))
-      )},
-      DecimalValueValidation.validate(
-        amount = foreignEarnings.earningsNotTaxableUK,
-        path = s"/foreignEarnings/earningsNotTaxableUK")
+      foreignEarnings.customerReference.fold(NoValidationErrors: List[MtdError]) { ref =>
+        CustomerRefValidation
+          .validate(ref)
+          .map(
+            _.copy(paths = Some(Seq(s"/foreignEarnings/customerReference")))
+          )
+      },
+      DecimalValueValidation.validate(amount = foreignEarnings.earningsNotTaxableUK, path = s"/foreignEarnings/earningsNotTaxableUK")
     ).flatten
   }
 
   private def validateUnremittableForeignIncome(unremittableForeignIncome: UnremittableForeignIncomeItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CountryCodeValidation.validate(unremittableForeignIncome.countryCode).map(
-        _.copy(paths = Some(Seq(s"/unremittableForeignIncome/$arrayIndex/countryCode")))
-      ),
+      CountryCodeValidation
+        .validate(unremittableForeignIncome.countryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/unremittableForeignIncome/$arrayIndex/countryCode")))
+        ),
       DecimalValueValidation.validate(
         amount = unremittableForeignIncome.amountInForeignCurrency,
         path = s"/unremittableForeignIncome/$arrayIndex/amountInForeignCurrency"),
@@ -93,4 +107,5 @@ class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig)
         path = s"/unremittableForeignIncome/$arrayIndex/amountTaxPaid")
     ).flatten
   }
+
 }

@@ -38,14 +38,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
-                                       val lookupService: MtdIdLookupService,
-                                       appConfig: AppConfig,
-                                       requestParser: AmendForeignRequestParser,
-                                       service: AmendForeignService,
-                                       auditService: AuditService,
-                                       cc: ControllerComponents,
-                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
+                                        val lookupService: MtdIdLookupService,
+                                        appConfig: AppConfig,
+                                        requestParser: AmendForeignRequestParser,
+                                        service: AmendForeignService,
+                                        auditService: AuditService,
+                                        cc: ControllerComponents,
+                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -117,8 +117,8 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
-          CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | CustomMtdError(
+            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
           CustomMtdError(CountryCodeRuleError.code) | CustomMtdError(CustomerRefFormatError.code) | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
@@ -129,4 +129,5 @@ class AmendForeignController @Inject()(val authService: EnrolmentsAuthService,
     val event = AuditEvent("CreateAmendForeignIncome", "create-amend-foreign-income", details)
     auditService.auditEvent(event)
   }
+
 }

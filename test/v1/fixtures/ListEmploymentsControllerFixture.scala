@@ -20,8 +20,9 @@ import play.api.libs.json.{JsObject, Json}
 
 object ListEmploymentsControllerFixture {
 
-  def mtdResponseWithCustomHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json.parse(
-    s"""
+  def mtdResponseWithCustomHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json
+    .parse(
+      s"""
        |{
        |   "employments": [{
        |         "employmentId": "$employmentId",
@@ -75,6 +76,7 @@ object ListEmploymentsControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
 }

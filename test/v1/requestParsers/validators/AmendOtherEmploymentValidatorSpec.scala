@@ -25,11 +25,9 @@ import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import api.models.errors._
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 
+class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-class AmendOtherEmploymentValidatorSpec extends UnitSpec
-  with ValueFormatErrorMessages {
-
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -656,28 +654,27 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     """.stripMargin
   )
 
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val validRawRequestBody    = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody    = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
 
-  private val invalidEmployerNameRawRequestBody = AnyContentAsJson(invalidEmployerNameJson)
-  private val invalidEmployerRefRawRequestBody = AnyContentAsJson(invalidEmployerRefJson)
-  private val invalidSchemePlanRawRequestBody = AnyContentAsJson(invalidSchemePlanTypeJson)
-  private val invalidDateRawRequestBody = AnyContentAsJson(invalidDateJson)
+  private val invalidEmployerNameRawRequestBody          = AnyContentAsJson(invalidEmployerNameJson)
+  private val invalidEmployerRefRawRequestBody           = AnyContentAsJson(invalidEmployerRefJson)
+  private val invalidSchemePlanRawRequestBody            = AnyContentAsJson(invalidSchemePlanTypeJson)
+  private val invalidDateRawRequestBody                  = AnyContentAsJson(invalidDateJson)
   private val invalidClassOfSharesAcquiredRawRequestBody = AnyContentAsJson(invalidClassOfSharesAcquiredJson)
-  private val invalidClassOfSharesAwardedRawRequestBody = AnyContentAsJson(invalidClassOfSharesAwardedJson)
-  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefJson)
+  private val invalidClassOfSharesAwardedRawRequestBody  = AnyContentAsJson(invalidClassOfSharesAwardedJson)
+  private val invalidCustomerRefRawRequestBody           = AnyContentAsJson(invalidCustomerRefJson)
 
-  private val invalidShareOptionRawRequestBody = AnyContentAsJson(invalidShareOptionJson)
+  private val invalidShareOptionRawRequestBody             = AnyContentAsJson(invalidShareOptionJson)
   private val invalidSharesAwardedOrReceivedRawRequestBody = AnyContentAsJson(invalidSharesAwardedOrReceivedJson)
-  private val invalidDisabilityRawRequestBody = AnyContentAsJson(invalidDisabilityJson)
-  private val invalidForeignServiceRawRequestBody = AnyContentAsJson(invalidForeignServiceJson)
-  private val invalidLumpSumsRawRequestBody = AnyContentAsJson(invalidLumpSumsJson)
-  private val ruleLumpSumsSingleScenarioRawRequestBody = AnyContentAsJson(ruleLumpSumsSingleErrorScenarioJson)
-  private val ruleLumpSumsMultipleScenarioRawRequestBody = AnyContentAsJson(ruleLumpSumsMultipleErrorScenarioJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
-
+  private val invalidDisabilityRawRequestBody              = AnyContentAsJson(invalidDisabilityJson)
+  private val invalidForeignServiceRawRequestBody          = AnyContentAsJson(invalidForeignServiceJson)
+  private val invalidLumpSumsRawRequestBody                = AnyContentAsJson(invalidLumpSumsJson)
+  private val ruleLumpSumsSingleScenarioRawRequestBody     = AnyContentAsJson(ruleLumpSumsSingleErrorScenarioJson)
+  private val ruleLumpSumsMultipleScenarioRawRequestBody   = AnyContentAsJson(ruleLumpSumsMultipleErrorScenarioJson)
+  private val allInvalidValueRawRequestBody                = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
 
@@ -688,6 +685,7 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -741,11 +739,20 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
 
       "the submitted request body is not in the correct format" in new Test {
         val paths = List(
-          "/shareOption/0/dateOfOptionGrant", "/shareOption/0/taxableAmount", "/shareOption/0/employerName",
-          "/shareOption/0/noOfSharesAcquired", "/shareOption/0/optionNotExercisedButConsiderationReceived",
-          "/shareOption/0/schemePlanType", "/shareOption/0/classOfSharesAcquired", "/shareOption/0/exercisePrice",
-          "/shareOption/0/amountPaidForOption", "/shareOption/0/employersNicPaid", "/shareOption/0/marketValueOfSharesOnExcise",
-          "/shareOption/0/amountOfConsiderationReceived", "/shareOption/0/dateOfEvent", "/shareOption/0/profitOnOptionExercised"
+          "/shareOption/0/dateOfOptionGrant",
+          "/shareOption/0/taxableAmount",
+          "/shareOption/0/employerName",
+          "/shareOption/0/noOfSharesAcquired",
+          "/shareOption/0/optionNotExercisedButConsiderationReceived",
+          "/shareOption/0/schemePlanType",
+          "/shareOption/0/classOfSharesAcquired",
+          "/shareOption/0/exercisePrice",
+          "/shareOption/0/amountPaidForOption",
+          "/shareOption/0/employersNicPaid",
+          "/shareOption/0/marketValueOfSharesOnExcise",
+          "/shareOption/0/amountOfConsiderationReceived",
+          "/shareOption/0/dateOfEvent",
+          "/shareOption/0/profitOnOptionExercised"
         )
 
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
@@ -805,42 +812,47 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (shareOption)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidShareOptionRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/shareOption/0/amountOfConsiderationReceived"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/shareOption/0/amountOfConsiderationReceived"))
+            ))
       }
 
       "one field fails value validation (sharesAwardedOrReceived)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidSharesAwardedOrReceivedRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward"))
+            ))
       }
 
       "one field fails value validation (Disability)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidDisabilityRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/disability/amountDeducted"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/disability/amountDeducted"))
+            ))
       }
 
       "one field fails value validation (foreignService)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidForeignServiceRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/foreignService/amountDeducted"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/foreignService/amountDeducted"))
+            ))
       }
 
       "one field fails value validation (lumpSums)" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidLumpSumsRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/lumpSums/0/taxableLumpSumsAndCertainIncome/amount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/lumpSums/0/taxableLumpSumsAndCertainIncome/amount"))
+            ))
       }
     }
 
@@ -875,7 +887,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/shareOption/1/profitOnOptionExercised",
                 "/shareOption/1/employersNicPaid",
                 "/shareOption/1/taxableAmount",
-
                 "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
                 "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
                 "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
@@ -886,10 +897,8 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
                 "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
                 "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
                 "/sharesAwardedOrReceived/1/taxableAmount",
-
                 "/disability/amountDeducted",
                 "/foreignService/amountDeducted",
-
                 "/lumpSums/0/taxableLumpSumsAndCertainIncome/amount",
                 "/lumpSums/0/taxableLumpSumsAndCertainIncome/taxPaid",
                 "/lumpSums/0/benefitFromEmployerFinancedRetirementSchemeItem/amount",
@@ -909,16 +918,18 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
               ))
             ),
             CustomerRefFormatError.copy(
-              paths = Some(List(
-                "/disability/customerReference",
-                "/foreignService/customerReference"
-              ))
+              paths = Some(
+                List(
+                  "/disability/customerReference",
+                  "/foreignService/customerReference"
+                ))
             ),
             ClassOfSharesAcquiredFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/classOfSharesAcquired",
-                "/shareOption/1/classOfSharesAcquired"
-              ))
+              paths = Some(
+                List(
+                  "/shareOption/0/classOfSharesAcquired",
+                  "/shareOption/1/classOfSharesAcquired"
+                ))
             ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
@@ -960,10 +971,11 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
               ))
             ),
             ClassOfSharesAwardedFormatError.copy(
-              paths = Some(List(
-                "/sharesAwardedOrReceived/0/classOfShareAwarded",
-                "/sharesAwardedOrReceived/1/classOfShareAwarded"
-              ))
+              paths = Some(
+                List(
+                  "/sharesAwardedOrReceived/0/classOfShareAwarded",
+                  "/sharesAwardedOrReceived/1/classOfShareAwarded"
+                ))
             )
           )
       }
@@ -988,4 +1000,5 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec
       }
     }
   }
+
 }

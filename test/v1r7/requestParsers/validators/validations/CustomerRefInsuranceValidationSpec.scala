@@ -41,13 +41,11 @@ class CustomerRefInsuranceValidationSpec extends UnitSpec {
         ) shouldBe NoValidationErrors
       }
 
-
       "return an empty list for a valid 1 char customerRef" in {
         CustomerRefInsuranceValidation.validateOptional(
           customerRef = Some("1")
         ) shouldBe NoValidationErrors
       }
-
 
       "return a CustomerRefFormatError for an invalid customerRef" in {
         CustomerRefInsuranceValidation.validateOptional(
@@ -68,4 +66,5 @@ class CustomerRefInsuranceValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -28,20 +28,18 @@ import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
-class UnignoreEmploymentConnector @Inject()(val http: HttpClient,
-                                            val appConfig: AppConfig) extends BaseDownstreamConnector {
+class UnignoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def unignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def unignoreEmployment(
+      request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear
+    val nino         = request.nino.nino
+    val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
     delete(IfsUri[Unit](s"income-tax/employments/$nino/$taxYear/ignore/$employmentId"))
   }
+
 }

@@ -90,8 +90,35 @@ class AmendBenefitsInKindSpec extends UnitSpec {
 
   val emptyJson = Json.parse("""{}""")
 
-  val emptyModel = AmendBenefitsInKind(None, None, None, None, None, None, None, None, None, None, None, None,
-    None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+  val emptyModel = AmendBenefitsInKind(
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None)
 
   "AmendBenefitsInKind" when {
     "read from valid JSON" should {
@@ -106,7 +133,7 @@ class AmendBenefitsInKindSpec extends UnitSpec {
       }
     }
 
-        "read from invalid JSON" should {
+    "read from invalid JSON" should {
       "produce a JsError" in {
         val invalidJson = Json.parse(
           """
@@ -153,4 +180,5 @@ class AmendBenefitsInKindSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -94,4 +94,5 @@ class LossesSpec extends UnitSpec {
       }
     }
   }
+
 }

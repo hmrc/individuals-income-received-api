@@ -34,7 +34,7 @@ class DateFormatValidationSpec extends UnitSpec {
       "return a DateFormatError for an invalid date" in {
         DateFormatValidation.validateWithPath(
           date = "20-04-2017",
-          path = "/path",
+          path = "/path"
         ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
       }
     }
@@ -57,7 +57,7 @@ class DateFormatValidationSpec extends UnitSpec {
       "return a DateFormatError for some invalid date" in {
         DateFormatValidation.validateOptionalWithPath(
           date = Some("20-04-2017"),
-          path = "/path",
+          path = "/path"
         ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
       }
     }
@@ -81,4 +81,5 @@ class DateFormatValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

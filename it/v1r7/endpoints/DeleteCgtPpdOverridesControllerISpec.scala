@@ -17,7 +17,15 @@
 package v1r7.endpoints
 
 import api.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -29,7 +37,7 @@ class DeleteCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
 
     def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
@@ -43,6 +51,7 @@ class DeleteCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'delete cgt ppd overrides' endpoint" should {
@@ -69,7 +78,7 @@ class DeleteCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -132,4 +141,5 @@ class DeleteCgtPpdOverridesControllerISpec extends V1R7IntegrationSpec {
       }
     }
   }
+
 }

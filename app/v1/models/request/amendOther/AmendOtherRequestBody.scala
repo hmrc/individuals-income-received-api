@@ -27,18 +27,20 @@ case class AmendOtherRequestBody(businessReceipts: Option[Seq[AmendBusinessRecei
                                  omittedForeignIncome: Option[AmendOmittedForeignIncome])
 
 object AmendOtherRequestBody extends JsonUtils {
-  val empty: AmendOtherRequestBody = AmendOtherRequestBody(None, None,None,None,None)
+  val empty: AmendOtherRequestBody = AmendOtherRequestBody(None, None, None, None, None)
 
   implicit val reads: Reads[AmendOtherRequestBody] = (
     (JsPath \ "businessReceipts").readNullable[Seq[AmendBusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AmendAllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "overseasIncomeAndGains").readNullable[AmendOverseasIncomeAndGains] and
-      (JsPath \ "chargeableForeignBenefitsAndGifts").readNullable[AmendChargeableForeignBenefitsAndGifts].map(_.flatMap {
-        case AmendChargeableForeignBenefitsAndGifts.empty => None
-        case chargeableForeignBenefitsAndGifts => Some(chargeableForeignBenefitsAndGifts)
-      }) and
+      (JsPath \ "chargeableForeignBenefitsAndGifts")
+        .readNullable[AmendChargeableForeignBenefitsAndGifts]
+        .map(_.flatMap {
+          case AmendChargeableForeignBenefitsAndGifts.empty => None
+          case chargeableForeignBenefitsAndGifts            => Some(chargeableForeignBenefitsAndGifts)
+        }) and
       (JsPath \ "omittedForeignIncome").readNullable[AmendOmittedForeignIncome]
-    ) (AmendOtherRequestBody.apply _)
+  )(AmendOtherRequestBody.apply _)
 
   implicit val writes: OWrites[AmendOtherRequestBody] = (
     (JsPath \ "businessReceipts").writeNullable[Seq[AmendBusinessReceiptsItem]] and
@@ -46,5 +48,6 @@ object AmendOtherRequestBody extends JsonUtils {
       (JsPath \ "overseasIncomeAndGains").writeNullable[AmendOverseasIncomeAndGains] and
       (JsPath \ "chargeableForeignBenefitsAndGifts").writeNullable[AmendChargeableForeignBenefitsAndGifts] and
       (JsPath \ "omittedForeignIncome").writeNullable[AmendOmittedForeignIncome]
-    ) (unlift(AmendOtherRequestBody.unapply))
+  )(unlift(AmendOtherRequestBody.unapply))
+
 }

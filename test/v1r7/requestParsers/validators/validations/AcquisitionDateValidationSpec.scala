@@ -22,7 +22,7 @@ import support.UnitSpec
 class AcquisitionDateValidationSpec extends UnitSpec {
 
   private val earlierDate = "2019-01-01"
-  private val laterDate = "2020-01-01"
+  private val laterDate   = "2020-01-01"
 
   "validate" should {
     "return no errors" when {
@@ -37,4 +37,5 @@ class AcquisitionDateValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

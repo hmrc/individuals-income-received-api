@@ -16,13 +16,13 @@
 
 package v1r7.endpoints
 
-import api.stubs.{ AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub }
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status
 import play.api.http.Status.NO_CONTENT
-import play.api.libs.json.{ JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import support.V1R7IntegrationSpec
 
 class AuthISpec extends V1R7IntegrationSpec {
@@ -55,6 +55,7 @@ class AuthISpec extends V1R7IntegrationSpec {
         | "responseData" : "someResponse"
         | }
     """.stripMargin)
+
   }
 
   "Calling the endpoint" when {

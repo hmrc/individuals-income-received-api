@@ -36,13 +36,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
-                                        val lookupService: MtdIdLookupService,
-                                        requestParser: DeleteRetrieveRequestParser,
-                                        service: DeleteRetrieveService,
-                                        auditService: AuditService,
-                                        cc: ControllerComponents,
-                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
+                                         val lookupService: MtdIdLookupService,
+                                         requestParser: DeleteRetrieveRequestParser,
+                                         service: DeleteRetrieveService,
+                                         auditService: AuditService,
+                                         cc: ControllerComponents,
+                                         val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -119,4 +119,5 @@ class DeleteSavingsController @Inject()(val authService: EnrolmentsAuthService,
     val event = AuditEvent("DeleteSavingsIncome", "delete-savings-income", details)
     auditService.auditEvent(event)
   }
+
 }

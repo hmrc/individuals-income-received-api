@@ -99,6 +99,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
         "SERVER_ERROR"              -> StandardDownstreamError,
         "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
+
   }
 
   "deleteEmploymentFinancialDetailsController" should {
@@ -191,4 +192,5 @@ class DeleteEmploymentFinancialDetailsControllerSpec
       }
     }
   }
+
 }

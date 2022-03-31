@@ -46,7 +46,6 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val desJson: JsValue = Json.parse(
     """
       |{
@@ -72,7 +71,6 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
@@ -90,13 +88,11 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
     Some(1999.99)
   )
 
-
   val model: CustomerAddedDisposals =
     CustomerAddedDisposals(
       "2020-07-06T09:37:17Z",
       Seq(disposals)
     )
-
 
   "CustomerAddedDisposals" when {
     "Reads" should {

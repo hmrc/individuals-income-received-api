@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.AmendOtherConnector
 import v1.models.request.amendOther.AmendOtherRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAmendOtherConnector extends MockFactory {
 
@@ -36,6 +36,7 @@ trait MockAmendOtherConnector extends MockFactory {
         .amend(_: AmendOtherRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
 
 }

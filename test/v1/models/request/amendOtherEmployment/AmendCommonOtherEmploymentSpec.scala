@@ -30,7 +30,7 @@ class AmendCommonOtherEmploymentSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = AmendCommonOtherEmployment(customerReference = Some ("cust ref"), amountDeducted = 1223.22)
+  private val model = AmendCommonOtherEmployment(customerReference = Some("cust ref"), amountDeducted = 1223.22)
 
   "AmendDisability" when {
     "read from valid JSON" should {
@@ -52,4 +52,5 @@ class AmendCommonOtherEmploymentSpec extends UnitSpec {
       }
     }
   }
+
 }

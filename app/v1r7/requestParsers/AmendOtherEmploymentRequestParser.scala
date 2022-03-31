@@ -24,9 +24,10 @@ import v1r7.models.request.amendOtherEmployment._
 import v1r7.requestParsers.validators.AmendOtherEmploymentValidator
 
 @Singleton
-class AmendOtherEmploymentRequestParser @Inject()(val validator: AmendOtherEmploymentValidator)
-  extends RequestParser[AmendOtherEmploymentRawData, AmendOtherEmploymentRequest] {
+class AmendOtherEmploymentRequestParser @Inject() (val validator: AmendOtherEmploymentValidator)
+    extends RequestParser[AmendOtherEmploymentRawData, AmendOtherEmploymentRequest] {
 
   override protected def requestFor(data: AmendOtherEmploymentRawData): AmendOtherEmploymentRequest =
     AmendOtherEmploymentRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendOtherEmploymentRequestBody])
+
 }

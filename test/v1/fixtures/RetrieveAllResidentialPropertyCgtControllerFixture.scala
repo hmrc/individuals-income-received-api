@@ -36,7 +36,6 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       Some(1999.99)
     )
 
-
   val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
@@ -59,13 +58,11 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       Some(1999.99)
     )
 
-
   val ppdService: PpdService =
     PpdService(
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
-
 
   val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
@@ -84,13 +81,11 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
     Some(1999.99)
   )
 
-
   val customerAddedDisposals: CustomerAddedDisposals =
     CustomerAddedDisposals(
       "2020-07-06T09:37:17Z",
       Seq(disposals)
     )
-
 
   val model: RetrieveAllResidentialPropertyCgtResponse =
     RetrieveAllResidentialPropertyCgtResponse(
@@ -161,7 +156,6 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |""".stripMargin
   )
 
-
   val ifsJson: JsValue = Json.parse(
     """
       |{
@@ -225,8 +219,9 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |""".stripMargin
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdJson.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdJson.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -257,5 +252,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

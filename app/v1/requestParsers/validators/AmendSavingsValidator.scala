@@ -19,13 +19,13 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.amendSavings.{ AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities }
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
+class AmendSavingsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -60,8 +60,8 @@ class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Val
         List(
           requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
           requestBodyData.foreignInterest
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateForeignInterest(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeignInterest(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList
@@ -111,4 +111,5 @@ class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Val
       )
     ).flatten
   }
+
 }

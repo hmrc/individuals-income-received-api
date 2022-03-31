@@ -17,10 +17,10 @@
 package api.connectors.httpparsers
 
 import api.connectors.MtdIdLookupOutcome
-import api.models.errors.{ InvalidBearerTokenError, NinoFormatError, StandardDownstreamError }
-import play.api.http.Status.{ FORBIDDEN, OK, UNAUTHORIZED }
+import api.models.errors.{InvalidBearerTokenError, NinoFormatError, StandardDownstreamError}
+import play.api.http.Status.{FORBIDDEN, OK, UNAUTHORIZED}
 import play.api.libs.json._
-import uk.gov.hmrc.http.{ HttpReads, HttpResponse }
+import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 
 object MtdIdLookupHttpParser extends HttpParser {
 
@@ -38,4 +38,5 @@ object MtdIdLookupHttpParser extends HttpParser {
       case _            => Left(StandardDownstreamError)
     }
   }
+
 }

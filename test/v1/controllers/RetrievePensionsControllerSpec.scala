@@ -21,24 +21,19 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType._
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrievePensionsControllerFixture
-import v1.models.response.retrievePensions.{
-  ForeignPensionsItem,
-  OverseasPensionContributions,
-  RetrievePensionsHateoasData,
-  RetrievePensionsResponse
-}
+import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -171,12 +166,13 @@ class RetrievePensionsControllerSpec
         MockHateoasFactory
           .wrap(retrievePensionsResponseModel, RetrievePensionsHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrievePensionsResponseModel,
-                           Seq(
-                             amendPensionsLink,
-                             retrievePensionsLink,
-                             deletePensionsLink
-                           )))
+            HateoasWrapper(
+              retrievePensionsResponseModel,
+              Seq(
+                amendPensionsLink,
+                retrievePensionsLink,
+                deletePensionsLink
+              )))
 
         val result: Future[Result] = controller.retrievePensions(nino, taxYear)(fakeGetRequest)
 
@@ -245,4 +241,5 @@ class RetrievePensionsControllerSpec
       }
     }
   }
+
 }

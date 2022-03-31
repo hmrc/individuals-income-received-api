@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.UnignoreEmploymentConnector
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockUnignoreEmploymentConnector extends MockFactory {
 
@@ -36,6 +36,7 @@ trait MockUnignoreEmploymentConnector extends MockFactory {
         .unignoreEmployment(_: IgnoreEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
 
 }

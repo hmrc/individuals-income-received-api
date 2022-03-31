@@ -16,7 +16,16 @@
 
 package v1r7.requestParsers.validators
 
-import api.models.errors.{CountryCodeFormatError, CountryCodeRuleError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -27,7 +36,7 @@ import v1r7.models.request.amendSavings.AmendSavingsRawData
 
 class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -138,7 +147,6 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """.stripMargin
   )
 
-
   private val invalidSecuritiesRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -181,26 +189,26 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     """.stripMargin
   )
 
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val validRawRequestBody                  = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody                  = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody               = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody               = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody     = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidCountryCodeRawRequestBody     = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
   private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
   private val invalidForeignInterestRawRequestBody = AnyContentAsJson(invalidForeignInterestRequestBodyJson)
-  private val invalidSecuritiesRawRequestBody = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val invalidSecuritiesRawRequestBody      = AnyContentAsJson(invalidSecuritiesRequestBodyJson)
+  private val allInvalidValueRawRequestBody        = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
     implicit val appConfig: AppConfig = mockAppConfig
-    val validator = new AmendSavingsValidator()
+    val validator                     = new AmendSavingsValidator()
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
       .anyNumberOfTimes()
-  }
 
+  }
 
   "running a validation" should {
     "return no errors" when {
@@ -255,11 +263,13 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
       "the submitted request body has missing mandatory fields" in new Test {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-            "/foreignInterest/0/countryCode",
-            "/foreignInterest/0/taxableAmount",
-            "/foreignInterest/0/foreignTaxCreditRelief"
-          ))))
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+              Seq(
+                "/foreignInterest/0/countryCode",
+                "/foreignInterest/0/taxableAmount",
+                "/foreignInterest/0/foreignTaxCreditRelief"
+              ))))
       }
     }
 
@@ -280,18 +290,20 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (foreign interest)" in new Test {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidForeignInterestRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/foreignInterest/0/taxableAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/foreignInterest/0/taxableAmount"))
+            ))
       }
 
       "one field fails value validation (securities)" in new Test {
         validator.validate(AmendSavingsRawData(validNino, validTaxYear, invalidSecuritiesRawRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/securities/netAmount"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/securities/netAmount"))
+            ))
       }
     }
 
@@ -316,10 +328,11 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
               ))
             ),
             CountryCodeFormatError.copy(
-              paths = Some(List(
-                "/foreignInterest/0/countryCode",
-                "/foreignInterest/1/countryCode"
-              ))
+              paths = Some(
+                List(
+                  "/foreignInterest/0/countryCode",
+                  "/foreignInterest/1/countryCode"
+                ))
             )
           )
       }
@@ -332,4 +345,5 @@ class AmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       }
     }
   }
+
 }

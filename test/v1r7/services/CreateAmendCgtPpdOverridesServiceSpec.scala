@@ -18,7 +18,20 @@ package v1r7.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PpdSubmissionIdNotFoundError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectDisposalTypeError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  PpdSubmissionIdNotFoundError,
+  RuleDuplicatedPpdSubmissionIdError,
+  RuleIncorrectDisposalTypeError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1r7.fixtures.overrides.CreateAmendCgtPpdOverridesServiceConnectorFixture.requestBodyModel
@@ -29,7 +42,7 @@ import scala.concurrent.Future
 
 class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   val createAmendCgtPpdOverridesRequest: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
@@ -44,6 +57,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
     val service: CreateAmendCgtPpdOverridesService = new CreateAmendCgtPpdOverridesService(
       connector = mockCreateAmendCgtPpdOverridesConnector
     )
+
   }
 
   "CreateAmendCgtPpdOverridesService" when {
@@ -51,7 +65,8 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
+        MockCreateAmendCgtPpdOverridesConnector
+          .createAmend(createAmendCgtPpdOverridesRequest)
           .returns(Future.successful(outcome))
 
         await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
@@ -62,7 +77,8 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector" in new Test {
 
-            MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
+            MockCreateAmendCgtPpdOverridesConnector
+              .createAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -71,7 +87,8 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
 
-            MockCreateAmendCgtPpdOverridesConnector.createAmend(createAmendCgtPpdOverridesRequest)
+            MockCreateAmendCgtPpdOverridesConnector
+              .createAmend(createAmendCgtPpdOverridesRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -96,4 +113,5 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

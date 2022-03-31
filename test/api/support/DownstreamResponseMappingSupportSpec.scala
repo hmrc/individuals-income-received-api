@@ -20,7 +20,7 @@ import api.controllers.EndpointLogContext
 import api.models.errors
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.{ Format, Json }
+import play.api.libs.json.{Format, Json}
 import support.UnitSpec
 import utils.Logging
 

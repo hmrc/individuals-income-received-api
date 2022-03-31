@@ -18,15 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.amendCustomEmployment.{ AmendCustomEmploymentRawData, AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody }
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
 import v1.requestParsers.validators.AmendCustomEmploymentValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendCustomEmploymentRequestParser @Inject()(val validator: AmendCustomEmploymentValidator)
+class AmendCustomEmploymentRequestParser @Inject() (val validator: AmendCustomEmploymentValidator)
     extends RequestParser[AmendCustomEmploymentRawData, AmendCustomEmploymentRequest] {
 
   override protected def requestFor(data: AmendCustomEmploymentRawData): AmendCustomEmploymentRequest =
     AmendCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId, data.body.json.as[AmendCustomEmploymentRequestBody])
+
 }

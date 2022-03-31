@@ -26,8 +26,7 @@ import v1r7.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 import v1r7.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 @Singleton
-class DeleteCustomEmploymentValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[DeleteCustomEmploymentRawData] {
+class DeleteCustomEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -48,4 +47,5 @@ class DeleteCustomEmploymentValidator @Inject()(implicit appConfig: AppConfig)
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
+
 }

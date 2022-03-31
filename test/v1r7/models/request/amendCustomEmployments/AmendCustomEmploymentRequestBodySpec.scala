@@ -22,7 +22,7 @@ import v1r7.models.request.amendCustomEmployment.AmendCustomEmploymentRequestBod
 
 class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
 
-  private val model = AmendCustomEmploymentRequestBody (
+  private val model = AmendCustomEmploymentRequestBody(
     employerRef = Some("123/AZ12334"),
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
@@ -172,4 +172,5 @@ class AmendCustomEmploymentRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

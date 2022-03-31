@@ -24,9 +24,9 @@ import v1r7.models.request.amendOther.{AmendOtherRawData, AmendOtherRequest, Ame
 import v1r7.requestParsers.validators.AmendOtherValidator
 
 @Singleton
-class AmendOtherRequestParser @Inject()(val validator: AmendOtherValidator)
-  extends RequestParser[AmendOtherRawData, AmendOtherRequest] {
+class AmendOtherRequestParser @Inject() (val validator: AmendOtherValidator) extends RequestParser[AmendOtherRawData, AmendOtherRequest] {
 
   override protected def requestFor(data: AmendOtherRawData): AmendOtherRequest =
     AmendOtherRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendOtherRequestBody])
+
 }

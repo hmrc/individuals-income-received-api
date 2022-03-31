@@ -20,6 +20,7 @@ import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class StudentLoansSpec extends UnitSpec {
+
   val json: JsValue = Json.parse(
     """
       |{
@@ -36,13 +37,13 @@ class StudentLoansSpec extends UnitSpec {
 
   "StudentLoans" when {
     "read from valid JSON" should {
-      "produce the expected 'StudentLoans' object" in{
+      "produce the expected 'StudentLoans' object" in {
         json.as[StudentLoans] shouldBe model
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty 'StudentLoans' object" in{
+      "produce an empty 'StudentLoans' object" in {
         JsObject.empty.as[StudentLoans] shouldBe StudentLoans.empty
       }
     }
@@ -67,4 +68,5 @@ class StudentLoansSpec extends UnitSpec {
       }
     }
   }
+
 }

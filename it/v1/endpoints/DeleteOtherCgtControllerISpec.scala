@@ -29,7 +29,7 @@ class DeleteOtherCgtControllerISpec extends V1IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
 
     def uri: String = s"/disposals/other-gains/$nino/$taxYear"
@@ -43,6 +43,7 @@ class DeleteOtherCgtControllerISpec extends V1IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'delete other capital gains and disposals' endpoint" should {
@@ -69,7 +70,7 @@ class DeleteOtherCgtControllerISpec extends V1IntegrationSpec {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -132,4 +133,5 @@ class DeleteOtherCgtControllerISpec extends V1IntegrationSpec {
       }
     }
   }
+
 }

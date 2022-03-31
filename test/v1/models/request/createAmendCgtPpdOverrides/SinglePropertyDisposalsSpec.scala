@@ -114,4 +114,5 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       }
     }
   }
+
 }

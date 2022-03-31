@@ -29,20 +29,18 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.models.request.EmptyBody
 
 @Singleton
-class IgnoreEmploymentConnector @Inject()(val http: HttpClient,
-                                          val appConfig: AppConfig) extends BaseDownstreamConnector {
+class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def ignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def ignoreEmployment(
+      request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
-    val taxYear = request.taxYear
+    val nino         = request.nino.nino
+    val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
     put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
   }
+
 }

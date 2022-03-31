@@ -24,16 +24,17 @@ import support.{V1R7IntegrationSpec, WireMockMethods}
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier, UpstreamErrorResponse}
 import v1r7.fixtures.nrs.NrsFixture
 
-class NrsProxyConnectorISpec extends V1R7IntegrationSpec
-  with NrsFixture
-  with ScalaFutures
-  with Inside
-  with IntegrationPatience
-  with WireMockMethods
-  with Injecting {
+class NrsProxyConnectorISpec
+    extends V1R7IntegrationSpec
+    with NrsFixture
+    with ScalaFutures
+    with Inside
+    with IntegrationPatience
+    with WireMockMethods
+    with Injecting {
 
-  val path = s"/mtd-api-nrs-proxy/$nino/$event"
-  val auth = "Bearer xyx"
+  val path                       = s"/mtd-api-nrs-proxy/$nino/$event"
+  val auth                       = "Bearer xyx"
   implicit val hc: HeaderCarrier = HeaderCarrier(authorization = Some(Authorization(auth)))
 
   val connector: NrsProxyConnector = inject[NrsProxyConnector]
@@ -53,8 +54,8 @@ class NrsProxyConnectorISpec extends V1R7IntegrationSpec
         when(POST, path, headers = Map("Authorization" -> auth), body = Some(body.toString))
           .thenReturn(INTERNAL_SERVER_ERROR)
 
-        inside(connector.submit(nino, event, body).futureValue) {
-          case Left(err) => err shouldBe an[UpstreamErrorResponse]
+        inside(connector.submit(nino, event, body).futureValue) { case Left(err) =>
+          err shouldBe an[UpstreamErrorResponse]
         }
       }
     }
@@ -64,10 +65,11 @@ class NrsProxyConnectorISpec extends V1R7IntegrationSpec
         when(POST, path, headers = Map("Authorization" -> auth), body = Some(body.toString))
           .thenReturn(BAD_REQUEST)
 
-        inside(connector.submit(nino, event, body).futureValue) {
-          case Left(err) => err shouldBe an[UpstreamErrorResponse]
+        inside(connector.submit(nino, event, body).futureValue) { case Left(err) =>
+          err shouldBe an[UpstreamErrorResponse]
         }
       }
     }
   }
+
 }

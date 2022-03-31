@@ -17,7 +17,16 @@
 package v1r7.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{EmploymentIdFormatError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  EmploymentIdFormatError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
@@ -33,8 +42,8 @@ import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
 
 class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
-  private val validTaxYear = "2020-21"
+  private val validNino         = "AA123456A"
+  private val validTaxYear      = "2020-21"
   private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -179,8 +188,8 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
-    private val missingStudentLoansBody: JsValue = Json.parse(
-      """
+  private val missingStudentLoansBody: JsValue = Json.parse(
+    """
         |{
         |    "employment": {
         |        "pay": {
@@ -224,7 +233,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         |    }
         |}
         |""".stripMargin
-    )
+  )
 
   private val missingDeductionsBody: JsValue = Json.parse(
     """
@@ -311,22 +320,22 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
-  private val validRawBody = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody = AnyContentAsJson(emptyRequestJson)
+  private val validRawBody                             = AnyContentAsJson(validRequestJson)
+  private val emptyRawBody                             = AnyContentAsJson(emptyRequestJson)
   private val missingMandatoryEmploymentRawRequestBody = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
-  private val missingMandatoryPayRawRequestBody = AnyContentAsJson(missingMandatoryPayObjectJson)
-  private val missingMandatoryFieldsRawRequestBody = AnyContentAsJson(missingMandatoryFieldsJson)
-  private val incorrectFormatRawBody = AnyContentAsJson(incorrectFormatRequestJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
-  private val missingStudentLoansRawRequestBody = AnyContentAsJson(missingStudentLoansBody)
-  private val missingBenefitsInKindRawRequestBody = AnyContentAsJson(missingBenefitsInKindBody)
-  private val missingDeductionsRawRequestBody = AnyContentAsJson(missingDeductionsBody)
-  private val missingMultipleObjectBodiesRequestBody = AnyContentAsJson(missingMultipleObjectBodies)
+  private val missingMandatoryPayRawRequestBody        = AnyContentAsJson(missingMandatoryPayObjectJson)
+  private val missingMandatoryFieldsRawRequestBody     = AnyContentAsJson(missingMandatoryFieldsJson)
+  private val incorrectFormatRawBody                   = AnyContentAsJson(incorrectFormatRequestJson)
+  private val allInvalidValueRawRequestBody            = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val missingStudentLoansRawRequestBody        = AnyContentAsJson(missingStudentLoansBody)
+  private val missingBenefitsInKindRawRequestBody      = AnyContentAsJson(missingBenefitsInKindBody)
+  private val missingDeductionsRawRequestBody          = AnyContentAsJson(missingDeductionsBody)
+  private val missingMultipleObjectBodiesRequestBody   = AnyContentAsJson(missingMultipleObjectBodies)
 
   class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -339,10 +348,10 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
 
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
-      s"""
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
          |taxYearNotEndedRule.enabled = $errorFeatureSwitch
       """.stripMargin))))
+
   }
 
   "AmendFinancialDetailsValidator" when {
@@ -400,7 +409,8 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
 
       "return RuleIncorrectOrEmptyBodyError error for a non-empty JSON body with no expected fields provided (No mandatory employment object)" in new Test {
-        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingMandatoryEmploymentRawRequestBody)) shouldBe
+        validator.validate(
+          AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingMandatoryEmploymentRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment"))))
       }
 
@@ -418,17 +428,17 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
       "return RuleIncorrectOrEmptyBodyError error when studentLoans object is provided with no fields" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingStudentLoansRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/deductions/studentLoans"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/deductions/studentLoans"))))
       }
 
       "return RuleIncorrectOrEmptyBodyError error when deductions object is provided with no fields" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingDeductionsRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/deductions"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/deductions"))))
       }
 
       "return RuleIncorrectOrEmptyBodyError error when benefitsInKind object is provided with no fields" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, missingBenefitsInKindRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths=Some(Seq("/employment/benefitsInKind"))))
+          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/benefitsInKind"))))
       }
 
       "return RuleIncorrectOrEmptyBodyError error when multiple object bodies are not provided" in new Test {
@@ -487,7 +497,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
                 "/employment/benefitsInKind/travelAndSubsistence",
                 "/employment/benefitsInKind/vouchersAndCreditCards",
                 "/employment/benefitsInKind/nonCash"
-                ))
+              ))
             ),
             ValueFormatError.copy(
               message = BIG_DECIMAL_MINIMUM_INCLUSIVE,
@@ -497,4 +507,5 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
     }
   }
+
 }

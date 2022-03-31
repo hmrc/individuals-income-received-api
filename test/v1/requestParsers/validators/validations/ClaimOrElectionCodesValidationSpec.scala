@@ -20,13 +20,16 @@ import support.UnitSpec
 import api.models.errors.ClaimOrElectionCodesFormatError
 
 class ClaimOrElectionCodesValidationSpec extends UnitSpec {
+
   "validateOptional" should {
     "return an empty list" when {
       "None is supplied" in {
         ClaimOrElectionCodesValidation.validateOptional(None, 0) shouldBe NoValidationErrors
       }
       "a List is supplied with no invalid fields" in {
-        ClaimOrElectionCodesValidation.validateOptional(Some(Seq("PRR", "LET", "GHO", "ROR", "PRO", "ESH", "NVC", "SIR", "OTH", "BAD", "INV")), 0) shouldBe
+        ClaimOrElectionCodesValidation.validateOptional(
+          Some(Seq("PRR", "LET", "GHO", "ROR", "PRO", "ESH", "NVC", "SIR", "OTH", "BAD", "INV")),
+          0) shouldBe
           NoValidationErrors
       }
     }
@@ -37,12 +40,17 @@ class ClaimOrElectionCodesValidationSpec extends UnitSpec {
       }
       "a list only containing invalid fields is supplied" in {
         ClaimOrElectionCodesValidation.validateOptional(Some(Seq("beans", "eggs", "toast")), 0) shouldBe
-          List(ClaimOrElectionCodesFormatError.copy(paths = Some(Seq(s"/disposals/0/claimOrElectionCodes/0", s"/disposals/0/claimOrElectionCodes/1", s"/disposals/0/claimOrElectionCodes/2"))))
+          List(
+            ClaimOrElectionCodesFormatError.copy(paths =
+              Some(Seq(s"/disposals/0/claimOrElectionCodes/0", s"/disposals/0/claimOrElectionCodes/1", s"/disposals/0/claimOrElectionCodes/2"))))
       }
       "a list containing a mixture of valid and invalid fields is supplied" in {
         ClaimOrElectionCodesValidation.validateOptional(Some(Seq("PRR", "beans", "LET", "eggs", "GHO", "toast")), 0) shouldBe
-          List(ClaimOrElectionCodesFormatError.copy(paths = Some(Seq(s"/disposals/0/claimOrElectionCodes/1", s"/disposals/0/claimOrElectionCodes/3", s"/disposals/0/claimOrElectionCodes/5"))))
+          List(
+            ClaimOrElectionCodesFormatError.copy(paths =
+              Some(Seq(s"/disposals/0/claimOrElectionCodes/1", s"/disposals/0/claimOrElectionCodes/3", s"/disposals/0/claimOrElectionCodes/5"))))
       }
     }
   }
+
 }

@@ -19,16 +19,15 @@ package v1.models.response.retrieveForeign
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class UnremittableForeignIncome(countryCode: String,
-                                     amountInForeignCurrency: BigDecimal,
-                                     amountTaxPaid: Option[BigDecimal])
+case class UnremittableForeignIncome(countryCode: String, amountInForeignCurrency: BigDecimal, amountTaxPaid: Option[BigDecimal])
 
 object UnremittableForeignIncome {
+
   implicit val reads: Reads[UnremittableForeignIncome] = (
     (JsPath \ "countryCode").read[String] and
       (JsPath \ "amountInForeignCurrency").read[BigDecimal] and
       (JsPath \ "amountTaxPaid").readNullable[BigDecimal]
-    ) (UnremittableForeignIncome.apply _)
+  )(UnremittableForeignIncome.apply _)
 
   implicit val writes: OWrites[UnremittableForeignIncome] = Json.writes[UnremittableForeignIncome]
 }

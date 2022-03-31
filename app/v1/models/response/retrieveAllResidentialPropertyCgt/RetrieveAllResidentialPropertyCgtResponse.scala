@@ -21,15 +21,15 @@ import play.api.libs.json.{Json, OFormat}
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas._
 
-case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdService],
-                                                     customerAddedDisposals: Option[CustomerAddedDisposals])
+case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdService], customerAddedDisposals: Option[CustomerAddedDisposals])
 
 object RetrieveAllResidentialPropertyCgtResponse extends HateoasLinks {
 
   implicit val format: OFormat[RetrieveAllResidentialPropertyCgtResponse] = Json.format[RetrieveAllResidentialPropertyCgtResponse]
 
   implicit object RetrieveSavingsLinksFactory
-    extends HateoasLinksFactory[RetrieveAllResidentialPropertyCgtResponse, RetrieveAllResidentialPropertyCgtHateoasData] {
+      extends HateoasLinksFactory[RetrieveAllResidentialPropertyCgtResponse, RetrieveAllResidentialPropertyCgtHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveAllResidentialPropertyCgtHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -40,7 +40,9 @@ object RetrieveAllResidentialPropertyCgtResponse extends HateoasLinks {
         retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveAllResidentialPropertyCgtHateoasData(nino: String, taxYear: String) extends HateoasData

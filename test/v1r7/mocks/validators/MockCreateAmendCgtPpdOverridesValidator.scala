@@ -33,6 +33,7 @@ trait MockCreateAmendCgtPpdOverridesValidator extends MockFactory {
         .validate(_: CreateAmendCgtPpdOverridesRawData))
         .expects(data)
     }
+
   }
 
 }

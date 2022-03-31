@@ -21,14 +21,14 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.RelType.{ AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -186,12 +186,13 @@ class RetrieveDividendsControllerSpec
         MockHateoasFactory
           .wrap(retrieveDividendsResponseModel, RetrieveDividendsHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveDividendsResponseModel,
-                           Seq(
-                             amendDividendsLink,
-                             retrieveDividendsLink,
-                             deleteDividendsLink
-                           )))
+            HateoasWrapper(
+              retrieveDividendsResponseModel,
+              Seq(
+                amendDividendsLink,
+                retrieveDividendsLink,
+                deleteDividendsLink
+              )))
 
         val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
 
@@ -260,4 +261,5 @@ class RetrieveDividendsControllerSpec
       }
     }
   }
+
 }

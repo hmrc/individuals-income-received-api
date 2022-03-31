@@ -24,8 +24,8 @@ import v1r7.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResiden
 import v1r7.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtRequestParser @Inject()(val validator: RetrieveAllResidentialPropertyCgtValidator)
-  extends RequestParser[RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest] {
+class RetrieveAllResidentialPropertyCgtRequestParser @Inject() (val validator: RetrieveAllResidentialPropertyCgtValidator)
+    extends RequestParser[RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest] {
 
   override protected def requestFor(data: RetrieveAllResidentialPropertyCgtRawData): RetrieveAllResidentialPropertyCgtRequest =
     RetrieveAllResidentialPropertyCgtRequest(
@@ -33,4 +33,5 @@ class RetrieveAllResidentialPropertyCgtRequestParser @Inject()(val validator: Re
       data.taxYear,
       data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest)
     )
+
 }

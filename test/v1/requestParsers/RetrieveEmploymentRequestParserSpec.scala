@@ -24,9 +24,9 @@ import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, Retrieve
 
 class RetrieveEmploymentRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2021-22"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2021-22"
+  val employmentId: String           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val retrieveCustomEmploymentRawData: RetrieveEmploymentRawData = RetrieveEmploymentRawData(
@@ -36,9 +36,11 @@ class RetrieveEmploymentRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockRetrieveEmploymentValidator {
+
     lazy val parser: RetrieveEmploymentRequestParser = new RetrieveEmploymentRequestParser(
       validator = mockRetrieveCustomEmploymentValidator
     )
+
   }
 
   "parse" should {
@@ -53,7 +55,8 @@ class RetrieveEmploymentRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockRetrieveCustomEmploymentValidator.validate(retrieveCustomEmploymentRawData)
+        MockRetrieveCustomEmploymentValidator
+          .validate(retrieveCustomEmploymentRawData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(retrieveCustomEmploymentRawData) shouldBe
@@ -61,7 +64,8 @@ class RetrieveEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
-        MockRetrieveCustomEmploymentValidator.validate(retrieveCustomEmploymentRawData)
+        MockRetrieveCustomEmploymentValidator
+          .validate(retrieveCustomEmploymentRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(retrieveCustomEmploymentRawData) shouldBe
@@ -69,7 +73,8 @@ class RetrieveEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur (NinoFormatError, TaxYearFormatError and EmploymentIdFormatError errors)" in new Test {
-        MockRetrieveCustomEmploymentValidator.validate(retrieveCustomEmploymentRawData)
+        MockRetrieveCustomEmploymentValidator
+          .validate(retrieveCustomEmploymentRawData)
           .returns(List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError))
 
         parser.parseRequest(retrieveCustomEmploymentRawData) shouldBe
@@ -77,4 +82,5 @@ class RetrieveEmploymentRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

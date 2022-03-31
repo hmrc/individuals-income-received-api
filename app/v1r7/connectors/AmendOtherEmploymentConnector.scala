@@ -29,21 +29,22 @@ import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
-class AmendOtherEmploymentConnector @Inject()(val http: HttpClient,
-                                              val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AmendOtherEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
-      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear"), body = request.body
+      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear"),
+      body = request.body
     )
   }
+
 }

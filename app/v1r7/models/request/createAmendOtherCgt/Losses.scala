@@ -26,5 +26,5 @@ case class Losses(broughtForwardLossesUsedInCurrentYear: Option[BigDecimal],
 object Losses {
   val empty: Losses = Losses(None, None, None, None)
 
-  implicit val format: OFormat[Losses] =  Json.format[Losses]
+  implicit val format: OFormat[Losses] = Json.format[Losses]
 }

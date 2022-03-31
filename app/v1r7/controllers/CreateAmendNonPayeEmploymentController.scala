@@ -36,14 +36,14 @@ import v1r7.services.CreateAmendNonPayeEmploymentService
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                                       val lookupService: MtdIdLookupService,
-                                                       appConfig: AppConfig,
-                                                       requestParser: CreateAmendNonPayeEmploymentRequestParser,
-                                                       service: CreateAmendNonPayeEmploymentService,
-                                                       auditService: AuditService,
-                                                       cc: ControllerComponents,
-                                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                        val lookupService: MtdIdLookupService,
+                                                        appConfig: AppConfig,
+                                                        requestParser: CreateAmendNonPayeEmploymentRequestParser,
+                                                        service: CreateAmendNonPayeEmploymentService,
+                                                        auditService: AuditService,
+                                                        cc: ControllerComponents,
+                                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging

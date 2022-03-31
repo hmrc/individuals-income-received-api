@@ -27,5 +27,6 @@ object AmendBusinessReceiptsItem {
   implicit val writes: OWrites[AmendBusinessReceiptsItem] = (
     (JsPath \ "grossAmount").write[BigDecimal] and
       (JsPath \ "taxYear").write[String]
-    ) (unlift(AmendBusinessReceiptsItem.unapply))
+  )(unlift(AmendBusinessReceiptsItem.unapply))
+
 }

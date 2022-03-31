@@ -23,5 +23,8 @@ case class CreateAmendCgtResidentialPropertyDisposalsRequestBody(disposals: Seq[
 }
 
 object CreateAmendCgtResidentialPropertyDisposalsRequestBody {
-  implicit val format: OFormat[CreateAmendCgtResidentialPropertyDisposalsRequestBody] = Json.format[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
+
+  implicit val format: OFormat[CreateAmendCgtResidentialPropertyDisposalsRequestBody] =
+    Json.format[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
+
 }

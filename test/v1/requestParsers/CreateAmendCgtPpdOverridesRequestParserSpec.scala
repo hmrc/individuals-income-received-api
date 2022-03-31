@@ -26,8 +26,8 @@ import v1.models.request.createAmendCgtPpdOverrides._
 
 class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -140,9 +140,11 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockCreateAmendCgtPpdOverridesValidator {
+
     lazy val parser: CreateAmendCgtPpdOverridesRequestParser = new CreateAmendCgtPpdOverridesRequestParser(
       validator = mockCreateAmendCgtPpdValidator
     )
+
   }
 
   "parse" should {
@@ -151,14 +153,14 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
         MockCreateAmendCgtPpdOverridesValidator.validate(createAmendCgtPpdOverridesRawData).returns(Nil)
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData) shouldBe
-        Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), taxYear, requestBody))
+          Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), taxYear, requestBody))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation occurs" in new Test {
-        MockCreateAmendCgtPpdOverridesValidator.validate(
-          createAmendCgtPpdOverridesRawData.copy(nino = "notANino"))
+        MockCreateAmendCgtPpdOverridesValidator
+          .validate(createAmendCgtPpdOverridesRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData.copy(nino = "notANino")) shouldBe
@@ -219,49 +221,54 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
 
         private val allInvalidValueErrors = List(
           PpdSubmissionIdFormatError.copy(
-            paths = Some(Seq(
-              "/multiplePropertyDisposals/0/ppdSubmissionId",
-              "/singlePropertyDisposals/0/ppdSubmissionId",
-              "/multiplePropertyDisposals/1/ppdSubmissionId",
-              "/singlePropertyDisposals/1/ppdSubmissionId"))
+            paths = Some(
+              Seq(
+                "/multiplePropertyDisposals/0/ppdSubmissionId",
+                "/singlePropertyDisposals/0/ppdSubmissionId",
+                "/multiplePropertyDisposals/1/ppdSubmissionId",
+                "/singlePropertyDisposals/1/ppdSubmissionId"
+              ))
           ),
           ValueFormatError.copy(
-            paths = Some(List(
-              "/multiplePropertyDisposals/0/amountOfNetGain",
-              "/multiplePropertyDisposals/1/amountOfNetLoss",
-              "/singlePropertyDisposals/0/amountOfNetLoss",
-              "/singlePropertyDisposals/0/disposalProceeds",
-              "/singlePropertyDisposals/0/acquisitionAmount",
-              "/singlePropertyDisposals/0/improvementCosts",
-              "/singlePropertyDisposals/0/additionalCosts",
-              "/singlePropertyDisposals/0/prfAmount",
-              "/singlePropertyDisposals/0/otherReliefAmount",
-              "/singlePropertyDisposals/0/lossesFromThisYear",
-              "/singlePropertyDisposals/0/lossesFromPreviousYear",
-              "/singlePropertyDisposals/0/amountOfNetGain",
-              "/singlePropertyDisposals/1/disposalProceeds",
-              "/singlePropertyDisposals/1/acquisitionAmount",
-              "/singlePropertyDisposals/1/improvementCosts",
-              "/singlePropertyDisposals/1/improvementCosts",
-              "/singlePropertyDisposals/1/additionalCosts",
-              "/singlePropertyDisposals/1/prfAmount",
-              "/singlePropertyDisposals/1/otherReliefAmount",
-              "/singlePropertyDisposals/1/lossesFromThisYear",
-              "/singlePropertyDisposals/1/lossesFromPreviousYear",
-              "/singlePropertyDisposals/1/amountOfNetLoss"
-            ))
+            paths = Some(
+              List(
+                "/multiplePropertyDisposals/0/amountOfNetGain",
+                "/multiplePropertyDisposals/1/amountOfNetLoss",
+                "/singlePropertyDisposals/0/amountOfNetLoss",
+                "/singlePropertyDisposals/0/disposalProceeds",
+                "/singlePropertyDisposals/0/acquisitionAmount",
+                "/singlePropertyDisposals/0/improvementCosts",
+                "/singlePropertyDisposals/0/additionalCosts",
+                "/singlePropertyDisposals/0/prfAmount",
+                "/singlePropertyDisposals/0/otherReliefAmount",
+                "/singlePropertyDisposals/0/lossesFromThisYear",
+                "/singlePropertyDisposals/0/lossesFromPreviousYear",
+                "/singlePropertyDisposals/0/amountOfNetGain",
+                "/singlePropertyDisposals/1/disposalProceeds",
+                "/singlePropertyDisposals/1/acquisitionAmount",
+                "/singlePropertyDisposals/1/improvementCosts",
+                "/singlePropertyDisposals/1/improvementCosts",
+                "/singlePropertyDisposals/1/additionalCosts",
+                "/singlePropertyDisposals/1/prfAmount",
+                "/singlePropertyDisposals/1/otherReliefAmount",
+                "/singlePropertyDisposals/1/lossesFromThisYear",
+                "/singlePropertyDisposals/1/lossesFromPreviousYear",
+                "/singlePropertyDisposals/1/amountOfNetLoss"
+              ))
           ),
           DateFormatError.copy(
-            paths = Some(List(
-              "/singlePropertyDisposals/0/completionDate",
-              "/singlePropertyDisposals/0/acquisitionDate",
-              "/singlePropertyDisposals/1/completionDate",
-              "/singlePropertyDisposals/1/acquisitionDate",
-            ))
+            paths = Some(
+              List(
+                "/singlePropertyDisposals/0/completionDate",
+                "/singlePropertyDisposals/0/acquisitionDate",
+                "/singlePropertyDisposals/1/completionDate",
+                "/singlePropertyDisposals/1/acquisitionDate"
+              ))
           )
         )
 
-        MockCreateAmendCgtPpdOverridesValidator.validate(createAmendCgtPpdOverridesRawData.copy(body = allInvalidValueRawRequestBody))
+        MockCreateAmendCgtPpdOverridesValidator
+          .validate(createAmendCgtPpdOverridesRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -269,4 +276,5 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

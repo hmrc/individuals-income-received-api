@@ -33,6 +33,7 @@ trait MockRetrieveFinancialDetailsValidator extends MockFactory {
         .validate(_: RetrieveFinancialDetailsRawData))
         .expects(data)
     }
+
   }
 
 }

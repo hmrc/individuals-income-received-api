@@ -198,4 +198,5 @@ class RetrievePensionsResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -19,7 +19,7 @@ package v1.models.response.retrieveOtherEmployment
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class TaxableLumpSumsAndCertainIncomeItemSpec extends UnitSpec{
+class TaxableLumpSumsAndCertainIncomeItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -57,4 +57,5 @@ class TaxableLumpSumsAndCertainIncomeItemSpec extends UnitSpec{
       }
     }
   }
+
 }

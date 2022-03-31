@@ -17,7 +17,16 @@
 package v1r7.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  NinoFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -26,8 +35,8 @@ import v1r7.models.request.amendForeign._
 
 class AmendForeignRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -73,9 +82,11 @@ class AmendForeignRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockAmendForeignValidator {
+
     lazy val parser: AmendForeignRequestParser = new AmendForeignRequestParser(
       validator = mockAmendForeignValidator
     )
+
   }
 
   "parse" should {
@@ -90,7 +101,8 @@ class AmendForeignRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendForeignValidator.validate(amendForeignRawData.copy(nino = "notANino"))
+        MockAmendForeignValidator
+          .validate(amendForeignRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendForeignRawData.copy(nino = "notANino")) shouldBe
@@ -98,7 +110,8 @@ class AmendForeignRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendForeignValidator.validate(amendForeignRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendForeignValidator
+          .validate(amendForeignRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendForeignRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -132,13 +145,14 @@ class AmendForeignRequestParserSpec extends UnitSpec {
             paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
           ),
           ValueFormatError.copy(
-            paths = Some(List(
-              "/foreignEarnings/earningsNotTaxableUK",
-              "/unremittableForeignIncome/0/amountInForeignCurrency",
-              "/unremittableForeignIncome/0/amountTaxPaid",
-              "/unremittableForeignIncome/1/amountInForeignCurrency",
-              "/unremittableForeignIncome/1/amountTaxPaid"
-            )),
+            paths = Some(
+              List(
+                "/foreignEarnings/earningsNotTaxableUK",
+                "/unremittableForeignIncome/0/amountInForeignCurrency",
+                "/unremittableForeignIncome/0/amountTaxPaid",
+                "/unremittableForeignIncome/1/amountInForeignCurrency",
+                "/unremittableForeignIncome/1/amountTaxPaid"
+              )),
             message = "The field should be between 0 and 99999999999.99"
           ),
           CustomerRefFormatError.copy(
@@ -149,7 +163,8 @@ class AmendForeignRequestParserSpec extends UnitSpec {
           )
         )
 
-        MockAmendForeignValidator.validate(amendForeignRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendForeignValidator
+          .validate(amendForeignRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendForeignRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -157,4 +172,5 @@ class AmendForeignRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

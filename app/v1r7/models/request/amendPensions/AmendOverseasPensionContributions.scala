@@ -40,5 +40,6 @@ object AmendOverseasPensionContributions {
       (JsPath \ "dblTaxationArticle").writeNullable[String] and
       (JsPath \ "dblTaxationTreaty").writeNullable[String] and
       (JsPath \ "sf74Reference").writeNullable[String]
-    ) (unlift(AmendOverseasPensionContributions.unapply))
+  )(unlift(AmendOverseasPensionContributions.unapply))
+
 }

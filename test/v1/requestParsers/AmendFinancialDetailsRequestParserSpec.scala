@@ -28,9 +28,9 @@ import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, Am
 
 class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
 
-  private val nino: String = "AA123456B"
-  private val taxYear: String = "2020-21"
-  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  private val nino: String           = "AA123456B"
+  private val taxYear: String        = "2020-21"
+  private val employmentId           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -154,9 +154,11 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockAmendFinancialDetailsValidator {
+
     lazy val parser: AmendFinancialDetailsRequestParser = new AmendFinancialDetailsRequestParser(
       validator = mockAmendFinancialDetailsValidator
     )
+
   }
 
   "parse" should {
@@ -169,7 +171,8 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawData.copy(nino = "notANino"))
+        MockAmendFinancialDetailsValidator
+          .validate(amendFinancialDetailsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendFinancialDetailsRawData.copy(nino = "notANino")) shouldBe
@@ -177,7 +180,8 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
-        MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendFinancialDetailsValidator
+          .validate(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -185,11 +189,12 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur (NinoFormatError, TaxYearFormatError and EmploymentIdFormatError errors)" in new Test {
-        MockAmendFinancialDetailsValidator.validate(
-          amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId"))
+        MockAmendFinancialDetailsValidator
+          .validate(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId"))
           .returns(List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError))
 
-        parser.parseRequest(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId")) shouldBe
+        parser.parseRequest(
+          amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId")) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError))))
       }
 
@@ -253,43 +258,45 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
           ),
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/employment/pay/taxablePayToDate",
-              "/employment/deductions/studentLoans/uglDeductionAmount",
-              "/employment/deductions/studentLoans/pglDeductionAmount",
-              "/employment/benefitsInKind/accommodation",
-              "/employment/benefitsInKind/assets",
-              "/employment/benefitsInKind/assetTransfer",
-              "/employment/benefitsInKind/beneficialLoan",
-              "/employment/benefitsInKind/car",
-              "/employment/benefitsInKind/carFuel",
-              "/employment/benefitsInKind/educationalServices",
-              "/employment/benefitsInKind/entertaining",
-              "/employment/benefitsInKind/expenses",
-              "/employment/benefitsInKind/medicalInsurance",
-              "/employment/benefitsInKind/telephone",
-              "/employment/benefitsInKind/service",
-              "/employment/benefitsInKind/taxableExpenses",
-              "/employment/benefitsInKind/van",
-              "/employment/benefitsInKind/vanFuel",
-              "/employment/benefitsInKind/mileage",
-              "/employment/benefitsInKind/nonQualifyingRelocationExpenses",
-              "/employment/benefitsInKind/nurseryPlaces",
-              "/employment/benefitsInKind/otherItems",
-              "/employment/benefitsInKind/paymentsOnEmployeesBehalf",
-              "/employment/benefitsInKind/personalIncidentalExpenses",
-              "/employment/benefitsInKind/qualifyingRelocationExpenses",
-              "/employment/benefitsInKind/employerProvidedProfessionalSubscriptions",
-              "/employment/benefitsInKind/employerProvidedServices",
-              "/employment/benefitsInKind/incomeTaxPaidByDirector",
-              "/employment/benefitsInKind/travelAndSubsistence",
-              "/employment/benefitsInKind/vouchersAndCreditCards",
-              "/employment/benefitsInKind/nonCash"
-            ))
+            paths = Some(
+              List(
+                "/employment/pay/taxablePayToDate",
+                "/employment/deductions/studentLoans/uglDeductionAmount",
+                "/employment/deductions/studentLoans/pglDeductionAmount",
+                "/employment/benefitsInKind/accommodation",
+                "/employment/benefitsInKind/assets",
+                "/employment/benefitsInKind/assetTransfer",
+                "/employment/benefitsInKind/beneficialLoan",
+                "/employment/benefitsInKind/car",
+                "/employment/benefitsInKind/carFuel",
+                "/employment/benefitsInKind/educationalServices",
+                "/employment/benefitsInKind/entertaining",
+                "/employment/benefitsInKind/expenses",
+                "/employment/benefitsInKind/medicalInsurance",
+                "/employment/benefitsInKind/telephone",
+                "/employment/benefitsInKind/service",
+                "/employment/benefitsInKind/taxableExpenses",
+                "/employment/benefitsInKind/van",
+                "/employment/benefitsInKind/vanFuel",
+                "/employment/benefitsInKind/mileage",
+                "/employment/benefitsInKind/nonQualifyingRelocationExpenses",
+                "/employment/benefitsInKind/nurseryPlaces",
+                "/employment/benefitsInKind/otherItems",
+                "/employment/benefitsInKind/paymentsOnEmployeesBehalf",
+                "/employment/benefitsInKind/personalIncidentalExpenses",
+                "/employment/benefitsInKind/qualifyingRelocationExpenses",
+                "/employment/benefitsInKind/employerProvidedProfessionalSubscriptions",
+                "/employment/benefitsInKind/employerProvidedServices",
+                "/employment/benefitsInKind/incomeTaxPaidByDirector",
+                "/employment/benefitsInKind/travelAndSubsistence",
+                "/employment/benefitsInKind/vouchersAndCreditCards",
+                "/employment/benefitsInKind/nonCash"
+              ))
           )
         )
 
-        MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendFinancialDetailsValidator
+          .validate(amendFinancialDetailsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendFinancialDetailsRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -297,4 +304,5 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

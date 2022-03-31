@@ -18,4 +18,4 @@ package v1.models.request.retrieveAllResidentialPropertyCgt
 
 import api.models.request.RawData
 
-case class RetrieveAllResidentialPropertyCgtRawData(nino: String, taxYear: String, source:Option[String]) extends RawData
+case class RetrieveAllResidentialPropertyCgtRawData(nino: String, taxYear: String, source: Option[String]) extends RawData

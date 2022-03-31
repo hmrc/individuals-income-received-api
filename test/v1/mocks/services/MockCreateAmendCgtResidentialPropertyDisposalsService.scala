@@ -29,14 +29,25 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsService extends MockFactory {
 
-  val mockCreateAmendCgtResidentialPropertyDisposalsService: CreateAmendCgtResidentialPropertyDisposalsService = mock[CreateAmendCgtResidentialPropertyDisposalsService]
+  val mockCreateAmendCgtResidentialPropertyDisposalsService: CreateAmendCgtResidentialPropertyDisposalsService =
+    mock[CreateAmendCgtResidentialPropertyDisposalsService]
 
   object MockCreateAmendCgtResidentialPropertyDisposalsService {
-    def createAndAmend(requestData: CreateAmendCgtResidentialPropertyDisposalsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockCreateAmendCgtResidentialPropertyDisposalsService
-        .createAndAmend(_: CreateAmendCgtResidentialPropertyDisposalsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+
+    def createAndAmend(
+        requestData: CreateAmendCgtResidentialPropertyDisposalsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (
+        mockCreateAmendCgtResidentialPropertyDisposalsService
+          .createAndAmend(_: CreateAmendCgtResidentialPropertyDisposalsRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

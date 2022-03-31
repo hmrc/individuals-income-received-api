@@ -64,4 +64,5 @@ class AmendDividendIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
       }
     }
   }
+
 }

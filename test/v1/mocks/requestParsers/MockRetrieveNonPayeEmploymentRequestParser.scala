@@ -19,7 +19,7 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.retrieveNonPayeEmploymentIncome.{ RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest }
+import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 import v1.requestParsers.RetrieveNonPayeEmploymentRequestParser
 
 trait MockRetrieveNonPayeEmploymentRequestParser extends MockFactory {
@@ -27,9 +27,11 @@ trait MockRetrieveNonPayeEmploymentRequestParser extends MockFactory {
   val mockRetrieveNonPayeEmploymentRequestParser: RetrieveNonPayeEmploymentRequestParser = mock[RetrieveNonPayeEmploymentRequestParser]
 
   object MockDeleteRetrieveRequestParser {
+
     def parse(data: RetrieveNonPayeEmploymentIncomeRawData): CallHandler[Either[ErrorWrapper, RetrieveNonPayeEmploymentIncomeRequest]] = {
       (mockRetrieveNonPayeEmploymentRequestParser.parseRequest(_: RetrieveNonPayeEmploymentIncomeRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

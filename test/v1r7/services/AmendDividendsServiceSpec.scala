@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendDividendsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val foreignDividendModel = Seq(
@@ -90,24 +90,25 @@ class AmendDividendsServiceSpec extends ServiceSpec {
   )
 
   val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
-      nino = Nino(nino),
-      taxYear = taxYear,
-      body = AmendDividendsRequestBody(
-        Some(foreignDividendModel),
-        Some(dividendIncomeReceivedWhilstAbroadModel),
-        Some(stockDividendModel),
-        Some(redeemableSharesModel),
-        Some(bonusIssuesOfSecuritiesModel),
-        Some(closeCompanyLoansWrittenOffModel)
-      )
+    nino = Nino(nino),
+    taxYear = taxYear,
+    body = AmendDividendsRequestBody(
+      Some(foreignDividendModel),
+      Some(dividendIncomeReceivedWhilstAbroadModel),
+      Some(stockDividendModel),
+      Some(redeemableSharesModel),
+      Some(bonusIssuesOfSecuritiesModel),
+      Some(closeCompanyLoansWrittenOffModel)
+    )
   )
 
-  trait Test extends MockAmendDividendsConnector{
+  trait Test extends MockAmendDividendsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: AmendDividendsService = new AmendDividendsService(
       connector = mockAmendDividendsConnector
     )
+
   }
 
   "AmendDividendsService" when {
@@ -115,7 +116,8 @@ class AmendDividendsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendDividendsConnector.amendDividends(amendDividendsRequest)
+        MockAmendDividendsConnector
+          .amendDividends(amendDividendsRequest)
           .returns(Future.successful(outcome))
 
         await(service.amendDividends(amendDividendsRequest)) shouldBe outcome
@@ -126,7 +128,8 @@ class AmendDividendsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendDividendsConnector.amendDividends(amendDividendsRequest)
+            MockAmendDividendsConnector
+              .amendDividends(amendDividendsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendDividends(amendDividendsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -145,4 +148,5 @@ class AmendDividendsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

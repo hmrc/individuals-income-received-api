@@ -159,17 +159,11 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
     Some(150.99)
   )
 
-  val mtdRequestBody: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
-    Some(Seq(disposal)),
-    Some(nonStandardGains),
-    Some(losses),
-    Some(160.99))
+  val mtdRequestBody: CreateAmendOtherCgtRequestBody =
+    CreateAmendOtherCgtRequestBody(Some(Seq(disposal)), Some(nonStandardGains), Some(losses), Some(160.99))
 
-  val mtdRequestBodyWithMultipleDisposals: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
-    Some(Seq(disposal, disposal2)),
-    Some(nonStandardGains),
-    Some(losses),
-    Some(160.99))
+  val mtdRequestBodyWithMultipleDisposals: CreateAmendOtherCgtRequestBody =
+    CreateAmendOtherCgtRequestBody(Some(Seq(disposal, disposal2)), Some(nonStandardGains), Some(losses), Some(160.99))
 
   val desJson: JsValue = Json.parse(
     """
@@ -326,4 +320,5 @@ class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

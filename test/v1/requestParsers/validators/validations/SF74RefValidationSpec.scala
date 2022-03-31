@@ -45,5 +45,5 @@ class SF74RefValidationSpec extends UnitSpec {
       }
     }
   }
-}
 
+}

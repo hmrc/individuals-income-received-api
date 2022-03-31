@@ -33,13 +33,13 @@ import v1r7.models.response.listEmployment.{Employment, ListEmploymentResponse}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends DownstreamResponseMappingSupport with Logging {
+class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def listEmployments(request: ListEmploymentsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]] = {
+  def listEmployments(request: ListEmploymentsRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.listEmployments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
@@ -49,12 +49,13 @@ class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) exte
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_TAXABLE_ENTITY_ID"  -> NinoFormatError,
-    "INVALID_TAX_YEAR"           -> TaxYearFormatError,
-    "INVALID_EMPLOYMENT_ID"      -> StandardDownstreamError,
-    "INVALID_CORRELATIONID"      -> StandardDownstreamError,
-    "NO_DATA_FOUND"              -> NotFoundError,
-    "SERVER_ERROR"               -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"        -> StandardDownstreamError
+    "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+    "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+    "INVALID_EMPLOYMENT_ID"     -> StandardDownstreamError,
+    "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+    "NO_DATA_FOUND"             -> NotFoundError,
+    "SERVER_ERROR"              -> StandardDownstreamError,
+    "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
   )
+
 }

@@ -24,11 +24,12 @@ object EmployerRefValidation {
   private val regex = "^[0-9]{3}\\/[^ ].{0,9}$"
 
   def validateOptional(employerRef: Option[String]): List[MtdError] = employerRef match {
-    case None => NoValidationErrors
+    case None        => NoValidationErrors
     case Some(value) => validate(value)
   }
 
   def validate(employerRef: String): List[MtdError] = {
-    if(employerRef.matches(regex)) NoValidationErrors else List(EmployerRefFormatError)
+    if (employerRef.matches(regex)) NoValidationErrors else List(EmployerRefFormatError)
   }
+
 }

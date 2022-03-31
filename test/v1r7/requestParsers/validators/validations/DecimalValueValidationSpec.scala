@@ -89,4 +89,5 @@ class DecimalValueValidationSpec extends UnitSpec with ValueFormatErrorMessages 
       }
     }
   }
+
 }

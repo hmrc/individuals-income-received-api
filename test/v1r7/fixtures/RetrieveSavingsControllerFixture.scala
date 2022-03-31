@@ -44,8 +44,9 @@ object RetrieveSavingsControllerFixture {
     """.stripMargin
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdRetrieveSavingsResponse.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdRetrieveSavingsResponse.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -66,5 +67,7 @@ object RetrieveSavingsControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

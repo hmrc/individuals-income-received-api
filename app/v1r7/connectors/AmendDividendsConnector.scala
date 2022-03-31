@@ -27,21 +27,20 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendDividendsConnector @Inject()(val http: HttpClient,
-                                        val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AmendDividendsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendDividends(request: AmendDividendsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def amendDividends(
+      request: AmendDividendsRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/dividends/$nino/$taxYear"), body = request.body
+      uri = IfsUri[Unit](s"income-tax/income/dividends/$nino/$taxYear"),
+      body = request.body
     )
   }
+
 }

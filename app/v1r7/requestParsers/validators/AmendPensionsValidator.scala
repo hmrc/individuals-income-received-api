@@ -23,11 +23,23 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendPensions._
-import v1r7.requestParsers.validators.validations.{CountryCodeValidation, CustomerRefValidation, DecimalValueValidation, DoubleTaxationArticleValidation, DoubleTaxationTreatyValidation, JsonFormatValidation, NinoValidation, QOPSRefValidation, SF74RefValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  CustomerRefValidation,
+  DecimalValueValidation,
+  DoubleTaxationArticleValidation,
+  DoubleTaxationTreatyValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  QOPSRefValidation,
+  SF74RefValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
+class AmendPensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -55,26 +67,34 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
   }
 
   private def bodyValueValidator: AmendPensionsRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendPensionsRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.foreignPensions.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateForeignPensions(data, index)
-        }).getOrElse(NoValidationErrors).toList,
-        requestBodyData.overseasPensionContributions.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateOverseasPensionContributions(data, index)
-        }).getOrElse(NoValidationErrors).toList
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          requestBodyData.foreignPensions
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeignPensions(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList,
+          requestBodyData.overseasPensionContributions
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateOverseasPensionContributions(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList
+        )
+      ))
   }
 
   private def validateForeignPensions(foreignPensions: AmendForeignPensionsItem, arrayIndex: Int): List[MtdError] = {
     List(
-      CountryCodeValidation.validate(foreignPensions.countryCode).map(
-        _.copy(paths = Some(Seq(s"/foreignPensions/$arrayIndex/countryCode")))
-      ),
+      CountryCodeValidation
+        .validate(foreignPensions.countryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/foreignPensions/$arrayIndex/countryCode")))
+        ),
       DecimalValueValidation.validateOptional(
         amount = foreignPensions.amountBeforeTax,
         path = s"/foreignPensions/$arrayIndex/amountBeforeTax"
@@ -94,14 +114,17 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
     ).flatten
   }
 
-  private def validateOverseasPensionContributions(overseasPensionContributions: AmendOverseasPensionContributions, arrayIndex: Int): List[MtdError] = {
+  private def validateOverseasPensionContributions(overseasPensionContributions: AmendOverseasPensionContributions,
+                                                   arrayIndex: Int): List[MtdError] = {
     List(
-      CustomerRefValidation.validateOptional(overseasPensionContributions.customerReference).map(
-        _.copy(paths = Some(Seq(s"/overseasPensionContributions/$arrayIndex/customerReference")))
-      ),
+      CustomerRefValidation
+        .validateOptional(overseasPensionContributions.customerReference)
+        .map(
+          _.copy(paths = Some(Seq(s"/overseasPensionContributions/$arrayIndex/customerReference")))
+        ),
       DecimalValueValidation.validate(
         amount = overseasPensionContributions.exemptEmployersPensionContribs,
-        path = s"/overseasPensionContributions/$arrayIndex/exemptEmployersPensionContribs",
+        path = s"/overseasPensionContributions/$arrayIndex/exemptEmployersPensionContribs"
       ),
       QOPSRefValidation.validateOptional(
         qopsRef = overseasPensionContributions.migrantMemReliefQopsRefNo,
@@ -111,9 +134,11 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
         amount = overseasPensionContributions.dblTaxationRelief,
         path = s"/overseasPensionContributions/$arrayIndex/dblTaxationRelief"
       ),
-      CountryCodeValidation.validateOptional(overseasPensionContributions.dblTaxationCountryCode).map(
-        _.copy(paths = Some(Seq(s"/overseasPensionContributions/$arrayIndex/dblTaxationCountryCode")))
-      ),
+      CountryCodeValidation
+        .validateOptional(overseasPensionContributions.dblTaxationCountryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/overseasPensionContributions/$arrayIndex/dblTaxationCountryCode")))
+        ),
       DoubleTaxationArticleValidation.validateOptional(
         dblTaxationArticle = overseasPensionContributions.dblTaxationArticle,
         path = s"/overseasPensionContributions/$arrayIndex/dblTaxationArticle"
@@ -128,4 +153,5 @@ class AmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
       )
     ).flatten
   }
+
 }

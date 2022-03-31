@@ -32,7 +32,7 @@ class UnremittableForeignIncomeSpec extends UnitSpec {
   )
 
   val fullUnremittableForeignIncomeModel1: UnremittableForeignIncome = UnremittableForeignIncome(
-    countryCode =  "FRA",
+    countryCode = "FRA",
     amountInForeignCurrency = 1999.99,
     amountTaxPaid = Some(1999.99)
   )
@@ -58,4 +58,5 @@ class UnremittableForeignIncomeSpec extends UnitSpec {
       }
     }
   }
+
 }

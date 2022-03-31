@@ -16,20 +16,22 @@
 
 package v1.requestParsers
 
-import api.models.domain.{ MtdSourceEnum, Nino }
+import api.models.domain.{MtdSourceEnum, Nino}
 import api.requestParsers.RequestParser
-import v1.models.request.retrieveFinancialDetails.{ RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest }
+import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
 import v1.requestParsers.validators.RetrieveFinancialDetailsValidator
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveFinancialDetailsRequestParser @Inject()(val validator: RetrieveFinancialDetailsValidator)
+class RetrieveFinancialDetailsRequestParser @Inject() (val validator: RetrieveFinancialDetailsValidator)
     extends RequestParser[RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest] {
 
   override protected def requestFor(data: RetrieveFinancialDetailsRawData): RetrieveFinancialDetailsRequest =
-    RetrieveFinancialDetailsRequest(Nino(data.nino),
-                                    data.taxYear,
-                                    data.employmentId,
-                                    data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+    RetrieveFinancialDetailsRequest(
+      Nino(data.nino),
+      data.taxYear,
+      data.employmentId,
+      data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+
 }

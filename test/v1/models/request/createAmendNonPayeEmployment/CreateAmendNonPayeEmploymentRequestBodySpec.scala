@@ -36,4 +36,5 @@ class CreateAmendNonPayeEmploymentRequestBodySpec extends UnitSpec {
       Json.toJson(model) shouldBe json
     }
   }
+
 }

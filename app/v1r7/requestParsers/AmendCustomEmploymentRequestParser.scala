@@ -24,9 +24,10 @@ import v1r7.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, 
 import v1r7.requestParsers.validators.AmendCustomEmploymentValidator
 
 @Singleton
-class AmendCustomEmploymentRequestParser @Inject()(val validator: AmendCustomEmploymentValidator)
-  extends RequestParser[AmendCustomEmploymentRawData, AmendCustomEmploymentRequest] {
+class AmendCustomEmploymentRequestParser @Inject() (val validator: AmendCustomEmploymentValidator)
+    extends RequestParser[AmendCustomEmploymentRawData, AmendCustomEmploymentRequest] {
 
   override protected def requestFor(data: AmendCustomEmploymentRawData): AmendCustomEmploymentRequest =
     AmendCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId, data.body.json.as[AmendCustomEmploymentRequestBody])
+
 }

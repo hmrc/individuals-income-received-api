@@ -38,6 +38,7 @@ trait MockAmendSavingsService extends MockFactory {
         .amendSaving(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

@@ -26,8 +26,7 @@ import v1r7.models.request.retrieveEmployment.RetrieveEmploymentRawData
 import v1r7.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 @Singleton
-class RetrieveEmploymentValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveEmploymentRawData] {
+class RetrieveEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -48,4 +47,5 @@ class RetrieveEmploymentValidator @Inject()(implicit appConfig: AppConfig)
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
+
 }

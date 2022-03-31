@@ -17,7 +17,17 @@
 package v1r7.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, CessationDateFormatError, EmployerNameFormatError, EmployerRefFormatError, ErrorWrapper, NinoFormatError, PayrollIdFormatError, StartDateFormatError, TaxYearFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CessationDateFormatError,
+  EmployerNameFormatError,
+  EmployerRefFormatError,
+  ErrorWrapper,
+  NinoFormatError,
+  PayrollIdFormatError,
+  StartDateFormatError,
+  TaxYearFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -26,8 +36,8 @@ import v1r7.models.request.addCustomEmployment._
 
 class AddCustomEmploymentRequestParserSpec extends UnitSpec {
 
-  private val nino: String = "AA123456B"
-  private val taxYear: String = "2017-18"
+  private val nino: String           = "AA123456B"
+  private val taxYear: String        = "2017-18"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -67,9 +77,11 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockAddCustomEmploymentValidator {
+
     lazy val parser: AddCustomEmploymentRequestParser = new AddCustomEmploymentRequestParser(
       validator = mockAddCustomEmploymentValidator
     )
+
   }
 
   "parse" should {
@@ -82,7 +94,8 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAddCustomEmploymentValidator.validate(addCustomEmploymentRawData.copy(nino = "notANino"))
+        MockAddCustomEmploymentValidator
+          .validate(addCustomEmploymentRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(addCustomEmploymentRawData.copy(nino = "notANino")) shouldBe
@@ -90,7 +103,8 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAddCustomEmploymentValidator.validate(addCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAddCustomEmploymentValidator
+          .validate(addCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(addCustomEmploymentRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -122,7 +136,8 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
           PayrollIdFormatError
         )
 
-        MockAddCustomEmploymentValidator.validate(addCustomEmploymentRawData.copy(body = invalidValueRawBody))
+        MockAddCustomEmploymentValidator
+          .validate(addCustomEmploymentRawData.copy(body = invalidValueRawBody))
           .returns(errors)
 
         parser.parseRequest(addCustomEmploymentRawData.copy(body = invalidValueRawBody)) shouldBe
@@ -130,4 +145,5 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

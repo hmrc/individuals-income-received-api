@@ -57,4 +57,5 @@ class RedundancyCompensationPaymentsOverExemptionItemSpec extends UnitSpec {
       }
     }
   }
+
 }

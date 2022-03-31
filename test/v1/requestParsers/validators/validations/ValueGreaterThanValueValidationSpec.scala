@@ -20,6 +20,7 @@ import support.UnitSpec
 import api.models.errors.RuleLossesGreaterThanGainError
 
 class ValueGreaterThanValueValidationSpec extends UnitSpec {
+
   "validateOptional" should {
     "return NoValidationErrors" when {
       "one or more values provided are None" in {
@@ -36,9 +37,10 @@ class ValueGreaterThanValueValidationSpec extends UnitSpec {
     }
     "return an error" when {
       "value 1 is greater than value 2" in {
-        ValueGreaterThanValueValidation.validateOptional(Some(2), Some(1), "path") shouldBe List(RuleLossesGreaterThanGainError.copy(
-          paths = Some(Seq("path"))))
+        ValueGreaterThanValueValidation.validateOptional(Some(2), Some(1), "path") shouldBe List(
+          RuleLossesGreaterThanGainError.copy(paths = Some(Seq("path"))))
       }
     }
   }
+
 }

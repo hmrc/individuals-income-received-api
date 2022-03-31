@@ -22,14 +22,16 @@ import org.scalamock.scalatest.MockFactory
 import v1r7.requestParsers.CreateAmendNonPayeEmploymentRequestParser
 import v1r7.models.request.createAmendNonPayeEmployment.{CreateAmendNonPayeEmploymentRawData, CreateAmendNonPayeEmploymentRequest}
 
-trait MockCreateAmendNonPayeEmploymentRequestParser extends MockFactory{
+trait MockCreateAmendNonPayeEmploymentRequestParser extends MockFactory {
 
   val mockRequestParser: CreateAmendNonPayeEmploymentRequestParser = mock[CreateAmendNonPayeEmploymentRequestParser]
 
   object MockCreateAmendNonPayeEmploymentRequestParser {
+
     def parse(data: CreateAmendNonPayeEmploymentRawData): CallHandler[Either[ErrorWrapper, CreateAmendNonPayeEmploymentRequest]] = {
       (mockRequestParser.parseRequest(_: CreateAmendNonPayeEmploymentRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

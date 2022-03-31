@@ -55,8 +55,9 @@ object RetrieveNonPayeEmploymentControllerFixture {
     nonPayeIncome = Some(NonPayeIncome(tips = Some(2132.22)))
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdResponse.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdResponse.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -77,5 +78,7 @@ object RetrieveNonPayeEmploymentControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

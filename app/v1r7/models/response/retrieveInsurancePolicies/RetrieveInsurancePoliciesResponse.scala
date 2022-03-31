@@ -39,11 +39,13 @@ object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
       (JsPath \ "lifeAnnuity").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "voidedIsa").readNullable[Seq[VoidedIsaPoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "foreign").readNullable[Seq[ForeignPoliciesItem]].mapEmptySeqToNone
-    ) (RetrieveInsurancePoliciesResponse.apply _)
+  )(RetrieveInsurancePoliciesResponse.apply _)
 
   implicit val writes: OWrites[RetrieveInsurancePoliciesResponse] = Json.writes[RetrieveInsurancePoliciesResponse]
 
-  implicit object RetrieveInsurancePoliciesLinksFactory extends HateoasLinksFactory[RetrieveInsurancePoliciesResponse, RetrieveInsurancePoliciesHateoasData] {
+  implicit object RetrieveInsurancePoliciesLinksFactory
+      extends HateoasLinksFactory[RetrieveInsurancePoliciesResponse, RetrieveInsurancePoliciesHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveInsurancePoliciesHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -52,6 +54,7 @@ object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
         deleteInsurancePolicies(appConfig, nino, taxYear)
       )
     }
+
   }
 
 }

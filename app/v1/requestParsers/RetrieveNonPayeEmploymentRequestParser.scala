@@ -16,18 +16,20 @@
 
 package v1.requestParsers
 
-import api.models.domain.{ MtdSourceEnum, Nino }
+import api.models.domain.{MtdSourceEnum, Nino}
 import api.requestParsers.RequestParser
-import v1.models.request.retrieveNonPayeEmploymentIncome.{ RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest }
+import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 import v1.requestParsers.validators.RetrieveNonPayeEmploymentValidator
 
 import javax.inject.Inject
 
-class RetrieveNonPayeEmploymentRequestParser @Inject()(val validator: RetrieveNonPayeEmploymentValidator)
+class RetrieveNonPayeEmploymentRequestParser @Inject() (val validator: RetrieveNonPayeEmploymentValidator)
     extends RequestParser[RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest] {
 
   override protected def requestFor(data: RetrieveNonPayeEmploymentIncomeRawData): RetrieveNonPayeEmploymentIncomeRequest =
-    RetrieveNonPayeEmploymentIncomeRequest(Nino(data.nino),
-                                           data.taxYear,
-                                           data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+    RetrieveNonPayeEmploymentIncomeRequest(
+      Nino(data.nino),
+      data.taxYear,
+      data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest))
+
 }

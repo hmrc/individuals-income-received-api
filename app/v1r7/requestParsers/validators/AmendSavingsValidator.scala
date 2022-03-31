@@ -23,11 +23,18 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
-import v1r7.requestParsers.validators.validations.{CountryCodeValidation, DecimalValueValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
+class AmendSavingsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -55,17 +62,20 @@ class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig)
   }
 
   private def bodyValueValidator: AmendSavingsRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendSavingsRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
-        requestBodyData.foreignInterest.map(_.zipWithIndex.flatMap {
-          case (data, index) => validateForeignInterest(data, index)
-        }).getOrElse(NoValidationErrors).toList
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
+          requestBodyData.foreignInterest
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeignInterest(data, index)
+            })
+            .getOrElse(NoValidationErrors)
+            .toList
+        )
+      ))
   }
 
   private def validateSecurity(securities: AmendSecurities): List[MtdError] = {
@@ -91,9 +101,11 @@ class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig)
         amount = foreignInterest.amountBeforeTax,
         path = s"/foreignInterest/$arrayIndex/amountBeforeTax"
       ),
-      CountryCodeValidation.validate(foreignInterest.countryCode).map(
-        _.copy(paths = Some(Seq(s"/foreignInterest/$arrayIndex/countryCode")))
-      ),
+      CountryCodeValidation
+        .validate(foreignInterest.countryCode)
+        .map(
+          _.copy(paths = Some(Seq(s"/foreignInterest/$arrayIndex/countryCode")))
+        ),
       DecimalValueValidation.validateOptional(
         amount = foreignInterest.taxTakenOff,
         path = s"/foreignInterest/$arrayIndex/taxTakenOff"
@@ -108,5 +120,5 @@ class AmendSavingsValidator @Inject()(implicit appConfig: AppConfig)
       )
     ).flatten
   }
-}
 
+}

@@ -17,17 +17,17 @@
 package v1.connectors
 
 import api.connectors.DownstreamUri.Release6Uri
-import api.connectors.{ BaseDownstreamConnector, DownstreamOutcome }
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.models.request.EmptyBody
 import config.AppConfig
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpClient }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IgnoreEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def ignoreEmployment(
       request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
@@ -40,4 +40,5 @@ class IgnoreEmploymentConnector @Inject()(val http: HttpClient, val appConfig: A
 
     put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
   }
+
 }

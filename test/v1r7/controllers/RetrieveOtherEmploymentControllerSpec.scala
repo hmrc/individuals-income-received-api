@@ -194,12 +194,13 @@ class RetrieveOtherEmploymentControllerSpec
         MockHateoasFactory
           .wrap(retrieveOtherResponseModel, RetrieveOtherEmploymentHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveOtherResponseModel,
-                           Seq(
-                             amendLink,
-                             retrieveLink,
-                             deleteLink
-                           )))
+            HateoasWrapper(
+              retrieveOtherResponseModel,
+              Seq(
+                amendLink,
+                retrieveLink,
+                deleteLink
+              )))
 
         val result: Future[Result] = controller.retrieveOther(nino, taxYear)(fakeGetRequest)
 
@@ -270,4 +271,5 @@ class RetrieveOtherEmploymentControllerSpec
       }
     }
   }
+
 }

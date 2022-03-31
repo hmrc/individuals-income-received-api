@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class NrsProxyService @Inject()(val connector: NrsProxyConnector) {
+class NrsProxyService @Inject() (val connector: NrsProxyConnector) {
 
   def submitAsync(nino: String, notableEvent: String, body: JsValue)(implicit hc: HeaderCarrier): Unit = {
     connector.submit(nino, notableEvent, body)

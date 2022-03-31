@@ -28,8 +28,8 @@ import scala.concurrent.Future
 
 class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
-  val taxYear: String = "2021-22"
+  val nino: String         = "AA111111A"
+  val taxYear: String      = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
@@ -64,11 +64,12 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-
-        ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.unignoreEmployment(request)) shouldBe outcome
       }
     }
   }
+
 }

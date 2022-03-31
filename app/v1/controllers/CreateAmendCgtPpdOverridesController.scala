@@ -16,17 +16,17 @@
 
 package v1.controllers
 
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
-import api.models.audit.{ AuditEvent, AuditResponse }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.errors._
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import cats.data.EitherT
 import config.AppConfig
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ Action, AnyContentAsJson, ControllerComponents }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{ IdGenerator, Logging }
+import utils.{IdGenerator, Logging}
 import api.hateoas.AmendHateoasBody
 import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
@@ -34,17 +34,17 @@ import v1.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.services._
 
 import javax.inject.Inject
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
-                                                     val lookupService: MtdIdLookupService,
-                                                     appConfig: AppConfig,
-                                                     requestParser: CreateAmendCgtPpdOverridesRequestParser,
-                                                     service: CreateAmendCgtPpdOverridesService,
-                                                     auditService: AuditService,
-                                                     nrsProxyService: NrsProxyService,
-                                                     cc: ControllerComponents,
-                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
+                                                      val lookupService: MtdIdLookupService,
+                                                      appConfig: AppConfig,
+                                                      requestParser: CreateAmendCgtPpdOverridesRequestParser,
+                                                      service: CreateAmendCgtPpdOverridesService,
+                                                      auditService: AuditService,
+                                                      nrsProxyService: NrsProxyService,
+                                                      cc: ControllerComponents,
+                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -106,12 +106,13 @@ class CreateAmendCgtPpdOverridesController @Inject()(val authService: Enrolments
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          CreateAmendCgtPpdOverridesAuditDetail(request.userDetails,
-                                                nino,
-                                                taxYear,
-                                                request.body,
-                                                correlationId,
-                                                AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
+          CreateAmendCgtPpdOverridesAuditDetail(
+            request.userDetails,
+            nino,
+            taxYear,
+            request.body,
+            correlationId,
+            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
 
         result
       }.merge

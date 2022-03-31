@@ -41,7 +41,6 @@ class DisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val desJson: JsValue = Json.parse(
     """
       |{
@@ -62,7 +61,6 @@ class DisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val model: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
     "2022-02-04",
@@ -80,7 +78,6 @@ class DisposalsSpec extends UnitSpec {
     Some(1999.99)
   )
 
-
   "Disposals" when {
     "Reads" should {
       "return a valid object" when {
@@ -96,6 +93,5 @@ class DisposalsSpec extends UnitSpec {
       }
     }
   }
-
 
 }

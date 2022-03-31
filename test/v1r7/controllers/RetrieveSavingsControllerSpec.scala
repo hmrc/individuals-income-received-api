@@ -140,12 +140,13 @@ class RetrieveSavingsControllerSpec
         MockHateoasFactory
           .wrap(retrieveSavingsResponseModel, RetrieveSavingsHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveSavingsResponseModel,
-                           Seq(
-                             amendSavingsLink,
-                             retrieveSavingsLink,
-                             deleteSavingsLink
-                           )))
+            HateoasWrapper(
+              retrieveSavingsResponseModel,
+              Seq(
+                amendSavingsLink,
+                retrieveSavingsLink,
+                deleteSavingsLink
+              )))
 
         val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
 
@@ -214,4 +215,5 @@ class RetrieveSavingsControllerSpec
       }
     }
   }
+
 }

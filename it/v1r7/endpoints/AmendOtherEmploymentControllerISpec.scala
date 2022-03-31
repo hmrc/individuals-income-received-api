@@ -18,7 +18,26 @@ package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError, CustomerRefFormatError, DateFormatError, EmployerNameFormatError, EmployerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleLumpSumsError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SchemePlanTypeFormatError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  ClassOfSharesAcquiredFormatError,
+  ClassOfSharesAwardedFormatError,
+  CustomerRefFormatError,
+  DateFormatError,
+  EmployerNameFormatError,
+  EmployerRefFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleLumpSumsError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SchemePlanTypeFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +49,8 @@ class AmendOtherEmploymentControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -185,6 +204,7 @@ class AmendOtherEmploymentControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'amend other employment income' endpoint" should {
@@ -297,101 +317,108 @@ class AmendOtherEmploymentControllerISpec extends V1R7IntegrationSpec {
 
         val allInvalidValueRequestError: List[MtdError] = List(
           EmployerRefFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/employerRef",
-              "/shareOption/1/employerRef",
-              "/sharesAwardedOrReceived/0/employerRef",
-              "/sharesAwardedOrReceived/1/employerRef"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/employerRef",
+                "/shareOption/1/employerRef",
+                "/sharesAwardedOrReceived/0/employerRef",
+                "/sharesAwardedOrReceived/1/employerRef"
+              ))
           ),
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/shareOption/0/amountOfConsiderationReceived",
-              "/shareOption/0/exercisePrice",
-              "/shareOption/0/amountPaidForOption",
-              "/shareOption/0/marketValueOfSharesOnExcise",
-              "/shareOption/0/profitOnOptionExercised",
-              "/shareOption/0/employersNicPaid",
-              "/shareOption/0/taxableAmount",
-              "/shareOption/1/amountOfConsiderationReceived",
-              "/shareOption/1/exercisePrice",
-              "/shareOption/1/amountPaidForOption",
-              "/shareOption/1/marketValueOfSharesOnExcise",
-              "/shareOption/1/profitOnOptionExercised",
-              "/shareOption/1/employersNicPaid",
-              "/shareOption/1/taxableAmount",
-
-              "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
-              "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
-              "/sharesAwardedOrReceived/0/taxableAmount",
-              "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
-              "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
-              "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
-              "/sharesAwardedOrReceived/1/taxableAmount",
-
-              "/disability/amountDeducted",
-              "/foreignService/amountDeducted"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/amountOfConsiderationReceived",
+                "/shareOption/0/exercisePrice",
+                "/shareOption/0/amountPaidForOption",
+                "/shareOption/0/marketValueOfSharesOnExcise",
+                "/shareOption/0/profitOnOptionExercised",
+                "/shareOption/0/employersNicPaid",
+                "/shareOption/0/taxableAmount",
+                "/shareOption/1/amountOfConsiderationReceived",
+                "/shareOption/1/exercisePrice",
+                "/shareOption/1/amountPaidForOption",
+                "/shareOption/1/marketValueOfSharesOnExcise",
+                "/shareOption/1/profitOnOptionExercised",
+                "/shareOption/1/employersNicPaid",
+                "/shareOption/1/taxableAmount",
+                "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
+                "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
+                "/sharesAwardedOrReceived/0/taxableAmount",
+                "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
+                "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
+                "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
+                "/sharesAwardedOrReceived/1/taxableAmount",
+                "/disability/amountDeducted",
+                "/foreignService/amountDeducted"
+              ))
           ),
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/disability/customerReference",
-              "/foreignService/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/disability/customerReference",
+                "/foreignService/customerReference"
+              ))
           ),
           ClassOfSharesAcquiredFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/classOfSharesAcquired",
-              "/shareOption/1/classOfSharesAcquired"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/classOfSharesAcquired",
+                "/shareOption/1/classOfSharesAcquired"
+              ))
           ),
           ValueFormatError.copy(
             message = "The value must be 0 or more",
-            paths = Some(List(
-              "/shareOption/0/noOfSharesAcquired",
-              "/shareOption/1/noOfSharesAcquired",
-              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+              ))
           ),
           SchemePlanTypeFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/schemePlanType",
-              "/shareOption/1/schemePlanType",
-              "/sharesAwardedOrReceived/0/schemePlanType",
-              "/sharesAwardedOrReceived/1/schemePlanType"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/schemePlanType",
+                "/shareOption/1/schemePlanType",
+                "/sharesAwardedOrReceived/0/schemePlanType",
+                "/sharesAwardedOrReceived/1/schemePlanType"
+              ))
           ),
           DateFormatError.copy(
             message = "The field should be in the format YYYY-MM-DD",
-            paths = Some(List(
-              "/shareOption/0/dateOfOptionGrant",
-              "/shareOption/0/dateOfEvent",
-              "/shareOption/1/dateOfOptionGrant",
-              "/shareOption/1/dateOfEvent",
-              "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
-              "/sharesAwardedOrReceived/0/dateSharesAwarded",
-              "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-              "/sharesAwardedOrReceived/1/dateSharesAwarded"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/dateOfOptionGrant",
+                "/shareOption/0/dateOfEvent",
+                "/shareOption/1/dateOfOptionGrant",
+                "/shareOption/1/dateOfEvent",
+                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/0/dateSharesAwarded",
+                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/1/dateSharesAwarded"
+              ))
           ),
           EmployerNameFormatError.copy(
-            paths = Some(List(
-              "/shareOption/0/employerName",
-              "/shareOption/1/employerName",
-              "/sharesAwardedOrReceived/0/employerName",
-              "/sharesAwardedOrReceived/1/employerName"
-            ))
+            paths = Some(
+              List(
+                "/shareOption/0/employerName",
+                "/shareOption/1/employerName",
+                "/sharesAwardedOrReceived/0/employerName",
+                "/sharesAwardedOrReceived/1/employerName"
+              ))
           ),
           ClassOfSharesAwardedFormatError.copy(
-            paths = Some(List(
-              "/sharesAwardedOrReceived/0/classOfShareAwarded",
-              "/sharesAwardedOrReceived/1/classOfShareAwarded"
-            ))
+            paths = Some(
+              List(
+                "/sharesAwardedOrReceived/0/classOfShareAwarded",
+                "/sharesAwardedOrReceived/1/classOfShareAwarded"
+              ))
           )
         )
 
@@ -1150,143 +1177,157 @@ class AmendOtherEmploymentControllerISpec extends V1R7IntegrationSpec {
       )
 
       val customerRefFormatError: MtdError = CustomerRefFormatError.copy(
-        paths = Some(Seq(
-          "/disability/customerReference",
-          "/foreignService/customerReference"
-        ))
+        paths = Some(
+          Seq(
+            "/disability/customerReference",
+            "/foreignService/customerReference"
+          ))
       )
 
       val employerRefFormatError: MtdError = EmployerRefFormatError.copy(
-        paths = Some(Seq(
-          "/shareOption/0/employerRef",
-          "/shareOption/1/employerRef"
-        ))
+        paths = Some(
+          Seq(
+            "/shareOption/0/employerRef",
+            "/shareOption/1/employerRef"
+          ))
       )
 
-      val employerNameFormatError: MtdError =  EmployerNameFormatError.copy(
-        paths = Some(Seq(
-          "/shareOption/0/employerName",
-          "/shareOption/1/employerName"
-        ))
+      val employerNameFormatError: MtdError = EmployerNameFormatError.copy(
+        paths = Some(
+          Seq(
+            "/shareOption/0/employerName",
+            "/shareOption/1/employerName"
+          ))
       )
 
       val schemePlanTypeFormatError: MtdError = SchemePlanTypeFormatError.copy(
-        paths = Some(Seq(
-          "/shareOption/0/schemePlanType",
-          "/shareOption/1/schemePlanType"
-        ))
+        paths = Some(
+          Seq(
+            "/shareOption/0/schemePlanType",
+            "/shareOption/1/schemePlanType"
+          ))
       )
 
       val dateFormatError: MtdError = DateFormatError.copy(
         message = "The field should be in the format YYYY-MM-DD",
-        paths = Some(Seq(
-          "/shareOption/0/dateOfOptionGrant",
-          "/shareOption/0/dateOfEvent",
-          "/shareOption/1/dateOfOptionGrant",
-          "/shareOption/1/dateOfEvent"
-        ))
+        paths = Some(
+          Seq(
+            "/shareOption/0/dateOfOptionGrant",
+            "/shareOption/0/dateOfEvent",
+            "/shareOption/1/dateOfOptionGrant",
+            "/shareOption/1/dateOfEvent"
+          ))
       )
 
       val classOfSharesAcquiredFormatError: MtdError = ClassOfSharesAcquiredFormatError.copy(
-        paths = Some(Seq(
-          "/shareOption/0/classOfSharesAcquired",
-          "/shareOption/1/classOfSharesAcquired"
-        ))
+        paths = Some(
+          Seq(
+            "/shareOption/0/classOfSharesAcquired",
+            "/shareOption/1/classOfSharesAcquired"
+          ))
       )
 
       val classOfSharesAwardedFormatError: MtdError = ClassOfSharesAwardedFormatError.copy(
-        paths = Some(Seq(
-          "/sharesAwardedOrReceived/0/classOfShareAwarded",
-          "/sharesAwardedOrReceived/1/classOfShareAwarded"
-        ))
+        paths = Some(
+          Seq(
+            "/sharesAwardedOrReceived/0/classOfShareAwarded",
+            "/sharesAwardedOrReceived/1/classOfShareAwarded"
+          ))
       )
 
       val allInvalidValueErrors: Seq[MtdError] = Seq(
         ValueFormatError.copy(
           message = "The value must be between 0 and 99999999999.99",
-          paths = Some(List(
-            "/shareOption/0/amountOfConsiderationReceived",
-            "/shareOption/0/exercisePrice",
-            "/shareOption/0/amountPaidForOption",
-            "/shareOption/0/marketValueOfSharesOnExcise",
-            "/shareOption/0/profitOnOptionExercised",
-            "/shareOption/0/employersNicPaid",
-            "/shareOption/0/taxableAmount",
-            "/shareOption/1/amountOfConsiderationReceived",
-            "/shareOption/1/exercisePrice",
-            "/shareOption/1/amountPaidForOption",
-            "/shareOption/1/marketValueOfSharesOnExcise",
-            "/shareOption/1/profitOnOptionExercised",
-            "/shareOption/1/employersNicPaid",
-            "/shareOption/1/taxableAmount",
-
-            "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
-            "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
-            "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
-            "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
-            "/sharesAwardedOrReceived/0/taxableAmount",
-            "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
-            "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
-            "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
-            "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
-            "/sharesAwardedOrReceived/1/taxableAmount",
-
-            "/disability/amountDeducted",
-            "/foreignService/amountDeducted"
-          ))
+          paths = Some(
+            List(
+              "/shareOption/0/amountOfConsiderationReceived",
+              "/shareOption/0/exercisePrice",
+              "/shareOption/0/amountPaidForOption",
+              "/shareOption/0/marketValueOfSharesOnExcise",
+              "/shareOption/0/profitOnOptionExercised",
+              "/shareOption/0/employersNicPaid",
+              "/shareOption/0/taxableAmount",
+              "/shareOption/1/amountOfConsiderationReceived",
+              "/shareOption/1/exercisePrice",
+              "/shareOption/1/amountPaidForOption",
+              "/shareOption/1/marketValueOfSharesOnExcise",
+              "/shareOption/1/profitOnOptionExercised",
+              "/shareOption/1/employersNicPaid",
+              "/shareOption/1/taxableAmount",
+              "/sharesAwardedOrReceived/0/actualMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/0/unrestrictedMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/0/amountPaidForSharesOnAward",
+              "/sharesAwardedOrReceived/0/marketValueAfterRestrictionsLifted",
+              "/sharesAwardedOrReceived/0/taxableAmount",
+              "/sharesAwardedOrReceived/1/actualMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/1/unrestrictedMarketValueOfSharesOnAward",
+              "/sharesAwardedOrReceived/1/amountPaidForSharesOnAward",
+              "/sharesAwardedOrReceived/1/marketValueAfterRestrictionsLifted",
+              "/sharesAwardedOrReceived/1/taxableAmount",
+              "/disability/amountDeducted",
+              "/foreignService/amountDeducted"
+            ))
         ),
         ValueFormatError.copy(
           message = "The value must be 0 or more",
-          paths = Some(List(
-            "/shareOption/0/noOfSharesAcquired",
-            "/shareOption/1/noOfSharesAcquired",
-            "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-            "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-          ))
+          paths = Some(
+            List(
+              "/shareOption/0/noOfSharesAcquired",
+              "/shareOption/1/noOfSharesAcquired",
+              "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+              "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
+            ))
         )
       )
 
       val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/shareOption/0/marketValueOfSharesOnExcise",
-          "/shareOption/0/profitOnOptionExercised",
-          "/shareOption/0/employersNicPaid",
-          "/shareOption/0/taxableAmount"
-        ))
+        paths = Some(
+          List(
+            "/shareOption/0/marketValueOfSharesOnExcise",
+            "/shareOption/0/profitOnOptionExercised",
+            "/shareOption/0/employersNicPaid",
+            "/shareOption/0/taxableAmount"
+          ))
       )
 
       val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(List(
-          "/shareOption/0/dateOfOptionGrant",
-          "/shareOption/0/taxableAmount",
-          "/shareOption/0/employerName",
-          "/shareOption/0/noOfSharesAcquired",
-          "/shareOption/0/optionNotExercisedButConsiderationReceived",
-          "/shareOption/0/schemePlanType",
-          "/shareOption/0/classOfSharesAcquired",
-          "/shareOption/0/exercisePrice",
-          "/shareOption/0/amountPaidForOption",
-          "/shareOption/0/employersNicPaid",
-          "/shareOption/0/marketValueOfSharesOnExcise",
-          "/shareOption/0/amountOfConsiderationReceived",
-          "/shareOption/0/dateOfEvent",
-          "/shareOption/0/profitOnOptionExercised"
-        ))
+        paths = Some(
+          List(
+            "/shareOption/0/dateOfOptionGrant",
+            "/shareOption/0/taxableAmount",
+            "/shareOption/0/employerName",
+            "/shareOption/0/noOfSharesAcquired",
+            "/shareOption/0/optionNotExercisedButConsiderationReceived",
+            "/shareOption/0/schemePlanType",
+            "/shareOption/0/classOfSharesAcquired",
+            "/shareOption/0/exercisePrice",
+            "/shareOption/0/amountPaidForOption",
+            "/shareOption/0/employersNicPaid",
+            "/shareOption/0/marketValueOfSharesOnExcise",
+            "/shareOption/0/amountOfConsiderationReceived",
+            "/shareOption/0/dateOfEvent",
+            "/shareOption/0/profitOnOptionExercised"
+          ))
       )
 
       val ruleLumpSumsError: MtdError = RuleLumpSumsError.copy(
-        paths = Some(Seq(
-          "/lumpSums/0",
-          "/lumpSums/2"
-        ))
+        paths = Some(
+          Seq(
+            "/lumpSums/0",
+            "/lumpSums/2"
+          ))
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int, expectedBody: ErrorWrapper): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: ErrorWrapper): Unit = {
           s"validation fails with ${expectedBody.error} error" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -1303,15 +1344,30 @@ class AmendOtherEmploymentControllerISpec extends V1R7IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None)),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
+          ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
-          ("AA123456A", "2019-20", invalidValuesRequestBodyJson, BAD_REQUEST, errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          (
+            "AA123456A",
+            "2019-20",
+            invalidValuesRequestBodyJson,
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2019-20", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerNameFormatError, None)),
           ("AA123456A", "2019-20", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", dateFormatError, None)),
-          ("AA123456A", "2019-20", invalidClassOfSharesAwardedRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", classOfSharesAwardedFormatError, None)),
-          ("AA123456A", "2019-20", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", classOfSharesAcquiredFormatError, None)),
+          (
+            "AA123456A",
+            "2019-20",
+            invalidClassOfSharesAwardedRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", classOfSharesAwardedFormatError, None)),
+          (
+            "AA123456A",
+            "2019-20",
+            invalidClassOfSharesAcquiredRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", classOfSharesAcquiredFormatError, None)),
           ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", customerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", schemePlanTypeFormatError, None)),
           ("AA123456A", "2019-20", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),
@@ -1355,10 +1411,12 @@ class AmendOtherEmploymentControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

@@ -27,12 +27,12 @@ class GainLossValidationSpec extends UnitSpec {
       (Some(res), Some(res), List(RuleGainLossError.copy(paths = Some(Seq("path"))))),
       (Some(res), None, NoValidationErrors),
       (None, Some(res), NoValidationErrors),
-      (None, None, NoValidationErrors),
-    ).foreach {
-      case (gain, loss, result) =>
-        s"return ${if (result.isEmpty) "an empty List" else "an error"} when passed in gain: $gain and loss: $loss" in {
-          GainLossValidation.validate(gain, loss, RuleGainLossError, "path") shouldBe result
-        }
+      (None, None, NoValidationErrors)
+    ).foreach { case (gain, loss, result) =>
+      s"return ${if (result.isEmpty) "an empty List" else "an error"} when passed in gain: $gain and loss: $loss" in {
+        GainLossValidation.validate(gain, loss, RuleGainLossError, "path") shouldBe result
+      }
     }
   }
+
 }

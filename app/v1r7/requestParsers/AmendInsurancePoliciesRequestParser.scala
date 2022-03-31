@@ -24,9 +24,10 @@ import v1r7.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData
 import v1r7.requestParsers.validators.AmendInsurancePoliciesValidator
 
 @Singleton
-class AmendInsurancePoliciesRequestParser @Inject()(val validator: AmendInsurancePoliciesValidator)
-  extends RequestParser[AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest] {
+class AmendInsurancePoliciesRequestParser @Inject() (val validator: AmendInsurancePoliciesValidator)
+    extends RequestParser[AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest] {
 
   override protected def requestFor(data: AmendInsurancePoliciesRawData): AmendInsurancePoliciesRequest =
     AmendInsurancePoliciesRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendInsurancePoliciesRequestBody])
+
 }

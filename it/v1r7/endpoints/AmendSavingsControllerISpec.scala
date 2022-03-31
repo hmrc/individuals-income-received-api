@@ -18,7 +18,20 @@ package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +43,8 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -100,6 +113,7 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'amend savings' endpoint" should {
@@ -164,34 +178,37 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
         val allInvalidValueRequestError: List[MtdError] = List(
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/securities/taxTakenOff",
-              "/securities/grossAmount",
-              "/securities/netAmount",
-              "/foreignInterest/0/amountBeforeTax",
-              "/foreignInterest/0/taxTakenOff",
-              "/foreignInterest/0/specialWithholdingTax",
-              "/foreignInterest/0/taxableAmount",
-              "/foreignInterest/1/amountBeforeTax",
-              "/foreignInterest/1/taxTakenOff",
-              "/foreignInterest/1/specialWithholdingTax",
-              "/foreignInterest/1/taxableAmount",
-              "/foreignInterest/2/amountBeforeTax",
-              "/foreignInterest/2/taxTakenOff",
-              "/foreignInterest/2/specialWithholdingTax",
-              "/foreignInterest/2/taxableAmount"
-            ))
+            paths = Some(
+              List(
+                "/securities/taxTakenOff",
+                "/securities/grossAmount",
+                "/securities/netAmount",
+                "/foreignInterest/0/amountBeforeTax",
+                "/foreignInterest/0/taxTakenOff",
+                "/foreignInterest/0/specialWithholdingTax",
+                "/foreignInterest/0/taxableAmount",
+                "/foreignInterest/1/amountBeforeTax",
+                "/foreignInterest/1/taxTakenOff",
+                "/foreignInterest/1/specialWithholdingTax",
+                "/foreignInterest/1/taxableAmount",
+                "/foreignInterest/2/amountBeforeTax",
+                "/foreignInterest/2/taxTakenOff",
+                "/foreignInterest/2/specialWithholdingTax",
+                "/foreignInterest/2/taxableAmount"
+              ))
           ),
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignInterest/0/countryCode",
-              "/foreignInterest/1/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignInterest/0/countryCode",
+                "/foreignInterest/1/countryCode"
+              ))
           ),
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/foreignInterest/2/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignInterest/2/countryCode"
+              ))
           )
         )
 
@@ -324,17 +341,19 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
-        paths = Some(Seq(
-        "/foreignInterest/0/countryCode",
-        "/foreignInterest/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/foreignInterest/0/countryCode",
+            "/foreignInterest/1/countryCode"
+          ))
       )
 
       val countryCodeRuleError: MtdError = CountryCodeRuleError.copy(
-        paths = Some(Seq(
-          "/foreignInterest/0/countryCode",
-          "/foreignInterest/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/foreignInterest/0/countryCode",
+            "/foreignInterest/1/countryCode"
+          ))
       )
 
       val allInvalidValueRequestBodyJson: JsValue = Json.parse(
@@ -369,26 +388,24 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
         message = "The value must be between 0 and 99999999999.99",
-        paths = Some(List(
-          "/securities/taxTakenOff",
-          "/securities/grossAmount",
-          "/securities/netAmount",
-          "/foreignInterest/0/amountBeforeTax",
-          "/foreignInterest/0/taxTakenOff",
-          "/foreignInterest/0/specialWithholdingTax",
-          "/foreignInterest/0/taxableAmount",
-          "/foreignInterest/1/amountBeforeTax",
-          "/foreignInterest/1/taxTakenOff",
-          "/foreignInterest/1/specialWithholdingTax",
-          "/foreignInterest/1/taxableAmount"
-        ))
+        paths = Some(
+          List(
+            "/securities/taxTakenOff",
+            "/securities/grossAmount",
+            "/securities/netAmount",
+            "/foreignInterest/0/amountBeforeTax",
+            "/foreignInterest/0/taxTakenOff",
+            "/foreignInterest/0/specialWithholdingTax",
+            "/foreignInterest/0/taxableAmount",
+            "/foreignInterest/1/amountBeforeTax",
+            "/foreignInterest/1/taxTakenOff",
+            "/foreignInterest/1/specialWithholdingTax",
+            "/foreignInterest/1/taxableAmount"
+          ))
       )
 
       val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(Seq(
-          "/securities/taxTakenOff",
-          "/foreignInterest/0/foreignTaxCreditRelief")
-        )
+        paths = Some(Seq("/securities/taxTakenOff", "/foreignInterest/0/foreignTaxCreditRelief"))
       )
 
       val missingFieldRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
@@ -396,12 +413,16 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -418,7 +439,7 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", "2019-20", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
@@ -463,10 +484,12 @@ class AmendSavingsControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

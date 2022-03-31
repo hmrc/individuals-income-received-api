@@ -21,8 +21,8 @@ import api.models.errors.{EventFormatError, MtdError}
 object EventValidation {
 
   def validateOptional(event: Option[String], path: String): List[MtdError] = event match {
-    case None => NoValidationErrors
-    case Some(value) => validate(value,path)
+    case None        => NoValidationErrors
+    case Some(value) => validate(value, path)
   }
 
   def validate(event: String, path: String): List[MtdError] = {
@@ -32,4 +32,5 @@ object EventValidation {
       List(EventFormatError.copy(paths = Some(Seq(path))))
     }
   }
+
 }

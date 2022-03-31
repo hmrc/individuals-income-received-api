@@ -34,7 +34,7 @@ object ChargeableForeignBenefitsAndGifts {
       (JsPath \ "protectedForeignIncomeOnwardGift").readNullable[BigDecimal] and
       (JsPath \ "benefitReceivedAsASettler").readNullable[BigDecimal] and
       (JsPath \ "onwardGiftReceivedAsASettler").readNullable[BigDecimal]
-    ) (ChargeableForeignBenefitsAndGifts.apply _)
+  )(ChargeableForeignBenefitsAndGifts.apply _)
 
   implicit val writes: OWrites[ChargeableForeignBenefitsAndGifts] = Json.writes[ChargeableForeignBenefitsAndGifts]
 }

@@ -38,6 +38,7 @@ trait MockAmendDividendsService extends MockFactory {
         .amendDividends(_: AmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

@@ -20,6 +20,7 @@ import support.UnitSpec
 import api.models.errors.AssetDescriptionFormatError
 
 class AssetDescriptionValidationSpec extends UnitSpec {
+
   "validate" should {
     "return an empty List" when {
       "the provided description is valid" in {
@@ -33,4 +34,5 @@ class AssetDescriptionValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

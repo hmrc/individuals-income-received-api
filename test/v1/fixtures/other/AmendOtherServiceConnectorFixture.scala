@@ -73,4 +73,5 @@ object AmendOtherServiceConnectorFixture {
     Some(chargeableForeignBenefitsAndGiftsModel),
     Some(omittedForeignIncomeModel)
   )
+
 }

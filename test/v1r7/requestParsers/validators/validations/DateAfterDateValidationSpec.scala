@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class DateAfterDateValidationSpec extends UnitSpec {
   private val earlierDate = "2020-01-01"
-  private val laterDate = "2020-01-02"
+  private val laterDate   = "2020-01-02"
 
   private val error = MtdError("test code", "test message")
 
@@ -47,4 +47,5 @@ class DateAfterDateValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

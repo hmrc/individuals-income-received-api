@@ -28,7 +28,7 @@ import api.services.ServiceSpec
 
 class AmendOtherEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val shareOptionModel = Seq(
@@ -148,23 +148,24 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
   )
 
   val amendOtherEmploymentRequest: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(
-      nino = Nino(nino),
-      taxYear = taxYear,
-      body = AmendOtherEmploymentRequestBody(
-        shareOption = Some(shareOptionModel),
-        sharesAwardedOrReceived = Some(sharesAwardedOrReceivedModel),
-        disability = Some(disabilityModel),
-        foreignService = Some(foreignServiceModel),
-        lumpSums = Some(lumpSumsModel)
-      )
+    nino = Nino(nino),
+    taxYear = taxYear,
+    body = AmendOtherEmploymentRequestBody(
+      shareOption = Some(shareOptionModel),
+      sharesAwardedOrReceived = Some(sharesAwardedOrReceivedModel),
+      disability = Some(disabilityModel),
+      foreignService = Some(foreignServiceModel),
+      lumpSums = Some(lumpSumsModel)
+    )
   )
 
-  trait Test extends MockAmendOtherEmploymentConnector{
+  trait Test extends MockAmendOtherEmploymentConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: AmendOtherEmploymentService = new AmendOtherEmploymentService(
       connector = mockAmendOtherEmploymentConnector
     )
+
   }
 
   "AmendOtherEmploymentService" when {
@@ -172,7 +173,8 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendOtherEmploymentConnector.amendOtherEmployment(amendOtherEmploymentRequest)
+        MockAmendOtherEmploymentConnector
+          .amendOtherEmployment(amendOtherEmploymentRequest)
           .returns(Future.successful(outcome))
 
         await(service.amendOtherEmployment(amendOtherEmploymentRequest)) shouldBe outcome
@@ -183,7 +185,8 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendOtherEmploymentConnector.amendOtherEmployment(amendOtherEmploymentRequest)
+            MockAmendOtherEmploymentConnector
+              .amendOtherEmployment(amendOtherEmploymentRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendOtherEmployment(amendOtherEmploymentRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -203,4 +206,5 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

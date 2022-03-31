@@ -20,8 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
 
-case class AmendForeignRequestBody(foreignEarnings: Option[ForeignEarnings],
-                                   unremittableForeignIncome: Option[Seq[UnremittableForeignIncomeItem]])
+case class AmendForeignRequestBody(foreignEarnings: Option[ForeignEarnings], unremittableForeignIncome: Option[Seq[UnremittableForeignIncomeItem]])
 
 object AmendForeignRequestBody extends JsonUtils {
   val empty: AmendForeignRequestBody = AmendForeignRequestBody(None, None)
@@ -29,10 +28,11 @@ object AmendForeignRequestBody extends JsonUtils {
   implicit val reads: Reads[AmendForeignRequestBody] = (
     (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncomeItem]].mapEmptySeqToNone
-    ) (AmendForeignRequestBody.apply _)
+  )(AmendForeignRequestBody.apply _)
 
   implicit val writes: OWrites[AmendForeignRequestBody] = (
     (JsPath \ "foreignEarnings").writeNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").writeNullable[Seq[UnremittableForeignIncomeItem]]
-    ) (unlift(AmendForeignRequestBody.unapply))
+  )(unlift(AmendForeignRequestBody.unapply))
+
 }

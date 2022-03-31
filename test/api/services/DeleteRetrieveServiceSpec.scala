@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class DeleteRetrieveServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   trait Test extends MockDeleteRetrieveConnector {
@@ -39,12 +39,13 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
     }
 
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    implicit val deleteDesUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-    implicit val retrieveDesUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
+    implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
+    implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
 
     val service: DeleteRetrieveService = new DeleteRetrieveService(
       connector = mockDeleteRetrieveConnector
     )
+
   }
 
   "DeleteRetrieveService" when {
@@ -52,7 +53,8 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockDeleteRetrieveConnector.delete()
+        MockDeleteRetrieveConnector
+          .delete()
           .returns(Future.successful(outcome))
 
         await(service.delete()) shouldBe outcome
@@ -63,7 +65,8 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockDeleteRetrieveConnector.delete()
+            MockDeleteRetrieveConnector
+              .delete()
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.delete()) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -86,7 +89,8 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, Data(Some("value"))))
 
-        MockDeleteRetrieveConnector.retrieve[Data]()
+        MockDeleteRetrieveConnector
+          .retrieve[Data]()
           .returns(Future.successful(outcome))
 
         await(service.retrieve[Data]()) shouldBe outcome
@@ -95,7 +99,8 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
       "return a NotFoundError for an empty response" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, Data(None)))
 
-        MockDeleteRetrieveConnector.retrieve[Data]()
+        MockDeleteRetrieveConnector
+          .retrieve[Data]()
           .returns(Future.successful(outcome))
 
         await(service.retrieve[Data]()) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
@@ -106,7 +111,8 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockDeleteRetrieveConnector.retrieve[Data]()
+            MockDeleteRetrieveConnector
+              .retrieve[Data]()
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrieve[Data]()) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -125,4 +131,5 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

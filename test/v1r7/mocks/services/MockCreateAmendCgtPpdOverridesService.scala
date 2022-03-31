@@ -27,15 +27,25 @@ import v1r7.services.CreateAmendCgtPpdOverridesService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendCgtPpdOverridesService extends MockFactory{
+trait MockCreateAmendCgtPpdOverridesService extends MockFactory {
 
   val mockCreateAmendCgtPpdOverridesService: CreateAmendCgtPpdOverridesService = mock[CreateAmendCgtPpdOverridesService]
 
   object MockCreateAmendCgtPpdOverridesService {
+
     def createAmend(requestData: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockCreateAmendCgtPpdOverridesService
-        .createAmend(_: CreateAmendCgtPpdOverridesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (
+        mockCreateAmendCgtPpdOverridesService
+          .createAmend(_: CreateAmendCgtPpdOverridesRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
         .expects(requestData, *, *, *, *)
     }
+
   }
+
 }

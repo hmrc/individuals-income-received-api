@@ -20,22 +20,19 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.domain.{ MtdSourceEnum, Nino }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.{MtdSourceEnum, Nino}
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.{ HateoasWrapper, Link, RelType }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link, RelType}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveAllResidentialPropertyCgtControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveAllResidentialPropertyCgtRequestParser
-import v1.models.request.retrieveAllResidentialPropertyCgt.{ RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest }
-import v1.models.response.retrieveAllResidentialPropertyCgt.{
-  RetrieveAllResidentialPropertyCgtHateoasData,
-  RetrieveAllResidentialPropertyCgtResponse
-}
+import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
+import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -130,6 +127,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
         "SERVER_ERROR"              -> StandardDownstreamError,
         "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
       )
+
   }
 
   "retrieveAll" should {
@@ -147,14 +145,15 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
         MockHateoasFactory
           .wrap(model, RetrieveAllResidentialPropertyCgtHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(model,
-                           Seq(
-                             createAndAmendPpdCgtLink,
-                             deletePpdCgtLink,
-                             createAndAmendNonPpdCgtLink,
-                             deleteNonPpdCgtLink,
-                             retrieveAllCgtLink
-                           )))
+            HateoasWrapper(
+              model,
+              Seq(
+                createAndAmendPpdCgtLink,
+                deletePpdCgtLink,
+                createAndAmendNonPpdCgtLink,
+                deleteNonPpdCgtLink,
+                retrieveAllCgtLink
+              )))
 
         val result: Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)
 
@@ -226,4 +225,5 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
       }
     }
   }
+
 }

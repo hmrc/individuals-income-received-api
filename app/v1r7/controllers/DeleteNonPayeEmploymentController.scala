@@ -34,13 +34,13 @@ import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService,
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                                  val lookupService: MtdIdLookupService,
-                                                  requestParser: DeleteRetrieveRequestParser,
-                                                  service: DeleteRetrieveService,
-                                                  auditService: AuditService,
-                                                  cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                                   val lookupService: MtdIdLookupService,
+                                                   requestParser: DeleteRetrieveRequestParser,
+                                                   service: DeleteRetrieveService,
+                                                   auditService: AuditService,
+                                                   cc: ControllerComponents,
+                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -125,4 +125,5 @@ class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAut
     val event = AuditEvent("DeleteNonPayeEmploymentIncome", "delete-non-paye-employment-income", details)
     auditService.auditEvent(event)
   }
+
 }

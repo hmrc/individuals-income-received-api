@@ -46,7 +46,6 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val desJson: JsValue = Json.parse(
     """
       |{
@@ -71,7 +70,6 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val model: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
@@ -94,7 +92,6 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       Some(1999.99)
     )
 
-
   "SinglePropertyDisposals" when {
     "Reads" should {
       "return a valid object" when {
@@ -110,4 +107,5 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       }
     }
   }
+
 }

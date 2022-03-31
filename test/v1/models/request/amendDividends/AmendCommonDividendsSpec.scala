@@ -42,7 +42,7 @@ class AmendCommonDividendsSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = AmendCommonDividends(customerReference = Some ("my divs"), grossAmount = 12321.22)
+  private val model = AmendCommonDividends(customerReference = Some("my divs"), grossAmount = 12321.22)
 
   "AmendCommonDividends" when {
     "read from valid JSON" should {
@@ -64,4 +64,5 @@ class AmendCommonDividendsSpec extends UnitSpec {
       }
     }
   }
+
 }

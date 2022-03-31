@@ -17,7 +17,16 @@
 package v1r7.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, RuleCessationDateBeforeTaxYearStartError, RuleStartDateAfterTaxYearEndError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleCessationDateBeforeTaxYearStartError,
+  RuleStartDateAfterTaxYearEndError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -33,14 +42,13 @@ import v1r7.models.response.addCustomEmployment.AddCustomEmploymentResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddCustomEmploymentService @Inject()(connector: AddCustomEmploymentConnector)
-  extends DownstreamResponseMappingSupport with Logging {
+class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def addEmployment(request: AddCustomEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]] = {
+  def addEmployment(request: AddCustomEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.addEmployment(request)).leftMap(mapDesErrors(desErrorMap))
@@ -52,14 +60,14 @@ class AddCustomEmploymentService @Inject()(connector: AddCustomEmploymentConnect
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "NOT_SUPPORTED_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "INVALID_DATE_RANGE" -> RuleStartDateAfterTaxYearEndError,
-      "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
-      "INVALID_PAYLOAD" -> StandardDownstreamError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "NOT_SUPPORTED_TAX_YEAR"    -> RuleTaxYearNotEndedError,
+      "INVALID_DATE_RANGE"        -> RuleStartDateAfterTaxYearEndError,
+      "INVALID_CESSATION_DATE"    -> RuleCessationDateBeforeTaxYearStartError,
+      "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
 
 }

@@ -18,7 +18,17 @@ package v1r7.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1r7.mocks.connectors.MockAmendFinancialDetailsConnector
@@ -30,10 +40,9 @@ import scala.concurrent.Future
 
 class AmendFinancialDetailsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
-  private val taxYear = "2019-20"
-  private val employmentId= "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-
+  private val nino         = "AA112233A"
+  private val taxYear      = "2019-20"
+  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   private val payModel = AmendPay(
     taxablePayToDate = 3500.75,
@@ -98,6 +107,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
     val service: AmendFinancialDetailsService = new AmendFinancialDetailsService(
       connector = mockAmendFinancialDetailsConnector
     )
+
   }
 
   "AmendFinancialDetailsService" when {
@@ -105,9 +115,8 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-
-
-        MockAmendFinancialDetailsConnector.amendFinancialDetails(request)
+        MockAmendFinancialDetailsConnector
+          .amendFinancialDetails(request)
           .returns(Future.successful(outcome))
 
         await(service.amendFinancialDetails(request)) shouldBe outcome
@@ -118,7 +127,8 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendFinancialDetailsConnector.amendFinancialDetails(request)
+            MockAmendFinancialDetailsConnector
+              .amendFinancialDetails(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -139,4 +149,5 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

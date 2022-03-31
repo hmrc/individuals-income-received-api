@@ -33,6 +33,7 @@ trait MockListEmploymentsValidator extends MockFactory {
         .validate(_: ListEmploymentsRawData))
         .expects(data)
     }
+
   }
 
 }

@@ -32,26 +32,26 @@ case class Disposals(customerReference: Option[String],
                      lossesFromThisYear: Option[BigDecimal],
                      lossesFromPreviousYear: Option[BigDecimal],
                      amountOfNetGain: Option[BigDecimal],
-                     amountOfNetLoss: Option[BigDecimal]
-                    )
+                     amountOfNetLoss: Option[BigDecimal])
+
 object Disposals {
+
   implicit val reads: Reads[Disposals] = (
     (JsPath \ "customerReference").readNullable[String] and
-    (JsPath \ "disposalDate").read[String] and
-    (JsPath \ "completionDate").read[String] and
-    (JsPath \ "disposalProceeds").read[BigDecimal] and
-    (JsPath \ "acquisitionDate").read[String] and
-    (JsPath \ "acquisitionAmount").read[BigDecimal] and
-    (JsPath \ "improvementCosts").readNullable[BigDecimal] and
-    (JsPath \ "additionalCosts").readNullable[BigDecimal] and
-    (JsPath \ "prfAmount").readNullable[BigDecimal] and
-    (JsPath \ "otherReliefAmount").readNullable[BigDecimal] and
-    (JsPath \ "lossesFromThisYear").readNullable[BigDecimal] and
-    (JsPath \ "lossesFromPreviousYear").readNullable[BigDecimal] and
-    (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
-    (JsPath \ "amountOfLoss").readNullable[BigDecimal]
-  ) (Disposals.apply _)
-
+      (JsPath \ "disposalDate").read[String] and
+      (JsPath \ "completionDate").read[String] and
+      (JsPath \ "disposalProceeds").read[BigDecimal] and
+      (JsPath \ "acquisitionDate").read[String] and
+      (JsPath \ "acquisitionAmount").read[BigDecimal] and
+      (JsPath \ "improvementCosts").readNullable[BigDecimal] and
+      (JsPath \ "additionalCosts").readNullable[BigDecimal] and
+      (JsPath \ "prfAmount").readNullable[BigDecimal] and
+      (JsPath \ "otherReliefAmount").readNullable[BigDecimal] and
+      (JsPath \ "lossesFromThisYear").readNullable[BigDecimal] and
+      (JsPath \ "lossesFromPreviousYear").readNullable[BigDecimal] and
+      (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
+      (JsPath \ "amountOfLoss").readNullable[BigDecimal]
+  )(Disposals.apply _)
 
   implicit val writes: OWrites[Disposals] = Json.writes[Disposals]
 }

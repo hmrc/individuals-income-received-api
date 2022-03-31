@@ -36,5 +36,6 @@ object AmendChargeableForeignBenefitsAndGifts {
       (JsPath \ "protectedForeignIncomeOnwardGift").writeNullable[BigDecimal] and
       (JsPath \ "benefitReceivedAsASettler").writeNullable[BigDecimal] and
       (JsPath \ "onwardGiftReceivedAsASettler").writeNullable[BigDecimal]
-    ) (unlift(AmendChargeableForeignBenefitsAndGifts.unapply))
+  )(unlift(AmendChargeableForeignBenefitsAndGifts.unapply))
+
 }

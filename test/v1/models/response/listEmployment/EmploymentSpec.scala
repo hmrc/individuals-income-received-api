@@ -40,12 +40,10 @@ class EmploymentSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val hmrcEmploymentModel = Employment(employmentId = "00000000-0000-1000-8000-000000000001",
-    employerName= "Vera Lynn",
-    dateIgnored= Some("2020-06-17T10:53:38Z"))
+  private val hmrcEmploymentModel =
+    Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z"))
 
-  private val customEmploymentModel = Employment(employmentId = "00000000-0000-1000-8000-000000000001",
-    employerName = "Vera Lynn")
+  private val customEmploymentModel = Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn")
 
   "Employment" should {
     "return a valid HMRC Employment model" when {
@@ -78,4 +76,5 @@ class EmploymentSpec extends UnitSpec {
       }
     }
   }
+
 }

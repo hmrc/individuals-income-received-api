@@ -67,8 +67,9 @@ object RetrieveEmploymentControllerFixture {
     """.stripMargin
   )
 
-  def mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino: String, taxYear: String, employmentId: String): JsObject = Json.parse(
-    s"""
+  def mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino: String, taxYear: String, employmentId: String): JsObject = Json
+    .parse(
+      s"""
       |{
       |   "employerRef": "123/AB56797",
       |   "employerName": "Employer Name Ltd.",
@@ -94,10 +95,12 @@ object RetrieveEmploymentControllerFixture {
       |   ]
       |}
       |""".stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
-  def mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino: String, taxYear: String, employmentId: String): JsObject = Json.parse(
-    s"""
+  def mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino: String, taxYear: String, employmentId: String): JsObject = Json
+    .parse(
+      s"""
        |{
        |   "employerRef": "123/AB56797",
        |   "employerName": "Employer Name Ltd.",
@@ -124,10 +127,12 @@ object RetrieveEmploymentControllerFixture {
        |   ]
        |}
        |""".stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
-  def mtdCustomEnteredResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json.parse(
-    s"""
+  def mtdCustomEnteredResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json
+    .parse(
+      s"""
        |{
        |   "employerRef": "123/AB56797",
        |   "employerName": "Employer Name Ltd.",
@@ -159,5 +164,7 @@ object RetrieveEmploymentControllerFixture {
        |   ]
        |}
        |""".stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

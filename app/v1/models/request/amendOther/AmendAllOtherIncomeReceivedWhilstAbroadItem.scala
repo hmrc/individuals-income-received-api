@@ -40,5 +40,6 @@ object AmendAllOtherIncomeReceivedWhilstAbroadItem {
       (JsPath \ "taxableAmount").write[BigDecimal] and
       (JsPath \ "residentialFinancialCostAmount").writeNullable[BigDecimal] and
       (JsPath \ "broughtFwdResidentialFinancialCostAmount").writeNullable[BigDecimal]
-    ) (unlift(AmendAllOtherIncomeReceivedWhilstAbroadItem.unapply))
+  )(unlift(AmendAllOtherIncomeReceivedWhilstAbroadItem.unapply))
+
 }

@@ -52,4 +52,5 @@ class AmendOverseasIncomeAndGainsSpec extends UnitSpec {
       }
     }
   }
+
 }

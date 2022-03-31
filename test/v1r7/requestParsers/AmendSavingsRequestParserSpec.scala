@@ -26,8 +26,8 @@ import v1r7.models.request.amendSavings._
 
 class AmendSavingsRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val taxYear: String = "2019-20"
+  val nino: String                   = "AA123456B"
+  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -63,29 +63,31 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
   private val validRequestBodyModel = AmendSavingsRequestBody(
-    securities = Some(AmendSecurities(
-      taxTakenOff = Some(100.11),
-      grossAmount = 100.12,
-      netAmount = Some(100.13)
-    )),
-    foreignInterest = Some(Seq(
-      AmendForeignInterestItem(
-        amountBeforeTax = Some(200.11),
-        countryCode = "GBR",
-        taxTakenOff = Some(200.12),
-        specialWithholdingTax = Some(200.13),
-        taxableAmount = 200.14,
-        foreignTaxCreditRelief = false
-      ),
-      AmendForeignInterestItem(
-        amountBeforeTax = Some(300.11),
-        countryCode = "GBR",
-        taxTakenOff = Some(300.12),
-        specialWithholdingTax = Some(300.13),
-        taxableAmount = 300.14,
-        foreignTaxCreditRelief = true
-      )
-    ))
+    securities = Some(
+      AmendSecurities(
+        taxTakenOff = Some(100.11),
+        grossAmount = 100.12,
+        netAmount = Some(100.13)
+      )),
+    foreignInterest = Some(
+      Seq(
+        AmendForeignInterestItem(
+          amountBeforeTax = Some(200.11),
+          countryCode = "GBR",
+          taxTakenOff = Some(200.12),
+          specialWithholdingTax = Some(200.13),
+          taxableAmount = 200.14,
+          foreignTaxCreditRelief = false
+        ),
+        AmendForeignInterestItem(
+          amountBeforeTax = Some(300.11),
+          countryCode = "GBR",
+          taxTakenOff = Some(300.12),
+          specialWithholdingTax = Some(300.13),
+          taxableAmount = 300.14,
+          foreignTaxCreditRelief = true
+        )
+      ))
   )
 
   private val amendSavingsRawData = AmendSavingsRawData(
@@ -95,9 +97,11 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
   )
 
   trait Test extends MockAmendSavingsValidator {
+
     lazy val parser: AmendSavingsRequestParser = new AmendSavingsRequestParser(
       validator = mockAmendSavingsValidator
     )
+
   }
 
   "parse" should {
@@ -112,7 +116,8 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendSavingsValidator.validate(amendSavingsRawData.copy(nino = "notANino"))
+        MockAmendSavingsValidator
+          .validate(amendSavingsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
         parser.parseRequest(amendSavingsRawData.copy(nino = "notANino")) shouldBe
@@ -120,7 +125,8 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendSavingsValidator.validate(amendSavingsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        MockAmendSavingsValidator
+          .validate(amendSavingsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
         parser.parseRequest(amendSavingsRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
@@ -164,29 +170,32 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
         private val allInvalidValueErrors = List(
           ValueFormatError.copy(
             message = "The field should be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/securities/taxTakenOff",
-              "/securities/grossAmount",
-              "/securities/netAmount",
-              "/foreignInterest/0/amountBeforeTax",
-              "/foreignInterest/0/taxTakenOff",
-              "/foreignInterest/0/specialWithholdingTax",
-              "/foreignInterest/0/taxableAmount",
-              "/foreignInterest/1/amountBeforeTax",
-              "/foreignInterest/1/taxTakenOff",
-              "/foreignInterest/1/specialWithholdingTax",
-              "/foreignInterest/1/taxableAmount"
-            ))
+            paths = Some(
+              List(
+                "/securities/taxTakenOff",
+                "/securities/grossAmount",
+                "/securities/netAmount",
+                "/foreignInterest/0/amountBeforeTax",
+                "/foreignInterest/0/taxTakenOff",
+                "/foreignInterest/0/specialWithholdingTax",
+                "/foreignInterest/0/taxableAmount",
+                "/foreignInterest/1/amountBeforeTax",
+                "/foreignInterest/1/taxTakenOff",
+                "/foreignInterest/1/specialWithholdingTax",
+                "/foreignInterest/1/taxableAmount"
+              ))
           ),
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignInterest/0/countryCode",
-              "/foreignInterest/1/countryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignInterest/0/countryCode",
+                "/foreignInterest/1/countryCode"
+              ))
           )
         )
 
-        MockAmendSavingsValidator.validate(amendSavingsRawData.copy(body = allInvalidValueRawRequestBody))
+        MockAmendSavingsValidator
+          .validate(amendSavingsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(amendSavingsRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
@@ -194,4 +203,5 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
       }
     }
   }
+
 }

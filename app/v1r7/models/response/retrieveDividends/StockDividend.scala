@@ -22,10 +22,11 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class StockDividend(customerReference: Option[String], grossAmount: BigDecimal)
 
 object StockDividend {
+
   implicit val reads: Reads[StockDividend] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "grossAmount").read[BigDecimal]
-    ) (StockDividend.apply _)
+  )(StockDividend.apply _)
 
   implicit val writes: OWrites[StockDividend] = Json.writes[StockDividend]
 }

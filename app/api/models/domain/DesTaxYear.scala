@@ -16,10 +16,10 @@
 
 package api.models.domain
 
-/**
-  * Represents a tax year for DES
+/** Represents a tax year for DES
   *
-  * @param value the tax year string (where 2018 represents 2017-18)
+  * @param value
+  *   the tax year string (where 2018 represents 2017-18)
   */
 case class DesTaxYear(value: String) extends AnyVal {
   override def toString: String = value
@@ -28,15 +28,16 @@ case class DesTaxYear(value: String) extends AnyVal {
 object DesTaxYear {
 
   def toMtd(taxYear: DesTaxYear): String = {
-    val prefix = taxYear.value.take(2)
+    val prefix  = taxYear.value.take(2)
     val yearTwo = taxYear.value.drop(2)
     val yearOne = (yearTwo.toInt - 1).toString
     prefix + yearOne + "-" + yearTwo
   }
 
-  /**
-    * @param taxYear tax year in MTD format (e.g. 2017-18)
+  /** @param taxYear
+    *   tax year in MTD format (e.g. 2017-18)
     */
   def fromMtd(taxYear: String): DesTaxYear =
     DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+
 }

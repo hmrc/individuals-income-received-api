@@ -26,18 +26,17 @@ import support.UnitSpec
 import utils.CurrentDateTime
 import v1r7.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
 
+class RetrieveNonPayeEmploymentValidatorSpec extends UnitSpec {
 
-class RetrieveNonPayeEmploymentValidatorSpec extends UnitSpec{
-
-  private val validNino = "AA123456A"
-  private val validTaxYear = "2021-22"
-  private val validSource = "latest"
+  private val validNino               = "AA123456A"
+  private val validTaxYear            = "2021-22"
+  private val validSource             = "latest"
   private val minimumPermittedTaxYear = 2021
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -49,12 +48,13 @@ class RetrieveNonPayeEmploymentValidatorSpec extends UnitSpec{
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(minimumPermittedTaxYear)
+
   }
 
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(RetrieveNonPayeEmploymentIncomeRawData(validNino, validTaxYear,  Some(validSource))) shouldBe Nil
+        validator.validate(RetrieveNonPayeEmploymentIncomeRawData(validNino, validTaxYear, Some(validSource))) shouldBe Nil
       }
 
       "a valid request is supplied without the employment source" in new Test {
@@ -104,4 +104,5 @@ class RetrieveNonPayeEmploymentValidatorSpec extends UnitSpec{
       }
     }
   }
+
 }

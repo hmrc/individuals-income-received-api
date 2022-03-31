@@ -26,6 +26,6 @@ case class CreateAmendOtherCgtRequestBody(disposals: Option[Seq[Disposal]],
 object CreateAmendOtherCgtRequestBody {
   val empty: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(None, None, None, None)
 
-  implicit val format: OFormat[CreateAmendOtherCgtRequestBody] =  Json.format[CreateAmendOtherCgtRequestBody]
+  implicit val format: OFormat[CreateAmendOtherCgtRequestBody] = Json.format[CreateAmendOtherCgtRequestBody]
 
 }

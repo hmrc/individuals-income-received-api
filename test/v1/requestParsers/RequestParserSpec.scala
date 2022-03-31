@@ -17,7 +17,7 @@
 package v1.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{ BadRequestError, ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError }
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, RuleIncorrectOrEmptyBodyError}
 import api.models.request.RawData
 import api.requestParsers.RequestParser
 import api.requestParsers.validators.Validator
@@ -41,6 +41,7 @@ class RequestParserSpec extends UnitSpec {
 
       protected def requestFor(data: Raw) = Request(Nino(data.nino))
     }
+
   }
 
   "parse" should {

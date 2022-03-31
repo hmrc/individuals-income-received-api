@@ -16,36 +16,36 @@
 
 package v1.controllers
 
-import api.controllers.{ AuthorisedController, BaseController, EndpointLogContext }
-import api.models.audit.{ AuditEvent, AuditResponse, GenericAuditDetail }
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.services.{ AuditService, EnrolmentsAuthService, MtdIdLookupService }
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import config.AppConfig
 import play.api.libs.json.Json
-import play.api.mvc.{ Action, AnyContent, ControllerComponents }
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{ IdGenerator, Logging }
+import utils.{IdGenerator, Logging}
 import api.hateoas.IgnoreHateoasBody
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 import v1.requestParsers.IgnoreEmploymentRequestParser
 import v1.services.UnignoreEmploymentService
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UnignoreEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                             val lookupService: MtdIdLookupService,
-                                             appConfig: AppConfig,
-                                             requestParser: IgnoreEmploymentRequestParser,
-                                             service: UnignoreEmploymentService,
-                                             auditService: AuditService,
-                                             cc: ControllerComponents,
-                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class UnignoreEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                              val lookupService: MtdIdLookupService,
+                                              appConfig: AppConfig,
+                                              requestParser: IgnoreEmploymentRequestParser,
+                                              service: UnignoreEmploymentService,
+                                              auditService: AuditService,
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -130,4 +130,5 @@ class UnignoreEmploymentController @Inject()(val authService: EnrolmentsAuthServ
     val event = AuditEvent("UnignoreEmployment", "unignore-employment", details)
     auditService.auditEvent(event)
   }
+
 }

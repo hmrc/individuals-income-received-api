@@ -23,11 +23,16 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
-import v1r7.requestParsers.validators.validations.{EmploymentIdValidation, EmploymentSourceValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
+import v1r7.requestParsers.validators.validations.{
+  EmploymentIdValidation,
+  EmploymentSourceValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
-class RetrieveFinancialDetailsValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveFinancialDetailsRawData] {
+class RetrieveFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveFinancialDetailsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -49,4 +54,5 @@ class RetrieveFinancialDetailsValidator @Inject()(implicit appConfig: AppConfig)
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
+
 }

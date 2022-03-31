@@ -187,12 +187,13 @@ class RetrieveDividendsControllerSpec
         MockHateoasFactory
           .wrap(retrieveDividendsResponseModel, RetrieveDividendsHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveDividendsResponseModel,
-                           Seq(
-                             amendDividendsLink,
-                             retrieveDividendsLink,
-                             deleteDividendsLink
-                           )))
+            HateoasWrapper(
+              retrieveDividendsResponseModel,
+              Seq(
+                amendDividendsLink,
+                retrieveDividendsLink,
+                deleteDividendsLink
+              )))
 
         val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
 
@@ -261,4 +262,5 @@ class RetrieveDividendsControllerSpec
       }
     }
   }
+
 }

@@ -24,9 +24,10 @@ import api.requestParsers.validators.DeleteRetrieveValidator
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteRetrieveRequestParser @Inject()(val validator: DeleteRetrieveValidator)
-  extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {
+class DeleteRetrieveRequestParser @Inject() (val validator: DeleteRetrieveValidator)
+    extends RequestParser[DeleteRetrieveRawData, DeleteRetrieveRequest] {
 
   override protected def requestFor(data: DeleteRetrieveRawData): DeleteRetrieveRequest =
     request.DeleteRetrieveRequest(Nino(data.nino), data.taxYear)
+
 }

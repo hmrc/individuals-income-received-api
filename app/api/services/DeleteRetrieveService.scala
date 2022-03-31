@@ -16,7 +16,7 @@
 
 package api.services
 
-import api.connectors.{ DeleteRetrieveConnector, DownstreamUri }
+import api.connectors.{DeleteRetrieveConnector, DownstreamUri}
 import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -27,17 +27,18 @@ import play.api.libs.json.Format
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 
-import javax.inject.{ Inject, Singleton }
-import scala.concurrent.{ ExecutionContext, Future }
+import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def delete(desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit hc: HeaderCarrier,
-                                                                      ec: ExecutionContext,
-                                                                      logContext: EndpointLogContext,
-                                                                      downstreamUri: DownstreamUri[Unit],
-                                                                      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def delete(desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      downstreamUri: DownstreamUri[Unit],
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.delete()).leftMap(mapDesErrors(desErrorMap))
@@ -46,8 +47,8 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
     result.value
   }
 
-  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(
-      implicit hc: HeaderCarrier,
+  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit
+      hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       downstreamUri: DownstreamUri[Resp],
@@ -70,4 +71,5 @@ class DeleteRetrieveService @Inject()(connector: DeleteRetrieveConnector) extend
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

@@ -22,15 +22,16 @@ import org.scalamock.scalatest.MockFactory
 import v1r7.requestParsers.AmendPensionsRequestParser
 import v1r7.models.request.amendPensions.{AmendPensionsRawData, AmendPensionsRequest}
 
-
 trait MockAmendPensionsRequestParser extends MockFactory {
 
   val mockAmendPensionsRequestParser: AmendPensionsRequestParser = mock[AmendPensionsRequestParser]
 
   object MockAmendPensionsRequestParser {
+
     def parse(data: AmendPensionsRawData): CallHandler[Either[ErrorWrapper, AmendPensionsRequest]] = {
       (mockAmendPensionsRequestParser.parseRequest(_: AmendPensionsRawData)(_: String)).expects(data, *)
     }
+
   }
 
 }

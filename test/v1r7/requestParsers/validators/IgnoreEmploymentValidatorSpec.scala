@@ -17,7 +17,14 @@
 package v1r7.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{EmploymentIdFormatError, NinoFormatError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import api.models.errors.{
+  EmploymentIdFormatError,
+  NinoFormatError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError
+}
 import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
@@ -31,14 +38,14 @@ import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRawData
 
 class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
-  private val validTaxYear = "2021-22"
+  private val validNino         = "AA123456A"
+  private val validTaxYear      = "2021-22"
   private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -51,10 +58,10 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
 
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
-      s"""
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
          |taxYearNotEndedRule.enabled = $errorFeatureSwitch
       """.stripMargin))))
+
   }
 
   "IgnoreEmploymentValidator" when {
@@ -105,4 +112,5 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
       }
     }
   }
+
 }

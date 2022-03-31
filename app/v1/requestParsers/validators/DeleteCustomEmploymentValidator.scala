@@ -20,12 +20,12 @@ import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
-import v1.requestParsers.validators.validations.{ EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation }
+import v1.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCustomEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteCustomEmploymentRawData] {
+class DeleteCustomEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -46,4 +46,5 @@ class DeleteCustomEmploymentValidator @Inject()(implicit appConfig: AppConfig) e
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
+
 }

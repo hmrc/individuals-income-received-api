@@ -79,8 +79,9 @@ object RetrieveInsurancePoliciesControllerFixture {
     """.stripMargin
   )
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveInsurancePoliciesResponse.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveInsurancePoliciesResponse.as[JsObject] ++ Json
+    .parse(
+      s"""
        |{
        |   "links":[
        |      {
@@ -101,5 +102,7 @@ object RetrieveInsurancePoliciesControllerFixture {
        |   ]
        |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

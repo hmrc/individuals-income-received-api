@@ -24,11 +24,17 @@ import javax.inject.{Inject, Singleton}
 import utils.CurrentDateTime
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.ignoreEmployment.IgnoreEmploymentRawData
-import v1r7.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotEndedValidation, TaxYearNotSupportedValidation, TaxYearValidation}
+import v1r7.requestParsers.validators.validations.{
+  EmploymentIdValidation,
+  NinoValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
-class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-  extends Validator[IgnoreEmploymentRawData] {
+class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[IgnoreEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -49,7 +55,8 @@ class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateT
 
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear)  else List.empty[MtdError]
+      if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
     )
   }
+
 }

@@ -19,6 +19,5 @@ package v1r7.requestParsers.validators.validations
 trait DisposalDateErrorMessages {
 
   val IN_YEAR_NO_LATER_THAN_TODAY = "The disposalDate must be in the specified tax year and no later than today's date"
-  val IN_YEAR = "The disposalDate must be in the specified tax year"
+  val IN_YEAR                     = "The disposalDate must be in the specified tax year"
 }
-

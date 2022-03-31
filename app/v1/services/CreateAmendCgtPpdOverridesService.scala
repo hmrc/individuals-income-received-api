@@ -29,13 +29,15 @@ import api.support.DownstreamResponseMappingSupport
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOverridesConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdOverridesConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
-  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDesErrors(desErrorMap))
@@ -46,16 +48,17 @@ class CreateAmendCgtPpdOverridesService @Inject()(connector: CreateAmendCgtPpdOv
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "INVALID_PAYLOAD" -> StandardDownstreamError,
-      "PPD_SUBMISSIONID_NOT_FOUND" -> PpdSubmissionIdNotFoundError,
-      "DUPLICATE_SUBMISSION" -> RuleDuplicatedPpdSubmissionIdError,
-      "NO_PPD_SUBMISSIONS_FOUND" -> NotFoundError,
+      "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
+      "INVALID_TAX_YEAR"                -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"           -> StandardDownstreamError,
+      "INVALID_PAYLOAD"                 -> StandardDownstreamError,
+      "PPD_SUBMISSIONID_NOT_FOUND"      -> PpdSubmissionIdNotFoundError,
+      "DUPLICATE_SUBMISSION"            -> RuleDuplicatedPpdSubmissionIdError,
+      "NO_PPD_SUBMISSIONS_FOUND"        -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "INVALID_DISPOSAL_TYPE" -> RuleIncorrectDisposalTypeError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "INVALID_DISPOSAL_TYPE"           -> RuleIncorrectDisposalTypeError,
+      "SERVER_ERROR"                    -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
+
 }

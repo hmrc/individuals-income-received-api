@@ -59,4 +59,5 @@ class AmendForeignPoliciesItemSpec extends UnitSpec {
       }
     }
   }
+
 }

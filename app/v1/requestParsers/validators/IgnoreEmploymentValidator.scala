@@ -18,15 +18,15 @@ package v1.requestParsers.validators
 
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
-import config.{ AppConfig, FeatureSwitch }
+import config.{AppConfig, FeatureSwitch}
 import utils.CurrentDateTime
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[IgnoreEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
@@ -51,4 +51,5 @@ class IgnoreEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateT
       if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
     )
   }
+
 }

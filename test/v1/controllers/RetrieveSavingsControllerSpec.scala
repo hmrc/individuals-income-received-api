@@ -21,19 +21,19 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{ MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService }
+import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.{ DELETE, GET, PUT }
-import api.models.hateoas.RelType.{ AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF }
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.{ DeleteRetrieveRawData, DeleteRetrieveRequest }
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveSavingsControllerFixture
-import v1.models.response.retrieveSavings.{ ForeignInterestItem, RetrieveSavingsHateoasData, RetrieveSavingsResponse, Securities }
+import v1.models.response.retrieveSavings.{ForeignInterestItem, RetrieveSavingsHateoasData, RetrieveSavingsResponse, Securities}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -139,12 +139,13 @@ class RetrieveSavingsControllerSpec
         MockHateoasFactory
           .wrap(retrieveSavingsResponseModel, RetrieveSavingsHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrieveSavingsResponseModel,
-                           Seq(
-                             amendSavingsLink,
-                             retrieveSavingsLink,
-                             deleteSavingsLink
-                           )))
+            HateoasWrapper(
+              retrieveSavingsResponseModel,
+              Seq(
+                amendSavingsLink,
+                retrieveSavingsLink,
+                deleteSavingsLink
+              )))
 
         val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
 
@@ -213,4 +214,5 @@ class RetrieveSavingsControllerSpec
       }
     }
   }
+
 }

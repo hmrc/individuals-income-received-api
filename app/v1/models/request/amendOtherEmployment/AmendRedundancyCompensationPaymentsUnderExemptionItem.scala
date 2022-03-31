@@ -25,4 +25,5 @@ object AmendRedundancyCompensationPaymentsUnderExemptionItem {
 
   implicit val writes: OWrites[AmendRedundancyCompensationPaymentsUnderExemptionItem] =
     (JsPath \ "amount").write[BigDecimal].contramap(_.amount)
+
 }

@@ -18,7 +18,16 @@ package v1r7.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1r7.mocks.connectors.MockListEmploymentsConnector
@@ -29,23 +38,22 @@ import scala.concurrent.Future
 
 class ListEmploymentsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val requestData = ListEmploymentsRequest(Nino(nino), taxYear)
 
   private val validResponse = ListEmploymentResponse(
-    employments = Some(Seq(Employment(employmentId = "00000000-0000-1000-8000-000000000000",
-      employerName = "Vera Lynn",
-      dateIgnored = Some("2020-06-17T10:53:38Z")),
-      Employment(employmentId = "00000000-0000-1000-8000-000000000001",
-        employerName = "Vera Lynn",
-        dateIgnored = Some("2020-06-17T10:53:38Z")))),
-    customEmployments =
-      Some(Seq(Employment(employmentId = "00000000-0000-1000-8000-000000000002",
-        employerName = "Vera Lynn"),
-        Employment(employmentId = "00000000-0000-1000-8000-000000000003",
-          employerName = "Vera Lynn")))
+    employments = Some(
+      Seq(
+        Employment(employmentId = "00000000-0000-1000-8000-000000000000", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z")),
+        Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z"))
+      )),
+    customEmployments = Some(
+      Seq(
+        Employment(employmentId = "00000000-0000-1000-8000-000000000002", employerName = "Vera Lynn"),
+        Employment(employmentId = "00000000-0000-1000-8000-000000000003", employerName = "Vera Lynn")
+      ))
   )
 
   trait Test extends MockListEmploymentsConnector {
@@ -59,8 +67,8 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, validResponse))
 
-
-        MockListEmploymentsConnector.listEmployments(requestData)
+        MockListEmploymentsConnector
+          .listEmployments(requestData)
           .returns(Future.successful(outcome))
 
         await(service.listEmployments(requestData)) shouldBe outcome
@@ -71,7 +79,8 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
         def serviceError(ifsErrorCode: String, error: MtdError): Unit =
           s"a $ifsErrorCode error is returned from the service" in new Test {
 
-            MockListEmploymentsConnector.listEmployments(requestData)
+            MockListEmploymentsConnector
+              .listEmployments(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(ifsErrorCode))))))
 
             await(service.listEmployments(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -91,4 +100,5 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

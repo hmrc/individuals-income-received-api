@@ -84,7 +84,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val desJson: JsValue = Json.parse(
     """
       |{
@@ -147,7 +146,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |""".stripMargin
   )
 
-
   val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
@@ -160,7 +158,6 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       Some(1999.99),
       None
     )
-
 
   val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
@@ -183,14 +180,12 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       None
     )
 
-
   val ppdService: PpdService =
     PpdService(
       Some(143.22),
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
-
 
   val disposals: Disposals = Disposals(
     Some("CGTDISPOSAL01"),
@@ -209,20 +204,17 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
     Some(1999.99)
   )
 
-
   val customerAddedDisposals: CustomerAddedDisposals =
     CustomerAddedDisposals(
       "2020-07-06T09:37:17Z",
       Seq(disposals)
     )
 
-
   val model: RetrieveAllResidentialPropertyCgtResponse =
     RetrieveAllResidentialPropertyCgtResponse(
       Some(ppdService),
       Some(customerAddedDisposals)
     )
-
 
   "RetrieveAllResidentialPropertyCgtResponse" when {
     "Reads" should {

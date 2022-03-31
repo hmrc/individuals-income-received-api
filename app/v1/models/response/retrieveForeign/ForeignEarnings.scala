@@ -22,10 +22,11 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class ForeignEarnings(customerReference: Option[String], earningsNotTaxableUK: BigDecimal)
 
 object ForeignEarnings {
+
   implicit val reads: Reads[ForeignEarnings] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "earningsNotTaxableUK").read[BigDecimal]
-    ) (ForeignEarnings.apply _)
+  )(ForeignEarnings.apply _)
 
   implicit val writes: OWrites[ForeignEarnings] = Json.writes[ForeignEarnings]
 }

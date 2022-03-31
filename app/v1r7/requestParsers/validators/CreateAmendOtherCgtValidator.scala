@@ -21,12 +21,27 @@ import api.requestParsers.validators.Validator
 import config.AppConfig
 import v1r7.requestParsers.validators.validations._
 import v1r7.models.request.createAmendOtherCgt._
-import v1r7.requestParsers.validators.validations.{AcquisitionDateValidation, AssetDescriptionValidation, AssetTypeValidation, ClaimOrElectionCodesValidation, DateFormatValidation, DecimalValueValidation, DisposalDateErrorMessages, DisposalDateValidation, GainLossValidation, JsonFormatValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  AcquisitionDateValidation,
+  AssetDescriptionValidation,
+  AssetTypeValidation,
+  ClaimOrElectionCodesValidation,
+  DateFormatValidation,
+  DecimalValueValidation,
+  DisposalDateErrorMessages,
+  DisposalDateValidation,
+  GainLossValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
+class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendOtherCgtRawData]
     with ValueFormatErrorMessages
     with DisposalDateErrorMessages {
@@ -56,25 +71,25 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
     )
 
     val requestBodyData = data.body.json.asOpt[CreateAmendOtherCgtRequestBody]
-    val emptyValidation: List[List[MtdError]] = List(requestBodyData.map {
-      body =>
-      val disposalsMissingFields = if(body.disposals.exists(_.isEmpty)) List("/disposals") else List()
-      val nonStandardGainsMissingFields = if(body.nonStandardGains.contains(NonStandardGains.empty)) List("/nonStandardGains") else List()
-      val lossesMissingFields = if(body.losses.contains(Losses.empty)) List("/losses") else List()
-      val allMissingFields = disposalsMissingFields ++ nonStandardGainsMissingFields ++ lossesMissingFields
-      if(allMissingFields.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(allMissingFields)))
-    }.getOrElse(NoValidationErrors))
+    val emptyValidation: List[List[MtdError]] = List(
+      requestBodyData
+        .map { body =>
+          val disposalsMissingFields        = if (body.disposals.exists(_.isEmpty)) List("/disposals") else List()
+          val nonStandardGainsMissingFields = if (body.nonStandardGains.contains(NonStandardGains.empty)) List("/nonStandardGains") else List()
+          val lossesMissingFields           = if (body.losses.contains(Losses.empty)) List("/losses") else List()
+          val allMissingFields              = disposalsMissingFields ++ nonStandardGainsMissingFields ++ lossesMissingFields
+          if (allMissingFields.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(allMissingFields)))
+        }
+        .getOrElse(NoValidationErrors))
 
     standardValidation ++ emptyValidation
   }
-
 
   private def oneOfThreeGainsSuppliedValidation(nonStandardGains: NonStandardGains): List[MtdError] = {
 
     if (nonStandardGains.isThreeFieldsEmpty) {
       List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/nonStandardGains"))))
-    }
-    else NoValidationErrors
+    } else NoValidationErrors
   }
 
   private def bodyFormatValidation: CreateAmendOtherCgtRawData => List[List[MtdError]] = { data =>
@@ -85,8 +100,8 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
         List(
           requestBodyData.disposals
             .map(_.toList)
-            .map(_.zipWithIndex.flatMap {
-              case (disposal, index) => validateDisposalFormat(disposal, index)
+            .map(_.zipWithIndex.flatMap { case (disposal, index) =>
+              validateDisposalFormat(disposal, index)
             })
             .getOrElse(NoValidationErrors),
           requestBodyData.nonStandardGains
@@ -114,8 +129,8 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
         List(
           requestBodyData.disposals
             .map(_.toList)
-            .map(_.zipWithIndex.flatMap {
-              case (disposal, index) => validateDisposalRules(disposal, data.taxYear, index)
+            .map(_.zipWithIndex.flatMap { case (disposal, index) =>
+              validateDisposalRules(disposal, data.taxYear, index)
             })
             .getOrElse(NoValidationErrors),
           requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation).getOrElse(NoValidationErrors)
@@ -223,7 +238,7 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
       DecimalValueValidation.validateOptional(
         amount = losses.setAgainstEarlierYear,
         path = "/losses/setAgainstEarlierYear"
-      ),
+      )
     ).flatten
   }
 
@@ -250,4 +265,5 @@ class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
       )
     ).flatten
   }
+
 }

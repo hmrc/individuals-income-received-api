@@ -34,11 +34,13 @@ trait MockListEmploymentsService extends MockFactory {
 
   object MockListEmploymentsService {
 
-    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]]] = {
+    def listEmployments(
+        requestData: ListEmploymentsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]]] = {
       (mockListEmploymentsService
         .listEmployments(_: ListEmploymentsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

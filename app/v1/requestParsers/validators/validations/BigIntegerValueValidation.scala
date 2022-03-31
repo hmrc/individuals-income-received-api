@@ -25,24 +25,25 @@ object BigIntegerValueValidation extends ValueFormatErrorMessages {
                        path: String,
                        message: String = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE): List[MtdError] = field match {
     case None => NoValidationErrors
-    case Some(value) => validate(
-      field = value,
-      minValue = minValue,
-      path = path,
-      message = message
-    )
-  }
-
-  def validate(field: BigInt,
-               minValue: BigInt = 0,
-               path: String,
-               message: String = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE): List[MtdError] = {
-
-    if (field >= minValue) NoValidationErrors else List(
-      ValueFormatError.copy(
-        message = message,
-        paths = Some(Seq(path))
+    case Some(value) =>
+      validate(
+        field = value,
+        minValue = minValue,
+        path = path,
+        message = message
       )
-    )
   }
+
+  def validate(field: BigInt, minValue: BigInt = 0, path: String, message: String = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE): List[MtdError] = {
+
+    if (field >= minValue) NoValidationErrors
+    else
+      List(
+        ValueFormatError.copy(
+          message = message,
+          paths = Some(Seq(path))
+        )
+      )
+  }
+
 }

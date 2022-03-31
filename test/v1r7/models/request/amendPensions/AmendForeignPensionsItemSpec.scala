@@ -63,4 +63,5 @@ class AmendForeignPensionsItemSpec extends UnitSpec {
       }
     }
   }
+
 }

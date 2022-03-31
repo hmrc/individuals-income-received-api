@@ -20,20 +20,20 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{ MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService }
-import api.models.audit.{ AuditError, AuditEvent, AuditResponse, GenericAuditDetail }
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.{ HateoasWrapper, Link }
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsValue, Json }
-import play.api.mvc.{ AnyContentAsJson, Result }
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAddCustomEmploymentRequestParser
 import v1.mocks.services.MockAddCustomEmploymentService
-import v1.models.request.addCustomEmployment.{ AddCustomEmploymentRawData, AddCustomEmploymentRequest, AddCustomEmploymentRequestBody }
-import v1.models.response.addCustomEmployment.{ AddCustomEmploymentHateoasData, AddCustomEmploymentResponse }
+import v1.models.request.addCustomEmployment.{AddCustomEmploymentRawData, AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
+import v1.models.response.addCustomEmployment.{AddCustomEmploymentHateoasData, AddCustomEmploymentResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -80,6 +80,7 @@ class AddCustomEmploymentControllerSpec
       amendCustomEmployment(mockAppConfig, nino, taxYear, employmentId),
       deleteCustomEmployment(mockAppConfig, nino, taxYear, employmentId)
     )
+
   }
 
   val requestBodyJson: JsValue = Json.parse(
@@ -264,4 +265,5 @@ class AddCustomEmploymentControllerSpec
       }
     }
   }
+
 }

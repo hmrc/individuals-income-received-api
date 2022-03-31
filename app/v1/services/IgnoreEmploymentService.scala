@@ -31,14 +31,13 @@ import api.support.DownstreamResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IgnoreEmploymentService @Inject()(connector: IgnoreEmploymentConnector)
-  extends DownstreamResponseMappingSupport with Logging {
+class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def ignoreEmployment(request: IgnoreEmploymentRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def ignoreEmployment(request: IgnoreEmploymentRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.ignoreEmployment(request)).leftMap(mapDesErrors(desErrorMap))
@@ -49,14 +48,15 @@ class IgnoreEmploymentService @Inject()(connector: IgnoreEmploymentConnector)
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+      "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
+      "INVALID_TAX_YEAR"                -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"           -> EmploymentIdFormatError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "CANNOT_IGNORE" -> RuleCustomEmploymentError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "CANNOT_IGNORE"                   -> RuleCustomEmploymentError,
+      "NO_DATA_FOUND"                   -> NotFoundError,
+      "INVALID_CORRELATIONID"           -> StandardDownstreamError,
+      "SERVER_ERROR"                    -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
+
 }

@@ -18,15 +18,15 @@ package v1.requestParsers.validators
 
 import api.models.errors._
 import api.requestParsers.validators.Validator
-import config.{ AppConfig, FeatureSwitch }
+import config.{AppConfig, FeatureSwitch}
 import utils.CurrentDateTime
 import v1.models.request.addCustomEmployment._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class AddCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[AddCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
@@ -38,7 +38,7 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
   private def parameterFormatValidation: AddCustomEmploymentRawData => List[List[MtdError]] = (data: AddCustomEmploymentRawData) => {
     List(
       NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear),
+      TaxYearValidation.validate(data.taxYear)
     )
   }
 
@@ -67,4 +67,5 @@ class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDa
       PayrollIdValidation.validateOptional(requestBodyData.payrollId)
     )
   }
+
 }

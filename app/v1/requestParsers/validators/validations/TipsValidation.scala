@@ -19,9 +19,10 @@ package v1.requestParsers.validators.validations
 import api.models.errors.{MtdError, ValueFormatError}
 
 object TipsValidation {
+
   def validateWithPath(amount: BigDecimal, path: String): List[MtdError] = {
 
-    val maxScale: Int = 2
+    val maxScale: Int        = 2
     val minValue: BigDecimal = 0
     val maxValue: BigDecimal = 99999999999.99
 
@@ -30,4 +31,5 @@ object TipsValidation {
 
     if (rangeCheck && scaleCheck) NoValidationErrors else List(ValueFormatError.copy(paths = Some(Seq(path))))
   }
+
 }

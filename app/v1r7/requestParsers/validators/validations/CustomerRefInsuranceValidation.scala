@@ -23,8 +23,8 @@ object CustomerRefInsuranceValidation {
 
   def validateOptional(customerRef: Option[String]): List[MtdError] = customerRef.fold(NoValidationErrors: List[MtdError]) { ref =>
     if (ref.matches("^[0-9a-zA-Z{À-˿'}\\- _&`():.'^]{1,90}$")) {
-        NoValidationErrors
-      } else {
+      NoValidationErrors
+    } else {
       List(CustomerRefFormatError)
     }
   }

@@ -16,7 +16,16 @@
 
 package v1r7.requestParsers.validators
 
-import api.models.errors.{CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -27,7 +36,7 @@ import v1r7.models.request.amendForeign.AmendForeignRawData
 
 class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2018-19"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -233,18 +242,18 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       |""".stripMargin
   )
 
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidEarningsNotTaxableUKRequestBody = AnyContentAsJson(invalidEarningsNotTaxableUKRequestBodyJson)
-  private val invalidCustomerReferenceRequestBody = AnyContentAsJson(invalidCustomerReferenceRequestBodyJson)
-  private val invalidCountryCodeRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidCountryCodeFormatRequestBody = AnyContentAsJson(invalidCountryCodeFormatRequestBodyJson)
+  private val validRawRequestBody                       = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody                       = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody                    = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody                    = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody          = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidEarningsNotTaxableUKRequestBody    = AnyContentAsJson(invalidEarningsNotTaxableUKRequestBodyJson)
+  private val invalidCustomerReferenceRequestBody       = AnyContentAsJson(invalidCustomerReferenceRequestBodyJson)
+  private val invalidCountryCodeRequestBody             = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidCountryCodeFormatRequestBody       = AnyContentAsJson(invalidCountryCodeFormatRequestBodyJson)
   private val invalidAmountInForeignCurrencyRequestBody = AnyContentAsJson(invalidAmountInForeignCurrencyRequestBodyJson)
-  private val invalidAmountTaxPaidRequestBody = AnyContentAsJson(invalidAmountTaxPaidRequestBodyJson)
-  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRawRequestBodyJson)
+  private val invalidAmountTaxPaidRequestBody           = AnyContentAsJson(invalidAmountTaxPaidRequestBodyJson)
+  private val allInvalidValueRawRequestBody             = AnyContentAsJson(allInvalidValueRawRequestBodyJson)
 
   class Test extends MockAppConfig {
 
@@ -255,6 +264,7 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2019)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -291,7 +301,6 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
           List(RuleIncorrectOrEmptyBodyError)
       }
 
-
       "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
@@ -299,17 +308,21 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
       "the submitted request body is not in the correct format" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-            "/unremittableForeignIncome/0/amountTaxPaid",
-            "/unremittableForeignIncome/1/amountTaxPaid"
-          ))))
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+              Seq(
+                "/unremittableForeignIncome/0/amountTaxPaid",
+                "/unremittableForeignIncome/1/amountTaxPaid"
+              ))))
       }
 
       "the submitted request body has missing mandatory fields" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-            "/unremittableForeignIncome/0/countryCode"
-          ))))
+          List(
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+              Seq(
+                "/unremittableForeignIncome/0/countryCode"
+              ))))
       }
     }
 
@@ -323,42 +336,47 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
     "return ValueFormatError error" when {
       "an incorrectly formatted earningsNotTaxableUK is submitted" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidEarningsNotTaxableUKRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            paths = Some(List("/foreignEarnings/earningsNotTaxableUK")),
-            message = ZERO_MINIMUM_INCLUSIVE
-          ))
+          List(
+            ValueFormatError.copy(
+              paths = Some(List("/foreignEarnings/earningsNotTaxableUK")),
+              message = ZERO_MINIMUM_INCLUSIVE
+            ))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (countryCode 3 digit)" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidCountryCodeRequestBody)) shouldBe
-          List(CountryCodeRuleError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
-          ))
+          List(
+            CountryCodeRuleError.copy(
+              paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+            ))
       }
 
       "one field fails value validation (countryCode 4 digit)" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidCountryCodeFormatRequestBody)) shouldBe
-          List(CountryCodeFormatError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
-          ))
+          List(
+            CountryCodeFormatError.copy(
+              paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+            ))
       }
 
       "one field fails value validation (amountInForeignCurrency)" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidAmountInForeignCurrencyRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/unremittableForeignIncome/0/amountInForeignCurrency"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/unremittableForeignIncome/0/amountInForeignCurrency"))
+            ))
       }
 
       "one field fails value validation (AmountTaxPaid)" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, invalidAmountTaxPaidRequestBody)) shouldBe
-          List(ValueFormatError.copy(
-            message = ZERO_MINIMUM_INCLUSIVE,
-            paths = Some(Seq("/unremittableForeignIncome/0/amountTaxPaid"))
-          ))
+          List(
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(Seq("/unremittableForeignIncome/0/amountTaxPaid"))
+            ))
       }
     }
 
@@ -383,8 +401,8 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
               paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
             ),
             CountryCodeRuleError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
-          )
+              paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))
+            )
           )
       }
     }
@@ -396,4 +414,5 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       }
     }
   }
+
 }

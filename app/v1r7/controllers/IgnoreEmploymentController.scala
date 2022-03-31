@@ -38,14 +38,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthService,
-                                           val lookupService: MtdIdLookupService,
-                                           appConfig: AppConfig,
-                                           requestParser: IgnoreEmploymentRequestParser,
-                                           service: IgnoreEmploymentService,
-                                           auditService: AuditService,
-                                           cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthService,
+                                            val lookupService: MtdIdLookupService,
+                                            appConfig: AppConfig,
+                                            requestParser: IgnoreEmploymentRequestParser,
+                                            service: IgnoreEmploymentService,
+                                            auditService: AuditService,
+                                            cc: ControllerComponents,
+                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -130,4 +130,5 @@ class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthServic
     val event = AuditEvent("IgnoreEmployment", "ignore-employment", details)
     auditService.auditEvent(event)
   }
+
 }

@@ -17,7 +17,15 @@
 package v1r7.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import cats.data.EitherT
 import cats.implicits._
 
@@ -33,13 +41,13 @@ import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDesErrors(desErrorMap))
@@ -51,12 +59,13 @@ class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsCon
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID" -> NotFoundError,
-      "INVALID_PAYLOAD" -> StandardDownstreamError,
-      "BEFORE_TAX_YEAR_END" -> RuleTaxYearNotEndedError,
-      "INVALID_CORRELATIONID" -> StandardDownstreamError,
-      "SERVER_ERROR" -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"     -> NotFoundError,
+      "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "BEFORE_TAX_YEAR_END"       -> RuleTaxYearNotEndedError,
+      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "SERVER_ERROR"              -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
 }

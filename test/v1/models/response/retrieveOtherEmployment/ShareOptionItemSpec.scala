@@ -83,5 +83,5 @@ class ShareOptionItemSpec extends UnitSpec {
       }
     }
   }
-}
 
+}

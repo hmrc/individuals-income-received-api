@@ -28,7 +28,7 @@ import api.services.ServiceSpec
 
 class AmendSavingsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
@@ -52,6 +52,7 @@ class AmendSavingsServiceSpec extends ServiceSpec {
     val service: AmendSavingsService = new AmendSavingsService(
       connector = mockAmendSavingsConnector
     )
+
   }
 
   "AmendSavingsService" when {
@@ -59,7 +60,8 @@ class AmendSavingsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         private val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
+        MockAmendSavingsConnector
+          .amendSaving(amendSavingsRequest)
           .returns(Future.successful(outcome))
 
         await(service.amendSaving(amendSavingsRequest)) shouldBe outcome
@@ -70,7 +72,8 @@ class AmendSavingsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendSavingsConnector.amendSaving(amendSavingsRequest)
+            MockAmendSavingsConnector
+              .amendSaving(amendSavingsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amendSaving(amendSavingsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -80,7 +83,7 @@ class AmendSavingsServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("INVALID_PAYLOAD",  StandardDownstreamError),
+          ("INVALID_PAYLOAD", StandardDownstreamError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
@@ -89,4 +92,5 @@ class AmendSavingsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.connectors.AmendFinancialDetailsConnector
 import v1r7.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 
 trait MockAmendFinancialDetailsConnector extends MockFactory {
 
@@ -36,5 +36,7 @@ trait MockAmendFinancialDetailsConnector extends MockFactory {
         .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
+
 }

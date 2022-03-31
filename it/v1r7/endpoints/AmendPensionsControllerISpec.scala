@@ -18,7 +18,25 @@ package v1r7.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, DoubleTaxationArticleFormatError, DoubleTaxationTreatyFormatError, ErrorWrapper, MtdError, NinoFormatError, QOPSRefFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SF74RefFormatError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  DoubleTaxationArticleFormatError,
+  DoubleTaxationTreatyFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  QOPSRefFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SF74RefFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -30,8 +48,8 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
+    val taxYear: String       = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -116,6 +134,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'amend pensions' endpoint" should {
@@ -140,7 +159,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       "all field value validations fail on the request body" in new Test {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-           """
+          """
              |{
              |   "foreignPensions": [
              |      {
@@ -189,62 +208,70 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
         val allInvalidValueRequestError: List[MtdError] = List(
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
-            paths = Some(List(
-              "/foreignPensions/0/amountBeforeTax",
-              "/foreignPensions/0/taxTakenOff",
-              "/foreignPensions/0/specialWithholdingTax",
-              "/foreignPensions/0/taxableAmount",
-              "/foreignPensions/1/amountBeforeTax",
-              "/foreignPensions/1/taxTakenOff",
-              "/foreignPensions/1/specialWithholdingTax",
-              "/foreignPensions/1/taxableAmount",
-              "/overseasPensionContributions/0/exemptEmployersPensionContribs",
-              "/overseasPensionContributions/0/dblTaxationRelief",
-              "/overseasPensionContributions/1/exemptEmployersPensionContribs",
-              "/overseasPensionContributions/1/dblTaxationRelief"
-            ))
+            paths = Some(
+              List(
+                "/foreignPensions/0/amountBeforeTax",
+                "/foreignPensions/0/taxTakenOff",
+                "/foreignPensions/0/specialWithholdingTax",
+                "/foreignPensions/0/taxableAmount",
+                "/foreignPensions/1/amountBeforeTax",
+                "/foreignPensions/1/taxTakenOff",
+                "/foreignPensions/1/specialWithholdingTax",
+                "/foreignPensions/1/taxableAmount",
+                "/overseasPensionContributions/0/exemptEmployersPensionContribs",
+                "/overseasPensionContributions/0/dblTaxationRelief",
+                "/overseasPensionContributions/1/exemptEmployersPensionContribs",
+                "/overseasPensionContributions/1/dblTaxationRelief"
+              ))
           ),
           CustomerRefFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/customerReference",
-              "/overseasPensionContributions/1/customerReference"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/customerReference",
+                "/overseasPensionContributions/1/customerReference"
+              ))
           ),
           QOPSRefFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
-              "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
+                "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+              ))
           ),
           SF74RefFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/sf74reference",
-              "/overseasPensionContributions/1/sf74reference"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/sf74reference",
+                "/overseasPensionContributions/1/sf74reference"
+              ))
           ),
           DoubleTaxationTreatyFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/dblTaxationTreaty",
-              "/overseasPensionContributions/1/dblTaxationTreaty"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/dblTaxationTreaty",
+                "/overseasPensionContributions/1/dblTaxationTreaty"
+              ))
           ),
           CountryCodeRuleError.copy(
-            paths = Some(List(
-              "/foreignPensions/0/countryCode",
-              "/overseasPensionContributions/0/dblTaxationCountryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignPensions/0/countryCode",
+                "/overseasPensionContributions/0/dblTaxationCountryCode"
+              ))
           ),
           DoubleTaxationArticleFormatError.copy(
-            paths = Some(List(
-              "/overseasPensionContributions/0/dblTaxationArticle",
-              "/overseasPensionContributions/1/dblTaxationArticle"
-            ))
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/dblTaxationArticle",
+                "/overseasPensionContributions/1/dblTaxationArticle"
+              ))
           ),
           CountryCodeFormatError.copy(
-            paths = Some(List(
-              "/foreignPensions/1/countryCode",
-              "/overseasPensionContributions/1/dblTaxationCountryCode"
-            ))
+            paths = Some(
+              List(
+                "/foreignPensions/1/countryCode",
+                "/overseasPensionContributions/1/dblTaxationCountryCode"
+              ))
           )
         )
 
@@ -267,8 +294,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
 
       "complex error scenario" in new Test {
 
-        val iirPensionsIncomeAmendErrorsRequest: JsValue = Json.parse(
-          """
+        val iirPensionsIncomeAmendErrorsRequest: JsValue = Json.parse("""
             |{
             |   "foreignPensions":[
             |      {
@@ -313,8 +339,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
             |}
             |""".stripMargin)
 
-        val iirPensionsIncomeAmendErrorsResponse: JsValue = Json.parse(
-          """
+        val iirPensionsIncomeAmendErrorsResponse: JsValue = Json.parse("""
             |{
             |   "code":"INVALID_REQUEST",
             |   "message":"Invalid request",
@@ -506,7 +531,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidCustomerRefRequestBodyJson: JsValue = Json.parse(
-         """
+        """
           |{
           |   "overseasPensionContributions": [
           |      {
@@ -535,7 +560,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidQOPSRefRequestBodyJson: JsValue = Json.parse(
-         """
+        """
            |{
            |   "overseasPensionContributions": [
            |      {
@@ -564,7 +589,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidDoubleTaxationArticleRequestBodyJson: JsValue = Json.parse(
-         """
+        """
            |{
            |   "overseasPensionContributions": [
            |      {
@@ -593,7 +618,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidDoubleTaxationTreatyRequestBodyJson: JsValue = Json.parse(
-         """
+        """
            |{
            |   "overseasPensionContributions": [
            |      {
@@ -622,7 +647,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val invalidSF74RefRequestBodyJson: JsValue = Json.parse(
-         """
+        """
            |{
            |   "overseasPensionContributions": [
            |      {
@@ -714,7 +739,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
         """.stripMargin
       )
 
-      val missingFieldRequestBodyJson : JsValue = Json.parse(
+      val missingFieldRequestBodyJson: JsValue = Json.parse(
         """
           |{
           |   "foreignPensions": [
@@ -731,70 +756,78 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       val countryCodeError: MtdError = CountryCodeFormatError.copy(
-        paths = Some(Seq(
-          "/foreignPensions/0/countryCode",
-          "/foreignPensions/1/countryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/foreignPensions/0/countryCode",
+            "/foreignPensions/1/countryCode"
+          ))
       )
 
       val countryCodeRuleError: MtdError = CountryCodeRuleError.copy(
-        paths = Some(Seq(
-          "/overseasPensionContributions/0/dblTaxationCountryCode",
-          "/overseasPensionContributions/1/dblTaxationCountryCode"
-        ))
+        paths = Some(
+          Seq(
+            "/overseasPensionContributions/0/dblTaxationCountryCode",
+            "/overseasPensionContributions/1/dblTaxationCountryCode"
+          ))
       )
 
       val customerRefError: MtdError = CustomerRefFormatError.copy(
-        paths = Some(Seq(
-          "/overseasPensionContributions/0/customerReference",
-          "/overseasPensionContributions/1/customerReference"
-        ))
+        paths = Some(
+          Seq(
+            "/overseasPensionContributions/0/customerReference",
+            "/overseasPensionContributions/1/customerReference"
+          ))
       )
 
       val qopsRefError: MtdError = QOPSRefFormatError.copy(
-        paths = Some(Seq(
-          "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
-          "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
-        ))
+        paths = Some(
+          Seq(
+            "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
+            "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+          ))
       )
 
       val dblTaxationArticleError: MtdError = DoubleTaxationArticleFormatError.copy(
-        paths = Some(Seq(
-          "/overseasPensionContributions/0/dblTaxationArticle",
-          "/overseasPensionContributions/1/dblTaxationArticle"
-        ))
+        paths = Some(
+          Seq(
+            "/overseasPensionContributions/0/dblTaxationArticle",
+            "/overseasPensionContributions/1/dblTaxationArticle"
+          ))
       )
 
       val dblTaxationTreatyError: MtdError = DoubleTaxationTreatyFormatError.copy(
-        paths = Some(Seq(
-          "/overseasPensionContributions/0/dblTaxationTreaty",
-          "/overseasPensionContributions/1/dblTaxationTreaty"
-        ))
+        paths = Some(
+          Seq(
+            "/overseasPensionContributions/0/dblTaxationTreaty",
+            "/overseasPensionContributions/1/dblTaxationTreaty"
+          ))
       )
 
       val sf74RefError: MtdError = SF74RefFormatError.copy(
-        paths = Some(Seq(
-          "/overseasPensionContributions/0/sf74reference",
-          "/overseasPensionContributions/1/sf74reference"
-        ))
+        paths = Some(
+          Seq(
+            "/overseasPensionContributions/0/sf74reference",
+            "/overseasPensionContributions/1/sf74reference"
+          ))
       )
 
       val allInvalidValueRequestError: MtdError = ValueFormatError.copy(
         message = "The value must be between 0 and 99999999999.99",
-        paths = Some(List(
-          "/foreignPensions/0/amountBeforeTax",
-          "/foreignPensions/0/taxTakenOff",
-          "/foreignPensions/0/specialWithholdingTax",
-          "/foreignPensions/0/taxableAmount",
-          "/foreignPensions/1/amountBeforeTax",
-          "/foreignPensions/1/taxTakenOff",
-          "/foreignPensions/1/specialWithholdingTax",
-          "/foreignPensions/1/taxableAmount",
-          "/overseasPensionContributions/0/exemptEmployersPensionContribs",
-          "/overseasPensionContributions/0/dblTaxationRelief",
-          "/overseasPensionContributions/1/exemptEmployersPensionContribs",
-          "/overseasPensionContributions/1/dblTaxationRelief"
-        ))
+        paths = Some(
+          List(
+            "/foreignPensions/0/amountBeforeTax",
+            "/foreignPensions/0/taxTakenOff",
+            "/foreignPensions/0/specialWithholdingTax",
+            "/foreignPensions/0/taxableAmount",
+            "/foreignPensions/1/amountBeforeTax",
+            "/foreignPensions/1/taxTakenOff",
+            "/foreignPensions/1/specialWithholdingTax",
+            "/foreignPensions/1/taxableAmount",
+            "/overseasPensionContributions/0/exemptEmployersPensionContribs",
+            "/overseasPensionContributions/0/dblTaxationRelief",
+            "/overseasPensionContributions/1/exemptEmployersPensionContribs",
+            "/overseasPensionContributions/1/dblTaxationRelief"
+          ))
       )
 
       val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
@@ -806,12 +839,16 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
       )
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestBody: JsValue, expectedStatus: Int,
-                                expectedBody: MtdError, scenario: Option[String]): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -828,7 +865,7 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
 
         val input = Seq(
           ("AA1123A", "2019-20", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20177", validRequestBodyJson,  BAD_REQUEST, TaxYearFormatError, None),
+          ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
           ("AA123456A", "2019-20", invalidCountryCodeRequestBodyJson, BAD_REQUEST, countryCodeError, None),
@@ -878,10 +915,12 @@ class AmendPensionsControllerISpec extends V1R7IntegrationSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

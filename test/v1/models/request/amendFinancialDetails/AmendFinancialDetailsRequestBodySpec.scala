@@ -148,4 +148,5 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
       }
     }
   }
+
 }

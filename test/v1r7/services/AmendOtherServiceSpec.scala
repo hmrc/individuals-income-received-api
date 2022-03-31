@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class AmendOtherServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   val amendOtherRequest: AmendOtherRequest = AmendOtherRequest(
@@ -44,6 +44,7 @@ class AmendOtherServiceSpec extends ServiceSpec {
     val service: AmendOtherService = new AmendOtherService(
       connector = mockAmendOtherConnector
     )
+
   }
 
   "AmendOtherService" when {
@@ -51,7 +52,8 @@ class AmendOtherServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendOtherConnector.amendOther(amendOtherRequest)
+        MockAmendOtherConnector
+          .amendOther(amendOtherRequest)
           .returns(Future.successful(outcome))
 
         await(service.amend(amendOtherRequest)) shouldBe outcome
@@ -62,7 +64,8 @@ class AmendOtherServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendOtherConnector.amendOther(amendOtherRequest)
+            MockAmendOtherConnector
+              .amendOther(amendOtherRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.amend(amendOtherRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -82,4 +85,5 @@ class AmendOtherServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

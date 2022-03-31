@@ -26,11 +26,21 @@ import api.models.errors.RuleIncorrectOrEmptyBodyError
 import api.requestParsers.validators.Validator
 import v1r7.models.request.amendFinancialDetails.emploment.AmendEmployment
 import v1r7.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
-import v1r7.requestParsers.validators.validations.{DecimalValueValidation, EmploymentIdValidation, JsonFormatValidation, NinoValidation, TaxYearNotEndedValidation, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
+import v1r7.requestParsers.validators.validations.{
+  DecimalValueValidation,
+  EmploymentIdValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
-class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-  extends Validator[AmendFinancialDetailsRawData] with ValueFormatErrorMessages {
+class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[AmendFinancialDetailsRawData]
+    with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -65,31 +75,33 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
       requestBodyObj
         .map { body =>
           val emptyDeductionsError: List[String] =
-            if(body.employment.deductions.exists(_.isEmpty)) List("/employment/deductions") else NoValidationErrors
+            if (body.employment.deductions.exists(_.isEmpty)) List("/employment/deductions") else NoValidationErrors
 
           val emptyBenefitsInKindError: List[String] =
-            if(body.employment.benefitsInKind.exists(_.isEmpty)) List("/employment/benefitsInKind") else NoValidationErrors
+            if (body.employment.benefitsInKind.exists(_.isEmpty)) List("/employment/benefitsInKind") else NoValidationErrors
 
           val emptyStudentLoansError: List[String] =
-            if(body.employment.deductions.exists(_.studentLoans.exists(_.isEmpty))) List("/employment/deductions/studentLoans") else NoValidationErrors
+            if (body.employment.deductions.exists(_.studentLoans.exists(_.isEmpty))) List("/employment/deductions/studentLoans")
+            else NoValidationErrors
 
           val minimumFieldsError = emptyDeductionsError ++ emptyBenefitsInKindError ++ emptyStudentLoansError
-          if(minimumFieldsError.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(minimumFieldsError)))
+          if (minimumFieldsError.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(minimumFieldsError)))
 
-        }.getOrElse(NoValidationErrors))
+        }
+        .getOrElse(NoValidationErrors))
 
     jsonFormatError ++ emptyObjectValidation
   }
 
   private def bodyValueValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
-
     val requestBodyData = data.body.json.as[AmendFinancialDetailsRequestBody]
 
-    List(Validator.flattenErrors(
-      List(
-        validateEmployment(requestBodyData.employment)
-      )
-    ))
+    List(
+      Validator.flattenErrors(
+        List(
+          validateEmployment(requestBodyData.employment)
+        )
+      ))
   }
 
   private def validateEmployment(employment: AmendEmployment): List[MtdError] = {
@@ -226,4 +238,5 @@ class AmendFinancialDetailsValidator @Inject()(implicit currentDateTime: Current
       )
     ).flatten
   }
+
 }

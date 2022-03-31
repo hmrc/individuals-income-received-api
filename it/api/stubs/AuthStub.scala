@@ -18,7 +18,7 @@ package api.stubs
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, Json }
+import play.api.libs.json.{JsObject, Json}
 import support.WireMockMethods
 
 object AuthStub extends WireMockMethods {
@@ -53,4 +53,5 @@ object AuthStub extends WireMockMethods {
   private def successfulAuthResponse(enrolments: JsObject*): JsObject = {
     Json.obj("authorisedEnrolments" -> enrolments, "affinityGroup" -> "Individual")
   }
+
 }

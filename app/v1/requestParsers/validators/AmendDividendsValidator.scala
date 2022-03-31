@@ -22,10 +22,10 @@ import config.AppConfig
 import v1.models.request.amendDividends._
 import v1.requestParsers.validators.validations._
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
+class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
@@ -59,14 +59,14 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig) extends V
       Validator.flattenErrors(
         List(
           requestBodyData.foreignDividend
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateForeignDividend(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateForeignDividend(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
           requestBodyData.dividendIncomeReceivedWhilstAbroad
-            .map(_.zipWithIndex.flatMap {
-              case (data, index) => validateDividendIncomeReceivedWhilstAbroad(data, index)
+            .map(_.zipWithIndex.flatMap { case (data, index) =>
+              validateDividendIncomeReceivedWhilstAbroad(data, index)
             })
             .getOrElse(NoValidationErrors)
             .toList,
@@ -160,4 +160,5 @@ class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig) extends V
       )
     ).flatten
   }
+
 }

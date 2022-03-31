@@ -34,10 +34,18 @@ trait MockAmendInsurancePoliciesService extends MockFactory {
   object MockAmendInsurancePoliciesService {
 
     def amendInsurancePolicies(requestData: AmendInsurancePoliciesRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockAmendInsurancePoliciesService
-        .amendInsurancePolicies(_: AmendInsurancePoliciesRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+      (
+        mockAmendInsurancePoliciesService
+          .amendInsurancePolicies(_: AmendInsurancePoliciesRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
         .expects(requestData, *, *, *, *)
     }
+
   }
 
 }

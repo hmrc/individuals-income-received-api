@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendDividendsConnectorSpec extends ConnectorSpec {
 
-  private val nino: String = "AA111111A"
+  private val nino: String    = "AA111111A"
   private val taxYear: String = "2019-20"
 
   private val foreignDividendModel = Seq(
@@ -99,9 +99,9 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
   )
 
   val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
-      nino = Nino(nino),
-      taxYear = taxYear,
-      body = amendDividendsRequestBody
+    nino = Nino(nino),
+    taxYear = taxYear,
+    body = amendDividendsRequestBody
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -120,8 +120,8 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
   "AmendDividendsConnector" when {
     "amendDividends" must {
       "return a 204 status for a success scenario" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
+        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
@@ -131,10 +131,12 @@ class AmendDividendsConnectorSpec extends ConnectorSpec {
             body = amendDividendsRequestBody,
             requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.amendDividends(amendDividendsRequest)) shouldBe outcome
       }
     }
   }
+
 }

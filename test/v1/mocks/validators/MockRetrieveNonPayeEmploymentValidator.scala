@@ -33,6 +33,7 @@ class MockRetrieveNonPayeEmploymentValidator extends MockFactory {
         .validate(_: RetrieveNonPayeEmploymentIncomeRawData))
         .expects(data)
     }
+
   }
 
 }

@@ -21,7 +21,9 @@ import api.models.errors.AssetDescriptionFormatError
 
 object AssetDescriptionValidation {
   private val regex = """^[0-9a-zA-Z{À-˿’}\- _&`():.'^]{1,90}$"""
+
   def validate(description: String, path: String): List[MtdError] = {
-    if(description.matches(regex)) NoValidationErrors else List(AssetDescriptionFormatError.copy(paths = Some(Seq(path))))
+    if (description.matches(regex)) NoValidationErrors else List(AssetDescriptionFormatError.copy(paths = Some(Seq(path))))
   }
+
 }

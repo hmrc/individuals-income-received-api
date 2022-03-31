@@ -24,9 +24,10 @@ import v1r7.models.request.listEmployments.{ListEmploymentsRawData, ListEmployme
 import v1r7.requestParsers.validators.ListEmploymentsValidator
 
 @Singleton
-class ListEmploymentsRequestParser @Inject()(val validator: ListEmploymentsValidator)
-  extends RequestParser[ListEmploymentsRawData, ListEmploymentsRequest] {
+class ListEmploymentsRequestParser @Inject() (val validator: ListEmploymentsValidator)
+    extends RequestParser[ListEmploymentsRawData, ListEmploymentsRequest] {
 
   override protected def requestFor(data: ListEmploymentsRawData): ListEmploymentsRequest =
     ListEmploymentsRequest(Nino(data.nino), data.taxYear)
+
 }

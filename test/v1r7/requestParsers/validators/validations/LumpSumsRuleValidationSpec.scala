@@ -53,4 +53,5 @@ class LumpSumsRuleValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

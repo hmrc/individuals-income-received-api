@@ -53,4 +53,5 @@ object GenericAuditDetail {
       response = auditResponse
     )
   }
+
 }

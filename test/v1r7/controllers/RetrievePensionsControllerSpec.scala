@@ -34,7 +34,12 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1r7.fixtures.RetrievePensionsControllerFixture
-import v1r7.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
+import v1r7.models.response.retrievePensions.{
+  ForeignPensionsItem,
+  OverseasPensionContributions,
+  RetrievePensionsHateoasData,
+  RetrievePensionsResponse
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -167,12 +172,13 @@ class RetrievePensionsControllerSpec
         MockHateoasFactory
           .wrap(retrievePensionsResponseModel, RetrievePensionsHateoasData(nino, taxYear))
           .returns(
-            HateoasWrapper(retrievePensionsResponseModel,
-                           Seq(
-                             amendPensionsLink,
-                             retrievePensionsLink,
-                             deletePensionsLink
-                           )))
+            HateoasWrapper(
+              retrievePensionsResponseModel,
+              Seq(
+                amendPensionsLink,
+                retrievePensionsLink,
+                deletePensionsLink
+              )))
 
         val result: Future[Result] = controller.retrievePensions(nino, taxYear)(fakeGetRequest)
 
@@ -241,4 +247,5 @@ class RetrievePensionsControllerSpec
       }
     }
   }
+
 }

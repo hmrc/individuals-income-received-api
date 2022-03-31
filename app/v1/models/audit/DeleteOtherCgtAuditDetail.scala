@@ -18,7 +18,7 @@ package v1.models.audit
 
 import api.models.audit.AuditResponse
 import api.models.auth.UserDetails
-import play.api.libs.json.{ Json, Writes }
+import play.api.libs.json.{Json, Writes}
 
 case class DeleteOtherCgtAuditDetail(userType: String,
                                      agentReferenceNumber: Option[String],
@@ -45,4 +45,5 @@ object DeleteOtherCgtAuditDetail {
       auditResponse
     )
   }
+
 }
