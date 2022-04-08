@@ -90,7 +90,8 @@ class AddCustomEmploymentControllerSpec
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412"
+      |  "payrollId": "124214112412",
+      |  "occupationalPension": false
       |}
     """.stripMargin
   )
@@ -106,7 +107,8 @@ class AddCustomEmploymentControllerSpec
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   val requestData: AddCustomEmploymentRequest = AddCustomEmploymentRequest(
@@ -121,31 +123,31 @@ class AddCustomEmploymentControllerSpec
 
   val responseJson: JsValue = Json.parse(
     s"""
-      |{
-      |   "employmentId": "$employmentId",
-      |   "links":[
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-      |         "rel": "list-employments",
-      |         "method": "GET"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "rel": "self",
-      |         "method": "GET"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "rel": "amend-custom-employment",
-      |         "method": "PUT"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "rel": "delete-custom-employment",
-      |         "method": "DELETE"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "employmentId": "$employmentId",
+       |   "links":[
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+       |         "rel": "list-employments",
+       |         "method": "GET"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "rel": "self",
+       |         "method": "GET"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "rel": "amend-custom-employment",
+       |         "method": "PUT"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "rel": "delete-custom-employment",
+       |         "method": "DELETE"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 

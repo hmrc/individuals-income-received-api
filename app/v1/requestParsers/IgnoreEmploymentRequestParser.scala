@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
-import v1.requestParsers.validators.IgnoreEmploymentValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploymentRequest}
+import v1.requestParsers.validators.IgnoreEmploymentValidator
 
 @Singleton
 class IgnoreEmploymentRequestParser @Inject() (val validator: IgnoreEmploymentValidator)

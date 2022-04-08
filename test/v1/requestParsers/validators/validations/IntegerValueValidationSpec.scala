@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.ValueFormatError
+import support.UnitSpec
 
 class IntegerValueValidationSpec extends UnitSpec with ValueFormatErrorMessages {
 

@@ -16,9 +16,10 @@
 
 package v1.requestParsers
 
-import javax.inject.{Inject, Singleton}
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
+
+import javax.inject.{Inject, Singleton}
 import v1.models.request.addCustomEmployment._
 import v1.requestParsers.validators.AddCustomEmploymentValidator
 

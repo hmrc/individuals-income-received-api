@@ -16,16 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors
+import api.models.errors.{BadRequestError, ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError, CustomerRefFormatError, DateFormatError, EmployerNameFormatError, EmployerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleLumpSumsError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SchemePlanTypeFormatError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class AmendOtherEmploymentControllerISpec extends V1IntegrationSpec {
+class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -402,7 +403,7 @@ class AmendOtherEmploymentControllerISpec extends V1IntegrationSpec {
           )
         )
 
-        val wrappedErrors: ErrorWrapper = ErrorWrapper(
+        val wrappedErrors: ErrorWrapper = errors.ErrorWrapper(
           correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueRequestError)
@@ -1327,7 +1328,12 @@ class AmendOtherEmploymentControllerISpec extends V1IntegrationSpec {
           ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
-          ("AA123456A", "2019-20", invalidValuesRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          (
+            "AA123456A",
+            "2019-20",
+            invalidValuesRequestBodyJson,
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2019-20", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerNameFormatError, None)),
           ("AA123456A", "2019-20", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", dateFormatError, None)),

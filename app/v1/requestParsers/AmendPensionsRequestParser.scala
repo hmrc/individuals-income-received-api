@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.amendPensions.{AmendPensionsRawData, AmendPensionsRequest, AmendPensionsRequestBody}
-import v1.requestParsers.validators.AmendPensionsValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.amendPensions.{AmendPensionsRawData, AmendPensionsRequest, AmendPensionsRequestBody}
+import v1.requestParsers.validators.AmendPensionsValidator
 
 @Singleton
 class AmendPensionsRequestParser @Inject() (val validator: AmendPensionsValidator) extends RequestParser[AmendPensionsRawData, AmendPensionsRequest] {

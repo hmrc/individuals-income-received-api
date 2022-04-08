@@ -16,14 +16,14 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{EmploymentIdFormatError, NinoFormatError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import support.UnitSpec
 import utils.CurrentDateTime
-import api.mocks.MockCurrentDateTime
-import api.models.errors._
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 
 class DeleteCustomEmploymentValidatorSpec extends UnitSpec {

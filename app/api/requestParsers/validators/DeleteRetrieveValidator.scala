@@ -19,7 +19,7 @@ package api.requestParsers.validators
 import api.models.errors.MtdError
 import api.models.request.DeleteRetrieveRawData
 import config.AppConfig
-import v1r7.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
+import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
 

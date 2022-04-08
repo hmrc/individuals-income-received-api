@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.EmployerRefFormatError
+import support.UnitSpec
 
 class EmployerRefValidationSpec extends UnitSpec {
 

@@ -16,10 +16,10 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json.{Json, OFormat}
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
-import api.models.hateoas._
 
 case class RetrieveAllResidentialPropertyCgtResponse(ppdService: Option[PpdService], customerAddedDisposals: Option[CustomerAddedDisposals])
 

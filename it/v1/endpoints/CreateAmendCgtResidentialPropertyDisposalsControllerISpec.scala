@@ -16,17 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{BadRequestError, CustomerRefFormatError, DateFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateAfterDisposalDateError, RuleCompletionDateBeforeDisposalDateError, RuleCompletionDateError, RuleDisposalDateError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleLossesGreaterThanGainError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.{V1IntegrationSpec, WireMockMethods}
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.{IntegrationBaseSpec, WireMockMethods}
 
-class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends V1IntegrationSpec with WireMockMethods {
+class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
   val validDisposalDate: String    = "2020-03-27"
   val validCompletionDate: String  = "2020-03-29"

@@ -16,9 +16,9 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.MtdSourceEnum
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import api.models.domain.MtdSourceEnum
 
 class MultiplePropertyDisposalsSpec extends UnitSpec {
 
@@ -32,8 +32,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetLoss": 1999.99
       |}
       |""".stripMargin
   )
@@ -48,8 +47,7 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfLoss": 1999.99
       |}
       |""".stripMargin
   )
@@ -64,7 +62,6 @@ class MultiplePropertyDisposalsSpec extends UnitSpec {
       Some(2022),
       Some("2022-03-08"),
       None,
-      Some(1999.99),
       Some(1999.99)
     )
 

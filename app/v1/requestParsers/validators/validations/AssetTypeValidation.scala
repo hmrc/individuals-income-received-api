@@ -18,6 +18,7 @@ package v1.requestParsers.validators.validations
 
 import api.models.domain.AssetType
 import api.models.errors.{AssetTypeFormatError, MtdError}
+import api.models.errors.AssetTypeFormatError
 
 import scala.util.{Failure, Success, Try}
 

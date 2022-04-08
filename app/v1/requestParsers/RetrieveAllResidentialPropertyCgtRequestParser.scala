@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.{MtdSourceEnum, Nino}
 import api.requestParsers.RequestParser
-import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
-import v1.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
+import v1.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
 
 @Singleton
 class RetrieveAllResidentialPropertyCgtRequestParser @Inject() (val validator: RetrieveAllResidentialPropertyCgtValidator)

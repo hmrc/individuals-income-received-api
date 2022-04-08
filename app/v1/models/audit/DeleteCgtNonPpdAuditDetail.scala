@@ -17,8 +17,8 @@
 package v1.models.audit
 
 import api.models.audit.AuditResponse
-import play.api.libs.json.{Json, Writes}
 import api.models.auth.UserDetails
+import play.api.libs.json.{Json, Writes}
 
 case class DeleteCgtNonPpdAuditDetail(userType: String,
                                       agentReferenceNumber: Option[String],

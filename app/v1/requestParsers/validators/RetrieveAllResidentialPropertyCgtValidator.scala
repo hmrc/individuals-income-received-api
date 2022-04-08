@@ -19,10 +19,11 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1.requestParsers.validators.validations.{EmploymentSourceValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
+import v1.requestParsers.validators.validations.{EmploymentSourceValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 @Singleton
 class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: AppConfig)

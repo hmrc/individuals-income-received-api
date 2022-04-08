@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.amendDividends.{AmendDividendsRawData, AmendDividendsRequest, AmendDividendsRequestBody}
-import v1.requestParsers.validators.AmendDividendsValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.amendDividends.{AmendDividendsRawData, AmendDividendsRequest, AmendDividendsRequestBody}
+import v1.requestParsers.validators.AmendDividendsValidator
 
 @Singleton
 class AmendDividendsRequestParser @Inject() (val validator: AmendDividendsValidator)

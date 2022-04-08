@@ -16,12 +16,20 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors._
+import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
-import v1.models.request.createAmendNonPayeEmployment._
 import v1.requestParsers.validators.validations._
+import v1.models.request.createAmendNonPayeEmployment._
+import v1.requestParsers.validators.validations.{
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  TipsValidation
+}
 
 import javax.inject.{Inject, Singleton}
 

@@ -16,12 +16,32 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors._
+import api.models.errors.{
+  MtdError,
+  RuleAcquisitionDateAfterDisposalDateError,
+  RuleCompletionDateBeforeDisposalDateError,
+  RuleGainLossError,
+  RuleIncorrectOrEmptyBodyError
+}
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
-import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 import v1.requestParsers.validators.validations._
+import v1.models.request.createAmendCgtResidentialPropertyDisposals._
+import v1.requestParsers.validators.validations.{
+  CompletionDateValidation,
+  CustomerRefValidation,
+  DateAfterDateValidation,
+  DateFormatValidation,
+  DecimalValueValidation,
+  DisposalDateErrorMessages,
+  DisposalDateValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueGreaterThanValueValidation
+}
 
 import javax.inject.{Inject, Singleton}
 

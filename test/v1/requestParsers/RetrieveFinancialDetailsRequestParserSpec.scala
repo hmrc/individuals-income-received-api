@@ -16,11 +16,10 @@
 
 package v1.requestParsers
 
+import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, SourceFormatError, TaxYearFormatError}
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockRetrieveFinancialDetailsValidator
-import api.models.domain.MtdSourceEnum
-import api.models.errors._
 import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
 
 class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {

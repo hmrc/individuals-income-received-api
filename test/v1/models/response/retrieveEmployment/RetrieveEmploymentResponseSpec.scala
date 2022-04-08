@@ -24,15 +24,16 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
   private val hmrcEnteredJson = Json.parse(
     """
       |{
-      |    "employments": {
-      |            "employmentId": "00000000-0000-1000-8000-000000000000",
-      |            "employerName": "Vera Lynn",
-      |            "employerRef": "123/abc",
-      |            "payrollId": "123345657",
-      |            "startDate": "2020-06-17",
-      |            "cessationDate": "2020-06-17",
-      |            "dateIgnored": "2020-06-17T10:53:38Z"
-      |        }
+      |   "employments": {
+      |      "employmentId": "00000000-0000-1000-8000-000000000000",
+      |      "employerName": "Vera Lynn",
+      |      "employerRef": "123/abc",
+      |      "payrollId": "123345657",
+      |      "occupationalPension": false,
+      |      "startDate": "2020-06-17",
+      |      "cessationDate": "2020-06-17",
+      |      "dateIgnored": "2020-06-17T10:53:38Z"
+      |   }
       |}
     """.stripMargin
   )
@@ -40,40 +41,47 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
   private val customEnteredJson = Json.parse(
     """
       |{
-      |    "customerDeclaredEmployments": {
-      |            "employmentId": "00000000-0000-1000-8000-000000000000",
-      |            "employerName": "Vera Lynn",
-      |            "employerRef": "123/abc",
-      |            "payrollId": "123345657",
-      |            "startDate": "2020-06-17",
-      |            "cessationDate": "2020-06-17",
-      |            "submittedOn": "2020-06-17T10:53:38Z"
-      |        }
+      |   "customerDeclaredEmployments": {
+      |      "employmentId": "00000000-0000-1000-8000-000000000000",
+      |      "employerName": "Vera Lynn",
+      |      "employerRef": "123/abc",
+      |      "payrollId": "123345657",
+      |      "occupationalPension": false,
+      |      "startDate": "2020-06-17",
+      |      "cessationDate": "2020-06-17",
+      |      "submittedOn": "2020-06-17T10:53:38Z"
+      |   }
       |}
     """.stripMargin
   )
 
-  private val hmrcEnteredMtdJson = Json.parse("""
+  private val hmrcEnteredMtdJson = Json.parse(
+    """
       |{
-      |    "employerRef": "123/abc",
-      |    "employerName": "Vera Lynn",
-      |    "startDate": "2020-06-17",
-      |    "cessationDate": "2020-06-17",
-      |    "payrollId": "123345657",
-      |    "dateIgnored": "2020-06-17T10:53:38Z"
+      |   "employerRef": "123/abc",
+      |   "employerName": "Vera Lynn",
+      |   "startDate": "2020-06-17",
+      |   "cessationDate": "2020-06-17",
+      |   "payrollId": "123345657",
+      |   "occupationalPension": false,
+      |   "dateIgnored": "2020-06-17T10:53:38Z"
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
-  private val customEnteredMtdJson = Json.parse("""
+  private val customEnteredMtdJson = Json.parse(
+    """
       |{
-      |    "employerRef": "123/abc",
-      |    "employerName": "Vera Lynn",
-      |    "startDate": "2020-06-17",
-      |    "cessationDate": "2020-06-17",
-      |    "payrollId": "123345657",
-      |    "submittedOn": "2020-06-17T10:53:38Z"
+      |   "employerRef": "123/abc",
+      |   "employerName": "Vera Lynn",
+      |   "startDate": "2020-06-17",
+      |   "cessationDate": "2020-06-17",
+      |   "payrollId": "123345657",
+      |   "occupationalPension": false,
+      |   "submittedOn": "2020-06-17T10:53:38Z"
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
   private val hmrcEnteredEmployment = RetrieveEmploymentResponse(
     employerRef = Some("123/abc"),
@@ -81,6 +89,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
     None
   )
@@ -91,6 +100,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     None,
     submittedOn = Some("2020-06-17T10:53:38Z")
   )
@@ -114,14 +124,14 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
       val invalidJson = Json.parse(
         """
           |{
-          |    "customerDeclaredEmployments": {
-          |            "employmentId": "00000000-0000-1000-8000-000000000000",
-          |            "employerRef": "123/abc",
-          |            "payrollId": "123345657",
-          |            "startDate": "2020-06-17",
-          |            "cessationDate": "2020-06-17",
-          |            "submittedOn": "2020-06-17T10:53:38Z"
-          |        }
+          |   "customerDeclaredEmployments": {
+          |      "employmentId": "00000000-0000-1000-8000-000000000000",
+          |      "employerRef": "123/abc",
+          |      "payrollId": "123345657",
+          |      "startDate": "2020-06-17",
+          |      "cessationDate": "2020-06-17",
+          |      "submittedOn": "2020-06-17T10:53:38Z"
+          |   }
           |}
           """.stripMargin
       )

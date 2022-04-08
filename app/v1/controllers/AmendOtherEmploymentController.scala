@@ -17,6 +17,7 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.AmendHateoasBody
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
@@ -29,7 +30,6 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import api.hateoas.AmendHateoasBody
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 import v1.requestParsers.AmendOtherEmploymentRequestParser
 import v1.services.AmendOtherEmploymentService
@@ -125,7 +125,7 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
     auditService.auditEvent(event)
   }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
+  private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
             ValueFormatError.code) | CustomMtdError(CustomerRefFormatError.code) | CustomMtdError(EmployerNameFormatError.code) | CustomMtdError(
@@ -136,6 +136,5 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
-  }
 
 }

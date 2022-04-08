@@ -16,12 +16,22 @@
 
 package v1.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors.{
+  BadRequestError,
+  CessationDateFormatError,
+  EmployerNameFormatError,
+  EmployerRefFormatError,
+  ErrorWrapper,
+  NinoFormatError,
+  PayrollIdFormatError,
+  StartDateFormatError,
+  TaxYearFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockAmendCustomEmploymentValidator
-import api.models.errors._
 import v1.models.request.amendCustomEmployment._
 
 class AmendCustomEmploymentRequestParserSpec extends UnitSpec {
@@ -38,7 +48,8 @@ class AmendCustomEmploymentRequestParserSpec extends UnitSpec {
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412"
+      |  "payrollId": "124214112412",
+      |  "occupationalPension": false
       |}
     """.stripMargin
   )
@@ -57,7 +68,8 @@ class AmendCustomEmploymentRequestParserSpec extends UnitSpec {
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   private val amendCustomEmploymentRequest = AmendCustomEmploymentRequest(
@@ -111,7 +123,8 @@ class AmendCustomEmploymentRequestParserSpec extends UnitSpec {
              |  "employerName": "${"a" * 75}",
              |  "startDate": "notValid",
              |  "cessationDate": "notValid",
-             |  "payrollId": "${"b" * 75}"
+             |  "payrollId": "${"b" * 75}",
+             |  "occupationalPension": false
              |}
             """.stripMargin
         )

@@ -18,7 +18,21 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors._
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  EmploymentIdFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleCessationDateBeforeTaxYearStartError,
+  RuleStartDateAfterTaxYearEndError,
+  RuleTaxYearNotEndedError,
+  RuleUpdateForbiddenError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendCustomEmploymentConnector
@@ -37,7 +51,8 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
     employerName = "BBC infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   val request: AmendCustomEmploymentRequest = AmendCustomEmploymentRequest(

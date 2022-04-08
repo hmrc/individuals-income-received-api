@@ -16,15 +16,16 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.MtdSourceEnum
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import api.models.domain.MtdSourceEnum
 
 class PpdServiceSpec extends UnitSpec {
 
   val mtdJson: JsValue = Json.parse(
     """
       |{
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "hmrcHeld",
@@ -34,8 +35,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetLoss": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -55,8 +55,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  }
@@ -66,6 +65,7 @@ class PpdServiceSpec extends UnitSpec {
   val desJson: JsValue = Json.parse(
     """
       |{
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "HMRC HELD",
@@ -75,8 +75,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfLoss": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -96,8 +95,7 @@ class PpdServiceSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  }
@@ -114,7 +112,6 @@ class PpdServiceSpec extends UnitSpec {
       Some(2022),
       Some("2022-03-08"),
       None,
-      Some(1999.99),
       Some(1999.99)
     )
 
@@ -136,12 +133,12 @@ class PpdServiceSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      None,
-      Some(1999.99)
+      None
     )
 
   val model: PpdService =
     PpdService(
+      Some(143.22),
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )

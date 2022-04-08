@@ -16,7 +16,6 @@
 
 package v1.models.request.retrieveFinancialDetails
 
-import api.models.domain.Nino
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Nino}
 
 case class RetrieveFinancialDetailsRequest(nino: Nino, taxYear: String, employmentId: String, source: MtdSourceEnum)

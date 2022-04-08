@@ -16,13 +16,28 @@
 
 package v1.requestParsers.validators
 
+import api.models.errors.{
+  AssetDescriptionFormatError,
+  AssetTypeFormatError,
+  ClaimOrElectionCodesFormatError,
+  DateFormatError,
+  NinoFormatError,
+  RuleAcquisitionDateError,
+  RuleDisposalDateError,
+  RuleGainAfterReliefLossAfterReliefError,
+  RuleGainLossError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.requestParsers.validators.validations.{DisposalDateErrorMessages, ValueFormatErrorMessages}
-import api.models.errors._
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
 
 class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMessages with DisposalDateErrorMessages with MockAppConfig {

@@ -19,11 +19,18 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.{AppConfig, FeatureSwitch}
-import utils.CurrentDateTime
-import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import utils.CurrentDateTime
+import v1.requestParsers.validators.validations._
+import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
+import v1.requestParsers.validators.validations.{
+  EmploymentIdValidation,
+  NinoValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
 class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)

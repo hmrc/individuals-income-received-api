@@ -16,14 +16,17 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.Release6Uri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpClient
+import api.connectors.DownstreamUri.Release6Uri
+import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
+
 import scala.concurrent.{ExecutionContext, Future}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
 class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {

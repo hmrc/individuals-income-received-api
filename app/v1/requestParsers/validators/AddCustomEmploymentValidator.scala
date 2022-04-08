@@ -16,14 +16,25 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors._
+import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.{AppConfig, FeatureSwitch}
-import utils.CurrentDateTime
-import v1.models.request.addCustomEmployment._
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import utils.CurrentDateTime
+import v1.requestParsers.validators.validations._
+import v1.models.request.addCustomEmployment._
+import v1.requestParsers.validators.validations.{
+  CustomEmploymentDateValidation,
+  EmployerNameValidation,
+  EmployerRefValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  PayrollIdValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
 class AddCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
@@ -62,7 +73,7 @@ class AddCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentD
 
     List(
       EmployerRefValidation.validateOptional(requestBodyData.employerRef),
-      EmployerNameValidation.validate(requestBodyData.employerName, 74),
+      EmployerNameValidation.validateCustomEmployment(requestBodyData.employerName),
       CustomEmploymentDateValidation.validate(requestBodyData.startDate, requestBodyData.cessationDate, data.taxYear),
       PayrollIdValidation.validateOptional(requestBodyData.payrollId)
     )

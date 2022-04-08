@@ -25,15 +25,21 @@ import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService,
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType._
+import api.models.hateoas.RelType.{AMEND_PENSIONS_INCOME, DELETE_PENSIONS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import api.models.request
 import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrievePensionsControllerFixture
-import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
+import v1.models.response.retrievePensions.{
+  ForeignPensionsItem,
+  OverseasPensionContributions,
+  RetrievePensionsHateoasData,
+  RetrievePensionsResponse
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -57,7 +63,7 @@ class RetrievePensionsControllerSpec
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = taxYear
   )

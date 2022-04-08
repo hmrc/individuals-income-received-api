@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.SchemePlanTypeFormatError
+import support.UnitSpec
 
 class SchemePlanTypeValidationSpec extends UnitSpec {
 

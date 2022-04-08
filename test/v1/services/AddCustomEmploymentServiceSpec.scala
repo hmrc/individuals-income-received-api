@@ -16,12 +16,23 @@
 
 package v1.services
 
-import api.models.domain.Nino
 import api.controllers.EndpointLogContext
-import v1.mocks.connectors.MockAddCustomEmploymentConnector
-import api.models.errors._
+import api.models.domain.Nino
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleCessationDateBeforeTaxYearStartError,
+  RuleStartDateAfterTaxYearEndError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import v1.mocks.connectors.MockAddCustomEmploymentConnector
 import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
@@ -37,7 +48,8 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
     employerName = "BBC infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(

@@ -16,17 +16,17 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.Release6Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
 import api.models.errors._
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.Release6Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 import v1.requestParsers.RetrieveEmploymentRequestParser
@@ -65,7 +65,7 @@ class RetrieveEmploymentController @Inject() (val authService: EnrolmentsAuthSer
         employmentId = employmentId
       )
 
-      implicit val ifsUri: Release6Uri[RetrieveEmploymentResponse] = Release6Uri[RetrieveEmploymentResponse](
+      implicit val IfsUri: Release6Uri[RetrieveEmploymentResponse] = Release6Uri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 

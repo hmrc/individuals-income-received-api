@@ -17,6 +17,7 @@
 package v1.requestParsers.validators.validations
 
 import api.models.errors.{EmploymentIdFormatError, MtdError}
+import api.models.errors.EmploymentIdFormatError
 
 object EmploymentIdValidation {
 

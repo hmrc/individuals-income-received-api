@@ -28,6 +28,7 @@ import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import api.models.request
 import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -57,7 +58,7 @@ class RetrieveDividendsControllerSpec
     taxYear = taxYear
   )
 
-  private val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  private val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = taxYear
   )

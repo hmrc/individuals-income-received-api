@@ -19,11 +19,23 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.{AppConfig, FeatureSwitch}
-import utils.CurrentDateTime
-import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import utils.CurrentDateTime
+import v1.requestParsers.validators.validations._
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
+import v1.requestParsers.validators.validations.{
+  CustomEmploymentDateValidation,
+  EmployerNameValidation,
+  EmployerRefValidation,
+  EmploymentIdValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  PayrollIdValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
 class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
@@ -63,7 +75,7 @@ class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: Curren
 
     List(
       EmployerRefValidation.validateOptional(dataModel.employerRef),
-      EmployerNameValidation.validate(dataModel.employerName, 74),
+      EmployerNameValidation.validateCustomEmployment(dataModel.employerName),
       CustomEmploymentDateValidation.validate(dataModel.startDate, dataModel.cessationDate, data.taxYear),
       PayrollIdValidation.validateOptional(dataModel.payrollId)
     )

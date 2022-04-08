@@ -16,12 +16,12 @@
 
 package v1.models.response.retrieveForeign
 
-import mocks.MockAppConfig
-import play.api.libs.json.{JsError, Json}
-import support.UnitSpec
 import api.hateoas.HateoasFactory
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
+import mocks.MockAppConfig
+import play.api.libs.json.{JsError, Json}
+import support.UnitSpec
 
 class RetrieveForeignResponseSpec extends UnitSpec {
 

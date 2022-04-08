@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.ClaimOrElectionCodesFormatError
+import support.UnitSpec
 
 class ClaimOrElectionCodesValidationSpec extends UnitSpec {
 

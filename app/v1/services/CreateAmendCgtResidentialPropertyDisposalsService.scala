@@ -16,16 +16,17 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
+
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
-import api.controllers.EndpointLogContext
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
-import api.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 

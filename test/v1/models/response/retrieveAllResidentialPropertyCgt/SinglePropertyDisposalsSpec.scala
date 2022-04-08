@@ -16,9 +16,9 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.MtdSourceEnum
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import api.models.domain.MtdSourceEnum
 
 class SinglePropertyDisposalsSpec extends UnitSpec {
 
@@ -40,8 +40,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetLoss": 1999.99
       |      }
       |""".stripMargin
   )
@@ -64,8 +63,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfLoss": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfLoss": 1999.99
       |      }
       |""".stripMargin
   )
@@ -88,7 +86,6 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       None,
-      Some(1999.99),
       Some(1999.99)
     )
 

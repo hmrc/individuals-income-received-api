@@ -19,10 +19,11 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
-import v1.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
+import v1.requestParsers.validators.validations.{EmploymentIdValidation, NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 @Singleton
 class DeleteCustomEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCustomEmploymentRawData] {

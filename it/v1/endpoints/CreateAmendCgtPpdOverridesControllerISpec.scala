@@ -16,17 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{DateFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PpdSubmissionIdFormatError, PpdSubmissionIdNotFoundError, RuleAmountGainLossError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectDisposalTypeError, RuleIncorrectOrEmptyBodyError, RuleLossesGreaterThanGainError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.{V1IntegrationSpec, WireMockMethods}
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.{IntegrationBaseSpec, WireMockMethods}
 
-class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with WireMockMethods {
+class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
   val validRequestBodyJson: JsValue = Json.parse(
     """
@@ -37,13 +37,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
       |            "amountOfNetGain": 1234.78
       |         },
       |         {
-      |            "ppdSubmissionId": "AB0000000099",
+      |            "ppdSubmissionId": "AB0000000098",
       |            "amountOfNetLoss": 134.99
       |         }
       |    ],
       |    "singlePropertyDisposals": [
       |         {
-      |             "ppdSubmissionId": "AB0000000098",
+      |             "ppdSubmissionId": "AB0000000099",
       |             "completionDate": "2020-02-28",
       |             "disposalProceeds": 454.24,
       |             "acquisitionDate": "2020-03-29",
@@ -275,31 +275,31 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
 
   def jsonWithIds(multipleSubmissionId: String, singleSubmissionId: String): JsValue = Json.parse(
     s"""
-       |{
-       |    "multiplePropertyDisposals": [
-       |         {
-       |            "ppdSubmissionId": "$multipleSubmissionId",
-       |            "amountOfNetGain": 1234.78
-       |         }
-       |    ],
-       |    "singlePropertyDisposals": [
-       |         {
-       |             "ppdSubmissionId": "$singleSubmissionId",
-       |             "completionDate": "2020-02-28",
-       |             "disposalProceeds": 454.24,
-       |             "acquisitionDate": "2020-03-29",
-       |             "acquisitionAmount": 3434.45,
-       |             "improvementCosts": 233.45,
-       |             "additionalCosts": 423.34,
-       |             "prfAmount": 2324.67,
-       |             "otherReliefAmount": 3434.23,
-       |             "lossesFromThisYear": 436.23,
-       |             "lossesFromPreviousYear": 234.23,
-       |             "amountOfNetGain": 4567.89
-       |         }
-       |    ]
-       |}
-       |""".stripMargin
+      |{
+      |    "multiplePropertyDisposals": [
+      |         {
+      |            "ppdSubmissionId": "$multipleSubmissionId",
+      |            "amountOfNetGain": 1234.78
+      |         }
+      |    ],
+      |    "singlePropertyDisposals": [
+      |         {
+      |             "ppdSubmissionId": "$singleSubmissionId",
+      |             "completionDate": "2020-02-28",
+      |             "disposalProceeds": 454.24,
+      |             "acquisitionDate": "2020-03-29",
+      |             "acquisitionAmount": 3434.45,
+      |             "improvementCosts": 233.45,
+      |             "additionalCosts": 423.34,
+      |             "prfAmount": 2324.67,
+      |             "otherReliefAmount": 3434.23,
+      |             "lossesFromThisYear": 436.23,
+      |             "lossesFromPreviousYear": 234.23,
+      |             "amountOfNetGain": 4567.89
+      |         }
+      |    ]
+      |}
+      |""".stripMargin
   )
 
   val ppdSubmissionFormatError: MtdError = PpdSubmissionIdFormatError.copy(
@@ -357,9 +357,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val taxYear: String       = "2020-21"
-    val correlationId: String = "X-123"
+    val nino: String    = "AA123456A"
+    val taxYear: String = "2020-21"
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -455,7 +454,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
           ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None, None),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None, None),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None, None),
-
           // Body Errors
           ("AA123456A", "2020-21", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
           ("AA123456A", "2020-21", nonsenseBodyJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("nonsenseBody")),
@@ -465,7 +463,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("ppdSubmissionIDFormat")),
+          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
           (
             "AA123456A",
             "2020-21",
@@ -513,8 +511,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends V1IntegrationSpec with W
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PpdSubmissionIdNotFoundError),
-          (CONFLICT, "DUPLICATE_SUBMISSION", BAD_REQUEST, RuleDuplicatedPpdSubmissionIdError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
+          (CONFLICT, "DUPLICATE_SUBMISSION", BAD_REQUEST, RuleDuplicatedPpdSubmissionIdError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", FORBIDDEN, RuleIncorrectDisposalTypeError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),

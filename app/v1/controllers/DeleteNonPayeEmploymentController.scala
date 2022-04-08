@@ -16,13 +16,8 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -30,6 +25,11 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -63,7 +63,7 @@ class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAu
         taxYear = taxYear
       )
 
-      implicit val ifsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
+      implicit val IfsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
         s"income-tax/employments/non-paye/$nino/$taxYear"
       )
 

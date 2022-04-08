@@ -19,10 +19,17 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
+import v1.requestParsers.validators.validations.{
+  EmploymentIdValidation,
+  EmploymentSourceValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation
+}
 
 @Singleton
 class RetrieveFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveFinancialDetailsRawData] {

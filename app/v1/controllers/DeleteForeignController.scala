@@ -16,13 +16,8 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.IfsUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -31,6 +26,11 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.IfsUri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -93,7 +93,7 @@ class DeleteForeignController @Inject() (val authService: EnrolmentsAuthService,
             .as(MimeTypes.JSON)
         }
 
-      result.leftMap { errorWrapper: ErrorWrapper =>
+      result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
         val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(

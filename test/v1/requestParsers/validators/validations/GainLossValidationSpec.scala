@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.RuleGainLossError
+import support.UnitSpec
 
 class GainLossValidationSpec extends UnitSpec {
   val res: BigDecimal = 1000.23

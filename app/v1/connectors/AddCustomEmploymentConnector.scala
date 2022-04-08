@@ -16,14 +16,16 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.Api1661Uri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+
+import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpClient
+import api.connectors.DownstreamUri.Api1661Uri
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -34,7 +36,7 @@ class AddCustomEmploymentConnector @Inject() (val http: HttpClient, val appConfi
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[AddCustomEmploymentResponse]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino    = request.nino.nino
     val taxYear = request.taxYear

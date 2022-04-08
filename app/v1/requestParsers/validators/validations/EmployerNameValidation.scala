@@ -17,11 +17,18 @@
 package v1.requestParsers.validators.validations
 
 import api.models.errors.{EmployerNameFormatError, MtdError}
+import api.models.errors.EmployerNameFormatError
 
 object EmployerNameValidation {
 
-  def validate(employerName: String, maxLength: Int): List[MtdError] = {
-    val regex = s"^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,$maxLength}$$"
+  def validateOtherEmployment(employerName: String): List[MtdError] = {
+    val regex = s"^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$$"
+
+    if (employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
+  }
+
+  def validateCustomEmployment(employerName: String): List[MtdError] = {
+    val regex = s"^\\S.{0,73}$$"
 
     if (employerName.matches(regex)) NoValidationErrors else List(EmployerNameFormatError)
   }

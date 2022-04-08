@@ -23,7 +23,7 @@ import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method._
+import api.models.hateoas.Method.{DELETE, GET, POST, PUT}
 import api.models.hateoas.RelType._
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
@@ -113,6 +113,7 @@ class RetrieveEmploymentControllerSpec
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = None,
     submittedOn = None
   )
@@ -123,6 +124,7 @@ class RetrieveEmploymentControllerSpec
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = Some("2020-06-17T10:53:38Z"),
     submittedOn = None
   )
@@ -133,6 +135,7 @@ class RetrieveEmploymentControllerSpec
     startDate = Some("2020-06-17"),
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
+    occupationalPension = Some(false),
     dateIgnored = None,
     submittedOn = Some("2020-06-17T10:53:38Z")
   )

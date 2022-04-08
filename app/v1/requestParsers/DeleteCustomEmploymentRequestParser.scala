@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
-import v1.requestParsers.validators.DeleteCustomEmploymentValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
+import v1.requestParsers.validators.DeleteCustomEmploymentValidator
 
 @Singleton
 class DeleteCustomEmploymentRequestParser @Inject() (val validator: DeleteCustomEmploymentValidator)

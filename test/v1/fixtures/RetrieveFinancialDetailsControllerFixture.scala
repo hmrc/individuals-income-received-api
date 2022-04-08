@@ -16,8 +16,8 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsObject, JsValue, Json}
 import api.models.domain.MtdSourceEnum
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveFinancialDetails._
 
 object RetrieveFinancialDetailsControllerFixture {

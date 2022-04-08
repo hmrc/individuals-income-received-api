@@ -16,9 +16,9 @@
 
 package v1.models.request.createAmendOtherCgt
 
+import api.models.domain.{AssetType, ClaimOrElectionCodes}
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import api.models.domain.{AssetType, ClaimOrElectionCodes}
 
 class CreateAmendOtherCgtRequestBodySpec extends UnitSpec {
 

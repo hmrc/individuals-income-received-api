@@ -16,19 +16,19 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
 import api.models.errors._
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.response.retrieveOtherCgt.{RetrieveOtherCgtHateoasData, RetrieveOtherCgtResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -64,7 +64,7 @@ class RetrieveOtherCgtController @Inject() (val authService: EnrolmentsAuthServi
         taxYear = taxYear
       )
 
-      implicit val ifsUri: Api1661Uri[RetrieveOtherCgtResponse] = Api1661Uri[RetrieveOtherCgtResponse](
+      implicit val IfsUri: Api1661Uri[RetrieveOtherCgtResponse] = Api1661Uri[RetrieveOtherCgtResponse](
         s"income-tax/income/disposals/other-gains/$nino/$taxYear"
       )
 

@@ -17,6 +17,7 @@
 package v1.requestParsers.validators.validations
 
 import api.models.errors.{AssetDescriptionFormatError, MtdError}
+import api.models.errors.AssetDescriptionFormatError
 
 object AssetDescriptionValidation {
   private val regex = """^[0-9a-zA-Z{À-˿’}\- _&`():.'^]{1,90}$"""

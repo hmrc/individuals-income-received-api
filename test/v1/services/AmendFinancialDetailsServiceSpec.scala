@@ -16,17 +16,27 @@
 
 package v1.services
 
-import api.models.domain.Nino
 import api.controllers.EndpointLogContext
-import v1.mocks.connectors.MockAmendFinancialDetailsConnector
-import api.models.errors._
+import api.models.domain.Nino
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.mocks.connectors.MockAmendFinancialDetailsConnector
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
 import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 
 import scala.concurrent.Future
-import api.services.ServiceSpec
 
 class AmendFinancialDetailsServiceSpec extends ServiceSpec {
 

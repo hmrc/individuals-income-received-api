@@ -16,12 +16,27 @@
 
 package v1.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors
+import api.models.errors.{
+  BadRequestError,
+  ClassOfSharesAcquiredFormatError,
+  ClassOfSharesAwardedFormatError,
+  CustomerRefFormatError,
+  DateFormatError,
+  EmployerNameFormatError,
+  EmployerRefFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  SchemePlanTypeFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockAmendOtherEmploymentValidator
-import api.models.errors._
 import v1.models.request.amendOtherEmployment._
 
 class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
@@ -592,7 +607,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
           .returns(allInvalidValueErrors)
 
         parser.parseRequest(rawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(allInvalidValueErrors)))
+          Left(errors.ErrorWrapper(correlationId, BadRequestError, Some(allInvalidValueErrors)))
       }
     }
   }

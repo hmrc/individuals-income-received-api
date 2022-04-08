@@ -16,10 +16,11 @@
 
 package v1.requestParsers
 
-import support.UnitSpec
-import v1.mocks.validators.MockRetrieveNonPayeEmploymentValidator
 import api.models.domain.{MtdSourceEnum, Nino}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import support.UnitSpec
+import v1.mocks.validators.MockRetrieveNonPayeEmploymentValidator
+import api.models.errors.BadRequestError
 import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 
 class RetrieveNonPayeEmploymentRequestParserSpec extends UnitSpec {
