@@ -16,17 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
+import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class RetrieveFinancialDetailsControllerISpec extends V1IntegrationSpec {
+class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 

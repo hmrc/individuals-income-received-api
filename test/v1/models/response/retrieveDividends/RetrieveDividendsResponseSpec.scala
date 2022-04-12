@@ -16,12 +16,12 @@
 
 package v1.models.response.retrieveDividends
 
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import api.hateoas.HateoasFactory
-import api.models.hateoas.{HateoasWrapper, Link}
-import api.models.hateoas.Method.{DELETE, GET, PUT}
 
 class RetrieveDividendsResponseSpec extends UnitSpec {
 

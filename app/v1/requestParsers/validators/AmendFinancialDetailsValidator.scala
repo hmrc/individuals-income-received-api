@@ -17,14 +17,25 @@
 package v1.requestParsers.validators
 
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import api.requestParsers.validators.Validator
 import config.{AppConfig, FeatureSwitch}
-import utils.CurrentDateTime
-import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
-import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import utils.CurrentDateTime
+import v1.requestParsers.validators.validations._
+import api.models.errors.RuleIncorrectOrEmptyBodyError
+import api.requestParsers.validators.Validator
+import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
+import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
+import v1.requestParsers.validators.validations.{
+  DecimalValueValidation,
+  EmploymentIdValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
 class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)

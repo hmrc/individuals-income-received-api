@@ -18,7 +18,6 @@ package v1.services
 
 import api.models.auth.UserDetails
 import api.models.errors.{StandardDownstreamError, UnauthorisedError}
-import api.services.EnrolmentsAuthService
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
@@ -27,7 +26,8 @@ import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, 
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
-import api.services.ServiceSpec
+import api.models.errors.UnauthorisedError
+import api.services.{EnrolmentsAuthService, ServiceSpec}
 
 import scala.concurrent.{ExecutionContext, Future}
 

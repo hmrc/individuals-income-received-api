@@ -19,10 +19,11 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.listEmployments.ListEmploymentsRawData
-import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.listEmployments.ListEmploymentsRawData
+import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 @Singleton
 class ListEmploymentsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[ListEmploymentsRawData] {

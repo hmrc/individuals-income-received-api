@@ -19,10 +19,20 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.amendDividends._
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.amendDividends._
+import v1.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  CustomerRefInsuranceValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
 class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
@@ -70,25 +80,13 @@ class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends 
             })
             .getOrElse(NoValidationErrors)
             .toList,
-          requestBodyData.stockDividend
-            .map { data =>
-              validateCommonDividends(data, "stockDividend")
-            }
-            .getOrElse(NoValidationErrors),
-          requestBodyData.redeemableShares
-            .map { data =>
-              validateCommonDividends(data, "redeemableShares")
-            }
-            .getOrElse(NoValidationErrors),
+          requestBodyData.stockDividend.map { data => validateCommonDividends(data, "stockDividend") }.getOrElse(NoValidationErrors),
+          requestBodyData.redeemableShares.map { data => validateCommonDividends(data, "redeemableShares") }.getOrElse(NoValidationErrors),
           requestBodyData.bonusIssuesOfSecurities
-            .map { data =>
-              validateCommonDividends(data, "bonusIssuesOfSecurities")
-            }
+            .map { data => validateCommonDividends(data, "bonusIssuesOfSecurities") }
             .getOrElse(NoValidationErrors),
           requestBodyData.closeCompanyLoansWrittenOff
-            .map { data =>
-              validateCommonDividends(data, "closeCompanyLoansWrittenOff")
-            }
+            .map { data => validateCommonDividends(data, "closeCompanyLoansWrittenOff") }
             .getOrElse(NoValidationErrors)
         )
       ))

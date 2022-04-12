@@ -16,19 +16,19 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.domain.MtdSourceEnum
-import api.models.domain.MtdSourceEnum.latest
 import api.models.errors._
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum.latest
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
 import v1.models.response.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse}
 import v1.requestParsers.RetrieveNonPayeEmploymentRequestParser
@@ -67,7 +67,7 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
         source = source
       )
 
-      implicit val ifsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
+      implicit val IfsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
         s"income-tax/income/employments/non-paye/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
@@ -101,7 +101,7 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
+  private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | SourceFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
@@ -109,7 +109,6 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => InternalServerError(Json.toJson(errorWrapper))
     }
-  }
 
   private def desErrorMap: Map[String, MtdError] =
     Map(

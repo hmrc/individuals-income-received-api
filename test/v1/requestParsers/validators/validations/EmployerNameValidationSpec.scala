@@ -16,24 +16,39 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.EmployerNameFormatError
+import support.UnitSpec
 
 class EmployerNameValidationSpec extends UnitSpec {
 
   "EmployerNameValidation" when {
     "validate" must {
-      "return an empty list for a valid employer name" in {
-        EmployerNameValidation.validate(
-          employerName = "BPDTS Ltd",
-          105
+      "return an empty list for a valid employer name for other employment" in {
+        EmployerNameValidation.validateOtherEmployment(
+          employerName = "BPDTS Ltd"
         ) shouldBe NoValidationErrors
       }
 
-      "return an EmployerNameFormatError for an invalid employerName" in {
-        EmployerNameValidation.validate(
-          employerName = "This employerName string is 106 characters long--------------------------------------------------------106",
-          105
+      "return an empty list for a valid employer name for custom employment" in {
+        EmployerNameValidation.validateCustomEmployment(
+          employerName = "BPDTS Ltd"
+        ) shouldBe NoValidationErrors
+      }
+
+      "return an EmployerNameFormatError for an invalid employerName in other employment" in {
+        EmployerNameValidation.validateOtherEmployment(
+          employerName = "This employerName string is 106 characters long--------------------------------------------------------106"
+        ) shouldBe List(EmployerNameFormatError)
+      }
+
+      "return an EmployerNameFormatError for an invalid employerName in custom employment" in {
+        EmployerNameValidation.validateCustomEmployment(
+          employerName = "This employerName string is 75 characters long---------------------------75"
+        ) shouldBe List(EmployerNameFormatError)
+      }
+      "return an EmployerNameFormatError for an an employerName that starts with a whitespace in custom employment" in {
+        EmployerNameValidation.validateCustomEmployment(
+          employerName = " BPDTS Ltd"
         ) shouldBe List(EmployerNameFormatError)
       }
     }

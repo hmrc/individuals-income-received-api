@@ -16,13 +16,15 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.Release6Uri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
 
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.HttpClient
+import api.connectors.DownstreamUri.Release6Uri
+import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

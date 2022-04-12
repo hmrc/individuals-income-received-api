@@ -16,9 +16,10 @@
 
 package v1.requestParsers.validators.validations
 
-import utils.CurrentDateTime
 import api.models.domain.DesTaxYear
 import api.models.errors.{MtdError, RuleCompletionDateError}
+import utils.CurrentDateTime
+import api.models.errors.RuleCompletionDateError
 
 import java.time.LocalDate
 

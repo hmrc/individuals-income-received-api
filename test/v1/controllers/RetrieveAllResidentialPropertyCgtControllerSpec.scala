@@ -32,7 +32,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveAllResidentialPropertyCgtControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveAllResidentialPropertyCgtRequestParser
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
-import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1.models.response.retrieveAllResidentialPropertyCgt.{
+  RetrieveAllResidentialPropertyCgtHateoasData,
+  RetrieveAllResidentialPropertyCgtResponse
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

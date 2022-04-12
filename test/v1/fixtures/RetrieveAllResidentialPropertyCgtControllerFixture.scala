@@ -16,8 +16,8 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsObject, JsValue, Json}
 import api.models.domain.MtdSourceEnum
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveAllResidentialPropertyCgt._
 
 object RetrieveAllResidentialPropertyCgtControllerFixture {
@@ -32,8 +32,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       Some(2022),
       Some("2022-03-08"),
       Some(1999.99),
-      None,
-      Some(1999.99)
+      None
     )
 
   val singlePropertyDisposals: SinglePropertyDisposals =
@@ -54,12 +53,12 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      None,
-      Some(1999.99)
+      None
     )
 
   val ppdService: PpdService =
     PpdService(
+      Some(143.22),
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )
@@ -97,6 +96,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
     """
       |{
       |  "ppdService": {
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "hmrcHeld",
@@ -106,8 +106,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -127,8 +126,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  },
@@ -160,6 +158,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
     """
       |{
       |  "ppdService": {
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "HMRC HELD",
@@ -169,8 +168,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -190,8 +188,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  },

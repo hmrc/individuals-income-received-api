@@ -17,6 +17,7 @@
 package v1.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, RuleAcquisitionDateError}
+import api.models.errors.RuleAcquisitionDateError
 
 import java.time.LocalDate
 

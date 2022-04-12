@@ -17,11 +17,11 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import api.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendOtherCgt._
 import v1.fixtures.other.CreateAmendOtherCgtConnectorServiceFixture.mtdRequestBody
 

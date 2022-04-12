@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.SF74RefFormatError
+import support.UnitSpec
 
 class SF74RefValidationSpec extends UnitSpec {
 

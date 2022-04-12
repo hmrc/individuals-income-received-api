@@ -16,10 +16,10 @@
 
 package v1.requestParsers
 
+import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, SourceFormatError, TaxYearFormatError}
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveAllResidentialPropertyCgtValidator
-import api.models.domain.{MtdSourceEnum, Nino}
-import api.models.errors._
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 class RetrieveAllResidentialPropertyCgtRequestParserSpec extends UnitSpec {

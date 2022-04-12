@@ -18,7 +18,8 @@ package v1.models.response.retrieveAllResidentialPropertyCgt
 
 import play.api.libs.json.{Json, OFormat}
 
-case class PpdService(multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
+case class PpdService(ppdYearToDate: Option[BigDecimal],
+                      multiplePropertyDisposals: Option[Seq[MultiplePropertyDisposals]],
                       singlePropertyDisposals: Option[Seq[SinglePropertyDisposals]])
 
 object PpdService {

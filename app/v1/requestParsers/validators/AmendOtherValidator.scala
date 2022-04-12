@@ -19,10 +19,19 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.amendOther._
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.amendOther._
+import v1.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
 class AmendOtherValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendOtherRawData] with ValueFormatErrorMessages {

@@ -17,6 +17,7 @@
 package v1.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, ValueFormatError}
+import api.models.errors.ValueFormatError
 
 object IntegerValueValidation extends ValueFormatErrorMessages {
 

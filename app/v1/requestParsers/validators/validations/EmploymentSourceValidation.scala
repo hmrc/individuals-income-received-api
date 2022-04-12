@@ -18,6 +18,7 @@ package v1.requestParsers.validators.validations
 
 import api.models.domain.MtdSourceEnum
 import api.models.errors.{MtdError, SourceFormatError}
+import api.models.errors.SourceFormatError
 
 import scala.util.{Failure, Success, Try}
 

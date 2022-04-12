@@ -16,6 +16,23 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{
+  CustomerRefFormatError,
+  DateFormatError,
+  NinoFormatError,
+  RuleAcquisitionDateAfterDisposalDateError,
+  RuleCompletionDateBeforeDisposalDateError,
+  RuleCompletionDateError,
+  RuleDisposalDateError,
+  RuleGainLossError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleLossesGreaterThanGainError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -23,9 +40,8 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.requestParsers.validators.validations.{DisposalDateErrorMessages, ValueFormatErrorMessages}
-import api.mocks.MockCurrentDateTime
-import api.models.errors._
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
+
 import java.time.LocalDate
 
 class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec

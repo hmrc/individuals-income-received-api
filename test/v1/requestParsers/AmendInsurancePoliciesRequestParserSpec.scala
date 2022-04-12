@@ -16,12 +16,20 @@
 
 package v1.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors.{
+  BadRequestError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  EventFormatError,
+  NinoFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockAmendInsurancePoliciesValidator
-import api.models.errors._
 import v1.models.request.amendInsurancePolicies._
 
 class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {

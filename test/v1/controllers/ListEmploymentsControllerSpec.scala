@@ -17,22 +17,22 @@
 package v1.controllers
 
 import api.controllers.ControllerBaseSpec
+import api.hateoas.HateoasLinks
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
+import api.models.hateoas.Method.{GET, POST}
+import api.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListEmploymentsControllerFixture._
-import api.hateoas.HateoasLinks
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.mocks.MockIdGenerator
-import api.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListEmploymentsRequestParser
 import v1.mocks.services.MockListEmploymentsService
-import api.models.hateoas.Method.{GET, POST}
-import api.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
-import api.models.hateoas.{HateoasWrapper, Link}
 import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmploymentsRequest}
 import v1.models.response.listEmployment.{Employment, ListEmploymentHateoasData, ListEmploymentResponse}
 

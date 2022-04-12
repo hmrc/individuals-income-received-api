@@ -16,12 +16,25 @@
 
 package v1.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  DoubleTaxationArticleFormatError,
+  DoubleTaxationTreatyFormatError,
+  ErrorWrapper,
+  NinoFormatError,
+  QOPSRefFormatError,
+  SF74RefFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockAmendPensionsValidator
-import api.models.errors._
 import v1.models.request.amendPensions._
 
 class AmendPensionsRequestParserSpec extends UnitSpec {

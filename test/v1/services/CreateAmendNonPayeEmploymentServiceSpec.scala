@@ -17,15 +17,25 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture.requestBodyModel
 import v1.mocks.connectors.MockCreateAmendNonPayeEmploymentConnector
-import api.models.domain.Nino
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import scala.concurrent.Future
-import api.services.ServiceSpec
 
 class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 

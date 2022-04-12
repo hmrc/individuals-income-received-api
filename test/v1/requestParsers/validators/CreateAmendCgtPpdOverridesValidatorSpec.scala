@@ -16,6 +16,21 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{
+  DateFormatError,
+  NinoFormatError,
+  PpdSubmissionIdFormatError,
+  RuleAmountGainLossError,
+  RuleDuplicatedPpdSubmissionIdError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleLossesGreaterThanGainError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -25,8 +40,6 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
-import api.mocks.MockCurrentDateTime
-import api.models.errors._
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
 class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
@@ -781,11 +794,12 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "the losses for this year are larger than the total gains" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, currentYearLossesGreaterThanGainsRequestBody)) shouldBe
           List(
-            RuleLossesGreaterThanGainError.copy(paths = Some(
-              Seq(
-                "/singlePropertyDisposals/0/lossesFromThisYear",
-                "/singlePropertyDisposals/0/lossesFromPreviousYear"
-              ))))
+            RuleLossesGreaterThanGainError.copy(
+              paths = Some(
+                Seq(
+                  "/singlePropertyDisposals/0/lossesFromThisYear",
+                  "/singlePropertyDisposals/0/lossesFromPreviousYear"
+                ))))
       }
     }
 
@@ -800,21 +814,21 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
         def ifNotEmpty(field: String, values: Seq[JsValue]) = if (values.nonEmpty) Json.obj(field -> values) else JsObject.empty
 
         val multiples = multipleIds.map(id => Json.parse(s"""{
-                                                            |   "ppdSubmissionId": "$id",
-                                                            |   "amountOfNetGain": 1
-                                                            |}""".stripMargin))
+                    |   "ppdSubmissionId": "$id",
+                    |   "amountOfNetGain": 1
+                    |}""".stripMargin))
 
         val singles = singleIds.map(id => Json.parse(s"""{
-                                                        |   "ppdSubmissionId": "$id",
-                                                        |   "completionDate": "2020-02-28", 
-                                                        |   "disposalProceeds": 1, 
-                                                        |   "acquisitionAmount": 1, 
-                                                        |   "improvementCosts": 1,
-                                                        |   "additionalCosts": 1, 
-                                                        |   "prfAmount": 1, 
-                                                        |   "otherReliefAmount": 1,
-                                                        |   "amountOfNetGain": 1
-                                                        |}""".stripMargin))
+                                                                |   "ppdSubmissionId": "$id",
+                                                                |   "completionDate": "2020-02-28", 
+                                                                |   "disposalProceeds": 1, 
+                                                                |   "acquisitionAmount": 1, 
+                                                                |   "improvementCosts": 1,
+                                                                |   "additionalCosts": 1, 
+                                                                |   "prfAmount": 1, 
+                                                                |   "otherReliefAmount": 1,
+                                                                |   "amountOfNetGain": 1
+                                                                |}""".stripMargin))
 
         AnyContentAsJson(ifNotEmpty("multiplePropertyDisposals", multiples) ++ ifNotEmpty("singlePropertyDisposals", singles))
 

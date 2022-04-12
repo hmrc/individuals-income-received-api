@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.EmploymentIdFormatError
+import support.UnitSpec
 
 class EmploymentIdValidationSpec extends UnitSpec {
 

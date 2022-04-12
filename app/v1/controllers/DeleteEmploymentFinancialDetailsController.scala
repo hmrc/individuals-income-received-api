@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.Release6Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
@@ -66,7 +66,7 @@ class DeleteEmploymentFinancialDetailsController @Inject() (val authService: Enr
         employmentId = employmentId
       )
 
-      implicit val desUri: DesUri[Unit] = DesUri[Unit](
+      implicit val downstreamUri: Release6Uri[Unit] = Release6Uri[Unit](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId"
       )
 

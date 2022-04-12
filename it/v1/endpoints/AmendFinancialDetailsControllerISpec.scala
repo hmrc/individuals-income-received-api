@@ -16,16 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors
+import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
+class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -235,7 +236,7 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
           )
         )
 
-        val wrappedErrors: ErrorWrapper = ErrorWrapper(
+        val wrappedErrors: ErrorWrapper = errors.ErrorWrapper(
           correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueRequestError)
@@ -679,7 +680,7 @@ class AmendFinancialDetailsControllerISpec extends V1IntegrationSpec {
             "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
             allInvalidValueRequestBodyJson,
             BAD_REQUEST,
-            ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
+            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
             None)
         )
 

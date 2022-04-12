@@ -16,12 +16,12 @@
 
 package v1.models.response.retrievePensions
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
-import api.models.hateoas.{HateoasData, Link}
 
 case class RetrievePensionsResponse(submittedOn: String,
                                     foreignPensions: Option[Seq[ForeignPensionsItem]],

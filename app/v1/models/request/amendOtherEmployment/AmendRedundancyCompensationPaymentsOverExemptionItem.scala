@@ -28,6 +28,6 @@ object AmendRedundancyCompensationPaymentsOverExemptionItem {
     (JsPath \ "amount").write[BigDecimal] and
       (JsPath \ "taxPaid").writeNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").write[Boolean]
-  )(unlift(AmendRedundancyCompensationPaymentsOverExemptionItem.unapply _))
+  )(unlift(AmendRedundancyCompensationPaymentsOverExemptionItem.unapply))
 
 }

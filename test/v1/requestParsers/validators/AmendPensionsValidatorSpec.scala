@@ -16,13 +16,27 @@
 
 package v1.requestParsers.validators
 
+import api.models.errors.{
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  DoubleTaxationArticleFormatError,
+  DoubleTaxationTreatyFormatError,
+  NinoFormatError,
+  QOPSRefFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SF74RefFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
-import api.models.errors._
 import v1.models.request.amendPensions.AmendPensionsRawData
 
 class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {

@@ -16,16 +16,16 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleCustomEmploymentError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class IgnoreEmploymentControllerISpec extends V1IntegrationSpec {
+class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -117,7 +117,7 @@ class IgnoreEmploymentControllerISpec extends V1IntegrationSpec {
           ("AA123456A", "2019-20", "ABCDE12345FG", BAD_REQUEST, EmploymentIdFormatError, None),
           ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotSupportedError, None),
           ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
-          ("AA123456A", "2021-22", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotEndedError, None)
+          ("AA123456A", getCurrentTaxYear, "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotEndedError, None)
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

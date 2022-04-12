@@ -17,8 +17,8 @@
 package v1.models.audit
 
 import api.models.audit.AuditResponse
-import play.api.libs.json.{JsValue, Json, Writes}
 import api.models.auth.UserDetails
+import play.api.libs.json.{JsValue, Json, Writes}
 
 case class CreateAmendCgtPpdOverridesAuditDetail(userType: String,
                                                  agentReferenceNumber: Option[String],

@@ -16,6 +16,24 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{
+  CessationDateFormatError,
+  EmployerNameFormatError,
+  EmployerRefFormatError,
+  EmploymentIdFormatError,
+  NinoFormatError,
+  PayrollIdFormatError,
+  RuleCessationDateBeforeStartDateError,
+  RuleCessationDateBeforeTaxYearStartError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleStartDateAfterTaxYearEndError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StartDateFormatError,
+  TaxYearFormatError
+}
 import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
@@ -27,8 +45,6 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
-import api.mocks.MockCurrentDateTime
-import api.models.errors._
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
 
 class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
@@ -44,7 +60,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       |  "employerName": "AMD infotech Ltd",
       |  "startDate": "2019-01-01",
       |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412"
+      |  "payrollId": "124214112412",
+      |  "occupationalPension": false
       |}
     """.stripMargin
   )
@@ -56,7 +73,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       |{
       |  "employerRef": true,
       |  "cessationDate": 400,
-      |  "payrollId": []
+      |  "payrollId": [],
+      |  "occupationalPension": 321
       |}
     """.stripMargin
   )
@@ -68,7 +86,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       |  "employerName": "${"a" * 75}",
       |  "startDate": "notValid",
       |  "cessationDate": "notValid",
-      |  "payrollId": "${"b" * 75}"
+      |  "payrollId": "${"b" * 75}",
+      |  "occupationalPension": false
       |}
     """.stripMargin
   )
@@ -80,7 +99,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
         |  "employerName": "AMD infotech Ltd",
         |  "startDate": "2019-01-01",
         |  "cessationDate": "2018-06-01",
-        |  "payrollId": "124214112412"
+        |  "payrollId": "124214112412",
+        |  "occupationalPension": false
         |}
     """.stripMargin
   )
@@ -92,7 +112,8 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
        |  "employerName": "AMD infotech Ltd",
        |  "startDate": "2023-01-01",
        |  "cessationDate": "2022-06-01",
-       |  "payrollId": "124214112412"
+       |  "payrollId": "124214112412",
+       |  "occupationalPension": false
        |}
     """.stripMargin
   )
@@ -181,7 +202,7 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect request body" in new Test {
-        val paths = List("/employerRef", "/employerName", "/payrollId", "/cessationDate", "/startDate")
+        val paths = List("/employerRef", "/employerName", "/payrollId", "/cessationDate", "/startDate", "/occupationalPension")
 
         validator.validate(AmendCustomEmploymentRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))

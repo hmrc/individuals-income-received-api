@@ -16,12 +16,12 @@
 
 package v1.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockAmendFinancialDetailsValidator
-import api.models.errors._
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}

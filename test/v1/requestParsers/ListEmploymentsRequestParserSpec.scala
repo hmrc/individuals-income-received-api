@@ -16,10 +16,10 @@
 
 package v1.requestParsers
 
-import support.UnitSpec
 import api.models.domain.Nino
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import support.UnitSpec
 import v1.mocks.validators.MockListEmploymentsValidator
-import api.models.errors._
 import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmploymentsRequest}
 
 class ListEmploymentsRequestParserSpec extends UnitSpec {

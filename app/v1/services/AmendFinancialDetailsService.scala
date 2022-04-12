@@ -16,6 +16,16 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.{
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotEndedError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import cats.data.EitherT
 import cats.implicits._
 
@@ -23,19 +33,10 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.AmendFinancialDetailsConnector
-import api.controllers.EndpointLogContext
-import api.models.errors.{
-  StandardDownstreamError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotEndedError,
-  TaxYearFormatError
-}
+import api.models.errors.StandardDownstreamError
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 import api.support.DownstreamResponseMappingSupport
+import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 

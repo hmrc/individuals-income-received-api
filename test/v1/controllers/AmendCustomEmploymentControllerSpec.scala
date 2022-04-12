@@ -17,6 +17,7 @@
 package v1.controllers
 
 import api.controllers.ControllerBaseSpec
+import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
@@ -26,7 +27,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import api.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockAmendCustomEmploymentRequestParser
 import v1.mocks.services.MockAmendCustomEmploymentService
 import v1.models.request.amendCustomEmployment._
@@ -107,7 +107,8 @@ class AmendCustomEmploymentControllerSpec
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   val requestData: AmendCustomEmploymentRequest = AmendCustomEmploymentRequest(

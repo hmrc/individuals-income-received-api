@@ -16,17 +16,18 @@
 
 package v1.models.response.retrieveEmployment
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
-import api.models.hateoas.{HateoasData, Link}
 
 case class RetrieveEmploymentResponse(employerRef: Option[String],
                                       employerName: String,
                                       startDate: Option[String],
                                       cessationDate: Option[String],
                                       payrollId: Option[String],
+                                      occupationalPension: Option[Boolean],
                                       dateIgnored: Option[String],
                                       submittedOn: Option[String])
 
@@ -40,6 +41,7 @@ object RetrieveEmploymentResponse extends HateoasLinks {
       (JsPath \\ "startDate").readNullable[String] and
       (JsPath \\ "cessationDate").readNullable[String] and
       (JsPath \\ "payrollId").readNullable[String] and
+      (JsPath \\ "occupationalPension").readNullable[Boolean] and
       (JsPath \\ "dateIgnored").readNullable[String] and
       (JsPath \\ "submittedOn").readNullable[String]
   )(RetrieveEmploymentResponse.apply _)

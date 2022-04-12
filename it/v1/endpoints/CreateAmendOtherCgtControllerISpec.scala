@@ -16,18 +16,18 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{AssetDescriptionFormatError, AssetTypeFormatError, BadRequestError, ClaimOrElectionCodesFormatError, DateFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.{V1IntegrationSpec, WireMockMethods}
+import support.{IntegrationBaseSpec, WireMockMethods}
 import v1.requestParsers.validators.validations.DisposalDateErrorMessages
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 
-class CreateAmendOtherCgtControllerISpec extends V1IntegrationSpec with DisposalDateErrorMessages with WireMockMethods {
+class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with DisposalDateErrorMessages with WireMockMethods {
 
   val validRequestJson: JsValue = Json.parse(
     """

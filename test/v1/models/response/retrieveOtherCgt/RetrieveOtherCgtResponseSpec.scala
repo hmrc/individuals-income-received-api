@@ -16,12 +16,12 @@
 
 package v1.models.response.retrieveOtherCgt
 
+import api.hateoas.HateoasFactory
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import api.hateoas.HateoasFactory
-import api.models.hateoas.{HateoasWrapper, Link}
-import api.models.hateoas.Method.{DELETE, GET, PUT}
 
 class RetrieveOtherCgtResponseSpec extends UnitSpec {
 

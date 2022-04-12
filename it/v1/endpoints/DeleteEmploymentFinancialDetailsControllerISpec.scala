@@ -16,16 +16,16 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec {
+class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -35,7 +35,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
 
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
-    def desUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+    def downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
 
     def setupStubs(): StubMapping
 
@@ -55,7 +55,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, desUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request().delete)
@@ -103,15 +103,15 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.DELETE, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().delete)
@@ -125,7 +125,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends V1IntegrationSpec 
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "downstream message"
              |}
             """.stripMargin
 

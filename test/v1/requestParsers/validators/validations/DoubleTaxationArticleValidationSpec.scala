@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.DoubleTaxationArticleFormatError
+import support.UnitSpec
 
 class DoubleTaxationArticleValidationSpec extends UnitSpec {
 

@@ -16,19 +16,19 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.IfsUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
 import api.models.errors._
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.IfsUri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.response.retrieveInsurancePolicies.{RetrieveInsurancePoliciesHateoasData, RetrieveInsurancePoliciesResponse}
 
 import javax.inject.{Inject, Singleton}

@@ -16,14 +16,15 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.Api1661Uri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import api.connectors.DownstreamUri.Api1661Uri
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 class CreateAmendNonPayeEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 

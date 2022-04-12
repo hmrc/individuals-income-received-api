@@ -17,6 +17,10 @@
 package v1.controllers
 
 import api.controllers.ControllerBaseSpec
+import api.hateoas.HateoasLinks
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse}
 import api.models.domain.Nino
 import api.models.errors._
@@ -25,10 +29,6 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import api.hateoas.HateoasLinks
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.mocks.MockIdGenerator
-import api.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.mocks.services._
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail

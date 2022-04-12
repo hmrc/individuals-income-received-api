@@ -16,9 +16,9 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.MtdSourceEnum
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import api.models.domain.MtdSourceEnum
 
 class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
 
@@ -26,6 +26,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
     """
       |{
       |  "ppdService": {
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "hmrcHeld",
@@ -35,8 +36,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -56,8 +56,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  },
@@ -89,6 +88,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
     """
       |{
       |  "ppdService": {
+      |    "ppdYearToDate": 143.22,
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "HMRC HELD",
@@ -98,8 +98,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": "2022",
       |        "completionDate": "2022-03-08",
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ],
       |    "singlePropertyDisposals": [
@@ -119,8 +118,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       |        "otherReliefAmount": 1999.99,
       |        "lossesFromThisYear": 1999.99,
       |        "lossesFromPreviousYear": 1999.99,
-      |        "amountOfNetGain": 1999.99,
-      |        "ppdReturnCharge": 1999.99
+      |        "amountOfNetGain": 1999.99
       |      }
       |    ]
       |  },
@@ -158,8 +156,7 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       Some(2022),
       Some("2022-03-08"),
       Some(1999.99),
-      None,
-      Some(1999.99)
+      None
     )
 
   val singlePropertyDisposals: SinglePropertyDisposals =
@@ -180,12 +177,12 @@ class RetrieveAllResidentialPropertyCgtResponseSpec extends UnitSpec {
       Some(1999.99),
       Some(1999.99),
       Some(1999.99),
-      None,
-      Some(1999.99)
+      None
     )
 
   val ppdService: PpdService =
     PpdService(
+      Some(143.22),
       Some(Seq(multiplePropertyDisposals)),
       Some(Seq(singlePropertyDisposals))
     )

@@ -16,11 +16,27 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors._
+import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.amendOtherEmployment._
 import v1.requestParsers.validators.validations._
+import v1.models.request.amendOtherEmployment._
+import v1.requestParsers.validators.validations.{
+  BigIntegerValueValidation,
+  ClassOfSharesValidation,
+  CustomerRefValidation,
+  DateFormatValidation,
+  DecimalValueValidation,
+  EmployerNameValidation,
+  EmployerRefValidation,
+  JsonFormatValidation,
+  LumpSumsRuleValidation,
+  NinoValidation,
+  SchemePlanTypeValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 import javax.inject.{Inject, Singleton}
 
@@ -78,15 +94,9 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
             })
             .getOrElse(NoValidationErrors)
             .toList,
-          requestBodyData.disability
-            .map { data =>
-              validateCommonOtherEmployment(data, fieldName = "disability")
-            }
-            .getOrElse(NoValidationErrors),
+          requestBodyData.disability.map { data => validateCommonOtherEmployment(data, fieldName = "disability") }.getOrElse(NoValidationErrors),
           requestBodyData.foreignService
-            .map { data =>
-              validateCommonOtherEmployment(data, fieldName = "foreignService")
-            }
+            .map { data => validateCommonOtherEmployment(data, fieldName = "foreignService") }
             .getOrElse(NoValidationErrors),
           requestBodyData.lumpSums
             .map(_.zipWithIndex.flatMap { case (data, index) =>
@@ -101,7 +111,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
   private def validateShareOption(shareOptionItem: AmendShareOptionItem, arrayIndex: Int): List[MtdError] = {
     List(
       EmployerNameValidation
-        .validate(shareOptionItem.employerName, 105)
+        .validateOtherEmployment(shareOptionItem.employerName)
         .map(
           _.copy(paths = Some(Seq(s"/shareOption/$arrayIndex/employerName")))
         ),
@@ -166,7 +176,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
   private def validateSharesAwardedOrReceivedItem(sharesAwardedOrReceivedItem: AmendSharesAwardedOrReceivedItem, arrayIndex: Int): List[MtdError] = {
     List(
       EmployerNameValidation
-        .validate(sharesAwardedOrReceivedItem.employerName, 105)
+        .validateOtherEmployment(sharesAwardedOrReceivedItem.employerName)
         .map(
           _.copy(paths = Some(Seq(s"/sharesAwardedOrReceived/$arrayIndex/employerName")))
         ),
@@ -237,7 +247,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
   private def validateLumpSums(lumpSums: AmendLumpSums, arrayIndex: Int): List[MtdError] = {
     List(
       EmployerNameValidation
-        .validate(lumpSums.employerName, 105)
+        .validateOtherEmployment(lumpSums.employerName)
         .map(
           _.copy(paths = Some(Seq(s"/lumpSums/$arrayIndex/employerName")))
         ),

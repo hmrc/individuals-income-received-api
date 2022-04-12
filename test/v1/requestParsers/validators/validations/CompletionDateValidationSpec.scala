@@ -16,9 +16,10 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.mocks.MockCurrentDateTime
 import api.models.errors.RuleCompletionDateError
+import support.UnitSpec
+
 import java.time.LocalDate
 
 class CompletionDateValidationSpec extends UnitSpec with MockCurrentDateTime {

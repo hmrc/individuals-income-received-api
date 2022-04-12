@@ -25,7 +25,7 @@ import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService,
 import api.models.domain.{MtdSourceEnum, Nino}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType._
+import api.models.hateoas.RelType.{AMEND_NON_PAYE_EMPLOYMENT_INCOME, DELETE_NON_PAYE_EMPLOYMENT_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json

@@ -16,12 +16,21 @@
 
 package v1.requestParsers
 
+import api.models.domain.Nino
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  NinoFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import api.models.domain.Nino
 import v1.mocks.validators.MockAmendDividendsValidator
-import api.models.errors._
 import v1.models.request.amendDividends._
 
 class AmendDividendsRequestParserSpec extends UnitSpec {

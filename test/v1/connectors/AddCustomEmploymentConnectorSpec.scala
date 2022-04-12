@@ -17,11 +17,11 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
+import api.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import api.mocks.MockHttpClient
 import v1.models.request.addCustomEmployment.{AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
@@ -37,7 +37,8 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
     employerName = "AMD infotech Ltd",
     startDate = "2019-01-01",
     cessationDate = Some("2020-06-01"),
-    payrollId = Some("124214112412")
+    payrollId = Some("124214112412"),
+    occupationalPension = false
   )
 
   val request: AddCustomEmploymentRequest = AddCustomEmploymentRequest(

@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.{MtdSourceEnum, Nino}
 import api.requestParsers.RequestParser
-import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
-import v1.requestParsers.validators.RetrieveFinancialDetailsValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
+import v1.requestParsers.validators.RetrieveFinancialDetailsValidator
 
 @Singleton
 class RetrieveFinancialDetailsRequestParser @Inject() (val validator: RetrieveFinancialDetailsValidator)

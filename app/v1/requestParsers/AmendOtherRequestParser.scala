@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.amendOther.{AmendOtherRawData, AmendOtherRequest, AmendOtherRequestBody}
-import v1.requestParsers.validators.AmendOtherValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.amendOther.{AmendOtherRawData, AmendOtherRequest, AmendOtherRequestBody}
+import v1.requestParsers.validators.AmendOtherValidator
 
 @Singleton
 class AmendOtherRequestParser @Inject() (val validator: AmendOtherValidator) extends RequestParser[AmendOtherRawData, AmendOtherRequest] {

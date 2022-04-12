@@ -16,16 +16,25 @@
 
 package v1.services
 
-import api.models.domain.Nino
 import api.controllers.EndpointLogContext
-import v1.mocks.connectors.MockListEmploymentsConnector
-import api.models.errors._
+import api.models.domain.Nino
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.mocks.connectors.MockListEmploymentsConnector
 import v1.models.request.listEmployments.ListEmploymentsRequest
 import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import scala.concurrent.Future
-import api.services.ServiceSpec
 
 class ListEmploymentsServiceSpec extends ServiceSpec {
 

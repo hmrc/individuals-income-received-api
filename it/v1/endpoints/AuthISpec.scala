@@ -23,9 +23,9 @@ import play.api.http.Status
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
+import support.IntegrationBaseSpec
 
-class AuthISpec extends V1IntegrationSpec {
+class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino    = "AA123456A"
@@ -110,7 +110,7 @@ class AuthISpec extends V1IntegrationSpec {
     "an MTD ID is successfully retrieve from the NINO and the user is NOT authorised" should {
 
       "return 403" in new Test {
-        override val nino = "AA123456A"
+        override val nino: String = "AA123456A"
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -122,6 +122,7 @@ class AuthISpec extends V1IntegrationSpec {
         response.status shouldBe Status.FORBIDDEN
       }
     }
+
   }
 
 }

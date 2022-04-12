@@ -16,16 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors
+import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class AmendOtherControllerISpec extends V1IntegrationSpec {
+class AmendOtherControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -383,7 +384,7 @@ class AmendOtherControllerISpec extends V1IntegrationSpec {
           )
         )
 
-        val wrappedErrors: ErrorWrapper = ErrorWrapper(
+        val wrappedErrors: ErrorWrapper = errors.ErrorWrapper(
           correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueRequestError)

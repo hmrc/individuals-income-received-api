@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.RuleLossesGreaterThanGainError
+import support.UnitSpec
 
 class ValueGreaterThanValueValidationSpec extends UnitSpec {
 

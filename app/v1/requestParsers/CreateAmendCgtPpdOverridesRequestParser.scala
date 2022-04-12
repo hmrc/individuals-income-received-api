@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.createAmendCgtPpdOverrides._
-import v1.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.createAmendCgtPpdOverrides._
+import v1.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
 
 @Singleton
 class CreateAmendCgtPpdOverridesRequestParser @Inject() (val validator: CreateAmendCgtPpdOverridesValidator)

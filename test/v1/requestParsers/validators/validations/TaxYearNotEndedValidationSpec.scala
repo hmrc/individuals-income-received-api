@@ -16,13 +16,13 @@
 
 package v1.requestParsers.validators.validations
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.RuleTaxYearNotEndedError
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalamock.handlers.CallHandler
 import support.UnitSpec
 import utils.CurrentDateTime
-import api.mocks.MockCurrentDateTime
-import api.models.errors.RuleTaxYearNotEndedError
 
 class TaxYearNotEndedValidationSpec extends UnitSpec {
 

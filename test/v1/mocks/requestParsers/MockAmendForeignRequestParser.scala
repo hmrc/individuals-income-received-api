@@ -16,10 +16,10 @@
 
 package v1.mocks.requestParsers
 
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.requestParsers.AmendForeignRequestParser
-import api.models.errors.ErrorWrapper
 import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest}
 
 trait MockAmendForeignRequestParser extends MockFactory {

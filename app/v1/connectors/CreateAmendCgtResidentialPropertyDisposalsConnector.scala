@@ -16,14 +16,16 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.Api1661Uri
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
 import javax.inject.Inject
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import api.connectors.DownstreamUri.Api1661Uri
+import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
+
 import scala.concurrent.{ExecutionContext, Future}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
@@ -32,10 +34,10 @@ class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject() (val http: H
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+
     val nino    = request.nino.nino
     val taxYear = request.taxYear
-
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     put(
       uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"),

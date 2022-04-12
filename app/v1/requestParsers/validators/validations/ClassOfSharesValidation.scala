@@ -17,6 +17,7 @@
 package v1.requestParsers.validators.validations
 
 import api.models.errors.{ClassOfSharesAcquiredFormatError, ClassOfSharesAwardedFormatError, MtdError}
+import api.models.errors.ClassOfSharesAcquiredFormatError
 
 object ClassOfSharesValidation {
   private val regex = "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"

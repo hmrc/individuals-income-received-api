@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
-import v1.requestParsers.validators.RetrieveEmploymentValidator
 
 import javax.inject.{Inject, Singleton}
+import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
+import v1.requestParsers.validators.RetrieveEmploymentValidator
 
 @Singleton
 class RetrieveEmploymentRequestParser @Inject() (val validator: RetrieveEmploymentValidator)

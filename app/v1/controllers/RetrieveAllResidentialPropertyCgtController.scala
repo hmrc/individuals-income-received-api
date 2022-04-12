@@ -16,21 +16,24 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.domain.MtdSourceEnum
-import api.models.domain.MtdSourceEnum.latest
 import api.models.errors._
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import api.connectors.DownstreamUri.Api1661Uri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.domain.MtdSourceEnum
+import api.models.domain.MtdSourceEnum.latest
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1.models.response.retrieveAllResidentialPropertyCgt.{
+  RetrieveAllResidentialPropertyCgtHateoasData,
+  RetrieveAllResidentialPropertyCgtResponse
+}
 import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 
 import javax.inject.{Inject, Singleton}
@@ -67,7 +70,7 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
         source = source
       )
 
-      implicit val ifsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
+      implicit val IfsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
         s"income-tax/income/disposals/residential-property/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )

@@ -17,15 +17,15 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1.fixtures.other.CreateAmendOtherCgtConnectorServiceFixture.mtdRequestBody
 import v1.mocks.connectors.MockCreateAmendOtherCgtConnector
-import api.models.domain.Nino
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 
 import scala.concurrent.Future
-import api.services.ServiceSpec
 
 class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
 

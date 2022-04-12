@@ -16,16 +16,16 @@
 
 package v1.endpoints
 
+import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
+class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -40,7 +40,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
         |  "employerName": "AMD infotech Ltd",
         |  "startDate": "2019-01-01",
         |  "cessationDate": "2020-06-01",
-        |  "payrollId": "124214112412"
+        |  "payrollId": "124214112412",
+        |  "occupationalPension": false
         |}
       """.stripMargin
     )
@@ -124,7 +125,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2019-01-01",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412"
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
           |}
       """.stripMargin
       )
@@ -138,7 +140,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
           |  "employerName": false,
           |  "startDate": false,
           |  "cessationDate": false,
-          |  "payrollId": false
+          |  "payrollId": false,
+          |  "occupationalPension": 13
           |}
         """.stripMargin
       )
@@ -158,56 +161,61 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2019-01-01",
           |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412"
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
           |}
       """.stripMargin
       )
 
       val invalidEmployerNameRequestJson: JsValue = Json.parse(
         s"""
-          |{
-          |  "employerRef": "123/AZ12334",
-          |  "employerName": "${"a" * 100}",
-          |  "startDate": "2019-01-01",
-          |  "cessationDate": "2020-06-01",
-          |  "payrollId": "124214112412"
-          |}
+           |{
+           |  "employerRef": "123/AZ12334",
+           |  "employerName": "${"a" * 100}",
+           |  "startDate": "2019-01-01",
+           |  "cessationDate": "2020-06-01",
+           |  "payrollId": "124214112412",
+           |  "occupationalPension": false
+           |}
       """.stripMargin
       )
 
       val invalidStartDateRequestJson: JsValue = Json.parse(
         """
-           |{
-           |  "employerRef": "123/AZ12334",
-           |  "employerName": "AMD infotech Ltd",
-           |  "startDate": "notValid",
-           |  "cessationDate": "2020-06-01",
-           |  "payrollId": "124214112412"
-           |}
+          |{
+          |  "employerRef": "123/AZ12334",
+          |  "employerName": "AMD infotech Ltd",
+          |  "startDate": "notValid",
+          |  "cessationDate": "2020-06-01",
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
+          |}
       """.stripMargin
       )
 
       val invalidCessationDateRequestJson: JsValue = Json.parse(
         """
-           |{
-           |  "employerRef": "123/AZ12334",
-           |  "employerName": "AMD infotech Ltd",
-           |  "startDate": "2019-01-01",
-           |  "cessationDate": "notValid",
-           |  "payrollId": "124214112412"
-           |}
+          |{
+          |  "employerRef": "123/AZ12334",
+          |  "employerName": "AMD infotech Ltd",
+          |  "startDate": "2019-01-01",
+          |  "cessationDate": "notValid",
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
+          |}
       """.stripMargin
       )
 
       val invalidPayrollIdRequestJson: JsValue = Json.parse(
         s"""
-          |{
-          |  "employerRef": "123/AZ12334",
-          |  "employerName": "AMD infotech Ltd",
-          |  "startDate": "2019-01-01",
-          |  "cessationDate": "2020-06-01",
-          |  "payrollId": "${"a" * 100}"
-          |}
+           |{
+           |  "employerRef": "123/AZ12334",
+           |  "employerName": "AMD infotech Ltd",
+           |  "startDate": "2019-01-01",
+           |  "cessationDate": "2020-06-01",
+           |  "payrollId": "${"a" * 100}",
+           |  "occupationalPension": false
+           |}
       """.stripMargin
       )
 
@@ -218,7 +226,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2020-01-01",
           |  "cessationDate": "2019-06-01",
-          |  "payrollId": "124214112412"
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
           |}
       """.stripMargin
       )
@@ -230,7 +239,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2023-01-01",
           |  "cessationDate": "2023-06-01",
-          |  "payrollId": "124214112412"
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
           |}
       """.stripMargin
       )
@@ -242,7 +252,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
           |  "employerName": "AMD infotech Ltd",
           |  "startDate": "2018-01-01",
           |  "cessationDate": "2018-06-01",
-          |  "payrollId": "124214112412"
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
           |}
       """.stripMargin
       )
@@ -254,7 +265,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
             "/employerName",
             "/payrollId",
             "/cessationDate",
-            "/startDate"
+            "/startDate",
+            "/occupationalPension"
           ))
       )
 
@@ -262,7 +274,8 @@ class AddCustomEmploymentControllerISpec extends V1IntegrationSpec {
         paths = Some(
           List(
             "/employerName",
-            "/startDate"
+            "/startDate",
+            "/occupationalPension"
           ))
       )
 

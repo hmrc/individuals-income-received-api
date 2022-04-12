@@ -16,10 +16,10 @@
 
 package v1.requestParsers
 
-import support.UnitSpec
 import api.models.domain.Nino
+import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import support.UnitSpec
 import v1.mocks.validators.MockDeleteCustomEmploymentValidator
-import api.models.errors._
 import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 class DeleteCustomEmploymentRequestParserSpec extends UnitSpec {

@@ -16,6 +16,15 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{
+  EmploymentIdFormatError,
+  NinoFormatError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError
+}
 import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
@@ -25,8 +34,6 @@ import play.api.Configuration
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
-import api.mocks.MockCurrentDateTime
-import api.models.errors._
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 
 class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {

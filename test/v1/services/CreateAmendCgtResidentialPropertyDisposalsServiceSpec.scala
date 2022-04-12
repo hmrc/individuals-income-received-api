@@ -17,15 +17,15 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v1.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture.requestBodyModel
 import v1.mocks.connectors.MockCreateAmendCgtResidentialPropertyDisposalsConnector
-import api.models.domain.Nino
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
 import scala.concurrent.Future
-import api.services.ServiceSpec
 
 class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec {
 

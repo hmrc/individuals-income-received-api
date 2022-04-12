@@ -16,13 +16,13 @@
 
 package v1.models.response.listEmployment
 
+import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import utils.JsonUtils
-import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
-import api.models.hateoas.{HateoasData, Link}
 
 case class ListEmploymentResponse[E](employments: Option[Seq[E]], customEmployments: Option[Seq[E]])
 

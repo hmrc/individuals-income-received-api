@@ -16,6 +16,16 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -24,8 +34,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import api.mocks.MockCurrentDateTime
-import api.models.errors._
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 
 class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppConfig {

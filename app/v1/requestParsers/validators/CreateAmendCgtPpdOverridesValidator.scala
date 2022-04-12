@@ -16,12 +16,30 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors._
+import api.models.errors.{
+  MtdError,
+  PpdSubmissionIdFormatError,
+  RuleAmountGainLossError,
+  RuleDuplicatedPpdSubmissionIdError,
+  RuleIncorrectOrEmptyBodyError
+}
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
-import v1.models.request.createAmendCgtPpdOverrides._
 import v1.requestParsers.validators.validations._
+import v1.models.request.createAmendCgtPpdOverrides._
+import v1.requestParsers.validators.validations.{
+  DateFormatValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  PpdSubmissionIdValidation,
+  TaxYearNotEndedValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages,
+  ValueGreaterThanValueValidation
+}
 
 import javax.inject.{Inject, Singleton}
 

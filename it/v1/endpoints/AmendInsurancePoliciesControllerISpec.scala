@@ -16,16 +16,17 @@
 
 package v1.endpoints
 
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.models.errors
+import api.models.errors.{BadRequestError, CustomerRefFormatError, ErrorWrapper, EventFormatError, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
-import support.V1IntegrationSpec
-import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import support.IntegrationBaseSpec
 
-class AmendInsurancePoliciesControllerISpec extends V1IntegrationSpec {
+class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -338,7 +339,7 @@ class AmendInsurancePoliciesControllerISpec extends V1IntegrationSpec {
           )
         )
 
-        val wrappedErrors: ErrorWrapper = ErrorWrapper(
+        val wrappedErrors: ErrorWrapper = errors.ErrorWrapper(
           correlationId = correlationId,
           error = BadRequestError,
           errors = Some(allInvalidValueErrors)
@@ -913,7 +914,12 @@ class AmendInsurancePoliciesControllerISpec extends V1IntegrationSpec {
           ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
           ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
-          ("AA123456A", "2019-20", allInvalidValueRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          (
+            "AA123456A",
+            "2019-20",
+            allInvalidValueRequestBodyJson,
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", customerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", eventFormatError, None)),
           ("AA123456A", "2019-20", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),

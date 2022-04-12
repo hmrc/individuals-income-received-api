@@ -66,14 +66,13 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
         validationResult shouldBe List(
-          RuleIncorrectOrEmptyBodyError.copy(
-            paths = Some(
-              Seq(
-                "/arrayField/0/fieldOne",
-                "/arrayField/0/fieldTwo",
-                "/arrayField/1/fieldOne",
-                "/arrayField/1/fieldTwo"
-              ))))
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+            Seq(
+              "/arrayField/0/fieldOne",
+              "/arrayField/0/fieldTwo",
+              "/arrayField/1/fieldOne",
+              "/arrayField/1/fieldTwo"
+            ))))
       }
 
       "empty body is submitted" in {

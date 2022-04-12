@@ -19,10 +19,20 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.amendForeign._
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.amendForeign._
+import v1.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  CustomerRefValidation,
+  DecimalValueValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
 class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
@@ -58,11 +68,7 @@ class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extend
     List(
       Validator.flattenErrors(
         List(
-          requestBodyData.foreignEarnings
-            .map { data =>
-              validateForeignEarnings(data)
-            }
-            .getOrElse(NoValidationErrors),
+          requestBodyData.foreignEarnings.map { data => validateForeignEarnings(data) }.getOrElse(NoValidationErrors),
           requestBodyData.unremittableForeignIncome
             .map(_.zipWithIndex.flatMap { case (data, index) =>
               validateUnremittableForeignIncome(data, index)

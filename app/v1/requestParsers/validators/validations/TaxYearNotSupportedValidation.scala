@@ -18,6 +18,7 @@ package v1.requestParsers.validators.validations
 
 import api.models.domain.DesTaxYear
 import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import api.models.errors.RuleTaxYearNotSupportedError
 
 object TaxYearNotSupportedValidation {
 

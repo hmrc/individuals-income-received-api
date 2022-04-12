@@ -24,6 +24,7 @@ import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDeta
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.models.request
 import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
@@ -50,7 +51,7 @@ class DeleteDividendsControllerSpec
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = taxYear
   )

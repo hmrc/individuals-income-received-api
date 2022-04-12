@@ -17,12 +17,12 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture._
 import api.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture._
 import v1.models.request.createAmendNonPayeEmployment._
 
 import scala.concurrent.Future
@@ -64,7 +64,7 @@ class CreateAmendNonPayeEmploymentConnectorSpec extends ConnectorSpec {
             config = dummyIfsHeaderCarrierConfig,
             body = requestBodyModel,
             requiredHeaders = requiredApi1661HeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            excludedHeaders = Seq("AnAmendCustomEmploymentConnectorotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))
 

@@ -28,6 +28,7 @@ import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import api.models.request
 import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.Result
@@ -56,7 +57,7 @@ class RetrieveOtherCgtControllerSpec
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = DeleteRetrieveRequest(
+  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
     nino = Nino(nino),
     taxYear = taxYear
   )

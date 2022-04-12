@@ -16,8 +16,8 @@
 
 package v1.requestParsers.validators.validations
 
-import support.UnitSpec
 import api.models.errors.PpdSubmissionIdFormatError
+import support.UnitSpec
 
 class PpdSubmissionIdValidationSpec extends UnitSpec {
 

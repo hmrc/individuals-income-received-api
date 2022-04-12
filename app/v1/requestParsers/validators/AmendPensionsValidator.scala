@@ -19,10 +19,24 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.amendPensions._
-import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
+import v1.requestParsers.validators.validations._
+import v1.models.request.amendPensions._
+import v1.requestParsers.validators.validations.{
+  CountryCodeValidation,
+  CustomerRefValidation,
+  DecimalValueValidation,
+  DoubleTaxationArticleValidation,
+  DoubleTaxationTreatyValidation,
+  JsonFormatValidation,
+  NinoValidation,
+  QOPSRefValidation,
+  SF74RefValidation,
+  TaxYearNotSupportedValidation,
+  TaxYearValidation,
+  ValueFormatErrorMessages
+}
 
 @Singleton
 class AmendPensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {

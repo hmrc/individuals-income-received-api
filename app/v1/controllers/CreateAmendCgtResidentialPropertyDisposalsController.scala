@@ -17,6 +17,7 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.AmendHateoasBody
 import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
@@ -27,7 +28,6 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import api.hateoas.AmendHateoasBody
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
 import v1.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
