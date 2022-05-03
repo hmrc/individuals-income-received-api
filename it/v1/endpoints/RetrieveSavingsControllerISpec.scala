@@ -72,9 +72,8 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling the 'retrieve savings' endpoint" should {
@@ -123,7 +122,6 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -161,7 +159,6 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }

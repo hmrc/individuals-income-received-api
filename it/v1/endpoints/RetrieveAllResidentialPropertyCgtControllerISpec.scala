@@ -57,9 +57,8 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling the 'retrieve all residential property cgt' endpoint" should {
@@ -114,7 +113,6 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
           ("AA123456A", "2015-16", "latest", BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2015-16", "test", BAD_REQUEST, SourceFormatError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -154,7 +152,6 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }

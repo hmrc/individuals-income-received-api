@@ -45,9 +45,8 @@ class DeleteDividendsControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling the 'delete dividends income' endpoint" should {
@@ -96,7 +95,6 @@ class DeleteDividendsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2015-17", BAD_REQUEST, RuleTaxYearRangeInvalidError),
           ("AA123456A", "2015-16", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -134,7 +132,6 @@ class DeleteDividendsControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }

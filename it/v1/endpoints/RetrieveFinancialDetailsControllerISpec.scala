@@ -55,9 +55,8 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling retrieve financial details endpoint" should {
@@ -132,7 +131,6 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2016-17", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", None, BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", Some("SOURCE"), BAD_REQUEST, SourceFormatError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -173,7 +171,6 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
