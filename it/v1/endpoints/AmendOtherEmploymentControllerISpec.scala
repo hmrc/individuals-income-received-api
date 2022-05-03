@@ -24,14 +24,15 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
 class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val taxYear: String       = "2019-20"
+    val nino: String = "AA123456A"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -183,9 +184,11 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'amend other employment income' endpoint" should {
@@ -1307,8 +1310,8 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: ErrorWrapper): Unit = {
           s"validation fails with ${expectedBody.error} error" in new Test {
 
-            override val nino: String             = requestNino
-            override val taxYear: String          = requestTaxYear
+            override val nino: String = requestNino
+            override val taxYear: String = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -1328,27 +1331,12 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
-          (
-            "AA123456A",
-            "2019-20",
-            invalidValuesRequestBodyJson,
-            BAD_REQUEST,
-            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          ("AA123456A", "2019-20", invalidValuesRequestBodyJson, BAD_REQUEST, errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2019-20", invalidEmployerNameRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerNameFormatError, None)),
           ("AA123456A", "2019-20", invalidEmployerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", employerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidDateRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", dateFormatError, None)),
-          (
-            "AA123456A",
-            "2019-20",
-            invalidClassOfSharesAwardedRequestBodyJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", classOfSharesAwardedFormatError, None)),
-          (
-            "AA123456A",
-            "2019-20",
-            invalidClassOfSharesAcquiredRequestBodyJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", classOfSharesAcquiredFormatError, None)),
+          ("AA123456A", "2019-20", invalidClassOfSharesAwardedRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", classOfSharesAwardedFormatError, None)),
+          ("AA123456A", "2019-20", invalidClassOfSharesAcquiredRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", classOfSharesAcquiredFormatError, None)),
           ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", customerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidSchemePlanTypeRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", schemePlanTypeFormatError, None)),
           ("AA123456A", "2019-20", nonsenseRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),
@@ -1356,7 +1344,6 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldErrors, None)),
           ("AA123456A", "2019-20", invalidLumpSumsRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", ruleLumpSumsError, None))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -1394,10 +1381,8 @@ class AmendOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

@@ -24,6 +24,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
 import v1.requestParsers.validators.validations.DisposalDateErrorMessages
 
@@ -423,14 +424,16 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def verifyNrs(payload: JsValue): Unit =
       verify(
         postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
           .withRequestBody(equalToJson(payload.toString())))
-
   }
 
   "Calling the 'create and amend other CGT' endpoint" should {
@@ -499,7 +502,6 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
           ("AA123456A", "2021-22", ruleDateJson, BAD_REQUEST, BadRequestError, Some(ruleDateErrors), Some("ruleDate")),
           ("AA123456A", "2021-22", formatNonStandardGainsJson, BAD_REQUEST, formatNonStandardGainsError, None, Some("formatNonStandardGains"))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -540,10 +542,8 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

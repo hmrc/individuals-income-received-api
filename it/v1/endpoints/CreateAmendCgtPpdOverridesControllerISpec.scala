@@ -24,6 +24,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
 
 class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with WireMockMethods {
@@ -393,7 +394,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def verifyNrs(payload: JsValue): Unit =
@@ -454,6 +458,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None, None),
           ("AA123456A", "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None, None),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None, None),
+
           // Body Errors
           ("AA123456A", "2020-21", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
           ("AA123456A", "2020-21", nonsenseBodyJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("nonsenseBody")),
@@ -464,16 +469,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
           ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
-          (
-            "AA123456A",
-            "2020-21",
-            jsonWithIds("DuplicatedId", "DuplicatedId"),
-            BAD_REQUEST,
-            ppdDuplicatedIdError("DuplicatedId"),
-            None,
-            Some("duplicatedIDs"))
+          ("AA123456A", "2020-21", jsonWithIds("DuplicatedId", "DuplicatedId"), BAD_REQUEST, ppdDuplicatedIdError("DuplicatedId"), None, Some("duplicatedIDs"))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -518,10 +515,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

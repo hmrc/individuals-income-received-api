@@ -23,6 +23,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
 class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
@@ -41,9 +42,11 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'delete cgt non-ppd disposals' endpoint" should {
@@ -91,7 +94,6 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2019-21", BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -128,10 +130,8 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

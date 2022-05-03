@@ -23,6 +23,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveNonPayeEmploymentControllerFixture
 
@@ -53,9 +54,11 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'retrieve non-paye' endpoint" should {
@@ -110,7 +113,6 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", None, BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2019-20", Some("BadSource"), BAD_REQUEST, SourceFormatError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -150,10 +152,8 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

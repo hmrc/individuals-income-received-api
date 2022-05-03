@@ -24,14 +24,15 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
 class AmendPensionsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val taxYear: String       = "2019-20"
+    val nino: String = "AA123456A"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -114,9 +115,11 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'amend pensions' endpoint" should {
@@ -142,48 +145,48 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
-             |{
-             |   "foreignPensions": [
-             |      {
-             |         "countryCode": "SBT",
-             |         "amountBeforeTax": 100.234,
-             |         "taxTakenOff": 1.235,
-             |         "specialWithholdingTax": -2.23,
-             |         "foreignTaxCreditRelief": false,
-             |         "taxableAmount": -3.23
-             |      },
-             |      {
-             |         "countryCode": "FRANCE",
-             |         "amountBeforeTax": -200.25,
-             |         "taxTakenOff": 1.273,
-             |         "specialWithholdingTax": -2.50,
-             |         "foreignTaxCreditRelief": true,
-             |         "taxableAmount": 3.508
-             |      }
-             |   ],
-             |   "overseasPensionContributions": [
-             |      {
-             |         "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-             |         "exemptEmployersPensionContribs": 200.237,
-             |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
-             |         "dblTaxationRelief": -4.238,
-             |         "dblTaxationCountryCode": "PUR",
-             |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
-             |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
-             |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
-             |      },
-             |      {
-             |         "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-             |         "exemptEmployersPensionContribs": -270.509,
-             |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
-             |         "dblTaxationRelief": 5.501,
-             |         "dblTaxationCountryCode": "GERMANY",
-             |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
-             |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
-             |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
-             |      }
-             |   ]
-             |}
+            |{
+            |   "foreignPensions": [
+            |      {
+            |         "countryCode": "SBT",
+            |         "amountBeforeTax": 100.234,
+            |         "taxTakenOff": 1.235,
+            |         "specialWithholdingTax": -2.23,
+            |         "foreignTaxCreditRelief": false,
+            |         "taxableAmount": -3.23
+            |      },
+            |      {
+            |         "countryCode": "FRANCE",
+            |         "amountBeforeTax": -200.25,
+            |         "taxTakenOff": 1.273,
+            |         "specialWithholdingTax": -2.50,
+            |         "foreignTaxCreditRelief": true,
+            |         "taxableAmount": 3.508
+            |      }
+            |   ],
+            |   "overseasPensionContributions": [
+            |      {
+            |         "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+            |         "exemptEmployersPensionContribs": 200.237,
+            |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
+            |         "dblTaxationRelief": -4.238,
+            |         "dblTaxationCountryCode": "PUR",
+            |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
+            |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
+            |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
+            |      },
+            |      {
+            |         "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+            |         "exemptEmployersPensionContribs": -270.509,
+            |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
+            |         "dblTaxationRelief": 5.501,
+            |         "dblTaxationCountryCode": "GERMANY",
+            |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
+            |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
+            |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
+            |      }
+            |   ]
+            |}
           """.stripMargin
         )
 
@@ -276,7 +279,8 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
 
       "complex error scenario" in new Test {
 
-        val iirPensionsIncomeAmendErrorsRequest: JsValue = Json.parse("""
+        val iirPensionsIncomeAmendErrorsRequest: JsValue = Json.parse(
+          """
             |{
             |   "foreignPensions":[
             |      {
@@ -321,7 +325,8 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
             |}
             |""".stripMargin)
 
-        val iirPensionsIncomeAmendErrorsResponse: JsValue = Json.parse("""
+        val iirPensionsIncomeAmendErrorsResponse: JsValue = Json.parse(
+          """
             |{
             |   "code":"INVALID_REQUEST",
             |   "message":"Invalid request",
@@ -543,117 +548,117 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
 
       val invalidQOPSRefRequestBodyJson: JsValue = Json.parse(
         """
-           |{
-           |   "overseasPensionContributions": [
-           |      {
-           |         "customerReference": "PENSIONINCOME245",
-           |         "exemptEmployersPensionContribs": 200.23,
-           |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
-           |         "dblTaxationRelief": 4.23,
-           |         "dblTaxationCountryCode": "FRA",
-           |         "dblTaxationArticle": "AB3211-1",
-           |         "dblTaxationTreaty": "Treaty",
-           |         "sf74reference": "SF74-123456"
-           |      },
-           |      {
-           |         "customerReference": "PENSIONINCOME275",
-           |         "exemptEmployersPensionContribs": 270.50,
-           |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
-           |         "dblTaxationRelief": 5.50,
-           |         "dblTaxationCountryCode": "NGA",
-           |         "dblTaxationArticle": "AB3477-5",
-           |         "dblTaxationTreaty": "Treaty",
-           |         "sf74reference": "SF74-1235"
-           |      }
-           |   ]
-           |}
+          |{
+          |   "overseasPensionContributions": [
+          |      {
+          |         "customerReference": "PENSIONINCOME245",
+          |         "exemptEmployersPensionContribs": 200.23,
+          |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
+          |         "dblTaxationRelief": 4.23,
+          |         "dblTaxationCountryCode": "FRA",
+          |         "dblTaxationArticle": "AB3211-1",
+          |         "dblTaxationTreaty": "Treaty",
+          |         "sf74reference": "SF74-123456"
+          |      },
+          |      {
+          |         "customerReference": "PENSIONINCOME275",
+          |         "exemptEmployersPensionContribs": 270.50,
+          |         "migrantMemReliefQopsRefNo": "This qopsRef string is 91 characters long ---------------------------------------------- 91",
+          |         "dblTaxationRelief": 5.50,
+          |         "dblTaxationCountryCode": "NGA",
+          |         "dblTaxationArticle": "AB3477-5",
+          |         "dblTaxationTreaty": "Treaty",
+          |         "sf74reference": "SF74-1235"
+          |      }
+          |   ]
+          |}
         """.stripMargin
       )
 
       val invalidDoubleTaxationArticleRequestBodyJson: JsValue = Json.parse(
         """
-           |{
-           |   "overseasPensionContributions": [
-           |      {
-           |         "customerReference": "PENSIONINCOME245",
-           |         "exemptEmployersPensionContribs": 200.23,
-           |         "migrantMemReliefQopsRefNo": "QOPS000000",
-           |         "dblTaxationRelief": 4.23,
-           |         "dblTaxationCountryCode": "FRA",
-           |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
-           |         "dblTaxationTreaty": "Treaty",
-           |         "sf74reference": "SF74-123456"
-           |      },
-           |      {
-           |         "customerReference": "PENSIONINCOME275",
-           |         "exemptEmployersPensionContribs": 270.50,
-           |         "migrantMemReliefQopsRefNo": "QOPS000245",
-           |         "dblTaxationRelief": 5.50,
-           |         "dblTaxationCountryCode": "NGA",
-           |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
-           |         "dblTaxationTreaty": "Treaty",
-           |         "sf74reference": "SF74-1235"
-           |      }
-           |   ]
-           |}
+          |{
+          |   "overseasPensionContributions": [
+          |      {
+          |         "customerReference": "PENSIONINCOME245",
+          |         "exemptEmployersPensionContribs": 200.23,
+          |         "migrantMemReliefQopsRefNo": "QOPS000000",
+          |         "dblTaxationRelief": 4.23,
+          |         "dblTaxationCountryCode": "FRA",
+          |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
+          |         "dblTaxationTreaty": "Treaty",
+          |         "sf74reference": "SF74-123456"
+          |      },
+          |      {
+          |         "customerReference": "PENSIONINCOME275",
+          |         "exemptEmployersPensionContribs": 270.50,
+          |         "migrantMemReliefQopsRefNo": "QOPS000245",
+          |         "dblTaxationRelief": 5.50,
+          |         "dblTaxationCountryCode": "NGA",
+          |         "dblTaxationArticle": "This dblTaxationArticle string is 91 characters long ------------------------------------91",
+          |         "dblTaxationTreaty": "Treaty",
+          |         "sf74reference": "SF74-1235"
+          |      }
+          |   ]
+          |}
         """.stripMargin
       )
 
       val invalidDoubleTaxationTreatyRequestBodyJson: JsValue = Json.parse(
         """
-           |{
-           |   "overseasPensionContributions": [
-           |      {
-           |         "customerReference": "PENSIONINCOME245",
-           |         "exemptEmployersPensionContribs": 200.23,
-           |         "migrantMemReliefQopsRefNo": "QOPS000000",
-           |         "dblTaxationRelief": 4.23,
-           |         "dblTaxationCountryCode": "FRA",
-           |         "dblTaxationArticle": "AB3211-1",
-           |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
-           |         "sf74reference": "SF74-123456"
-           |      },
-           |      {
-           |         "customerReference": "PENSIONINCOME275",
-           |         "exemptEmployersPensionContribs": 270.50,
-           |         "migrantMemReliefQopsRefNo": "QOPS000245",
-           |         "dblTaxationRelief": 5.50,
-           |         "dblTaxationCountryCode": "NGA",
-           |         "dblTaxationArticle": "AB3477-5",
-           |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
-           |         "sf74reference": "SF74-1235"
-           |      }
-           |   ]
-           |}
+          |{
+          |   "overseasPensionContributions": [
+          |      {
+          |         "customerReference": "PENSIONINCOME245",
+          |         "exemptEmployersPensionContribs": 200.23,
+          |         "migrantMemReliefQopsRefNo": "QOPS000000",
+          |         "dblTaxationRelief": 4.23,
+          |         "dblTaxationCountryCode": "FRA",
+          |         "dblTaxationArticle": "AB3211-1",
+          |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
+          |         "sf74reference": "SF74-123456"
+          |      },
+          |      {
+          |         "customerReference": "PENSIONINCOME275",
+          |         "exemptEmployersPensionContribs": 270.50,
+          |         "migrantMemReliefQopsRefNo": "QOPS000245",
+          |         "dblTaxationRelief": 5.50,
+          |         "dblTaxationCountryCode": "NGA",
+          |         "dblTaxationArticle": "AB3477-5",
+          |         "dblTaxationTreaty": "This dblTaxationTreaty string is 91 characters long -------------------------------------91",
+          |         "sf74reference": "SF74-1235"
+          |      }
+          |   ]
+          |}
         """.stripMargin
       )
 
       val invalidSF74RefRequestBodyJson: JsValue = Json.parse(
         """
-           |{
-           |   "overseasPensionContributions": [
-           |      {
-           |         "customerReference": "PENSIONINCOME245",
-           |         "exemptEmployersPensionContribs": 200.23,
-           |         "migrantMemReliefQopsRefNo": "QOPS000000",
-           |         "dblTaxationRelief": 4.23,
-           |         "dblTaxationCountryCode": "FRA",
-           |         "dblTaxationArticle": "AB3211-1",
-           |         "dblTaxationTreaty": "Treaty",
-           |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
-           |      },
-           |      {
-           |         "customerReference": "PENSIONINCOME275",
-           |         "exemptEmployersPensionContribs": 270.50,
-           |         "migrantMemReliefQopsRefNo": "QOPS000245",
-           |         "dblTaxationRelief": 5.50,
-           |         "dblTaxationCountryCode": "NGA",
-           |         "dblTaxationArticle": "AB3477-5",
-           |         "dblTaxationTreaty": "Treaty",
-           |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
-           |      }
-           |   ]
-           |}
+          |{
+          |   "overseasPensionContributions": [
+          |      {
+          |         "customerReference": "PENSIONINCOME245",
+          |         "exemptEmployersPensionContribs": 200.23,
+          |         "migrantMemReliefQopsRefNo": "QOPS000000",
+          |         "dblTaxationRelief": 4.23,
+          |         "dblTaxationCountryCode": "FRA",
+          |         "dblTaxationArticle": "AB3211-1",
+          |         "dblTaxationTreaty": "Treaty",
+          |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
+          |      },
+          |      {
+          |         "customerReference": "PENSIONINCOME275",
+          |         "exemptEmployersPensionContribs": 270.50,
+          |         "migrantMemReliefQopsRefNo": "QOPS000245",
+          |         "dblTaxationRelief": 5.50,
+          |         "dblTaxationCountryCode": "NGA",
+          |         "dblTaxationArticle": "AB3477-5",
+          |         "dblTaxationTreaty": "Treaty",
+          |         "sf74reference": "This sf74Ref string is 91 characters long ---------------------------------------------- 91"
+          |      }
+          |   ]
+          |}
         """.stripMargin
       )
 
@@ -829,8 +834,8 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String             = requestNino
-            override val taxYear: String          = requestTaxYear
+            override val nino: String = requestNino
+            override val taxYear: String = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -862,7 +867,6 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, nonValidRequestBodyErrors, Some("(invalid request body format)")),
           ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, missingFieldRequestBodyErrors, Some("(missing mandatory fields)"))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -899,10 +903,8 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

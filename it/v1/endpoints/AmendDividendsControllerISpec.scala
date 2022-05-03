@@ -24,14 +24,15 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
 class AmendDividendsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
-    val taxYear: String       = "2019-20"
+    val nino: String = "AA123456A"
+    val taxYear: String = "2019-20"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -126,9 +127,11 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'amend dividends' endpoint" should {
@@ -154,60 +157,60 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
-             |{
-             |   "foreignDividend": [
-             |      {
-             |        "countryCode": "GERMANY",
-             |        "amountBeforeTax": -1232.22,
-             |        "taxTakenOff": 22.223,
-             |        "specialWithholdingTax": 27.354,
-             |        "foreignTaxCreditRelief": true,
-             |        "taxableAmount": -2321.22
-             |      },
-             |      {
-             |        "countryCode": "PUR",
-             |        "amountBeforeTax": 1350.559,
-             |        "taxTakenOff": 25.278,
-             |        "specialWithholdingTax": -30.59,
-             |        "foreignTaxCreditRelief": false,
-             |        "taxableAmount": -2500.99
-             |      }
-             |   ],
-             |   "dividendIncomeReceivedWhilstAbroad": [
-             |      {
-             |        "countryCode": "FRANCE",
-             |        "amountBeforeTax": 1232.227,
-             |        "taxTakenOff": 22.224,
-             |        "specialWithholdingTax": 27.358,
-             |        "foreignTaxCreditRelief": true,
-             |        "taxableAmount": 2321.229
-             |      },
-             |      {
-             |        "countryCode": "SBT",
-             |        "amountBeforeTax": -1350.55,
-             |        "taxTakenOff": -25.27,
-             |        "specialWithholdingTax": -30.59,
-             |        "foreignTaxCreditRelief": false,
-             |        "taxableAmount": -2500.99
-             |       }
-             |   ],
-             |   "stockDividend": {
-             |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-             |      "grossAmount": -12321.22
-             |   },
-             |   "redeemableShares": {
-             |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-             |      "grossAmount": 12345.758
-             |   },
-             |   "bonusIssuesOfSecurities": {
-             |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-             |      "grossAmount": -12500.89
-             |   },
-             |   "closeCompanyLoansWrittenOff": {
-             |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-             |      "grossAmount": 13700.557
-             |   }
-             |}
+            |{
+            |   "foreignDividend": [
+            |      {
+            |        "countryCode": "GERMANY",
+            |        "amountBeforeTax": -1232.22,
+            |        "taxTakenOff": 22.223,
+            |        "specialWithholdingTax": 27.354,
+            |        "foreignTaxCreditRelief": true,
+            |        "taxableAmount": -2321.22
+            |      },
+            |      {
+            |        "countryCode": "PUR",
+            |        "amountBeforeTax": 1350.559,
+            |        "taxTakenOff": 25.278,
+            |        "specialWithholdingTax": -30.59,
+            |        "foreignTaxCreditRelief": false,
+            |        "taxableAmount": -2500.99
+            |      }
+            |   ],
+            |   "dividendIncomeReceivedWhilstAbroad": [
+            |      {
+            |        "countryCode": "FRANCE",
+            |        "amountBeforeTax": 1232.227,
+            |        "taxTakenOff": 22.224,
+            |        "specialWithholdingTax": 27.358,
+            |        "foreignTaxCreditRelief": true,
+            |        "taxableAmount": 2321.229
+            |      },
+            |      {
+            |        "countryCode": "SBT",
+            |        "amountBeforeTax": -1350.55,
+            |        "taxTakenOff": -25.27,
+            |        "specialWithholdingTax": -30.59,
+            |        "foreignTaxCreditRelief": false,
+            |        "taxableAmount": -2500.99
+            |       }
+            |   ],
+            |   "stockDividend": {
+            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+            |      "grossAmount": -12321.22
+            |   },
+            |   "redeemableShares": {
+            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+            |      "grossAmount": 12345.758
+            |   },
+            |   "bonusIssuesOfSecurities": {
+            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+            |      "grossAmount": -12500.89
+            |   },
+            |   "closeCompanyLoansWrittenOff": {
+            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
+            |      "grossAmount": 13700.557
+            |   }
+            |}
           """.stripMargin
         )
 
@@ -282,7 +285,8 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
 
       "complex error scenario" in new Test {
 
-        val iirDividendsIncomeAmendErrorsRequest: JsValue = Json.parse("""
+        val iirDividendsIncomeAmendErrorsRequest: JsValue = Json.parse(
+          """
             |{
             |   "foreignDividend": [
             |      {
@@ -339,7 +343,8 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
             |}
             |""".stripMargin)
 
-        val iirDividendsIncomeAmendErrorsResponse: JsValue = Json.parse("""
+        val iirDividendsIncomeAmendErrorsResponse: JsValue = Json.parse(
+          """
             |{
             |   "code":"INVALID_REQUEST",
             |   "message":"Invalid request",
@@ -695,8 +700,8 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String             = requestNino
-            override val taxYear: String          = requestTaxYear
+            override val nino: String = requestNino
+            override val taxYear: String = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -760,10 +765,8 @@ class AmendDividendsControllerISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

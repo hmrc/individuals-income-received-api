@@ -23,14 +23,15 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
 class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String         = "AA123456A"
-    val taxYear: String      = "2019-20"
+    val nino: String = "AA123456A"
+    val taxYear: String = "2019-20"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
     val requestBodyJson: JsValue = Json.parse(
@@ -93,9 +94,11 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
     def request(): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'add custom employment' endpoint" should {
@@ -288,8 +291,8 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String             = requestNino
-            override val taxYear: String          = requestTaxYear
+            override val nino: String = requestNino
+            override val taxYear: String = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -322,7 +325,6 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, invalidFieldType, Some("(wrong field type)")),
           ("AA123456A", "2019-20", missingFieldRequestBodyJson, BAD_REQUEST, missingMandatoryFieldErrors, Some("(missing mandatory fields)"))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -362,10 +364,8 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }

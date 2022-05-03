@@ -24,6 +24,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
 
 class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends IntegrationBaseSpec with WireMockMethods {
@@ -531,7 +532,10 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def verifyNrs(payload: JsValue): Unit =
@@ -604,43 +608,14 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           ("AA123456A", "2019-20", datesNotFormattedJson, BAD_REQUEST, datesNotFormattedError, None, Some("incorrect date formats")),
           ("AA123456A", "2019-20", customerRefTooLongJson, BAD_REQUEST, customerRefError, None, Some("bad customer reference")),
           ("AA123456A", "2019-20", customerRefTooShortJson, BAD_REQUEST, customerRefError, None, Some("empty customer reference string")),
-          (
-            "AA123456A",
-            "2019-20",
-            completionBeforeDisposalJson,
-            BAD_REQUEST,
-            completionBeforeDisposalError,
-            None,
-            Some("completion date before disposal date")),
-          (
-            "AA123456A",
-            "2019-20",
-            acquisitionAfterDisposalJson,
-            BAD_REQUEST,
-            acquisitionAfterDisposalError,
-            None,
-            Some("acquisition date after disposal date")),
-          (
-            "AA123456A",
-            "2019-20",
-            completionDateJson,
-            BAD_REQUEST,
-            completionDateError,
-            None,
-            Some("completion date outside valid submission window")),
+          ("AA123456A", "2019-20", completionBeforeDisposalJson, BAD_REQUEST, completionBeforeDisposalError, None, Some("completion date before disposal date")),
+          ("AA123456A", "2019-20", acquisitionAfterDisposalJson, BAD_REQUEST, acquisitionAfterDisposalError, None, Some("acquisition date after disposal date")),
+          ("AA123456A", "2019-20", completionDateJson, BAD_REQUEST, completionDateError, None, Some("completion date outside valid submission window")),
           ("AA123456A", "2019-20", disposalDateJson, BAD_REQUEST, disposalDateError, None, Some("disposal date outside tax year")),
           ("AA123456A", "2019-20", gainLossJson, BAD_REQUEST, gainLossError, None, Some("gain and loss provided")),
           ("AA123456A", "2019-20", lossGreaterThanGainJson, BAD_REQUEST, lossGreaterThanGainError, None, Some("loss is greater than gain")),
-          (
-            "AA123456A",
-            "2019-20",
-            lossGreaterThanGainAndLossJson,
-            BAD_REQUEST,
-            BadRequestError,
-            Some(lossGreaterThanGainAndLossError),
-            Some("loss is greater than gain and bith gain and loss provided"))
+          ("AA123456A", "2019-20", lossGreaterThanGainAndLossJson, BAD_REQUEST, BadRequestError, Some(lossGreaterThanGainAndLossError), Some("loss is greater than gain and bith gain and loss provided"))
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -683,10 +658,8 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
-
 }
