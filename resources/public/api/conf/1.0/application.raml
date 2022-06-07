@@ -91,6 +91,15 @@ uses:
         delete: !include endpoints/dividendsIncome/delete.raml
         put: !include endpoints/dividendsIncome/amend.raml
         get: !include endpoints/dividendsIncome/retrieve.raml
+  /uk-dividends:
+    (annotations.group):
+      name: UK Dividends Income
+      description: Resources relating to an individual's dividends income
+    /{nino}:
+      /{taxYear}:
+        uriParameters:
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
+        delete: !include endpoints/ukDividendsIncome/delete.raml
   /foreign:
     (annotations.group):
       name: Foreign Income
