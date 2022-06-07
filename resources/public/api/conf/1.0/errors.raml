@@ -59,6 +59,17 @@ traits:
                 description: 'The client or agent is not authorised. This is because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.'
                 value:
                   code: CLIENT_OR_AGENT_NOT_AUTHORISED
+  clientOrAgentNotAuthorisedUkDividends:
+    responses:
+      403:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              clientOrAgentNotAuthorisedUkDividends:
+                description: 'The client and/or agent is not authorised. This is normally because: the client is not subscribed to MTD, the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.'
+                value:
+                  code: CLIENT_OR_AGENT_NOT_AUTHORISED
   formatNino:
     responses:
       400:
@@ -101,6 +112,17 @@ traits:
             examples:
               rule_TaxYearNotSupported:
                 description: 'The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value.'
+                value:
+                  code: RULE_TAX_YEAR_NOT_SUPPORTED
+  ruleTaxYearNotSupportedUkDividends:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearNotSupportedUkDividends:
+                description: 'The specified tax year is not supported. The tax year specified is before the minimum tax year value.'
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearNotSupportedMinus4Years:
