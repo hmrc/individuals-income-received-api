@@ -94,11 +94,11 @@ uses:
   /uk-dividends:
     (annotations.group):
       name: UK Dividends Income
-      description: Resources relating to an individual's dividends income
+      description: Resources relating to an individual's UK dividends income
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYearMinimum2021.raml
+          taxYear: !include pathParameters/taxYearMinimum2017.raml
         delete: !include endpoints/ukDividendsIncome/delete.raml
   /foreign:
     (annotations.group):
