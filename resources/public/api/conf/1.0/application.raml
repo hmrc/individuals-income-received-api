@@ -98,7 +98,7 @@ uses:
     /{nino}:
       /{taxYear}:
         uriParameters:
-          taxYear: !include pathParameters/taxYear.raml
+          taxYear: !include pathParameters/taxYearMinimum2021.raml
         delete: !include endpoints/ukDividendsIncome/delete.raml
   /foreign:
     (annotations.group):
