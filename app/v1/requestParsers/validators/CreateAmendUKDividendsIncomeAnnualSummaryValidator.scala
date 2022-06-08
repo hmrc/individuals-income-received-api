@@ -20,7 +20,6 @@ import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
-import v1.models.request.createAmendNonPayeEmployment._
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
   CreateAmendUkDividendsIncomeAnnualSummaryRawData
@@ -54,33 +53,32 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() (implicit cur
   private def parameterRuleValidation: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
   private def bodyFormatValidator: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[CreateAmendNonPayeEmploymentRequestBody](data.body.json)
+      JsonFormatValidation.validate[CreateAmendUkDividendsIncomeAnnualSummaryBody](data.body.json)
     )
   }
 
-  private def bodyValueValidator: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[MtdError] = { data =>
+  private def bodyValueValidator: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = { data =>
     val requestBody = data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryBody]
 
     List(
-    Validator.flattenErrors(
-      List(
-        DecimalValueValidation.validateOptional(
-          amount = requestBody.ukDividends,
-          path = s"/ukDividends"
-        ),
-        DecimalValueValidation.validateOptional(
-          amount = requestBody.otherUkDividends,
-          path = s"/otherUkDividends"
+      Validator.flattenErrors(
+        List(
+          DecimalValueValidation.validateOptional(
+            amount = requestBody.ukDividends,
+            path = s"/ukDividends"
+          ),
+          DecimalValueValidation.validateOptional(
+            amount = requestBody.otherUkDividends,
+            path = s"/otherUkDividends"
+          )
         )
       )
     )
-    ).flatten
   }
 
 }
