@@ -20,15 +20,18 @@ import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
-import v1.requestParsers.validators.validations._
 import v1.models.request.createAmendNonPayeEmployment._
-import v1.requestParsers.validators.validations.{JsonFormatValidation, NinoValidation, TaxYearNotEndedValidation, TaxYearNotSupportedValidation, TaxYearValidation, TipsValidation}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
+  CreateAmendUkDividendsIncomeAnnualSummaryBody,
+  CreateAmendUkDividendsIncomeAnnualSummaryRawData
+}
+import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-  extends Validator[CreateAmendNonPayeEmploymentRawData] {
+class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+    extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
 
   private val validationSet = List(
     parameterFormatValidation,
@@ -37,39 +40,47 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject()(implicit curr
     bodyValueValidator
   )
 
-  override def validate(data: CreateAmendUKDividendsIncomeAnnualSalaryRawData): List[MtdError] = {
+  override def validate(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: CreateAmendUKDividendsINcomeAnnualSalaryRawData => List[List[MtdError]] = data => {
+  private def parameterFormatValidation: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: CreateAmendUKDividendsINcomeAnnualSalaryRawData  => List[List[MtdError]] = data => {
+  private def parameterRuleValidation: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
       TaxYearNotEndedValidation.validate(data.taxYear)
     )
   }
 
-  private def bodyFormatValidator: CreateAmendUKDividendsINcomeAnnualSalaryRawData  => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = { data =>
     List(
       JsonFormatValidation.validate[CreateAmendNonPayeEmploymentRequestBody](data.body.json)
     )
   }
 
-  private def bodyValueValidator: CreateAmendNonPayeEmploymentRawData => List[List[MtdError]] = { data =>
-    val requestBody = data.body.json.as[CreateAmendNonPayeEmploymentRequestBody]
+  private def bodyValueValidator: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[MtdError] = { data =>
+    val requestBody = data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryBody]
 
     List(
-      TipsValidation.validateWithPath(
-        amount = requestBody.tips,
-        path = s"/"
+    Validator.flattenErrors(
+      List(
+        DecimalValueValidation.validateOptional(
+          amount = requestBody.ukDividends,
+          path = s"/ukDividends"
+        ),
+        DecimalValueValidation.validateOptional(
+          amount = requestBody.otherUkDividends,
+          path = s"/otherUkDividends"
+        )
       )
     )
+    ).flatten
   }
 
 }
