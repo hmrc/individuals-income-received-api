@@ -16,7 +16,7 @@
 
 package v1.requestParsers.validators
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 
 import java.time.LocalDate
 import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
@@ -34,7 +34,7 @@ package object validations {
     val SIX   = 6
     val FIVE  = 5
 
-    val year     = LocalDate.parse(DesTaxYear.fromMtd(taxYear).value, yearFormat)
+    val year     = LocalDate.parse(TaxYear.fromMtd(taxYear).toDownstream, yearFormat)
     val fromDate = year.minusYears(1).withMonth(APRIL).withDayOfMonth(SIX)
     val toDate   = year.withMonth(APRIL).withDayOfMonth(FIVE)
 

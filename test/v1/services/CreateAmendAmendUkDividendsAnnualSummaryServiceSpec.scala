@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{DesTaxYear, Nino}
+import api.models.domain.{TaxYear, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -33,7 +33,7 @@ class CreateAmendAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
   private val request = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
     nino = Nino("AA112233A"),
-    taxYear = DesTaxYear.fromMtd("2019-20"),
+    taxYear = TaxYear.fromMtd("2019-20"),
     body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
   )
 

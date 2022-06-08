@@ -36,7 +36,7 @@ class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClie
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.value
+    val taxYear = request.taxYear.toDownstream
 
     post(
       uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),

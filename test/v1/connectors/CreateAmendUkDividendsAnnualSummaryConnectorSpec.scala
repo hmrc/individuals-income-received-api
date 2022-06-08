@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
-import api.models.domain.{DesTaxYear, Nino}
+import api.models.domain.{TaxYear, Nino}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
@@ -39,7 +39,7 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
   private val request = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
     nino = Nino(nino),
-    taxYear = DesTaxYear.fromMtd(taxYear),
+    taxYear = TaxYear.fromMtd(taxYear),
     body = body
   )
 

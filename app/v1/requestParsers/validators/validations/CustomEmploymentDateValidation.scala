@@ -16,7 +16,7 @@
 
 package v1.requestParsers.validators.validations
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import api.models.errors.{
   CessationDateFormatError,
   MtdError,
@@ -33,7 +33,7 @@ object CustomEmploymentDateValidation {
   def validate(startDate: String, cessationDate: Option[String], taxYear: String): List[MtdError] = {
 
     lazy val taxYearStartDate: LocalDate = LocalDate.parse(taxYear.take(4) + "-04-06", dateFormat)
-    lazy val taxYearEndDate: LocalDate   = LocalDate.parse(DesTaxYear.fromMtd(taxYear) + "-04-05", dateFormat)
+    lazy val taxYearEndDate: LocalDate   = LocalDate.parse(TaxYear.fromMtd(taxYear).toDownstream + "-04-05", dateFormat)
 
     val formatErrors: List[MtdError] = List(
       Some(DateFormatValidation.validate(startDate, StartDateFormatError)),
