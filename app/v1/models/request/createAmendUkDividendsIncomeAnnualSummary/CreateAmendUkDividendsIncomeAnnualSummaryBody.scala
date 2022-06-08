@@ -18,8 +18,7 @@ package v1.models.request.createAmendUkDividendsIncomeAnnualSummary
 
 import play.api.libs.json.{Json, OFormat}
 
-case class CreateAmendUkDividendsIncomeAnnualSummaryBody(ukDividends: Option[BigDecimal],
-                                                         otherUkDividends: Option[BigDecimal])
+case class CreateAmendUkDividendsIncomeAnnualSummaryBody(ukDividends: Option[BigDecimal], otherUkDividends: Option[BigDecimal])
 
 object CreateAmendUkDividendsIncomeAnnualSummaryBody {
   implicit val format: OFormat[CreateAmendUkDividendsIncomeAnnualSummaryBody] = Json.format[CreateAmendUkDividendsIncomeAnnualSummaryBody]

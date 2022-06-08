@@ -18,17 +18,19 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
+import v1.requestParsers.validators.CreateAmendUKDividendsIncomeAnnualSummaryValidator
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUKDividendsIncomeAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUkDividendsIncomeAnnualSummaryValidator)
-  extends RequestParser[CreateAmendUKDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest] {
+class CreateAmendUKDividendsIncomeAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUKDividendsIncomeAnnualSummaryValidator)
+    extends RequestParser[CreateAmendUKDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest] {
 
   override protected def requestFor(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CreateAmendUkDividendsIncomeAnnualSummaryRequest =
     CreateAmendUkDividendsIncomeAnnualSummaryRequest(
       Nino(data.nino),
       data.taxYear,
-      data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryRequestBody])
+      data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryRequest])
 
 }
