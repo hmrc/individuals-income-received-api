@@ -33,78 +33,6 @@ trait BaseDownstreamConnector {
 
   private val jsonContentTypeHeader = HeaderNames.CONTENT_TYPE -> MimeTypes.JSON
 
-  private def desHeaderCarrier(hc: HeaderCarrier, correlationId: String, additionalHeaders: (String, String)*): HeaderCarrier = {
-    val passThroughHeaders = hc
-      .headers(appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
-      .filterNot(hdr => additionalHeaders.exists(_._1.equalsIgnoreCase(hdr._1)))
-
-    HeaderCarrier(
-      extraHeaders = hc.extraHeaders ++
-        // Contract headers
-        Seq(
-          "Authorization" -> s"Bearer ${appConfig.desToken}",
-          "Environment"   -> appConfig.desEnv,
-          "CorrelationId" -> correlationId
-        ) ++
-        additionalHeaders ++
-        passThroughHeaders
-    )
-  }
-
-  private def ifsHeaderCarrier(hc: HeaderCarrier, correlationId: String, additionalHeaders: (String, String)*): HeaderCarrier = {
-    val passThroughHeaders = hc
-      .headers(appConfig.ifsEnvironmentHeaders.getOrElse(Seq.empty))
-      .filterNot(hdr => additionalHeaders.exists(_._1.equalsIgnoreCase(hdr._1)))
-
-    HeaderCarrier(
-      extraHeaders = hc.extraHeaders ++
-        // Contract headers
-        Seq(
-          "Authorization" -> s"Bearer ${appConfig.ifsToken}",
-          "Environment"   -> appConfig.ifsEnv,
-          "CorrelationId" -> correlationId
-        ) ++
-        additionalHeaders ++
-        passThroughHeaders
-    )
-  }
-
-  private def release6HeaderCarrier(hc: HeaderCarrier, correlationId: String, additionalHeaders: (String, String)*): HeaderCarrier = {
-    val passThroughHeaders = hc
-      .headers(appConfig.release6EnvironmentHeaders.getOrElse(Seq.empty))
-      .filterNot(hdr => additionalHeaders.exists(_._1.equalsIgnoreCase(hdr._1)))
-
-    HeaderCarrier(
-      extraHeaders = hc.extraHeaders ++
-        // Contract headers
-        Seq(
-          "Authorization" -> s"Bearer ${appConfig.release6Token}",
-          "Environment"   -> appConfig.release6Env,
-          "CorrelationId" -> correlationId
-        ) ++
-        additionalHeaders ++
-        passThroughHeaders
-    )
-  }
-
-  private def api1661HeaderCarrier(hc: HeaderCarrier, correlationId: String, additionalHeaders: (String, String)*): HeaderCarrier = {
-    val passThroughHeaders = hc
-      .headers(appConfig.api1661EnvironmentHeaders.getOrElse(Seq.empty))
-      .filterNot(hdr => additionalHeaders.exists(_._1.equalsIgnoreCase(hdr._1)))
-
-    HeaderCarrier(
-      extraHeaders = hc.extraHeaders ++
-        // Contract headers
-        Seq(
-          "Authorization" -> s"Bearer ${appConfig.api1661Token}",
-          "Environment"   -> appConfig.api1661Env,
-          "CorrelationId" -> correlationId
-        ) ++
-        additionalHeaders ++
-        passThroughHeaders
-    )
-  }
-
   def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier,
@@ -156,22 +84,38 @@ trait BaseDownstreamConnector {
     doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
   }
 
-  private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String = uri match {
-    case DesUri(value)      => s"${appConfig.desBaseUrl}/$value"
-    case IfsUri(value)      => s"${appConfig.ifsBaseUrl}/$value"
-    case Release6Uri(value) => s"${appConfig.release6BaseUrl}/$value"
-    case Api1661Uri(value)  => s"${appConfig.api1661BaseUrl}/$value"
-  }
+  private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String =
+    s"${configFor(uri).baseUrl}/${uri.value}"
 
   private def getBackendHeaders[Resp](uri: DownstreamUri[Resp],
                                       hc: HeaderCarrier,
                                       correlationId: String,
-                                      additionalHeaders: (String, String)*): HeaderCarrier =
+                                      additionalHeaders: (String, String)*): HeaderCarrier = {
+    val downstreamConfig = configFor(uri)
+
+    val passThroughHeaders = hc
+      .headers(downstreamConfig.environmentHeaders.getOrElse(Seq.empty))
+      .filterNot(hdr => additionalHeaders.exists(_._1.equalsIgnoreCase(hdr._1)))
+
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${downstreamConfig.token}",
+          "Environment"   -> downstreamConfig.env,
+          "CorrelationId" -> correlationId
+        ) ++
+        additionalHeaders ++
+        passThroughHeaders
+    )
+  }
+
+  private def configFor[Resp](uri: DownstreamUri[Resp]) =
     uri match {
-      case DesUri(_)      => desHeaderCarrier(hc, correlationId, additionalHeaders: _*)
-      case IfsUri(_)      => ifsHeaderCarrier(hc, correlationId, additionalHeaders: _*)
-      case Release6Uri(_) => release6HeaderCarrier(hc, correlationId, additionalHeaders: _*)
-      case Api1661Uri(_)  => api1661HeaderCarrier(hc, correlationId, additionalHeaders: _*)
+      case DesUri(_)      => appConfig.desDownstreamConfig
+      case IfsUri(_)      => appConfig.ifsDownstreamConfig
+      case Release6Uri(_) => appConfig.release6DownstreamConfig
+      case Api1661Uri(_)  => appConfig.api1661DownstreamConfig
     }
 
 }
