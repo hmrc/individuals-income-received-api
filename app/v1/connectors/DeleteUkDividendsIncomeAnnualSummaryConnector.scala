@@ -17,10 +17,11 @@
 package v1.connectors
 
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.DownstreamUri.DesUri
 import config.AppConfig
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,8 +37,8 @@ def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
   val nino    = request.nino.nino
   val taxYear = request.taxYear
 
-  delete(
-    uri = Api1661Uri[Unit](s"/income-tax/nino/{nino}/income-source/$nino/annual/$taxYear"),
+  post(
+    uri = DesUri[Unit](s"/income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),
     body = request.body
   )
 }

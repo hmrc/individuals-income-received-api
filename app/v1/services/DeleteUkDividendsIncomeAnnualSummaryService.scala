@@ -25,6 +25,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.DeleteUkDividendsIncomeAnnualSummaryConnector
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
