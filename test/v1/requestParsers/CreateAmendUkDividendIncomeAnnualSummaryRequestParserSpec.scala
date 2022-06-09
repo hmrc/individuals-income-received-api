@@ -16,19 +16,18 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.mocks.validators.MockCreateAmendNonPayeEmploymentValidator
-import api.models.errors.BadRequestError
-import v1.models.request.createAmendNonPayeEmployment._
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData}
+import v1.mocks.validators.MockCreateAmendUkDividendsAnnualSummaryValidator
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary._
 
 class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitSpec {
   val nino: String                   = "AA123456B"
-  val taxYear: String                = "2019-20"
+  val taxYear: TaxYear            = TaxYear.fromDownstream("2019-20")
+  val taxYearString:String          ="2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
   val validUkDividends:BigDecimal = 55844806400.99
   val validOtherUkDividends:BigDecimal = 60267421355.99
@@ -50,13 +49,13 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
 
   private val rawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
     nino = nino,
-    taxYear = taxYear,
+    taxYear = taxYearString,
     body = rawRequestBody
   )
 
-  trait Test extends MockCreateAmendNonPayeEmploymentValidator {
+  trait Test extends MockCreateAmendUkDividendsAnnualSummaryValidator {
 
-    lazy val parser: CreateAmendNonPayeEmploymentRequestParser = new CreateAmendNonPayeEmploymentRequestParser(
+    lazy val parser: CreateAmendUKDividendsIncomeAnnualSummaryRequestParser = new CreateAmendUKDividendsIncomeAnnualSummaryRequestParser(
       validator = mockValidator
     )
 
@@ -65,10 +64,10 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockCreateAmendNonPayeEmploymentValidator.validate(rawData).returns(Nil)
+        MockCreateAmendUkDividendsAnnualSummaryValidator.validate(rawData).returns(Nil)
 
         parser.parseRequest(rawData) shouldBe
-          Right(CreateAmendNonPayeEmploymentRequest(Nino(nino), taxYear, requestBody))
+          Right(CreateAmendUkDividendsIncomeAnnualSummaryRequest(Nino(nino), taxYear, requestBody))
       }
     }
 
