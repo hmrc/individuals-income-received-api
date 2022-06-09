@@ -19,7 +19,9 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
+
 //import utils.CurrentDateTime
+
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
   CreateAmendUkDividendsIncomeAnnualSummaryRawData
@@ -29,6 +31,7 @@ import v1.requestParsers.validators.validations._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
+
 class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: AppConfig)
     extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
 
@@ -52,7 +55,7 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
 
   private def parameterRuleValidation: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 
@@ -80,5 +83,4 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
       )
     )
   }
-
 }
