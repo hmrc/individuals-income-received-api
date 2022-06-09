@@ -16,6 +16,6 @@
 
 package v1.models.request.deleteUkDividendsIncomeAnnualSummary
 
-import api.models.domain.{DesTaxYear, Nino}
+import api.models.domain.{TaxYear, Nino}
 
-case class DeleteUkDividendsIncomeAnnualSummaryRequest(nino: Nino, taxYear: DesTaxYear)
+case class DeleteUkDividendsIncomeAnnualSummaryRequest(nino: Nino, taxYear: TaxYear)
