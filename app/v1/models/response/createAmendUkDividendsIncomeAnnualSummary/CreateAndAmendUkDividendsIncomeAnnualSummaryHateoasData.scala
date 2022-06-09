@@ -20,7 +20,7 @@ import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 
-object CreateAndAmendUkDividendsIncomeAnnualSummaryResponse extends HateoasLinks {
+object CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData extends HateoasLinks {
 
   implicit object LinksFactory extends HateoasLinksFactory[Unit, CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData] {
 
