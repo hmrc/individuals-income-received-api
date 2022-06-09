@@ -17,7 +17,7 @@
 package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -26,7 +26,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRawData
 
 class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec with MockAppConfig {
@@ -85,7 +84,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    val validator = new CreateAmendUKDividendsIncomeAnnualSummaryValidator()
+    val validator = new CreateAmendUKDividendsIncomeAnnualSummaryValidator(appConfig: AppConfig)
 
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
@@ -140,7 +139,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(
             RuleIncorrectOrEmptyBodyError.copy(
-              paths = Some(Seq("/tips"))
+              paths = Some(Seq("/ukDividends"))
             ))
       }
 
@@ -150,14 +149,14 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
             RuleIncorrectOrEmptyBodyError.copy(
               paths = Some(
                 Seq(
-                  "/tips"
+                  "/ukDividends"
                 ))
             ))
       }
     }
 
     "return ukDividendsFormatError" when {
-      "passed invalid tips" in new Test {
+      "passed invalid ukDividends" in new Test {
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear,  invalidUkDividendsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(paths = Some(
@@ -167,7 +166,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
       }
     }
     "return otherUkDividendsFormatError" when {
-      "passed invalid tips" in new Test {
+      "passed invalid otherUkDividends" in new Test {
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear,  invalidOtherUkDividendsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(paths = Some(

@@ -19,7 +19,7 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import utils.CurrentDateTime
+//import utils.CurrentDateTime
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
   CreateAmendUkDividendsIncomeAnnualSummaryRawData
@@ -29,7 +29,7 @@ import v1.requestParsers.validators.validations._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: AppConfig)
     extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
 
   private val validationSet = List(
