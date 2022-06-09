@@ -16,7 +16,7 @@
 
 package v1.requestParsers.validators.validations
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleCompletionDateError}
 import utils.CurrentDateTime
 import api.models.errors.RuleCompletionDateError
@@ -29,7 +29,7 @@ object CompletionDateValidation {
 
   def validate(date: String, path: String, taxYear: String)(implicit currentDateTime: CurrentDateTime): List[MtdError] = {
     val formattedDate = LocalDate.parse(date)
-    val march7th      = LocalDate.parse(DesTaxYear.fromMtd(taxYear).value, yearFormat).withMonth(MARCH).withDayOfMonth(SEVEN)
+    val march7th      = LocalDate.parse(TaxYear.fromMtd(taxYear).toDownstream, yearFormat).withMonth(MARCH).withDayOfMonth(SEVEN)
 
     val (fromDate, toDate) = getToDateAndFromDate(taxYear)
 
@@ -43,7 +43,7 @@ object CompletionDateValidation {
     val dateIsBefore7thMarch    = formattedDate.isBefore(march7th)
     val dateIsAfterToday        = formattedDate.isAfter(currentDateTime.getLocalDate)
     val dateIsInTaxYear         = !formattedDate.isBefore(fromDate) && !formattedDate.isAfter(toDate)
-    val taxYearIsCurrentTaxYear = DesTaxYear.fromMtd(taxYear).value.toInt == currentTaxYear
+    val taxYearIsCurrentTaxYear = TaxYear.fromMtd(taxYear).toDownstream.toInt == currentTaxYear
 
     if (dateIsBefore7thMarch && taxYearIsCurrentTaxYear || dateIsAfterToday || !dateIsInTaxYear) {
       List(RuleCompletionDateError.copy(paths = Some(Seq(path))))

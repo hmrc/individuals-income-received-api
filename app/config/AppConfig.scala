@@ -31,11 +31,17 @@ trait AppConfig {
   def desToken: String
   def desEnvironmentHeaders: Option[Seq[String]]
 
+  lazy val desDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
+
   // IFS Config
   def ifsBaseUrl: String
   def ifsEnv: String
   def ifsToken: String
   def ifsEnvironmentHeaders: Option[Seq[String]]
+
+  lazy val ifsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
 
   // release6 Config
   def release6BaseUrl: String
@@ -43,11 +49,17 @@ trait AppConfig {
   def release6Token: String
   def release6EnvironmentHeaders: Option[Seq[String]]
 
+  lazy val release6DownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = release6BaseUrl, env = release6Env, token = release6Token, environmentHeaders = release6EnvironmentHeaders)
+
   // Api1661 Config
   def api1661BaseUrl: String
   def api1661Env: String
   def api1661Token: String
   def api1661EnvironmentHeaders: Option[Seq[String]]
+
+  lazy val api1661DownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = api1661BaseUrl, env = api1661Env, token = api1661Token, environmentHeaders = api1661EnvironmentHeaders)
 
   def apiGatewayContext: String
   def minimumPermittedTaxYear: Int

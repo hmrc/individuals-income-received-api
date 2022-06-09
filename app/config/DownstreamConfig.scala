@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package api.models.domain
+package config
 
-import support.UnitSpec
-
-class DesTaxYearSpec extends UnitSpec {
-  private val desYear = "2019"
-  private val mtdYear = "2018-19"
-
-  "fromMtd" should {
-    "return a des tax year" in {
-      DesTaxYear.fromMtd(mtdYear) shouldBe DesTaxYear(desYear)
-    }
-  }
-
-  "toMtd" should {
-    "return an mtd tax year" in {
-      DesTaxYear.toMtd(DesTaxYear(desYear)) shouldBe mtdYear
-    }
-  }
-
-}
+case class DownstreamConfig(
+    baseUrl: String,
+    env: String,
+    token: String,
+    environmentHeaders: Option[Seq[String]]
+)

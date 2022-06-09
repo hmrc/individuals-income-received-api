@@ -16,7 +16,7 @@
 
 package v1.requestParsers.validators.validations
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import api.models.errors.RuleDisposalDateError
 import support.UnitSpec
 
@@ -40,7 +40,7 @@ class DisposalDateValidationSpec extends UnitSpec with DisposalDateErrorMessages
       }
       "the supplied date is within the supplied tax year and validateToday is false" in {
         val year    = now.plusYears(1).getYear.toString
-        val taxYear = DesTaxYear.toMtd(DesTaxYear(year))
+        val taxYear = TaxYear.fromDownstream(year).toMtd
         val date = LocalDate
           .parse(year, yearFormat)
           .withMonth(4)
