@@ -31,7 +31,6 @@ import v1.requestParsers.validators.validations._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-
 class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: AppConfig)
     extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
 

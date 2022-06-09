@@ -33,7 +33,7 @@ class CreateAmendUKDividendsIncomeAnnualSummaryRequestParser @Inject() (val vali
     CreateAmendUkDividendsIncomeAnnualSummaryRequest(
       Nino(data.nino),
       TaxYear.fromMtd(data.taxYear),
-      data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryBody])
+      data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryBody]
   )
 
 }

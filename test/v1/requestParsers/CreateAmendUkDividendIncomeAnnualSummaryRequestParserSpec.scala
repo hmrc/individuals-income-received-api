@@ -73,7 +73,7 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
 
     "return an ErrorWrapper" when {
       "a single validation occurs" in new Test {
-        MockCreateAmendNonPayeEmploymentValidator
+        MockCreateAmendUkDividendsAnnualSummaryValidator
           .validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
@@ -83,7 +83,7 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
       }
 
       "multiple validation errors occur" in new Test {
-        MockCreateAmendNonPayeEmploymentValidator
+        MockCreateAmendUkDividendsAnnualSummaryValidator
           .validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
