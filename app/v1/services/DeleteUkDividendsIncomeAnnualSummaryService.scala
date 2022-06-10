@@ -21,7 +21,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.DeleteUkDividendsIncomeAnnualSummaryConnector
@@ -29,6 +29,7 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsI
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUkDividendsIncomeAnnualSummaryConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
@@ -38,7 +39,7 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
                                                                    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.addEmployment(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
@@ -46,7 +47,7 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_TAXABLE_ENTITY_ID"         -> NinoFormatError,
+      "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
       "INVALID_TAX_YEAR"                  -> TaxYearFormatError,
       "INVALID_PAYLOAD"                   -> StandardDownstreamError,
