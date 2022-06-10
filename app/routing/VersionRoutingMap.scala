@@ -52,7 +52,7 @@ case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig,
         logger.info("[VersionRoutingMap][map] using ukDividendsRouter to include UK Dividends routes")
         ukDividendsRouter
       } else {
-        logger.info("[VersionRoutingMap][map] using v1Router to use full routes (sandbox routes)")
+        logger.info("[VersionRoutingMap][map] using v1Router without UK Dividends routes")
         v1Router
       }
     }
