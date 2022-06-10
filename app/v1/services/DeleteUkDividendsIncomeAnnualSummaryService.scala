@@ -30,13 +30,15 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsI
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUkDividendsIncomeAnnualSummaryConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUkDividendsIncomeAnnualSummaryConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
-                                                                   hc: HeaderCarrier,
-                                                                   ec: ExecutionContext,
-                                                                   logContext: EndpointLogContext,
-                                                                   correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDesErrors(desErrorMap))

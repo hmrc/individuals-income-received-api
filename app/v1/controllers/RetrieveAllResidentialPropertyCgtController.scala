@@ -30,10 +30,7 @@ import api.models.domain.MtdSourceEnum
 import api.models.domain.MtdSourceEnum.latest
 import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1.models.response.retrieveAllResidentialPropertyCgt.{
-  RetrieveAllResidentialPropertyCgtHateoasData,
-  RetrieveAllResidentialPropertyCgtResponse
-}
+import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
 import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 
 import javax.inject.{Inject, Singleton}

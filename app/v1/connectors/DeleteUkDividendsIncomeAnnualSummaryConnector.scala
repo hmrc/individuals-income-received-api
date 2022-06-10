@@ -27,24 +27,22 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsI
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-case class DeleteUkDividendsIncomeAnnualSummaryConnector  @Inject() (http: HttpClient, appConfig: AppConfig) extends BaseDownstreamConnector {
+case class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (http: HttpClient, appConfig: AppConfig) extends BaseDownstreamConnector {
 
-def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
-                                                                 hc: HeaderCarrier,
-                                                                 ec: ExecutionContext,
-                                                                 correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-  import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-  val nino    = request.nino.nino
-  val taxYear = request.taxYear
+    val nino    = request.nino.nino
+    val taxYear = request.taxYear
 
-  post(
-    uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.toDownstream}"),
-    body = Json.parse("""{}""")
-  )
-}
-
-
+    post(
+      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.toDownstream}"),
+      body = Json.parse("""{}""")
+    )
+  }
 
 }
