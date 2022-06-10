@@ -44,4 +44,10 @@ case class FeatureSwitch(value: Option[Configuration]) {
 
     enabled.getOrElse(false)
   }
+
+  val isUkDividendsRoutingEnabled: Boolean = value match {
+    case Some(config) => config.getOptional[Boolean]("uk-dividends-endpoints.enabled").getOrElse(true)
+    case None         => true
+  }
+
 }
