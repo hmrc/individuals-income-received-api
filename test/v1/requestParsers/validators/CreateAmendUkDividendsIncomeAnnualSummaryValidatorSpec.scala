@@ -57,13 +57,13 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
 
     private val invalidUkDividendsJson: JsValue = Json.parse(s"""
                                                         |{
-                                                        |  "ukDividends": -1
+                                                        |  "ukDividends": -1,
                                                         |  "otherUkDividends": $validOtherUkDividends
                                                         |}
                                                         |""".stripMargin)
     private val invalidOtherUkDividendsJson: JsValue = Json.parse(s"""
                                                                      |{
-                                                                     |  "ukDividends": $validUkDividends
+                                                                     |  "ukDividends": $validUkDividends,
                                                                      |  "otherUkDividends": -1
                                                                      |}
                                                                      |""".stripMargin)
@@ -138,9 +138,8 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
       "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(
-            RuleIncorrectOrEmptyBodyError.copy(
-              paths = Some(Seq("/ukDividends"))
-            ))
+            RuleIncorrectOrEmptyBodyError
+            )
       }
 
       "the submitted request body is not in the correct format" in new Test {
