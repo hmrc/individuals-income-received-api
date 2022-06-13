@@ -70,7 +70,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
       val input = Seq(
         ("INVALID_NINO", NinoFormatError),
         ("INVALID_TYPE", StandardDownstreamError),
-        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("INVALID_TAXYEAR", TaxYearFormatError),
         ("INVALID_PAYLOAD", StandardDownstreamError),
         ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
         ("MISSING_CHARITIES_NAME_GIFT_AID", StandardDownstreamError),

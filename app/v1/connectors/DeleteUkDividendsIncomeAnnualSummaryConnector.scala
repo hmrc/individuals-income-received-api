@@ -20,14 +20,14 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.DesUri
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
-import play.api.libs.json.Json
+import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-case class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (http: HttpClient, appConfig: AppConfig) extends BaseDownstreamConnector {
+class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
@@ -41,7 +41,7 @@ case class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (http: HttpCl
 
     post(
       uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.toDownstream}"),
-      body = Json.parse("""{}""")
+      body = JsObject.empty
     )
   }
 

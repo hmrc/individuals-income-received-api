@@ -26,7 +26,7 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsI
 
 import scala.concurrent.Future
 
-class DeleteUkDividendsIncomeSummaryConnectorSpec extends ConnectorSpec {
+class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
 
   val nino: String              = "AA123456A"
   val taxYearMtd: String        = "2017-18"
