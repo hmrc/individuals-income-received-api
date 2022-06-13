@@ -21,6 +21,7 @@ import api.requestParsers.validators.Validator
 import config.AppConfig
 import v1.requestParsers.validators.validations.DecimalValueValidation.ZERO_DOUBLE_MINIMUM_INCLUSIVE
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData}
+
 import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
@@ -58,26 +59,6 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
       JsonFormatValidation.validate[CreateAmendUkDividendsIncomeAnnualSummaryBody](data.body.json)
     )
 
-
-//    val jsonFormatError = List(
-//      JsonFormatValidation.validate[CreateAmendUkDividendsIncomeAnnualSummaryBody](data.body.json)
-//    )
-//
-//    val requestBodyObj = data.body.json.asOpt[CreateAmendUkDividendsIncomeAnnualSummaryBody]
-//    val emptyValidation: List[List[MtdError]] = List(
-//      requestBodyObj
-//        .map { body =>
-//          val emptyUkDividendsError: List[String] = if (body.ukDividends.isEmpty) List("/ukDividends") else List()
-//          if (emptyUkDividendsError.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(emptyUkDividendsError)))
-//        }
-//        .getOrElse(NoValidationErrors))
-//
-//    jsonFormatError ++ emptyValidation
-//    if(requestBodyObj.isEmpty){
-//      emptyValidation
-//    }else{
-//      jsonFormatError
-//    }
 
   }
 
