@@ -64,7 +64,7 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockCreateAmendUkDividendsAnnualSummaryValidator.validate(rawData).returns(Nil)
+        MockCreateAmendUkDividendsIncomeAnnualSummaryValidator.validate(rawData).returns(Nil)
 
         parser.parseRequest(rawData) shouldBe
           Right(CreateAmendUkDividendsIncomeAnnualSummaryRequest(Nino(nino), taxYear, requestBody))
@@ -73,7 +73,7 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
 
     "return an ErrorWrapper" when {
       "a single validation occurs" in new Test {
-        MockCreateAmendUkDividendsAnnualSummaryValidator
+        MockCreateAmendUkDividendsIncomeAnnualSummaryValidator
           .validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
@@ -83,7 +83,7 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
       }
 
       "multiple validation errors occur" in new Test {
-        MockCreateAmendUkDividendsAnnualSummaryValidator
+        MockCreateAmendUkDividendsIncomeAnnualSummaryValidator
           .validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
