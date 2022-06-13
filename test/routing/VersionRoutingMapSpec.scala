@@ -16,28 +16,45 @@
 
 package routing
 
+import com.typesafe.config.ConfigFactory
 import definition.Versions
 import mocks.MockAppConfig
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Configuration
 import play.api.routing.Router
 import support.UnitSpec
 
 class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneAppPerSuite {
 
-  val defaultRouter: Router = mock[Router]
-  val v1Routes: v1.Routes   = app.injector.instanceOf[v1.Routes]
+  val defaultRouter: Router                             = mock[Router]
+  val v1Routes: v1.Routes                               = app.injector.instanceOf[v1.Routes]
+  val v1RoutesWithUkDividends: v1WithUkDividends.Routes = app.injector.instanceOf[v1WithUkDividends.Routes]
+
+  private def newVersionRoutingMap(ukDividendsEnabled: Boolean) = {
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"uk-dividends-endpoints.enabled = $ukDividendsEnabled"))))
+
+    VersionRoutingMapImpl(
+      appConfig = mockAppConfig,
+      defaultRouter = defaultRouter,
+      v1Router = v1Routes,
+      ukDividendsRouter = v1RoutesWithUkDividends
+    )
+  }
 
   "map" when {
     "routing to v1" should {
-      s"route to ${v1Routes.toString}" in {
-
-        val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(
-          defaultRouter = defaultRouter,
-          v1Router = v1Routes
-        )
-
+      "route to v1.routes" in {
+        val versionRoutingMap = newVersionRoutingMap(ukDividendsEnabled = false)
         versionRoutingMap.map(Versions.VERSION_1) shouldBe v1Routes
       }
     }
+
+    "routing to v1WithUkDividends" should {
+      "route to v1WithUkDividends.routes" in {
+        val versionRoutingMap = newVersionRoutingMap(ukDividendsEnabled = true)
+        versionRoutingMap.map(Versions.VERSION_1) shouldBe v1RoutesWithUkDividends
+      }
+    }
   }
+
 }
