@@ -50,7 +50,7 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
 
   private def parameterRuleValidation: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.ukDividendsMinimumTaxYear/*appConfig.minimumPermittedTaxYear*/)
     )
   }
 

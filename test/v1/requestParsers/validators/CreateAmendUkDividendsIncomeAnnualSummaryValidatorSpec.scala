@@ -86,11 +86,15 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
 
     val validator = new CreateAmendUKDividendsIncomeAnnualSummaryValidator(appConfig: AppConfig)
 
+    MockedAppConfig.ukDividendsMinimumTaxYear
+      .returns(2018)
+      .anyNumberOfTimes()
+
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
       .anyNumberOfTimes()
 
-    private val MINIMUM_YEAR = 2020
+    private val MINIMUM_YEAR = 2018
     MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR
   }
 
@@ -117,7 +121,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
 
     "return RuleTaxYearNotSupportedError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, "2017-18", validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, "2016-17", validRawRequestBody)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
