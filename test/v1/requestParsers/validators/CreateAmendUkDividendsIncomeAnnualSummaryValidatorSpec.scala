@@ -138,7 +138,14 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
       "a non-empty JSON body is submitted without any expected fields" in new Test {
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(
-            RuleIncorrectOrEmptyBodyError
+            RuleIncorrectOrEmptyBodyError.copy(
+              paths=Some(
+               Seq(
+                 "/ukDividends",
+                 "/otherUkDividends"
+               )
+              )
+            )
             )
       }
 
