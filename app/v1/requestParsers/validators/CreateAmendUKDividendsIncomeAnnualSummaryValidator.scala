@@ -16,12 +16,10 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors.{MtdError}
+import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.requestParsers.validators.validations.DecimalValueValidation.ZERO_DOUBLE_MINIMUM_INCLUSIVE
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData}
-
 import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
@@ -70,12 +68,12 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
         List(
           DecimalValueValidation.validateOptional(
             amount = requestBody.ukDividends,
-            message = ZERO_DOUBLE_MINIMUM_INCLUSIVE,
+            message = "The value must be between 0.00 and 99999999999.99",
             path = "/ukDividends"
           ),
           DecimalValueValidation.validateOptional(
             amount = requestBody.otherUkDividends,
-            message = ZERO_DOUBLE_MINIMUM_INCLUSIVE,
+            message = "The value must be between 0.00 and 99999999999.99",
             path = "/otherUkDividends"
           )
         )
