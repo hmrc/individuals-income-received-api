@@ -101,6 +101,7 @@ uses:
           taxYear: !include pathParameters/taxYearMinimum2017.raml
         delete: !include endpoints/ukDividendsIncome/delete.raml
         put: !include endpoints/ukDividendsIncome/amend.raml
+        get: !include endpoints/ukDividendsIncome/retrieve.raml
   /foreign:
     (annotations.group):
       name: Foreign Income
