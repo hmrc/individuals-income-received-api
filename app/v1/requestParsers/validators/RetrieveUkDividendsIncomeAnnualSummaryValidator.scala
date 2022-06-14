@@ -19,31 +19,31 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRawData
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRawData
 import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[DeleteUkDividendsIncomeAnnualSummaryRawData] {
+class RetrieveUkDividendsIncomeAnnualSummaryValidator @Inject() (implicit appConfig: AppConfig)
+    extends Validator[RetrieveUkDividendsAnnualIncomeSummaryRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteUkDividendsIncomeAnnualSummaryRawData): List[MtdError] = {
+  override def validate(data: RetrieveUkDividendsAnnualIncomeSummaryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: DeleteUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] =
-    (data: DeleteUkDividendsIncomeAnnualSummaryRawData) => {
+  private def parameterFormatValidation: RetrieveUkDividendsAnnualIncomeSummaryRawData => List[List[MtdError]] =
+    (data: RetrieveUkDividendsAnnualIncomeSummaryRawData) => {
       List(
         NinoValidation.validate(data.nino),
         TaxYearValidation.validate(data.taxYear)
       )
     }
 
-  private def parameterRuleValidation: DeleteUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] =
-    (data: DeleteUkDividendsIncomeAnnualSummaryRawData) => {
+  private def parameterRuleValidation: RetrieveUkDividendsAnnualIncomeSummaryRawData => List[List[MtdError]] =
+    (data: RetrieveUkDividendsAnnualIncomeSummaryRawData) => {
       List(
         TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.ukDividendsMinimumTaxYear)
       )
