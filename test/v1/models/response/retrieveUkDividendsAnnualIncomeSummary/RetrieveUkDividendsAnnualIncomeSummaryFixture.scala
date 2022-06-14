@@ -30,24 +30,7 @@ trait RetrieveUkDividendsAnnualIncomeSummaryFixture {
   protected val mtdResponseJson: JsValue = Json.parse("""
       |{
       |  "ukDividends": 10.12,
-      |  "otherUkDividends": 11.12,
-      |  "links":[
-      |      {
-      |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
-      |         "method":"PUT",
-      |         "rel":"create-and-amend-uk-dividends-income"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
-      |         "method":"GET",
-      |         "rel":"self"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
-      |         "method":"DELETE",
-      |         "rel":"delete-uk-dividends-income"
-      |      }
-      |   ]
+      |  "otherUkDividends": 11.12
       |}
       |""".stripMargin)
 

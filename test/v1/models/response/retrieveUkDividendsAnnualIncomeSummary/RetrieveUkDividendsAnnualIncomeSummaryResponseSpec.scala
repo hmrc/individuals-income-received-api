@@ -31,7 +31,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryResponseSpec extends UnitSpec with M
     }
 
     "write to MTD JSON" in {
-      Json.toJson(downstreamResponseJson).as[RetrieveUkDividendsAnnualIncomeSummaryResponse] shouldBe mtdResponseJson
+      Json.toJson(responseModel) shouldBe mtdResponseJson
     }
   }
 
@@ -41,12 +41,14 @@ class RetrieveUkDividendsAnnualIncomeSummaryResponseSpec extends UnitSpec with M
       val taxYear = "mytaxyear"
       val context = "individuals/income-received"
 
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
+
       RetrieveUkDividendsAnnualIncomeSummaryResponse.LinksFactory.links(
         mockAppConfig,
         RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear)) shouldBe
         Seq(
-          Link(s"/$context/uk-dividends/$nino/$taxYear", GET, "self"),
           Link(s"/$context/uk-dividends/$nino/$taxYear", PUT, "create-and-amend-uk-dividends-income"),
+          Link(s"/$context/uk-dividends/$nino/$taxYear", GET, "self"),
           Link(s"/$context/uk-dividends/$nino/$taxYear", DELETE, "delete-uk-dividends-income")
         )
     }
