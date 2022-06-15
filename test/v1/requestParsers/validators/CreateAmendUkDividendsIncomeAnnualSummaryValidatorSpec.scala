@@ -34,6 +34,7 @@ import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRawData
+import v1.requestParsers.validators.validations.DecimalValueValidation.ZERO_MINIMUM_INCLUSIVE
 
 class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec with MockAppConfig {
 
@@ -169,20 +170,24 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
       "passed invalid ukDividends" in new Test {
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, invalidUkDividendsRawRequestBody)) shouldBe
           List(
-            ValueFormatError.copy(paths = Some(
-              Seq(
-                "/ukDividends"
-              ))))
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(
+                Seq(
+                  "/ukDividends"
+                ))))
       }
     }
     "return otherUkDividendsFormatError" when {
       "passed invalid otherUkDividends" in new Test {
         validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, invalidOtherUkDividendsRawRequestBody)) shouldBe
           List(
-            ValueFormatError.copy(paths = Some(
-              Seq(
-                "/otherUkDividends"
-              ))))
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_INCLUSIVE,
+              paths = Some(
+                Seq(
+                  "/otherUkDividends"
+                ))))
       }
     }
 

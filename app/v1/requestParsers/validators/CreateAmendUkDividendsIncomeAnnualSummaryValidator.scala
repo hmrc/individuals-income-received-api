@@ -70,12 +70,10 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject() (appConfig: A
         List(
           DecimalValueValidation.validateOptional(
             amount = requestBody.ukDividends,
-            message = "The value must be between 0.00 and 99999999999.99",
             path = "/ukDividends"
           ),
           DecimalValueValidation.validateOptional(
             amount = requestBody.otherUkDividends,
-            message = "The value must be between 0.00 and 99999999999.99",
             path = "/otherUkDividends"
           )
         )

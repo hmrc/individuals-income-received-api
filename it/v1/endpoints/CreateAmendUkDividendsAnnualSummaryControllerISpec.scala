@@ -25,6 +25,7 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
+import v1.requestParsers.validators.validations.DecimalValueValidation.ZERO_MINIMUM_INCLUSIVE
 
 class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
@@ -91,7 +92,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
           DownstreamStub
             .when(method = DownstreamStub.POST, uri = downstreamUri)
             .withRequestBody(downstreamRequestBodyJson)
-            .thenReturn(status = NO_CONTENT, JsObject.empty)
+            .thenReturn(status = OK, JsObject.empty)
         }
 
         val response: WSResponse = await(request.put(requestJson))
@@ -135,7 +136,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
             "2020-21",
             Json.parse("""{ "ukDividends": -10.99 }""".stripMargin),
             BAD_REQUEST,
-            ValueFormatError.copy(paths = Some(Seq("/ukDividends"))))
+            ValueFormatError.copy(message = ZERO_MINIMUM_INCLUSIVE, paths = Some(Seq("/ukDividends"))))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))

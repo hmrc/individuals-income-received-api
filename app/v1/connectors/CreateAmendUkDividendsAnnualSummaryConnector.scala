@@ -19,6 +19,7 @@ package v1.connectors
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
+import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
 
@@ -34,6 +35,8 @@ class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClie
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+
+    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
     val nino    = request.nino.nino
     val taxYear = request.taxYear.toDownstream
