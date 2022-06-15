@@ -17,7 +17,14 @@
 package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -31,9 +38,9 @@ import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUk
 class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
-    val validNino    = "AA123456A"
-    val validTaxYear = "2019-20"
-    val validUkDividends = 55844806400.99
+    val validNino             = "AA123456A"
+    val validTaxYear          = "2019-20"
+    val validUkDividends      = 55844806400.99
     val validOtherUkDividends = 60267421355.99
 
     private val validRequestBodyJson: JsValue = Json.parse(s"""
@@ -61,6 +68,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
                                                         |  "otherUkDividends": $validOtherUkDividends
                                                         |}
                                                         |""".stripMargin)
+
     private val invalidOtherUkDividendsJson: JsValue = Json.parse(s"""
                                                                      |{
                                                                      |  "ukDividends": $validUkDividends,
@@ -68,11 +76,11 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
                                                                      |}
                                                                      |""".stripMargin)
 
-    val validRawRequestBody: AnyContentAsJson       = AnyContentAsJson(validRequestBodyJson)
-    val emptyRawRequestBody: AnyContentAsJson       = AnyContentAsJson(emptyRequestBodyJson)
-    val nonsenseRawRequestBody: AnyContentAsJson    = AnyContentAsJson(nonsenseRequestBodyJson)
-    val nonValidRawRequestBody: AnyContentAsJson    = AnyContentAsJson(nonValidRequestBodyJson)
-    val invalidUkDividendsRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidUkDividendsJson)
+    val validRawRequestBody: AnyContentAsJson                   = AnyContentAsJson(validRequestBodyJson)
+    val emptyRawRequestBody: AnyContentAsJson                   = AnyContentAsJson(emptyRequestBodyJson)
+    val nonsenseRawRequestBody: AnyContentAsJson                = AnyContentAsJson(nonsenseRequestBodyJson)
+    val nonValidRawRequestBody: AnyContentAsJson                = AnyContentAsJson(nonValidRequestBodyJson)
+    val invalidUkDividendsRawRequestBody: AnyContentAsJson      = AnyContentAsJson(invalidUkDividendsJson)
     val invalidOtherUkDividendsRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidOtherUkDividendsJson)
   }
 
@@ -84,7 +92,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    val validator = new CreateAmendUKDividendsIncomeAnnualSummaryValidator(appConfig: AppConfig)
+    val validator = new CreateAmendUkDividendsIncomeAnnualSummaryValidator(appConfig: AppConfig)
 
     MockedAppConfig.ukDividendsMinimumTaxYear
       .returns(2018)
@@ -159,7 +167,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
 
     "return ukDividendsFormatError" when {
       "passed invalid ukDividends" in new Test {
-        validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear,  invalidUkDividendsRawRequestBody)) shouldBe
+        validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, invalidUkDividendsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(paths = Some(
               Seq(
@@ -169,7 +177,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
     }
     "return otherUkDividendsFormatError" when {
       "passed invalid otherUkDividends" in new Test {
-        validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear,  invalidOtherUkDividendsRawRequestBody)) shouldBe
+        validator.validate(CreateAmendUkDividendsIncomeAnnualSummaryRawData(validNino, validTaxYear, invalidOtherUkDividendsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(paths = Some(
               Seq(
