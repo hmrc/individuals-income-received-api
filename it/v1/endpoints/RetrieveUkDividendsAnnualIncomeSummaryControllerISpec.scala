@@ -16,12 +16,11 @@
 
 package v1.endpoints
 
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE}
-import play.api.libs.json
+import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
@@ -34,8 +33,8 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
     val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
 
-    val ifsResponse: JsValue = ""
-    val mtdResponse: JsValue = ""
+    val ifsResponse: JsValue = Json.parse("""""")
+    val mtdResponse: JsValue = Json.parse("""""")
 
     def uri: String = s"/dividends/$nino/$taxYear"
 

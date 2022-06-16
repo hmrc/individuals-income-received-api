@@ -35,6 +35,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData, RetrieveUkDividendsAnnualIncomeSummaryResponse}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
@@ -82,6 +83,11 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
       rel = DELETE_DIVIDENDS_INCOME
     )
 
+  private val retrieveUkDividendsAnnualIncomeSummaryResponseModel = RetrieveUkDividendsAnnualIncomeSummaryResponse(
+    Some(100.99),
+    Some(100.99)
+  )
+
 
   private val mtdResponse = ""
 
@@ -116,14 +122,14 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkDividendsAnnualIncomeSummaryResponseModel))))
 
         MockHateoasFactory
-          .wrap(RetrieveUkDividendsAnnualIncomeSummaryResponseModel, RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear))
+          .wrap(retrieveUkDividendsAnnualIncomeSummaryResponseModel, RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear))
           .returns(
             HateoasWrapper(
               retrieveUkDividendsAnnualIncomeSummaryResponseModel,
               Seq(
-                amendDividendsLink,
-                retrieveDividendsLink,
-                deleteDividendsLink
+                amendUkDividendsLink,
+                retrieveUkDividendsLink,
+                deleteUkDividendsLink
               )))
 
         val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
