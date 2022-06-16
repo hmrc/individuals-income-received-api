@@ -26,16 +26,17 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
-class DeleteUkDividendsControllerISpec extends IntegrationBaseSpec {
+class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
     val nino: String    = "AA123456A"
-    val taxYear: String = "2019-20"
+    val taxYear: String = "2017-18"
+    val desTaxYear: String = "2018"
 
     def uri: String = s"/uk-dividends/$nino/$taxYear"
 
-    def desUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$taxYear"
+    def desUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$desTaxYear"
 
     def setupStubs(): StubMapping
 

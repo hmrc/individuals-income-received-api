@@ -38,12 +38,12 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    val taxYear = request.taxYear.toDownstream
 
     implicit val successCode: SuccessCode = SuccessCode(NO_CONTENT)
 
     post(
-      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.toMtd}"),
+      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),
       body = JsObject.empty
     )
   }

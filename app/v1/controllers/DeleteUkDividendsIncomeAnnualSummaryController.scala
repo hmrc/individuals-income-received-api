@@ -17,10 +17,7 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
@@ -28,27 +25,28 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRawData
+import v1.requestParsers.DeleteUkDividendsIncomeAnnualSummaryRequestParser
 import v1.services.DeleteUkDividendsIncomeAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteUkDividendsController @Inject()(val authService: EnrolmentsAuthService,
-                                            val lookupService: MtdIdLookupService,
-                                            requestParser: DeleteRetrieveRequestParser,
-                                            service: DeleteUkDividendsIncomeAnnualSummaryService,
-                                            auditService: AuditService,
-                                            cc: ControllerComponents,
-                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteUkDividendsIncomeAnnualSummaryController @Inject()(val authService: EnrolmentsAuthService,
+                                                               val lookupService: MtdIdLookupService,
+                                                               requestParser: DeleteUkDividendsIncomeAnnualSummaryRequestParser,
+                                                               service: DeleteUkDividendsIncomeAnnualSummaryService,
+                                                               auditService: AuditService,
+                                                               cc: ControllerComponents,
+                                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "DeleteUkDividendsController",
+      controllerName = "DeleteUkDividendsIncomeAnnualSummaryController",
       endpointName = "deleteUkDividends"
     )
 
@@ -59,15 +57,14 @@ class DeleteUkDividendsController @Inject()(val authService: EnrolmentsAuthServi
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+      val rawData: DeleteUkDividendsIncomeAnnualSummaryRawData = DeleteUkDividendsIncomeAnnualSummaryRawData(
         nino = nino,
         taxYear = taxYear
       )
 
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          parsedRequest = DeleteUkDividendsIncomeAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.delete(parsedRequest))
         } yield {
           logger.info(
