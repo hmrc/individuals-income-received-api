@@ -19,13 +19,16 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
+  CreateAmendUkDividendsIncomeAnnualSummaryBody,
+  CreateAmendUkDividendsIncomeAnnualSummaryRawData
+}
 import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: AppConfig)
+class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject() (appConfig: AppConfig)
     extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
 
   private val validationSet = List(
@@ -48,7 +51,7 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
 
   private def parameterRuleValidation: CreateAmendUkDividendsIncomeAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.ukDividendsMinimumTaxYear/*appConfig.minimumPermittedTaxYear*/)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.ukDividendsMinimumTaxYear)
     )
   }
 
@@ -56,7 +59,6 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
     List(
       JsonFormatValidation.validate[CreateAmendUkDividendsIncomeAnnualSummaryBody](data.body.json)
     )
-
 
   }
 
@@ -68,12 +70,10 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
         List(
           DecimalValueValidation.validateOptional(
             amount = requestBody.ukDividends,
-            message = "The value must be between 0.00 and 99999999999.99",
             path = "/ukDividends"
           ),
           DecimalValueValidation.validateOptional(
             amount = requestBody.otherUkDividends,
-            message = "The value must be between 0.00 and 99999999999.99",
             path = "/otherUkDividends"
           )
         )
@@ -81,4 +81,5 @@ class CreateAmendUKDividendsIncomeAnnualSummaryValidator @Inject() ( appConfig: 
     )
 
   }
+
 }
