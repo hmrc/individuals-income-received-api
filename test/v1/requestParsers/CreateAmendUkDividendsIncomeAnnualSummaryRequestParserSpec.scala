@@ -24,27 +24,27 @@ import support.UnitSpec
 import v1.mocks.validators.MockCreateAmendUkDividendsAnnualSummaryValidator
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary._
 
-class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitSpec {
-  val nino: String                   = "AA123456B"
-  val taxYear: TaxYear            = TaxYear.fromMtd("2019-20")
-  val taxYearString:String          ="2019-20"
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  val validUkDividends:BigDecimal = 55844806400.99
-  val validOtherUkDividends:BigDecimal = 60267421355.99
+class CreateAmendUkDividendsIncomeAnnualSummaryRequestParserSpec extends UnitSpec {
+  val nino: String                      = "AA123456B"
+  val taxYear: TaxYear                  = TaxYear.fromMtd("2019-20")
+  val taxYearString: String             = "2019-20"
+  implicit val correlationId: String    = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val validUkDividends: BigDecimal      = 55844806400.99
+  val validOtherUkDividends: BigDecimal = 60267421355.99
 
   private val requestBodyJson: JsValue = Json.parse(s"""
                                                        |{
                                                        | "ukDividends": $validUkDividends,
                                                        | "otherUkDividends": $validOtherUkDividends
                                                        |}
-                                                       |""".stripMargin
-  )
+                                                       |""".stripMargin)
 
   private val rawRequestBody = AnyContentAsJson(requestBodyJson)
 
   private val requestBody: CreateAmendUkDividendsIncomeAnnualSummaryBody =
     CreateAmendUkDividendsIncomeAnnualSummaryBody(
-      Some(validUkDividends), Some(validOtherUkDividends)
+      Some(validUkDividends),
+      Some(validOtherUkDividends)
     )
 
   private val rawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
@@ -55,7 +55,7 @@ class CreateAmendNonUkDividendIncomeAnnualSummaryRequestParserSpec extends UnitS
 
   trait Test extends MockCreateAmendUkDividendsAnnualSummaryValidator {
 
-    lazy val parser: CreateAmendUKDividendsIncomeAnnualSummaryRequestParser = new CreateAmendUKDividendsIncomeAnnualSummaryRequestParser(
+    lazy val parser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser = new CreateAmendUkDividendsIncomeAnnualSummaryRequestParser(
       validator = mockValidator
     )
 

@@ -17,7 +17,10 @@
 package api.controllers
 
 import api.models.errors._
+import api.models.hateoas.Link
+import api.models.hateoas.Method.GET
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
@@ -40,6 +43,16 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 
   def fakePutRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
+
+  val testHateoasLinks: Seq[Link] =
+    Seq(Link(href = "/some/link", method = GET, rel = "someRel"))
+
+  val testHateoasLinksJson: JsObject = Json
+    .parse("""{
+             |  "links": [ { "href":"/some/link", "method":"GET", "rel":"someRel" } ]
+             |}
+             |""".stripMargin)
+    .as[JsObject]
 
   def defaultDownstreamErrorMap: Map[String, MtdError] =
     Map(

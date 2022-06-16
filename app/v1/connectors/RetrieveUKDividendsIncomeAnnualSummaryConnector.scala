@@ -19,31 +19,28 @@ package v1.connectors
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import play.api.http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
-
 import javax.inject.{Inject, Singleton}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createOrAmendAnnualSummary(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit
+  def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      correlationId: String): Future[DownstreamOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
-    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
     val nino    = request.nino.nino
     val taxYear = request.taxYear.toDownstream
 
-    post(
-      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),
-      body = request.body
+    get(
+      DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear")
     )
   }
 

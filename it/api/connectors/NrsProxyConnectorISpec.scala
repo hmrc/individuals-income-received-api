@@ -42,7 +42,8 @@ class NrsProxyConnectorISpec
   "NrsProxyConnector" when {
     "submission is successful" should {
       "return successfully" in {
-        when(POST, path, headers = Map("Authorization" -> auth), body = Some(body.toString))
+        when(POST, path, headers = Map("Authorization" -> auth))
+          .withRequestBody(body)
           .thenReturn(OK)
 
         connector.submit(nino, event, body).futureValue shouldBe Right(())
@@ -51,7 +52,8 @@ class NrsProxyConnectorISpec
 
     "submission fails with a server error status" should {
       "return an error" in {
-        when(POST, path, headers = Map("Authorization" -> auth), body = Some(body.toString))
+        when(POST, path, headers = Map("Authorization" -> auth))
+          .withRequestBody(body)
           .thenReturn(INTERNAL_SERVER_ERROR)
 
         inside(connector.submit(nino, event, body).futureValue) { case Left(err) =>
@@ -62,7 +64,8 @@ class NrsProxyConnectorISpec
 
     "submission fails with a client error status" should {
       "return an error" in {
-        when(POST, path, headers = Map("Authorization" -> auth), body = Some(body.toString))
+        when(POST, path, headers = Map("Authorization" -> auth))
+          .withRequestBody(body)
           .thenReturn(BAD_REQUEST)
 
         inside(connector.submit(nino, event, body).futureValue) { case Left(err) =>
