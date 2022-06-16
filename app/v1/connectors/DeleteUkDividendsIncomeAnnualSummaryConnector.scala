@@ -23,6 +23,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
+import play.api.http.Status.NO_CONTENT
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,8 +40,10 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
     val nino    = request.nino.nino
     val taxYear = request.taxYear
 
+    implicit val successCode: SuccessCode = SuccessCode(NO_CONTENT)
+
     post(
-      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.toDownstream}"),
+      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.toMtd}"),
       body = JsObject.empty
     )
   }
