@@ -26,17 +26,20 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveUKDividendsIncomeAnnualSummaryConnector
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUKDividendsIncomeAnnualSummaryService @Inject()(connector: RetrieveUKDividendsIncomeAnnualSummaryConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveUKDividendsIncomeAnnualSummaryService @Inject()(connector: RetrieveUKDividendsIncomeAnnualSummaryConnector)
+  extends DownstreamResponseMappingSupport with Logging {
 
-  def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUKDividendsIncomeAnnualSummaryRequest)(implicit
+  def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUKDividendsIncomeAnnualSummaryResponse]]] = {
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDesErrors(mappingDesToMtdError))
