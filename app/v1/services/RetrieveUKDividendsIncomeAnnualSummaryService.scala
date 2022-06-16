@@ -43,7 +43,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryService @Inject()(connector: Retriev
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-    } yield desResponseWrapper.map(des => des)
+    } yield desResponseWrapper
 
     result.value
   }
