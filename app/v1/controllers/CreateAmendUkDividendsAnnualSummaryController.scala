@@ -22,7 +22,6 @@ import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.{IdGenerator, Logging}
@@ -37,7 +36,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                val lookupService: MtdIdLookupService,
-                                                               appConfig: AppConfig,
                                                                requestParser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser,
                                                                service: CreateAmendAmendUkDividendsAnnualSummaryService,
                                                                hateoasFactory: HateoasFactory,
@@ -98,7 +96,7 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
-            ValueFormatError.code) | CustomMtdError(DateFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+            ValueFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
