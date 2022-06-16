@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package v1.models.response.createAmendUkDividendsAnnualSummary
+package v1.models.response.createAmendUkDividendsIncomeAnnualSummary
 
-import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.Link
+import api.models.hateoas.Method.{DELETE, GET, PUT}
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.response.createAmendUkDividendsIncomeAnnualSummary._
 
-
-class CreateAmendUkDividendsAnnualSummaryResponseSpec extends UnitSpec with MockAppConfig {
+class CreateAndAmendUkDividendsIncomeAnnualSummaryResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory" should {
     "return the correct links" in {
-      val nino           = "someNino"
-      val taxYear        = "2017-18"
+      val nino    = "someNino"
+      val taxYear = "2017-18"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
-      CreateAndAmendUkDividendsIncomeAnnualSummaryResponse.LinksFactory.links(mockAppConfig, CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear)) shouldBe
+      CreateAndAmendUkDividendsIncomeAnnualSummaryResponse.LinksFactory.links(
+        mockAppConfig,
+        CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear)) shouldBe
         Seq(
-          Link(s"/individuals/income-received/uk-dividends/$nino/$taxYear", PUT, "create-and-amend-uk-dividends"),
+          Link(s"/individuals/income-received/uk-dividends/$nino/$taxYear", PUT, "create-and-amend-uk-dividends-income"),
           Link(s"/individuals/income-received/uk-dividends/$nino/$taxYear", GET, "self"),
           Link(s"/individuals/income-received/uk-dividends/$nino/$taxYear", DELETE, "delete-uk-dividends-income")
         )
     }
 
   }
+
 }
