@@ -12,7 +12,7 @@ is:
   - errors.incorrectOrEmptyBody
 displayName: Create and Amend a UK Dividends Income Annual Summary [test only]
 description: "This endpoint allows the developer to create and amend UK dividends income. A National Insurance number and tax year must be provided."
-(annotations.sandboxData): !include ../../scenarios/defaultOnly.md
+(annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 body:
