@@ -20,19 +20,18 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
+import api.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
 import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.Nino
-import api.models.errors.{BadRequestError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest}
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData, RetrieveUkDividendsAnnualIncomeSummaryResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +43,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
     with MockHateoasFactory
-    with MockRetrieve
+    with MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -52,14 +51,14 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
   private val taxYear: String       = "2019-20"
   private val correlationId: String = "X-123"
 
-  private val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  private val rawData: RetrieveUkDividendsAnnualIncomeSummaryRawData = RetrieveUkDividendsAnnualIncomeSummaryRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  private val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  private val requestData: RetrieveUkDividendsAnnualIncomeSummaryRequest = RetrieveUkDividendsAnnualIncomeSummaryRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val amendUkDividendsLink: Link =
@@ -89,15 +88,24 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
   )
 
 
-  private val mtdResponse = ""
+  private val mtdResponse = Json.parse(
+    """
+      |{
+      |  "ukDividends":100.99,
+      |  "otherUkDividends":100.99,
+      |  "links":[
+      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"PUT","rel":"create-and-amend-dividends-income"},
+      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"GET","rel":"self"},
+      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"DELETE","rel":"delete-dividends-income"}]}
+      |""".stripMargin)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new RetrieveUkDividendsAnnualIncomeSummaryController()(
+    val controller = new RetrieveUkDividendsAnnualIncomeSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
+      requestParser = mockRetrieveUkDividendsAnnualIncomeSummaryRequestParser,
       service = mockDeleteRetrieveService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
@@ -113,7 +121,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -132,7 +140,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
                 deleteUkDividendsLink
               )))
 
-        val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
@@ -145,11 +153,11 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -172,7 +180,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
@@ -180,7 +188,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
               .retrieve[RetrieveUkDividendsAnnualIncomeSummaryResponse](defaultDownstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

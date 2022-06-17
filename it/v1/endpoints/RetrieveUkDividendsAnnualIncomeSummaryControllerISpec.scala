@@ -33,12 +33,42 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
     val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
 
-    val ifsResponse: JsValue = Json.parse("""""")
-    val mtdResponse: JsValue = Json.parse("""""")
+    val ifsResponse: JsValue = Json.parse(
+      """
+        |{
+        |  "ukDividends": 10.12,
+        |  "otherUkDividends": 11.12
+        |}
+        |""".stripMargin)
 
-    def uri: String = s"/dividends/$nino/$taxYear"
+    val mtdResponse: JsValue = Json.parse(
+      """
+        |{
+        |  "ukDividends": 10.12,
+        |  "otherUkDividends": 11.12,
+        |  "links":[
+        |      {
+        |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
+        |         "method":"PUT",
+        |         "rel":"create-and-amend-uk-dividends-income"
+        |      },
+        |      {
+        |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
+        |         "method":"GET",
+        |         "rel":"self"
+        |      },
+        |      {
+        |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
+        |         "method":"DELETE",
+        |         "rel":"delete-uk-dividends-income"
+        |      }
+        |   ]
+        |}
+        |""".stripMargin)
 
-    def ifsUri: String = s"/income-tax/income/dividends/$nino/$taxYear"
+    def uri: String = s"/uk-dividends/$nino/$taxYear"
+
+    def ifsUri: String = s"/income-tax/income/uk-dividends/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
