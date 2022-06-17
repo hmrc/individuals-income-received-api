@@ -42,8 +42,7 @@ object GenericAuditDetail {
             params: Map[String, String],
             request: Option[JsValue],
             `X-CorrelationId`: String,
-            auditResponse: AuditResponse,
-            versionNumber: Option[String] = None): GenericAuditDetail = {
+            auditResponse: AuditResponse): GenericAuditDetail = {
 
     GenericAuditDetail(
       userType = userDetails.userType,
