@@ -42,7 +42,8 @@ object GenericAuditDetail {
             params: Map[String, String],
             request: Option[JsValue],
             `X-CorrelationId`: String,
-            auditResponse: AuditResponse): GenericAuditDetail = {
+            auditResponse: AuditResponse,
+            versionNumber: Option[String] = None): GenericAuditDetail = {
 
     GenericAuditDetail(
       userType = userDetails.userType,
@@ -51,6 +52,49 @@ object GenericAuditDetail {
       request = request,
       `X-CorrelationId` = `X-CorrelationId`,
       response = auditResponse
+    )
+  }
+
+}
+
+case class FlattenedGenericAuditDetail(versionNumber: Option[String],
+                                       userType: String,
+                                       agentReferenceNumber: Option[String],
+                                       params: Map[String, String],
+                                       request: Option[JsValue],
+                                       `X-CorrelationId`: String,
+                                       httpStatusCode: Int,
+                                       errorCodes: Option[Seq[String]])
+
+object FlattenedGenericAuditDetail {
+
+  implicit val writes: OWrites[FlattenedGenericAuditDetail] = (
+    (JsPath \ "versionNumber").writeNullable[String] and
+      (JsPath \ "userType").write[String] and
+      (JsPath \ "agentReferenceNumber").writeNullable[String] and
+      JsPath.write[Map[String, String]] and
+      JsPath.writeNullable[JsValue] and
+      (JsPath \ "X-CorrelationId").write[String] and
+      (JsPath \ "httpStatusCode").write[Int] and
+      (JsPath \ "errorCodes").writeNullable[Seq[String]]
+  )(unlift(FlattenedGenericAuditDetail.unapply))
+
+  def apply(versionNumber: Option[String] = None,
+            userDetails: UserDetails,
+            params: Map[String, String],
+            request: Option[JsValue],
+            `X-CorrelationId`: String,
+            auditResponse: AuditResponse): FlattenedGenericAuditDetail = {
+
+    FlattenedGenericAuditDetail(
+      versionNumber = versionNumber,
+      userType = userDetails.userType,
+      agentReferenceNumber = userDetails.agentReferenceNumber,
+      params = params,
+      request = request,
+      `X-CorrelationId` = `X-CorrelationId`,
+      httpStatusCode = auditResponse.httpStatus,
+      errorCodes = auditResponse.errors.map(_.map(_.errorCode))
     )
   }
 
