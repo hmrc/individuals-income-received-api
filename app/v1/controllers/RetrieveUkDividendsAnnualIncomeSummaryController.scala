@@ -16,11 +16,10 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.IfsUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import javax.inject.{Inject, Singleton}
@@ -29,8 +28,9 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRawData
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData, RetrieveUkDividendsAnnualIncomeSummaryResponse}
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData}
 import v1.requestParsers.RetrieveUkDividendsIncomeAnnualSummaryRequestParser
+import v1.services.RetrieveUkDividendsIncomeAnnualSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveUkDividendsAnnualIncomeSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                   val lookupService: MtdIdLookupService,
                                                                   requestParser: RetrieveUkDividendsIncomeAnnualSummaryRequestParser,
-                                                                  service: DeleteRetrieveService,
+                                                                  service: RetrieveUkDividendsIncomeAnnualSummaryService,
                                                                   hateoasFactory: HateoasFactory,
                                                                   cc: ControllerComponents,
                                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -64,15 +64,12 @@ class RetrieveUkDividendsAnnualIncomeSummaryController @Inject() (val authServic
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse] = IfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](
-        s"income-tax/income/dividends/$nino/$taxYear"
-      )
 
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveUkDividendsAnnualIncomeSummaryResponse]())
-          vendorResponse <- EitherT.fromEither[Future](
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieveUKDividendsIncomeAnnualSummary(parsedRequest))
+          vendorResponse  <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData,RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear))
               .asRight[ErrorWrapper])

@@ -60,5 +60,5 @@ DELETE     /disposals/other-gains/:nino/:taxYear                            v1.c
 DELETE     /disposals/residential-property/:nino/:taxYear                   v1.controllers.DeleteCgtNonPpdController.deleteCgtNonPpd(nino: String, taxYear: String)
 
 # UK Dividends Income Annual Summary routes go here:
-PUT        /uk-dividends/:nino/:taxYear                                     v1.controllers.CreateAmendUkDividendsAnnualSummaryController.createAmendUkDividendsAnnualSummary(nino: String, taxYear: String)
-GET        /uk-dividends/:nino/:taxYear                                     v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
+
+GET        /uk-dividends/:nino/:taxYear                                     v1.controllers.RetrieveUkDividendsAnnualIncomeSummaryController.retrieveUkDividends(nino: String, taxYear: String)

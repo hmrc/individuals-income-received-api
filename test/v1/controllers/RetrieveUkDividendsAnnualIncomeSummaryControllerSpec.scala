@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkDividendsAnnualIncomeSummaryService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -41,7 +41,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveUkDividendsAnnualIncomeSummaryService
     with MockHateoasFactory
     with MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
     with HateoasLinks
@@ -106,7 +106,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRetrieveUkDividendsAnnualIncomeSummaryRequestParser,
-      service = mockDeleteRetrieveService,
+      service = mockRetrieveUkDividendsAnnualIncomeSummaryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -125,8 +125,8 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrieveUkDividendsAnnualIncomeSummaryResponse](defaultDownstreamErrorMap)
+        MockRetrieveUkDividendsIncomeAnnualSummaryService
+          .retrieveUkDividends(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkDividendsAnnualIncomeSummaryResponseModel))))
 
         MockHateoasFactory
@@ -184,8 +184,8 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .retrieve[RetrieveUkDividendsAnnualIncomeSummaryResponse](defaultDownstreamErrorMap)
+            MockRetrieveUkDividendsIncomeAnnualSummaryService
+              .retrieveUkDividends(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)

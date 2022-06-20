@@ -27,7 +27,7 @@ import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivid
 
 import scala.concurrent.Future
 
-class RetrieveUKDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
+class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
   private val taxYear = "2019-20"
@@ -42,8 +42,8 @@ class RetrieveUKDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
   trait Test extends MockRetrieveUKDividendsIncomeAnnualSummaryConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: RetrieveUKDividendsIncomeAnnualSummaryService =
-      new RetrieveUKDividendsIncomeAnnualSummaryService(connector = mockRetrieveUKDividendsIncomeAnnualSummaryConnector)
+    val service: RetrieveUkDividendsIncomeAnnualSummaryService =
+      new RetrieveUkDividendsIncomeAnnualSummaryService(connector = mockRetrieveUKDividendsIncomeAnnualSummaryConnector)
   }
 
   "RetrieveUKDividendsIncomeAnnualSummaryService" when {

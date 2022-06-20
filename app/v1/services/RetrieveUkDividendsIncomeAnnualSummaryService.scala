@@ -32,7 +32,7 @@ import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivid
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUKDividendsIncomeAnnualSummaryService @Inject()(connector: RetrieveUKDividendsIncomeAnnualSummaryConnector)
+class RetrieveUkDividendsIncomeAnnualSummaryService @Inject()(connector: RetrieveUKDividendsIncomeAnnualSummaryConnector)
   extends DownstreamResponseMappingSupport with Logging {
 
   def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit

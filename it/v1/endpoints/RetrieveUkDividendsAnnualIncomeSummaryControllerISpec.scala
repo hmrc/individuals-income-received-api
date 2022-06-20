@@ -68,7 +68,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
 
     def uri: String = s"/uk-dividends/$nino/$taxYear"
 
-    def ifsUri: String = s"/income-tax/income/uk-dividends/$nino/$taxYear"
+    def ifsUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -158,10 +158,12 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
             """.stripMargin
 
         val input = Seq(
-          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_INCOME_SOURCE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (NOT_FOUND, "NOT_FOUND_PERIOD", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NOT_FOUND_INCOME_SOURCE", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
