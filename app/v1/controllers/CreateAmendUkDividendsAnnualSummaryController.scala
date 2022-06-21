@@ -23,7 +23,6 @@ import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -40,7 +39,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                val lookupService: MtdIdLookupService,
-                                                               appConfig: AppConfig,
                                                                requestParser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser,
                                                                service: CreateAmendAmendUkDividendsAnnualSummaryService,
                                                                auditService: AuditService,
@@ -84,6 +82,8 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
             s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
         )
 
+        val jsonResponse = Json.toJson(vendorResponse)
+
         auditSubmission(
           FlattenedGenericAuditDetail(
             versionNumber = Some("1.0"),
@@ -91,11 +91,11 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
             Map("nino" -> nino, "taxYear" -> taxYear),
             Some(request.body),
             serviceResponse.correlationId,
-            AuditResponse(httpStatus = OK, response = Right(Some(amendDividendsHateoasBody(appConfig, nino, taxYear))))
+            AuditResponse(httpStatus = OK, response = Right(Some(jsonResponse)))
           )
         )
 
-        Ok(Json.toJson(vendorResponse))
+        Ok(jsonResponse)
           .withApiHeaders(serviceResponse.correlationId)
       }
 

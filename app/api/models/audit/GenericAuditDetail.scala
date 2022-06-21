@@ -62,6 +62,7 @@ case class FlattenedGenericAuditDetail(versionNumber: Option[String],
                                        params: Map[String, String],
                                        request: Option[JsValue],
                                        `X-CorrelationId`: String,
+                                       response: String,
                                        httpStatusCode: Int,
                                        errorCodes: Option[Seq[String]])
 
@@ -74,6 +75,7 @@ object FlattenedGenericAuditDetail {
       JsPath.write[Map[String, String]] and
       JsPath.writeNullable[JsValue] and
       (JsPath \ "X-CorrelationId").write[String] and
+      (JsPath \ "response").write[String] and
       (JsPath \ "httpStatusCode").write[Int] and
       (JsPath \ "errorCodes").writeNullable[Seq[String]]
   )(unlift(FlattenedGenericAuditDetail.unapply))
@@ -92,6 +94,7 @@ object FlattenedGenericAuditDetail {
       params = params,
       request = request,
       `X-CorrelationId` = `X-CorrelationId`,
+      response = if (auditResponse.errors.exists(_.nonEmpty)) "error" else "success",
       httpStatusCode = auditResponse.httpStatus,
       errorCodes = auditResponse.errors.map(_.map(_.errorCode))
     )

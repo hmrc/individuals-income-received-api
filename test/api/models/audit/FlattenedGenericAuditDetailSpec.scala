@@ -16,7 +16,6 @@
 
 package api.models.audit
 
-import api.hateoas.AmendHateoasBody
 import api.models.auth.UserDetails
 import api.models.errors.TaxYearFormatError
 import mocks.MockAppConfig
@@ -24,7 +23,7 @@ import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with AmendHateoasBody {
+class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
 
   val versionNumber: String                = "99.0"
   val nino: String                         = "XX751130C"
@@ -35,7 +34,13 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
   val userDetails: UserDetails             = UserDetails("mtdId", userType, agentReferenceNumber)
   val correlationId: String                = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+  val requestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |    "field": "value"
+      |}
+        """.stripMargin
+  )
 
   val auditDetailJsonSuccess: JsValue = Json.parse(
     s"""
@@ -45,38 +50,24 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
       |    "agentReferenceNumber": "${agentReferenceNumber.get}",
       |    "nino": "$nino",
       |    "taxYear": "$taxYear",
-      |    "employerRef": "123/AB56797",
-      |    "employerName": "AMD infotech Ltd",
-      |    "startDate": "2019-01-01",
-      |    "cessationDate": "2020-06-01",
-      |    "payrollId": "124214112412",
+      |    "field": "value",
       |    "X-CorrelationId": "$correlationId",
+      |    "response": "success",
       |    "httpStatusCode": $OK
       |}
     """.stripMargin
   )
 
-  val successAuditResponse: AuditResponse =
-    AuditResponse(httpStatus = OK, response = Right(Some(amendDividendsHateoasBody(mockAppConfig, nino, taxYear))))
-
   val auditDetailModelSuccess: FlattenedGenericAuditDetail = FlattenedGenericAuditDetail(
     versionNumber = Some(versionNumber),
-    userDetails = userDetails,
+    userType = userDetails.userType,
+    agentReferenceNumber = agentReferenceNumber,
     params = Map("nino" -> nino, "taxYear" -> taxYear),
-    request = Some(
-      Json.parse(
-        """
-        |{
-        |   "employerRef": "123/AB56797",
-        |   "employerName": "AMD infotech Ltd",
-        |   "startDate": "2019-01-01",
-        |   "cessationDate": "2020-06-01",
-        |   "payrollId": "124214112412"
-        |}
-        """.stripMargin
-      )),
+    request = Some(requestBodyJson),
     `X-CorrelationId` = correlationId,
-    auditResponse = successAuditResponse
+    response = "success",
+    httpStatusCode = OK,
+    errorCodes = None
   )
 
   val invalidTaxYearAuditDetailJson: JsValue = Json.parse(
@@ -87,12 +78,9 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
       |    "agentReferenceNumber": "${agentReferenceNumber.get}",
       |    "nino": "$nino",
       |    "taxYear" : "2021-2022",
-      |    "employerRef": "123/AB56797",
-      |    "employerName": "AMD infotech Ltd",
-      |    "startDate": "2019-01-01",
-      |    "cessationDate": "2020-06-01",
-      |    "payrollId": "124214112412",
+      |    "field": "value",
       |    "X-CorrelationId": "$correlationId",
+      |    "response": "error",
       |    "httpStatusCode": $BAD_REQUEST,
       |    "errorCodes": [
       |       "FORMAT_TAX_YEAR"
@@ -101,26 +89,16 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
     """.stripMargin
   )
 
-  val errorAuditResponse: AuditResponse = AuditResponse(httpStatus = BAD_REQUEST, response = Left(List(AuditError(TaxYearFormatError.code))))
-
   val invalidTaxYearAuditDetailModel: FlattenedGenericAuditDetail = FlattenedGenericAuditDetail(
     versionNumber = Some(versionNumber),
-    userDetails = userDetails,
+    userType = userDetails.userType,
+    agentReferenceNumber = agentReferenceNumber,
     params = Map("nino" -> nino, "taxYear" -> "2021-2022"),
-    request = Some(
-      Json.parse(
-        """
-        |{
-        |   "employerRef": "123/AB56797",
-        |   "employerName": "AMD infotech Ltd",
-        |   "startDate": "2019-01-01",
-        |   "cessationDate": "2020-06-01",
-        |   "payrollId": "124214112412"
-        |}
-      """.stripMargin
-      )),
+    request = Some(requestBodyJson),
     `X-CorrelationId` = correlationId,
-    auditResponse = errorAuditResponse
+    response = "error",
+    httpStatusCode = BAD_REQUEST,
+    errorCodes = Some(List(TaxYearFormatError.code))
   )
 
   "FlattenedGenericAuditDetail" when {

@@ -26,7 +26,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.HateoasWrapper
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -48,7 +47,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
     with MockCreateAmendUkDividendsAnnualSummaryRequestParser
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockAppConfig
     with MockAuditService
     with MockHateoasFactory
     with MockIdGenerator {
@@ -80,7 +78,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
     val controller = new CreateAmendUkDividendsAnnualSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
       requestParser = mockCreateAmendUkDividendsAnnualSummaryRequestParser,
       service = mockCreateAmendUkDividendsAnnualSummaryService,
       hateoasFactory = mockHateoasFactory,
@@ -91,7 +88,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
     MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
