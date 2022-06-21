@@ -51,6 +51,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
       |    "cessationDate": "2020-06-01",
       |    "payrollId": "124214112412",
       |    "X-CorrelationId": "$correlationId",
+      |    "response": "success",
       |    "httpStatusCode": $OK
       |}
     """.stripMargin
@@ -93,6 +94,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
       |    "cessationDate": "2020-06-01",
       |    "payrollId": "124214112412",
       |    "X-CorrelationId": "$correlationId",
+      |    "response": "error",
       |    "httpStatusCode": $BAD_REQUEST,
       |    "errorCodes": [
       |       "FORMAT_TAX_YEAR"
