@@ -27,9 +27,9 @@ import v1.services.CreateAmendAmendUkDividendsAnnualSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendAmendUkDividendsAnnualSummaryService extends MockFactory {
+trait MockCreateAmendUkDividendsAnnualSummaryService extends MockFactory {
 
-  val mockCreateAmendAmendUkDividendsAnnualSummaryService: CreateAmendAmendUkDividendsAnnualSummaryService =
+  val mockCreateAmendUkDividendsAnnualSummaryService: CreateAmendAmendUkDividendsAnnualSummaryService =
     mock[CreateAmendAmendUkDividendsAnnualSummaryService]
 
   object MockCreateAmendAmendUkDividendsAnnualSummaryService {
@@ -37,7 +37,7 @@ trait MockCreateAmendAmendUkDividendsAnnualSummaryService extends MockFactory {
     def createOrAmendAnnualSummary(
         requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] =
       (
-        mockCreateAmendAmendUkDividendsAnnualSummaryService
+        mockCreateAmendUkDividendsAnnualSummaryService
           .createOrAmendAnnualSummary(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
