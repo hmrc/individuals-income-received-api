@@ -59,7 +59,7 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       "MISSING_CHARITIES_NAME_INVESTMENT" -> StandardDownstreamError,
       "MISSING_INVESTMENT_AMOUNT"         -> StandardDownstreamError,
       "INVALID_ACCOUNTING_PERIOD"         -> RuleTaxYearNotSupportedError,
-      "SERVICE_ERROR"                     -> StandardDownstreamError,
+      "SERVER_ERROR"                      -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"               -> StandardDownstreamError,
       "GONE"                              -> NotFoundError,
       "NOT_FOUND"                         -> NotFoundError
