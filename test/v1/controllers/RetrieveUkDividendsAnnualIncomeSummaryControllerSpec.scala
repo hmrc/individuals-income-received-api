@@ -25,7 +25,7 @@ import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, Mo
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF}
+import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_DIVIDENDS_INCOME, DELETE_UK_DIVIDENDS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
@@ -65,7 +65,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     Link(
       href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
       method = PUT,
-      rel = AMEND_DIVIDENDS_INCOME
+      rel = CREATE_AND_AMEND_UK_DIVIDENDS_INCOME
     )
 
   private val retrieveUkDividendsLink: Link =
@@ -79,7 +79,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     Link(
       href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
       method = DELETE,
-      rel = DELETE_DIVIDENDS_INCOME
+      rel = DELETE_UK_DIVIDENDS_INCOME
     )
 
   private val retrieveUkDividendsAnnualIncomeSummaryResponseModel = RetrieveUkDividendsAnnualIncomeSummaryResponse(
@@ -94,9 +94,9 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
       |  "ukDividends":100.99,
       |  "otherUkDividends":100.99,
       |  "links":[
-      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"PUT","rel":"create-and-amend-dividends-income"},
+      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"PUT","rel":"create-and-amend-uk-dividends-income"},
       |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"GET","rel":"self"},
-      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"DELETE","rel":"delete-dividends-income"}]}
+      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"DELETE","rel":"delete-uk-dividends-income"}]}
       |""".stripMargin)
 
   trait Test {
