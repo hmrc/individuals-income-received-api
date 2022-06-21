@@ -18,21 +18,17 @@ package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.{AmendHateoasBody, HateoasFactory}
-import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import api.models.errors._
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRawData
 import v1.models.response.createAmendUkDividendsIncomeAnnualSummary.CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData
 import v1.requestParsers.CreateAmendUkDividendsIncomeAnnualSummaryRequestParser
-import v1.services.CreateAmendAmendUkDividendsAnnualSummaryService
+import v1.services._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,10 +36,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                val lookupService: MtdIdLookupService,
-                                                               appConfig: AppConfig,
                                                                requestParser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser,
                                                                service: CreateAmendAmendUkDividendsAnnualSummaryService,
-                                                               auditService: AuditService,
                                                                hateoasFactory: HateoasFactory,
                                                                cc: ControllerComponents,
                                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -84,17 +78,6 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
             s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
         )
 
-        auditSubmission(
-          FlattenedGenericAuditDetail(
-            versionNumber = Some("1.0"),
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body),
-            serviceResponse.correlationId,
-            AuditResponse(httpStatus = OK, response = Right(Some(amendDividendsHateoasBody(appConfig, nino, taxYear))))
-          )
-        )
-
         Ok(Json.toJson(vendorResponse))
           .withApiHeaders(serviceResponse.correlationId)
       }
@@ -105,17 +88,6 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          FlattenedGenericAuditDetail(
-            Some("1.0"),
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body),
-            resCorrelationId,
-            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
 
         result
       }.merge
@@ -130,10 +102,5 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
-
-  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("CreateAndAmendUkDividendsIncome", "create-amend-uk-dividends-income", details)
-    auditService.auditEvent(event)
-  }
 
 }

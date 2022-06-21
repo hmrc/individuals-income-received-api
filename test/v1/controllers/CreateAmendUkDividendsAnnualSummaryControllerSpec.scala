@@ -19,19 +19,16 @@ package v1.controllers
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
-import api.models.auth.UserDetails
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.HateoasWrapper
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockCreateAmendUkDividendsAnnualSummaryRequestParser
-import v1.mocks.services.MockCreateAmendUkDividendsAnnualSummaryService
+import v1.mocks.services._
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
   CreateAmendUkDividendsIncomeAnnualSummaryRawData,
@@ -44,19 +41,16 @@ import scala.concurrent.Future
 
 class CreateAmendUkDividendsAnnualSummaryControllerSpec
     extends ControllerBaseSpec
-    with MockCreateAmendUkDividendsAnnualSummaryService
-    with MockCreateAmendUkDividendsAnnualSummaryRequestParser
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockAppConfig
-    with MockAuditService
+    with MockCreateAmendAmendUkDividendsAnnualSummaryService
     with MockHateoasFactory
+    with MockCreateAmendUkDividendsAnnualSummaryRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
-  val mtdId: String         = "test-mtd-id"
 
   val requestJson: JsObject = JsObject.empty
 
@@ -80,34 +74,17 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
     val controller = new CreateAmendUkDividendsAnnualSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
       requestParser = mockCreateAmendUkDividendsAnnualSummaryRequestParser,
-      service = mockCreateAmendUkDividendsAnnualSummaryService,
+      service = mockCreateAmendAmendUkDividendsAnnualSummaryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
-      idGenerator = mockIdGenerator,
-      auditService = mockAuditService
+      idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
-
-  def event(auditResponse: AuditResponse): AuditEvent[FlattenedGenericAuditDetail] =
-    AuditEvent(
-      auditType = "CreateAndAmendUkDividendsIncome",
-      transactionName = "create-amend-uk-dividends-income",
-      detail = FlattenedGenericAuditDetail(
-        versionNumber = Some("1.0"),
-        userDetails = UserDetails(mtdId, "Individual", None),
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = Some(requestJson),
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
-      )
-    )
 
   "CreateAmendUkDividendsAnnualSummaryController" should {
     "return OK" when {
@@ -130,10 +107,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe testHateoasLinksJson
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(testHateoasLinksJson)))
-        MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
-
       }
     }
 
@@ -151,10 +124,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-
           }
         }
 
@@ -191,9 +160,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
