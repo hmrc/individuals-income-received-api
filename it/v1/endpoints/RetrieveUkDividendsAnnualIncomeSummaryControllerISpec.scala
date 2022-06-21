@@ -32,8 +32,9 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
 
     val nino: String    = "AA123456A"
     val taxYear: String = "2019-20"
+    val desTaxYear: String = "2020"
 
-    val ifsResponse: JsValue = Json.parse(
+    val desResponse: JsValue = Json.parse(
       """
         |{
         |  "ukDividends": 10.12,
@@ -42,33 +43,33 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
         |""".stripMargin)
 
     val mtdResponse: JsValue = Json.parse(
-      """
-        |{
-        |  "ukDividends": 10.12,
-        |  "otherUkDividends": 11.12,
-        |  "links":[
-        |      {
-        |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
-        |         "method":"PUT",
-        |         "rel":"create-and-amend-uk-dividends-income"
-        |      },
-        |      {
-        |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
-        |         "method":"GET",
-        |         "rel":"self"
-        |      },
-        |      {
-        |         "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
-        |         "method":"DELETE",
-        |         "rel":"delete-uk-dividends-income"
-        |      }
-        |   ]
-        |}
-        |""".stripMargin)
+      s"""
+         |{
+         |  "ukDividends": 10.12,
+         |  "otherUkDividends": 11.12,
+         |  "links":[
+         |      {
+         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-uk-dividends-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-uk-dividends-income"
+         |      }
+         |   ]
+         |}
+         |""".stripMargin)
 
     def uri: String = s"/uk-dividends/$nino/$taxYear"
 
-    def ifsUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$taxYear"
+    def desUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$desTaxYear"
 
     def setupStubs(): StubMapping
 
@@ -90,7 +91,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, OK, ifsResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -131,15 +132,15 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "des service error" when {
+        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"des returns an $desCode error and status $desStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -153,7 +154,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "des message"
              |}
             """.stripMargin
 
