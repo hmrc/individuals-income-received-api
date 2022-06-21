@@ -16,7 +16,6 @@
 
 package api.models.audit
 
-import api.hateoas.AmendHateoasBody
 import api.models.auth.UserDetails
 import api.models.errors.TaxYearFormatError
 import mocks.MockAppConfig
@@ -24,7 +23,7 @@ import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with AmendHateoasBody {
+class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
 
   val versionNumber: String                = "99.0"
   val nino: String                         = "XX751130C"
@@ -34,8 +33,6 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
   val userType: String                     = "Agent"
   val userDetails: UserDetails             = UserDetails("mtdId", userType, agentReferenceNumber)
   val correlationId: String                = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
   val auditDetailJsonSuccess: JsValue = Json.parse(
     s"""
@@ -58,7 +55,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig with A
   )
 
   val successAuditResponse: AuditResponse =
-    AuditResponse(httpStatus = OK, response = Right(Some(amendDividendsHateoasBody(mockAppConfig, nino, taxYear))))
+    AuditResponse(httpStatus = OK, response = Right(Some(auditDetailJsonSuccess)))
 
   val auditDetailModelSuccess: FlattenedGenericAuditDetail = FlattenedGenericAuditDetail(
     versionNumber = Some(versionNumber),
