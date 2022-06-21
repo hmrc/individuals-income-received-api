@@ -34,6 +34,14 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
   val userDetails: UserDetails             = UserDetails("mtdId", userType, agentReferenceNumber)
   val correlationId: String                = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
+  val requestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |    "field": "value"
+      |}
+        """.stripMargin
+  )
+
   val auditDetailJsonSuccess: JsValue = Json.parse(
     s"""
       |{
@@ -42,10 +50,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
       |    "agentReferenceNumber": "${agentReferenceNumber.get}",
       |    "nino": "$nino",
       |    "taxYear": "$taxYear",
-      |    "employerName": "AMD infotech Ltd",
-      |    "startDate": "2019-01-01",
-      |    "cessationDate": "2020-06-01",
-      |    "payrollId": "124214112412",
+      |    "field": "value",
       |    "X-CorrelationId": "$correlationId",
       |    "response": "success",
       |    "httpStatusCode": $OK
@@ -58,18 +63,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
     userType = userDetails.userType,
     agentReferenceNumber = agentReferenceNumber,
     params = Map("nino" -> nino, "taxYear" -> taxYear),
-    request = Some(
-      Json.parse(
-        s"""
-        |{
-        |   "agentReferenceNumber": "${agentReferenceNumber.get}",
-        |   "employerName": "AMD infotech Ltd",
-        |   "startDate": "2019-01-01",
-        |   "cessationDate": "2020-06-01",
-        |   "payrollId": "124214112412"
-        |}
-        """.stripMargin
-      )),
+    request = Some(requestBodyJson),
     `X-CorrelationId` = correlationId,
     response = "success",
     httpStatusCode = OK,
@@ -84,10 +78,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
       |    "agentReferenceNumber": "${agentReferenceNumber.get}",
       |    "nino": "$nino",
       |    "taxYear" : "2021-2022",
-      |    "employerName": "AMD infotech Ltd",
-      |    "startDate": "2019-01-01",
-      |    "cessationDate": "2020-06-01",
-      |    "payrollId": "124214112412",
+      |    "field": "value",
       |    "X-CorrelationId": "$correlationId",
       |    "response": "error",
       |    "httpStatusCode": $BAD_REQUEST,
@@ -103,18 +94,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
     userType = userDetails.userType,
     agentReferenceNumber = agentReferenceNumber,
     params = Map("nino" -> nino, "taxYear" -> "2021-2022"),
-    request = Some(
-      Json.parse(
-        s"""
-        |{
-        |   "agentReferenceNumber": "${agentReferenceNumber.get}",
-        |   "employerName": "AMD infotech Ltd",
-        |   "startDate": "2019-01-01",
-        |   "cessationDate": "2020-06-01",
-        |   "payrollId": "124214112412"
-        |}
-      """.stripMargin
-      )),
+    request = Some(requestBodyJson),
     `X-CorrelationId` = correlationId,
     response = "error",
     httpStatusCode = BAD_REQUEST,
