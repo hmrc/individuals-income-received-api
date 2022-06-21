@@ -54,9 +54,6 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
     """.stripMargin
   )
 
-  val successAuditResponse: AuditResponse =
-    AuditResponse(httpStatus = OK, response = Right(Some(auditDetailJsonSuccess)))
-
   val auditDetailModelSuccess: FlattenedGenericAuditDetail = FlattenedGenericAuditDetail(
     versionNumber = Some(versionNumber),
     userDetails = userDetails,
@@ -74,7 +71,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
         """.stripMargin
       )),
     `X-CorrelationId` = correlationId,
-    auditResponse = successAuditResponse
+    auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(auditDetailJsonSuccess)))
   )
 
   val invalidTaxYearAuditDetailJson: JsValue = Json.parse(
@@ -100,8 +97,6 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
     """.stripMargin
   )
 
-  val errorAuditResponse: AuditResponse = AuditResponse(httpStatus = BAD_REQUEST, response = Left(List(AuditError(TaxYearFormatError.code))))
-
   val invalidTaxYearAuditDetailModel: FlattenedGenericAuditDetail = FlattenedGenericAuditDetail(
     versionNumber = Some(versionNumber),
     userDetails = userDetails,
@@ -119,7 +114,7 @@ class FlattenedGenericAuditDetailSpec extends UnitSpec with MockAppConfig {
       """.stripMargin
       )),
     `X-CorrelationId` = correlationId,
-    auditResponse = errorAuditResponse
+    auditResponse = AuditResponse(httpStatus = BAD_REQUEST, response = Left(List(AuditError(TaxYearFormatError.code))))
   )
 
   "FlattenedGenericAuditDetail" when {
