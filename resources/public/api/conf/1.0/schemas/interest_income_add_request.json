@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Add a Uk Savings Account Request",
+  "description": "Add a Uk Savings Account Request",
+  "type": "object",
+  "properties": {
+    "accountName": {
+      "type": "string",
+      "description": "Friendly account name. Must conform to the regular expression: ^[A-Za-z0-9 &'\\(\\)\\*,\\-\\./@£]{1,32}$",
+      "example": "Shares savings account"
+    }
+  },
+  "required": [
+    "accountName"
+  ]
+}

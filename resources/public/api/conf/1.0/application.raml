@@ -183,3 +183,10 @@ uses:
           put: !include endpoints/cgt/other/amend.raml
           get: !include endpoints/cgt/other/get.raml
           delete: !include endpoints/cgt/other/delete.raml
+  /savings:
+    /uk-accounts:
+      (annotations.group):
+        name: UK Savings Account
+        description: Resources relating to an individual’s UK savings account.
+      /{nino}:
+          post: !include endpoints/interestIncome/add.raml

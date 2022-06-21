@@ -620,3 +620,36 @@ traits:
                 description: 'A deletion for an HMRC held employment is not permitted.'
                 value:
                   code: RULE_DELETE_FORBIDDEN
+  formatAccountName:
+    responses:
+     400:
+       body:
+         application/json:
+           type: types.errorResponse
+           examples:
+             formatAccountName:
+               description: 'The format of the supplied account name field is not valid.'
+               value:
+                 code: FORMAT_ACCOUNT_NAME
+  maximumSavingsAccountLimit:
+   responses:
+    403:
+      body:
+        application/json:
+          type: types.errorResponse
+          examples:
+            maximumSavingsAccountLimit:
+              description: 'The maximum number of 1000 savings accounts exceeded.'
+              value:
+                code: RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT
+  duplicateAccountName:
+   responses:
+    403:
+      body:
+        application/json:
+          type: types.errorResponse
+          examples:
+            duplicateAccountName:
+              description: 'A duplicate account name was supplied for that National Insurance Number.'
+              value:
+                code: RULE_DUPLICATE_ACCOUNT_NAME
