@@ -7,7 +7,7 @@
     "savingsAccountId": {
       "type": "string",
       "description": "The unique identifier of the savings account. Must conform to the regular expression: ^[A-Za-z0-9]{15}$",
-      "example": "SAVKB2UVwUTBQGJ",
+      "example": "SAVKB2UVwUTBQGJ"
     },
     "links": {
       "type": "array",
@@ -47,5 +47,8 @@
         ]
       }
     }
-  }
+  },
+  "required": [
+    "savingsAccountId"
+  ]
 }
