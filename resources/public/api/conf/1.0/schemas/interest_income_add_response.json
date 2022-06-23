@@ -24,10 +24,10 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "create-and-amend-savings-income",
+              "list-all-uk-savings-account",
               "self",
-              "delete-savings-income",
-              "list-savings-income"
+              "create-and-amend-uk-savings-account",
+              "delete-uk-savings-account"
             ]
           },
           "method": {
