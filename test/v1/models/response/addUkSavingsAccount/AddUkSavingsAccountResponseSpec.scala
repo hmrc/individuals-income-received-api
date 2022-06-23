@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.response.addUkSavings
+package v1.models.response.addUkSavingsAccount
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class AddUkSavingsResponseSpec extends UnitSpec {
+class AddUkSavingsAccountResponseSpec extends UnitSpec {
 
-  val model: AddUkSavingsResponse = AddUkSavingsResponse("SAVKB2UVwUTBQGJ")
+  val model: AddUkSavingsAccountResponse = AddUkSavingsAccountResponse("SAVKB2UVwUTBQGJ")
 
   val mtdJson = Json.parse(
     """
@@ -38,10 +38,10 @@ class AddUkSavingsResponseSpec extends UnitSpec {
       |""".stripMargin)
 
 
-  "AddUkSavingsResponse" when {
+  "AddUkSavingsAccountResponse" when {
     "read from valid JSON" should {
       "produce the expected object" in {
-        desJson.as[AddUkSavingsResponse] shouldBe model
+        desJson.as[AddUkSavingsAccountResponse] shouldBe model
       }
     }
 

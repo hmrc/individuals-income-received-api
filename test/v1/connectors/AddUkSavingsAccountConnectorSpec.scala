@@ -22,63 +22,57 @@ import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRequest, AddUkSavingsAccountRequestBody}
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
 
 import scala.concurrent.Future
 
 class AddUkSavingsAccountConnectorSpec extends ConnectorSpec {
 
   val nino: String    = "AA111111A"
-  val taxYear: String = "2019-20"
 
-  val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
-    amountBeforeTax = None,
-    countryCode = "FRA",
-    taxTakenOff = None,
-    specialWithholdingTax = None,
-    taxableAmount = 233.11,
-    foreignTaxCreditRelief = false
+  val addUkSavingsAccountRequestBody: AddUkSavingsAccountRequestBody = AddUkSavingsAccountRequestBody(accountName = "Shares savings account")
+
+  val addUkSavingsAccountRequest: AddUkSavingsAccountRequest = AddUkSavingsAccountRequest(
+    nino = Nino(nino),
+    body = addUkSavingsAccountRequestBody
   )
 
-  val amendSavingsRequestBody: AmendSavingsRequestBody = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
-
-  val amendSavingsRequest: AmendSavingsRequest = AmendSavingsRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = amendSavingsRequestBody
+  val addUkSavingsAccountResponse: AddUkSavingsAccountResponse = AddUkSavingsAccountResponse(
+    savingsAccountId = "SAVKB2UVwUTBQGJ"
   )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: AmendSavingsConnector = new AmendSavingsConnector(
+    val connector: AddUkSavingsAccountConnector = new AddUkSavingsAccountConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.desBaseUrl returns baseUrl
+    MockedAppConfig.desToken returns "des-token"
+    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
-  "AddUkSavingsAccountConnector" when {
-    "addSavings" must {
-      "return a 200 status for a success scenario" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
+  "addSavings" should {
+    "return a 200 status for a success scenario" when {
+     "valid request is supplied" in new Test {
+        val outcome                                      = Right(ResponseWrapper(correlationId, addUkSavingsAccountResponse))
         implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredDesHeadersPost: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
           .post(
             url = s"$baseUrl/income-tax/income-sources/nino/$nino",
-            config = dummyIfsHeaderCarrierConfig,
-            body = amendSavingsRequestBody,
-            requiredHeaders = requiredIfsHeadersPut,
+            config = dummyDesHeaderCarrierConfig,
+            body = addUkSavingsAccountRequestBody,
+            requiredHeaders = requiredDesHeadersPost,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))
 
-        await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome
+        await(connector.addSavings(addUkSavingsAccountRequest)) shouldBe outcome
       }
     }
   }

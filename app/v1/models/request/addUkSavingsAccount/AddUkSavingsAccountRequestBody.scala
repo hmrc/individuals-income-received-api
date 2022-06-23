@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package v1.models.response.addUkSavings
+package v1.models.request.addUkSavingsAccount
 
+import play.api.libs.json.{Json, OWrites, Reads}
 
-import play.api.libs.json.{JsPath, Json, Reads, Writes}
+case class AddUkSavingsAccountRequestBody(accountName: String)
 
-case class AddUkSavingsResponse(savingsAccountId: String)
+object AddUkSavingsAccountRequestBody {
 
-object AddUkSavingsResponse {
+  implicit val reads: Reads[AddUkSavingsAccountRequestBody] = Json.reads[AddUkSavingsAccountRequestBody]
 
-  implicit val reads: Reads[AddUkSavingsResponse] = (JsPath \"incomeSourceId").read[String].map(AddUkSavingsResponse(_))
+  implicit val writes: OWrites[AddUkSavingsAccountRequestBody] = (addUkSavingsRequestBody:AddUkSavingsAccountRequestBody) =>
+    Json.obj(
+      "incomeSourceType" -> "interest-from-uk-banks",
+      "incomeSourceName" -> addUkSavingsRequestBody.accountName
+  )
 
-  implicit val writes: Writes[AddUkSavingsResponse] = Json.writes[AddUkSavingsResponse]
 }

@@ -21,7 +21,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.AddUkSavingsAccountConnector
-import v1.models.request.amendSavings.AmendSavingsRequest
+import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRequest
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,9 +32,9 @@ trait MockAddUkSavingsAccountConnector extends MockFactory {
 
   object MockAddUkSavingsAccountConnector {
 
-    def addSavings(request: AmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def addSavings(request: AddUkSavingsAccountRequest): CallHandler[Future[DownstreamOutcome[AddUkSavingsAccountResponse]]] = {
       (mockAddUkSavingsAccountConnector
-        .addSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .addSavings(_: AddUkSavingsAccountRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
 

@@ -25,7 +25,8 @@ import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.AddUkSavingsAccountConnector
-import v1.models.request.amendSavings.AmendSavingsRequest
+import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRequest
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,11 +34,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AddUkSavingsAccountService @Inject()(connector: AddUkSavingsAccountConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def addSavings(request: AmendSavingsRequest)(implicit
+  def addSavings(request: AddUkSavingsAccountRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.addSavings(request)).leftMap(mapDesErrors(desErrorMap))
