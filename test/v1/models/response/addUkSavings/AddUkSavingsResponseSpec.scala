@@ -14,52 +14,41 @@
  * limitations under the License.
  */
 
-package v1.models.request.addUkSavings
+package v1.models.response.addUkSavings
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.Json
 import support.UnitSpec
 
-class AddUkSavingsRequestBodySpec extends UnitSpec {
+class AddUkSavingsResponseSpec extends UnitSpec {
+
+  val model: AddUkSavingsResponse = AddUkSavingsResponse("SAVKB2UVwUTBQGJ")
 
   val mtdJson = Json.parse(
     """
       |{
-      |   "accountName": "Shares savings account"
+      |    "savingsAccountId": "SAVKB2UVwUTBQGJ"
       |}
       |""".stripMargin)
 
   val desJson = Json.parse(
     """
       |{
-      |    "incomeSourceType": "interest-from-uk-banks",
-      |    "incomeSourceName": "Shares savings account"
+      |    "incomeSourceId": "SAVKB2UVwUTBQGJ"
       |}
       |""".stripMargin)
 
 
-  val model: AddUkSavingsRequestBody = AddUkSavingsRequestBody("Shares savings account")
-
-  "AddUkSavings" when {
-    "read from a valid JSON" should {
+  "AddUkSavingsResponse" when {
+    "read from valid JSON" should {
       "produce the expected object" in {
-        mtdJson.as[AddUkSavingsRequestBody] shouldBe model
+        desJson.as[AddUkSavingsResponse] shouldBe model
+      }
+    }
+
+    "written to JSON" should {
+      "produce the expected Json" in {
+        Json.toJson(model) shouldBe mtdJson
       }
     }
   }
-
-  "read from empty JSON" should {
-    "produce a JsError" in {
-      val invalidJson = JsObject.empty
-      invalidJson.validate[AddUkSavingsRequestBody] shouldBe a[JsError]
-    }
-  }
-
-  "written to JSON" should {
-    "Produce the expected JsObject" in {
-      Json.toJson(model) shouldBe desJson
-    }
-  }
-
-
-
 }

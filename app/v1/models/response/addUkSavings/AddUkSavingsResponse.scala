@@ -23,7 +23,7 @@ case class AddUkSavingsResponse(savingsAccountId: String)
 
 object AddUkSavingsResponse {
 
-  implicit val reads: Reads[AddUkSavingsResponse] = (JsPath \"nameToRead").read[String].map(AddUkSavingsResponse(_))
+  implicit val reads: Reads[AddUkSavingsResponse] = (JsPath \"incomeSourceId").read[String].map(AddUkSavingsResponse(_))
 
   implicit val writes: Writes[AddUkSavingsResponse] = Json.writes[AddUkSavingsResponse]
 }

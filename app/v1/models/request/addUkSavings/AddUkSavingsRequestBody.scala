@@ -16,7 +16,7 @@
 
 package v1.models.request.addUkSavings
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class AddUkSavingsRequestBody(accountName: String)
 
@@ -24,5 +24,10 @@ object AddUkSavingsRequestBody {
 
   implicit val reads: Reads[AddUkSavingsRequestBody] = Json.reads[AddUkSavingsRequestBody]
 
-  implicit val writes: OWrites[AddUkSavingsRequestBody] = (JsPath \ "incomeSourceName").write[String].contramap(_.accountName)
+  implicit val writes: OWrites[AddUkSavingsRequestBody] = (addUkSavingsRequestBody:AddUkSavingsRequestBody) =>
+    Json.obj(
+      "incomeSourceType" -> "interest-from-uk-banks",
+      "incomeSourceName" -> addUkSavingsRequestBody.accountName
+  )
+
 }
