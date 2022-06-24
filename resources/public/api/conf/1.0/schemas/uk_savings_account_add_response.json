@@ -25,7 +25,7 @@
             "type": "string",
             "enum": [
               "list-all-uk-savings-account",
-              "create-and-amend-uk-savings-account-annual-summary",
+              "create-and-amend-uk-savings-account-annual-summary"
             ]
           },
           "method": {
