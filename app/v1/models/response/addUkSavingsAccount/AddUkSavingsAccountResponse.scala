@@ -16,7 +16,11 @@
 
 package v1.models.response.addUkSavingsAccount
 
+import api.hateoas.HateoasLinksFactory
+import api.models.hateoas.{HateoasData, Link}
+import config.AppConfig
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
+import v1.models.response.listEmployment.Employment._
 
 case class AddUkSavingsAccountResponse(savingsAccountId: String)
 
@@ -25,4 +29,17 @@ object AddUkSavingsAccountResponse {
   implicit val reads: Reads[AddUkSavingsAccountResponse] = (JsPath \ "incomeSourceId").read[String].map(AddUkSavingsAccountResponse(_))
 
   implicit val writes: Writes[AddUkSavingsAccountResponse] = Json.writes[AddUkSavingsAccountResponse]
+
+  implicit object AddUkSavingsLinksFactory extends HateoasLinksFactory[AddUkSavingsResponse,AddUkSavingsHateoasData] {
+
+    override def links(appConfig: AppConfig, data: AddUkSavingsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        listUkSavings(appConfig, nino),
+        createAmendUkSavings(appConfig, nino, taxYear, savingsAccountId)
+      )
+    }
+  }
 }
+
+case class AddUkSavingsHateoasData(nino: String, taxYear: String, savingsAccountId: String) extends HateoasData

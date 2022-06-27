@@ -21,6 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
@@ -30,6 +31,8 @@ import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAddUkSavingsRequestParser
 import v1.mocks.services.MockAddUkSavingsService
+import v1.models.request.addUkSavings.{AddUkSavingsRawData, AddUkSavingsRequest, AddUkSavingsRequestBody}
+import v1.models.response.addUkSavings.AddUkSavingsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -87,7 +90,6 @@ class AddUkSavingsControllerSpec
 
     val rawData: AddUkSavingsRawData = AddUkSavingsRawData(
       nino = nino,
-      taxYear = taxYear,
       body = AnyContentAsJson(requestBodyJson)
     )
 
@@ -97,12 +99,11 @@ class AddUkSavingsControllerSpec
 
     val requestData: AddUkSavingsRequest = AddUkSavingsRequest(
       nino = Nino(nino),
-      taxYear = taxYear,
       body = addUkSavingsRequestBody
     )
 
     val responseData: AddUkSavingsResponse = AddUkSavingsResponse(
-      incomeSourceId = "SAVKB2UVwUTBQGJ"
+      savingsAccountId = savingsAccountId
     )
 
     val responseJson: JsValue = Json.parse(

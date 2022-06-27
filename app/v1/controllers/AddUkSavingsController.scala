@@ -27,6 +27,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.models.request.addUkSavings.AddUkSavingsRawData
 
 import scala.concurrent.{ExecutionContext, Future}
 
