@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.addUkSavings
+package v1.models.request.addUkSavingsAccount
 
 import api.models.domain.Nino
 
-case class AddUkSavingsRequest(nino: Nino, body: AddUkSavingsRequestBody)
+case class AddUkSavingsAccountRequest(nino: Nino, body: AddUkSavingsAccountRequestBody)
