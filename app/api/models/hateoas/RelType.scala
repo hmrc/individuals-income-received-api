@@ -70,5 +70,8 @@ object RelType {
 
   val RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS = "retrieve-all-cgt-residential-property-disposals-and-overrides"
 
+  val LIST_UK_SAVINGS = "list-all-uk-savings-account"
+  val CREATE_AND_AMEND_UK_SAVINGS = "create-and-amend-uk-savings-account-annual-summary"
+
   val SELF = "self"
 }
