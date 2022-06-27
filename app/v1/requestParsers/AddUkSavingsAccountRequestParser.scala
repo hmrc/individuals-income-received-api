@@ -19,14 +19,14 @@ package v1.requestParsers
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
 import javax.inject.{Inject, Singleton}
-import v1.models.request.addUkSavings._
+import v1.models.request.addUkSavingsAccount._
 import v1.requestParsers.validators.AddUkSavingsAccountValidator
 
 @Singleton
 class AddUkSavingsAccountRequestParser @Inject() (val validator: AddUkSavingsAccountValidator)
-    extends RequestParser[AddUkSavingsRawData, AddUkSavingsRequest] {
+    extends RequestParser[AddUkSavingsAccountRawData, AddUkSavingsAccountRequest] {
 
-  override protected def requestFor(data: AddUkSavingsRawData): AddUkSavingsRequest =
-    AddUkSavingsRequest(Nino(data.nino), data.body.json.as[AddUkSavingsRequestBody])
+  override protected def requestFor(data: AddUkSavingsAccountRawData): AddUkSavingsAccountRequest =
+    AddUkSavingsAccountRequest(Nino(data.nino), data.body.json.as[AddUkSavingsAccountRequestBody])
 
 }

@@ -19,32 +19,32 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import javax.inject.Singleton
-import v1.models.request.addUkSavings.{AddUkSavingsRawData, AddUkSavingsRequestBody}
+import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequestBody}
 import v1.requestParsers.validators.validations._
 
 @Singleton
-class AddUkSavingsAccountValidator extends Validator[AddUkSavingsRawData] {
+class AddUkSavingsAccountValidator extends Validator[AddUkSavingsAccountRawData] {
 
   private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AddUkSavingsRawData): List[MtdError] = {
+  override def validate(data: AddUkSavingsAccountRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: AddUkSavingsRawData => List[List[MtdError]] = { data =>
+  private def parameterFormatValidation: AddUkSavingsAccountRawData => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino)
     )
   }
 
-  private def bodyFormatValidator: AddUkSavingsRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: AddUkSavingsAccountRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AddUkSavingsRequestBody](data.body.json)
+      JsonFormatValidation.validate[AddUkSavingsAccountRequestBody](data.body.json)
     )
   }
 
-  private def bodyValueValidator: AddUkSavingsRawData => List[List[MtdError]] = { data =>
-    val requestBody = data.body.json.as[AddUkSavingsRequestBody]
+  private def bodyValueValidator: AddUkSavingsAccountRawData => List[List[MtdError]] = { data =>
+    val requestBody = data.body.json.as[AddUkSavingsAccountRequestBody]
 
     List(AccountNameValidation.validate(accountName = requestBody.accountName))
   }

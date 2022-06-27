@@ -202,16 +202,16 @@ object RuleDeleteForbiddenError
     )
 
 object RuleMaximumSavingsAccountsLimitError
-  extends MtdError(
-    code = "RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT",
-    message = "The 1000 savings account limit exceeded"
-  )
+    extends MtdError(
+      code = "RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT",
+      message = "The 1000 savings account limit exceeded"
+    )
 
 object RuleDuplicateAccountNameError
-  extends MtdError(
-    code = "RULE_DUPLICATE_ACCOUNT_NAME",
-    message = "Duplicate account name given for supplied NINO"
-  )
+    extends MtdError(
+      code = "RULE_DUPLICATE_ACCOUNT_NAME",
+      message = "Duplicate account name given for supplied NINO"
+    )
 
 // Not found errors
 object PpdSubmissionIdNotFoundError

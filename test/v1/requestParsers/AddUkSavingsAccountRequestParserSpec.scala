@@ -22,7 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.mocks.validators.MockAddUkSavingsAccountValidator
-import v1.models.request.addUkSavings._
+import v1.models.request.addUkSavingsAccount._
 
 class AddUkSavingsAccountRequestParserSpec extends UnitSpec {
 
@@ -37,14 +37,14 @@ class AddUkSavingsAccountRequestParserSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val addUkSavingsAccountRawData = AddUkSavingsRawData(
+  private val addUkSavingsAccountRawData = AddUkSavingsAccountRawData(
     nino = nino,
     body = AnyContentAsJson(validRequestBodyJson)
   )
 
-  private val addUkSavingsAccountRequest = AddUkSavingsRequest(
+  private val addUkSavingsAccountRequest = AddUkSavingsAccountRequest(
     nino = Nino(nino),
-    body = AddUkSavingsRequestBody(accountName = "Shares savings account")
+    body = AddUkSavingsAccountRequestBody(accountName = "Shares savings account")
   )
 
   trait Test extends MockAddUkSavingsAccountValidator {

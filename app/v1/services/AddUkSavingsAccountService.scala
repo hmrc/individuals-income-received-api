@@ -32,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsAccountService @Inject()(connector: AddUkSavingsAccountConnector) extends DownstreamResponseMappingSupport with Logging {
+class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def addSavings(request: AddUkSavingsAccountRequest)(implicit
       hc: HeaderCarrier,
@@ -49,13 +49,13 @@ class AddUkSavingsAccountService @Inject()(connector: AddUkSavingsAccountConnect
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDVALUE"           -> NinoFormatError,
-      "MAX_ACCOUNTS_REACHED"      -> RuleMaximumSavingsAccountsLimitError,
-      "ALREADY_EXISTS"            -> RuleDuplicateAccountNameError,
-      "INVALID_IDTYPE"            -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "INVALID_IDVALUE"      -> NinoFormatError,
+      "MAX_ACCOUNTS_REACHED" -> RuleMaximumSavingsAccountsLimitError,
+      "ALREADY_EXISTS"       -> RuleDuplicateAccountNameError,
+      "INVALID_IDTYPE"       -> StandardDownstreamError,
+      "INVALID_PAYLOAD"      -> StandardDownstreamError,
+      "SERVER_ERROR"         -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"  -> StandardDownstreamError
     )
 
 }

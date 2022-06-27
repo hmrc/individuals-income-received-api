@@ -24,10 +24,10 @@ object AddUkSavingsAccountRequestBody {
 
   implicit val reads: Reads[AddUkSavingsAccountRequestBody] = Json.reads[AddUkSavingsAccountRequestBody]
 
-  implicit val writes: OWrites[AddUkSavingsAccountRequestBody] = (addUkSavingsRequestBody:AddUkSavingsAccountRequestBody) =>
+  implicit val writes: OWrites[AddUkSavingsAccountRequestBody] = (addUkSavingsRequestBody: AddUkSavingsAccountRequestBody) =>
     Json.obj(
       "incomeSourceType" -> "interest-from-uk-banks",
       "incomeSourceName" -> addUkSavingsRequestBody.accountName
-  )
+    )
 
 }

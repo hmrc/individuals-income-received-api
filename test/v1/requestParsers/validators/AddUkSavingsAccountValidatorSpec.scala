@@ -20,7 +20,7 @@ import api.models.errors._
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.models.request.addUkSavings.AddUkSavingsRawData
+import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
 
 class AddUkSavingsAccountValidatorSpec extends UnitSpec {
 
@@ -66,37 +66,37 @@ class AddUkSavingsAccountValidatorSpec extends UnitSpec {
     "running a validation" should {
       "return no errors" when {
         "a valid request is supplied" in {
-          validator.validate(AddUkSavingsRawData(validNino, validRawRequestBody)) shouldBe Nil
+          validator.validate(AddUkSavingsAccountRawData(validNino, validRawRequestBody)) shouldBe Nil
         }
       }
 
       "return NinoFormatError" when {
         "an invalid nino is supplied" in {
-          validator.validate(AddUkSavingsRawData("A12344A", validRawRequestBody)) shouldBe
+          validator.validate(AddUkSavingsAccountRawData("A12344A", validRawRequestBody)) shouldBe
             List(NinoFormatError)
         }
       }
 
       "return RuleIncorrectOrEmptyBodyError" when {
         "an empty JSON body is submitted" in {
-          validator.validate(AddUkSavingsRawData(validNino, emptyRawRequestBody)) shouldBe
+          validator.validate(AddUkSavingsAccountRawData(validNino, emptyRawRequestBody)) shouldBe
             List(RuleIncorrectOrEmptyBodyError)
         }
 
         "a non-empty JSON body is submitted without the mandatory account name field" in {
-          validator.validate(AddUkSavingsRawData(validNino, nonsenseRawRequestBody)) shouldBe
+          validator.validate(AddUkSavingsAccountRawData(validNino, nonsenseRawRequestBody)) shouldBe
             List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountName"))))
         }
 
         "account name is supplied with the wrong data type" in {
-          validator.validate(AddUkSavingsRawData(validNino, invalidFieldTypeRawRequestBody)) shouldBe
+          validator.validate(AddUkSavingsAccountRawData(validNino, invalidFieldTypeRawRequestBody)) shouldBe
             List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/accountName"))))
         }
       }
 
       "return AccountNameFormatError" when {
         "an invalid account name is supplied" in {
-          validator.validate(AddUkSavingsRawData(validNino, invalidValueRawRequestBody)) shouldBe
+          validator.validate(AddUkSavingsAccountRawData(validNino, invalidValueRawRequestBody)) shouldBe
             List(AccountNameFormatError)
         }
       }
