@@ -23,8 +23,8 @@ import v1.models.request.addUkSavings._
 import v1.requestParsers.validators.AddUkSavingsAccountValidator
 
 @Singleton
-class AddUkSavingsAccountRequestParser @Inject()(val validator: AddUkSavingsAccountValidator)
-  extends RequestParser[AddUkSavingsRawData, AddUkSavingsRequest] {
+class AddUkSavingsAccountRequestParser @Inject() (val validator: AddUkSavingsAccountValidator)
+    extends RequestParser[AddUkSavingsRawData, AddUkSavingsRequest] {
 
   override protected def requestFor(data: AddUkSavingsRawData): AddUkSavingsRequest =
     AddUkSavingsRequest(Nino(data.nino), data.body.json.as[AddUkSavingsRequestBody])

@@ -27,7 +27,7 @@ import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivid
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
       hc: HeaderCarrier,

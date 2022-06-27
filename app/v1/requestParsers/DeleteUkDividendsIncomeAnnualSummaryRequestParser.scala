@@ -18,13 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{
+  DeleteUkDividendsIncomeAnnualSummaryRawData,
+  DeleteUkDividendsIncomeAnnualSummaryRequest
+}
 import v1.requestParsers.validators.DeleteUkDividendsIncomeAnnualSummaryValidator
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryRequestParser @Inject()(val validator: DeleteUkDividendsIncomeAnnualSummaryValidator)
+class DeleteUkDividendsIncomeAnnualSummaryRequestParser @Inject() (val validator: DeleteUkDividendsIncomeAnnualSummaryValidator)
     extends RequestParser[DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest] {
 
   override protected def requestFor(data: DeleteUkDividendsIncomeAnnualSummaryRawData): DeleteUkDividendsIncomeAnnualSummaryRequest =

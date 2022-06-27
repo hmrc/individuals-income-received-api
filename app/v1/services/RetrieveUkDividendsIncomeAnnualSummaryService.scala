@@ -32,8 +32,9 @@ import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivid
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkDividendsIncomeAnnualSummaryService @Inject()(connector: RetrieveUKDividendsIncomeAnnualSummaryConnector)
-  extends DownstreamResponseMappingSupport with Logging {
+class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: RetrieveUKDividendsIncomeAnnualSummaryConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
       hc: HeaderCarrier,
@@ -49,14 +50,14 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject()(connector: Retriev
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_NINO"              -> NinoFormatError,
-    "INVALID_TYPE"              -> StandardDownstreamError,
-    "INVALID_TAXYEAR"           -> TaxYearFormatError,
-    "INVALID_INCOME_SOURCE"     -> StandardDownstreamError,
-    "NOT_FOUND_PERIOD"          -> NotFoundError,
-    "NOT_FOUND_INCOME_SOURCE"   -> NotFoundError,
-    "SERVER_ERROR"              -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+    "INVALID_NINO"            -> NinoFormatError,
+    "INVALID_TYPE"            -> StandardDownstreamError,
+    "INVALID_TAXYEAR"         -> TaxYearFormatError,
+    "INVALID_INCOME_SOURCE"   -> StandardDownstreamError,
+    "NOT_FOUND_PERIOD"        -> NotFoundError,
+    "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
+    "SERVER_ERROR"            -> StandardDownstreamError,
+    "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
   )
 
 }

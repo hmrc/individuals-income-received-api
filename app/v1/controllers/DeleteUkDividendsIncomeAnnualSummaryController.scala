@@ -33,13 +33,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryController @Inject()(val authService: EnrolmentsAuthService,
-                                                               val lookupService: MtdIdLookupService,
-                                                               requestParser: DeleteUkDividendsIncomeAnnualSummaryRequestParser,
-                                                               service: DeleteUkDividendsIncomeAnnualSummaryService,
-                                                               auditService: AuditService,
-                                                               cc: ControllerComponents,
-                                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
+                                                                val lookupService: MtdIdLookupService,
+                                                                requestParser: DeleteUkDividendsIncomeAnnualSummaryRequestParser,
+                                                                service: DeleteUkDividendsIncomeAnnualSummaryService,
+                                                                auditService: AuditService,
+                                                                cc: ControllerComponents,
+                                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
