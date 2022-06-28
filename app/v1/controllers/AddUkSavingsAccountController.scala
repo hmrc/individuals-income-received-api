@@ -22,24 +22,28 @@ import api.hateoas.HateoasFactory
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v1.models.request.addUkSavings.AddUkSavingsRawData
+import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountHateoasData
+import v1.requestParsers.AddUkSavingsAccountRequestParser
+import v1.services.AddUkSavingsAccountService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsController @Inject() (val authService: EnrolmentsAuthService,
-                                        val lookupService: MtdIdLookupService,
-                                        requestParser: AddUkSavingsRequestParser,
-                                        service: AddUkSavingsService,
-                                        auditService: AuditService,
-                                        hateoasFactory: HateoasFactory,
-                                        cc: ControllerComponents,
-                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthService,
+                                              val lookupService: MtdIdLookupService,
+                                              requestParser: AddUkSavingsAccountRequestParser,
+                                              service: AddUkSavingsAccountService,
+                                              auditService: AuditService,
+                                              hateoasFactory: HateoasFactory,
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
 
   extends AuthorisedController(cc)
   with BaseController
@@ -47,24 +51,24 @@ class AddUkSavingsController @Inject() (val authService: EnrolmentsAuthService,
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "AddUkSavingsController",
-      endpointName = "addSavings"
+      controllerName = "AddUkSavingsAccountController",
+      endpointName = "addSavingsAccount"
     )
 
-  def addUkSavings(nino: String, taxYear: String): Action[JsValue] =
+  def addUkSavingsAccount(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] with CorrelationId: $correlationId")
 
-      val rawData: AddUkSavingsRawData = AddUkSavingsRawData(nino = nino, body = AnyContentAsJson(request.body))
+      val rawData: AddUkSavingsAccountRawData = AddUkSavingsAccountRawData(nino = nino, body = AnyContentAsJson(request.body))
 
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.addEmployment(parsedRequest))
+          serviceResponse <- EitherT(service.addSavings(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrap(serviceResponse.responseData, AddUkSavingsHateoasData(nino, taxYear, serviceResponse.responseData.employmentId))
+              .wrap(serviceResponse.responseData, AddUkSavingsAccountHateoasData(nino, taxYear, serviceResponse.responseData.savingsAccountId))
               .asRight[ErrorWrapper]
           )
         } yield {

@@ -22,19 +22,22 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRequest
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
+import v1.services.AddUkSavingsAccountService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAddUkSavingsService extends MockFactory {
+trait MockAddUkSavingsAccountService extends MockFactory {
 
-  val mockAddUkSavingsService: AddUkSavingsService = mock[AddUkSavingsService]
+  val mockAddUkSavingsAccountService: AddUkSavingsAccountService = mock[AddUkSavingsAccountService]
 
   object MockAddUkSavingsService {
 
     def addUkSavingsService(
-                           requestData: AddUkSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsResponse]]]] = {
-      (mockAddUkSavingsService
-        .addUkSavings(_: AddUkSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _:EndpointLogContext, _: String))
+                           requestData: AddUkSavingsAccountRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]]] = {
+      (mockAddUkSavingsAccountService
+        .addSavings(_: AddUkSavingsAccountRequest)(_: HeaderCarrier, _: ExecutionContext, _:EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
   }

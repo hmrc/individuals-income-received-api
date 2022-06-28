@@ -29,22 +29,22 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockAddUkSavingsRequestParser
-import v1.mocks.services.MockAddUkSavingsService
+import v1.mocks.requestParsers.{MockAddUkSavingsAccountRequestParser, MockAddUkSavingsRequestParser}
+import v1.mocks.services.MockAddUkSavingsAccountService
 import v1.models.request.addUkSavings.{AddUkSavingsRawData, AddUkSavingsRequest, AddUkSavingsRequestBody}
 import v1.models.response.addUkSavings.AddUkSavingsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AddUkSavingsControllerSpec
+class AddUkSavingsAccountAccountControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
-    with MockAddUkSavingsService
+    with MockAddUkSavingsAccountService
     with MockAuditService
-    with MockAddUkSavingsRequestParser
+    with MockAddUkSavingsAccountRequestParser
     with MockHateoasFactory
     with HateoasLinks
     with MockIdGenerator {
@@ -59,11 +59,11 @@ class AddUkSavingsControllerSpec
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new AddUkSavingsController(
+    val controller = new AddUkSavingsAccountController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockAddUkSavingsRequestParser,
-      service = mockAddUkSavingsService,
+      requestParser = mockAddUkSavingsAccountRequestParser,
+      service = mockAddUkSavingsAccountService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

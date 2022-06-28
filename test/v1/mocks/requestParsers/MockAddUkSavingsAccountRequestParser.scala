@@ -19,15 +19,17 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequest}
+import v1.requestParsers.AddUkSavingsAccountRequestParser
 
-trait MockAddUkSavingsRequestParser extends MockFactory {
+trait MockAddUkSavingsAccountRequestParser extends MockFactory {
 
-  val mockAddUkSavingsRequestParser: AddUkSavingsRequestParser = mock[AddUkSavingsRequestParser]
+  val mockAddUkSavingsAccountRequestParser: AddUkSavingsAccountRequestParser = mock[AddUkSavingsAccountRequestParser]
 
-  object MockAddUkSavingsRequestParser {
+  object MockAddUkSavingsAccountRequestParser {
 
-    def parse(data: AddUkSavingsRequestParser): CallHandler[Either[ErrorWrapper, AddUkSavingsRequestRequest]] = {
-      (mockAddUkSavingsRequestParser.parseRequest(_: AddUkSavingsRequestRawData)(_: String)).expects(data, *)
+    def parse(data: AddUkSavingsAccountRequestParser): CallHandler[Either[ErrorWrapper, AddUkSavingsAccountRequest]] = {
+      (mockAddUkSavingsAccountRequestParser.parseRequest(_: AddUkSavingsAccountRawData)(_: String)).expects(data, *)
     }
   }
 }

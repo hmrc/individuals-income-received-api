@@ -25,7 +25,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.{ACCEPT, AUTHORIZATION}
 import support.IntegrationBaseSpec
 
-class AddUkSavingsControllerISpec extends IntegrationBaseSpec {
+class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 

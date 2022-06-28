@@ -30,9 +30,9 @@ object AddUkSavingsAccountResponse {
 
   implicit val writes: Writes[AddUkSavingsAccountResponse] = Json.writes[AddUkSavingsAccountResponse]
 
-  implicit object AddUkSavingsLinksFactory extends HateoasLinksFactory[AddUkSavingsResponse,AddUkSavingsHateoasData] {
+  implicit object AddUkSavingsLinksFactory extends HateoasLinksFactory[AddUkSavingsAccountResponse,AddUkSavingsAccountHateoasData] {
 
-    override def links(appConfig: AppConfig, data: AddUkSavingsHateoasData): Seq[Link] = {
+    override def links(appConfig: AppConfig, data: AddUkSavingsAccountHateoasData): Seq[Link] = {
       import data._
       Seq(
         listUkSavings(appConfig, nino),
@@ -42,4 +42,4 @@ object AddUkSavingsAccountResponse {
   }
 }
 
-case class AddUkSavingsHateoasData(nino: String, taxYear: String, savingsAccountId: String) extends HateoasData
+case class AddUkSavingsAccountHateoasData(nino: String, taxYear: String, savingsAccountId: String) extends HateoasData
