@@ -27,14 +27,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsAccountConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AddUkSavingsAccountConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def addSavings(
-      request: AddUkSavingsAccountRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[AddUkSavingsAccountResponse]] = {
+  def addSavings(request: AddUkSavingsAccountRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[AddUkSavingsAccountResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino    = request.nino.nino
+    val nino = request.nino.nino
 
     post(
       uri = DesUri[AddUkSavingsAccountResponse](s"income-tax/income-sources/nino/$nino"),

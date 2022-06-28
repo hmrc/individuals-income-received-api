@@ -47,7 +47,6 @@ case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig,
   val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
   protected val logger: Logger     = Logger(this.getClass)
 
-
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
       if (featureSwitch.isUkDividendsRoutingEnabled) {

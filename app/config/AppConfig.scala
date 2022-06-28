@@ -105,8 +105,8 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val api1661Token: String                           = config.getString("microservice.services.api1661.token")
   val api1661EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.api1661.environmentHeaders")
 
-  val apiGatewayContext: String    = config.getString("api.gateway.context")
-  val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
+  val apiGatewayContext: String      = config.getString("api.gateway.context")
+  val minimumPermittedTaxYear: Int   = config.getInt("minimumPermittedTaxYear")
   val ukDividendsMinimumTaxYear: Int = config.getInt("ukDividendsMinimumTaxYear")
 
   // API Config

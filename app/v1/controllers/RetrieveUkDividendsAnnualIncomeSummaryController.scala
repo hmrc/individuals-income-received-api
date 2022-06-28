@@ -18,7 +18,16 @@ package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  BadRequestError,
+  ErrorWrapper,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
@@ -42,7 +51,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryController @Inject() (val authServic
                                                                   hateoasFactory: HateoasFactory,
                                                                   cc: ControllerComponents,
                                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+    extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
@@ -64,14 +73,13 @@ class RetrieveUkDividendsAnnualIncomeSummaryController @Inject() (val authServic
         taxYear = taxYear
       )
 
-
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.retrieveUKDividendsIncomeAnnualSummary(parsedRequest))
-          vendorResponse  <- EitherT.fromEither[Future](
+          vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrap(serviceResponse.responseData,RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear))
+              .wrap(serviceResponse.responseData, RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear))
               .asRight[ErrorWrapper])
         } yield {
           logger.info(
@@ -104,4 +112,3 @@ class RetrieveUkDividendsAnnualIncomeSummaryController @Inject() (val authServic
     }
 
 }
-

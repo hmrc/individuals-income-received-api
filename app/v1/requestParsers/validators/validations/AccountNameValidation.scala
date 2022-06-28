@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.request.addUkSavingsAccount
+package v1.requestParsers.validators.validations
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import api.models.errors.{AccountNameFormatError, MtdError}
 
-case class AddUkSavingsAccountRequestBody(accountName: String)
+object AccountNameValidation {
 
-object AddUkSavingsAccountRequestBody {
+  private val regex = "^[A-Za-z0-9 &'\\(\\)\\*,\\-\\./@£]{1,32}$"
 
-  implicit val reads: Reads[AddUkSavingsAccountRequestBody] = Json.reads[AddUkSavingsAccountRequestBody]
-
-  implicit val writes: OWrites[AddUkSavingsAccountRequestBody] = (addUkSavingsRequestBody: AddUkSavingsAccountRequestBody) =>
-    Json.obj(
-      "incomeSourceType" -> "interest-from-uk-banks",
-      "incomeSourceName" -> addUkSavingsRequestBody.accountName
-    )
+  def validate(accountName: String): List[MtdError] = {
+    if (accountName.matches(regex)) NoValidationErrors else List(AccountNameFormatError)
+  }
 
 }
