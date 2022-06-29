@@ -3,12 +3,13 @@ is:
   - headers.testScenarioHeader
   - errors.formatNino
   - errors.formatTaxYear
+  - errors.formatSavingsAccountId
   - errors.ruleTaxYearRangeInvalid
   - errors.ruletaxYearNotSupportedUkSavings
   - errors.notFound
   - errors.duplicateAccountName
   - errors.clientOrAgentNotAuthorised
-displayName: Retrieve UK savings account annual summary [test only]
+displayName: Retrieve UK Savings Account Annual Summary [test only]
 description: This endpoint allows a developer to retrieve UK savings account annual summary for a tax year. This enables them to view their annual savings interest for a previously added savings account. A National Insurance number, Savings Account ID, and tax year must be provided.
 (annotations.sandboxData): !include ../../scenarios/ukSavingsAccount/retrieve.md
 (annotations.scope): "write:self-assessment"
