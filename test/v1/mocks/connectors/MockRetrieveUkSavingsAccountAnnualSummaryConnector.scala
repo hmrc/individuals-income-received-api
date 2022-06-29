@@ -21,6 +21,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.RetrieveUkSavingsAccountAnnualSummaryConnector
+import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,10 +33,10 @@ trait MockRetrieveUkSavingsAccountAnnualSummaryConnector extends MockFactory {
 
   object MockRetrieveUkSavingsAccountAnnualSummaryConnector {
 
-    def retrieveUkSavingsAccountAnnualSummary(requestData: RetrieveUkSavingsAccountAnnualSummaryRequest):
-    CallHandler[Future[DownstreamOutcome[RetrieveUkSavingsAccountAnnualSummaryResponse]]] = {
+    def retrieveUkSavingsAccountAnnualSummary(requestData: RetrieveUkSavingsAnnualSummaryRequest):
+    CallHandler[Future[DownstreamOutcome[RetrieveUkSavingsAnnualSummaryResponse]]] = {
       (mockRetrieveUkSavingsAccountAnnualSummaryConnector
-        .retrieveUkSavingsAccountAnnualSummary(_: RetrieveUkSavingsAccountAnnualSummaryRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .retrieveUkSavingsAccountAnnualSummary(_: RetrieveUkSavingsAnnualSummaryRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
 

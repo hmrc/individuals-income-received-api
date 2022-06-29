@@ -19,9 +19,11 @@ package v1.services
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.models.outcomes.{DesResponse, ResponseWrapper, RetrieveSavingsAccountAnnualSummaryOutcome}
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockRetrieveUkSavingsAccountAnnualSummaryConnector
+import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
+import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
 
 import scala.concurrent.Future
 
@@ -31,9 +33,9 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
   private val taxYear          = "2019-20"
   private val incomeSourceId   = "SAVKB2UVwUTBQGJ"
 
-  private val requestData = RetrieveUkSavingsAccountAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)
+  private val requestData = RetrieveUkSavingsAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)
 
-  private val validResponse = RetrieveUkSavingsAccountAnnualSummaryResponse(
+  private val validResponse = RetrieveUkSavingsAnnualSummaryResponse(
     taxedUkInterest = Some(1230.55),
     untaxedUkInterest = Some(1230.55)
   )
@@ -48,13 +50,23 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
   "RetrieveUkSavingsAccountAnnualSummaryService" when {
     "retrieveUkSavingsAccountAnnualSummary" must {
       "return correct result for a success" in new Test {
-        val outcome: Right[Nothing, ResponseWrapper[Nothing]] = Right(ResponseWrapper(correlationId, validResponse))
+        val request: RetrieveUkSavingsAnnualSummaryRequest = RetrieveUkSavingsAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)
+        "valid data is passed" should {
+          "return a valid response" in new Test {
+            val desResponse: DesResponse[DownstreamUkSavingsAnnualIncomeResponse] =
+              DesResponse(
+                correlationId,
+                DownstreamUkSavingsAnnualIncomeResponse(
+                  Seq(
+                    DownstreamUkSavingsAnnualIncomeResponse(Seq[DownstreamUkSavingsAnnualIncomeItem])
+                  )))
 
-        MockRetrieveUkSavingsAccountAnnualSummaryConnector
-          .retrieveUkSavingsAccountAnnualSummary(requestData)
-          .returns(Future.successful(outcome))
+            MockRetrieveUkSavingsAccountAnnualSummaryConnector.retrieveUkSavingsAccountAnnualSummary(request).returns(Future.successful(Right(desResponse)))
 
-        await(service.retrieveUkSavingsAccountAnnualSummary(requestData)) shouldBe outcome
+            val result: RetrieveSavingsAccountAnnualSummaryOutcome = await(service.retrieveUkSavingsAccountAnnualSummary(request))
+            result shouldBe Right(DesResponse(correlationId, RetrieveUkSavingsAnnualSummaryResponse(Some(2000.99), Some(5000.50))))
+          }
+        }
       }
 
       "map errors according to spec" when {

@@ -65,6 +65,7 @@ object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTI
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
 object AccountNameFormatError           extends MtdError("FORMAT_ACCOUNT_NAME", "The provided account name is invalid")
+object SavingsAccountIdFormatError      extends MtdError("FORMAT_SAVINGS_ACCOUNT_ID", "The format of the supplied savings account ID is not valid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
