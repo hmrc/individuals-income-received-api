@@ -153,6 +153,7 @@ uses:
        description: Resources relating to an individual’s UK savings account
       /{nino}:
         post: !include endpoints/ukSavingsAccount/add.raml
+        put:  !include endpoints/ukSavingsAccount/amend.raml
     /{nino}:
       (annotations.group):
         name: Savings Income
