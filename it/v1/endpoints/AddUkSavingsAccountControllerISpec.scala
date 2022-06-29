@@ -19,7 +19,7 @@ package v1.endpoints
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SERVICE_UNAVAILABLE}
+import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.{ACCEPT, AUTHORIZATION}
@@ -76,7 +76,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "calling the 'add uk savings' endpoint" should {
+  "calling the 'add uk savings account' endpoint" should {
     "return a 200 status code" when {
       "any valid request is made" in new Test {
 

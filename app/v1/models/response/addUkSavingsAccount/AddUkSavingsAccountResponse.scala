@@ -34,11 +34,10 @@ object AddUkSavingsAccountResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: AddUkSavingsAccountHateoasData): Seq[Link] = {
       import data._
       Seq(
-        listUkSavings(appConfig, nino),
-        createAmendUkSavings(appConfig, nino, taxYear, savingsAccountId)
+        listUkSavings(appConfig, nino)
       )
     }
   }
 }
 
-case class AddUkSavingsAccountHateoasData(nino: String, taxYear: String, savingsAccountId: String) extends HateoasData
+case class AddUkSavingsAccountHateoasData(nino: String, savingsAccountId: String) extends HateoasData

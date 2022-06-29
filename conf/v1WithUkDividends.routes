@@ -64,3 +64,6 @@ DELETE     /disposals/residential-property/:nino/:taxYear                   v1.c
 DELETE     /uk-dividends/:nino/:taxYear                                     v1.controllers.DeleteUkDividendsIncomeAnnualSummaryController.deleteUkDividends(nino: String, taxYear: String)
 PUT        /uk-dividends/:nino/:taxYear                                     v1.controllers.CreateAmendUkDividendsAnnualSummaryController.createAmendUkDividendsAnnualSummary(nino: String, taxYear: String)
 GET        /uk-dividends/:nino/:taxYear                                     v1.controllers.RetrieveUkDividendsAnnualIncomeSummaryController.retrieveUkDividends(nino: String, taxYear: String)
+
+# UK Savings Account routes go here:
+POST        /savings/uk-accounts/:nino                                       v1.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)

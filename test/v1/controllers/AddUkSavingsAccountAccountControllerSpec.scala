@@ -52,7 +52,6 @@ class AddUkSavingsAccountAccountControllerSpec
 
   val nino: String = "AA123456A"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  val taxYear: String = "2019-20"
   val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
 
 
@@ -76,8 +75,7 @@ class AddUkSavingsAccountAccountControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
     val links: List[Link] = List(
-      listUkSavings(mockAppConfig, nino),
-      createAmendUkSavings(mockAppConfig, nino, taxYear, savingsAccountId)
+      listUkSavings(mockAppConfig, nino)
     )
 
     val requestBodyJson: JsValue = Json.parse(
@@ -114,11 +112,6 @@ class AddUkSavingsAccountAccountControllerSpec
          |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
          |         "method":"GET",
          |         "rel":"list-all-uk-savings-account"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
-         |         "method":"PUT",
-         |         "rel":"create-and-amend-uk-savings-account-annual-summary"
          |      }
          |   ]
          |}
@@ -138,10 +131,10 @@ class AddUkSavingsAccountAccountControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseData))))
 
         MockHateoasFactory
-          .wrap(responseData, AddUkSavingsAccountHateoasData(nino, taxYear, savingsAccountId))
+          .wrap(responseData, AddUkSavingsAccountHateoasData(nino, savingsAccountId))
           .returns(HateoasWrapper(responseData, links))
 
-        val result: Future[Result] = controller.addUkSavingsAccount(nino, taxYear)(fakePostRequest(requestBodyJson))
+        val result: Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe responseJson
@@ -157,7 +150,7 @@ class AddUkSavingsAccountAccountControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.addUkSavingsAccount(nino, taxYear)(fakePostRequest(requestBodyJson))
+            val result: Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -187,7 +180,7 @@ class AddUkSavingsAccountAccountControllerSpec
               .addUkSavingsAccountService(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.addUkSavingsAccount(nino, taxYear)(fakePostRequest(requestBodyJson))
+            val result: Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -197,6 +190,8 @@ class AddUkSavingsAccountAccountControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
+          (RuleMaximumSavingsAccountsLimitError, BAD_REQUEST),
+          (RuleDuplicateAccountNameError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 

@@ -54,7 +54,7 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
       endpointName = "addUkSavingsAccount"
     )
 
-  def addUkSavingsAccount(nino: String, taxYear: String): Action[JsValue] =
+  def addUkSavingsAccount(nino: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] with CorrelationId: $correlationId")
@@ -67,7 +67,7 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
           serviceResponse <- EitherT(service.addSavings(parsedRequest))
           hateoasResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrap(serviceResponse.responseData, AddUkSavingsAccountHateoasData(nino, taxYear, serviceResponse.responseData.savingsAccountId))
+              .wrap(serviceResponse.responseData, AddUkSavingsAccountHateoasData(nino, serviceResponse.responseData.savingsAccountId))
               .asRight[ErrorWrapper]
           )
         } yield {
@@ -93,7 +93,7 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError |
-           RuleMaximumSavingsAccountsLimitError|
+           RuleMaximumSavingsAccountsLimitError| AccountNameFormatError |
            RuleDuplicateAccountNameError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
