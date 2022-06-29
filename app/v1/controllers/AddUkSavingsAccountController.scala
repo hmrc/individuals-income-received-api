@@ -20,7 +20,7 @@ package v1.controllers
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors._
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import javax.inject.{Inject, Singleton}
@@ -40,7 +40,6 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
                                               val lookupService: MtdIdLookupService,
                                               requestParser: AddUkSavingsAccountRequestParser,
                                               service: AddUkSavingsAccountService,
-                                              auditService: AuditService,
                                               hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -52,7 +51,7 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "AddUkSavingsAccountController",
-      endpointName = "addSavingsAccount"
+      endpointName = "addUkSavingsAccount"
     )
 
   def addUkSavingsAccount(nino: String, taxYear: String): Action[JsValue] =
@@ -93,8 +92,9 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError |
-           RuleTaxYearNotEndedError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+      case BadRequestError | NinoFormatError |
+           RuleMaximumSavingsAccountsLimitError|
+           RuleDuplicateAccountNameError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)

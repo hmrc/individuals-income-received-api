@@ -19,7 +19,7 @@ package v1.endpoints
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, OK, SERVICE_UNAVAILABLE}
+import play.api.http.Status.{BAD_REQUEST, CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NO_CONTENT, OK, SERVICE_UNAVAILABLE}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.{ACCEPT, AUTHORIZATION}
@@ -44,7 +44,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
     val responseJson: JsValue = Json.parse(
       s"""
          |{
-         |    "savingsAccountId": "$savingsAccountId"
+         |    "savingsAccountId": "$savingsAccountId",
          |    "links":[
          |      {
          |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
@@ -78,7 +78,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
 
   "calling the 'add uk savings' endpoint" should {
     "return a 200 status code" when {
-      "any valid requst is made" in new Test {
+      "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()

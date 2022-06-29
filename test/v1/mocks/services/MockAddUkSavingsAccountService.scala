@@ -32,9 +32,9 @@ trait MockAddUkSavingsAccountService extends MockFactory {
 
   val mockAddUkSavingsAccountService: AddUkSavingsAccountService = mock[AddUkSavingsAccountService]
 
-  object MockAddUkSavingsService {
+  object MockAddUkSavingsAccountService {
 
-    def addUkSavingsService(
+    def addUkSavingsAccountService(
                            requestData: AddUkSavingsAccountRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]]] = {
       (mockAddUkSavingsAccountService
         .addSavings(_: AddUkSavingsAccountRequest)(_: HeaderCarrier, _: ExecutionContext, _:EndpointLogContext, _: String))
