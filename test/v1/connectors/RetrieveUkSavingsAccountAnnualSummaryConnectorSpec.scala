@@ -22,6 +22,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 import scala.concurrent.Future
 
@@ -32,14 +34,14 @@ class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
   val taxYearDownstream: String = "2019"
   val incomeSourceId: String    = "SAVKB2UVwUTBQGJ"
 
-  val request: RetrieveUkSavingsAccountAnnualSummaryRequest =
-    RetrieveUkSavingsAccountAnnualSummaryRequest(
+  val request: RetrieveUkSavingsAnnualSummaryRequest =
+    RetrieveUkSavingsAnnualSummaryRequest(
       Nino(nino),
       TaxYear.fromMtd(taxYearMtd),
       incomeSourceId
     )
 
-  private val validResponse = RetrieveUkSavingsAccountAnnualSummaryResponse(
+  private val validResponse = RetrieveUkSavingsAnnualSummaryResponse(
     taxedUkInterest = Some(1230.55),
     untaxedUkInterest = Some(1230.55)
   )
@@ -60,7 +62,7 @@ class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
   "RetrieveUkSavingsAccountAnnualSummaryConnector" when {
     "retrieveUkSavingsAccountAnnualSummary" must {
       "return a 200 status for a success scenario" in new Test {
-        val outcome: Right[Nothing, ResponseWrapper[RetrieveUkSavingsAccountAnnualSummaryConnector]] = Right(ResponseWrapper(correlationId, validResponse))
+        val outcome: Right[Nothing, ResponseWrapper[RetrieveUkSavingsAnnualSummaryResponse]] = Right(ResponseWrapper(correlationId, validResponse))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient

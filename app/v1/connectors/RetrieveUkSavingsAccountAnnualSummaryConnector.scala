@@ -16,23 +16,24 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.DesUri
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-
 import javax.inject.{Inject, Singleton}
 import config.AppConfig
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryConnector {
+class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAccountAnnualSummaryRequest)(implicit
-                                                                                                   hc: HeaderCarrier,
-                                                                                                   ec: ExecutionContext,
-                                                                                                   correlationId: String): Future[DownstreamOutcome[RetrieveUkSavingsAccountAnnualSummaryResponse]] = {
+  def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(
+      implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
@@ -41,8 +42,9 @@ class RetrieveUkSavingsAccountAnnualSummaryConnector {
     val incomeSourceId = request.savingsAccountId
 
     get(
-      DesUri[RetrieveUkSavingsAccountAnnualSummaryResponse](s"income-tax/nino/$nino/income-source/savings/annual/$taxYear?incomeSourceId=$incomeSourceId")
+      DesUri[RetrieveUkSavingsAnnualSummaryResponse](s"income-tax/nino/$nino/income-source/savings/annual/$taxYear?incomeSourceId=$incomeSourceId")
     )
+
   }
 
 }
