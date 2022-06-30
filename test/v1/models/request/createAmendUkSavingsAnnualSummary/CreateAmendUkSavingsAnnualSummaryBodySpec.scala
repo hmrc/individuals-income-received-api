@@ -50,7 +50,7 @@ class CreateAmendUkSavingsAnnualSummaryBodySpec extends UnitSpec {
     }
 
     "reading empty JSON" should {
-      "produce an empty JSON document" in {
+      "create an empty instance" in {
         emptyJson.as[CreateAmendUkSavingsAnnualSummaryBody] shouldBe emptyModel
       }
     }
@@ -59,7 +59,7 @@ class CreateAmendUkSavingsAnnualSummaryBodySpec extends UnitSpec {
   "CreateAmendUkSavingsAnnualSummaryBody writes" when {
 
     "writing a populated instance" should {
-      "write valid JSON" in {
+      "produce valid JSON" in {
         Json.toJson(model) shouldBe json
       }
     }
