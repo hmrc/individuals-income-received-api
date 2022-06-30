@@ -153,8 +153,11 @@ uses:
        description: Resources relating to an individual’s UK savings account
       /{nino}:
         post: !include endpoints/ukSavingsAccount/add.raml
-      /{nino}/{taxYear}/{savingsAccountId}:
-        put:  !include endpoints/ukSavingsAccount/amend.raml
+        /{taxYear}/{savingsAccountId}:
+           uriParameters:
+            taxYear: !include pathParameters/taxYearMinimum2017.raml
+            savingsAccountId: !include pathParameters/savingsAccountId.raml
+           put:  !include endpoints/ukSavingsAccount/amend.raml
     /{nino}:
       (annotations.group):
         name: Savings Income
