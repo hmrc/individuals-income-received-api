@@ -13,39 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package v1.connectors
 
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import play.api.http.Status
-import play.api.mvc.AnyContent
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkSavingsAccountAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig:AppConfig) extends BaseDownstreamConnector
-{
-  def createOrAmendUKSavingsAccountSummary(request: AnyContent) //TODO - replace with the request model
-                                     (implicit
+class CreateAmendUkSavingsAccountAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig:AppConfig)
+  extends BaseDownstreamConnector
+  {
+    def createOrAmendUKSavingsAccountSummary(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
         hc: HeaderCarrier,
         cc: ExecutionContext,
         correlationId: String): Future[DownstreamOutcome[Unit]]= {
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
+      import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    //TODO - confirm mappings are correct
-    val nino:String = request.nino
-    val taxYear:String = request.taxYear.toDownStream
+      implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-    post (
-      uri = DesUri[Unit](s"income-tax/nino/${nino}/income-source/savings/annual/{$taxYear}"),
-      body = request.body
-    )
+      val nino:String = request.nino.nino
+      val taxYear:String = request.taxYear.toDownstream
 
+      post (
+        uri = DesUri[Unit](s"income-tax/nino/${nino}/income-source/savings/annual/{$taxYear}"),
+        body = request.body
+      )
   }
-
 }

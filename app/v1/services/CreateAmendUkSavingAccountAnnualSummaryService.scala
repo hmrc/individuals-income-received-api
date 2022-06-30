@@ -17,45 +17,43 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
-import play.api.mvc.AnyContent
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendUkSavingsAccountAnnualSummaryConnector
+import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRequest
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CreateAmendUkSavingAccountAnnualSummaryService @Inject() (connector: CreateAmendUkSavingsAccountAnnualSummaryConnector)
-extends DownstreamResponseMappingSupport with Logging {
-   def createAmmend(request: AnyContent) //TODO - request here
-                   (implicit
+    extends DownstreamResponseMappingSupport
+    with Logging {
+
+  def createAmend(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
                    hc: HeaderCarrier,
                    ec: ExecutionContext,
                    logContext: EndpointLogContext,
                     correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
      val result = for {
-       desResponseWrapper <- EitherT(connector.createOrAmendUKSavingsAccountSummary(request))
-         .leftMap(desErrorMap)
+          desResponseWrapper <- EitherT(connector.createOrAmendUKSavingsAccountSummary(request))
+                    .leftMap(mapDesErrors(desErrorMap))
      } yield desResponseWrapper
+     result.value
    }
 
-  //TODO:
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_NINO" -> NinoFormatError,
-      "INVALID_TAXYEAR"          -> TaxYearFormatError,
-
-      "INVALID_ACCOUNTING_PERIOD"     -> StandardDownstreamError,
-      "INVALID_TYPE"     -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "NOT_FOUND_INCOME_SOURCE"     -> StandardDownstreamError,
-      "MISSING_CHARITIES_NAME_GIFT_AID"  -> StandardDownstreamError,
-      "MISSING_INVESTMENT_AMOUNT"              -> StandardDownstreamError,
-      "NOT_FOUND"       -> StandardDownstreamError,
-      "GONE"              -> StandardDownstreamError,
+      "INVALID_NINO"                    -> NinoFormatError,
+      "INVALID_TAXYEAR"                 -> TaxYearFormatError,
+      "INVALID_INCOME_SOURCE"           -> SavingsAccountIdFormatError,
+      "INVALID_TYPE"                    -> StandardDownstreamError,
+      "NOT_FOUND_PERIOD"                -> NotFoundError,
+      "NOT_FOUND_INCOME_SOURCE"         -> NotFoundError,
+      "SERVER_ERROR"                    -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
 }

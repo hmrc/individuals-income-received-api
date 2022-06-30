@@ -21,7 +21,9 @@ import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRequest}
 
 import scala.concurrent.Future
 
@@ -32,18 +34,17 @@ class CreateAmendUkSavingsAccountAnnualSummaryConnectorSpec extends  ConnectorSp
     val taxYear: TaxYear  =  TaxYear.fromMtd(taxYearMtd)
     val incomeSourceId:    String     = "ABCDE1234567890"
 
-    val taxedUkInterest:   BigDecimal = 31554452289.99
-    val untaxedUkInterest: BigDecimal = 91523009816.00
+    val taxedUkInterest:   Option[BigDecimal] = Some(31554452289.99)
+    val untaxedUkInterest: Option[BigDecimal] = Some(91523009816.00)
 
     val transactionReference: String  = "0000000000000001"
 
-  //TODO - replace with request model
-     val request = CreateAmendUkSavingsAccountAnnualSummaryRequest(Nino(nino), taxYear, taxedUkInterest, untaxedUkInterest)
+    val body: CreateAmendUkSavingsAnnualSummaryBody = CreateAmendUkSavingsAnnualSummaryBody(taxedUkInterest, untaxedUkInterest)
+    val request = CreateAmendUkSavingsAnnualSummaryRequest(Nino(nino), taxYear,   incomeSourceId, body)
 
-  //TODO - replace with response model
-    private val validResponse = CreateAmendSavingsAccountAnnualSummaryResponse(
-      transactionReference = transactionReference
-    )
+
+    private val validResponse:JsObject = JSON(s"{\"transactionReference\":\"$transactionReference\"}")
+
 
   class Test extends MockHttpClient with MockAppConfig {
 
