@@ -23,7 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse}
 
 import scala.concurrent.Future
 
@@ -41,9 +41,13 @@ class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
       incomeSourceId
     )
 
-  private val validResponse = RetrieveUkSavingsAnnualSummaryResponse(
-    taxedUkInterest = Some(1230.55),
-    untaxedUkInterest = Some(1230.55)
+  private val response = DownstreamUkSavingsAnnualIncomeResponse(
+    Seq(
+      DownstreamUkSavingsAnnualIncomeItem(
+        incomeSourceId = incomeSourceId,
+        taxedUkInterest = Some(1230.55),
+        untaxedUkInterest = Some(1230.55)
+      ))
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -62,7 +66,7 @@ class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
   "RetrieveUkSavingsAccountAnnualSummaryConnector" when {
     "retrieveUkSavingsAccountAnnualSummary" must {
       "return a 200 status for a success scenario" in new Test {
-        val outcome: Right[Nothing, ResponseWrapper[RetrieveUkSavingsAnnualSummaryResponse]] = Right(ResponseWrapper(correlationId, validResponse))
+        private val outcome            = Right(ResponseWrapper(correlationId, response))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient

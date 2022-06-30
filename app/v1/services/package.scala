@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
-package api.models.outcomes
+package v1
 
-case class DesResponse[+T](correlationId: String, responseData: T)
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
+
+package object services {
+
+  type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
+}

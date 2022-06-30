@@ -16,24 +16,23 @@
 
 package v1.connectors
 
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import javax.inject.{Inject, Singleton}
-import config.AppConfig
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.DownstreamUkSavingsAnnualIncomeResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(
-      implicit
+  def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
+      correlationId: String): Future[DownstreamOutcome[DownstreamUkSavingsAnnualIncomeResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
@@ -42,7 +41,7 @@ class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpCl
     val incomeSourceId = request.savingsAccountId
 
     get(
-      DesUri[RetrieveUkSavingsAnnualSummaryResponse](s"income-tax/nino/$nino/income-source/savings/annual/$taxYear?incomeSourceId=$incomeSourceId")
+      DesUri(s"income-tax/nino/$nino/income-source/savings/annual/$taxYear?incomeSourceId=$incomeSourceId")
     )
 
   }
