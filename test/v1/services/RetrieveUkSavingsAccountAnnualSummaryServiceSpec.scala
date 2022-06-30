@@ -19,81 +19,111 @@ package v1.services
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.outcomes.{DesResponse, ResponseWrapper, RetrieveSavingsAccountAnnualSummaryOutcome}
+import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockRetrieveUkSavingsAccountAnnualSummaryConnector
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
+import v1.models.response.retrieveUkSavingsAnnualSummary.{
+  DownstreamUkSavingsAnnualIncomeItem,
+  DownstreamUkSavingsAnnualIncomeResponse,
+  RetrieveUkSavingsAnnualSummaryResponse
+}
 
 import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
 
-  private val nino             = "AA112233A"
-  private val taxYear          = "2019-20"
-  private val incomeSourceId   = "SAVKB2UVwUTBQGJ"
+  private val nino           = "AA112233A"
+  private val taxYear        = "2019-20"
+  private val incomeSourceId = "SAVKB2UVwUTBQGJ"
 
-  private val requestData = RetrieveUkSavingsAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)
-
-  private val validResponse = RetrieveUkSavingsAnnualSummaryResponse(
-    taxedUkInterest = Some(1230.55),
-    untaxedUkInterest = Some(1230.55)
-  )
+  private val request = RetrieveUkSavingsAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)
 
   trait Test extends MockRetrieveUkSavingsAccountAnnualSummaryConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: RetrieveUkSavingsAccountAnnualSummaryService =
       new RetrieveUkSavingsAccountAnnualSummaryService(connector = mockRetrieveUkSavingsAccountAnnualSummaryConnector)
+
   }
 
   "RetrieveUkSavingsAccountAnnualSummaryService" when {
-    "retrieveUkSavingsAccountAnnualSummary" must {
-      "return correct result for a success" in new Test {
-        val request: RetrieveUkSavingsAnnualSummaryRequest = RetrieveUkSavingsAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)
-        "valid data is passed" should {
-          "return a valid response" in new Test {
-            val desResponse: DesResponse[DownstreamUkSavingsAnnualIncomeResponse] =
-              DesResponse(
-                correlationId,
-                DownstreamUkSavingsAnnualIncomeResponse(
-                  Seq(
-                    DownstreamUkSavingsAnnualIncomeResponse(Seq[DownstreamUkSavingsAnnualIncomeItem])
-                  )))
+    "the downstream returns a single account" must {
+      "return a successful result" in new Test {
+        val downstreamResponse: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse] =
+          ResponseWrapper(
+            correlationId,
+            DownstreamUkSavingsAnnualIncomeResponse(
+              Seq(
+                DownstreamUkSavingsAnnualIncomeItem(incomeSourceId = "ignored", taxedUkInterest = Some(2000.99), untaxedUkInterest = Some(5000.50))))
+          )
 
-            MockRetrieveUkSavingsAccountAnnualSummaryConnector.retrieveUkSavingsAccountAnnualSummary(request).returns(Future.successful(Right(desResponse)))
+        MockRetrieveUkSavingsAccountAnnualSummaryConnector
+          .retrieveUkSavingsAccountAnnualSummary(request) returns Future.successful(Right(downstreamResponse))
 
-            val result: RetrieveSavingsAccountAnnualSummaryOutcome = await(service.retrieveUkSavingsAccountAnnualSummary(request))
-            result shouldBe Right(DesResponse(correlationId, RetrieveUkSavingsAnnualSummaryResponse(Some(2000.99), Some(5000.50))))
-          }
+        await(service.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe
+          Right(ResponseWrapper(correlationId, RetrieveUkSavingsAnnualSummaryResponse(Some(2000.99), Some(5000.50))))
+      }
+    }
+
+    "the downstream returns multiple accounts" must {
+      "return an internal server error" in new Test {
+        val downstreamResponse: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse] =
+          ResponseWrapper(
+            correlationId,
+            DownstreamUkSavingsAnnualIncomeResponse(
+              Seq(
+                DownstreamUkSavingsAnnualIncomeItem(incomeSourceId = "ignored1", taxedUkInterest = Some(1), untaxedUkInterest = Some(1)),
+                DownstreamUkSavingsAnnualIncomeItem(incomeSourceId = "ignored1", taxedUkInterest = Some(2), untaxedUkInterest = Some(3))
+              )
+            )
+          )
+
+        MockRetrieveUkSavingsAccountAnnualSummaryConnector
+          .retrieveUkSavingsAccountAnnualSummary(request) returns Future.successful(Right(downstreamResponse))
+
+        await(service.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe
+          Left(ErrorWrapper(correlationId, StandardDownstreamError))
+      }
+    }
+
+    "the downstream returns no accounts" must {
+      "return a NotFoundError" in new Test {
+        val downstreamResponse: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse] =
+          ResponseWrapper(correlationId, DownstreamUkSavingsAnnualIncomeResponse(Nil))
+
+        MockRetrieveUkSavingsAccountAnnualSummaryConnector
+          .retrieveUkSavingsAccountAnnualSummary(request) returns Future.successful(Right(downstreamResponse))
+
+        await(service.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe
+          Left(ErrorWrapper(correlationId, NotFoundError))
+      }
+    }
+
+    "map errors according to spec" when {
+
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
+
+          MockRetrieveUkSavingsAccountAnnualSummaryConnector
+            .retrieveUkSavingsAccountAnnualSummary(request)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+
+          await(service.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
-      }
 
-      "map errors according to spec" when {
+      val input = Seq(
+        ("INVALID_NINO", NinoFormatError),
+        ("INVALID_TYPE", StandardDownstreamError),
+        ("INVALID_TAXYEAR", TaxYearFormatError),
+        ("INVALID_INCOME_SOURCE", SavingsAccountIdFormatError),
+        ("NOT_FOUND_PERIOD", NotFoundError),
+        ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
+        ("SERVER_ERROR", StandardDownstreamError),
+        ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+      )
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
-
-            MockRetrieveUkSavingsAccountAnnualSummaryConnector
-              .retrieveUkSavingsAccountAnnualSummary(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
-
-            await(service.retrieveUkSavingsAccountAnnualSummary(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
-          }
-
-        val input = Seq(
-          ("INVALID_NINO", NinoFormatError),
-          ("INVALID_TYPE", StandardDownstreamError),
-          ("INVALID_TAXYEAR", TaxYearFormatError),
-          ("INVALID_INCOME_SOURCE", SavingsAccountIdFormatError),
-          ("NOT_FOUND_PERIOD", NotFoundError),
-          ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
-        )
-
-        input.foreach(args => (serviceError _).tupled(args))
-      }
+      input.foreach(args => (serviceError _).tupled(args))
     }
   }
 

@@ -17,13 +17,10 @@
 package api.models
 
 import api.models.auth.UserDetails
-import api.models.errors.{ErrorWrapper, MtdError}
-import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
+import api.models.errors.MtdError
 
 package object outcomes {
 
   type AuthOutcome = Either[MtdError, UserDetails]
-
-  type RetrieveSavingsAccountAnnualSummaryOutcome = Either[ErrorWrapper, ResponseWrapper[RetrieveUkSavingsAnnualSummaryResponse]]
 
 }

@@ -18,48 +18,58 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors._
-import api.models.outcomes.{DesResponse, ResponseWrapper, RetrieveSavingsAccountAnnualSummaryOutcome}
+import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
+import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveUkSavingsAccountAnnualSummaryConnector
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.DownstreamUkSavingsAnnualIncomeResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryService @Inject()(connector: RetrieveUkSavingsAccountAnnualSummaryConnector)
-  extends DownstreamResponseMappingSupport with Logging {
+class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: RetrieveUkSavingsAccountAnnualSummaryConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[RetrieveSavingsAccountAnnualSummaryOutcome] = {
-    connector
-      .retrieveUkSavingsAccountAnnualSummary(request)
-      .map(mapDesErrors(mappingDesToMtdError) {
-        case desResponse@DownstreamUkSavingsAnnualIncomeResponse(x) if x.length == 1 => Right(DesResponse(desResponse.correlationId, x.head.toMtd))
-        case desResponse@DownstreamUkSavingsAnnualIncomeResponse(x) if x.isEmpty     => Left(ErrorWrapper(desResponse.correlationId, NotFoundError, None))
-        case desResponse =>
-          logger.info(
-            s"[RetrieveUkSavingsAccountAnnualSummaryService] [retrieve] [CorrelationId - ${desResponse.correlationId}] - " +
-              "More than one matching account found")
-          Left(ErrorWrapper(desResponse.correlationId, StandardDownstreamError, None))
-      })
+      correlationId: String): Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
+
+    val result = for {
+      downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDesErrors(desErrorMap))
+      mtdResponseWrapper        <- EitherT.fromEither[Future](convertToMtd(downstreamResponseWrapper))
+    } yield mtdResponseWrapper
+
+    result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_NINO"              -> NinoFormatError,
-    "INVALID_TYPE"              -> StandardDownstreamError,
-    "INVALID_TAXYEAR"           -> TaxYearFormatError,
-    "INVALID_INCOME_SOURCE"     -> SavingsAccountIdFormatError,
-    "NOT_FOUND_PERIOD"          -> NotFoundError,
-    "NOT_FOUND_INCOME_SOURCE"   -> NotFoundError,
-    "SERVER_ERROR"              -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+  private def convertToMtd(downstreamResponseWrapper: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse])(implicit
+      logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
+    downstreamResponseWrapper.responseData.savingsInterestAnnualIncome match {
+      case item :: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))
+      case Nil         => Left(ErrorWrapper(downstreamResponseWrapper.correlationId, NotFoundError, None))
+
+      case _ =>
+        logger.info(s"[${logContext.controllerName}] [${logContext.endpointName}] - More than one matching account found")
+        Left(ErrorWrapper(downstreamResponseWrapper.correlationId, StandardDownstreamError, None))
+    }
+  }
+
+  private def desErrorMap: Map[String, MtdError] = Map(
+    "INVALID_NINO"            -> NinoFormatError,
+    "INVALID_TYPE"            -> StandardDownstreamError,
+    "INVALID_TAXYEAR"         -> TaxYearFormatError,
+    "INVALID_INCOME_SOURCE"   -> SavingsAccountIdFormatError,
+    "NOT_FOUND_PERIOD"        -> NotFoundError,
+    "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
+    "SERVER_ERROR"            -> StandardDownstreamError,
+    "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
   )
 
 }
