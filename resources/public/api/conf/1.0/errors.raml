@@ -103,6 +103,17 @@ traits:
                 description: 'The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value.'
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
+  ruletaxYearNotSupportedUkSavings:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruletaxYearNotSupportedUkSavings:
+                description: 'The specified tax year is not supported. The tax year specified is before the minimum tax year value.'
+                value:
+                  code: RULE_TAX_YEAR_NOT_SUPPORTED
   ruleTaxYearNotSupportedMinus4Years:
     responses:
       400:
@@ -664,3 +675,14 @@ traits:
               description: 'A duplicate account name was supplied for that National Insurance Number.'
               value:
                 code: RULE_DUPLICATE_ACCOUNT_NAME
+  formatSavingsAccountId:
+   responses:
+    403:
+      body:
+        application/json:
+          type: types.errorResponse
+          examples:
+            formatSavingsAccountId:
+              description: 'The format of the supplied savings account ID is not valid.'
+              value:
+                code: FORMAT_SAVINGS_ACCOUNT_ID
