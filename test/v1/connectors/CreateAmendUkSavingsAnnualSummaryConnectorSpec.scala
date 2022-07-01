@@ -27,7 +27,7 @@ import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavings
 
 import scala.concurrent.Future
 
-class CreateAmendUkSavingsAccountAnnualSummaryConnectorSpec extends  ConnectorSpec {
+class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends  ConnectorSpec {
 
     val nino: String       = "AA111111A"
     val taxYear: String = "2018-19"
@@ -49,7 +49,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryConnectorSpec extends  ConnectorSp
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: CreateAmendUkSavingsAccountAnnualSummaryConnector = new CreateAmendUkSavingsAccountAnnualSummaryConnector(
+    val connector: CreateAmendUkSavingsAnnualSummaryConnector = new CreateAmendUkSavingsAnnualSummaryConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )

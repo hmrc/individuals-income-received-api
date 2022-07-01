@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkSavingsAccountAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig:AppConfig)
+class CreateAmendUkSavingsAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig:AppConfig)
   extends BaseDownstreamConnector
   {
     def createOrAmendUKSavingsAccountSummary(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
@@ -36,6 +36,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryConnector @Inject()(val http: Http
         correlationId: String): Future[DownstreamOutcome[Unit]]= {
 
       import api.connectors.httpparsers.StandardDownstreamHttpParser._
+
 
       implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
