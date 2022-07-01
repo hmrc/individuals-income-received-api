@@ -71,7 +71,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
@@ -108,7 +108,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
         contentAsString(result) shouldBe ""
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(testHateoasLinksJson)))
+        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, Right(Some(testHateoasLinksJson)))
         MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
       }
     }

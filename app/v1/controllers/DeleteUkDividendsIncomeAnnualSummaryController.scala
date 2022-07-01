@@ -81,7 +81,7 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
             Map("nino" -> nino, "taxYear" -> taxYear),
             None,
             serviceResponse.correlationId,
-            AuditResponse(httpStatus = OK, response = Right(None))
+            AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
           )
         )
 
