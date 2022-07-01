@@ -21,7 +21,7 @@ import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.libs.json.JsObject
+import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRequest}
 
@@ -30,8 +30,9 @@ import scala.concurrent.Future
 class CreateAmendUkSavingsAccountAnnualSummaryConnectorSpec extends  ConnectorSpec {
 
     val nino: String       = "AA111111A"
-    val taxYearMtd: String = "2018-19"
-    val taxYear: TaxYear  =  TaxYear.fromMtd(taxYearMtd)
+    val taxYear: String = "2018-19"
+    val taxYearMtd: TaxYear  =  TaxYear.fromMtd(taxYear)
+    val downstreamTaxYear: String = taxYearMtd.toDownstream
     val incomeSourceId:    String     = "ABCDE1234567890"
 
     val taxedUkInterest:   Option[BigDecimal] = Some(31554452289.99)
@@ -40,10 +41,10 @@ class CreateAmendUkSavingsAccountAnnualSummaryConnectorSpec extends  ConnectorSp
     val transactionReference: String  = "0000000000000001"
 
     val body: CreateAmendUkSavingsAnnualSummaryBody = CreateAmendUkSavingsAnnualSummaryBody(taxedUkInterest, untaxedUkInterest)
-    val request = CreateAmendUkSavingsAnnualSummaryRequest(Nino(nino), taxYear,   incomeSourceId, body)
+    val request = CreateAmendUkSavingsAnnualSummaryRequest(Nino(nino), taxYearMtd,   incomeSourceId, body)
 
 
-    private val validResponse:JsObject = JSON(s"{\"transactionReference\":\"$transactionReference\"}")
+    private val validResponse:JsObject = Json.obj("transactionReference"->transactionReference)
 
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -59,22 +60,22 @@ class CreateAmendUkSavingsAccountAnnualSummaryConnectorSpec extends  ConnectorSp
     MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
-  "CreateAmendUkSavingsAccountSummaryConnector" when {
+  "CreateAmendUkSavingsAccountAnnualSummaryConnector" when {
     "createAmendUkSavingsAccountAnnualSummary" must {
       "return a 200 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, validResponse))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
         MockedHttpClient
           .post(
-             url = s"${baseUrl}/income-tax/nino/${nino}/income-source/savings/annual/${taxYear.toDownstream}",
+             url = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/$downstreamTaxYear",
              config = dummyDesHeaderCarrierConfig,
              requiredHeaders = requiredDesHeaders,
              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"),
-             body = "" //TODO - request model
+             body = body
           )
           .returns(Future.successful(outcome))
-        await(connector.createOrAmendUKSavingsAccountSummary(validRequest))
+        await(connector.createOrAmendUKSavingsAccountSummary(request)) shouldBe outcome
       }
     }
   }

@@ -43,7 +43,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryConnector @Inject()(val http: Http
       val taxYear:String = request.taxYear.toDownstream
 
       post (
-        uri = DesUri[Unit](s"income-tax/nino/${nino}/income-source/savings/annual/{$taxYear}"),
+        uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/savings/annual/$taxYear"),
         body = request.body
       )
   }
