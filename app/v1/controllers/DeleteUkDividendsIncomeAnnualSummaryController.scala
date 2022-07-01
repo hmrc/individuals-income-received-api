@@ -17,19 +17,22 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRawData
 import v1.requestParsers.DeleteUkDividendsIncomeAnnualSummaryRequestParser
 import v1.services.DeleteUkDividendsIncomeAnnualSummaryService
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -71,6 +74,17 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
+        auditSubmission(
+          FlattenedGenericAuditDetail(
+            versionNumber = Some("1.0"),
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
+            serviceResponse.correlationId,
+            AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+          )
+        )
+
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -82,6 +96,17 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
+
+          auditSubmission(
+            FlattenedGenericAuditDetail(
+              Some("1.0"),
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
+              resCorrelationId,
+              AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            )
+          )
 
         result
       }.merge
@@ -96,4 +121,8 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
       case _                       => unhandledError(errorWrapper)
     }
 
+  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("DeleteUkDividendsIncome", "delete-uk-dividends-income", details)
+    auditService.auditEvent(event)
+  }
 }
