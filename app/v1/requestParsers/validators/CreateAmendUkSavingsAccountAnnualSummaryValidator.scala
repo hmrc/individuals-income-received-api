@@ -64,7 +64,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     val requestBody = data.body.json.as[CreateAmendUkSavingsAnnualSummaryBody]
 
     List(
-      //Validation goes here.
+      //Validation will go here.
     )
 
   }
