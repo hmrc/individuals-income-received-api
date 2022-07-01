@@ -16,19 +16,19 @@
 
 package v1.requestParsers
 
-import api.models.domain.{TaxYear, Nino}
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary._
-
-import v1.requestParsers.validators.CreateAmendUkDividendsIncomeAnnualSummaryValidator
+import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRawData
+import v1.requestParsers.validators.{CreateAmendUkDividendsIncomeAnnualSummaryValidator, CreateAmendUkSavingsAccountAnnualSummaryValidator}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUkSavingsAccountAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUkDividendsIncomeAnnualSummaryValidator)
+class CreateAmendUkSavingsAccountAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUkSavingsAccountAnnualSummaryValidator)
   extends RequestParser[CreateAmendUkDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest] {
 
-  override protected def requestFor(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CreateAmendUkDividendsIncomeAnnualSummaryRequest =
+  override protected def requestFor(data: CreateAmendUkSavingsAnnualSummaryRawData): CreateAmendUkDividendsIncomeAnnualSummaryRequest =
     CreateAmendUkDividendsIncomeAnnualSummaryRequest(
       Nino(data.nino),
       TaxYear.fromMtd(data.taxYear),
