@@ -19,6 +19,8 @@ package v1.controllers
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import api.models.auth.UserDetails
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -44,6 +46,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
   val nino: String          = "AA123456A"
   val taxYear: String       = "2017-18"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val mtdId: String         = "test-mtd-id"
 
   val rawData: DeleteUkDividendsIncomeAnnualSummaryRawData = DeleteUkDividendsIncomeAnnualSummaryRawData(
     nino = nino,
@@ -68,10 +71,24 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent[FlattenedGenericAuditDetail] =
+    AuditEvent(
+      auditType = "DeleteUkDividendsIncome",
+      transactionName = "delete-uk-dividends-income",
+      detail = FlattenedGenericAuditDetail(
+        versionNumber = Some("1.0"),
+        userDetails = UserDetails(mtdId, "Individual", None),
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        request = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   "DeleteDividendsController" should {
     "return NO_content" when {
@@ -91,6 +108,8 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
         contentAsString(result) shouldBe ""
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
+        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, Right(Some(testHateoasLinksJson)))
+        MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
       }
     }
 
@@ -109,6 +128,8 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
           }
         }
 
@@ -141,6 +162,8 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
           }
         }
 

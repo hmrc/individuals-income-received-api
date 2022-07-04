@@ -160,6 +160,7 @@ uses:
             uriParameters:
              savingsAccountId: !include pathParameters/savingsAccountId.raml
             get: !include endpoints/ukSavingsAccount/retrieve.raml
+            put: !include endpoints/ukSavingsAccount/amend.raml
     /{nino}:
       (annotations.group):
         name: Savings Income

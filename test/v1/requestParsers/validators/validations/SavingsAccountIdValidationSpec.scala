@@ -16,13 +16,21 @@
 
 package v1.requestParsers.validators.validations
 
-import api.models.errors.{MtdError, SavingsAccountIdFormatError}
+import api.models.errors.SavingsAccountIdFormatError
+import support.UnitSpec
 
-object SavingsAccountIdValidation {
+class SavingsAccountIdValidationSpec extends UnitSpec {
 
-  def validate(savingsAccountId: String): List[MtdError] = {
-    val regex = "^[A-Za-z0-9]{15}$"
-    if (savingsAccountId.matches(regex)) NoValidationErrors else List(SavingsAccountIdFormatError)
+  "SavingsAccountIdValidation" when {
+    "validate" should {
+      "return an empty list for a valid SavingsAccountId" in {
+        SavingsAccountIdValidation.validate("SAVKB2UVwUTBQGJ") shouldBe NoValidationErrors
+      }
+
+      "return an SavingsAccountIdFormatError error for an invalid SavingsAccount ID" in {
+        SavingsAccountIdValidation.validate("") shouldBe List(SavingsAccountIdFormatError)
+      }
+    }
   }
 
 }

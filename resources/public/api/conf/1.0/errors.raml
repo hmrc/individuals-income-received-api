@@ -653,6 +653,17 @@ traits:
               description: 'The maximum number of 1000 savings accounts exceeded.'
               value:
                 code: RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT
+  formatSavingsAccountId:
+   responses:
+    400:
+     body:
+      application/json:
+       type: types.errorResponse
+       examples:
+        formatSavingsAccountId:
+         description: 'The format of the supplied savings account ID is not valid'
+         value:
+          code: FORMAT_SAVINGS_ACCOUNT_ID
   duplicateAccountName:
    responses:
     403:
@@ -664,14 +675,3 @@ traits:
               description: 'A duplicate account name was supplied for that National Insurance Number.'
               value:
                 code: RULE_DUPLICATE_ACCOUNT_NAME
-  formatSavingsAccountId:
-   responses:
-    403:
-      body:
-        application/json:
-          type: types.errorResponse
-          examples:
-            formatSavingsAccountId:
-              description: 'The format of the supplied savings account ID is not valid.'
-              value:
-                code: FORMAT_SAVINGS_ACCOUNT_ID

@@ -1,0 +1,35 @@
+is:
+  - headers.acceptJson
+  - headers.contentTypeJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.ruleTaxYearRangeInvalid
+  - errors.ruleTaxYearNotSupported
+  - errors.formatValue
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+  - errors.formatSavingsAccountId
+  - errors.incorrectOrEmptyBody
+displayName: Create and Amend a UK Savings Account Annual Summary [test only]
+description: "This endpoint allows a developer to create and amend a UK savings account annual summary for a tax year. This enables supplying savings interest for a previously added savings account. A National Insurance number, Savings Account ID, and tax year must be provided."
+(annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+   application/json:
+      type: !include ../../schemas/uk_savings_account_amend_request.json
+      examples:
+        full_amendment:
+          description: Uk Savings Account Annual Summary Amendment
+          value: !include ../../examples/ukSavingsAccount/uk_savings_account_amend_request.json
+responses:
+  200:
+    body:
+      application/json:
+        type: !include ../../schemas/uk_savings_account_amend_response.json
+        example: !include ../../examples/ukSavingsAccount/uk_savings_account_amend_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.
