@@ -19,7 +19,6 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData}
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRawData}
 import v1.requestParsers.validators.validations._
 
@@ -43,7 +42,8 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
   private def parameterFormatValidation: CreateAmendUkSavingsAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
       NinoValidation.validate(data.nino),
-      TaxYearValidation.validate(data.taxYear)
+      TaxYearValidation.validate(data.taxYear),
+      SavingsAccountIdValidation.validate(data.savingsAccountId)
     )
   }
 
@@ -64,7 +64,18 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     val requestBody = data.body.json.as[CreateAmendUkSavingsAnnualSummaryBody]
 
     List(
-      //Validation will go here.
+      Validator.flattenErrors(
+        List(
+          DecimalValueValidation.validateOptional(
+            amount = requestBody.taxedUkInterest,
+            path = "/taxedUkInterest"
+          ),
+          DecimalValueValidation.validateOptional(
+            amount = requestBody.untaxedUkInterest,
+            path = "/untaxedUkInterest"
+          )
+        )
+      )
     )
 
   }

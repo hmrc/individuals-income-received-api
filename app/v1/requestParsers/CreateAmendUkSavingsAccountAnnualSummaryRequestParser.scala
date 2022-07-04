@@ -18,7 +18,6 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary._
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest}
 import v1.requestParsers.validators.CreateAmendUkSavingsAccountAnnualSummaryValidator
 
@@ -30,9 +29,10 @@ class CreateAmendUkSavingsAccountAnnualSummaryRequestParser @Inject() (val valid
 
   override protected def requestFor(data: CreateAmendUkSavingsAnnualSummaryRawData): CreateAmendUkSavingsAnnualSummaryRequest =
     CreateAmendUkSavingsAnnualSummaryRequest(
-      Nino(data.nino),
-      TaxYear.fromMtd(data.taxYear),
-      data.body.json.as[CreateAmendUkSavingsAnnualSummaryBody]
+      nino = Nino(data.nino),
+      taxYear = TaxYear.fromMtd(data.taxYear),
+      savingsAccountId = data.savingsAccountId,
+      body = data.body.json.as[CreateAmendUkSavingsAnnualSummaryBody]
     )
 
 }
