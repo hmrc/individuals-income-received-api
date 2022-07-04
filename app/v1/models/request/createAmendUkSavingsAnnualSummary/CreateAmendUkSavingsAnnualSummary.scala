@@ -29,7 +29,7 @@ object CreateAmendUkSavingsAnnualSummaryBody {
   implicit val format: OFormat[CreateAmendUkSavingsAnnualSummaryBody] = Json.format[CreateAmendUkSavingsAnnualSummaryBody]
 }
 
-case class CreateAmendUkDividendsIncomeAnnualSummaryRequest(nino: Nino,
+case class CreateAmendUkSavingsAnnualSummaryRequest(nino: Nino,
                                                             taxYear: TaxYear,
                                                             savingsAccountId: String,
                                                             body: CreateAmendUkSavingsAnnualSummaryBody)
