@@ -27,6 +27,9 @@ trait HateoasLinks {
   private def savingsUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/savings/$nino/$taxYear"
 
+  private def savingsUkUri(appConfig: AppConfig, nino: String, taxYear: String, accountId: String) =
+    s"/${appConfig.apiGatewayContext}/savings/uk-accounts/$nino/$taxYear/$accountId"
+
   private def insurancePoliciesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/insurance-policies/$nino/$taxYear"
 
@@ -94,6 +97,28 @@ trait HateoasLinks {
       href = savingsUri(appConfig, nino, taxYear),
       method = DELETE,
       rel = DELETE_SAVINGS_INCOME
+    )
+
+  // UK Savings Income
+  def createAmendUkSavings(appConfig: AppConfig, nino: String, taxYear: String, accountId: String): Link =
+    Link(
+      href = savingsUkUri(appConfig, nino, taxYear, accountId),
+      method = PUT,
+      rel = CREATE_AND_AMEND_UK_SAVINGS_INCOME
+    )
+
+  def retrieveUkSavings(appConfig: AppConfig, nino: String, taxYear: String, accountId: String): Link =
+    Link(
+      href = savingsUkUri(appConfig, nino, taxYear, accountId),
+      method = GET,
+      rel = SELF
+    )
+
+  def deleteUkSavings(appConfig: AppConfig, nino: String, taxYear: String, accountId: String): Link =
+    Link(
+      href = savingsUkUri(appConfig, nino, taxYear, accountId),
+      method = DELETE,
+      rel = DELETE_UK_SAVINGS_INCOME
     )
 
   // Insurance Policies Income

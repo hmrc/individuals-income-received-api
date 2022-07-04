@@ -42,7 +42,6 @@ object NinoFormatError                  extends MtdError("FORMAT_NINO", "The pro
 object TaxYearFormatError               extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object EmploymentIdFormatError          extends MtdError("FORMAT_EMPLOYMENT_ID", "The provided employment ID is invalid")
 object PpdSubmissionIdFormatError       extends MtdError("FORMAT_PPD_SUBMISSION_ID", "The provided ppdSubmissionId is invalid")
-object AccountNameFormatError           extends MtdError("FORMAT_ACCOUNT_NAME", "The provided account name is invalid")
 object CountryCodeFormatError           extends MtdError("FORMAT_COUNTRY_CODE", "The format of the country code is invalid")
 object CountryCodeRuleError             extends MtdError("RULE_COUNTRY_CODE", "The country code is not a valid ISO 3166-1 alpha-3 country code")
 object ValueFormatError                 extends MtdError("FORMAT_VALUE", "The value must be between 0.00 and 99999999999.99")
@@ -65,6 +64,8 @@ object SourceFormatError                extends MtdError("FORMAT_SOURCE", "The p
 object AssetDescriptionFormatError      extends MtdError("FORMAT_ASSET_DESCRIPTION", "The provided asset description is invalid")
 object AssetTypeFormatError             extends MtdError("FORMAT_ASSET_TYPE", "The format of the assetType value is invalid")
 object ClaimOrElectionCodesFormatError  extends MtdError("FORMAT_CLAIM_OR_ELECTION_CODES", "The format of the claimOrElectionCodes value is invalid")
+object AccountNameFormatError           extends MtdError("FORMAT_ACCOUNT_NAME", "The provided account name is invalid")
+object SavingsAccountIdFormatError      extends MtdError("FORMAT_SAVINGS_ACCOUNT_ID", "The format of the supplied savings account ID is not valid")
 
 // Rule Errors
 
