@@ -6,7 +6,8 @@
   "properties": {
     "accountName": {
       "type": "string",
-      "description": "Friendly account name. Must conform to the regular expression: ^[A-Za-z0-9 &'\\(\\)\\*,\\-\\./@£]{1,32}$",
+      "description": "Friendly account name.",
+      "pattern": "^[A-Za-z0-9 &'\\(\\)\\*,\\-\\./@£]{1,32}$",
       "example": "Shares savings account"
     }
   },
