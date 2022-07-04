@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package v1.mocks.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors.ErrorWrapper
@@ -22,23 +22,24 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
-import v1.services.RetrieveUkDividendsIncomeAnnualSummaryService
+import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
+import v1.services.RetrieveUkSavingsAccountAnnualSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveUkDividendsAnnualIncomeSummaryService  extends MockFactory {
+trait MockRetrieveUkSavingsAnnualSummaryService  extends MockFactory {
 
-  val mockRetrieveUkDividendsAnnualIncomeSummaryService: RetrieveUkDividendsIncomeAnnualSummaryService = mock[RetrieveUkDividendsIncomeAnnualSummaryService]
 
-  object MockRetrieveUkDividendsIncomeAnnualSummaryService {
+  val mockRetrieveUkSavingsAnnualSummaryService: RetrieveUkSavingsAccountAnnualSummaryService = mock[RetrieveUkSavingsAccountAnnualSummaryService]
 
-    def retrieveUkDividends(requestData: RetrieveUkDividendsAnnualIncomeSummaryRequest)
-    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]]] = {
+  object MockRetrieveUkSavingsAnnualSummaryService {
+
+    def retrieveUkSavings(requestData: RetrieveUkSavingsAnnualSummaryRequest)
+    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkSavingsAnnualSummaryResponse]]]] = {
       (
-        mockRetrieveUkDividendsAnnualIncomeSummaryService
-          .retrieveUKDividendsIncomeAnnualSummary(_: RetrieveUkDividendsAnnualIncomeSummaryRequest)(
+        mockRetrieveUkSavingsAnnualSummaryService
+          .retrieveUkSavingsAccountAnnualSummary(_: RetrieveUkSavingsAnnualSummaryRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,

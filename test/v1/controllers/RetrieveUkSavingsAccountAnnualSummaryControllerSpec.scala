@@ -17,20 +17,34 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
-import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.errors.MtdError
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SavingsAccountIdFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.hateoas.Method.{DELETE, GET, POST}
+import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_SAVINGS_INCOME, DELETE_UK_SAVINGS_INCOME, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.Json
+import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveUkSavingsAccountAnnualSummaryControllerFixture
+import v1.mocks.requestParsers.MockRetrieveUkSavingsAnnualRequestParser
+import v1.mocks.services.MockRetrieveUkSavingsAnnualSummaryService
+import v1.models.request.retrieveUkSavingsAnnualSummary.{RetrieveUkSavingsAnnualSummaryRawData, RetrieveUkSavingsAnnualSummaryRequest}
+import v1.models.response.retrieveUkSavingsAnnualSummary.{RetrieveUkSavingsAnnualSummaryResponse, RetrieveUkSavingsAnnualSummaryResponseHateoasData}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    //TODO: add new service
+    with MockRetrieveUkSavingsAnnualSummaryService
+    with MockHateoasFactory
+    with MockRetrieveUkSavingsAnnualRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -38,14 +52,28 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
   val taxYear: String       = "2019-20"
   val savingsAccountId: String = "ABCDE0123456789"
   val correlationId: String = "X-123"
+  val taxedUkIncome: Option[BigDecimal] = Some(123456.00)
+  val unTaxedUkIncome: Option[BigDecimal] = Some(5678910.00)
 
-  //TODO: Retrieve model
+  private val rawData: RetrieveUkSavingsAnnualSummaryRawData = RetrieveUkSavingsAnnualSummaryRawData(nino, taxYear, savingsAccountId)
 
-  //TODO: Retrieve Request Model
+  private val requestData: RetrieveUkSavingsAnnualSummaryRequest = RetrieveUkSavingsAnnualSummaryRequest(
+    nino = Nino(nino),
+    taxYear = TaxYear.fromMtd(taxYear),
+    savingsAccountId = savingsAccountId
+  )
 
- //TODO: Hateoas links
+  private val link: String = s"/savings/uk-accounts/$nino/$taxYear/$savingsAccountId"
+  private val links: Seq[Link] = Seq[Link](
+    Link(href = link, method = POST, rel = CREATE_AND_AMEND_UK_SAVINGS_INCOME),
+    Link(href = link, method = GET, rel = SELF),
+    Link(href = link, method = DELETE, rel = DELETE_UK_SAVINGS_INCOME),
+  )
 
-  //TODO: Response model
+  private val retrieveUkSavingsAnnualSummaryResponse:RetrieveUkSavingsAnnualSummaryResponse = new RetrieveUkSavingsAnnualSummaryResponse(
+    taxedUkInterest = taxedUkIncome,
+    untaxedUkInterest = unTaxedUkIncome
+  )
 
   private val mtdResponse = RetrieveUkSavingsAccountAnnualSummaryControllerFixture
     .mtdRetrieveResponseWithHateaos(nino, taxYear,savingsAccountId )
@@ -56,12 +84,13 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     val controller = new RetrieveUkSavingsAccountAnnualSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockRetrieveUkSavingsSummaryRequestParser,
+      service = mockRetrieveUkSavingsAnnualSummaryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
@@ -71,7 +100,27 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
   "RetrieveUkSavingsAccountSummaryControllerSpec" should {
     "return OK" when {
       "happy path" in new Test {
+        MockRetrieveUkSavingsAnnualRequestParser
+            .parse(rawData)
+            .returns(Right(requestData))
 
+        MockRetrieveUkSavingsAnnualSummaryService
+            .retrieveUkSavings(requestData)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkSavingsAnnualSummaryResponse))))
+
+        MockHateoasFactory
+          .wrap(retrieveUkSavingsAnnualSummaryResponse,
+            RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
+          .returns(
+            HateoasWrapper(
+              retrieveUkSavingsAnnualSummaryResponse,
+              links
+            )
+          )
+        val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe mtdResponse
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
 
@@ -79,10 +128,24 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
       "parsers errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
          s"a(n) ${error.code} is returned from the parser" in new Test {
-           ???
+           MockRetrieveUkSavingsAnnualRequestParser
+             .parse(rawData)
+             .returns(Left(ErrorWrapper(correlationId, error, None)))
+           val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
+           status(result) shouldBe Json.toJson(error)
+           header("X-CorrelationId", result) shouldBe Some(correlationId)
          }
         }
-        val input= Seq()
+        val input= Seq(
+          (BadRequestError, BAD_REQUEST),
+          (NinoFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (SavingsAccountIdFormatError, BAD_REQUEST),
+          (NotFoundError, NOT_FOUND),
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+        )
       }
     }
   }

@@ -22,6 +22,7 @@ object RelType {
 
   val CREATE_AND_AMEND_UK_SAVINGS_INCOME = "create-and-amend-uk-savings-account-annual-summary"
   val DELETE_UK_SAVINGS_INCOME           = "delete-uk-savings-account-annual-summary"
+  val RETRIEVE_UK_SAVINGS_INCOME         = "retrieve-uk-savings-account-annual-summary"
 
   val AMEND_INSURANCE_POLICIES_INCOME  = "create-and-amend-insurance-policies-income"
   val DELETE_INSURANCE_POLICIES_INCOME = "delete-insurance-policies-income"

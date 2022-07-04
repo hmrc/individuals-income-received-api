@@ -18,30 +18,31 @@ package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
-import api.models.errors._
-
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError,
+  RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SavingsAccountIdFormatError, StandardDownstreamError, TaxYearFormatError}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
-import play.api.http.MimeTypes
+import cats.implicits.catsSyntaxEitherId
 import play.api.libs.json.Json
+import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRawData
 import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponseHateoasData
+import v1.requestParsers.RetrieveUkSavingsAccountRequestParser
+import v1.services.RetrieveUkSavingsAccountAnnualSummaryService
 
-
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryController @Inject()(val authService:EnrolmentsAuthService,
-                                                        val lookupService:MtdIdLookupService,
-                                                        requestParser: Any, //TODO
-                                                        service:Any,  //TODO
-                                                        hateoasFactory:HateoasFactory,
-                                                        cc:ControllerComponents,
-                                                        val idGenerator:IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
+                                                        val lookupService: MtdIdLookupService,
+                                                        requestParser: RetrieveUkSavingsAccountRequestParser,
+                                                        service: RetrieveUkSavingsAccountAnnualSummaryService,
+                                                        hateoasFactory: HateoasFactory,
+                                                        cc: ControllerComponents,
+                                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
               extends AuthorisedController(cc)
               with BaseController
               with Logging {
@@ -49,10 +50,10 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject()(val authService:
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveUkSavingsAccountAnnualSummaryController",
-      endpointName = "retrieveUkSavingAccountAnnualSummary"
+      endpointName = "retrieveUkSavingAccountSummary"
     )
 
-  def retrieveUkSavingAccountAnnualSummary(nino: String, taxYear: String, savingsAccountId: String):Action[AnyContent] =
+  def retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
@@ -61,26 +62,27 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject()(val authService:
 
       val rawData: RetrieveUkSavingsAnnualSummaryRawData = RetrieveUkSavingsAnnualSummaryRawData(nino, taxYear, savingsAccountId)
 
-      val result: EitherT[Future, ErrorWrapper, Result] =
-      for {
-        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.retrieveUkSavingsAnnualSummary(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory
-            .wrap(serviceResponse.responseData, RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
-            .asRight[ErrorWrapper])
-      } yield {
-        logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-        s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val result =
+        for {
+           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+           serviceResponse <- EitherT(service.retrieveUkSavingsAccountAnnualSummary(parsedRequest))
+           vendorResponse  <- EitherT.fromEither[Future](
+              hateoasFactory
+               .wrap(serviceResponse.responseData, RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
+               .asRight[ErrorWrapper])
+        } yield {
+            logger.info(
+              s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-     Ok(Json.toJson(vendorResponse)
-      .withApiHeaders(serviceResponse.correlationId))
-      .as(MimeTypes.JSON)
+          Ok(Json.toJson(vendorResponse))
+            .withApiHeaders(serviceResponse.correlationId)
+            .as(MimeTypes.JSON)
     }
 
     result.leftMap { errorWrapper =>
       val resCorrelationId = errorWrapper.correlationId
-      val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+      val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
       logger.warn(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
           s"Error response received with CorrelationId: $resCorrelationId")
@@ -89,14 +91,8 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject()(val authService:
   }
 
   private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match { //TODO: confirm that these errors are correct
-      /*
-Need to add (to mtdErrors.scala):
-FORMAT_SAVINGS_ACCOUNT_ID
-The format of the supplied savings account ID is not valid
-=================
-       */
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+    errorWrapper.error match {
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SavingsAccountIdFormatError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
