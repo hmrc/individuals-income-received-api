@@ -30,8 +30,8 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
   private val validationSet = List(
     parameterFormatValidation,
     parameterRuleValidation,
-    bodyFormatValidator,
-    bodyValueValidator
+    bodyFormatValidation,
+    bodyValueValidation
   )
 
   override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): List[MtdError] = {
@@ -52,14 +52,14 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     )
   }
 
-  private def bodyFormatValidator: CreateAmendUkSavingsAnnualSummaryRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidation: CreateAmendUkSavingsAnnualSummaryRawData => List[List[MtdError]] = { data =>
     List(
       JsonFormatValidation.validate[CreateAmendUkSavingsAnnualSummaryBody](data.body.json)
     )
 
   }
 
-  private def bodyValueValidator: CreateAmendUkSavingsAnnualSummaryRawData => List[List[MtdError]] = { data =>
+  private def bodyValueValidation: CreateAmendUkSavingsAnnualSummaryRawData => List[List[MtdError]] = { data =>
     val requestBody = data.body.json.as[CreateAmendUkSavingsAnnualSummaryBody]
 
     List(
