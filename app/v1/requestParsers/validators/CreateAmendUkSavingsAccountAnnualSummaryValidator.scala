@@ -25,8 +25,7 @@ import v1.requestParsers.validators.validations._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: AppConfig)
-  extends Validator[CreateAmendUkSavingsAnnualSummaryRawData] {
+class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: AppConfig) extends Validator[CreateAmendUkSavingsAnnualSummaryRawData] {
 
   private val validationSet = List(
     parameterFormatValidation,

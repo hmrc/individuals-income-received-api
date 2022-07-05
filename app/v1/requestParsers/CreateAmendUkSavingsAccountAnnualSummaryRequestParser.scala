@@ -18,14 +18,18 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest}
+import v1.models.request.createAmendUkSavingsAnnualSummary.{
+  CreateAmendUkSavingsAnnualSummaryBody,
+  CreateAmendUkSavingsAnnualSummaryRawData,
+  CreateAmendUkSavingsAnnualSummaryRequest
+}
 import v1.requestParsers.validators.CreateAmendUkSavingsAccountAnnualSummaryValidator
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class CreateAmendUkSavingsAccountAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUkSavingsAccountAnnualSummaryValidator)
-  extends RequestParser[CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest] {
+    extends RequestParser[CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest] {
 
   override protected def requestFor(data: CreateAmendUkSavingsAnnualSummaryRawData): CreateAmendUkSavingsAnnualSummaryRequest =
     CreateAmendUkSavingsAnnualSummaryRequest(

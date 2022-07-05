@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.{ CreateAmendUkSavingsAccountAnnualSummaryValidator}
+import v1.requestParsers.validators.CreateAmendUkSavingsAccountAnnualSummaryValidator
 import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRawData
 
 trait MockCreateAmendUkSavingsAccountAnnualSummaryValidator extends MockFactory {
@@ -29,8 +29,7 @@ trait MockCreateAmendUkSavingsAccountAnnualSummaryValidator extends MockFactory 
 
   object MockCreateAmendUkSavingsAccountAnnualSummaryValidator {
 
-    def validate(
-                  data: CreateAmendUkSavingsAnnualSummaryRawData): CallHandler1[CreateAmendUkSavingsAnnualSummaryRawData, List[MtdError]] = {
+    def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): CallHandler1[CreateAmendUkSavingsAnnualSummaryRawData, List[MtdError]] = {
       (mockValidator
         .validate(_: CreateAmendUkSavingsAnnualSummaryRawData))
         .expects(data)

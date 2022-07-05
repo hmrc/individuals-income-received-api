@@ -22,23 +22,27 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.mocks.validators.MockCreateAmendUkSavingsAccountAnnualSummaryValidator
-import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest}
+import v1.models.request.createAmendUkSavingsAnnualSummary.{
+  CreateAmendUkSavingsAnnualSummaryBody,
+  CreateAmendUkSavingsAnnualSummaryRawData,
+  CreateAmendUkSavingsAnnualSummaryRequest
+}
 
 class CreateAmendUkSavingsAccountAnnualSummaryRequestParserSpec extends UnitSpec {
-  val nino: String                      = "AA123456B"
-  val taxYear: TaxYear                  = TaxYear.fromMtd("2019-20")
-  val taxYearString: String             = "2019-20"
-  implicit val correlationId: String    = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  val validTaxedUkInterest:Double       = 31554452289.99
-  val validUntaxedUkInterest:Double     = 91523009816.00
-  val validSavingsAccountId:String      = "SAVKB2UVwUTBQGJ"
+  val nino: String                   = "AA123456B"
+  val taxYear: TaxYear               = TaxYear.fromMtd("2019-20")
+  val taxYearString: String          = "2019-20"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val validTaxedUkInterest: Double   = 31554452289.99
+  val validUntaxedUkInterest: Double = 91523009816.00
+  val validSavingsAccountId: String  = "SAVKB2UVwUTBQGJ"
 
   private val requestBodyJson: JsValue = Json.parse(s"""
-                                                       |{
-                                                       | "taxedUkInterest": $validTaxedUkInterest,
-                                                       | "untaxedUkInterest": $validUntaxedUkInterest
-                                                       |}
-                                                       |""".stripMargin)
+       |{
+       | "taxedUkInterest": $validTaxedUkInterest,
+       | "untaxedUkInterest": $validUntaxedUkInterest
+       |}
+       |""".stripMargin)
 
   private val rawRequestBody = AnyContentAsJson(requestBodyJson)
 

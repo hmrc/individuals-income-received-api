@@ -17,7 +17,15 @@
 package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SavingsAccountIdFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SavingsAccountIdFormatError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -32,12 +40,11 @@ import v1.requestParsers.validators.validations.DecimalValueValidation.ZERO_MINI
 class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
-    val validNino             = "AA123456A"
-    val validTaxYear          = "2019-20"
-    val validTaxedUkInterest = 31554452289.99
+    val validNino              = "AA123456A"
+    val validTaxYear           = "2019-20"
+    val validTaxedUkInterest   = 31554452289.99
     val validUntaxedUkInterest = 91523009816.00
-    val validSavingsAccountId = "SAVKB2UVwUTBQGJ"
-
+    val validSavingsAccountId  = "SAVKB2UVwUTBQGJ"
 
     private val validRequestBodyJson: JsValue = Json.parse(s"""
                                                               |{
@@ -171,7 +178,8 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec wit
 
     "return taxedUkInterestFormatError" when {
       "passed invalid taxedUkInterest" in new Test {
-        validator.validate(CreateAmendUkSavingsAnnualSummaryRawData(validNino, validTaxYear, validSavingsAccountId, invalidTaxedUkInterestRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendUkSavingsAnnualSummaryRawData(validNino, validTaxYear, validSavingsAccountId, invalidTaxedUkInterestRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -183,7 +191,8 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec wit
     }
     "return untaxedUkInterestFormatError" when {
       "passed invalid untaxedUkInterest" in new Test {
-        validator.validate(CreateAmendUkSavingsAnnualSummaryRawData(validNino, validTaxYear, validSavingsAccountId, invalidUntaxedUkInterestRawRequestBody)) shouldBe
+        validator.validate(
+          CreateAmendUkSavingsAnnualSummaryRawData(validNino, validTaxYear, validSavingsAccountId, invalidUntaxedUkInterestRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
