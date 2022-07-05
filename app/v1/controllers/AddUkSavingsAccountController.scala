@@ -93,9 +93,10 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError |
-           RuleMaximumSavingsAccountsLimitError| AccountNameFormatError |
-           RuleDuplicateAccountNameError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+           AccountNameFormatError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
+      case RuleMaximumSavingsAccountsLimitError | RuleDuplicateAccountNameError =>
+        Forbidden(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }

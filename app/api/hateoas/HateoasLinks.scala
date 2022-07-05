@@ -72,9 +72,6 @@ trait HateoasLinks {
   private def ukAccountUri(appConfig: AppConfig, nino: String) =
     s"/${appConfig.apiGatewayContext}/savings/uk-accounts/$nino"
 
-  private def ukAccountWithTaxYearAndIdUri(appConfig: AppConfig, nino: String, taxYear: String, savingsAccountId: String) =
-    s"/${appConfig.apiGatewayContext}/savings/uk-accounts/$nino/$taxYear/$savingsAccountId"
-
   // API resource links
 
   // Savings Income
@@ -437,12 +434,4 @@ trait HateoasLinks {
       method = GET,
       rel = LIST_UK_SAVINGS
     )
-
-  def createAmendUkSavings(appConfig: AppConfig, nino: String, taxYear: String, savingsAccountId: String): Link =
-    Link(
-      href = ukAccountWithTaxYearAndIdUri(appConfig, nino, taxYear, savingsAccountId),
-      method = PUT,
-      rel = CREATE_AND_AMEND_UK_SAVINGS
-    )
-
 }

@@ -41,20 +41,22 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
         |}
         |""".stripMargin)
 
+    val desResponseJson: JsValue = Json.parse(
+      s"""
+         |{
+         |   "incomeSourceId": "$savingsAccountId"
+         |}
+         |""".stripMargin)
+
     val responseJson: JsValue = Json.parse(
       s"""
          |{
-         |    "savingsAccountId": "$savingsAccountId",
-         |    "links":[
+         |   "savingsAccountId": "$savingsAccountId",
+         |   "links":[
          |      {
          |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
          |         "method":"GET",
          |         "rel":"list-all-uk-savings-account"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
-         |         "method":"PUT",
-         |         "rel":"create-and-amend-uk-savings-account-annual-summary"
          |      }
          |   ]
          |}
@@ -84,7 +86,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.POST, ifsUri, OK, responseJson)
+          DownstreamStub.onSuccess(DownstreamStub.POST, ifsUri, OK, desResponseJson)
         }
 
         val response: WSResponse = await(request().post(requestBodyJson))

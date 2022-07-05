@@ -190,8 +190,8 @@ class AddUkSavingsAccountAccountControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (RuleMaximumSavingsAccountsLimitError, BAD_REQUEST),
-          (RuleDuplicateAccountNameError, BAD_REQUEST),
+          (RuleMaximumSavingsAccountsLimitError, FORBIDDEN),
+          (RuleDuplicateAccountNameError, FORBIDDEN),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 

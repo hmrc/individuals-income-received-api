@@ -45,8 +45,8 @@ case class FeatureSwitch(value: Option[Configuration]) {
     enabled.getOrElse(false)
   }
 
-  val isUkDividendsRoutingEnabled: Boolean = value match {
-    case Some(config) => config.getOptional[Boolean]("uk-dividends-endpoints.enabled").getOrElse(true)
+  val isV1R7cRoutingEnabled: Boolean = value match {
+    case Some(config) => config.getOptional[Boolean]("v1r7c-endpoints.enabled").getOrElse(true)
     case None         => true
   }
 
