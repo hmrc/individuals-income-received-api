@@ -176,7 +176,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (CONFLICT, "MAX_ACCOUNTS_REACHED", FORBIDDEN, RuleMaximumSavingsAccoountsLimit),
+          (CONFLICT, "MAX_ACCOUNTS_REACHED", FORBIDDEN, RuleMaximumSavingsAccountsLimitError),
           (CONFLICT, "ALREADY_EXISTS", FORBIDDEN, RuleDuplicateAccountName),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)

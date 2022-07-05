@@ -68,13 +68,6 @@ object AccountNameFormatError           extends MtdError("FORMAT_ACCOUNT_NAME", 
 object SavingsAccountIdFormatError      extends MtdError("FORMAT_SAVINGS_ACCOUNT_ID", "The format of the supplied savings account ID is not valid")
 
 // Rule Errors
-
-object RuleMaximumSavingsAccoountsLimit
-  extends MtdError(
-    code = "RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT",
-    message = "The 1000 savings account limit exceeded"
-  )
-
 object RuleDuplicateAccountName
   extends MtdError(
     code = "RULE_DUPLICATE_ACCOUNT_NAME",

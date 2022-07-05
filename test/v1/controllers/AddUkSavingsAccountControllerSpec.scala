@@ -37,7 +37,7 @@ import v1.models.response.addUkSavingsAccount.{AddUkSavingsAccountHateoasData, A
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AddUkSavingsAccountAccountControllerSpec
+class AddUkSavingsAccountControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
