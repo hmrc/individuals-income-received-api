@@ -17,11 +17,12 @@
 package v1.mocks.connectors
 
 import api.connectors.DownstreamOutcome
+import api.models.domain.{Nino, TaxYear}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.CreateAmendUkSavingsAnnualSummaryConnector
-import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRequest
+import v1.models.request.createAmendUkSavingsAnnualSummary.DownstreamCreateAmendUkSavingsAnnualSummaryBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,16 +32,18 @@ trait MockCreateAmendUkSavingsAnnualSummaryConnector extends MockFactory {
 
   object MockCreateAmendUkSavingsAnnualSummaryConnector {
 
-    def createOrAmendAnnualSummary(request: CreateAmendUkSavingsAnnualSummaryRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def createOrAmendAnnualSummary(nino: Nino,
+                                   taxYear: TaxYear,
+                                   body: DownstreamCreateAmendUkSavingsAnnualSummaryBody): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (
         mockAmendUkSavingsConnector
-          .createOrAmendUKSavingsAccountSummary(_: CreateAmendUkSavingsAnnualSummaryRequest)(
+          .createOrAmendUKSavingsAccountSummary(_: Nino, _: TaxYear, _: DownstreamCreateAmendUkSavingsAnnualSummaryBody)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String
           )
         )
-        .expects(request, *, *, *)
+        .expects(nino, taxYear, body, *, *, *)
     }
 
   }

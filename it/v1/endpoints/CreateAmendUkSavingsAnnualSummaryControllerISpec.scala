@@ -59,7 +59,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSp
          |      {
          |         "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
          |         "method":"GET",
-         |         "rel":"retrieve-uk-savings-account-annual-summary"
+         |         "rel":"self"
          |      },
          |      {
          |         "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
