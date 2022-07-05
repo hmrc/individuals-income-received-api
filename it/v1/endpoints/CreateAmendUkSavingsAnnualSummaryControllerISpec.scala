@@ -69,7 +69,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSp
          |   ]
          |}""".stripMargin)
 
-    def downstreamUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$downstreamTaxYear"
+    def downstreamUri: String = s"/income-tax/nino/$nino/income-source/savings/annual/$downstreamTaxYear"
 
     def setupStubs(): StubMapping
 
