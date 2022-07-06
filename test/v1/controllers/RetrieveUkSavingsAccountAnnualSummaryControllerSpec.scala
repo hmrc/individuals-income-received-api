@@ -179,7 +179,6 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (SavingsAccountIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (UnauthorisedError, FORBIDDEN),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
         input.foreach(args => (serviceErrors _).tupled(args))
