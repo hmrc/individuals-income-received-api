@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package v1.controllers
 
 import api.controllers.ControllerBaseSpec
@@ -21,8 +22,8 @@ import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{BadRequestError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SavingsAccountIdFormatError, StandardDownstreamError, TaxYearFormatError}
-import api.models.hateoas.Method.{DELETE, GET, POST}
+import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_SAVINGS_INCOME, DELETE_UK_SAVINGS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
@@ -52,8 +53,8 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
   val taxYear: String       = "2019-20"
   val savingsAccountId: String = "ABCDE0123456789"
   val correlationId: String = "X-123"
-  val taxedUkIncome: Option[BigDecimal] = Some(123456.00)
-  val unTaxedUkIncome: Option[BigDecimal] = Some(5678910.00)
+  val taxedUkIncome: Option[BigDecimal] = Some(93556675358.99)
+  val unTaxedUkIncome: Option[BigDecimal] = Some(34514974058.99)
 
   private val rawData: RetrieveUkSavingsAnnualSummaryRawData = RetrieveUkSavingsAnnualSummaryRawData(nino, taxYear, savingsAccountId)
 
@@ -63,9 +64,9 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     savingsAccountId = savingsAccountId
   )
 
-  private val link: String = s"/savings/uk-accounts/$nino/$taxYear/$savingsAccountId"
+  private val link: String = s"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId"
   private val links: Seq[Link] = Seq[Link](
-    Link(href = link, method = POST, rel = CREATE_AND_AMEND_UK_SAVINGS_INCOME),
+    Link(href = link, method = PUT, rel = CREATE_AND_AMEND_UK_SAVINGS_INCOME),
     Link(href = link, method = GET, rel = SELF),
     Link(href = link, method = DELETE, rel = DELETE_UK_SAVINGS_INCOME),
   )
@@ -124,30 +125,65 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
       }
     }
 
-    "return the error as per the spec" when {
-      "parsers errors occur" must {
+    "return the error as per spec" when {
+      "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-         s"a(n) ${error.code} is returned from the parser" in new Test {
-           MockRetrieveUkSavingsAnnualRequestParser
-             .parse(rawData)
-             .returns(Left(ErrorWrapper(correlationId, error, None)))
-           val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
-           status(result) shouldBe Json.toJson(error)
-           header("X-CorrelationId", result) shouldBe Some(correlationId)
-         }
+          s"a ${error.code} error is returned from the parser" in new Test {
+
+            MockRetrieveUkSavingsAnnualRequestParser
+              .parse(rawData)
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
+
+            val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(error)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
         }
-        val input= Seq(
+
+        val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
+          (SavingsAccountIdFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
+        )
+
+        input.foreach(args => (errorsFromParserTester _).tupled(args))
+      }
+
+      "service errors occur" must {
+        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+          s"a $mtdError error is returned from the service" in new Test {
+
+            MockRetrieveUkSavingsAnnualRequestParser
+              .parse(rawData)
+              .returns(Right(requestData))
+
+            MockRetrieveUkSavingsAnnualSummaryService
+              .retrieveUkSavings(requestData)
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+            val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(mtdError)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
+        }
+
+        val input = Seq(
+          (NinoFormatError, BAD_REQUEST),
+          (TaxYearFormatError, BAD_REQUEST),
           (SavingsAccountIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
+          (UnauthorisedError, FORBIDDEN),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
+        input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }
-
 }

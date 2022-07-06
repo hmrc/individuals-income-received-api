@@ -18,12 +18,12 @@ package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError,
-  RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SavingsAccountIdFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SavingsAccountIdFormatError, StandardDownstreamError, TaxYearFormatError, UnauthorisedError}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import play.api.libs.json.Json
+
 import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -95,6 +95,7 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SavingsAccountIdFormatError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case UnauthorisedError       => Forbidden(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
