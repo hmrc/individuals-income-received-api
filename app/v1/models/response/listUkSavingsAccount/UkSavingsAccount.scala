@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.response.addUkSavingsAccount
+package v1.models.response.listUkSavingsAccount
+import api.hateoas.HateoasLinks
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
 
-import play.api.libs.json.{JsPath, Json, Reads, Writes}
+case class UkSavingsAccount(savingsAccountId: String, accountName: String)
 
-case class AddUkSavingsAccountResponse(savingsAccountId: String)
+object UkSavingsAccount extends HateoasLinks {
 
-object AddUkSavingsAccountResponse {
+  implicit val writes: OWrites[UkSavingsAccount] = Json.writes[UkSavingsAccount]
 
-  implicit val reads: Reads[AddUkSavingsAccountResponse] = (JsPath \ "incomeSourceId").read[String].map(AddUkSavingsAccountResponse(_))
+  implicit val reads: Reads[UkSavingsAccount] = (
+    (JsPath \ "incomeSourceId").read[String] and
+      (JsPath \ "incomeSourceName").read[String]
+  )(UkSavingsAccount.apply _)
 
-  implicit val writes: Writes[AddUkSavingsAccountResponse] = Json.writes[AddUkSavingsAccountResponse]
-
-  // is the hateos link missing?
 }
+
+

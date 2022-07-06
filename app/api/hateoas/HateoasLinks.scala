@@ -30,6 +30,9 @@ trait HateoasLinks {
   private def savingsUkUri(appConfig: AppConfig, nino: String, taxYear: String, accountId: String) =
     s"/${appConfig.apiGatewayContext}/savings/uk-accounts/$nino/$taxYear/$accountId"
 
+  private def savingsUkUriWithoutTaxYearAndAccountId(appConfig: AppConfig, nino: String) =
+    s"/${appConfig.apiGatewayContext}/savings/uk-accounts/$nino"
+
   private def insurancePoliciesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/insurance-policies/$nino/$taxYear"
 
@@ -113,6 +116,20 @@ trait HateoasLinks {
       href = savingsUkUri(appConfig, nino, taxYear, accountId),
       method = DELETE,
       rel = DELETE_UK_SAVINGS_INCOME
+    )
+
+  def addUkSavings(appConfig: AppConfig, nino: String): Link =
+    Link(
+      href = savingsUkUriWithoutTaxYearAndAccountId(appConfig, nino),
+      method = POST,
+      rel = ADD_UK_SAVINGS_INCOME
+    )
+
+  def listUkSavings(appConfig: AppConfig, nino: String, isSelf: Boolean = false): Link =
+    Link(
+      href = savingsUkUriWithoutTaxYearAndAccountId(appConfig, nino),
+      method = GET,
+      rel = if (isSelf) SELF else ADD_UK_SAVINGS_INCOME
     )
 
   // Insurance Policies Income

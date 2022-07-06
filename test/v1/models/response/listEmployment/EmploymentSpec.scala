@@ -54,7 +54,7 @@ class EmploymentSpec extends UnitSpec {
 
     "return a valid Custom Employment model" when {
       "a valid custom employment json is supplied" in {
-        hmrcEmploymentJson.as[Employment] shouldBe hmrcEmploymentModel
+        customEmploymentJson.as[Employment] shouldBe customEmploymentModel
       }
     }
 

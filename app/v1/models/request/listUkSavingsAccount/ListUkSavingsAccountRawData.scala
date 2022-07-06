@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.response.addUkSavingsAccount
+package v1.models.request.listUkSavingsAccount
 
-import play.api.libs.json.{JsPath, Json, Reads, Writes}
+import api.models.request.RawData
 
-case class AddUkSavingsAccountResponse(savingsAccountId: String)
-
-object AddUkSavingsAccountResponse {
-
-  implicit val reads: Reads[AddUkSavingsAccountResponse] = (JsPath \ "incomeSourceId").read[String].map(AddUkSavingsAccountResponse(_))
-
-  implicit val writes: Writes[AddUkSavingsAccountResponse] = Json.writes[AddUkSavingsAccountResponse]
-
-  // is the hateos link missing?
-}
+case class ListUkSavingsAccountRawData(nino: String, savingsAccountId: Option[String]) extends RawData
