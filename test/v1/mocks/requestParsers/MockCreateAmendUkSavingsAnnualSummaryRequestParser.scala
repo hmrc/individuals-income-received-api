@@ -20,12 +20,12 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest}
-import v1.requestParsers.CreateAmendUkSavingsAnnualSummaryRequestParser
+import v1.requestParsers.CreateAmendUkSavingsAccountAnnualSummaryRequestParser
 
 trait MockCreateAmendUkSavingsAnnualSummaryRequestParser extends MockFactory {
 
-  val mockCreateAmendUkSavingsAnnualSummaryRequestParser: CreateAmendUkSavingsAnnualSummaryRequestParser =
-    mock[CreateAmendUkSavingsAnnualSummaryRequestParser]
+  val mockCreateAmendUkSavingsAnnualSummaryRequestParser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser =
+    mock[CreateAmendUkSavingsAccountAnnualSummaryRequestParser]
 
   object MockCreateAmendUkSavingsAnnualSummaryRequestParser {
 

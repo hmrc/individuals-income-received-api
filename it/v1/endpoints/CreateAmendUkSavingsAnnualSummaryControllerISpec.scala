@@ -139,7 +139,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSp
           (
             "AA123456A",
             "2020-21",
-            "",
+            "ABCDE1234567890",
             Json.parse("""{ "taxedUkInterest": -10.99 }""".stripMargin),
             BAD_REQUEST,
             ValueFormatError.copy(message = ZERO_MINIMUM_INCLUSIVE, paths = Some(Seq("/taxedUkInterest"))))

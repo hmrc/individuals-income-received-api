@@ -27,7 +27,7 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRawData
 import v1.models.response.createAmendUkSavingsIncomeAnnualSummary.CreateAndAmendUkSavingsAnnualSummaryHateoasData
-import v1.requestParsers.CreateAmendUkSavingsAnnualSummaryRequestParser
+import v1.requestParsers.CreateAmendUkSavingsAccountAnnualSummaryRequestParser
 import v1.services.CreateAmendUkSavingsAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}
@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                              val lookupService: MtdIdLookupService,
-                                                             requestParser: CreateAmendUkSavingsAnnualSummaryRequestParser,
+                                                             requestParser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
                                                              service: CreateAmendUkSavingsAnnualSummaryService,
                                                              hateoasFactory: HateoasFactory,
                                                              cc: ControllerComponents,
