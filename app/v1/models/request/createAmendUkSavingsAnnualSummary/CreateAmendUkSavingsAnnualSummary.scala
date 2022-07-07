@@ -30,6 +30,6 @@ object CreateAmendUkSavingsAnnualSummaryBody {
 }
 
 case class CreateAmendUkSavingsAnnualSummaryRequest(nino: Nino,
-                                                            taxYear: TaxYear,
-                                                            savingsAccountId: String,
-                                                            body: CreateAmendUkSavingsAnnualSummaryBody)
+                                                    taxYear: TaxYear,
+                                                    savingsAccountId: String,
+                                                    body: CreateAmendUkSavingsAnnualSummaryBody)
