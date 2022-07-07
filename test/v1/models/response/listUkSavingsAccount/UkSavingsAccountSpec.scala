@@ -45,6 +45,8 @@ class UkSavingsAccountSpec extends UnitSpec {
     """.stripMargin
   )
 
+  val emptyJson = Json.parse("{}")
+
   "UkSavingsAccount" should {
     "return a valid UkSavingsAccount model " when {
       "a valid uk savings account json from DES is supplied" in {
@@ -56,6 +58,12 @@ class UkSavingsAccountSpec extends UnitSpec {
     "return a JsError" when {
       "an invalid uk savings account json from DES is supplied" in {
           invalidUkSavingsAccountFromDESJson.validate[UkSavingsAccount] shouldBe a[JsError]
+      }
+    }
+
+    "return a JsError" when {
+      "an empty json from DES is supplied" in {
+          emptyJson.validate[UkSavingsAccount] shouldBe a[JsError]
       }
     }
 
