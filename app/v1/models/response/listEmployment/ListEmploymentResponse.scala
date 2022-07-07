@@ -33,7 +33,7 @@ object ListEmploymentResponse extends HateoasLinks with JsonUtils {
   implicit def reads[E: Reads]: Reads[ListEmploymentResponse[E]] = (
     (JsPath \ "employments").readNullable[Seq[E]].mapEmptySeqToNone and
       (JsPath \ "customerDeclaredEmployments").readNullable[Seq[E]].mapEmptySeqToNone
-  ).apply((employments, customerEmployments) => ListEmploymentResponse(employments, customerEmployments))
+  )((employments, customerEmployments) => ListEmploymentResponse(employments, customerEmployments))
 
   implicit object ListEmploymentLinksFactory extends HateoasListLinksFactory[ListEmploymentResponse, Employment, ListEmploymentHateoasData] {
 
