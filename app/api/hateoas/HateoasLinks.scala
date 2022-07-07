@@ -69,6 +69,9 @@ trait HateoasLinks {
   private def cgtResidentialPropertyDisposalsAndOverridesUri(appConfig: AppConfig, nino: String, taxYear: String) =
     s"/${appConfig.apiGatewayContext}/disposals/residential-property/$nino/$taxYear"
 
+  private def ukAccountUri(appConfig: AppConfig, nino: String) =
+    s"/${appConfig.apiGatewayContext}/savings/uk-accounts/$nino"
+
   // API resource links
 
   // Savings Income
@@ -423,4 +426,12 @@ trait HateoasLinks {
       rel = DELETE_NON_PAYE_EMPLOYMENT
     )
 
+  // UK Savings Account
+
+  def listUkSavings(appConfig: AppConfig, nino: String): Link =
+    Link(
+      href = ukAccountUri(appConfig, nino),
+      method = GET,
+      rel = LIST_UK_SAVINGS
+    )
 }
