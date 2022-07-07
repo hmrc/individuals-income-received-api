@@ -41,7 +41,7 @@ trait VersionRoutingMap {
 case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig,
                                             defaultRouter: Router,
                                             v1Router: v1.Routes,
-                                            ukDividendsRouter: v1WithUkDividends.Routes)
+                                            v1r7cRouter: v1r7c.Routes)
     extends VersionRoutingMap {
 
   val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
@@ -49,9 +49,9 @@ case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig,
 
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
-      if (featureSwitch.isUkDividendsRoutingEnabled) {
+      if (featureSwitch.isV1R7cRoutingEnabled) {
         logger.info("[VersionRoutingMap][map] using ukDividendsRouter to include UK Dividends routes")
-        ukDividendsRouter
+        v1r7cRouter
       } else {
         logger.info("[VersionRoutingMap][map] using v1Router without UK Dividends routes")
         v1Router

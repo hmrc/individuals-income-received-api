@@ -28,31 +28,31 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
 
   val defaultRouter: Router                             = mock[Router]
   val v1Routes: v1.Routes                               = app.injector.instanceOf[v1.Routes]
-  val v1RoutesWithUkDividends: v1WithUkDividends.Routes = app.injector.instanceOf[v1WithUkDividends.Routes]
+  val v1r7cRoutes: v1r7c.Routes                         = app.injector.instanceOf[v1r7c.Routes]
 
-  private def newVersionRoutingMap(ukDividendsEnabled: Boolean) = {
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"uk-dividends-endpoints.enabled = $ukDividendsEnabled"))))
+  private def newVersionRoutingMap(v1r7cEnabled: Boolean) = {
+    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"v1r7c-endpoints.enabled = $v1r7cEnabled"))))
 
     VersionRoutingMapImpl(
       appConfig = mockAppConfig,
       defaultRouter = defaultRouter,
       v1Router = v1Routes,
-      ukDividendsRouter = v1RoutesWithUkDividends
+      v1r7cRouter = v1r7cRoutes
     )
   }
 
   "map" when {
     "routing to v1" should {
       "route to v1.routes" in {
-        val versionRoutingMap = newVersionRoutingMap(ukDividendsEnabled = false)
+        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = false)
         versionRoutingMap.map(Versions.VERSION_1) shouldBe v1Routes
       }
     }
 
     "routing to v1WithUkDividends" should {
-      "route to v1WithUkDividends.routes" in {
-        val versionRoutingMap = newVersionRoutingMap(ukDividendsEnabled = true)
-        versionRoutingMap.map(Versions.VERSION_1) shouldBe v1RoutesWithUkDividends
+      "route to v1r7c.routes" in {
+        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = true)
+        versionRoutingMap.map(Versions.VERSION_1) shouldBe v1r7cRoutes
       }
     }
   }
