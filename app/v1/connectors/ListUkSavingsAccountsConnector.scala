@@ -16,34 +16,31 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import api.connectors.DownstreamUri.Release6Uri
-import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
+import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
 
 @Singleton
 class ListUkSavingsAccountsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  // Wait for Models to be completed, then ListUkSavingsRequest will get resolved.
-  def listUkSavingsAccounts(request: ListUkSavingsRequest)(implicit
+  def listUkSavingsAccounts(request: ListUkSavingsAccountRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[ListEmploymentResponse[Employment]]] = {
+      correlationId: String): Future[DownstreamOutcome[ListUkSavingsAccountResponse[UkSavingsAccount]]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    val nino = request.nino.nino
 
     get(
-      Release6Uri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear")
+      Release6Uri[ListUkSavingsAccountResponse[UkSavingsAccount]](s"individuals/income-received/savings/uk-accounts/$nino")
     )
   }
 

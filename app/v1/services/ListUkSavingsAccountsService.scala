@@ -17,15 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  SavingsAccountIdFormatError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError, StandardDownstreamError}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -34,20 +26,20 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.{ListEmploymentsConnector, ListUkSavingsAccountsConnector}
-import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.connectors.ListUkSavingsAccountsConnector
+import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
+import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
+  def listUkSavingsAccounts(request: ListUkSavingsAccountRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[Employment]]]] = {
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountResponse[UkSavingsAccount]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.listUkSavingsAccounts(request)).leftMap(mapDesErrors(mappingDesToMtdError))
