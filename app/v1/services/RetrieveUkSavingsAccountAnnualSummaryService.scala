@@ -51,8 +51,9 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
 
   private def convertToMtd(downstreamResponseWrapper: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse])(implicit
       logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
+
     downstreamResponseWrapper.responseData.savingsInterestAnnualIncome match {
-      case item :: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))
+      case item  +: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))
       case Nil         => Left(ErrorWrapper(downstreamResponseWrapper.correlationId, NotFoundError, None))
 
       case _ =>
