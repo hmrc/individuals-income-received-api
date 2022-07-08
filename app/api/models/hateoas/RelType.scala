@@ -22,6 +22,8 @@ object RelType {
 
   val CREATE_AND_AMEND_UK_SAVINGS_INCOME = "create-and-amend-uk-savings-account-annual-summary"
   val DELETE_UK_SAVINGS_INCOME           = "delete-uk-savings-account-annual-summary"
+  val ADD_UK_SAVINGS_INCOME              = "add-uk-savings-account"
+  val LIST_UK_SAVINGS_INCOME             = "list-all-uk-savings-account"
   val RETRIEVE_UK_SAVINGS_INCOME         = "retrieve-uk-savings-account-annual-summary"
 
   val AMEND_INSURANCE_POLICIES_INCOME  = "create-and-amend-insurance-policies-income"
@@ -73,6 +75,9 @@ object RelType {
   val DELETE_NON_PAYE_EMPLOYMENT           = "delete-non-paye-employment-income"
 
   val RETRIEVE_ALL_CGT_PPD_OVERRIDES_AND_DISPOSALS = "retrieve-all-cgt-residential-property-disposals-and-overrides"
+
+  val LIST_UK_SAVINGS = "list-all-uk-savings-account"
+  val CREATE_AND_AMEND_UK_SAVINGS = "create-and-amend-uk-savings-account-annual-summary"
 
   val SELF = "self"
 }

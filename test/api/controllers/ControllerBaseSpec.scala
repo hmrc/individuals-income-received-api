@@ -54,6 +54,8 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
              |""".stripMargin)
     .as[JsObject]
 
+  def withPath(error: MtdError): MtdError = error.copy(paths = Some(Seq("/somePath")))
+
   def defaultDownstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,

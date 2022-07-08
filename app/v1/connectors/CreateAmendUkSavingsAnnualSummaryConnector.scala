@@ -18,34 +18,31 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
 import config.AppConfig
 import play.api.http.Status
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRequest
+import v1.models.request.createAmendUkSavingsAnnualSummary.DownstreamCreateAmendUkSavingsAnnualSummaryBody
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkSavingsAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig:AppConfig)
-  extends BaseDownstreamConnector
-  {
-    def createOrAmendUKSavingsAccountSummary(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
-        hc: HeaderCarrier,
-        cc: ExecutionContext,
-        correlationId: String): Future[DownstreamOutcome[Unit]]= {
+class CreateAmendUkSavingsAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-      import api.connectors.httpparsers.StandardDownstreamHttpParser._
+  def createOrAmendUKSavingsAccountSummary(nino: Nino, taxYear: TaxYear, body: DownstreamCreateAmendUkSavingsAnnualSummaryBody)(implicit
+      hc: HeaderCarrier,
+      cc: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-      implicit val successCode: SuccessCode = SuccessCode(Status.OK)
+    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
-      val nino:String = request.nino.nino
-      val taxYear:String = request.taxYear.toDownstream
-
-      post (
-        uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/savings/annual/$taxYear"),
-        body = request.body
-      )
+    post(
+      uri = DesUri[Unit](s"income-tax/nino/${nino.nino}/income-source/savings/annual/${taxYear.toDownstream}"),
+      body = body
+    )
   }
+
 }

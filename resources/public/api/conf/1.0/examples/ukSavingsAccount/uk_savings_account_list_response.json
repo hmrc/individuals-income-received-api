@@ -1,0 +1,28 @@
+{
+  "savingsAccounts": [
+    {
+      "savingsAccountId": "000000000000001",
+      "accountName": "Bank Account 1"
+    },
+    {
+      "savingsAccountId": "000000000000002",
+      "accountName": "Bank Account 2"
+    },
+    {
+      "savingsAccountId": "000000000000003",
+      "accountName": "Bank Account 3"
+    }
+  ],
+  "links": [
+    {
+      "href": "/individuals/income-received/savings/uk-accounts/TC663795B",
+      "rel": "add-uk-savings-account",
+      "method": "POST"
+    },
+    {
+      "href": "/individuals/income-received/savings/uk-accounts/TC663795B}",
+      "rel": "self",
+      "method": "GET"
+    }
+  ]
+}

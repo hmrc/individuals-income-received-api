@@ -267,8 +267,6 @@ class CreateAmendCgtPpdOverridesControllerSpec
           }
         }
 
-        def withPath(error: MtdError): MtdError = error.copy(paths = Some(Seq("/somePath")))
-
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
