@@ -58,3 +58,7 @@ GET        /disposals/other-gains/:nino/:taxYear                            v1.c
 DELETE     /disposals/other-gains/:nino/:taxYear                            v1.controllers.DeleteOtherCgtController.deleteOtherCgt(nino: String, taxYear: String)
 
 DELETE     /disposals/residential-property/:nino/:taxYear                   v1.controllers.DeleteCgtNonPpdController.deleteCgtNonPpd(nino: String, taxYear: String)
+
+
+# UK Savings Income Annual Summary routes:
+GET        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId             v1.controllers.RetrieveUkSavingsAccountAnnualSummaryController.retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String)

@@ -71,3 +71,8 @@ POST        /savings/uk-accounts/:nino                                       v1.
 # UK Savings Income Annual Summary routes go here:
 PUT        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId            v1.controllers.CreateAmendUkSavingsAnnualSummaryController.createAmendUkSavingsAnnualSummary(nino: String, taxYear: String, savingsAccountId: String)
 
+
+
+
+# UK Savings Income Annual Summary routes:
+GET        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId             v1.controllers.RetrieveUkSavingsAccountAnnualSummaryController.retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String)
