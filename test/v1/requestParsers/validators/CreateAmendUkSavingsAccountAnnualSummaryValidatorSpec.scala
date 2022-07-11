@@ -41,7 +41,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec wit
 
   object Data {
     val validNino              = "AA123456A"
-    val validTaxYear           = "2019-20"
+    val validTaxYear           = "2017-18"
     val validTaxedUkInterest   = 31554452289.99
     val validUntaxedUkInterest = 91523009816.00
     val validSavingsAccountId  = "SAVKB2UVwUTBQGJ"
@@ -98,16 +98,13 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec wit
 
     val validator = new CreateAmendUkSavingsAccountAnnualSummaryValidator(appConfig: AppConfig)
 
-    MockedAppConfig.minimumPermittedTaxYear
+    MockedAppConfig.ukDividendsMinimumTaxYear
       .returns(2018)
       .anyNumberOfTimes()
 
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
       .anyNumberOfTimes()
-
-    private val MINIMUM_YEAR = 2018
-    MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR
   }
 
   "running validation" should {
