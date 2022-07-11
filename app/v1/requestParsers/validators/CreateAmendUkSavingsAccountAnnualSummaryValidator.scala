@@ -48,7 +48,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
 
   private def parameterRuleValidation: CreateAmendUkSavingsAnnualSummaryRawData => List[List[MtdError]] = data => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.ukDividendsMinimumTaxYear)
     )
   }
 
