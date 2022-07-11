@@ -60,13 +60,15 @@ class ListUkSavingsAccountsConnectorSpec extends ConnectorSpec {
 
   "ListUkSavingsAccountsConnector" when {
     "listUkSavingsAccounts" must {
-      "return a 200 status for a success scenario" in new Test {
+      "return a valid response, list of uk savings accounts " +
+        "upon receiving SUCCESS response from the backend service" in new Test {
         val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/individuals/income-received/savings/uk-accounts/$nino",
+            url = s"$baseUrl/income-tax/income-sources/nino/$nino",
+            parameters = Seq("incomeSourceType" -> "interest-from-uk-banks"),
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
