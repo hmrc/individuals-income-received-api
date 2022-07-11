@@ -38,9 +38,12 @@ class ListUkSavingsAccountsConnector @Inject() (val http: HttpClient, val appCon
 
     val nino = request.nino.nino
 
+    val incomeSourceTypeParam = "incomeSourceType" -> "interest-from-uk-banks"
+
     get(
       DesUri[ListUkSavingsAccountResponse[UkSavingsAccount]](s"income-tax/income-sources/nino/$nino"),
-      Seq("incomeSourceType" -> "interest-from-uk-banks")
+      request.savingsAccountId
+        .fold(Seq(incomeSourceTypeParam))(savingsId => Seq(incomeSourceTypeParam, "incomeSourceId" -> savingsId))
     )
   }
 
