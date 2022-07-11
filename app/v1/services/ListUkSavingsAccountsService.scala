@@ -41,11 +41,9 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountResponse[UkSavingsAccount]]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.listUkSavingsAccounts(request)).leftMap(mapDesErrors(mappingDesToMtdError))
-    } yield desResponseWrapper.map(des => des)
-
-    result.value
+      EitherT(connector.listUkSavingsAccounts(request))
+        .leftMap(mapDesErrors(mappingDesToMtdError))
+        .value
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(

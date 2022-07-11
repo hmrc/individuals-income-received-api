@@ -27,7 +27,7 @@ import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, Uk
 
 import scala.concurrent.Future
 
-class ListUkSavingsAccountConnectorSpec extends ConnectorSpec {
+class ListUkSavingsAccountsConnectorSpec extends ConnectorSpec {
 
   val nino: String     = "AA111111A"
   val taxYear: String  = "2019"
@@ -52,10 +52,10 @@ class ListUkSavingsAccountConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.release6BaseUrl returns baseUrl
-    MockedAppConfig.release6Token returns "release6-token"
-    MockedAppConfig.release6Environment returns "release6-environment"
-    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockedAppConfig.desBaseUrl returns baseUrl
+    MockedAppConfig.desToken returns "des-token"
+    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "ListUkSavingsAccountsConnector" when {
@@ -68,7 +68,7 @@ class ListUkSavingsAccountConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/individuals/income-received/savings/uk-accounts/$nino",
             config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredRelease6Headers,
+            requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

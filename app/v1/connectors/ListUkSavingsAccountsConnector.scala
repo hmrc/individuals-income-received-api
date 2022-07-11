@@ -16,16 +16,15 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Release6Uri
-
-import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
 import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListUkSavingsAccountsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -40,7 +39,7 @@ class ListUkSavingsAccountsConnector @Inject() (val http: HttpClient, val appCon
     val nino = request.nino.nino
 
     get(
-      Release6Uri[ListUkSavingsAccountResponse[UkSavingsAccount]](s"individuals/income-received/savings/uk-accounts/$nino")
+      DesUri[ListUkSavingsAccountResponse[UkSavingsAccount]](s"individuals/income-received/savings/uk-accounts/$nino")
     )
   }
 
