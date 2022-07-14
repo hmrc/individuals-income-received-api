@@ -18,16 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.Nino
 import api.requestParsers.RequestParser
-import v1.models.request.listUkSavingsAccount.{ListUkSavingsAccountRawData, ListUkSavingsAccountRequest}
-import v1.requestParsers.validators.ListUkSavingsAccountValidator
+import v1.models.request.listUkSavingsAccounts.{ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest}
+import v1.requestParsers.validators.ListUkSavingsAccountsValidator
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ListUkSavingsAccountRequestParser @Inject() (val validator: ListUkSavingsAccountValidator)
-    extends RequestParser[ListUkSavingsAccountRawData, ListUkSavingsAccountRequest] {
+class ListUkSavingsAccountsRequestParser @Inject()(val validator: ListUkSavingsAccountsValidator)
+    extends RequestParser[ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest] {
 
-  override protected def requestFor(data: ListUkSavingsAccountRawData): ListUkSavingsAccountRequest =
-    ListUkSavingsAccountRequest(Nino(data.nino), data.savingsAccountId)
+  override protected def requestFor(data: ListUkSavingsAccountsRawData): ListUkSavingsAccountsRequest =
+    ListUkSavingsAccountsRequest(Nino(data.nino), data.savingsAccountId)
 
 }

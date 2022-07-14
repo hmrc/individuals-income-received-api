@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.services
 
-import api.connectors.DownstreamOutcome
+import api.controllers.EndpointLogContext
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.ListUkSavingsAccountsConnector
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
 import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
+import v1.services.ListUkSavingsAccountsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListUkSavingsAccountsConnector extends MockFactory {
+trait MockListUkSavingsAccountsService extends MockFactory {
 
-  val mockListUkSavingsAccountsConnector: ListUkSavingsAccountsConnector = mock[ListUkSavingsAccountsConnector]
+  val mockListUkSavingsAccountsService: ListUkSavingsAccountsService = mock[ListUkSavingsAccountsService]
 
-  object MockListUkSavingsAccountsConnector {
+  object MockListUkSavingsAccountsService {
 
     def listUkSavingsAccounts(
-        requestData: ListUkSavingsAccountsRequest): CallHandler[Future[DownstreamOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
-      (mockListUkSavingsAccountsConnector
-        .listUkSavingsAccounts(_: ListUkSavingsAccountsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(requestData, *, *, *)
+        requestData: ListUkSavingsAccountsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]]] = {
+      (mockListUkSavingsAccountsService
+        .listUkSavingsAccounts(_: ListUkSavingsAccountsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
 
   }

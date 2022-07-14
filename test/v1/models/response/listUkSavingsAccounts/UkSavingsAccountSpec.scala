@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.listUkSavingsAccount
+package v1.models.response.listUkSavingsAccounts
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 

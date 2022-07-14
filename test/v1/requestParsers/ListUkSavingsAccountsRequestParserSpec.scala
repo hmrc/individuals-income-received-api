@@ -19,18 +19,18 @@ package v1.requestParsers
 import api.models.domain.Nino
 import api.models.errors._
 import support.UnitSpec
-import v1.mocks.validators.MockListUkSavingsAccountValidator
-import v1.models.request.listUkSavingsAccount.{ListUkSavingsAccountRawData, ListUkSavingsAccountRequest}
+import v1.mocks.validators.MockListUkSavingsAccountsValidator
+import v1.models.request.listUkSavingsAccounts.{ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest}
 
-class ListUkSavingsAccountRequestParserSpec extends UnitSpec {
+class ListUkSavingsAccountsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val savingsAccountId: String       = "someSavingsId"
   implicit val correlationId: String = "someCorrelationId"
 
-  trait Test extends MockListUkSavingsAccountValidator {
+  trait Test extends MockListUkSavingsAccountsValidator {
 
-    lazy val parser: ListUkSavingsAccountRequestParser = new ListUkSavingsAccountRequestParser(
+    lazy val parser: ListUkSavingsAccountsRequestParser = new ListUkSavingsAccountsRequestParser(
       validator = mockListUkSavingsAccountValidator
     )
 
@@ -39,22 +39,22 @@ class ListUkSavingsAccountRequestParserSpec extends UnitSpec {
   "parse" should {
     "return the correct request object" when {
       "valid request data is supplied with no savingsAccountId" in new Test {
-        val rawData: ListUkSavingsAccountRawData = ListUkSavingsAccountRawData(nino = nino, None)
+        val rawData: ListUkSavingsAccountsRawData = ListUkSavingsAccountsRawData(nino = nino, None)
         MockListUkSavingsAccountValidator.validate(rawData) returns Nil
 
-        parser.parseRequest(rawData) shouldBe Right(ListUkSavingsAccountRequest(Nino(nino), None))
+        parser.parseRequest(rawData) shouldBe Right(ListUkSavingsAccountsRequest(Nino(nino), None))
       }
 
       "valid request data is supplied with a savingsAccountId" in new Test {
-        val rawData: ListUkSavingsAccountRawData = ListUkSavingsAccountRawData(nino = nino, Some(savingsAccountId))
+        val rawData: ListUkSavingsAccountsRawData = ListUkSavingsAccountsRawData(nino = nino, Some(savingsAccountId))
         MockListUkSavingsAccountValidator.validate(rawData) returns Nil
 
-        parser.parseRequest(rawData) shouldBe Right(ListUkSavingsAccountRequest(Nino(nino), Some(savingsAccountId)))
+        parser.parseRequest(rawData) shouldBe Right(ListUkSavingsAccountsRequest(Nino(nino), Some(savingsAccountId)))
       }
     }
 
     "return an ErrorWrapper" when {
-      val rawData = ListUkSavingsAccountRawData(nino, None)
+      val rawData = ListUkSavingsAccountsRawData(nino, None)
 
       "a single validation error occurs" in new Test {
         MockListUkSavingsAccountValidator.validate(rawData) returns List(NinoFormatError)

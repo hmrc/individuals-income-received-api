@@ -20,45 +20,45 @@ import api.mocks.MockCurrentDateTime
 import api.models.errors.{NinoFormatError, SavingsAccountIdFormatError}
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRawData
+import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
 
-class ListUkSavingsAccountValidatorSpec extends UnitSpec {
+class ListUkSavingsAccountsValidatorSpec extends UnitSpec {
 
   private val validNino             = "AA123456A"
   private val validSavingsAccountId = "SAVKB2UVwUTBQGJ"
 
   class Test extends MockCurrentDateTime with MockAppConfig {
-    val validator = new ListUkSavingsAccountValidator
+    val validator = new ListUkSavingsAccountsValidator
   }
 
   "running a validation" should {
     "return no errors" when {
       "a valid request without a savingsAccountId is supplied" in new Test {
-        validator.validate(ListUkSavingsAccountRawData(validNino, None)) shouldBe Nil
+        validator.validate(ListUkSavingsAccountsRawData(validNino, None)) shouldBe Nil
       }
 
       "a valid request with a savingsAccountId is supplied" in new Test {
-        validator.validate(ListUkSavingsAccountRawData(validNino, Some(validSavingsAccountId))) shouldBe Nil
+        validator.validate(ListUkSavingsAccountsRawData(validNino, Some(validSavingsAccountId))) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(ListUkSavingsAccountRawData("BAD_NINO", None)) shouldBe
+        validator.validate(ListUkSavingsAccountsRawData("BAD_NINO", None)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return SavingsAccountIdFormatError errors" when {
       "an invalid savingsAccountId" in new Test {
-        validator.validate(ListUkSavingsAccountRawData(validNino, Some("BAD_SAVINGS_ACCT"))) shouldBe
+        validator.validate(ListUkSavingsAccountsRawData(validNino, Some("BAD_SAVINGS_ACCT"))) shouldBe
           List(SavingsAccountIdFormatError)
       }
     }
 
     "return multiple errors" when {
       "the request has multiple errors" in new Test {
-        validator.validate(ListUkSavingsAccountRawData("BAD_NINO", Some("BAD_SAVINGS_ACCT"))) shouldBe
+        validator.validate(ListUkSavingsAccountsRawData("BAD_NINO", Some("BAD_SAVINGS_ACCT"))) shouldBe
           List(NinoFormatError, SavingsAccountIdFormatError)
       }
     }

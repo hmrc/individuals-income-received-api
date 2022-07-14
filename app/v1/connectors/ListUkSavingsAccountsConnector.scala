@@ -21,18 +21,18 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
-import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
+import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListUkSavingsAccountsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listUkSavingsAccounts(request: ListUkSavingsAccountRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[ListUkSavingsAccountResponse[UkSavingsAccount]]] = {
+  def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
+                                                                   hc: HeaderCarrier,
+                                                                   ec: ExecutionContext,
+                                                                   correlationId: String): Future[DownstreamOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
@@ -41,7 +41,7 @@ class ListUkSavingsAccountsConnector @Inject() (val http: HttpClient, val appCon
     val incomeSourceTypeParam = "incomeSourceType" -> "interest-from-uk-banks"
 
     get(
-      DesUri[ListUkSavingsAccountResponse[UkSavingsAccount]](s"income-tax/income-sources/nino/$nino"),
+      DesUri[ListUkSavingsAccountsResponse[UkSavingsAccount]](s"income-tax/income-sources/nino/$nino"),
       request.savingsAccountId
         .fold(Seq(incomeSourceTypeParam))(savingsId => Seq(incomeSourceTypeParam, "incomeSourceId" -> savingsId))
     )

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.listUkSavingsAccount
+package v1.models.request.listUkSavingsAccounts
 
-import api.models.request.RawData
+import api.models.domain.Nino
 
-case class ListUkSavingsAccountRawData(nino: String, savingsAccountId: Option[String]) extends RawData
+case class ListUkSavingsAccountsRequest(nino: Nino, savingsAccountId: Option[String])

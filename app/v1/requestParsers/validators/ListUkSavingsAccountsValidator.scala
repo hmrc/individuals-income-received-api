@@ -18,21 +18,21 @@ package v1.requestParsers.validators
 
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
-import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRawData
+import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
 import v1.requestParsers.validators.validations.{NinoValidation, SavingsAccountIdValidation}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ListUkSavingsAccountValidator @Inject() extends Validator[ListUkSavingsAccountRawData] {
+class ListUkSavingsAccountsValidator @Inject() extends Validator[ListUkSavingsAccountsRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
-  override def validate(data: ListUkSavingsAccountRawData): List[MtdError] =
+  override def validate(data: ListUkSavingsAccountsRawData): List[MtdError] =
     run(validationSet, data).distinct
 
-  private def parameterFormatValidation: ListUkSavingsAccountRawData => List[List[MtdError]] =
-    (data: ListUkSavingsAccountRawData) => {
+  private def parameterFormatValidation: ListUkSavingsAccountsRawData => List[List[MtdError]] =
+    (data: ListUkSavingsAccountsRawData) => {
       List(
         NinoValidation.validate(data.nino),
         data.savingsAccountId.map(SavingsAccountIdValidation.validate).getOrElse(Nil)
