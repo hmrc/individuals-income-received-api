@@ -51,11 +51,9 @@ class ListUkSavingsAccountsController @Inject()(val authService: EnrolmentsAuthS
       endpointName = "listUkSavingsAccounts"
     )
 
-  def listUkSavingsAccounts(nino: String, savingsAccountId: Option[String]): Action[AnyContent] =
+  def listUkSavingsAccounts(nino: String, savingsAccountId: Option[String]): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
-
-      println(" ********************************************* ")
 
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -93,6 +91,7 @@ class ListUkSavingsAccountsController @Inject()(val authService: EnrolmentsAuthS
         result
       }.merge
     }
+  }
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {

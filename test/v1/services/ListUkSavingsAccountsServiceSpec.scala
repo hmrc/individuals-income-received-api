@@ -85,7 +85,7 @@ class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
 
         val input = Seq(
           ("INVALID_ID_TYPE", StandardDownstreamError),
-          ("INVALID_IDVAlUE", NinoFormatError),
+          ("INVALID_IDVALUE", NinoFormatError),
           ("INVALID_INCOMESOURCETYPE", StandardDownstreamError),
           ("INVALID_TAXYEAR", StandardDownstreamError),
           ("INVALID_INCOMESOURCEID", SavingsAccountIdFormatError),

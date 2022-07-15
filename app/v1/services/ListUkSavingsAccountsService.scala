@@ -48,7 +48,7 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_ID_TYPE"          -> StandardDownstreamError,
-    "INVALID_IDVAlUE"          -> NinoFormatError,
+    "INVALID_IDVALUE"          -> NinoFormatError,
     "INVALID_INCOMESOURCETYPE" -> StandardDownstreamError,
     "INVALID_TAXYEAR"          -> StandardDownstreamError, // Is tech spec correct here?
     "INVALID_INCOMESOURCEID"   -> SavingsAccountIdFormatError,

@@ -192,7 +192,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXYEAR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_INCOMESOURCEID", BAD_REQUEST, SavingsAccountIdFormatError),
           (BAD_REQUEST, "INVALID_ENDDATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
