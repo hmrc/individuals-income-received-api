@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response.listUkSavingsAccount
+package v1.models.response.listUkSavingsAccounts
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class ListUkSavingsAccountResponseSpec extends UnitSpec {
+class ListUkSavingsAccountsResponseSpec extends UnitSpec {
 
   val ukSavingsAccountsFromDES = Json.parse(
     """
@@ -69,7 +69,7 @@ class ListUkSavingsAccountResponseSpec extends UnitSpec {
 
   val emptyJson = Json.parse( """[]""" )
 
-  val validListUkSavingsAccountResponse = ListUkSavingsAccountResponse(
+  val validListUkSavingsAccountResponse = ListUkSavingsAccountsResponse(
     Some(
       Seq(
         UkSavingsAccount("000000000000001", "Bank Account 1"),
@@ -79,10 +79,10 @@ class ListUkSavingsAccountResponseSpec extends UnitSpec {
     )
   )
 
-  "ListUkSavingsAccountResponse" should {
-    "return a valid ListUkSavingsAccountResponse model " when {
+  "ListUkSavingsAccountsResponse" should {
+    "return a valid ListUkSavingsAccountsResponse model " when {
       "a valid uk savings account list json from DES is supplied" in {
-        ukSavingsAccountsFromDES.as[ListUkSavingsAccountResponse[UkSavingsAccount]] shouldBe
+        ukSavingsAccountsFromDES.as[ListUkSavingsAccountsResponse[UkSavingsAccount]] shouldBe
           validListUkSavingsAccountResponse
       }
     }
@@ -94,10 +94,10 @@ class ListUkSavingsAccountResponseSpec extends UnitSpec {
       }
     }
 
-    "return a valid empty ListUkSavingsAccountResponse model " when {
+    "return a valid empty ListUkSavingsAccountsResponse model " when {
       "a valid empty uk savings account list json from DES is supplied" in {
-        emptyJson.as[ListUkSavingsAccountResponse[UkSavingsAccount]] shouldBe
-          ListUkSavingsAccountResponse(None)
+        emptyJson.as[ListUkSavingsAccountsResponse[UkSavingsAccount]] shouldBe
+          ListUkSavingsAccountsResponse(None)
       }
     }
   }

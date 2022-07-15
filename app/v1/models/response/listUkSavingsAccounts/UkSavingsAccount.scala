@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.request.listUkSavingsAccount
+package v1.models.response.listUkSavingsAccounts
+import api.hateoas.HateoasLinks
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
 
-import api.models.domain.Nino
+case class UkSavingsAccount(savingsAccountId: String, accountName: String)
 
-case class ListUkSavingsAccountRequest(nino: Nino, savingsAccountId: Option[String])
+object UkSavingsAccount extends HateoasLinks {
+
+  implicit val writes: OWrites[UkSavingsAccount] = Json.writes[UkSavingsAccount]
+
+  implicit val reads: Reads[UkSavingsAccount] = (
+    (JsPath \ "incomeSourceId").read[String] and
+      (JsPath \ "incomeSourceName").read[String]
+  )(UkSavingsAccount.apply _)
+
+}
+
+

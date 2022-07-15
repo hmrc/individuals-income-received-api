@@ -31,8 +31,8 @@ import api.models.errors.{
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockListUkSavingsAccountsConnector
-import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
-import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
+import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
 import scala.concurrent.Future
 
@@ -41,9 +41,9 @@ class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
   private val nino             = "AA112233A"
   private val savingsAccountId = "SAVKB2UVwUTBQGJ"
 
-  private val requestData = ListUkSavingsAccountRequest(Nino(nino), Some(savingsAccountId))
+  private val requestData = ListUkSavingsAccountsRequest(Nino(nino), Some(savingsAccountId))
 
-  private val validResponse = ListUkSavingsAccountResponse(
+  private val validResponse = ListUkSavingsAccountsResponse(
     savingsAccounts = Some(
       Seq(
         UkSavingsAccount(savingsAccountId = "000000000000001", accountName = "Bank Account 1"),
@@ -85,7 +85,7 @@ class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
 
         val input = Seq(
           ("INVALID_ID_TYPE", StandardDownstreamError),
-          ("INVALID_IDVAlUE", NinoFormatError),
+          ("INVALID_IDVALUE", NinoFormatError),
           ("INVALID_INCOMESOURCETYPE", StandardDownstreamError),
           ("INVALID_TAXYEAR", StandardDownstreamError),
           ("INVALID_INCOMESOURCEID", SavingsAccountIdFormatError),

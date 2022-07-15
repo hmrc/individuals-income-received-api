@@ -22,8 +22,8 @@ import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
-import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
+import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
 import scala.concurrent.Future
 
@@ -33,10 +33,10 @@ class ListUkSavingsAccountsConnectorSpec extends ConnectorSpec {
   val taxYear: String  = "2019"
   val savingsAccountId = "SAVKB2UVwUTBQGJ"
 
-  val request: ListUkSavingsAccountRequest = ListUkSavingsAccountRequest(Nino(nino), None)
-  val requestWithSavingsAccountId: ListUkSavingsAccountRequest = ListUkSavingsAccountRequest(Nino(nino), Some(savingsAccountId))
+  val request: ListUkSavingsAccountsRequest = ListUkSavingsAccountsRequest(Nino(nino), None)
+  val requestWithSavingsAccountId: ListUkSavingsAccountsRequest = ListUkSavingsAccountsRequest(Nino(nino), Some(savingsAccountId))
 
-  private val validResponse = ListUkSavingsAccountResponse(
+  private val validResponse = ListUkSavingsAccountsResponse(
     savingsAccounts = Some(
       Seq(
         UkSavingsAccount(savingsAccountId = "000000000000001", accountName = "Bank Account 1"),

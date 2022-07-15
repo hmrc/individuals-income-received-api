@@ -27,19 +27,19 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.ListUkSavingsAccountsConnector
-import v1.models.request.listUkSavingsAccount.ListUkSavingsAccountRequest
-import v1.models.response.listUkSavingsAccount.{ListUkSavingsAccountResponse, UkSavingsAccount}
+import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def listUkSavingsAccounts(request: ListUkSavingsAccountRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountResponse[UkSavingsAccount]]]] = {
+  def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
+                                                                   hc: HeaderCarrier,
+                                                                   ec: ExecutionContext,
+                                                                   logContext: EndpointLogContext,
+                                                                   correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
 
       EitherT(connector.listUkSavingsAccounts(request))
         .leftMap(mapDesErrors(mappingDesToMtdError))
@@ -48,7 +48,7 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_ID_TYPE"          -> StandardDownstreamError,
-    "INVALID_IDVAlUE"          -> NinoFormatError,
+    "INVALID_IDVALUE"          -> NinoFormatError,
     "INVALID_INCOMESOURCETYPE" -> StandardDownstreamError,
     "INVALID_TAXYEAR"          -> StandardDownstreamError, // Is tech spec correct here?
     "INVALID_INCOMESOURCEID"   -> SavingsAccountIdFormatError,
