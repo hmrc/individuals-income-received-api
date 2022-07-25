@@ -16,14 +16,18 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext, UserRequest}
 import api.hateoas.{AmendHateoasBody, HateoasFactory}
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import api.models.errors._
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.models.hateoas.RelType.CREATE_AND_AMEND_UK_SAVINGS
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRawData
 import v1.models.response.createAmendUkSavingsIncomeAnnualSummary.CreateAndAmendUkSavingsAnnualSummaryHateoasData
@@ -38,6 +42,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
                                                              val lookupService: MtdIdLookupService,
                                                              requestParser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
                                                              service: CreateAmendUkSavingsAnnualSummaryService,
+                                                             auditService: AuditService,
                                                              hateoasFactory: HateoasFactory,
                                                              cc: ControllerComponents,
                                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -66,6 +71,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
         body = AnyContentAsJson(request.body)
       )
 
+      val auditMapping: Map[String, String] = Map("nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId)
       val result = for {
         parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
         serviceResponse <- EitherT(service.createAmend(parsedRequest))
@@ -78,6 +84,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
         )
+        saveAudit(request, auditMapping, serviceResponse.correlationId, AuditResponse(httpStatus = OK, response = Right(None)))
 
         Ok(Json.toJson(vendorResponse))
           .withApiHeaders(serviceResponse.correlationId)
@@ -85,9 +92,15 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
+        val errResult        = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId: $resCorrelationId")
+        saveAudit(
+          request,
+          auditMapping,
+          resCorrelationId,
+          AuditResponse(httpStatus = errResult.header.status, response = Left(errorWrapper.auditErrors)))
 
         errorResult(errorWrapper).withApiHeaders(resCorrelationId)
       }.merge
@@ -102,5 +115,25 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+
+  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event: AuditEvent[FlattenedGenericAuditDetail] = AuditEvent("createAmendUkSavingsAnnualSummary", CREATE_AND_AMEND_UK_SAVINGS, details)
+    auditService.auditEvent(event)
+  }
+
+  private def saveAudit(request: UserRequest[JsValue], auditMapping: Map[String, String], correlationId: String, auditResponse: AuditResponse)(
+      implicit hc: HeaderCarrier) = {
+
+    auditSubmission(
+      FlattenedGenericAuditDetail(
+        versionNumber = Some("1.0"),
+        request.userDetails,
+        auditMapping,
+        Some(request.body),
+        correlationId,
+        auditResponse
+      )
+    )
+  }
 
 }

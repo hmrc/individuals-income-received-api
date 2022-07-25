@@ -19,10 +19,13 @@ package v1.controllers
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import api.models.auth.UserDetails
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.HateoasWrapper
+import api.models.hateoas.RelType.CREATE_AND_AMEND_UK_SAVINGS
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
@@ -45,6 +48,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
     with MockCreateAmendUkSavingsAnnualSummaryRequestParser
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
+    with MockAuditService
     with MockHateoasFactory
     with MockIdGenerator {
 
@@ -78,6 +82,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockCreateAmendUkSavingsAnnualSummaryRequestParser,
       service = mockCreateAmendUkSavingsAnnualSummaryService,
+      auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -86,6 +91,21 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
+  }
+
+  def event(auditResponse: AuditResponse): AuditEvent[FlattenedGenericAuditDetail] = {
+    AuditEvent(
+      auditType = "createAmendUkSavingsAnnualSummary",
+      transactionName = CREATE_AND_AMEND_UK_SAVINGS,
+      detail = FlattenedGenericAuditDetail(
+        versionNumber = Some("1.0"),
+        userDetails = UserDetails(mtdId, "Individual", None),
+        params = Map("nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId),
+        request = Some(requestJson),
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
   }
 
   "CreateAmendUkSavingsAnnualSummaryController" should {
@@ -109,6 +129,9 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe testHateoasLinksJson
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(testHateoasLinksJson)))
+        MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
       }
     }
 
@@ -126,6 +149,9 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
           }
         }
 
