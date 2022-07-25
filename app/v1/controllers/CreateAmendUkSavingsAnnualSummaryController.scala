@@ -129,7 +129,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
         versionNumber = Some("1.0"),
         request.userDetails,
         auditMapping,
-        None,
+        Some(request.body),
         correlationId,
         auditResponse
       )

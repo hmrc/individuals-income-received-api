@@ -101,7 +101,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
         versionNumber = Some("1.0"),
         userDetails = UserDetails(mtdId, "Individual", None),
         params = Map("nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId),
-        request = None,
+        request = Some(requestJson),
         `X-CorrelationId` = correlationId,
         auditResponse = auditResponse
       )
