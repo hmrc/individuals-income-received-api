@@ -24,21 +24,27 @@ import api.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryReques
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkDividendsAnnualIncomeSummaryService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_DIVIDENDS_INCOME, DELETE_UK_DIVIDENDS_INCOME, SELF}
+import api.models.hateoas.Method.{GET, PUT}
+import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_DIVIDENDS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest}
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData, RetrieveUkDividendsAnnualIncomeSummaryResponse}
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{
+  RetrieveUkDividendsAnnualIncomeSummaryRawData,
+  RetrieveUkDividendsAnnualIncomeSummaryRequest
+}
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{
+  RetrieveUkDividendsAnnualIncomeSummaryHateoasData,
+  RetrieveUkDividendsAnnualIncomeSummaryResponse
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveUkDividendsAnnualIncomeSummaryService
@@ -75,28 +81,18 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
       rel = SELF
     )
 
-  private val deleteUkDividendsLink: Link =
-    Link(
-      href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
-      method = DELETE,
-      rel = DELETE_UK_DIVIDENDS_INCOME
-    )
-
   private val retrieveUkDividendsAnnualIncomeSummaryResponseModel = RetrieveUkDividendsAnnualIncomeSummaryResponse(
     Some(100.99),
     Some(100.99)
   )
 
-
-  private val mtdResponse = Json.parse(
-    """
+  private val mtdResponse = Json.parse("""
       |{
       |  "ukDividends":100.99,
       |  "otherUkDividends":100.99,
       |  "links":[
       |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"PUT","rel":"create-and-amend-uk-dividends-income"},
-      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"GET","rel":"self"},
-      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"DELETE","rel":"delete-uk-dividends-income"}]}
+      |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"GET","rel":"self"}]}
       |""".stripMargin)
 
   trait Test {
@@ -136,8 +132,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
               retrieveUkDividendsAnnualIncomeSummaryResponseModel,
               Seq(
                 amendUkDividendsLink,
-                retrieveUkDividendsLink,
-                deleteUkDividendsLink
+                retrieveUkDividendsLink
               )))
 
         val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)

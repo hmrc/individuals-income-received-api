@@ -23,8 +23,8 @@ import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_SAVINGS_INCOME, DELETE_UK_SAVINGS_INCOME, SELF}
+import api.models.hateoas.Method.{GET, PUT}
+import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_SAVINGS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
@@ -49,11 +49,11 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val savingsAccountId: String = "ABCDE0123456789"
-  val correlationId: String = "X-123"
-  val taxedUkIncome: Option[BigDecimal] = Some(93556675358.99)
+  val nino: String                        = "AA123456A"
+  val taxYear: String                     = "2019-20"
+  val savingsAccountId: String            = "ABCDE0123456789"
+  val correlationId: String               = "X-123"
+  val taxedUkIncome: Option[BigDecimal]   = Some(93556675358.99)
   val unTaxedUkIncome: Option[BigDecimal] = Some(34514974058.99)
 
   private val rawData: RetrieveUkSavingsAnnualSummaryRawData = RetrieveUkSavingsAnnualSummaryRawData(nino, taxYear, savingsAccountId)
@@ -65,19 +65,19 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
   )
 
   private val link: String = s"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId"
+
   private val links: Seq[Link] = Seq[Link](
     Link(href = link, method = PUT, rel = CREATE_AND_AMEND_UK_SAVINGS_INCOME),
-    Link(href = link, method = GET, rel = SELF),
-    Link(href = link, method = DELETE, rel = DELETE_UK_SAVINGS_INCOME),
+    Link(href = link, method = GET, rel = SELF)
   )
 
-  private val retrieveUkSavingsAnnualSummaryResponse:RetrieveUkSavingsAnnualSummaryResponse = new RetrieveUkSavingsAnnualSummaryResponse(
+  private val retrieveUkSavingsAnnualSummaryResponse: RetrieveUkSavingsAnnualSummaryResponse = new RetrieveUkSavingsAnnualSummaryResponse(
     taxedUkInterest = taxedUkIncome,
     untaxedUkInterest = unTaxedUkIncome
   )
 
   private val mtdResponse = RetrieveUkSavingsAccountAnnualSummaryControllerFixture
-    .mtdRetrieveResponseWithHateaos(nino, taxYear,savingsAccountId )
+    .mtdRetrieveResponseWithHateaos(nino, taxYear, savingsAccountId)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -92,7 +92,6 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
       idGenerator = mockIdGenerator
     )
 
-
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
@@ -102,16 +101,15 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     "return OK" when {
       "happy path" in new Test {
         MockRetrieveUkSavingsAnnualRequestParser
-            .parse(rawData)
-            .returns(Right(requestData))
+          .parse(rawData)
+          .returns(Right(requestData))
 
         MockRetrieveUkSavingsAnnualSummaryService
-            .retrieveUkSavings(requestData)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkSavingsAnnualSummaryResponse))))
+          .retrieveUkSavings(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveUkSavingsAnnualSummaryResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveUkSavingsAnnualSummaryResponse,
-            RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
+          .wrap(retrieveUkSavingsAnnualSummaryResponse, RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
           .returns(
             HateoasWrapper(
               retrieveUkSavingsAnnualSummaryResponse,
@@ -185,4 +183,5 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
       }
     }
   }
+
 }

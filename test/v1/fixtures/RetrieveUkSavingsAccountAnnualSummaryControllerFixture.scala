@@ -20,16 +20,16 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 
 object RetrieveUkSavingsAccountAnnualSummaryControllerFixture {
 
-  val mtdRetrieveResponse: JsValue = Json.parse(
-    """
+  val mtdRetrieveResponse: JsValue = Json.parse("""
       |{
       |   "taxedUkInterest": 93556675358.99,
       |   "untaxedUkInterest": 34514974058.99
       |   }
       """.stripMargin)
 
-  def mtdRetrieveResponseWithHateaos(nino:String, taxYear:String, savingsAccountId: String): JsValue = mtdRetrieveResponse.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdRetrieveResponseWithHateaos(nino: String, taxYear: String, savingsAccountId: String): JsValue = mtdRetrieveResponse.as[JsObject] ++ Json
+    .parse(
+      s"""
       |{
       |"links":[
       |{
@@ -41,15 +41,11 @@ object RetrieveUkSavingsAccountAnnualSummaryControllerFixture {
       |   "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
       |   "rel":"self",
       |   "method":"GET"
-      |},
-      |{
-      |   "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
-      |   "rel":"delete-uk-savings-account-annual-summary",
-      |   "method":"DELETE"
       |}
       |]
       |}
   """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
 }

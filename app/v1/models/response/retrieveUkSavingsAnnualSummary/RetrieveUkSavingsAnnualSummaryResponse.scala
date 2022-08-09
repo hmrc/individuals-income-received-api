@@ -20,11 +20,11 @@ import api.hateoas.HateoasLinksFactory
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json.{Json, OWrites}
-import v1.models.response.listEmployment.Employment.{createAmendUkSavings, deleteUkSavings, retrieveUkSavings}
+import v1.models.response.listEmployment.Employment.{createAmendUkSavings, retrieveUkSavings}
 
 case class RetrieveUkSavingsAnnualSummaryResponse(taxedUkInterest: Option[BigDecimal], untaxedUkInterest: Option[BigDecimal])
 
-object RetrieveUkSavingsAnnualSummaryResponse  {
+object RetrieveUkSavingsAnnualSummaryResponse {
   implicit val writes: OWrites[RetrieveUkSavingsAnnualSummaryResponse] = Json.writes[RetrieveUkSavingsAnnualSummaryResponse]
 
   implicit object LinksFactory
@@ -34,8 +34,7 @@ object RetrieveUkSavingsAnnualSummaryResponse  {
       import data._
       Seq(
         createAmendUkSavings(appConfig, nino, taxYear, savingsAccountId),
-        retrieveUkSavings(appConfig, nino, taxYear, savingsAccountId),
-        deleteUkSavings(appConfig, nino, taxYear, savingsAccountId)
+        retrieveUkSavings(appConfig, nino, taxYear, savingsAccountId)
       )
     }
 
