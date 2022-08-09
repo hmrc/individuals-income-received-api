@@ -30,8 +30,7 @@
             "type": "string",
             "enum": [
               "create-and-amend-uk-savings-account-annual-summary",
-              "self",
-              "delete-uk-savings-account-annual-summary"
+              "self"
             ]
           },
           "method": {
@@ -39,8 +38,7 @@
             "type": "string",
             "enum": [
               "PUT",
-              "GET",
-              "DELETE"
+              "GET"
             ]
           }
         },

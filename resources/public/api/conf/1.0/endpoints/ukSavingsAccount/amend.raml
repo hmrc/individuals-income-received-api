@@ -20,12 +20,12 @@ body:
    application/json:
       type: !include ../../schemas/uk_savings_account_amend_request.json
       examples:
-        full_amendment:
+        full_agitmendment:
           description: Uk Savings Account Annual Summary Amendment
           value: !include ../../examples/ukSavingsAccount/uk_savings_account_amend_request.json
         deletion:
-              description: Uk Savings Account Annual Summary Delete Values
-              value: !include ../../examples/ukSavingsAccount/uk_savings_account_delete_request.json
+          description: Uk Savings Account Annual Summary Delete
+          value: !include ../../examples/ukSavingsAccount/uk_savings_account_delete_request.json
 responses:
   200:
     body:
