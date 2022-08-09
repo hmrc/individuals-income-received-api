@@ -11,11 +11,6 @@
       "href":"/individuals/income-received/savings/uk-accounts/TC663795B/2020-21/122784545874145",
       "rel":"self",
       "method":"GET"
-    },
-    {
-      "href":"/individuals/income-received/savings/uk-accounts/TC663795B/2020-21/122784545874145",
-      "rel":"delete-uk-savings-account-annual-summary",
-      "method":"DELETE"
     }
   ]
 }

@@ -19,14 +19,14 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
             "type": "string",
             "enum": [
-              "retrieve-uk-savings-account-annual-summary", "create-and-amend-uk-savings-account-annual-summary", "delete-uk-savings-account-annual-summary"
+              "retrieve-uk-savings-account-annual-summary", "create-and-amend-uk-savings-account-annual-summary"
             ]
           },
           "method": {
             "description": "The HTTP method type for the endpoint.",
             "type": "string",
             "enum": [
-              "GET", "PUT", "DELETE"
+              "GET", "PUT"
             ]
           }
         },
