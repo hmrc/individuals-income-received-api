@@ -114,13 +114,6 @@ trait HateoasLinks {
       rel = SELF
     )
 
-  def deleteUkSavings(appConfig: AppConfig, nino: String, taxYear: String, accountId: String): Link =
-    Link(
-      href = savingsUkUri(appConfig, nino, taxYear, accountId),
-      method = DELETE,
-      rel = DELETE_UK_SAVINGS_INCOME
-    )
-
   def addUkSavings(appConfig: AppConfig, nino: String): Link =
     Link(
       href = savingsUkUriWithoutTaxYearAndAccountId(appConfig, nino),
@@ -451,4 +444,5 @@ trait HateoasLinks {
       method = GET,
       rel = LIST_UK_SAVINGS
     )
+
 }

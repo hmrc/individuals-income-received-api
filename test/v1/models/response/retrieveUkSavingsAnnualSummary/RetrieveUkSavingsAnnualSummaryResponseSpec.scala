@@ -48,8 +48,7 @@ class RetrieveUkSavingsAnnualSummaryResponseSpec extends UnitSpec with MockAppCo
         RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, accountId)) shouldBe
         Seq(
           Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$accountId", PUT, "create-and-amend-uk-savings-account-annual-summary"),
-          Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$accountId", GET, "self"),
-          Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$accountId", DELETE, "delete-uk-savings-account-annual-summary")
+          Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$accountId", GET, "self")
         )
     }
   }

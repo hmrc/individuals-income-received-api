@@ -17,7 +17,7 @@
 package v1.models.response.createAmendUkSavingsIncomeAnnualSummary
 
 import api.models.hateoas.Link
-import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.Method.{GET, PUT}
 import mocks.MockAppConfig
 import support.UnitSpec
 
@@ -37,8 +37,7 @@ class CreateAndAmendUkSavingsAnnualSummaryHateoasDataSpec extends UnitSpec with 
         CreateAndAmendUkSavingsAnnualSummaryHateoasData(nino, taxYear, savingsAccountId)) shouldBe
         Seq(
           Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$savingsAccountId", PUT, "create-and-amend-uk-savings-account-annual-summary"),
-          Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$savingsAccountId", GET, "self"),
-          Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$savingsAccountId", DELETE, "delete-uk-savings-account-annual-summary")
+          Link(s"/$context/savings/uk-accounts/$nino/$taxYear/$savingsAccountId", GET, "self")
         )
     }
 

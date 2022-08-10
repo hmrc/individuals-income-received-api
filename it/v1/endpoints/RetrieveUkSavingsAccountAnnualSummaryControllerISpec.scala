@@ -26,19 +26,18 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
-class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationBaseSpec {
+class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String          = "TC663795B"
-    val taxYear: String       = "2020-21"
-    val desTaxYear:String     ="2021"
+    val nino: String       = "TC663795B"
+    val taxYear: String    = "2020-21"
+    val desTaxYear: String = "2021"
 
     val savingsAccountId: String = "122784545874145"
     val incomeSourceType: String = "savings"
 
-    val desResponse: JsValue = Json.parse(
-      """
+    val desResponse: JsValue = Json.parse("""
         |   {
         |     "savingsInterestAnnualIncome": [
         |      {
@@ -49,8 +48,8 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
         |     ]
         |   }
         |""".stripMargin)
-    val mtdResponse: JsValue = Json.parse(
-      s"""
+
+    val mtdResponse: JsValue = Json.parse(s"""
         {
          |   "taxedUkInterest": 93556675358.99,
          |   "untaxedUkInterest": 34514974058.99,
@@ -64,19 +63,13 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
          |          "href":"/individuals/income-received/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId",
          |          "rel":"self",
          |          "method":"GET"
-         |    },
-         |    {
-         |          "href":"/individuals/income-received/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId",
-         |          "rel":"delete-uk-savings-account-annual-summary",
-         |          "method":"DELETE"
-         |     }
+         |    }
          |   ]
          |}
          |""".stripMargin)
 
-    def uri: String =s"/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId"
+    def uri: String    = s"/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId"
     def desUri: String = s"/income-tax/nino/$nino/income-source/$incomeSourceType/annual/$desTaxYear"
-
 
     def setupStubs(): StubMapping
 
@@ -88,6 +81,7 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
           (AUTHORIZATION, "Bearer 123")
         )
     }
+
   }
 
   "Calling the 'retrieve savings' endpoint" should {
@@ -117,12 +111,15 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestSavingsAccountId: String,
-                                expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestSavingsAccountId: String,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String    = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val savingsAccountId: String = requestSavingsAccountId
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -140,9 +137,9 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
         val input = Seq(
           ("AA1123A", "2019-20", "AB1DE0123456789", BAD_REQUEST, NinoFormatError),
           ("AA123456A", "20177", "AB1DE0123456789", BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2017-18", "AB1DE",  BAD_REQUEST, SavingsAccountIdFormatError),
-          ("AA123456A", "2015-17", "AB1DE0123456789",BAD_REQUEST, RuleTaxYearRangeInvalidError),
-          ("AA123456A", "2010-11", "AB1DE0123456789",BAD_REQUEST, RuleTaxYearNotSupportedError)
+          ("AA123456A", "2017-18", "AB1DE", BAD_REQUEST, SavingsAccountIdFormatError),
+          ("AA123456A", "2015-17", "AB1DE0123456789", BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", "2010-11", "AB1DE0123456789", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -180,7 +177,6 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
           (BAD_REQUEST, "INVALID_INCOME_SOURCE", BAD_REQUEST, SavingsAccountIdFormatError),
           (BAD_REQUEST, "NOT_FOUND_PERIOD", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "NOT_FOUND_INCOME_SOURCE", NOT_FOUND, NotFoundError),
-
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
@@ -188,4 +184,5 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec  extends IntegrationB
       }
     }
   }
+
 }

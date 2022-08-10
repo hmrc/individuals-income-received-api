@@ -30,8 +30,7 @@ object CreateAndAmendUkSavingsAnnualSummaryHateoasData extends HateoasLinks {
       import data._
       Seq(
         createAmendUkSavings(appConfig, nino, taxYear, savingsAccountId),
-        retrieveUkSavings(appConfig, nino, taxYear, savingsAccountId),
-        deleteUkSavings(appConfig, nino, taxYear, savingsAccountId)
+        retrieveUkSavings(appConfig, nino, taxYear, savingsAccountId)
       )
     }
 
