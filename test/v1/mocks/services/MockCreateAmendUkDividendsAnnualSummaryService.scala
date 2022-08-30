@@ -23,14 +23,14 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
-import v1.services.CreateAmendAmendUkDividendsAnnualSummaryService
+import v1.services.CreateAmendUkDividendsAnnualSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendUkDividendsAnnualSummaryService extends MockFactory {
 
-  val mockCreateAmendUkDividendsAnnualSummaryService: CreateAmendAmendUkDividendsAnnualSummaryService =
-    mock[CreateAmendAmendUkDividendsAnnualSummaryService]
+  val mockCreateAmendUkDividendsAnnualSummaryService: CreateAmendUkDividendsAnnualSummaryService =
+    mock[CreateAmendUkDividendsAnnualSummaryService]
 
   object MockCreateAmendAmendUkDividendsAnnualSummaryService {
 

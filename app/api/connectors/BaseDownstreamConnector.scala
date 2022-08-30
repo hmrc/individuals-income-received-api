@@ -16,8 +16,8 @@
 
 package api.connectors
 
-import api.connectors.DownstreamUri.{Api1661Uri, DesUri, IfsUri, Release6Uri}
-import config.AppConfig
+import api.connectors.DownstreamUri._
+import config.{AppConfig, FeatureSwitches}
 import play.api.Logger
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.Writes
@@ -29,7 +29,9 @@ trait BaseDownstreamConnector {
   val http: HttpClient
   val appConfig: AppConfig
 
-  val logger: Logger = Logger(this.getClass)
+  protected val logger: Logger = Logger(this.getClass)
+
+  implicit protected lazy val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
 
   private val jsonContentTypeHeader = HeaderNames.CONTENT_TYPE -> MimeTypes.JSON
 
@@ -112,10 +114,11 @@ trait BaseDownstreamConnector {
 
   private def configFor[Resp](uri: DownstreamUri[Resp]) =
     uri match {
-      case DesUri(_)      => appConfig.desDownstreamConfig
-      case IfsUri(_)      => appConfig.ifsDownstreamConfig
-      case Release6Uri(_) => appConfig.release6DownstreamConfig
-      case Api1661Uri(_)  => appConfig.api1661DownstreamConfig
+      case DesUri(_)                => appConfig.desDownstreamConfig
+      case IfsUri(_)                => appConfig.ifsDownstreamConfig
+      case TaxYearSpecificIfsUri(_) => appConfig.taxYearSpecificIfsDownstreamConfig
+      case Release6Uri(_)           => appConfig.release6DownstreamConfig
+      case Api1661Uri(_)            => appConfig.api1661DownstreamConfig
     }
 
 }

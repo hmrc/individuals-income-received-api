@@ -17,6 +17,7 @@
 package routing
 
 import akka.actor.ActorSystem
+import api.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 import com.typesafe.config.ConfigFactory
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler1
@@ -26,12 +27,11 @@ import play.api.Configuration
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.{HttpConfiguration, HttpErrorHandler, HttpFilters}
 import play.api.libs.json.Json
-import play.api.mvc.{EssentialAction, _}
+import play.api.mvc._
 import play.api.routing.Router
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import support.UnitSpec
-import api.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 
 class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockAppConfig with GuiceOneAppPerSuite {
   test =>
@@ -74,10 +74,10 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     private val filters                      = mock[HttpFilters]
     (filters.filters _).stubs().returns(Seq.empty)
 
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString("""
+    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString("""
                                                                            |version-1.enabled = true
                                                                            |version-2.enabled = true
-                                                                         """.stripMargin))))
+                                                                         """.stripMargin)))
 
     val requestHandler: VersionRoutingRequestHandler =
       new VersionRoutingRequestHandler(routingMap, errorHandler, httpConfiguration, mockAppConfig, filters, action)

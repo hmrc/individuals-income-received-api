@@ -79,6 +79,12 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "CorrelationId" -> s"$correlationId"
   )
 
+  val requiredTysIfsHeaders: Seq[(String, String)] = Seq(
+    "Environment"   -> "TYS-IFS-environment",
+    "Authorization" -> s"Bearer TYS-IFS-token",
+    "CorrelationId" -> s"$correlationId"
+  )
+
   val requiredRelease6Headers: Seq[(String, String)] = Seq(
     "Environment"   -> "release6-environment",
     "Authorization" -> s"Bearer release6-token",

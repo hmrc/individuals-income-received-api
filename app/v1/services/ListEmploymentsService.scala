@@ -42,7 +42,7 @@ class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) ext
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.listEmployments(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.listEmployments(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
     } yield desResponseWrapper.map(des => des)
 
     result.value

@@ -37,7 +37,7 @@ class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpCl
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino           = request.nino.nino
-    val taxYear        = request.taxYear.toDownstream
+    val taxYear        = request.taxYear.asDownstream
     val incomeSourceId = request.savingsAccountId
 
     get(

@@ -41,7 +41,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendOtherEmployment(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendOtherEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

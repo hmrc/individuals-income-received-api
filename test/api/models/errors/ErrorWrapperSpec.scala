@@ -93,6 +93,45 @@ class ErrorWrapperSpec extends UnitSpec {
     }
   }
 
+  "When ErrorWrapper has only one error, containsAnyOf" should {
+    val errorWrapper = ErrorWrapper("correlationId", NinoFormatError, None)
+
+    "return false" when {
+
+      "given different errors" in {
+        val result = errorWrapper.containsAnyOf(TaxYearFormatError, EmploymentIdFormatError)
+        result shouldBe false
+      }
+    }
+    "return true" when {
+      "given the same error" in {
+        val result = errorWrapper.containsAnyOf(NinoFormatError, EmploymentIdFormatError)
+        result shouldBe true
+      }
+    }
+  }
+
+  "When ErrorWrapper has several errors, containsAnyOf" should {
+    val errorWrapper = ErrorWrapper("correlationId", BadRequestError, Some(List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError)))
+
+    "return false" when {
+      "given no matching errors" in {
+        val result = errorWrapper.containsAnyOf(DateFormatError, ValueFormatError)
+        result shouldBe false
+      }
+    }
+    "return true" when {
+      "given at least one matching error" in {
+        val result = errorWrapper.containsAnyOf(NinoFormatError, ValueFormatError)
+        result shouldBe true
+      }
+      "given the 'single' BadRequestError" in {
+        val result = errorWrapper.containsAnyOf(BadRequestError, ValueFormatError)
+        result shouldBe true
+      }
+    }
+  }
+
   "auditErrors" should {
     "map a single error to a single audit error" in {
       val singleWrappedError = ErrorWrapper(correlationId, NinoFormatError, None)

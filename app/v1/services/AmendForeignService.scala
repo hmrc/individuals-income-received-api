@@ -41,7 +41,7 @@ class AmendForeignService @Inject() (connector: AmendForeignConnector) extends D
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendForeign(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendForeign(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

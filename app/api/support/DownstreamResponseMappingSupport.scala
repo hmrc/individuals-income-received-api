@@ -17,7 +17,6 @@
 package api.support
 
 import api.controllers.EndpointLogContext
-import api.models.errors
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsObject, Json, Writes}
@@ -34,17 +33,17 @@ trait DownstreamResponseMappingSupport {
     }
   }
 
-  final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DownstreamError])(implicit
-      logContext: EndpointLogContext): ErrorWrapper = {
+  final def mapDownstreamErrors[D](errorCodeMap: PartialFunction[String, MtdError])(downstreamResponseWrapper: ResponseWrapper[DownstreamError])(
+      implicit logContext: EndpointLogContext): ErrorWrapper = {
 
     lazy val defaultErrorCodeMapping: String => MtdError = { code =>
       logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
       StandardDownstreamError
     }
 
-    desResponseWrapper match {
+    downstreamResponseWrapper match {
       case ResponseWrapper(correlationId, DownstreamErrors(error :: Nil)) =>
-        errors.ErrorWrapper(correlationId, errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping), None)
+        ErrorWrapper(correlationId, errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping), None)
 
       case ResponseWrapper(correlationId, DownstreamErrors(errorCodes)) =>
         val mtdErrors = errorCodes.map(error => errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping))
@@ -55,7 +54,7 @@ trait DownstreamResponseMappingSupport {
               s" - downstream returned ${errorCodes.map(_.code).mkString(",")}. Revert to ISE")
           ErrorWrapper(correlationId, StandardDownstreamError, None)
         } else {
-          errors.ErrorWrapper(correlationId, BadRequestError, Some(mtdErrors))
+          ErrorWrapper(correlationId, BadRequestError, Some(mtdErrors))
         }
 
       case ResponseWrapper(correlationId, OutboundError(error, errors)) =>

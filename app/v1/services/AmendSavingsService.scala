@@ -41,7 +41,7 @@ class AmendSavingsService @Inject() (connector: AmendSavingsConnector) extends D
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendSavings(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendSavings(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

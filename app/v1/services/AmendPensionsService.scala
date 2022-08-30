@@ -41,7 +41,7 @@ class AmendPensionsService @Inject() (connector: AmendPensionsConnector) extends
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendPensions(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendPensions(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

@@ -43,7 +43,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDesErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
     } yield desResponseWrapper
 
     result.value

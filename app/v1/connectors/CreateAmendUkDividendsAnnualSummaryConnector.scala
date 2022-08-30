@@ -16,10 +16,10 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import play.api.http.Status
+import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
 
@@ -35,14 +35,19 @@ class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClie
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request.taxYear
+    import request.nino.nino
 
-    implicit val successCode: SuccessCode = SuccessCode(Status.OK)
+    implicit val successCode: SuccessCode = SuccessCode(OK)
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear.toDownstream
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi)
+        TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
+      else
+        DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
 
     post(
-      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),
+      uri = downstreamUri,
       body = request.body
     )
   }

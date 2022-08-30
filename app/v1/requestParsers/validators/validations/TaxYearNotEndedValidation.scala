@@ -28,7 +28,7 @@ object TaxYearNotEndedValidation {
   // @param taxYear In format YYYY-YY
   def validate(taxYear: String)(implicit dateTimeProvider: CurrentDateTime): List[MtdError] = {
 
-    val downstreamTaxYear     = Integer.parseInt(TaxYear.fromMtd(taxYear).toDownstream)
+    val downstreamTaxYear     = Integer.parseInt(TaxYear.fromMtd(taxYear).asDownstream)
     val currentDate: DateTime = dateTimeProvider.getDateTime
 
     if (downstreamTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError)

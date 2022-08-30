@@ -16,17 +16,51 @@
 
 package api.models.domain
 
-/** Opaque representation of a tax year
-  */
-final class TaxYear private (private val value: String) extends AnyVal {
-  def toDownstream: String = value
+import config.FeatureSwitches
 
-  def toMtd: String = {
+/** Opaque representation of a tax year.
+ *
+ * @param value
+  *   A single-year representation, e.g. "2024" represents the tax year 2023-24.
+  */
+final case class TaxYear private (private val value: String) {
+
+  /**
+   * The tax year as a number, e.g. for "2023-24" this will be 2024.
+   */
+  val year: Int = value.toInt
+
+  /**
+   * The tax year in MTD (vendor-facing) format, e.g. "2024".
+   */
+  val asMtd: String = {
     val prefix  = value.take(2)
     val yearTwo = value.drop(2)
     val yearOne = (yearTwo.toInt - 1).toString
     prefix + yearOne + "-" + yearTwo
   }
+
+  /**
+   * The tax year in the pre-TYS downstream format, e.g. "2023-24".
+   */
+  val asDownstream: String = value
+
+  /**
+   * The tax year in the Tax Year Specific downstream format, e.g. "23-24".
+   */
+  val asTysDownstream: String = {
+    val year2 = value.toInt - 2000
+    val year1 = year2 - 1
+    s"${year1}-$year2"
+  }
+
+  /**
+   * Use this for downstream API endpoints that are known to be TYS.
+   */
+  def useTaxYearSpecificApi(implicit featureSwitches: FeatureSwitches): Boolean = featureSwitches.isTaxYearSpecificApiEnabled && year >= 2024
+
+  def ifUsingTaxYearSpecificApi[RESULT](using: => RESULT, notUsing: => RESULT)(implicit featureSwitches: FeatureSwitches): RESULT =
+    if (useTaxYearSpecificApi) using else notUsing
 
   override def toString: String = s"TaxYear($value)"
 }
@@ -37,12 +71,12 @@ object TaxYear {
     *   tax year in MTD format (e.g. 2017-18)
     */
   def fromMtd(taxYear: String): TaxYear =
-    new TaxYear(taxYear.take(2) + taxYear.drop(5))
+    TaxYear(taxYear.take(2) + taxYear.drop(5))
 
   def fromDownstream(taxYear: String): TaxYear =
-    new TaxYear(taxYear)
+    TaxYear(taxYear)
 
   def fromDownstreamInt(taxYear: Int): TaxYear =
-    new TaxYear(taxYear.toString)
+    TaxYear(taxYear.toString)
 
 }

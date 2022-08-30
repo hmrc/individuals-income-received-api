@@ -48,7 +48,7 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

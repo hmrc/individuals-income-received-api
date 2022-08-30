@@ -16,13 +16,35 @@
 
 package api.connectors
 
-trait DownstreamUri[Resp] {
+import config.FeatureSwitches
+
+sealed trait DownstreamUri[Resp] {
   val value: String
 }
 
 object DownstreamUri {
-  case class DesUri[Resp](value: String)      extends DownstreamUri[Resp]
-  case class IfsUri[Resp](value: String)      extends DownstreamUri[Resp]
-  case class Release6Uri[Resp](value: String) extends DownstreamUri[Resp]
-  case class Api1661Uri[Resp](value: String)  extends DownstreamUri[Resp]
+  case class DesUri[Resp](value: String)                extends DownstreamUri[Resp]
+  case class IfsUri[Resp](value: String)                extends DownstreamUri[Resp]
+  case class TaxYearSpecificIfsUri[Resp](value: String) extends DownstreamUri[Resp]
+  case class Release6Uri[Resp](value: String)           extends DownstreamUri[Resp]
+  case class Api1661Uri[Resp](value: String)            extends DownstreamUri[Resp]
+
+  /**
+   * Use this for endpoints that are known to have a tax year specific IFS API.
+   */
+  def ifsUri[Resp](value: String)(implicit featureSwitches: FeatureSwitches): DownstreamUri[Resp] = {
+    if (featureSwitches.isTaxYearSpecificApiEnabled) {
+      TaxYearSpecificIfsUri(value)
+    } else {
+      IfsUri(value)
+    }
+  }
+
+  def apply[Resp](value: String, ifFeatureEnabled: => DownstreamUri[Resp], ifFeatureDisabled: => DownstreamUri[Resp])(implicit featureSwitches: FeatureSwitches): DownstreamUri[Resp] = {
+    if (featureSwitches.isTaxYearSpecificApiEnabled) {
+      ifFeatureEnabled
+    } else {
+      ifFeatureDisabled
+    }
+  }
 }

@@ -22,6 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendUkDividendsAnnualSummaryConnector
@@ -31,9 +32,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector)
+class CreateAmendUkDividendsAnnualSummaryService @Inject()(connector: CreateAmendUkDividendsAnnualSummaryConnector, appConfig: AppConfig)
     extends DownstreamResponseMappingSupport
     with Logging {
+
+  implicit lazy private val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
 
   def createOrAmendAnnualSummary(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
@@ -41,14 +44,37 @@ class CreateAmendAmendUkDividendsAnnualSummaryService @Inject() (connector: Crea
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
+
+    val errorMap = if (request.taxYear.useTaxYearSpecificApi) tysIfsErrorMap else desErrorMap
+
     val result = for {
-      desResponseWrapper <- EitherT(connector.createOrAmendAnnualSummary(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createOrAmendAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  // TODO revisit these when the TYS technical spec is ready:
+  private val tysIfsErrorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_NINO"                      -> NinoFormatError,
+      "INVALID_TAXYEAR"                   -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_TYPE"         -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"             -> BadRequestError,
+      "INVALID_PAYLOAD"                   -> BadRequestError,
+      "INCOME_SOURCE_NOT_FOUND"           -> NotFoundError,
+      "MISSING_CHARITIES_NAME_GIFT_AID"   -> StandardDownstreamError,
+      "MISSING_GIFT_AID_AMOUNT"           -> StandardDownstreamError,
+      "MISSING_CHARITIES_NAME_INVESTMENT" -> StandardDownstreamError,
+      "MISSING_INVESTMENT_AMOUNT"         -> StandardDownstreamError,
+      "INVALID_ACCOUNTING_PERIOD"         -> RuleTaxYearNotSupportedError,
+      "INCOMPATIBLE_INCOME_SOURCE"        -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"            -> RuleTaxYearNotSupportedError,
+      "SERVER_ERROR"                      -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"               -> StandardDownstreamError
+    )
+
+  private val desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,

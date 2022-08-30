@@ -37,7 +37,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpC
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.toDownstream
+    val taxYear = request.taxYear.asDownstream
 
     get(
       DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear")

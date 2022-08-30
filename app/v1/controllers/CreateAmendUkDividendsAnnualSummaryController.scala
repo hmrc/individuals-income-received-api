@@ -31,7 +31,7 @@ import utils.{IdGenerator, Logging}
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRawData
 import v1.models.response.createAmendUkDividendsIncomeAnnualSummary.CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData
 import v1.requestParsers.CreateAmendUkDividendsIncomeAnnualSummaryRequestParser
-import v1.services.CreateAmendAmendUkDividendsAnnualSummaryService
+import v1.services.CreateAmendUkDividendsAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                val lookupService: MtdIdLookupService,
                                                                requestParser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser,
-                                                               service: CreateAmendAmendUkDividendsAnnualSummaryService,
+                                                               service: CreateAmendUkDividendsAnnualSummaryService,
                                                                auditService: AuditService,
                                                                hateoasFactory: HateoasFactory,
                                                                cc: ControllerComponents,
@@ -121,15 +121,26 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
+  private def errorResult(errorWrapper: ErrorWrapper) = {
+
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
-            ValueFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            ValueFormatError,
+            RuleIncorrectOrEmptyBodyError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
+
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+  }
 
   private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAndAmendUkDividendsIncome", "create-amend-uk-dividends-income", details)
