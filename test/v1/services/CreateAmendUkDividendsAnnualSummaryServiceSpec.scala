@@ -108,8 +108,8 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
           ("GONE", StandardDownstreamError),
           ("NOT_FOUND", NotFoundError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))
@@ -148,20 +148,20 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
       val input = Seq(
         ("INVALID_NINO", NinoFormatError),
-        ("INVALID_TAXYEAR", TaxYearFormatError),
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
-        ("INVALID_CORRELATIONID", BadRequestError),
+        ("INVALID_CORRELATIONID", StandardDownstreamError),
         ("INVALID_PAYLOAD", BadRequestError),
-        ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
+        ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+        ("INCOME_SOURCE_NOT_FOUND", StandardDownstreamError),
         ("MISSING_CHARITIES_NAME_GIFT_AID", StandardDownstreamError),
         ("MISSING_GIFT_AID_AMOUNT", StandardDownstreamError),
         ("MISSING_CHARITIES_NAME_INVESTMENT", StandardDownstreamError),
         ("MISSING_INVESTMENT_AMOUNT", StandardDownstreamError),
-        ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
         ("INCOMPATIBLE_INCOME_SOURCE", StandardDownstreamError),
-        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
-        ("SERVER_ERROR", StandardDownstreamError),
-        ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+        ("SERVICE_UNAVAILABLE", StandardDownstreamError),
+        ("SERVER_ERROR", StandardDownstreamError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))
