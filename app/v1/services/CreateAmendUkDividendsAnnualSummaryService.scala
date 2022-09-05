@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendUkDividendsAnnualSummaryConnector
@@ -36,15 +36,11 @@ class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAme
     extends DownstreamResponseMappingSupport
     with Logging {
 
-  implicit lazy private val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
-
   def createOrAmendAnnualSummary(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    val errorMap = if (request.taxYear.useTaxYearSpecificApi) tysIfsErrorMap else desErrorMap
 
     val result = for {
       desResponseWrapper <- EitherT(connector.createOrAmendAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
@@ -53,27 +49,8 @@ class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAme
     result.value
   }
 
-  private val tysIfsErrorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_NINO"                      -> NinoFormatError,
-      "INVALID_TAX_YEAR"                  -> TaxYearFormatError,
-      "INVALID_INCOMESOURCE_TYPE"         -> StandardDownstreamError,
-      "INVALID_CORRELATIONID"             -> StandardDownstreamError,
-      "INVALID_PAYLOAD"                   -> BadRequestError,
-      "INVALID_ACCOUNTING_PERIOD"         -> RuleTaxYearNotSupportedError,
-      "TAX_YEAR_NOT_SUPPORTED"            -> RuleTaxYearNotSupportedError,
-      "INCOME_SOURCE_NOT_FOUND"           -> StandardDownstreamError,
-      "MISSING_CHARITIES_NAME_GIFT_AID"   -> StandardDownstreamError,
-      "MISSING_GIFT_AID_AMOUNT"           -> StandardDownstreamError,
-      "MISSING_CHARITIES_NAME_INVESTMENT" -> StandardDownstreamError,
-      "MISSING_INVESTMENT_AMOUNT"         -> StandardDownstreamError,
-      "INCOMPATIBLE_INCOME_SOURCE"        -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"               -> StandardDownstreamError,
-      "SERVER_ERROR"                      -> StandardDownstreamError
-    )
-
-  private val desErrorMap: Map[String, MtdError] =
-    Map(
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
@@ -89,5 +66,16 @@ class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAme
       "SERVICE_UNAVAILABLE"               -> StandardDownstreamError,
       "SERVER_ERROR"                      -> StandardDownstreamError
     )
+    val extraTysErrors = Map(
+      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"      -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError,
+      "INCOME_SOURCE_NOT_FOUND"    -> StandardDownstreamError,
+      "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

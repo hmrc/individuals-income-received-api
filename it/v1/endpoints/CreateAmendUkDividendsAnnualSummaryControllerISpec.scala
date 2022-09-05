@@ -43,7 +43,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
 
   "Calling the endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new DesTest {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -86,7 +86,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
                                 expectedStatus: Int,
                                 expectedError: MtdError): Unit = {
 
-          s"validation fails with ${expectedError.code} error" in new DesTest {
+          s"validation fails with ${expectedError.code} error" in new NonTysTest {
             override def nino: String    = requestNino
             override def taxYear: String = requestTaxYear
 
@@ -120,8 +120,8 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
       }
 
       "downstream service error" when {
-        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedError: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new DesTest {
+        def nonTysServiceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedError: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -145,7 +145,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -161,7 +161,17 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_INCOMESOURCE_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (NOT_FOUND, "INCOME_SOURCE_NOT_FOUND", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "INCOMPATIBLE_INCOME_SOURCE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (nonTysServiceErrorTest _).tupled(args))
       }
     }
   }
@@ -207,7 +217,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
 
   }
 
-  private trait DesTest extends Test {
+  private trait NonTysTest extends Test {
     def taxYear: String           = "2020-21"
     def downstreamTaxYear: String = "2021"
     def downstreamUri: String     = s"/income-tax/nino/$nino/income-source/dividends/annual/$downstreamTaxYear"

@@ -57,7 +57,6 @@ class TaxYearSpec extends UnitSpec {
     "compared with equals" should {
       "have equality based on content" in {
         val taxYear = TaxYear.fromMtd("2021-22")
-
         taxYear shouldBe TaxYear.fromDownstream("2022")
         taxYear should not be TaxYear.fromDownstream("2021")
       }

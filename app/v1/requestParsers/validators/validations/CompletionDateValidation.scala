@@ -19,7 +19,6 @@ package v1.requestParsers.validators.validations
 import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleCompletionDateError}
 import utils.CurrentDateTime
-import api.models.errors.RuleCompletionDateError
 
 import java.time.LocalDate
 

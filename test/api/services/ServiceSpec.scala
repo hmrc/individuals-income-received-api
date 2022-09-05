@@ -16,6 +16,8 @@
 
 package api.services
 
+import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
@@ -27,5 +29,25 @@ trait ServiceSpec extends UnitSpec with Status with MimeTypes with HeaderNames {
   implicit val hc: HeaderCarrier     = HeaderCarrier()
   implicit val ec: ExecutionContext  = scala.concurrent.ExecutionContext.global
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+
+  trait TysDisabledTesting extends MockAppConfig {
+
+    private val featureSwitchConfig: Configuration = Configuration.from(
+      Map(
+        "tys-api.enabled" -> false
+      ))
+
+    MockedAppConfig.featureSwitches returns featureSwitchConfig
+  }
+
+  trait TysEnabledTesting extends MockAppConfig {
+
+    private val featureSwitchConfig: Configuration = Configuration.from(
+      Map(
+        "tys-api.enabled" -> true
+      ))
+
+    MockedAppConfig.featureSwitches returns featureSwitchConfig
+  }
 
 }

@@ -18,12 +18,15 @@ package api.models.domain
 
 case class Nino(nino: String) {
   require(Nino.isValid(nino), s"$nino is not a valid nino.")
+  private val LengthWithoutSuffix = 8
 
-  private val LengthWithoutSuffix: Int = 8
-  def value: String                    = nino
-  val name                             = "nino"
-  def formatted: String                = value.grouped(2).mkString(" ")
-  def withoutSuffix: String            = value.take(LengthWithoutSuffix)
+  val value: String = nino
+  val name          = "nino"
+
+  def formatted: String     = value.grouped(2).mkString(" ")
+  def withoutSuffix: String = value.take(LengthWithoutSuffix)
+
+  override def toString: String = nino
 }
 
 object Nino extends (String => Nino) {

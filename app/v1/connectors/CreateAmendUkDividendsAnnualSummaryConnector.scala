@@ -35,16 +35,17 @@ class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClie
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
-    import request.taxYear
     import request.nino.nino
+    import request.taxYear
 
     implicit val successCode: SuccessCode = SuccessCode(OK)
 
     val downstreamUri =
-      if (taxYear.useTaxYearSpecificApi)
+      if (taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
-      else
+      } else {
         DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
+      }
 
     post(
       uri = downstreamUri,

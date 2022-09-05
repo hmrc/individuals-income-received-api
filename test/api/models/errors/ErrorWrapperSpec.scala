@@ -119,14 +119,14 @@ class ErrorWrapperSpec extends UnitSpec {
         val result = errorWrapper.containsAnyOf(DateFormatError, ValueFormatError)
         result shouldBe false
       }
+      "given a matching error in 'errors' but not the single 'error' which should be a BadRequestError" in {
+        val result = errorWrapper.containsAnyOf(NinoFormatError, TaxYearFormatError, ValueFormatError)
+        result shouldBe false
+      }
     }
     "return true" when {
-      "given at least one matching error" in {
-        val result = errorWrapper.containsAnyOf(NinoFormatError, ValueFormatError)
-        result shouldBe true
-      }
       "given the 'single' BadRequestError" in {
-        val result = errorWrapper.containsAnyOf(BadRequestError, ValueFormatError)
+        val result = errorWrapper.containsAnyOf(NinoFormatError, BadRequestError, TaxYearFormatError, ValueFormatError)
         result shouldBe true
       }
     }

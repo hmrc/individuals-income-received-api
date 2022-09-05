@@ -60,7 +60,6 @@ trait MockAppConfig extends MockFactory {
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 
     def featureSwitches: CallHandler[Configuration] = (mockAppConfig.featureSwitches _: () => Configuration).expects()
-    // featureSwitches.returns(Configuration("tys-api.enabled" -> false))
 
     def apiGatewayContext: CallHandler[String]      = (mockAppConfig.apiGatewayContext _: () => String).expects()
     def apiStatus: CallHandler[String]              = (mockAppConfig.apiStatus: String => String).expects("1.0")

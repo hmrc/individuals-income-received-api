@@ -16,124 +16,58 @@
 
 package v1.connectors
 
-import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.{Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import play.api.Configuration
-import uk.gov.hmrc.http.HeaderCarrier
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.TaxYear
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
   CreateAmendUkDividendsIncomeAnnualSummaryRequest
 }
 
-import scala.concurrent.Future
-
 class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
-  private val nino = "AA111111A"
   private val body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
 
   "CreateAmendUkDividendsAnnualSummaryConnector" when {
     "createOrAmendAnnualSummary called" must {
-      "return a 200 status for a success scenario" in new DesTest {
-        def taxYear           = "2019-20"
-        val downstreamTaxYear = "2020"
+      "return a 200 status for a success scenario" in
+        new DesTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+          mockHttpClientPost(s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}", body)
 
-        implicit val hc: HeaderCarrier =
-          HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-
-        val requiredDownstreamHeaders: Seq[(String, String)] =
-          requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
-
-        MockedHttpClient
-          .post(
-            url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/$downstreamTaxYear",
-            config = dummyDesHeaderCarrierConfig,
-            body = body,
-            requiredHeaders = requiredDownstreamHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.createOrAmendAnnualSummary(request)) shouldBe outcome
-      }
+          val result: DownstreamOutcome[Unit] = await(connector.createOrAmendAnnualSummary(request))
+          result shouldBe successBlankOutcome
+        }
     }
 
     "createOrAmendAnnualSummary called for a Tax Year Specific tax year" must {
-      "return a 200 status for a success scenario" in new TysIfsTest {
-        def taxYear           = "2023-24"
-        val downstreamTaxYear = "23-24"
+      "return a 200 status for a success scenario" in
+        new TysIfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+          mockHttpClientPost(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual", body)
 
-        implicit val hc: HeaderCarrier =
-          HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-
-        val requiredDownstreamHeaders: Seq[(String, String)] =
-          requiredTysIfsHeaders ++ Seq("Content-Type" -> "application/json")
-
-        MockedHttpClient
-          .post(
-            url = s"$baseUrl/income-tax/$downstreamTaxYear/$nino/income-source/dividends/annual",
-            config = dummyDesHeaderCarrierConfig,
-            body = body,
-            requiredHeaders = requiredDownstreamHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.createOrAmendAnnualSummary(request)) shouldBe outcome
-      }
+          val result: DownstreamOutcome[Unit] = await(connector.createOrAmendAnnualSummary(request))
+          result shouldBe successBlankOutcome
+        }
     }
   }
 
-  private trait DesTest extends MockHttpClient with MockAppConfig {
-    def taxYear: String
+  trait Test { _: ConnectorTest =>
+    def taxYear: TaxYear
 
-    val request = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
-      nino = Nino(nino),
-      taxYear = TaxYear.fromMtd(taxYear),
-      body = body
-    )
+    protected val connector: CreateAmendUkDividendsAnnualSummaryConnector =
+      new CreateAmendUkDividendsAnnualSummaryConnector(
+        http = mockHttpClient,
+        appConfig = mockAppConfig
+      )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-
-    MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)
-
-    val connector: CreateAmendUkDividendsAnnualSummaryConnector = new CreateAmendUkDividendsAnnualSummaryConnector(
-      http = mockHttpClient,
-      appConfig = mockAppConfig
-    )
-
-  }
-
-  private trait TysIfsTest extends MockHttpClient with MockAppConfig {
-    def taxYear: String
-
-    val request = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
-      nino = Nino(nino),
-      taxYear = TaxYear.fromMtd(taxYear),
-      body = body
-    )
-
-    MockedAppConfig.tysIfsBaseUrl returns baseUrl
-    MockedAppConfig.tysIfsToken returns "TYS-IFS-token"
-    MockedAppConfig.tysIfsEnvironment returns "TYS-IFS-environment"
-    MockedAppConfig.tysIfsEnvironmentHeaders returns Some(allowedIfsHeaders)
-
-    MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> true)
-
-    val connector: CreateAmendUkDividendsAnnualSummaryConnector = new CreateAmendUkDividendsAnnualSummaryConnector(
-      http = mockHttpClient,
-      appConfig = mockAppConfig
-    )
+    protected val request: CreateAmendUkDividendsIncomeAnnualSummaryRequest =
+      CreateAmendUkDividendsIncomeAnnualSummaryRequest(
+        nino = nino,
+        taxYear = taxYear,
+        body = body
+      )
 
   }
 

@@ -39,39 +39,17 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
     body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
   )
 
-  trait Test extends MockCreateAmendUkDividendsAnnualSummaryConnector with MockAppConfig {
-    protected def featureSwitchConfig: Configuration
-
+  trait Test extends MockCreateAmendUkDividendsAnnualSummaryConnector { _: MockAppConfig =>
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    MockedAppConfig.featureSwitches returns featureSwitchConfig
 
     val service: CreateAmendUkDividendsAnnualSummaryService =
       new CreateAmendUkDividendsAnnualSummaryService(mockAmendUkDividendsConnector, mockAppConfig)
 
   }
 
-  trait DesTest extends Test {
-
-    override protected def featureSwitchConfig: Configuration = Configuration.from(
-      Map(
-        "tys-api.enabled" -> false
-      ))
-
-  }
-
-  trait TaxYearSpecificTest extends Test {
-
-    override protected def featureSwitchConfig: Configuration = Configuration.from(
-      Map(
-        "tys-api.enabled" -> true
-      ))
-
-  }
-
   "CreateAmendAmendUkDividendsAnnualSummaryService calling a DES endpoint" when {
     "the downstream request is successful" must {
-      "return a success result" in new DesTest {
+      "return a success result" in new Test with TysDisabledTesting {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockCreateAmendUkDividendsAnnualSummaryConnector
@@ -83,8 +61,9 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-          s"downstream returns $downstreamErrorCode" in new DesTest {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
+
+          s"downstream returns $downstreamErrorCode" in new Test with TysDisabledTesting {
             MockedAppConfig.featureSwitches returns Configuration.empty
 
             MockCreateAmendUkDividendsAnnualSummaryConnector
@@ -94,6 +73,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
             val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createOrAmendAnnualSummary(request))
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
+        }
 
         val input = Seq(
           ("INVALID_NINO", NinoFormatError),
@@ -120,7 +100,8 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
   "CreateAmendAmendUkDividendsAnnualSummaryService calling a Tax Year Specific IFS endpoint" when {
 
     "the downstream request is successful" must {
-      "return a success result" in new TaxYearSpecificTest {
+      "return a success result" in new Test with TysEnabledTesting {
+
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockCreateAmendUkDividendsAnnualSummaryConnector
@@ -134,8 +115,9 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
     "map errors according to spec" when {
 
-      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-        s"downstream returns $downstreamErrorCode" in new TaxYearSpecificTest {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
+
+        s"downstream returns $downstreamErrorCode" in new Test with TysEnabledTesting {
           MockedAppConfig.featureSwitches returns Configuration.empty
 
           MockCreateAmendUkDividendsAnnualSummaryConnector
@@ -145,13 +127,14 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createOrAmendAnnualSummary(request))
           result shouldBe Left(ErrorWrapper(correlationId, error))
         }
+      }
 
       val input = Seq(
         ("INVALID_NINO", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
         ("INVALID_CORRELATIONID", StandardDownstreamError),
-        ("INVALID_PAYLOAD", BadRequestError),
+        ("INVALID_PAYLOAD", StandardDownstreamError),
         ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
         ("INCOME_SOURCE_NOT_FOUND", StandardDownstreamError),
