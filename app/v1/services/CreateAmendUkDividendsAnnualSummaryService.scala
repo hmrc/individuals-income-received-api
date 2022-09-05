@@ -22,7 +22,6 @@ import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendUkDividendsAnnualSummaryConnector
@@ -32,7 +31,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector, appConfig: AppConfig)
+class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector)
     extends DownstreamResponseMappingSupport
     with Logging {
 

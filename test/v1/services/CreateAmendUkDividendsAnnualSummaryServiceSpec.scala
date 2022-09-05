@@ -21,8 +21,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import mocks.MockAppConfig
-import play.api.Configuration
 import v1.mocks.connectors.MockCreateAmendUkDividendsAnnualSummaryConnector
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
@@ -39,17 +37,9 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
     body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
   )
 
-  trait Test extends MockCreateAmendUkDividendsAnnualSummaryConnector { _: MockAppConfig =>
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    val service: CreateAmendUkDividendsAnnualSummaryService =
-      new CreateAmendUkDividendsAnnualSummaryService(mockAmendUkDividendsConnector, mockAppConfig)
-
-  }
-
   "CreateAmendAmendUkDividendsAnnualSummaryService calling a DES endpoint" when {
     "the downstream request is successful" must {
-      "return a success result" in new Test with TysDisabledTesting {
+      "return a success result" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockCreateAmendUkDividendsAnnualSummaryConnector
@@ -63,9 +53,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
 
-          s"downstream returns $downstreamErrorCode" in new Test with TysDisabledTesting {
-            MockedAppConfig.featureSwitches returns Configuration.empty
-
+          s"downstream returns $downstreamErrorCode" in new Test {
             MockCreateAmendUkDividendsAnnualSummaryConnector
               .createOrAmendAnnualSummary(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
@@ -100,7 +88,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
   "CreateAmendAmendUkDividendsAnnualSummaryService calling a Tax Year Specific IFS endpoint" when {
 
     "the downstream request is successful" must {
-      "return a success result" in new Test with TysEnabledTesting {
+      "return a success result" in new Test {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
@@ -117,8 +105,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
 
-        s"downstream returns $downstreamErrorCode" in new Test with TysEnabledTesting {
-          MockedAppConfig.featureSwitches returns Configuration.empty
+        s"downstream returns $downstreamErrorCode" in new Test {
 
           MockCreateAmendUkDividendsAnnualSummaryConnector
             .createOrAmendAnnualSummary(request)
@@ -149,6 +136,14 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
       input.foreach(args => (serviceError _).tupled(args))
     }
+  }
+
+  trait Test extends MockCreateAmendUkDividendsAnnualSummaryConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    val service: CreateAmendUkDividendsAnnualSummaryService =
+      new CreateAmendUkDividendsAnnualSummaryService(mockAmendUkDividendsConnector)
+
   }
 
 }
