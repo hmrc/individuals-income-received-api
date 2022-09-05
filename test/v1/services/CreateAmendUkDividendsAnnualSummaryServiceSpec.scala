@@ -37,7 +37,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
     body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
   )
 
-  "CreateAmendAmendUkDividendsAnnualSummaryService calling a DES endpoint" when {
+  "CreateAmendAmendUkDividendsAnnualSummaryService" when {
     "the downstream request is successful" must {
       "return a success result" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
@@ -63,7 +63,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           }
         }
 
-        val input = Seq(
+        val errprs = Seq(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", StandardDownstreamError),
@@ -80,61 +80,17 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVER_ERROR", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("INVALID_TAX_YEAR", TaxYearFormatError),
+          ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+          ("INCOME_SOURCE_NOT_FOUND", StandardDownstreamError),
+          ("INCOMPATIBLE_INCOME_SOURCE", StandardDownstreamError)
+        )
+
+        (errprs ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
-    }
-  }
-
-  "CreateAmendAmendUkDividendsAnnualSummaryService calling a Tax Year Specific IFS endpoint" when {
-
-    "the downstream request is successful" must {
-      "return a success result" in new Test {
-
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-
-        MockCreateAmendUkDividendsAnnualSummaryConnector
-          .createOrAmendAnnualSummary(request)
-          .returns(Future.successful(outcome))
-
-        val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createOrAmendAnnualSummary(request))
-        result shouldBe outcome
-      }
-    }
-
-    "map errors according to spec" when {
-
-      def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
-
-        s"downstream returns $downstreamErrorCode" in new Test {
-
-          MockCreateAmendUkDividendsAnnualSummaryConnector
-            .createOrAmendAnnualSummary(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
-
-          val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createOrAmendAnnualSummary(request))
-          result shouldBe Left(ErrorWrapper(correlationId, error))
-        }
-      }
-
-      val input = Seq(
-        ("INVALID_NINO", NinoFormatError),
-        ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
-        ("INVALID_CORRELATIONID", StandardDownstreamError),
-        ("INVALID_PAYLOAD", StandardDownstreamError),
-        ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
-        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
-        ("INCOME_SOURCE_NOT_FOUND", StandardDownstreamError),
-        ("MISSING_CHARITIES_NAME_GIFT_AID", StandardDownstreamError),
-        ("MISSING_GIFT_AID_AMOUNT", StandardDownstreamError),
-        ("MISSING_CHARITIES_NAME_INVESTMENT", StandardDownstreamError),
-        ("MISSING_INVESTMENT_AMOUNT", StandardDownstreamError),
-        ("INCOMPATIBLE_INCOME_SOURCE", StandardDownstreamError),
-        ("SERVICE_UNAVAILABLE", StandardDownstreamError),
-        ("SERVER_ERROR", StandardDownstreamError)
-      )
-
-      input.foreach(args => (serviceError _).tupled(args))
     }
   }
 
