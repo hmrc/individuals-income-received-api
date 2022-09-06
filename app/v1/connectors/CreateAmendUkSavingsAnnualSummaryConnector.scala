@@ -40,7 +40,7 @@ class CreateAmendUkSavingsAnnualSummaryConnector @Inject() (val http: HttpClient
     implicit val successCode: SuccessCode = SuccessCode(Status.OK)
 
     post(
-      uri = DesUri[Unit](s"income-tax/nino/${nino.nino}/income-source/savings/annual/${taxYear.toDownstream}"),
+      uri = DesUri[Unit](s"income-tax/nino/${nino.nino}/income-source/savings/annual/${taxYear.asDownstream}"),
       body = body
     )
   }

@@ -38,7 +38,7 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino    = request.nino.nino
-    val taxYear = request.taxYear.toDownstream
+    val taxYear = request.taxYear.asDownstream
 
     implicit val successCode: SuccessCode = SuccessCode(NO_CONTENT)
 

@@ -26,12 +26,12 @@ import support.UnitSpec
 
 class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneAppPerSuite {
 
-  val defaultRouter: Router                             = mock[Router]
-  val v1Routes: v1.Routes                               = app.injector.instanceOf[v1.Routes]
-  val v1r7cRoutes: v1r7c.Routes                         = app.injector.instanceOf[v1r7c.Routes]
+  val defaultRouter: Router     = mock[Router]
+  val v1Routes: v1.Routes       = app.injector.instanceOf[v1.Routes]
+  val v1r7cRoutes: v1r7c.Routes = app.injector.instanceOf[v1r7c.Routes]
 
   private def newVersionRoutingMap(v1r7cEnabled: Boolean) = {
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"v1r7c-endpoints.enabled = $v1r7cEnabled"))))
+    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"v1r7c-endpoints.enabled = $v1r7cEnabled")))
 
     VersionRoutingMapImpl(
       appConfig = mockAppConfig,

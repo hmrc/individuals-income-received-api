@@ -18,24 +18,12 @@ package v1.requestParsers.validators
 
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
-import config.{AppConfig, FeatureSwitch}
+import config.{AppConfig, FeatureSwitches}
+import utils.CurrentDateTime
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
+import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
-import utils.CurrentDateTime
-import v1.requestParsers.validators.validations._
-import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
-import v1.requestParsers.validators.validations.{
-  CustomEmploymentDateValidation,
-  EmployerNameValidation,
-  EmployerRefValidation,
-  EmploymentIdValidation,
-  JsonFormatValidation,
-  NinoValidation,
-  PayrollIdValidation,
-  TaxYearNotEndedValidation,
-  TaxYearNotSupportedValidation,
-  TaxYearValidation
-}
 
 @Singleton
 class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
@@ -56,11 +44,9 @@ class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: Curren
   }
 
   private def parameterRuleValidation: AmendCustomEmploymentRawData => List[List[MtdError]] = (data: AmendCustomEmploymentRawData) => {
-    val featureSwitch = FeatureSwitch(appConfig.featureSwitch)
-
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (featureSwitch.isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
+      if (FeatureSwitches().isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
     )
   }
 

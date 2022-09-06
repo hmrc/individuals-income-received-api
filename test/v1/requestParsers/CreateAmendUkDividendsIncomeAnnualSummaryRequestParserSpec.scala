@@ -64,10 +64,13 @@ class CreateAmendUkDividendsIncomeAnnualSummaryRequestParserSpec extends UnitSpe
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockCreateAmendUkDividendsIncomeAnnualSummaryValidator.validate(rawData).returns(Nil)
+        MockCreateAmendUkDividendsIncomeAnnualSummaryValidator
+          .validate(rawData)
+          .returns(Nil)
 
-        parser.parseRequest(rawData) shouldBe
-          Right(CreateAmendUkDividendsIncomeAnnualSummaryRequest(Nino(nino), taxYear, requestBody))
+        val result: Either[ErrorWrapper, CreateAmendUkDividendsIncomeAnnualSummaryRequest] =
+          parser.parseRequest(rawData)
+        result shouldBe Right(CreateAmendUkDividendsIncomeAnnualSummaryRequest(Nino(nino), taxYear, requestBody))
       }
     }
 
@@ -77,8 +80,9 @@ class CreateAmendUkDividendsIncomeAnnualSummaryRequestParserSpec extends UnitSpe
           .validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
-        parser.parseRequest(rawData.copy(nino = "notANino")) shouldBe
-          Left(ErrorWrapper(correlationId, NinoFormatError, None))
+        val result: Either[ErrorWrapper, CreateAmendUkDividendsIncomeAnnualSummaryRequest] =
+          parser.parseRequest(rawData.copy(nino = "notANino"))
+        result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError, None))
 
       }
 
@@ -87,8 +91,9 @@ class CreateAmendUkDividendsIncomeAnnualSummaryRequestParserSpec extends UnitSpe
           .validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(rawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
+        val result: Either[ErrorWrapper, CreateAmendUkDividendsIncomeAnnualSummaryRequest] =
+          parser.parseRequest(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
     }
   }

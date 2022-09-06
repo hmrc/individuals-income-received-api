@@ -42,7 +42,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
       correlationId: String): Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
 
     val result = for {
-      downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDesErrors(desErrorMap))
+      downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDownstreamErrors(desErrorMap))
       mtdResponseWrapper        <- EitherT.fromEither[Future](convertToMtd(downstreamResponseWrapper))
     } yield mtdResponseWrapper
 

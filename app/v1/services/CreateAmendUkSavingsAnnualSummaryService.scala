@@ -41,7 +41,7 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
     val result = for {
       desResponseWrapper <- EitherT(
         connector.createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request)))
-        .leftMap(mapDesErrors(desErrorMap))
+        .leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
     result.value
   }

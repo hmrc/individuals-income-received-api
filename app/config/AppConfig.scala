@@ -17,9 +17,10 @@
 package config
 
 import com.typesafe.config.Config
-import javax.inject.{Inject, Singleton}
 import play.api.{ConfigLoader, Configuration}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
 
@@ -42,6 +43,15 @@ trait AppConfig {
 
   lazy val ifsDownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
+
+  // Tax Year Specific (TYS) IFS Config
+  def tysIfsBaseUrl: String
+  def tysIfsEnv: String
+  def tysIfsToken: String
+  def tysIfsEnvironmentHeaders: Option[Seq[String]]
+
+  lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
 
   // release6 Config
   def release6BaseUrl: String
@@ -67,7 +77,7 @@ trait AppConfig {
 
   // API Config
   def apiStatus(version: String): String
-  def featureSwitch: Option[Configuration]
+  def featureSwitches: Configuration
   def endpointsEnabled(version: String): Boolean
 
   def confidenceLevelConfig: ConfidenceLevelConfig
@@ -93,6 +103,12 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val ifsToken: String                           = config.getString("microservice.services.ifs.token")
   val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
 
+  // Tax Year Specific (TYS) IFS Config
+  val tysIfsBaseUrl: String                         = config.baseUrl("tys-ifs")
+  val tysIfsEnv: String                             = config.getString("microservice.services.tys-ifs.env")
+  val tysIfsToken: String                           = config.getString("microservice.services.tys-ifs.token")
+  val tysIfsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.tys-ifs.environmentHeaders")
+
   // Release6 Config
   val release6BaseUrl: String                         = config.baseUrl("release6")
   val release6Env: String                             = config.getString("microservice.services.release6.env")
@@ -111,7 +127,7 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
 
   // API Config
   def apiStatus(version: String): String         = config.getString(s"api.$version.status")
-  def featureSwitch: Option[Configuration]       = configuration.getOptional[Configuration](s"feature-switch")
+  def featureSwitches: Configuration             = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")

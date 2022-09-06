@@ -40,7 +40,7 @@ class DisposalDateValidationSpec extends UnitSpec with DisposalDateErrorMessages
       }
       "the supplied date is within the supplied tax year and validateToday is false" in {
         val year    = now.plusYears(1).getYear.toString
-        val taxYear = TaxYear.fromDownstream(year).toMtd
+        val taxYear = TaxYear.fromDownstream(year).asMtd
         val date = LocalDate
           .parse(year, yearFormat)
           .withMonth(4)

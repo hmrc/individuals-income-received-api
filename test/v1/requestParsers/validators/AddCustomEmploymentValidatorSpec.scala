@@ -17,22 +17,7 @@
 package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{
-  CessationDateFormatError,
-  EmployerNameFormatError,
-  EmployerRefFormatError,
-  NinoFormatError,
-  PayrollIdFormatError,
-  RuleCessationDateBeforeStartDateError,
-  RuleCessationDateBeforeTaxYearStartError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleStartDateAfterTaxYearEndError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StartDateFormatError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
@@ -43,8 +28,8 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
+import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 
 class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
@@ -128,10 +113,6 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    implicit val appConfig: AppConfig = mockAppConfig
-
-    val validator = new AddCustomEmploymentValidator()
-
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
@@ -139,10 +120,13 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
 
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
+    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"""
          |taxYearNotEndedRule.enabled = $errorFeatureSwitch
-      """.stripMargin))))
+      """.stripMargin)))
 
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new AddCustomEmploymentValidator()
   }
 
   "AddCustomEmploymentValidator" when {

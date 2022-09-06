@@ -17,17 +17,7 @@
 package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{
-  EmploymentIdFormatError,
-  NinoFormatError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError,
-  ValueFormatError
-}
-import com.typesafe.config.ConfigFactory
+import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
@@ -37,8 +27,8 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
+import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 
 class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
@@ -337,10 +327,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    implicit val appConfig: AppConfig = mockAppConfig
-
-    val validator = new AmendFinancialDetailsValidator()
-
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
@@ -348,10 +334,14 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
 
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
-         |taxYearNotEndedRule.enabled = $errorFeatureSwitch
-      """.stripMargin))))
+    MockedAppConfig.featureSwitches.returns(
+      Configuration(
+        "taxYearNotEndedRule.enabled" -> errorFeatureSwitch
+      ))
 
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new AmendFinancialDetailsValidator()
   }
 
   "AmendFinancialDetailsValidator" when {

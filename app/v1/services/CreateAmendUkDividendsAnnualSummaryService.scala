@@ -31,7 +31,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector)
+class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector)
     extends DownstreamResponseMappingSupport
     with Logging {
 
@@ -42,14 +42,14 @@ class CreateAmendAmendUkDividendsAnnualSummaryService @Inject() (connector: Crea
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createOrAmendAnnualSummary(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createOrAmendAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
@@ -62,8 +62,19 @@ class CreateAmendAmendUkDividendsAnnualSummaryService @Inject() (connector: Crea
       "INVALID_ACCOUNTING_PERIOD"         -> RuleTaxYearNotSupportedError,
       "GONE"                              -> StandardDownstreamError,
       "NOT_FOUND"                         -> NotFoundError,
-      "SERVER_ERROR"                      -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"               -> StandardDownstreamError
+      "SERVICE_UNAVAILABLE"               -> StandardDownstreamError,
+      "SERVER_ERROR"                      -> StandardDownstreamError
     )
+    val extraTysErrors = Map(
+      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"      -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError,
+      "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
+      "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

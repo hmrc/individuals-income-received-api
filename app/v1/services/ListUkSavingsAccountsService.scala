@@ -42,7 +42,7 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
                                                                    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
 
       EitherT(connector.listUkSavingsAccounts(request))
-        .leftMap(mapDesErrors(mappingDesToMtdError))
+        .leftMap(mapDownstreamErrors(mappingDesToMtdError))
         .value
   }
 

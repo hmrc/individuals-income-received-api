@@ -17,7 +17,7 @@
 package routing
 
 import com.google.inject.ImplementedBy
-import config.{AppConfig, FeatureSwitch}
+import config.{AppConfig, FeatureSwitches}
 import definition.Versions.VERSION_1
 import play.api.Logger
 import play.api.routing.Router
@@ -38,18 +38,15 @@ trait VersionRoutingMap {
 
 // Add routes corresponding to available versions...
 
-case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig,
-                                            defaultRouter: Router,
-                                            v1Router: v1.Routes,
-                                            v1r7cRouter: v1r7c.Routes)
+case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig, defaultRouter: Router, v1Router: v1.Routes, v1r7cRouter: v1r7c.Routes)
     extends VersionRoutingMap {
 
-  val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
-  protected val logger: Logger     = Logger(this.getClass)
+  val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
+  protected val logger: Logger       = Logger(this.getClass)
 
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
-      if (featureSwitch.isV1R7cRoutingEnabled) {
+      if (featureSwitches.isV1R7cRoutingEnabled) {
         logger.info("[VersionRoutingMap][map] using ukDividendsRouter to include UK Dividends routes")
         v1r7cRouter
       } else {

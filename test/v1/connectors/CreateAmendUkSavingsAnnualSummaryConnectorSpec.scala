@@ -32,7 +32,7 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec {
   val nino: String              = "AA111111A"
   val taxYear: String           = "2018-19"
   val taxYearMtd: TaxYear       = TaxYear.fromMtd(taxYear)
-  val downstreamTaxYear: String = taxYearMtd.toDownstream
+  val downstreamTaxYear: String = taxYearMtd.asDownstream
   val incomeSourceId: String    = "ABCDE1234567890"
 
   val taxedUkInterest: Option[BigDecimal]   = Some(31554452289.99)

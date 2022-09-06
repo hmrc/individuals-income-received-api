@@ -18,36 +18,32 @@ package config
 
 import play.api.Configuration
 
-case class FeatureSwitch(value: Option[Configuration]) {
+case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
   private val versionRegex = """(\d)\.\d""".r
 
-  def isTaxYearNotEndedRuleEnabled: Boolean = {
-    value match {
-      case Some(config) => config.getOptional[Boolean]("taxYearNotEndedRule.enabled").getOrElse(true)
-      case _            => true
-    }
-  }
-
   def isVersionEnabled(version: String): Boolean = {
-    val versionNoIfPresent: Option[String] =
+    val maybeVersion: Option[String] =
       version match {
         case versionRegex(v) => Some(v)
         case _               => None
       }
 
     val enabled = for {
-      versionNo <- versionNoIfPresent
-      config    <- value
-      enabled   <- config.getOptional[Boolean](s"version-$versionNo.enabled")
+      validVersion <- maybeVersion
+      enabled      <- featureSwitchConfig.getOptional[Boolean](s"version-$validVersion.enabled")
     } yield enabled
 
     enabled.getOrElse(false)
   }
 
-  val isV1R7cRoutingEnabled: Boolean = value match {
-    case Some(config) => config.getOptional[Boolean]("v1r7c-endpoints.enabled").getOrElse(true)
-    case None         => true
-  }
+  val isV1R7cRoutingEnabled: Boolean        = isEnabled("v1r7c-endpoints.enabled")
+  val isTaxYearNotEndedRuleEnabled: Boolean = isEnabled("taxYearNotEndedRule.enabled")
+  val isTaxYearSpecificApiEnabled: Boolean  = isEnabled("tys-api.enabled")
 
+  private def isEnabled(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
+}
+
+object FeatureSwitches {
+  def apply()(implicit appConfig: AppConfig): FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
 }

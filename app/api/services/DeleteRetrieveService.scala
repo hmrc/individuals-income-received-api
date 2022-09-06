@@ -41,7 +41,7 @@ class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) exten
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.delete()).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.delete()).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
@@ -55,7 +55,7 @@ class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) exten
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve[Resp]()).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieve[Resp]()).leftMap(mapDownstreamErrors(desErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 

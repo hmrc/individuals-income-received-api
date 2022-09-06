@@ -17,23 +17,7 @@
 package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
-import api.models.errors.{
-  CessationDateFormatError,
-  EmployerNameFormatError,
-  EmployerRefFormatError,
-  EmploymentIdFormatError,
-  NinoFormatError,
-  PayrollIdFormatError,
-  RuleCessationDateBeforeStartDateError,
-  RuleCessationDateBeforeTaxYearStartError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleStartDateAfterTaxYearEndError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StartDateFormatError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
@@ -44,8 +28,8 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
+import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 
 class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
@@ -141,9 +125,9 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
 
-    MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
+    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"""
          |taxYearNotEndedRule.enabled = $errorFeatureSwitch
-      """.stripMargin))))
+      """.stripMargin)))
 
   }
 

@@ -19,6 +19,8 @@ package api.models.errors
 import api.models.audit.AuditError
 import play.api.libs.json.{JsObject, Json, Writes}
 
+/** If the errors arg is defined, error should be a BadRequest.
+  */
 case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[Seq[MtdError]] = None) {
 
   private def allErrors: Seq[MtdError] = errors match {
@@ -28,6 +30,11 @@ case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[S
 
   def auditErrors: Seq[AuditError] =
     allErrors.map(error => AuditError(error.code))
+
+  /** Controller only checks the first/main error code, not the additional errors.
+    */
+  def containsAnyOf(errorsToCheck: MtdError*): Boolean =
+    errorsToCheck.exists(_.code == error.code)
 
 }
 

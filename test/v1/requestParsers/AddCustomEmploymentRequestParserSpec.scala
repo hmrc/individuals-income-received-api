@@ -17,17 +17,7 @@
 package v1.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{
-  BadRequestError,
-  CessationDateFormatError,
-  EmployerNameFormatError,
-  EmployerRefFormatError,
-  ErrorWrapper,
-  NinoFormatError,
-  PayrollIdFormatError,
-  StartDateFormatError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec

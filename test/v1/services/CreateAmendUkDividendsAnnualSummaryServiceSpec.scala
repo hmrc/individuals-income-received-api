@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{TaxYear, Nino}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -29,22 +29,13 @@ import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
 
 import scala.concurrent.Future
 
-class CreateAmendAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
+class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
   private val request = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
     nino = Nino("AA112233A"),
-    taxYear = TaxYear.fromMtd("2019-20"),
+    taxYear = TaxYear.fromMtd("2023-24"),
     body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
   )
-
-  trait Test extends MockCreateAmendUkDividendsAnnualSummaryConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    val service: CreateAmendAmendUkDividendsAnnualSummaryService = new CreateAmendAmendUkDividendsAnnualSummaryService(
-      connector = mockAmendUkDividendsConnector
-    )
-
-  }
 
   "CreateAmendAmendUkDividendsAnnualSummaryService" when {
     "the downstream request is successful" must {
@@ -60,17 +51,19 @@ class CreateAmendAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-          s"a $downstreamErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
 
+          s"downstream returns $downstreamErrorCode" in new Test {
             MockCreateAmendUkDividendsAnnualSummaryConnector
               .createOrAmendAnnualSummary(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.createOrAmendAnnualSummary(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createOrAmendAnnualSummary(request))
+            result shouldBe Left(ErrorWrapper(correlationId, error))
           }
+        }
 
-        val input = Seq(
+        val errprs = Seq(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", StandardDownstreamError),
@@ -83,13 +76,30 @@ class CreateAmendAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
           ("GONE", StandardDownstreamError),
           ("NOT_FOUND", NotFoundError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError),
+          ("SERVER_ERROR", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("INVALID_TAX_YEAR", TaxYearFormatError),
+          ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+          ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
+          ("INCOMPATIBLE_INCOME_SOURCE", StandardDownstreamError)
+        )
+
+        (errprs ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockCreateAmendUkDividendsAnnualSummaryConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    val service: CreateAmendUkDividendsAnnualSummaryService =
+      new CreateAmendUkDividendsAnnualSummaryService(mockAmendUkDividendsConnector)
+
   }
 
 }
