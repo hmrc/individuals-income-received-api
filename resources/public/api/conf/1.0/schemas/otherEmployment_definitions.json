@@ -25,7 +25,7 @@
           },
           "schemePlanType": {
             "type": "string",
-            "description": "The type of share scheme or plan the employer has: Equated Monthly Instalment (EMI), Company Share Option Plan (CSOP) or Save As You Earn (SAYE).",
+            "description": "The type of share scheme or plan the employer has: Enterprise Management Incentive (EMI), Company Share Option Plan (CSOP) or Save As You Earn (SAYE).",
             "enum": ["EMI", "CSOP", "SAYE", "Other"]
           },
           "dateOfOptionGrant": {
