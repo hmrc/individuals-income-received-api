@@ -17,14 +17,18 @@
 package v1.connectors
 
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.TaxYear
+import api.models.domain.{Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
   CreateAmendUkDividendsIncomeAnnualSummaryBody,
   CreateAmendUkDividendsIncomeAnnualSummaryRequest
 }
 
+import scala.concurrent.Future
+
 class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
+  val nino: String = "AA123456A"
   private val body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
 
   "CreateAmendUkDividendsAnnualSummaryConnector" when {
@@ -33,10 +37,12 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
         new DesTest with Test {
           def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-          mockHttpClientPost(s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}", body)
+          val outcome = Right(ResponseWrapper(correlationId, ()))
+
+          willPost(s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}", body) returns Future.successful(outcome)
 
           val result: DownstreamOutcome[Unit] = await(connector.createOrAmendAnnualSummary(request))
-          result shouldBe successBlankOutcome
+          result shouldBe outcome
         }
     }
 
@@ -45,10 +51,12 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
         new TysIfsTest with Test {
           def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-          mockHttpClientPost(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual", body)
+          val outcome = Right(ResponseWrapper(correlationId, ()))
+
+          willPost(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual", body) returns Future.successful(outcome)
 
           val result: DownstreamOutcome[Unit] = await(connector.createOrAmendAnnualSummary(request))
-          result shouldBe successBlankOutcome
+          result shouldBe outcome
         }
     }
   }
@@ -64,7 +72,7 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
     protected val request: CreateAmendUkDividendsIncomeAnnualSummaryRequest =
       CreateAmendUkDividendsIncomeAnnualSummaryRequest(
-        nino = nino,
+        nino = Nino(nino),
         taxYear = taxYear,
         body = body
       )
