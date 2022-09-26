@@ -43,21 +43,34 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
+      desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_NINO"            -> NinoFormatError,
-    "INVALID_TYPE"            -> StandardDownstreamError,
-    "INVALID_TAXYEAR"         -> TaxYearFormatError,
-    "INVALID_INCOME_SOURCE"   -> StandardDownstreamError,
-    "NOT_FOUND_PERIOD"        -> NotFoundError,
-    "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
-    "SERVER_ERROR"            -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
-  )
+  val errorMap: Map[String, MtdError] = {
+    val DesToMtdErrors = Map(
+      "INVALID_NINO"            -> NinoFormatError,
+      "INVALID_TYPE"            -> StandardDownstreamError,
+      "INVALID_TAXYEAR"         -> TaxYearFormatError,
+      "INVALID_INCOME_SOURCE"   -> StandardDownstreamError,
+      "NOT_FOUND_PERIOD"        -> NotFoundError,
+      "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
+      "SERVER_ERROR"            -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
+    )
+    val extraTysErrors: Map[String, MtdError] = Map(
+      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_ID"      -> StandardDownstreamError,
+      "INVALID_INCOMESOURCE_TYPE"    -> StandardDownstreamError,
+      "INVALID_CORRELATION_ID"       -> StandardDownstreamError,
+      "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
+      "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError
+    )
+
+    DesToMtdErrors ++ extraTysErrors
+  }
 
 }
