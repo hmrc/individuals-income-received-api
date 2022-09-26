@@ -21,6 +21,7 @@ import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
@@ -29,9 +30,9 @@ import scala.concurrent.Future
 
 class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
 
-  val nino: String       = "AA111111A"
-  val taxYearMtd: String = "2018-19"
-  val taxYearDownstream: String    = "2019"
+  val nino: String              = "AA111111A"
+  val taxYearMtd: String        = "2018-19"
+  val taxYearDownstream: String = "2019"
 
   val request: RetrieveUkDividendsAnnualIncomeSummaryRequest = RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYearMtd))
 
@@ -51,6 +52,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
     MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.featureSwitches returns Configuration.empty
   }
 
   "RetrieveUKDividendsIncomeAnnualSummaryConnector" when {
@@ -61,7 +63,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/$taxYearDownstream",
+            url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYearDownstream}",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")

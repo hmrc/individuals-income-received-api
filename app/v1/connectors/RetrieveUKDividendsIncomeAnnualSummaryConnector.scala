@@ -16,9 +16,10 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
@@ -35,13 +36,19 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpC
       correlationId: String): Future[DownstreamOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request.nino.nino
+    import request.taxYear
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear.asDownstream
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"/income-tax/$taxYear/$nino/income-source/dividends/annual")
+    } else {
+      DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
+    }
 
     get(
-      DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear")
+      uri = downstreamUri
     )
+
   }
 
 }
