@@ -36,7 +36,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
   private val validResponse = RetrieveUkDividendsAnnualIncomeSummaryResponse(
     ukDividends = Some(10.12),
-    otherUkDividends =  Some(11.12)
+    otherUkDividends = Some(11.12)
   )
 
   trait Test extends MockRetrieveUKDividendsIncomeAnnualSummaryConnector {
@@ -44,6 +44,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
     val service: RetrieveUkDividendsIncomeAnnualSummaryService =
       new RetrieveUkDividendsIncomeAnnualSummaryService(connector = mockRetrieveUKDividendsIncomeAnnualSummaryConnector)
+
   }
 
   "RetrieveUKDividendsIncomeAnnualSummaryService" when {
@@ -81,7 +82,18 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("INVALID_TAX_YEAR", TaxYearFormatError),
+          ("INVALID_INCOMESOURCE_ID", StandardDownstreamError),
+          ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
+          ("INVALID_CORRELATION_ID", StandardDownstreamError),
+          ("SUBMISSION_PERIOD_NOT_FOUND", NotFoundError),
+          ("INCOME_DATA_SOURCE_NOT_FOUND", NotFoundError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+        val fullErrorList = input ++ extraTysErrors
+
+        fullErrorList.foreach(args => (serviceError _).tupled(args))
       }
     }
   }
