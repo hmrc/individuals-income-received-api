@@ -61,12 +61,12 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(backendErrorCode: String, error: MtdError): Unit =
+          s"a $backendErrorCode error is returned from the service" in new Test {
 
             MockRetrieveUKDividendsIncomeAnnualSummaryConnector
               .retrieveUKDividendsIncomeAnnualSummary(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(backendErrorCode))))))
 
             await(service.retrieveUKDividendsIncomeAnnualSummary(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
