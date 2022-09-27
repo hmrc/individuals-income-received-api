@@ -42,7 +42,8 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpC
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {
 
-        TaxYearSpecificIfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"/income-tax/$taxYear/$nino/income-source/dividends/annual")
+        TaxYearSpecificIfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](
+          s"income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
       } else {
         DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
       }

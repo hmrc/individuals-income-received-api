@@ -94,7 +94,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
       RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino("AA111111A"), TaxYear.fromMtd(taxYearMtd))
 
     protected val tysRequest: RetrieveUkDividendsAnnualIncomeSummaryRequest =
-      RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino("AA111111A"), TaxYear.fromMtd("2023-24"))
+      RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino("AA111111A"), taxYear = taxYear)
 
   }
 
