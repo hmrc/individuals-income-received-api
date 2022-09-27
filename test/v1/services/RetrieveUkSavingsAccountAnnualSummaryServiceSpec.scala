@@ -112,7 +112,7 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
           await(service.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_NINO", NinoFormatError),
         ("INVALID_TYPE", StandardDownstreamError),
         ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -123,7 +123,17 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
         ("SERVICE_UNAVAILABLE", StandardDownstreamError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      val tysErrors = Seq(
+        ("INVALID_TAX_YEAR", TaxYearFormatError),
+        ("INVALID_CORRELATION_ID", StandardDownstreamError),
+        ("INVALID_INCOMESOURCE_ID", SavingsAccountIdFormatError),
+        ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
+        ("SUBMISSION_PERIOD_NOT_FOUND", NotFoundError),
+        ("INCOME_DATA_SOURCE_NOT_FOUND", NotFoundError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ tysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
 

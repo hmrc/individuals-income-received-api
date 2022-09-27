@@ -36,15 +36,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
-                                                        val lookupService: MtdIdLookupService,
-                                                        requestParser: RetrieveUkSavingsAccountRequestParser,
-                                                        service: RetrieveUkSavingsAccountAnnualSummaryService,
-                                                        hateoasFactory: HateoasFactory,
-                                                        cc: ControllerComponents,
-                                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-              extends AuthorisedController(cc)
-              with BaseController
-              with Logging {
+                                                                 val lookupService: MtdIdLookupService,
+                                                                 requestParser: RetrieveUkSavingsAccountRequestParser,
+                                                                 service: RetrieveUkSavingsAccountAnnualSummaryService,
+                                                                 hateoasFactory: HateoasFactory,
+                                                                 cc: ControllerComponents,
+                                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -63,38 +63,46 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService
 
       val result =
         for {
-           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-           serviceResponse <- EitherT(service.retrieveUkSavingsAccountAnnualSummary(parsedRequest))
-           vendorResponse  <- EitherT.fromEither[Future](
-              hateoasFactory
-               .wrap(serviceResponse.responseData, RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
-               .asRight[ErrorWrapper])
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieveUkSavingsAccountAnnualSummary(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrap(serviceResponse.responseData, RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
+              .asRight[ErrorWrapper])
         } yield {
-            logger.info(
-              s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+          logger.info(
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
           Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
-    }
+        }
 
-    result.leftMap { errorWrapper =>
-      val resCorrelationId = errorWrapper.correlationId
-      val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-      logger.warn(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-          s"Error response received with CorrelationId: $resCorrelationId")
-      result
-    }.merge
-  }
+      result.leftMap { errorWrapper =>
+        val resCorrelationId = errorWrapper.correlationId
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.warn(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
+        result
+      }.merge
+    }
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SavingsAccountIdFormatError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            SavingsAccountIdFormatError) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+
 }

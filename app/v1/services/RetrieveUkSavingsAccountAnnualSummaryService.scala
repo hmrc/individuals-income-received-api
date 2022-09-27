@@ -53,7 +53,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
       logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
 
     downstreamResponseWrapper.responseData.savingsInterestAnnualIncome match {
-      case item  +: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))
+      case item +: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))
       case Nil         => Left(ErrorWrapper(downstreamResponseWrapper.correlationId, NotFoundError, None))
 
       case _ =>
@@ -62,15 +62,29 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
     }
   }
 
-  private def desErrorMap: Map[String, MtdError] = Map(
-    "INVALID_NINO"            -> NinoFormatError,
-    "INVALID_TYPE"            -> StandardDownstreamError,
-    "INVALID_TAXYEAR"         -> TaxYearFormatError,
-    "INVALID_INCOME_SOURCE"   -> SavingsAccountIdFormatError,
-    "NOT_FOUND_PERIOD"        -> NotFoundError,
-    "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
-    "SERVER_ERROR"            -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
-  )
+  private val desErrorMap: Map[String, MtdError] = {
+    val errors = Map(
+      "INVALID_NINO"            -> NinoFormatError,
+      "INVALID_TYPE"            -> StandardDownstreamError,
+      "INVALID_TAXYEAR"         -> TaxYearFormatError,
+      "INVALID_INCOME_SOURCE"   -> SavingsAccountIdFormatError,
+      "NOT_FOUND_PERIOD"        -> NotFoundError,
+      "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
+      "SERVER_ERROR"            -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
+    )
+
+    val extraTysErrors = Map(
+      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+      "INVALID_CORRELATION_ID"       -> StandardDownstreamError,
+      "INVALID_INCOMESOURCE_ID"      -> SavingsAccountIdFormatError,
+      "INVALID_INCOMESOURCE_TYPE"    -> StandardDownstreamError,
+      "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
+      "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError
+    )
+    // FIXME what to do with TAX_YEAR_NOT_SUPPORTED?
+
+    errors ++ extraTysErrors
+  }
 
 }
