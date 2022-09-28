@@ -68,15 +68,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
 
           val outcome = Right(ResponseWrapper(correlationId, validResponse))
 
-          willGet()
-
-          MockedHttpClient
-            .get(
-              url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual",
-              config = dummyIfsHeaderCarrierConfig,
-              requiredHeaders = requiredDownstreamHeaders,
-              excludedHeaders = Seq("OneMoreHeader" -> "HeaderValue")
-            )
+          willGet(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
             .returns(Future.successful(outcome))
 
           await(connector.retrieveUKDividendsIncomeAnnualSummary(tysRequest)) shouldBe outcome
