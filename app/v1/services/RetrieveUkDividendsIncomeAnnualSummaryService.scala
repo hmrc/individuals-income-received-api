@@ -58,6 +58,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       "SERVER_ERROR"            -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
     )
+
     val extraTysErrors: Map[String, MtdError] = Map(
       "INVALID_TAX_YEAR"             -> TaxYearFormatError,
       "INVALID_INCOMESOURCE_ID"      -> StandardDownstreamError,

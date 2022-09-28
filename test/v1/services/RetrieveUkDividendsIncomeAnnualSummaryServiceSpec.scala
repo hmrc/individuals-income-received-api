@@ -61,17 +61,17 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(backendErrorCode: String, error: MtdError): Unit =
-          s"a $backendErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockRetrieveUKDividendsIncomeAnnualSummaryConnector
               .retrieveUKDividendsIncomeAnnualSummary(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(backendErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.retrieveUKDividendsIncomeAnnualSummary(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TYPE", StandardDownstreamError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -91,9 +91,8 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
           ("INCOME_DATA_SOURCE_NOT_FOUND", NotFoundError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
-        val fullErrorList = input ++ extraTysErrors
 
-        fullErrorList.foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }
