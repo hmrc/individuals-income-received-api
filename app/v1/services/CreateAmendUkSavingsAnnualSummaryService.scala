@@ -46,8 +46,8 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def desErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
@@ -63,5 +63,14 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
       "SERVER_ERROR"                      -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"               -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"      -> StandardDownstreamError,
+      "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError
+    )
+    errors ++ extraTysErrors
+  }
 
 }
