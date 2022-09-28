@@ -95,13 +95,15 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
         val tysErrors = Seq(
+          ("INVALID_TAXYEAR"            -> TaxYearFormatError),
+          ("INCOME_SOURCE_NOT_FOUND"    -> NotFoundError),
           ("INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError),
           ("INVALID_CORRELATIONID"      -> StandardDownstreamError),
           ("INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError),
           ("TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError)
         )
 
-        (errors ++ tysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ tysErrors).distinct.foreach(args => (serviceError _).tupled(args))
       }
     }
   }
