@@ -108,8 +108,17 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | SavingsAccountIdFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError |
-          RuleTaxYearNotSupportedError | CustomMtdError(ValueFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            SavingsAccountIdFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            ValueFormatError,
+            RuleIncorrectOrEmptyBodyError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
