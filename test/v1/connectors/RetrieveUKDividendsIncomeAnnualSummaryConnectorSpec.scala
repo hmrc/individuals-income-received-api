@@ -71,7 +71,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
           willGet(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
             .returns(Future.successful(outcome))
 
-          await(connector.retrieveUKDividendsIncomeAnnualSummary(tysRequest)) shouldBe outcome
+          await(connector.retrieveUKDividendsIncomeAnnualSummary(request)) shouldBe outcome
         }
       }
     }
@@ -84,9 +84,6 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
       new RetrieveUKDividendsIncomeAnnualSummaryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected val request: RetrieveUkDividendsAnnualIncomeSummaryRequest =
-      RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino("AA111111A"), TaxYear.fromMtd(taxYearMtd))
-
-    protected val tysRequest: RetrieveUkDividendsAnnualIncomeSummaryRequest =
       RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino("AA111111A"), taxYear = taxYear)
 
   }
