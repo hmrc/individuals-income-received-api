@@ -17,8 +17,9 @@
 package v1.connectors
 
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -36,16 +37,19 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear.asDownstream
+    import request.nino.nino
+    import request.taxYear
 
     implicit val successCode: SuccessCode = SuccessCode(NO_CONTENT)
 
-    post(
-      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),
-      body = JsObject.empty
-    )
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
+      } else {
+        DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
+      }
+
+    post(uri = downstreamUri, body = JsObject.empty)
   }
 
 }

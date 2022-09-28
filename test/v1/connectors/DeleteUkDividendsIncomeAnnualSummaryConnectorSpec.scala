@@ -16,12 +16,10 @@
 
 package v1.connectors
 
-import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import play.api.libs.json.Json
+import play.api.libs.json.JsObject
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
 
 import scala.concurrent.Future
@@ -29,43 +27,52 @@ import scala.concurrent.Future
 class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
 
   val nino: String              = "AA123456A"
-  val taxYearMtd: String        = "2017-18"
-  val taxYearDownstream: String = "2018"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  "DeleteUkDividendsIncomeAnnualSummaryConnector" should {
+    "delete called" when {
+      "return a 200 status for a success scenario" in {
+        new DesTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-    val connector: DeleteUkDividendsIncomeAnnualSummaryConnector = new DeleteUkDividendsIncomeAnnualSummaryConnector(
+          val outcome = Right(ResponseWrapper(correlationId, ()))
+
+          willPost(s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}", JsObject.empty) returns Future.successful(outcome)
+
+          val result: DownstreamOutcome[Unit] = await(connector.delete(request))
+          result shouldBe outcome
+        }
+      }
+    }
+
+    "delete called for a Tax Year Specific tax year" when {
+      "return a 200 status for a success scenario" in {
+        new TysIfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+          val outcome = Right(ResponseWrapper(correlationId, ()))
+
+          willPost(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual", JsObject.empty) returns Future.successful(outcome)
+
+          val result: DownstreamOutcome[Unit] = await(connector.delete(request))
+          result shouldBe outcome
+        }
+      }
+    }
+  }
+
+  trait Test { _: ConnectorTest =>
+    
+    def taxYear: TaxYear
+
+    protected val connector: DeleteUkDividendsIncomeAnnualSummaryConnector = new DeleteUkDividendsIncomeAnnualSummaryConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-  }
-
-  "delete" should {
-
-    val request: DeleteUkDividendsIncomeAnnualSummaryRequest = DeleteUkDividendsIncomeAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYearMtd))
-
-    "return a result" when {
-      "the downstream call is successful" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-
-        MockedHttpClient
-          .post(
-            url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/$taxYearDownstream",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"),
-            body = Json.parse("""{}""")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.delete(request)) shouldBe outcome
-      }
-    }
+    protected val request: DeleteUkDividendsIncomeAnnualSummaryRequest = DeleteUkDividendsIncomeAnnualSummaryRequest(
+      nino = Nino(nino),
+      taxYear = taxYear
+    )
   }
 
 }

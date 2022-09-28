@@ -40,15 +40,13 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.delete(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def errorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,
@@ -64,5 +62,17 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       "GONE"                              -> NotFoundError,
       "NOT_FOUND"                         -> NotFoundError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_INCOMESOURCE_TYPE" -> StandardDownstreamError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
+      "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }
