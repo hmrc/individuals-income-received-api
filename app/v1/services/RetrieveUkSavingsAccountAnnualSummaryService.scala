@@ -80,9 +80,9 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
       "INVALID_INCOMESOURCE_ID"      -> SavingsAccountIdFormatError,
       "INVALID_INCOMESOURCE_TYPE"    -> StandardDownstreamError,
       "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
-      "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError
+      "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError
     )
-    // FIXME what to do with TAX_YEAR_NOT_SUPPORTED?
 
     errors ++ extraTysErrors
   }
