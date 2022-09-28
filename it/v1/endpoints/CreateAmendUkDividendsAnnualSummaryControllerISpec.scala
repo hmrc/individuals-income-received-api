@@ -120,7 +120,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
       }
 
       "downstream service error" when {
-        def nonTysServiceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedError: MtdError): Unit = {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedError: MtdError): Unit = {
           s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
@@ -171,7 +171,7 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
           (UNPROCESSABLE_ENTITY, "INCOMPATIBLE_INCOME_SOURCE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
 
-        (errors ++ extraTysErrors).foreach(args => (nonTysServiceErrorTest _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
@@ -184,25 +184,26 @@ class CreateAmendUkDividendsAnnualSummaryControllerISpec extends IntegrationBase
 
     def nino: String = "AA123456A"
 
-    val hateoasResponse: JsValue = Json.parse(s"""{
-                                                 |  "links":[
-                                                 |      {
-                                                 |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
-                                                 |         "method":"PUT",
-                                                 |         "rel":"create-and-amend-uk-dividends-income"
-                                                 |      },
-                                                 |      {
-                                                 |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
-                                                 |         "method":"GET",
-                                                 |         "rel":"self"
-                                                 |      },
-                                                 |      {
-                                                 |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
-                                                 |         "method":"DELETE",
-                                                 |         "rel":"delete-uk-dividends-income"
-                                                 |      }
-                                                 |   ]
-                                                 |}""".stripMargin)
+    val hateoasResponse: JsValue = Json.parse(s"""
+      |{
+      |  "links":[
+      |      {
+      |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+      |         "method":"PUT",
+      |         "rel":"create-and-amend-uk-dividends-income"
+      |      },
+      |      {
+      |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+      |         "method":"GET",
+      |         "rel":"self"
+      |      },
+      |      {
+      |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+      |         "method":"DELETE",
+      |         "rel":"delete-uk-dividends-income"
+      |      }
+      |   ]
+      |}""".stripMargin)
 
     def setupStubs(): StubMapping
 
