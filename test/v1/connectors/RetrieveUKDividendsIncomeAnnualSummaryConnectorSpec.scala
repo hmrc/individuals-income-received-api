@@ -67,7 +67,8 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
           def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
           val outcome = Right(ResponseWrapper(correlationId, validResponse))
-          // override implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+
+          willGet()
 
           MockedHttpClient
             .get(

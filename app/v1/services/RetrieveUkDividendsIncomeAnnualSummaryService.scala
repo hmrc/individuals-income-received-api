@@ -42,15 +42,13 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.retrieveUKDividendsIncomeAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }
 
   val errorMap: Map[String, MtdError] = {
-    val DesToMtdErrors = Map(
+    val downstreamErrors = Map(
       "INVALID_NINO"            -> NinoFormatError,
       "INVALID_TYPE"            -> StandardDownstreamError,
       "INVALID_TAXYEAR"         -> TaxYearFormatError,
@@ -70,7 +68,8 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError
     )
 
-    DesToMtdErrors ++ extraTysErrors
+    downstreamErrors ++ extraTysErrors
+
   }
 
 }
