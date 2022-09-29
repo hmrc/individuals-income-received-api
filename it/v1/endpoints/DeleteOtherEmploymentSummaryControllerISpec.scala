@@ -51,7 +51,7 @@ class DeleteOtherEmploymentSummaryControllerISpec extends IntegrationBaseSpec {
 
   }
 
-  "Calling the 'delete uk dividends income' endpoint" should {
+  "Calling the 'delete other employment income' endpoint" should {
     "return a 204 status code" when {
       "any valid request is made" in new Test {
 
