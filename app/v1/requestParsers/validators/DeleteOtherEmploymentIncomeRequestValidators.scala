@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequestRawData
 
 @Singleton
-class DeleteOtherEmploymentIncomeRequestValidator @Inject()(implicit appConfig: AppConfig)
+class DeleteOtherEmploymentIncomeRequestValidators @Inject() (implicit appConfig: AppConfig)
     extends Validator[DeleteOtherEmploymentIncomeRequestRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
