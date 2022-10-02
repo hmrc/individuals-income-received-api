@@ -60,9 +60,7 @@ class DeleteOtherEmploymentIncomeService @Inject() (connector: DeleteOtherEmploy
     )
 
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
       "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
-      "INVALID_CORRELATIONID"      -> StandardDownstreamError,
       "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError,
       "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
       "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError
