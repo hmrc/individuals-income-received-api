@@ -18,19 +18,19 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.models.domain.{Nino, TaxYear}
 import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import play.api.http.Status.OK
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deleteOtherEmploymentIncome(request: DeleteOtherEmploymentIncomeRequest, desUri: DesUri[Unit])(implicit
+  def deleteOtherEmploymentIncome(nino: Nino, taxYear: TaxYear, desUri: DesUri[Unit])(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
@@ -40,8 +40,8 @@ class DeleteOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val 
     implicit val successCode: SuccessCode = SuccessCode(OK)
 
     val downstreamUri =
-      if (request.taxYear.useTaxYearSpecificApi) {
-        TaxYearSpecificIfsUri[Unit](s"/income-tax/income/other/employments/${request.taxYear}/${request.nino}")
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"/income-tax/income/other/employments/$taxYear/$nino")
       } else {
         desUri
       }

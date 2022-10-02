@@ -18,6 +18,7 @@ package v1.services
 
 import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
@@ -26,7 +27,6 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.DeleteOtherEmploymentIncomeConnector
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,14 +35,15 @@ class DeleteOtherEmploymentIncomeService @Inject() (connector: DeleteOtherEmploy
     extends DownstreamResponseMappingSupport
     with Logging {
 
-  def delete(request: DeleteOtherEmploymentIncomeRequest, desUri: DesUri[Unit])(implicit
+  def delete(nino: Nino, taxYear: TaxYear)(implicit
+      desUri: DesUri[Unit],
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request, desUri)).leftMap(mapDownstreamErrors(errorMap))
+      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(nino, taxYear, desUri)).leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value

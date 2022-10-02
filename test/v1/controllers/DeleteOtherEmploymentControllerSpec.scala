@@ -16,20 +16,20 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
+import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
 import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.models.request
+import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockDeleteOtherEmploymentIncomeRequestParser
-import v1.mocks.services.MockDeleteOtherEmploymentIncomeService
-import v1.models.request.deleteOtherEmploymentIncome.{DeleteOtherEmploymentIncomeRequest, DeleteOtherEmploymentIncomeRequestRawData}
+import v1.services.DeleteOtherEmploymentIncomeService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,8 +39,7 @@ class DeleteOtherEmploymentControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
-    with MockDeleteOtherEmploymentIncomeRequestParser
-    with MockDeleteOtherEmploymentIncomeService
+    with MockDeleteRetrieveRequestParser
     with MockAuditService
     with MockIdGenerator {
 
@@ -48,14 +47,14 @@ class DeleteOtherEmploymentControllerSpec
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteOtherEmploymentIncomeRequestRawData = DeleteOtherEmploymentIncomeRequestRawData(
+  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteOtherEmploymentIncomeRequest = DeleteOtherEmploymentIncomeRequest(
+  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
     nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear)
+    taxYear = taxYear
   )
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -73,14 +72,13 @@ class DeleteOtherEmploymentControllerSpec
     )
 
   trait Test {
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    val desUri                     = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear")
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new DeleteOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteOtherEmploymentIncomeRequestParser,
-      service = mockDeleteOtherEmploymentIncomeService,
+      requestParser = mockDeleteRetrieveRequestParser,
+      service = mock[DeleteOtherEmploymentIncomeService],
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -95,12 +93,12 @@ class DeleteOtherEmploymentControllerSpec
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteOtherEmploymentIncomeRequestParser
+        MockDeleteRetrieveRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteOtherEmploymentIncomeService
-          .delete(requestData, desUri)
+        MockDeleteRetrieveService
+          .delete(defaultDownstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteOtherEmployment(nino, taxYear)(fakeDeleteRequest)
@@ -119,7 +117,7 @@ class DeleteOtherEmploymentControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteOtherEmploymentIncomeRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -149,12 +147,12 @@ class DeleteOtherEmploymentControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteOtherEmploymentIncomeRequestParser
+            MockDeleteRetrieveRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteOtherEmploymentIncomeService
-              .delete(requestData, desUri)
+            MockDeleteRetrieveService
+              .delete(defaultDownstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteOtherEmployment(nino, taxYear)(fakeDeleteRequest)
@@ -171,7 +169,6 @@ class DeleteOtherEmploymentControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
