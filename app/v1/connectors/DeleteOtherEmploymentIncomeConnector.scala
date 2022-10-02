@@ -41,7 +41,7 @@ class DeleteOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val 
 
     val downstreamUri =
       if (request.taxYear.useTaxYearSpecificApi) {
-        TaxYearSpecificIfsUri[Unit](s"income-tax/income/other/employments/${request.taxYear.asTysDownstream}/${request.nino}")
+        TaxYearSpecificIfsUri[Unit](s"/income-tax/income/other/employments/${request.taxYear}/${request.nino}")
       } else {
         desUri
       }
