@@ -16,6 +16,7 @@
 
 package v1.mocks.services
 
+import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
@@ -33,16 +34,17 @@ trait MockDeleteOtherEmploymentIncomeService extends MockFactory {
 
   object MockDeleteOtherEmploymentIncomeService {
 
-    def delete(requestData: DeleteOtherEmploymentIncomeRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
+    def delete(requestData: DeleteOtherEmploymentIncomeRequest,
+               desUri: DesUri[Unit]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
       mockDeleteOtherEmploymentIncomeService
-        .delete(_: DeleteOtherEmploymentIncomeRequest)(
+        .delete(_: DeleteOtherEmploymentIncomeRequest, _: DesUri[Unit])(
           _: HeaderCarrier,
           _: ExecutionContext,
           _: EndpointLogContext,
           _: String
         )
       )
-      .expects(requestData, *, *, *, *)
+      .expects(requestData, desUri, *, *, *, *)
 
   }
 

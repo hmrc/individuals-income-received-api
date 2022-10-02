@@ -17,11 +17,13 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
+import api.connectors.DownstreamUri.DesUri
 import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
+import play.api.libs.json.Json
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
 
 import scala.concurrent.Future
@@ -37,6 +39,10 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
     val connector: DeleteOtherEmploymentIncomeConnector = new DeleteOtherEmploymentIncomeConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
+    )
+
+    val desUri: DesUri[Unit] = DesUri[Unit](
+      s"income-tax/income/other/employments/$nino/$taxYearDownstream"
     )
 
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -60,15 +66,16 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
         MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)
 
         MockedHttpClient
-          .delete(
+          .post(
             url = s"$baseUrl/income-tax/income/other/employments/${request.nino}/${request.taxYear.asDownstream}",
             config = dummyDesHeaderCarrierConfig,
             requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"),
+            body = Json.parse("""{}""")
           )
           .returns(Future.successful(outcome))
 
-        await(connector.deleteOtherEmploymentIncome(request)) shouldBe outcome
+        await(connector.deleteOtherEmploymentIncome(request, desUri)) shouldBe outcome
       }
 
       "the downstream call is successful when tax year specific" in new Test {
@@ -78,15 +85,16 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
         MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> true)
 
         MockedHttpClient
-          .delete(
+          .post(
             url = s"$baseUrl/income-tax/income/other/employments/${tysRequest.taxYear.asTysDownstream}/${tysRequest.nino}",
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredTysIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"),
+            body = Json.parse("""{}""")
           )
           .returns(Future.successful(outcome))
 
-        await(connector.deleteOtherEmploymentIncome(tysRequest)) shouldBe outcome
+        await(connector.deleteOtherEmploymentIncome(tysRequest, desUri)) shouldBe outcome
       }
     }
   }
