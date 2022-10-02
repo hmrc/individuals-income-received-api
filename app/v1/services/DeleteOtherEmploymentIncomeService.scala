@@ -16,7 +16,6 @@
 
 package v1.services
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -35,14 +34,14 @@ class DeleteOtherEmploymentIncomeService @Inject() (connector: DeleteOtherEmploy
     extends DownstreamResponseMappingSupport
     with Logging {
 
-  def delete(request: DeleteOtherEmploymentIncomeRequest, desUri: DesUri[Unit])(implicit
+  def delete(request: DeleteOtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request, desUri)).leftMap(mapDownstreamErrors(errorMap))
+      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request)).leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
@@ -59,10 +58,7 @@ class DeleteOtherEmploymentIncomeService @Inject() (connector: DeleteOtherEmploy
     )
 
     val extraTysErrors = Map(
-      "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
-      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError,
-      "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
-      "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
     errorMap ++ extraTysErrors
   }

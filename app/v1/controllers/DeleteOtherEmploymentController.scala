@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
@@ -66,14 +65,10 @@ class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuth
         taxYear = taxYear
       )
 
-      val desUri: DesUri[Unit] = DesUri[Unit](
-        s"income-tax/income/other/employments/$nino/$taxYear"
-      )
-
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete(parsedRequest, desUri))
+          serviceResponse <- EitherT(service.delete(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

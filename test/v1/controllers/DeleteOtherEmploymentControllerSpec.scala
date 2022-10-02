@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
@@ -74,7 +73,6 @@ class DeleteOtherEmploymentControllerSpec
 
   trait Test {
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    val desUri                     = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear")
 
     val controller = new DeleteOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
@@ -100,7 +98,7 @@ class DeleteOtherEmploymentControllerSpec
           .returns(Right(requestData))
 
         MockDeleteOtherEmploymentIncomeService
-          .delete(requestData, desUri)
+          .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteOtherEmployment(nino, taxYear)(fakeDeleteRequest)
@@ -154,7 +152,7 @@ class DeleteOtherEmploymentControllerSpec
               .returns(Right(requestData))
 
             MockDeleteOtherEmploymentIncomeService
-              .delete(requestData, desUri)
+              .delete(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteOtherEmployment(nino, taxYear)(fakeDeleteRequest)
