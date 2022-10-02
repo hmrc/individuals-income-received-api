@@ -17,8 +17,11 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
+import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import play.api.Configuration
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
 
 import scala.concurrent.Future
@@ -27,50 +30,64 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
 
   val nino: String              = "AA123456A"
   val taxYearMtd: String        = "2017-18"
-  val taxYearTys: String        = "2023-2024"
   val taxYearDownstream: String = "2018"
 
-  trait Test {
-    _: ConnectorTest =>
-    def taxYear: TaxYear
+  class Test extends MockHttpClient with MockAppConfig {
 
-    protected val connector: DeleteOtherEmploymentIncomeConnector =
-      new DeleteOtherEmploymentIncomeConnector(
-        http = mockHttpClient,
-        appConfig = mockAppConfig
-      )
+    val connector: DeleteOtherEmploymentIncomeConnector = new DeleteOtherEmploymentIncomeConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
 
-    protected val request: DeleteOtherEmploymentIncomeRequest =
-      DeleteOtherEmploymentIncomeRequest(
-        nino = Nino(nino),
-        taxYear = taxYear
-      )
+    MockedAppConfig.desBaseUrl returns baseUrl
+    MockedAppConfig.desToken returns "des-token"
+    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
+    MockedAppConfig.tysIfsBaseUrl returns baseUrl
+    MockedAppConfig.tysIfsEnvironment returns "TYS-IFS-environment"
+    MockedAppConfig.tysIfsToken returns "TYS-IFS-token"
+    MockedAppConfig.tysIfsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
-  "DeleteOtherEmploymentIncomeConnector" should {
-    "return a 200 result" when {
-      "the downstream call is successful and not tax year specific" in new DesTest with Test {
-        def taxYear          = TaxYear.fromMtd(taxYearMtd)
-        override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
-        val outcome          = Right(ResponseWrapper(correlationId, ()))
+  "delete" should {
 
-        willDelete(s"$baseUrl/income-tax/income/other/employments/${request.nino}/${request.taxYear.asDownstream}") returns Future.successful(outcome)
+    "return a result" when {
+      "the downstream call is successful when not tax year specific" in new Test {
+        val request: DeleteOtherEmploymentIncomeRequest = DeleteOtherEmploymentIncomeRequest(Nino(nino), TaxYear.fromMtd(taxYearMtd))
+        val outcome                                     = Right(ResponseWrapper(correlationId, ()))
 
-        await(connector.deleteOtherEmploymentIncome(request)) shouldBe outcome
-      }
+        MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)
 
-      "the downstream call is successful and is tax year specific" in new TysIfsTest with Test {
-        def taxYear          = TaxYear.fromMtd(taxYearTys)
-        override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
-        val outcome          = Right(ResponseWrapper(correlationId, ()))
-
-        willDelete(s"$baseUrl/income-tax/income/other/employments/${request.taxYear.asTysDownstream}/${request.nino}") returns Future.successful(
-          outcome)
+        MockedHttpClient
+          .delete(
+            url = s"$baseUrl/income-tax/income/other/employments/${request.nino}/${request.taxYear.asDownstream}",
+            config = dummyDesHeaderCarrierConfig,
+            requiredHeaders = requiredDesHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.deleteOtherEmploymentIncome(request)) shouldBe outcome
       }
 
+      "the downstream call is successful when tax year specific" in new Test {
+        val tysRequest: DeleteOtherEmploymentIncomeRequest = DeleteOtherEmploymentIncomeRequest(Nino(nino), TaxYear.fromMtd("2023-24"))
+        val outcome                                        = Right(ResponseWrapper(correlationId, ()))
+
+        MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> true)
+
+        MockedHttpClient
+          .delete(
+            url = s"$baseUrl/income-tax/income/other/employments/${tysRequest.taxYear.asTysDownstream}/${tysRequest.nino}",
+            config = dummyIfsHeaderCarrierConfig,
+            requiredHeaders = requiredTysIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(outcome))
+
+        await(connector.deleteOtherEmploymentIncome(tysRequest)) shouldBe outcome
+      }
     }
   }
 
