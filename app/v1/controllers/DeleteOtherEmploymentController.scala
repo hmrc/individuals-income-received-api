@@ -16,32 +16,30 @@
 
 package v1.controllers
 
-import api.connectors.DownstreamUri.DesUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.TaxYear
 import api.models.errors._
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
-import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1.services.DeleteOtherEmploymentIncomeService
+import api.connectors.DownstreamUri.DesUri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
                                                  requestParser: DeleteRetrieveRequestParser,
-                                                 service: DeleteOtherEmploymentIncomeService,
+                                                 service: DeleteRetrieveService,
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -73,8 +71,8 @@ class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuth
 
       val result =
         for {
-          requestDetails  <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete(requestDetails.nino, TaxYear(requestDetails.taxYear)))
+          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.delete())
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -118,14 +116,7 @@ class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuth
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError
-          ) =>
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))

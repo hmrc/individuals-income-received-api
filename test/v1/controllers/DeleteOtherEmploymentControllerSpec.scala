@@ -29,7 +29,6 @@ import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.services.DeleteOtherEmploymentIncomeService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -78,7 +77,7 @@ class DeleteOtherEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteRetrieveRequestParser,
-      service = mock[DeleteOtherEmploymentIncomeService],
+      service = mockDeleteRetrieveService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
