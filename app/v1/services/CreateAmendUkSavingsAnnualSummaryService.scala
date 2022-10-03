@@ -65,6 +65,7 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
     )
 
     val extraTysErrors = Map(
+      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
       "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
       "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
       "INVALID_CORRELATIONID"      -> StandardDownstreamError,
