@@ -52,7 +52,7 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
         override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 
-        willDelete(s"$baseUrl/income-tax/income/other/employments/$nino/2018") returns Future.successful(outcome)
+        willDelete(s"$baseUrl/income-tax/income/other/employments/$nino/2017-18") returns Future.successful(outcome)
 
         await(connector.deleteOtherEmploymentIncome(request)) shouldBe outcome
       }
