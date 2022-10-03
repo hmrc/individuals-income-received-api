@@ -144,7 +144,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSp
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -160,7 +160,16 @@ class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSp
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (NOT_FOUND, "INCOME_SOURCE_NOT_FOUND", NOT_FOUND, NotFoundError),
+          (INTERNAL_SERVER_ERROR, "INVALID_INCOMESOURCE_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (INTERNAL_SERVER_ERROR, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (INTERNAL_SERVER_ERROR, "INCOMPATIBLE_INCOME_SOURCE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).distinct.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
