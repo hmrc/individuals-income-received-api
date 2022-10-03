@@ -25,10 +25,7 @@ import scala.concurrent.Future
 
 class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
 
-  val nino: String              = "AA123456A"
-  val taxYearMtd: String        = "2017-18"
-  val taxYearTys: String        = "2023-2024"
-  val taxYearDownstream: String = "2018"
+  val nino: String = "AA123456A"
 
   trait Test {
     _: ConnectorTest =>
@@ -51,11 +48,11 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
   "DeleteOtherEmploymentIncomeConnector" should {
     "return a 200 result" when {
       "the downstream call is successful and not tax year specific" in new DesTest with Test {
-        def taxYear          = TaxYear.fromMtd(taxYearMtd)
+        def taxYear          = TaxYear.fromMtd("2017-18")
         override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 
-        willDelete(s"$baseUrl/income-tax/income/other/employments/${request.nino}/${request.taxYear.asDownstream}") returns Future.successful(outcome)
+        willDelete(s"$baseUrl/income-tax/income/other/employments/$nino/2018") returns Future.successful(outcome)
 
         await(connector.deleteOtherEmploymentIncome(request)) shouldBe outcome
       }
@@ -65,8 +62,7 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
         override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 
-        willDelete(s"$baseUrl/income-tax/income/other/employments/2324/${request.nino}") returns Future.successful(
-          outcome)
+        willDelete(s"$baseUrl/income-tax/income/other/employments/23-24/$nino") returns Future.successful(outcome)
 
         await(connector.deleteOtherEmploymentIncome(request)) shouldBe outcome
       }
