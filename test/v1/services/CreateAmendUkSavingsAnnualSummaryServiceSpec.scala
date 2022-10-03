@@ -78,7 +78,7 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
             await(service.createAmend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", StandardDownstreamError),
@@ -94,8 +94,16 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
+        val tysErrors = Seq(
+          ("INVALID_TAX_YEAR"           -> TaxYearFormatError),
+          ("INCOME_SOURCE_NOT_FOUND"    -> NotFoundError),
+          ("INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError),
+          ("INVALID_CORRELATIONID"      -> StandardDownstreamError),
+          ("INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError),
+          ("TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError)
+        )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        (errors ++ tysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

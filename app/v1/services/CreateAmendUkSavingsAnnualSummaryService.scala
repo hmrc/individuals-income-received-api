@@ -41,13 +41,13 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
     val result = for {
       desResponseWrapper <- EitherT(
         connector.createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request)))
-        .leftMap(mapDownstreamErrors(desErrorMap))
+        .leftMap(mapDownstreamErrors(downstreamErrorMap))
     } yield desResponseWrapper
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
@@ -63,5 +63,16 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
       "SERVER_ERROR"                      -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"               -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
+      "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
+      "INVALID_INCOMESOURCE_TYPE"  -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"      -> StandardDownstreamError,
+      "INCOMPATIBLE_INCOME_SOURCE" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError
+    )
+    errors ++ extraTysErrors
+  }
 
 }
