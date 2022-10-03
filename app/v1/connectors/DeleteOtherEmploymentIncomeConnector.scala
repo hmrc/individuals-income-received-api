@@ -36,7 +36,7 @@ class DeleteOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val 
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    implicit val successCode: SuccessCode = SuccessCode(OK)
+    implicit val successCode: SuccessCode = SuccessCode(NO_CONTENT)
 
     val downstreamUri =
       if (request.taxYear.useTaxYearSpecificApi) {
