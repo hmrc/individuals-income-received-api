@@ -54,15 +54,13 @@ class DeleteOtherEmploymentControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    override def taxYear: String  = "2020-21"
-    def downstreamTaxYear: String = "2021"
-    def downstreamUri: String     = s"/income-tax/income/other/employments/$nino/$downstreamTaxYear"
+    override def taxYear: String = "2020-21"
+    def downstreamUri: String    = s"/income-tax/income/other/employments/$nino/$taxYear"
   }
 
   private trait TysIfsTest extends Test {
-    override def taxYear: String  = "2023-24"
-    def downstreamTaxYear: String = "23-24"
-    def downstreamUri: String     = s"/income-tax/income/other/employments/$downstreamTaxYear/$nino"
+    override def taxYear: String = "2023-24"
+    def downstreamUri: String    = s"/income-tax/income/other/employments/23-24/$nino"
   }
 
   "Calling the 'delete other income' endpoint" should {
