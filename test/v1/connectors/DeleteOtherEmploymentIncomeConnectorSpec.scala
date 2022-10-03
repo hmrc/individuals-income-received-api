@@ -61,7 +61,7 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
       }
 
       "the downstream call is successful and is tax year specific" in new TysIfsTest with Test {
-        def taxYear          = TaxYear.fromMtd(taxYearTys)
+        def taxYear          = TaxYear.fromMtd("2023-24")
         override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 
