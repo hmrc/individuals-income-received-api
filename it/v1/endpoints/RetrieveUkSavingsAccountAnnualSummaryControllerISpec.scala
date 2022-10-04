@@ -30,14 +30,12 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
 
   private trait Test {
 
-    val nino: String       = "TC663795B"
-    val taxYear: String    = "2020-21"
-    val desTaxYear: String = "2021"
+    val nino: String = "TC663795B"
+    def taxYear: String
 
     val savingsAccountId: String = "122784545874145"
-    val incomeSourceType: String = "savings"
 
-    val desResponse: JsValue = Json.parse("""
+    val downstreamResponse: JsValue = Json.parse("""
         |   {
         |     "savingsInterestAnnualIncome": [
         |      {
@@ -55,12 +53,12 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
          |   "untaxedUkInterest": 34514974058.99,
          |   "links":[
          |     {
-         |          "href":"/individuals/income-received/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId",
+         |          "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
          |          "rel":"create-and-amend-uk-savings-account-annual-summary",
          |          "method":"PUT"
          |    },
          |    {
-         |          "href":"/individuals/income-received/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId",
+         |          "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
          |          "rel":"self",
          |          "method":"GET"
          |    }
@@ -68,14 +66,13 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
          |}
          |""".stripMargin)
 
-    def uri: String    = s"/$incomeSourceType/uk-accounts/$nino/$taxYear/$savingsAccountId"
-    def desUri: String = s"/income-tax/nino/$nino/income-source/$incomeSourceType/annual/$desTaxYear"
+    def downstreamUri: String
 
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/savings/uk-accounts/$nino/$taxYear/$savingsAccountId")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123")
@@ -84,9 +81,21 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
 
   }
 
+  private trait NonTysTest extends Test {
+    def taxYear: String = "2020-21"
+
+    def downstreamUri: String = s"/income-tax/nino/$nino/income-source/savings/annual/2021"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String = "2023-24"
+
+    def downstreamUri: String = s"/income-tax/23-24/$nino/income-source/savings/annual"
+  }
+
   "Calling the 'retrieve savings' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -95,10 +104,31 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
 
           DownstreamStub.onSuccess(
             method = DownstreamStub.GET,
-            uri = desUri,
+            uri = downstreamUri,
             queryParams = Map[String, String]("incomeSourceId" -> savingsAccountId),
             status = OK,
-            body = desResponse)
+            body = downstreamResponse)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for a tax-year specific endpoint" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+
+          DownstreamStub.onSuccess(
+            method = DownstreamStub.GET,
+            uri = downstreamUri,
+            queryParams = Map[String, String]("incomeSourceId" -> savingsAccountId),
+            status = OK,
+            body = downstreamResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -116,7 +146,7 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
                                 requestSavingsAccountId: String,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String             = requestNino
             override val taxYear: String          = requestTaxYear
@@ -144,15 +174,15 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -166,21 +196,32 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerISpec extends IntegrationBa
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "message"
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_INCOME_SOURCE", BAD_REQUEST, SavingsAccountIdFormatError),
-          (BAD_REQUEST, "NOT_FOUND_PERIOD", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "NOT_FOUND_INCOME_SOURCE", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NOT_FOUND_PERIOD", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NOT_FOUND_INCOME_SOURCE", NOT_FOUND, NotFoundError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", BAD_REQUEST, SavingsAccountIdFormatError),
+          (BAD_REQUEST, "INVALID_INCOMESOURCE_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (NOT_FOUND, "SUBMISSION_PERIOD_NOT_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "INCOME_DATA_SOURCE_NOT_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }

@@ -17,11 +17,8 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
 import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse}
 
@@ -29,54 +26,61 @@ import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
 
-  val nino: String              = "AA111111A"
-  val taxYearMtd: String        = "2018-19"
-  val taxYearDownstream: String = "2019"
-  val incomeSourceId: String    = "SAVKB2UVwUTBQGJ"
+  val nino: String           = "AA111111A"
+  val incomeSourceId: String = "SAVKB2UVwUTBQGJ"
 
-  val request: RetrieveUkSavingsAnnualSummaryRequest =
-    RetrieveUkSavingsAnnualSummaryRequest(
-      Nino(nino),
-      TaxYear.fromMtd(taxYearMtd),
-      incomeSourceId
+  trait Test {
+    _: ConnectorTest =>
+
+    def taxYear: TaxYear
+
+    val request: RetrieveUkSavingsAnnualSummaryRequest =
+      RetrieveUkSavingsAnnualSummaryRequest(
+        Nino(nino),
+        taxYear,
+        incomeSourceId
+      )
+
+    val response: DownstreamUkSavingsAnnualIncomeResponse = DownstreamUkSavingsAnnualIncomeResponse(
+      Seq(
+        DownstreamUkSavingsAnnualIncomeItem(
+          incomeSourceId = incomeSourceId,
+          taxedUkInterest = Some(1230.55),
+          untaxedUkInterest = Some(1230.55)
+        ))
     )
-
-  private val response = DownstreamUkSavingsAnnualIncomeResponse(
-    Seq(
-      DownstreamUkSavingsAnnualIncomeItem(
-        incomeSourceId = incomeSourceId,
-        taxedUkInterest = Some(1230.55),
-        untaxedUkInterest = Some(1230.55)
-      ))
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
 
     val connector: RetrieveUkSavingsAccountAnnualSummaryConnector = new RetrieveUkSavingsAccountAnnualSummaryConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveUkSavingsAccountAnnualSummaryConnector" when {
-    "retrieveUkSavingsAccountAnnualSummary" must {
-      "return a 200 status for a success scenario" in new Test {
-        private val outcome            = Right(ResponseWrapper(correlationId, response))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+    "retrieveUkSavingsAccountAnnualSummary called" must {
+      "return a 200 status for a success scenario" in new DesTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/$taxYearDownstream?incomeSourceId=$incomeSourceId",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        private val outcome = Right(ResponseWrapper(correlationId, response))
+
+        willGet(
+          s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/2020?incomeSourceId=$incomeSourceId"
+        ) returns Future.successful(outcome)
+
+        await(connector.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe outcome
+      }
+    }
+
+    "retrieveUkSavingsAccountAnnualSummary called for a TYS tax year" must {
+      "return a 200 status for a success scenario" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        private val outcome = Right(ResponseWrapper(correlationId, response))
+
+        willGet(
+          s"$baseUrl/income-tax/23-24/$nino/income-source/savings/annual?incomeSourceId=$incomeSourceId"
+        ) returns Future.successful(outcome)
 
         await(connector.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe outcome
       }

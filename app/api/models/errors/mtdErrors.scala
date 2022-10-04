@@ -69,10 +69,10 @@ object SavingsAccountIdFormatError      extends MtdError("FORMAT_SAVINGS_ACCOUNT
 
 // Rule Errors
 object RuleDuplicateAccountName
-  extends MtdError(
-    code = "RULE_DUPLICATE_ACCOUNT_NAME",
-    message = "Duplicate account name given for supplied NINO"
-  )
+    extends MtdError(
+      code = "RULE_DUPLICATE_ACCOUNT_NAME",
+      message = "Duplicate account name given for supplied NINO"
+    )
 
 object RuleTaxYearNotSupportedError
     extends MtdError(
