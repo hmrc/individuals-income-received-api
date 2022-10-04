@@ -24,74 +24,19 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import support.IntegrationBaseSpec
+import support.{IntegrationBaseSpec, WireMockMethods}
 
-class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends IntegrationBaseSpec {
-
-  private trait Test {
-
-    val nino: String    = "AA123456A"
-    val taxYear: String = "2019-20"
-    val desTaxYear: String = "2020"
-
-    val desResponse: JsValue = Json.parse(
-      """
-        |{
-        |  "ukDividends": 10.12,
-        |  "otherUkDividends": 11.12
-        |}
-        |""".stripMargin)
-
-    val mtdResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |  "ukDividends": 10.12,
-         |  "otherUkDividends": 11.12,
-         |  "links":[
-         |      {
-         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
-         |         "method":"PUT",
-         |         "rel":"create-and-amend-uk-dividends-income"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
-         |         "method":"GET",
-         |         "rel":"self"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
-         |         "method":"DELETE",
-         |         "rel":"delete-uk-dividends-income"
-         |      }
-         |   ]
-         |}
-         |""".stripMargin)
-
-    def uri: String = s"/uk-dividends/$nino/$taxYear"
-
-    def desUri: String = s"/income-tax/nino/$nino/income-source/dividends/annual/$desTaxYear"
-
-    def setupStubs(): StubMapping
-
-    def request: WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-  }
+class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 
   "Calling the 'retrieve dividends' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -99,13 +44,28 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
       }
+
+      "any valid request is made with a Tax Year Specific year" in new TysIfsTest {
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
     }
 
     "return error according to spec" when {
 
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
@@ -132,15 +92,15 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"des returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -158,7 +118,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_NINO", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_TAXYEAR", BAD_REQUEST, TaxYearFormatError),
@@ -168,8 +128,84 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec  extends Integration
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_INCOMESOURCE_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (NOT_FOUND, "SUBMISSION_PERIOD_NOT_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "INCOME_DATA_SOURCE_NOT_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
+  private trait Test {
+
+    def taxYear: String
+    def downstreamTaxYear: String
+    def downstreamUri: String
+
+    def nino: String = "AA123456A"
+
+    val downstreamResponse: JsValue = Json.parse("""
+        |{
+        |  "ukDividends": 10.12,
+        |  "otherUkDividends": 11.12
+        |}
+        |""".stripMargin)
+
+    val mtdResponse: JsValue = Json.parse(s"""
+         |{
+         |  "ukDividends": 10.12,
+         |  "otherUkDividends": 11.12,
+         |  "links":[
+         |      {
+         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-uk-dividends-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-uk-dividends-income"
+         |      }
+         |   ]
+         |}
+         |""".stripMargin)
+
+    def setupStubs(): StubMapping
+
+    def request: WSRequest = {
+      setupStubs()
+      buildRequest(s"/uk-dividends/$nino/$taxYear")
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String           = "2020-21"
+    def downstreamTaxYear: String = "2021"
+    def downstreamUri: String     = s"/income-tax/nino/$nino/income-source/dividends/annual/$downstreamTaxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String           = "2023-24"
+    def downstreamTaxYear: String = "23-24"
+    def downstreamUri: String     = s"/income-tax/$downstreamTaxYear/$nino/income-source/dividends/annual"
+  }
+
 }

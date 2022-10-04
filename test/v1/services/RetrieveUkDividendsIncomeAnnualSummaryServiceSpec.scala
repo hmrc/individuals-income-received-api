@@ -36,7 +36,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
   private val validResponse = RetrieveUkDividendsAnnualIncomeSummaryResponse(
     ukDividends = Some(10.12),
-    otherUkDividends =  Some(11.12)
+    otherUkDividends = Some(11.12)
   )
 
   trait Test extends MockRetrieveUKDividendsIncomeAnnualSummaryConnector {
@@ -44,6 +44,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
     val service: RetrieveUkDividendsIncomeAnnualSummaryService =
       new RetrieveUkDividendsIncomeAnnualSummaryService(connector = mockRetrieveUKDividendsIncomeAnnualSummaryConnector)
+
   }
 
   "RetrieveUKDividendsIncomeAnnualSummaryService" when {
@@ -60,17 +61,17 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockRetrieveUKDividendsIncomeAnnualSummaryConnector
               .retrieveUKDividendsIncomeAnnualSummary(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.retrieveUKDividendsIncomeAnnualSummary(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TYPE", StandardDownstreamError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -81,7 +82,17 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("INVALID_TAX_YEAR", TaxYearFormatError),
+          ("INVALID_INCOMESOURCE_ID", StandardDownstreamError),
+          ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
+          ("INVALID_CORRELATION_ID", StandardDownstreamError),
+          ("SUBMISSION_PERIOD_NOT_FOUND", NotFoundError),
+          ("INCOME_DATA_SOURCE_NOT_FOUND", NotFoundError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }
