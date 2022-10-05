@@ -68,7 +68,7 @@ class DeleteRetrieveOtherEmploymentIncomeService @Inject() (connector: DeleteRet
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "NO_DATA_FOUND"             -> NotFoundError, //TODO this should be not found
+      "NO_DATA_FOUND"             -> NotFoundError, // TODO this should be not found
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
