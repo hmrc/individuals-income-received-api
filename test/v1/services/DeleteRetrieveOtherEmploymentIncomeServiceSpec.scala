@@ -23,26 +23,34 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockDeleteRetrieveOtherEmploymentIncomeConnector
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
+import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
+import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
 import scala.concurrent.Future
 
-class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
+class DeleteRetrieveOtherEmploymentIncomeServiceSpec extends ServiceSpec {
 
-  private val request = DeleteOtherEmploymentIncomeRequest(
+  private val deleteRequest = DeleteOtherEmploymentIncomeRequest(
     nino = Nino("AA112233A"),
     taxYear = TaxYear.fromMtd("2023-24")
   )
 
-  "DeleteOtherEmploymentIncomeServiceSpec" when {
-    "the downstream request is successful" must {
+  private val retrieveRequest = RetrieveOtherEmploymentIncomeRequest(
+    nino = Nino("AA112233A"),
+    taxYear = TaxYear.fromMtd("2023-24")
+  )
+
+  "DeleteRetrieveOtherEmploymentIncomeSpec" when {
+    "the downstream delete request is successful" must {
       "return a success result" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockDeleteRetrieveOtherEmploymentIncomeConnector
-          .deleteOtherEmploymentIncome(request)
+          .deleteOtherEmploymentIncome(deleteRequest)
           .returns(Future.successful(outcome))
 
-        await(service.delete(request)) shouldBe outcome
+        await(service.delete(deleteRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -51,10 +59,10 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
 
           s"downstream returns $downstreamErrorCode" in new Test {
             MockDeleteRetrieveOtherEmploymentIncomeConnector
-              .deleteOtherEmploymentIncome(request)
+              .deleteOtherEmploymentIncome(deleteRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(request))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(deleteRequest))
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
         }
@@ -75,6 +83,49 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
+
+    "the downstream retrieve request is successful" must {
+      "return a success result" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))
+
+        MockDeleteRetrieveOtherEmploymentIncomeConnector
+          .retrieveOtherEmploymentIncome(retrieveRequest)
+          .returns(Future.successful(outcome))
+
+        await(service.retrieve(retrieveRequest)) shouldBe outcome
+      }
+
+      "map errors according to spec" when {
+
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
+
+          s"downstream returns $downstreamErrorCode" in new Test {
+            MockDeleteRetrieveOtherEmploymentIncomeConnector
+              .retrieveOtherEmploymentIncome(retrieveRequest)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+
+            val result: Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]] = await(service.retrieve(retrieveRequest))
+            result shouldBe Left(ErrorWrapper(correlationId, error))
+          }
+        }
+
+        val errors = Seq(
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
+          ("INVALID_TAX_YEAR", TaxYearFormatError),
+          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("NO_DATA_FOUND", NotFoundError),
+          ("SERVER_ERROR", StandardDownstreamError),
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+        )
+
+        val extraTysErrors = Seq(
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      }
+    }
+
   }
 
   trait Test extends MockDeleteRetrieveOtherEmploymentIncomeConnector {

@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.{Nino, ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -30,6 +30,7 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
 import v1.fixtures.RetrieveOtherEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveOtherEmploymentIncomeRequestParser
 import v1.mocks.services.MockDeleteRetrieveOtherEmploymentIncomeService
@@ -61,87 +62,6 @@ class RetrieveOtherEmploymentControllerSpec
   val requestData: RetrieveOtherEmploymentIncomeRequest = RetrieveOtherEmploymentIncomeRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
-  )
-
-  private val shareOption = ShareOptionItem(
-    employerName = "Company Ltd",
-    employerRef = Some("123/AB456"),
-    schemePlanType = ShareOptionSchemeType.EMI,
-    dateOfOptionGrant = "2019-11-20",
-    dateOfEvent = "2019-12-22",
-    optionNotExercisedButConsiderationReceived = true,
-    amountOfConsiderationReceived = 23122.22,
-    noOfSharesAcquired = 1,
-    classOfSharesAcquired = "FIRST",
-    exercisePrice = 12.22,
-    amountPaidForOption = 123.22,
-    marketValueOfSharesOnExcise = 1232.22,
-    profitOnOptionExercised = 1232.33,
-    employersNicPaid = 2312.22,
-    taxableAmount = 2132.22
-  )
-
-  private val sharesAwardedOrReceived = SharesAwardedOrReceivedItem(
-    employerName = "Company Ltd",
-    employerRef = Some("123/AB456"),
-    schemePlanType = SharesAwardedOrReceivedSchemeType.SIP,
-    dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
-    noOfShareSecuritiesAwarded = 11,
-    classOfShareAwarded = "FIRST",
-    dateSharesAwarded = "2019-12-20",
-    sharesSubjectToRestrictions = true,
-    electionEnteredIgnoreRestrictions = false,
-    actualMarketValueOfSharesOnAward = 2123.22,
-    unrestrictedMarketValueOfSharesOnAward = 123.22,
-    amountPaidForSharesOnAward = 123.22,
-    marketValueAfterRestrictionsLifted = 1232.22,
-    taxableAmount = 12321.22
-  )
-
-  private val commonOtherEmployment = CommonOtherEmployment(
-    customerReference = Some("customer reference"),
-    amountDeducted = 1223.22
-  )
-
-  private val taxableLumpSumsAndCertainIncome = TaxableLumpSumsAndCertainIncomeItem(
-    amount = 5000.99,
-    taxPaid = Some(3333.33),
-    taxTakenOffInEmployment = true
-  )
-
-  private val benefitFromEmployerFinancedRetirementScheme = BenefitFromEmployerFinancedRetirementSchemeItem(
-    amount = 5000.99,
-    exemptAmount = Some(2345.99),
-    taxPaid = Some(3333.33),
-    taxTakenOffInEmployment = true
-  )
-
-  private val redundancyCompensationPaymentsOverExemption = RedundancyCompensationPaymentsOverExemptionItem(
-    amount = 5000.99,
-    taxPaid = Some(3333.33),
-    taxTakenOffInEmployment = true
-  )
-
-  private val redundancyCompensationPaymentsUnderExemption = RedundancyCompensationPaymentsUnderExemptionItem(
-    amount = Some(5000.99)
-  )
-
-  private val lumpSums = LumpSums(
-    employerName = "BPDTS Ltd",
-    employerRef = "123/AB456",
-    taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
-    benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
-    redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
-    redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
-  )
-
-  private val retrieveOtherResponseModel: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
-    shareOption = Some(Seq(shareOption)),
-    sharesAwardedOrReceived = Some(Seq(sharesAwardedOrReceived)),
-    disability = Some(commonOtherEmployment),
-    foreignService = Some(commonOtherEmployment),
-    lumpSums = Some(Seq(lumpSums))
   )
 
   private val amendLink: Link = Link(
