@@ -17,10 +17,10 @@
 package v1.mocks.validators
 
 import api.models.errors.MtdError
-import api.requestParsers.validators.DeleteOtherEmploymentIncomeRequestValidator
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequestRawData
+import v1.requestParsers.validators.DeleteOtherEmploymentIncomeRequestValidator
 
 trait MockDeleteOtherEmploymentIncomeValidator extends MockFactory {
 

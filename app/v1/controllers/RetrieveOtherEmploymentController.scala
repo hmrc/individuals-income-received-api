@@ -16,20 +16,20 @@
 
 package v1.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
 import api.models.errors._
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.DesUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
-import v1.models.response.retrieveOtherEmployment.{RetrieveOtherEmploymentHateoasData, RetrieveOtherEmploymentResponse}
+import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequestRawData
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentHateoasData
+import v1.requestParsers.RetrieveOtherEmploymentIncomeRequestParser
+import v1.services.DeleteRetrieveOtherEmploymentIncomeService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,8 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
-                                                   requestParser: DeleteRetrieveRequestParser,
-                                                   service: DeleteRetrieveService,
+                                                   requestParser: RetrieveOtherEmploymentIncomeRequestParser,
+                                                   service: DeleteRetrieveOtherEmploymentIncomeService,
                                                    hateoasFactory: HateoasFactory,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -59,19 +59,15 @@ class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAu
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+      val rawData: RetrieveOtherEmploymentIncomeRequestRawData = RetrieveOtherEmploymentIncomeRequestRawData(
         nino = nino,
         taxYear = taxYear
       )
 
-      implicit val desUri: DesUri[RetrieveOtherEmploymentResponse] = DesUri[RetrieveOtherEmploymentResponse](
-        s"income-tax/income/other/employments/$nino/$taxYear"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveOtherEmploymentResponse]())
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieve(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveOtherEmploymentHateoasData(nino, taxYear))

@@ -21,20 +21,23 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
-import v1.services.DeleteOtherEmploymentIncomeService
+import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
+import v1.services.DeleteRetrieveOtherEmploymentIncomeService
 
-trait MockDeleteOtherEmploymentIncomeService extends MockFactory {
+import scala.concurrent.{ExecutionContext, Future}
 
-  val mockDeleteOtherEmploymentIncomeService: DeleteOtherEmploymentIncomeService =
-    mock[DeleteOtherEmploymentIncomeService]
+trait MockDeleteRetrieveOtherEmploymentIncomeService extends MockFactory {
 
-  object MockDeleteOtherEmploymentIncomeService {
+  val mockDeleteRetrieveOtherEmploymentIncomeService: DeleteRetrieveOtherEmploymentIncomeService =
+    mock[DeleteRetrieveOtherEmploymentIncomeService]
+
+  object MockDeleteRetrieveOtherEmploymentIncomeService {
 
     def delete(requestData: DeleteOtherEmploymentIncomeRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
-      mockDeleteOtherEmploymentIncomeService
+      mockDeleteRetrieveOtherEmploymentIncomeService
         .delete(_: DeleteOtherEmploymentIncomeRequest)(
           _: HeaderCarrier,
           _: ExecutionContext,
@@ -43,6 +46,20 @@ trait MockDeleteOtherEmploymentIncomeService extends MockFactory {
         )
       )
       .expects(requestData, *, *, *, *)
+
+    def retrieve(request: RetrieveOtherEmploymentIncomeRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]]]] = {
+      (
+        mockDeleteRetrieveOtherEmploymentIncomeService
+          .retrieve(_: RetrieveOtherEmploymentIncomeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
+        .expects(request, *, *, *, *)
+    }
 
   }
 

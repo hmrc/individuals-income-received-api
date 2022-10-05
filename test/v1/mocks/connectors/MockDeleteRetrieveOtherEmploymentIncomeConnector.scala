@@ -20,21 +20,37 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.DeleteOtherEmploymentIncomeConnector
+import v1.connectors.DeleteRetrieveOtherEmploymentIncomeConnector
+import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteOtherEmploymentIncomeConnector extends MockFactory {
+trait MockDeleteRetrieveOtherEmploymentIncomeConnector extends MockFactory {
 
-  val mockDeleteOtherEmploymentIncomeConnector: DeleteOtherEmploymentIncomeConnector = mock[DeleteOtherEmploymentIncomeConnector]
+  val mockDeleteRetrieveOtherEmploymentIncomeConnector: DeleteRetrieveOtherEmploymentIncomeConnector =
+    mock[DeleteRetrieveOtherEmploymentIncomeConnector]
 
-  object MockDeleteOtherEmploymentIncomeConnector {
+  object MockDeleteRetrieveOtherEmploymentIncomeConnector {
 
     def deleteOtherEmploymentIncome(request: DeleteOtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (
-        mockDeleteOtherEmploymentIncomeConnector
+        mockDeleteRetrieveOtherEmploymentIncomeConnector
           .deleteOtherEmploymentIncome(_: DeleteOtherEmploymentIncomeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
+        .expects(request, *, *, *)
+    }
+
+    def retrieveOtherEmploymentIncome(
+        request: RetrieveOtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]]] = {
+      (
+        mockDeleteRetrieveOtherEmploymentIncomeConnector
+          .retrieveOtherEmploymentIncome(_: RetrieveOtherEmploymentIncomeRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

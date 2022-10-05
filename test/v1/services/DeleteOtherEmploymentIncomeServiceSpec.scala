@@ -21,7 +21,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v1.mocks.connectors.MockDeleteOtherEmploymentIncomeConnector
+import v1.mocks.connectors.MockDeleteRetrieveOtherEmploymentIncomeConnector
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
 
 import scala.concurrent.Future
@@ -38,7 +38,7 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
       "return a success result" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockDeleteOtherEmploymentIncomeConnector
+        MockDeleteRetrieveOtherEmploymentIncomeConnector
           .deleteOtherEmploymentIncome(request)
           .returns(Future.successful(outcome))
 
@@ -50,7 +50,7 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
 
           s"downstream returns $downstreamErrorCode" in new Test {
-            MockDeleteOtherEmploymentIncomeConnector
+            MockDeleteRetrieveOtherEmploymentIncomeConnector
               .deleteOtherEmploymentIncome(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
@@ -77,11 +77,11 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
     }
   }
 
-  trait Test extends MockDeleteOtherEmploymentIncomeConnector {
+  trait Test extends MockDeleteRetrieveOtherEmploymentIncomeConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: DeleteOtherEmploymentIncomeService =
-      new DeleteOtherEmploymentIncomeService(mockDeleteOtherEmploymentIncomeConnector)
+    val service: DeleteRetrieveOtherEmploymentIncomeService =
+      new DeleteRetrieveOtherEmploymentIncomeService(mockDeleteRetrieveOtherEmploymentIncomeConnector)
 
   }
 

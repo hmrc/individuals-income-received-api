@@ -20,30 +20,29 @@ import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequestRawData
-
 import javax.inject.{Inject, Singleton}
+import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequestRawData
 
 @Singleton
-class DeleteOtherEmploymentIncomeRequestValidator @Inject()(implicit appConfig: AppConfig)
-    extends Validator[DeleteOtherEmploymentIncomeRequestRawData] {
+class RetrieveOtherEmploymentIncomeRequestValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[RetrieveOtherEmploymentIncomeRequestRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteOtherEmploymentIncomeRequestRawData): List[MtdError] = {
+  override def validate(data: RetrieveOtherEmploymentIncomeRequestRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: DeleteOtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
-    (data: DeleteOtherEmploymentIncomeRequestRawData) => {
+  private def parameterFormatValidation: RetrieveOtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
+    (data: RetrieveOtherEmploymentIncomeRequestRawData) => {
       List(
         NinoValidation.validate(data.nino),
         TaxYearValidation.validate(data.taxYear)
       )
     }
 
-  private def parameterRuleValidation: DeleteOtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
-    (data: DeleteOtherEmploymentIncomeRequestRawData) => {
+  private def parameterRuleValidation: RetrieveOtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
+    (data: RetrieveOtherEmploymentIncomeRequestRawData) => {
       List(
         TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
       )

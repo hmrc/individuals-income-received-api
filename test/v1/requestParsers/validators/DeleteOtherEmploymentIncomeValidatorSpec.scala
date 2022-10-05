@@ -34,7 +34,6 @@ package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
 import api.models.errors._
-import api.requestParsers.validators.DeleteOtherEmploymentIncomeRequestValidator
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime

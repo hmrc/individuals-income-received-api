@@ -25,21 +25,21 @@ import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
-import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequestRawData
 import v1.requestParsers.DeleteOtherEmploymentIncomeRequestParser
-import v1.services.DeleteOtherEmploymentIncomeService
+import v1.services.DeleteRetrieveOtherEmploymentIncomeService
 
 import javax.inject.{Inject, Singleton}
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
                                                  requestParser: DeleteOtherEmploymentIncomeRequestParser,
-                                                 service: DeleteOtherEmploymentIncomeService,
+                                                 service: DeleteRetrieveOtherEmploymentIncomeService,
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)

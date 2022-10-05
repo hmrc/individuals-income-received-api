@@ -31,8 +31,8 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
     def taxYear: TaxYear
 
-    protected val connector: DeleteOtherEmploymentIncomeConnector =
-      new DeleteOtherEmploymentIncomeConnector(
+    protected val connector: DeleteRetrieveOtherEmploymentIncomeConnector =
+      new DeleteRetrieveOtherEmploymentIncomeConnector(
         http = mockHttpClient,
         appConfig = mockAppConfig
       )
@@ -45,8 +45,8 @@ class DeleteOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
 
   }
 
-  "DeleteOtherEmploymentIncomeConnector" should {
-    "return a 200 result" when {
+  "DeleteRetrieveOtherEmploymentIncomeConnector" should {
+    "return a 200 result on delete" when {
       "the downstream call is successful and not tax year specific" in new DesTest with Test {
         def taxYear          = TaxYear.fromMtd("2017-18")
         override val request = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)

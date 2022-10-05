@@ -21,16 +21,18 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.DeleteOtherEmploymentIncomeConnector
+import v1.connectors.DeleteRetrieveOtherEmploymentIncomeConnector
 import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
+import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteOtherEmploymentIncomeService @Inject() (connector: DeleteOtherEmploymentIncomeConnector)
+class DeleteRetrieveOtherEmploymentIncomeService @Inject() (connector: DeleteRetrieveOtherEmploymentIncomeConnector)
     extends DownstreamResponseMappingSupport
     with Logging {
 
@@ -47,12 +49,26 @@ class DeleteOtherEmploymentIncomeService @Inject() (connector: DeleteOtherEmploy
     result.value
   }
 
+  def retrieve(request: RetrieveOtherEmploymentIncomeRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]]] = {
+
+    val result = for {
+      desResponseWrapper <- EitherT(connector.retrieveOtherEmploymentIncome(request))
+        .leftMap(mapDownstreamErrors(errorMap))
+    } yield desResponseWrapper
+
+    result.value
+  }
+
   private def errorMap: Map[String, MtdError] = {
     val errorMap = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "NO_DATA_FOUND"             -> NotFoundError,
+      "NO_DATA_FOUND"             -> NotFoundError, //TODO this should be not found
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
