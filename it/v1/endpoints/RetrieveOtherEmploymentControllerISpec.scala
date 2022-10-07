@@ -162,7 +162,7 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
         val extraTysErrors = Seq(
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError)
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError)
         )
 
         (input ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
