@@ -19,30 +19,30 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
+import v1.requestParsers.validators.validations.{TaxYearValidation, NinoValidation, TaxYearNotSupportedValidation}
 import javax.inject.{Inject, Singleton}
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequestRawData
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
 
 @Singleton
-class RetrieveOtherEmploymentIncomeRequestValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveOtherEmploymentIncomeRequestRawData] {
+class OtherEmploymentIncomeRequestValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[OtherEmploymentIncomeRequestRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveOtherEmploymentIncomeRequestRawData): List[MtdError] = {
+  override def validate(data: OtherEmploymentIncomeRequestRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: RetrieveOtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
-    (data: RetrieveOtherEmploymentIncomeRequestRawData) => {
+  private def parameterFormatValidation: OtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
+    (data: OtherEmploymentIncomeRequestRawData) => {
       List(
         NinoValidation.validate(data.nino),
         TaxYearValidation.validate(data.taxYear)
       )
     }
 
-  private def parameterRuleValidation: RetrieveOtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
-    (data: RetrieveOtherEmploymentIncomeRequestRawData) => {
+  private def parameterRuleValidation: OtherEmploymentIncomeRequestRawData => List[List[MtdError]] =
+    (data: OtherEmploymentIncomeRequestRawData) => {
       List(
         TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
       )

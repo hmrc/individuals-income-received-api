@@ -227,8 +227,12 @@ object PpdSubmissionIdNotFoundError
       message = "Matching resource not found"
     )
 
+class NotFoundMtdError extends MtdError("NOT_FOUND", "The requested resource could not be found")
+
 // Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
+
+object TysNotFoundError extends NotFoundMtdError
 
 object StandardDownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
@@ -245,6 +249,6 @@ object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is
 // Accept header Errors
 object InvalidAcceptHeaderError extends MtdError("ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
 
-object UnsupportedVersionError extends MtdError("NOT_FOUND", "The requested resource could not be found")
+object UnsupportedVersionError extends NotFoundMtdError
 
 object InvalidBodyTypeError extends MtdError("INVALID_BODY_TYPE", "Expecting text/json or application/json body")

@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockMtdIdLookupService, MockEnrolmentsAuthService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.{HateoasWrapper, Link}
@@ -32,21 +32,20 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
 import v1.fixtures.RetrieveOtherEmploymentControllerFixture._
-import v1.mocks.requestParsers.MockRetrieveOtherEmploymentIncomeRequestParser
-import v1.mocks.services.MockDeleteRetrieveOtherEmploymentIncomeService
-import v1.models.request.retrieveOtherEmploymentIncome.{RetrieveOtherEmploymentIncomeRequest, RetrieveOtherEmploymentIncomeRequestRawData}
+import v1.mocks.requestParsers.MockOtherEmploymentIncomeRequestParser
+import v1.mocks.services.MockOtherEmploymentIncomeService
 import v1.models.response.retrieveOtherEmployment._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest}
 
 class RetrieveOtherEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveOtherEmploymentIncomeService
+    with MockOtherEmploymentIncomeService
     with MockHateoasFactory
-    with MockRetrieveOtherEmploymentIncomeRequestParser
+    with MockOtherEmploymentIncomeRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -54,12 +53,12 @@ class RetrieveOtherEmploymentControllerSpec
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
-  val rawData: RetrieveOtherEmploymentIncomeRequestRawData = RetrieveOtherEmploymentIncomeRequestRawData(
+  val rawData: OtherEmploymentIncomeRequestRawData = OtherEmploymentIncomeRequestRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: RetrieveOtherEmploymentIncomeRequest = RetrieveOtherEmploymentIncomeRequest(
+  val requestData: OtherEmploymentIncomeRequest = OtherEmploymentIncomeRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
@@ -88,8 +87,8 @@ class RetrieveOtherEmploymentControllerSpec
     val controller = new RetrieveOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveOtherEmploymentIncomeRequestParser,
-      service = mockDeleteRetrieveOtherEmploymentIncomeService,
+      requestParser = mockOtherEmploymentIncomeRequestParser,
+      service = mockOtherEmploymentIncomeService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -103,11 +102,11 @@ class RetrieveOtherEmploymentControllerSpec
   "RetrieveOtherEmploymentIncomeController" should {
     "return OK" when {
       "retrieve other employment income endpoint is hit" in new Test {
-        MockRetrieveOtherEmploymentIncomeRequestParser
+        MockOtherEmploymentIncomeRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveOtherEmploymentIncomeService
+        MockOtherEmploymentIncomeService
           .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))))
 
@@ -137,7 +136,7 @@ class RetrieveOtherEmploymentControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockRetrieveOtherEmploymentIncomeRequestParser
+            MockOtherEmploymentIncomeRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -164,11 +163,11 @@ class RetrieveOtherEmploymentControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockRetrieveOtherEmploymentIncomeRequestParser
+            MockOtherEmploymentIncomeRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveOtherEmploymentIncomeService
+            MockOtherEmploymentIncomeService
               .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
@@ -181,9 +180,12 @@ class RetrieveOtherEmploymentControllerSpec
         }
 
         val input = Seq(
+          (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
+          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (TysNotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 

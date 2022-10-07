@@ -28,9 +28,9 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequestRawData
-import v1.requestParsers.DeleteOtherEmploymentIncomeRequestParser
-import v1.services.DeleteRetrieveOtherEmploymentIncomeService
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
+import v1.requestParsers.OtherEmploymentIncomeRequestParser
+import v1.services.OtherEmploymentIncomeService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,8 +38,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
-                                                 requestParser: DeleteOtherEmploymentIncomeRequestParser,
-                                                 service: DeleteRetrieveOtherEmploymentIncomeService,
+                                                 requestParser: OtherEmploymentIncomeRequestParser,
+                                                 service: OtherEmploymentIncomeService,
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -60,7 +60,7 @@ class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuth
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteOtherEmploymentIncomeRequestRawData = DeleteOtherEmploymentIncomeRequestRawData(
+      val rawData: OtherEmploymentIncomeRequestRawData = OtherEmploymentIncomeRequestRawData(
         nino = nino,
         taxYear = taxYear
       )

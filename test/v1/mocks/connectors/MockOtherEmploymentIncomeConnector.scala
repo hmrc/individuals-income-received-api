@@ -20,24 +20,23 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.DeleteRetrieveOtherEmploymentIncomeConnector
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.connectors.OtherEmploymentIncomeConnector
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteRetrieveOtherEmploymentIncomeConnector extends MockFactory {
+trait MockOtherEmploymentIncomeConnector extends MockFactory {
 
-  val mockDeleteRetrieveOtherEmploymentIncomeConnector: DeleteRetrieveOtherEmploymentIncomeConnector =
-    mock[DeleteRetrieveOtherEmploymentIncomeConnector]
+  val otherEmploymentIncomeConnector: OtherEmploymentIncomeConnector =
+    mock[OtherEmploymentIncomeConnector]
 
-  object MockDeleteRetrieveOtherEmploymentIncomeConnector {
+  object OtherEmploymentIncomeConnector {
 
-    def deleteOtherEmploymentIncome(request: DeleteOtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def deleteOtherEmploymentIncome(request: OtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (
-        mockDeleteRetrieveOtherEmploymentIncomeConnector
-          .deleteOtherEmploymentIncome(_: DeleteOtherEmploymentIncomeRequest)(
+        otherEmploymentIncomeConnector
+          .deleteOtherEmploymentIncome(_: OtherEmploymentIncomeRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String
@@ -47,10 +46,10 @@ trait MockDeleteRetrieveOtherEmploymentIncomeConnector extends MockFactory {
     }
 
     def retrieveOtherEmploymentIncome(
-        request: RetrieveOtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]]] = {
+        request: OtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]]] = {
       (
-        mockDeleteRetrieveOtherEmploymentIncomeConnector
-          .retrieveOtherEmploymentIncome(_: RetrieveOtherEmploymentIncomeRequest)(
+        otherEmploymentIncomeConnector
+          .retrieveOtherEmploymentIncome(_: OtherEmploymentIncomeRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

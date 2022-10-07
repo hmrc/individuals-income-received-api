@@ -37,12 +37,12 @@ import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 import support.UnitSpec
 import utils.CurrentDateTime
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequestRawData
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
 
-class RetrieveOtherEmploymentIncomeRequestValidatorSpec extends UnitSpec with MockAppConfig {
+class OtherEmploymentIncomeRequestValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
     val validNino    = "AA123456A"
@@ -57,7 +57,7 @@ class RetrieveOtherEmploymentIncomeRequestValidatorSpec extends UnitSpec with Mo
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    val validator = new RetrieveOtherEmploymentIncomeRequestValidator()
+    val validator = new OtherEmploymentIncomeRequestValidator()
 
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
@@ -70,34 +70,34 @@ class RetrieveOtherEmploymentIncomeRequestValidatorSpec extends UnitSpec with Mo
   "running validation" should {
     "return no errors" when {
       "passed a valid raw request model" in new Test {
-        validator.validate(RetrieveOtherEmploymentIncomeRequestRawData(validNino, validTaxYear)) shouldBe Nil
+        validator.validate(OtherEmploymentIncomeRequestRawData(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "passed an invalid nino" in new Test {
-        validator.validate(RetrieveOtherEmploymentIncomeRequestRawData("A12344A", validTaxYear)) shouldBe
+        validator.validate(OtherEmploymentIncomeRequestRawData("A12344A", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "passed an invalid taxYear" in new Test {
-        validator.validate(RetrieveOtherEmploymentIncomeRequestRawData(validNino, "201920")) shouldBe
+        validator.validate(OtherEmploymentIncomeRequestRawData(validNino, "201920")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(RetrieveOtherEmploymentIncomeRequestRawData(validNino, "2016-17")) shouldBe
+        validator.validate(OtherEmploymentIncomeRequestRawData(validNino, "2016-17")) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(RetrieveOtherEmploymentIncomeRequestRawData(validNino, "2019-23")) shouldBe
+        validator.validate(OtherEmploymentIncomeRequestRawData(validNino, "2019-23")) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }

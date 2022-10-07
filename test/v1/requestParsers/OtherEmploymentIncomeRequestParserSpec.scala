@@ -17,25 +17,25 @@
 package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.errors.{NinoFormatError, TaxYearFormatError, ErrorWrapper, BadRequestError}
 import support.UnitSpec
-import v1.mocks.validators.MockRetrieveOtherEmploymentIncomeValidator
-import v1.models.request.retrieveOtherEmploymentIncome.{RetrieveOtherEmploymentIncomeRequest, RetrieveOtherEmploymentIncomeRequestRawData}
+import v1.mocks.validators.MockOtherEmploymentIncomeValidator
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest}
 
-class RetrieveOtherEmploymentIncomeRequestParserSpec extends UnitSpec {
+class OtherEmploymentIncomeRequestParserSpec extends UnitSpec {
   val nino: String                   = "AA123456B"
   val taxYear: TaxYear               = TaxYear.fromMtd("2019-20")
   val taxYearString: String          = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  private val rawData = RetrieveOtherEmploymentIncomeRequestRawData(
+  private val rawData = OtherEmploymentIncomeRequestRawData(
     nino = nino,
     taxYear = taxYearString
   )
 
-  trait Test extends MockRetrieveOtherEmploymentIncomeValidator {
+  trait Test extends MockOtherEmploymentIncomeValidator {
 
-    lazy val parser: RetrieveOtherEmploymentIncomeRequestParser = new RetrieveOtherEmploymentIncomeRequestParser(
+    lazy val parser: OtherEmploymentIncomeRequestParser = new OtherEmploymentIncomeRequestParser(
       validator = mockValidator
     )
 
@@ -44,34 +44,34 @@ class RetrieveOtherEmploymentIncomeRequestParserSpec extends UnitSpec {
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockRetrieveOtherEmploymentIncomeValidator
+        MockOtherEmploymentIncomeValidator
           .validate(rawData)
           .returns(Nil)
 
-        val result: Either[ErrorWrapper, RetrieveOtherEmploymentIncomeRequest] =
+        val result: Either[ErrorWrapper, OtherEmploymentIncomeRequest] =
           parser.parseRequest(rawData)
-        result shouldBe Right(RetrieveOtherEmploymentIncomeRequest(Nino(nino), taxYear))
+        result shouldBe Right(OtherEmploymentIncomeRequest(Nino(nino), taxYear))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation occurs" in new Test {
-        MockRetrieveOtherEmploymentIncomeValidator
+        MockOtherEmploymentIncomeValidator
           .validate(rawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
-        val result: Either[ErrorWrapper, RetrieveOtherEmploymentIncomeRequest] =
+        val result: Either[ErrorWrapper, OtherEmploymentIncomeRequest] =
           parser.parseRequest(rawData.copy(nino = "notANino"))
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError, None))
 
       }
 
       "multiple validation errors occur" in new Test {
-        MockRetrieveOtherEmploymentIncomeValidator
+        MockOtherEmploymentIncomeValidator
           .validate(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
-        val result: Either[ErrorWrapper, RetrieveOtherEmploymentIncomeRequest] =
+        val result: Either[ErrorWrapper, OtherEmploymentIncomeRequest] =
           parser.parseRequest(rawData.copy(nino = "notANino", taxYear = "notATaxYear"))
         result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }

@@ -16,29 +16,28 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers.{BaseController, AuthorisedController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, ControllerComponents, AnyContent}
 import play.mvc.Http.MimeTypes
-import utils.{IdGenerator, Logging}
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequestRawData
+import utils.{Logging, IdGenerator}
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentHateoasData
-import v1.requestParsers.RetrieveOtherEmploymentIncomeRequestParser
-import v1.services.DeleteRetrieveOtherEmploymentIncomeService
-
+import v1.requestParsers.OtherEmploymentIncomeRequestParser
+import v1.services.OtherEmploymentIncomeService
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
 
 @Singleton
 class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
-                                                   requestParser: RetrieveOtherEmploymentIncomeRequestParser,
-                                                   service: DeleteRetrieveOtherEmploymentIncomeService,
+                                                   requestParser: OtherEmploymentIncomeRequestParser,
+                                                   service: OtherEmploymentIncomeService,
                                                    hateoasFactory: HateoasFactory,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -59,7 +58,7 @@ class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAu
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: RetrieveOtherEmploymentIncomeRequestRawData = RetrieveOtherEmploymentIncomeRequestRawData(
+      val rawData: OtherEmploymentIncomeRequestRawData = OtherEmploymentIncomeRequestRawData(
         nino = nino,
         taxYear = taxYear
       )
@@ -97,7 +96,7 @@ class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAu
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case TysNotFoundError        => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }

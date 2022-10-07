@@ -23,33 +23,31 @@ import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.DeleteRetrieveOtherEmploymentIncomeConnector
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.connectors.OtherEmploymentIncomeConnector
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteRetrieveOtherEmploymentIncomeService @Inject() (connector: DeleteRetrieveOtherEmploymentIncomeConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class OtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def delete(request: DeleteOtherEmploymentIncomeRequest)(implicit
+  def delete(request: OtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request)).leftMap(mapDownstreamErrors(errorMap))
+      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request))
+        .leftMap(mapDownstreamErrors(errorMap ++ Map("NO_DATA_FOUND" -> NotFoundError)))
     } yield desResponseWrapper
 
     result.value
   }
 
-  def retrieve(request: RetrieveOtherEmploymentIncomeRequest)(implicit
+  def retrieve(request: OtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
@@ -57,7 +55,7 @@ class DeleteRetrieveOtherEmploymentIncomeService @Inject() (connector: DeleteRet
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveOtherEmploymentIncome(request))
-        .leftMap(mapDownstreamErrors(errorMap))
+        .leftMap(mapDownstreamErrors(errorMap ++ Map("NO_DATA_FOUND" -> TysNotFoundError)))
     } yield desResponseWrapper
 
     result.value
@@ -68,7 +66,6 @@ class DeleteRetrieveOtherEmploymentIncomeService @Inject() (connector: DeleteRet
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "NO_DATA_FOUND"             -> NotFoundError, // TODO this should be not found
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )

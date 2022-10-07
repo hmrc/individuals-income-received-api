@@ -21,17 +21,16 @@ import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import config.AppConfig
 import play.api.http.Status.NO_CONTENT
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteRetrieveOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class OtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deleteOtherEmploymentIncome(request: DeleteOtherEmploymentIncomeRequest)(implicit
+  def deleteOtherEmploymentIncome(request: OtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
@@ -52,7 +51,7 @@ class DeleteRetrieveOtherEmploymentIncomeConnector @Inject() (val http: HttpClie
     )
   }
 
-  def retrieveOtherEmploymentIncome(request: RetrieveOtherEmploymentIncomeRequest)(implicit
+  def retrieveOtherEmploymentIncome(request: OtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]] = {

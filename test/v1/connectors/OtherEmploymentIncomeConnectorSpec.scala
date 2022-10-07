@@ -19,14 +19,13 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
-import v1.models.request.retrieveOtherEmploymentIncome.RetrieveOtherEmploymentIncomeRequest
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 import v1.fixtures.OtherIncomeEmploymentFixture.retrieveResponse
 
 import scala.concurrent.Future
 
-class DeleteRetrieveOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
+class OtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA123456A"
 
@@ -34,20 +33,20 @@ class DeleteRetrieveOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
     def taxYear: TaxYear
 
-    protected val connector: DeleteRetrieveOtherEmploymentIncomeConnector =
-      new DeleteRetrieveOtherEmploymentIncomeConnector(
+    protected val connector: OtherEmploymentIncomeConnector =
+      new OtherEmploymentIncomeConnector(
         http = mockHttpClient,
         appConfig = mockAppConfig
       )
 
   }
 
-  "DeleteRetrieveOtherEmploymentIncomeConnector" should {
+  "OtherEmploymentIncomeConnector" should {
     "return a 200 result on delete" when {
       "the downstream call is successful and not tax year specific" in new DesTest with Test {
-        def taxYear: TaxYear                                  = TaxYear.fromMtd("2017-18")
-        val deleteRequest: DeleteOtherEmploymentIncomeRequest = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
-        val outcome: Right[Nothing, ResponseWrapper[Unit]]    = Right(ResponseWrapper(correlationId, ()))
+        def taxYear: TaxYear                               = TaxYear.fromMtd("2017-18")
+        val deleteRequest: OtherEmploymentIncomeRequest    = OtherEmploymentIncomeRequest(Nino(nino), taxYear)
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(s"$baseUrl/income-tax/income/other/employments/$nino/2017-18") returns Future.successful(outcome)
 
@@ -55,9 +54,9 @@ class DeleteRetrieveOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
       }
 
       "the downstream call is successful and is tax year specific" in new TysIfsTest with Test {
-        def taxYear: TaxYear                                  = TaxYear.fromMtd("2023-24")
-        val deleteRequest: DeleteOtherEmploymentIncomeRequest = DeleteOtherEmploymentIncomeRequest(Nino(nino), taxYear)
-        val outcome: Right[Nothing, ResponseWrapper[Unit]]    = Right(ResponseWrapper(correlationId, ()))
+        def taxYear: TaxYear                               = TaxYear.fromMtd("2023-24")
+        val deleteRequest: OtherEmploymentIncomeRequest    = OtherEmploymentIncomeRequest(Nino(nino), taxYear)
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(s"$baseUrl/income-tax/income/other/employments/23-24/$nino") returns Future.successful(outcome)
 
@@ -70,7 +69,7 @@ class DeleteRetrieveOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
       "the downstream call is successful and is not tax year specific" in new DesTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val retrieveRequest: RetrieveOtherEmploymentIncomeRequest = RetrieveOtherEmploymentIncomeRequest(
+        val retrieveRequest: OtherEmploymentIncomeRequest = OtherEmploymentIncomeRequest(
           nino = Nino(nino),
           taxYear = TaxYear.fromMtd("2023-24")
         )
@@ -85,7 +84,7 @@ class DeleteRetrieveOtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
       "the downstream call is successful and is tax year specific" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val retrieveRequest: RetrieveOtherEmploymentIncomeRequest                     = RetrieveOtherEmploymentIncomeRequest(Nino(nino), taxYear)
+        val retrieveRequest: OtherEmploymentIncomeRequest                             = OtherEmploymentIncomeRequest(Nino(nino), taxYear)
         val outcome: Right[Nothing, ResponseWrapper[RetrieveOtherEmploymentResponse]] = Right(ResponseWrapper(correlationId, retrieveResponse))
 
         willGet(s"$baseUrl/income-tax/income/other/employments/23-24/$nino") returns Future.successful(outcome)

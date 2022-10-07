@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteOtherEmploymentIncome
+package v1.models.request.otherEmploymentIncome
 
-import api.models.request.RawData
+import api.models.domain.{Nino, TaxYear}
 
-case class DeleteOtherEmploymentIncomeRequestRawData(nino: String, taxYear: String) extends RawData
+case class OtherEmploymentIncomeRequest(nino: Nino, taxYear: TaxYear)
