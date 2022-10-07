@@ -23,19 +23,11 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockOtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
-import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
-import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
-
 import scala.concurrent.Future
 
-class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
+class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
 
   private val deleteRequest = OtherEmploymentIncomeRequest(
-    nino = Nino("AA112233A"),
-    taxYear = TaxYear.fromMtd("2023-24")
-  )
-
-  private val retrieveRequest = OtherEmploymentIncomeRequest(
     nino = Nino("AA112233A"),
     taxYear = TaxYear.fromMtd("2023-24")
   )
@@ -43,7 +35,7 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
   "OtherEmploymentIncomeSpec" when {
     "the downstream delete request is successful" must {
       "return a success result" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         OtherEmploymentIncomeConnector
           .deleteOtherEmploymentIncome(deleteRequest)
@@ -83,55 +75,10 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
       }
     }
 
-    "the downstream retrieve request is successful" must {
-      "return a success result" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))
-
-        OtherEmploymentIncomeConnector
-          .retrieveOtherEmploymentIncome(retrieveRequest)
-          .returns(Future.successful(outcome))
-
-        await(retrieveService.retrieve(retrieveRequest)) shouldBe outcome
-      }
-
-      "map errors according to spec" when {
-
-        def serviceError(downstreamErrorCode: String, error: MtdError): Unit = {
-
-          s"downstream returns $downstreamErrorCode" in new Test {
-            OtherEmploymentIncomeConnector
-              .retrieveOtherEmploymentIncome(retrieveRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
-
-            val result: Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]] = await(retrieveService.retrieve(retrieveRequest))
-            result shouldBe Left(ErrorWrapper(correlationId, error))
-          }
-        }
-
-        val errors = Seq(
-          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-          ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
-        )
-
-        val extraTysErrors = Seq(
-          ("NO_DATA_FOUND", NotFoundError),
-          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
-        )
-
-        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
-      }
-    }
-
   }
 
   trait Test extends MockOtherEmploymentIncomeConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    val retrieveService: RetrieveOtherEmploymentIncomeService =
-      new RetrieveOtherEmploymentIncomeService(otherEmploymentIncomeConnector)
 
     val deleteService: DeleteOtherEmploymentIncomeService =
       new DeleteOtherEmploymentIncomeService(otherEmploymentIncomeConnector)
