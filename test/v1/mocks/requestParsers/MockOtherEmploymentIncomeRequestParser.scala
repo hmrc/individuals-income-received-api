@@ -19,21 +19,21 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.deleteOtherEmploymentIncome.{DeleteOtherEmploymentIncomeRequest, DeleteOtherEmploymentIncomeRequestRawData}
-import v1.requestParsers.DeleteOtherEmploymentIncomeRequestParser
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest}
+import v1.requestParsers.OtherEmploymentIncomeRequestParser
 
-trait MockDeleteOtherEmploymentIncomeRequestParser extends MockFactory {
+trait MockOtherEmploymentIncomeRequestParser extends MockFactory {
 
-  val mockDeleteOtherEmploymentIncomeRequestParser: DeleteOtherEmploymentIncomeRequestParser =
-    mock[DeleteOtherEmploymentIncomeRequestParser]
+  val mockOtherEmploymentIncomeRequestParser: OtherEmploymentIncomeRequestParser =
+    mock[OtherEmploymentIncomeRequestParser]
 
-  object MockDeleteOtherEmploymentIncomeRequestParser {
+  object MockOtherEmploymentIncomeRequestParser {
 
-    def parse(data: DeleteOtherEmploymentIncomeRequestRawData): CallHandler[Either[ErrorWrapper, DeleteOtherEmploymentIncomeRequest]] =
-      (mockDeleteOtherEmploymentIncomeRequestParser
-        .parseRequest(_: DeleteOtherEmploymentIncomeRequestRawData)(_: String))
+    def parse(data: OtherEmploymentIncomeRequestRawData): CallHandler[Either[ErrorWrapper, OtherEmploymentIncomeRequest]] =
+      (mockOtherEmploymentIncomeRequestParser
+        .parseRequest(_: OtherEmploymentIncomeRequestRawData)(_: String))
         .expects(data, *)
+
   }
 
 }
-

@@ -26,9 +26,9 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockDeleteOtherEmploymentIncomeRequestParser
+import v1.mocks.requestParsers.MockOtherEmploymentIncomeRequestParser
 import v1.mocks.services.MockDeleteOtherEmploymentIncomeService
-import v1.models.request.deleteOtherEmploymentIncome.{DeleteOtherEmploymentIncomeRequest, DeleteOtherEmploymentIncomeRequestRawData}
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequest, OtherEmploymentIncomeRequestRawData}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +38,7 @@ class DeleteOtherEmploymentControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
-    with MockDeleteOtherEmploymentIncomeRequestParser
+    with MockOtherEmploymentIncomeRequestParser
     with MockDeleteOtherEmploymentIncomeService
     with MockAuditService
     with MockIdGenerator {
@@ -47,12 +47,12 @@ class DeleteOtherEmploymentControllerSpec
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteOtherEmploymentIncomeRequestRawData = DeleteOtherEmploymentIncomeRequestRawData(
+  val rawData: OtherEmploymentIncomeRequestRawData = OtherEmploymentIncomeRequestRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteOtherEmploymentIncomeRequest = DeleteOtherEmploymentIncomeRequest(
+  val requestData: OtherEmploymentIncomeRequest = OtherEmploymentIncomeRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
@@ -77,7 +77,7 @@ class DeleteOtherEmploymentControllerSpec
     val controller = new DeleteOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteOtherEmploymentIncomeRequestParser,
+      requestParser = mockOtherEmploymentIncomeRequestParser,
       service = mockDeleteOtherEmploymentIncomeService,
       auditService = mockAuditService,
       cc = cc,
@@ -93,7 +93,7 @@ class DeleteOtherEmploymentControllerSpec
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteOtherEmploymentIncomeRequestParser
+        MockOtherEmploymentIncomeRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -117,7 +117,7 @@ class DeleteOtherEmploymentControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteOtherEmploymentIncomeRequestParser
+            MockOtherEmploymentIncomeRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -147,7 +147,7 @@ class DeleteOtherEmploymentControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteOtherEmploymentIncomeRequestParser
+            MockOtherEmploymentIncomeRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 

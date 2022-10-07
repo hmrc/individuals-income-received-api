@@ -16,20 +16,21 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import config.AppConfig
 import play.api.http.Status.NO_CONTENT
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequest
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class OtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deleteOtherEmploymentIncome(request: DeleteOtherEmploymentIncomeRequest)(implicit
+  def deleteOtherEmploymentIncome(request: OtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
@@ -48,6 +49,25 @@ class DeleteOtherEmploymentIncomeConnector @Inject() (val http: HttpClient, val 
     delete(
       uri = downstreamUri
     )
+  }
+
+  def retrieveOtherEmploymentIncome(request: OtherEmploymentIncomeRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]] = {
+
+    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+
+    val resolvedDownstreamUri = if (request.taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[RetrieveOtherEmploymentResponse](
+        s"income-tax/income/other/employments/${request.taxYear.asTysDownstream}/${request.nino}")
+    } else {
+      DesUri[RetrieveOtherEmploymentResponse](
+        s"income-tax/income/other/employments/${request.nino}/${request.taxYear.asMtd}"
+      )
+    }
+
+    get(uri = resolvedDownstreamUri)
   }
 
 }

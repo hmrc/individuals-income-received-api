@@ -23,27 +23,30 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
-import v1.services.DeleteOtherEmploymentIncomeService
-
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
+import v1.services.RetrieveOtherEmploymentIncomeService
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteOtherEmploymentIncomeService extends MockFactory {
+trait MockRetrieveOtherEmploymentIncomeService extends MockFactory {
 
-  val mockDeleteOtherEmploymentIncomeService: DeleteOtherEmploymentIncomeService =
-    mock[DeleteOtherEmploymentIncomeService]
+  val mockRetrieveOtherEmploymentIncomeService: RetrieveOtherEmploymentIncomeService =
+    mock[RetrieveOtherEmploymentIncomeService]
 
-  object MockDeleteOtherEmploymentIncomeService {
+  object MockRetrieveOtherEmploymentIncomeService {
 
-    def delete(requestData: OtherEmploymentIncomeRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
-      mockDeleteOtherEmploymentIncomeService
-        .delete(_: OtherEmploymentIncomeRequest)(
-          _: HeaderCarrier,
-          _: ExecutionContext,
-          _: EndpointLogContext,
-          _: String
+    def retrieve(
+        request: OtherEmploymentIncomeRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]]]] = {
+      (
+        mockRetrieveOtherEmploymentIncomeService
+          .retrieve(_: OtherEmploymentIncomeRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
         )
-      )
-      .expects(requestData, *, *, *, *)
+        .expects(request, *, *, *, *)
+    }
 
   }
 

@@ -20,32 +20,32 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.{Nino, ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
+import api.mocks.services.{MockMtdIdLookupService, MockEnrolmentsAuthService}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_OTHER_EMPLOYMENT_INCOME, DELETE_OTHER_EMPLOYMENT_INCOME, SELF}
-import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
 import v1.fixtures.RetrieveOtherEmploymentControllerFixture._
+import v1.mocks.requestParsers.MockOtherEmploymentIncomeRequestParser
+import v1.mocks.services.MockRetrieveOtherEmploymentIncomeService
 import v1.models.response.retrieveOtherEmployment._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest}
 
 class RetrieveOtherEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveOtherEmploymentIncomeService
     with MockHateoasFactory
-    with MockDeleteRetrieveRequestParser
+    with MockOtherEmploymentIncomeRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -53,95 +53,14 @@ class RetrieveOtherEmploymentControllerSpec
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: OtherEmploymentIncomeRequestRawData = OtherEmploymentIncomeRequestRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  val requestData: OtherEmploymentIncomeRequest = OtherEmploymentIncomeRequest(
     nino = Nino(nino),
-    taxYear = taxYear
-  )
-
-  private val shareOption = ShareOptionItem(
-    employerName = "Company Ltd",
-    employerRef = Some("123/AB456"),
-    schemePlanType = ShareOptionSchemeType.EMI,
-    dateOfOptionGrant = "2019-11-20",
-    dateOfEvent = "2019-12-22",
-    optionNotExercisedButConsiderationReceived = true,
-    amountOfConsiderationReceived = 23122.22,
-    noOfSharesAcquired = 1,
-    classOfSharesAcquired = "FIRST",
-    exercisePrice = 12.22,
-    amountPaidForOption = 123.22,
-    marketValueOfSharesOnExcise = 1232.22,
-    profitOnOptionExercised = 1232.33,
-    employersNicPaid = 2312.22,
-    taxableAmount = 2132.22
-  )
-
-  private val sharesAwardedOrReceived = SharesAwardedOrReceivedItem(
-    employerName = "Company Ltd",
-    employerRef = Some("123/AB456"),
-    schemePlanType = SharesAwardedOrReceivedSchemeType.SIP,
-    dateSharesCeasedToBeSubjectToPlan = "2019-11-10",
-    noOfShareSecuritiesAwarded = 11,
-    classOfShareAwarded = "FIRST",
-    dateSharesAwarded = "2019-12-20",
-    sharesSubjectToRestrictions = true,
-    electionEnteredIgnoreRestrictions = false,
-    actualMarketValueOfSharesOnAward = 2123.22,
-    unrestrictedMarketValueOfSharesOnAward = 123.22,
-    amountPaidForSharesOnAward = 123.22,
-    marketValueAfterRestrictionsLifted = 1232.22,
-    taxableAmount = 12321.22
-  )
-
-  private val commonOtherEmployment = CommonOtherEmployment(
-    customerReference = Some("customer reference"),
-    amountDeducted = 1223.22
-  )
-
-  private val taxableLumpSumsAndCertainIncome = TaxableLumpSumsAndCertainIncomeItem(
-    amount = 5000.99,
-    taxPaid = Some(3333.33),
-    taxTakenOffInEmployment = true
-  )
-
-  private val benefitFromEmployerFinancedRetirementScheme = BenefitFromEmployerFinancedRetirementSchemeItem(
-    amount = 5000.99,
-    exemptAmount = Some(2345.99),
-    taxPaid = Some(3333.33),
-    taxTakenOffInEmployment = true
-  )
-
-  private val redundancyCompensationPaymentsOverExemption = RedundancyCompensationPaymentsOverExemptionItem(
-    amount = 5000.99,
-    taxPaid = Some(3333.33),
-    taxTakenOffInEmployment = true
-  )
-
-  private val redundancyCompensationPaymentsUnderExemption = RedundancyCompensationPaymentsUnderExemptionItem(
-    amount = Some(5000.99)
-  )
-
-  private val lumpSums = LumpSums(
-    employerName = "BPDTS Ltd",
-    employerRef = "123/AB456",
-    taxableLumpSumsAndCertainIncome = Some(taxableLumpSumsAndCertainIncome),
-    benefitFromEmployerFinancedRetirementScheme = Some(benefitFromEmployerFinancedRetirementScheme),
-    redundancyCompensationPaymentsOverExemption = Some(redundancyCompensationPaymentsOverExemption),
-    redundancyCompensationPaymentsUnderExemption = Some(redundancyCompensationPaymentsUnderExemption)
-  )
-
-  private val retrieveOtherResponseModel: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
-    shareOption = Some(Seq(shareOption)),
-    sharesAwardedOrReceived = Some(Seq(sharesAwardedOrReceived)),
-    disability = Some(commonOtherEmployment),
-    foreignService = Some(commonOtherEmployment),
-    lumpSums = Some(Seq(lumpSums))
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val amendLink: Link = Link(
@@ -168,8 +87,8 @@ class RetrieveOtherEmploymentControllerSpec
     val controller = new RetrieveOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockOtherEmploymentIncomeRequestParser,
+      service = mockRetrieveOtherEmploymentIncomeService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -183,12 +102,12 @@ class RetrieveOtherEmploymentControllerSpec
   "RetrieveOtherEmploymentIncomeController" should {
     "return OK" when {
       "retrieve other employment income endpoint is hit" in new Test {
-        MockDeleteRetrieveRequestParser
+        MockOtherEmploymentIncomeRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrieveOtherEmploymentResponse](defaultDownstreamErrorMap)
+        MockRetrieveOtherEmploymentIncomeService
+          .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))))
 
         MockHateoasFactory
@@ -217,7 +136,7 @@ class RetrieveOtherEmploymentControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockOtherEmploymentIncomeRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -244,12 +163,12 @@ class RetrieveOtherEmploymentControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockOtherEmploymentIncomeRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .retrieve[RetrieveOtherEmploymentResponse](defaultDownstreamErrorMap)
+            MockRetrieveOtherEmploymentIncomeService
+              .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveOther(nino, taxYear)(fakeGetRequest)
@@ -261,8 +180,10 @@ class RetrieveOtherEmploymentControllerSpec
         }
 
         val input = Seq(
+          (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )

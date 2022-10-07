@@ -17,20 +17,20 @@
 package v1.mocks.validators
 
 import api.models.errors.MtdError
-import api.requestParsers.validators.DeleteOtherEmploymentIncomeRequestValidator
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.deleteOtherEmploymentIncome.DeleteOtherEmploymentIncomeRequestRawData
+import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
+import v1.requestParsers.validators.OtherEmploymentIncomeRequestValidator
 
-trait MockDeleteOtherEmploymentIncomeValidator extends MockFactory {
+trait MockOtherEmploymentIncomeValidator extends MockFactory {
 
-  val mockValidator: DeleteOtherEmploymentIncomeRequestValidator = mock[DeleteOtherEmploymentIncomeRequestValidator]
+  val mockValidator: OtherEmploymentIncomeRequestValidator = mock[OtherEmploymentIncomeRequestValidator]
 
-  object MockDeleteOtherEmploymentIncomeValidator {
+  object MockOtherEmploymentIncomeValidator {
 
-    def validate(data: DeleteOtherEmploymentIncomeRequestRawData): CallHandler1[DeleteOtherEmploymentIncomeRequestRawData, List[MtdError]] = {
+    def validate(data: OtherEmploymentIncomeRequestRawData): CallHandler1[OtherEmploymentIncomeRequestRawData, List[MtdError]] = {
       (mockValidator
-        .validate(_: DeleteOtherEmploymentIncomeRequestRawData))
+        .validate(_: OtherEmploymentIncomeRequestRawData))
         .expects(data)
     }
 

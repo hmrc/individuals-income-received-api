@@ -18,17 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-import api.requestParsers.validators.DeleteOtherEmploymentIncomeRequestValidator
-import v1.models.request.deleteOtherEmploymentIncome.{DeleteOtherEmploymentIncomeRequest, DeleteOtherEmploymentIncomeRequestRawData}
-
 import javax.inject.{Inject, Singleton}
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest}
+import v1.requestParsers.validators.OtherEmploymentIncomeRequestValidator
 
 @Singleton
-class DeleteOtherEmploymentIncomeRequestParser @Inject() (val validator: DeleteOtherEmploymentIncomeRequestValidator)
-    extends RequestParser[DeleteOtherEmploymentIncomeRequestRawData, DeleteOtherEmploymentIncomeRequest] {
+class OtherEmploymentIncomeRequestParser @Inject() (val validator: OtherEmploymentIncomeRequestValidator)
+    extends RequestParser[OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest] {
 
-  override protected def requestFor(data: DeleteOtherEmploymentIncomeRequestRawData): DeleteOtherEmploymentIncomeRequest =
-    DeleteOtherEmploymentIncomeRequest(
+  override protected def requestFor(data: OtherEmploymentIncomeRequestRawData): OtherEmploymentIncomeRequest =
+    OtherEmploymentIncomeRequest(
       Nino(data.nino),
       TaxYear.fromMtd(data.taxYear)
     )

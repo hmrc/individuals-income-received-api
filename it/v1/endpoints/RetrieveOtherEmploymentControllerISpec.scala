@@ -16,12 +16,12 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.stubs.{AuditStub, MtdIdLookupStub, DownstreamStub, AuthStub}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{Json, JsValue}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
@@ -31,37 +31,60 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String    = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String = "AA123456A"
+    def taxYear: String
 
-    val desResponse: JsValue = RetrieveOtherEmploymentControllerFixture.mtdResponse
-    val mtdResponse: JsValue = RetrieveOtherEmploymentControllerFixture.mtdResponseWithHateoas(nino, taxYear)
-
-    def uri: String = s"/employments/other/$nino/$taxYear"
-
-    def desUri: String = s"/income-tax/income/other/employments/$nino/$taxYear"
+    val downstreamResponse: JsValue = RetrieveOtherEmploymentControllerFixture.mtdResponse
+    val mtdResponse: JsValue        = RetrieveOtherEmploymentControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/employments/other/$nino/$taxYear")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+  }
+
+  private trait NonTysTest extends Test {
+    override def taxYear: String = "2020-21"
+
+    def downstreamUri: String = s"/income-tax/income/other/employments/$nino/$taxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    override def taxYear: String = "2023-24"
+
+    def downstreamUri: String = s"/income-tax/income/other/employments/23-24/$nino"
   }
 
   "Calling the 'retrieve other' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made to the DES endpoint" in new NonTysTest {
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made to the TYS endpoint" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -75,10 +98,10 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
       "validation error" when {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String    = requestNino
-            override val taxYear: String = requestTaxYear
+            override def taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -104,16 +127,17 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
 
       "des service error" when {
         def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
-
+          s"des returns an $desCode error and status $desStatus" in new NonTysTest {
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request.get)
+            println(Json.toJson(expectedBody))
+            println(response.json)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -136,8 +160,15 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError)
+        )
+
+        (input ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }
