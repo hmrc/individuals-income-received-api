@@ -26,26 +26,13 @@ import utils.Logging
 import v1.connectors.OtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector) extends DownstreamResponseMappingSupport with Logging {
-
-  def delete(request: OtherEmploymentIncomeRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    val result = for {
-      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request))
-        .leftMap(mapDownstreamErrors(errorMap ++ Map("NO_DATA_FOUND" -> NotFoundError)))
-    } yield desResponseWrapper
-
-    result.value
-  }
+class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def retrieve(request: OtherEmploymentIncomeRequest)(implicit
       hc: HeaderCarrier,
@@ -55,7 +42,7 @@ class OtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeCo
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveOtherEmploymentIncome(request))
-        .leftMap(mapDownstreamErrors(errorMap ++ Map("NO_DATA_FOUND" -> TysNotFoundError)))
+        .leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
@@ -66,12 +53,14 @@ class OtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeCo
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "NO_DATA_FOUND"             -> NotFoundError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
 
     val extraTysErrors = Map(
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+      "NOT_FOUND"              -> NotFoundError
     )
     errorMap ++ extraTysErrors
   }

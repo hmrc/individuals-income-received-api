@@ -27,7 +27,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockOtherEmploymentIncomeRequestParser
-import v1.mocks.services.MockOtherEmploymentIncomeService
+import v1.mocks.services.MockDeleteOtherEmploymentIncomeService
 import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequest, OtherEmploymentIncomeRequestRawData}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,7 +39,7 @@ class DeleteOtherEmploymentControllerSpec
     with MockMtdIdLookupService
     with MockDeleteRetrieveService
     with MockOtherEmploymentIncomeRequestParser
-    with MockOtherEmploymentIncomeService
+    with MockDeleteOtherEmploymentIncomeService
     with MockAuditService
     with MockIdGenerator {
 
@@ -78,7 +78,7 @@ class DeleteOtherEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockOtherEmploymentIncomeRequestParser,
-      service = mockOtherEmploymentIncomeService,
+      service = mockDeleteOtherEmploymentIncomeService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -97,7 +97,7 @@ class DeleteOtherEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockOtherEmploymentIncomeService
+        MockDeleteOtherEmploymentIncomeService
           .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
@@ -151,7 +151,7 @@ class DeleteOtherEmploymentControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockOtherEmploymentIncomeService
+            MockDeleteOtherEmploymentIncomeService
               .delete(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 

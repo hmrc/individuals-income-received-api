@@ -30,7 +30,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
 import v1.requestParsers.OtherEmploymentIncomeRequestParser
-import v1.services.OtherEmploymentIncomeService
+import v1.services.DeleteOtherEmploymentIncomeService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
                                                  requestParser: OtherEmploymentIncomeRequestParser,
-                                                 service: OtherEmploymentIncomeService,
+                                                 service: DeleteOtherEmploymentIncomeService,
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)

@@ -49,7 +49,7 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
           .deleteOtherEmploymentIncome(deleteRequest)
           .returns(Future.successful(outcome))
 
-        await(service.delete(deleteRequest)) shouldBe outcome
+        await(deleteService.delete(deleteRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -61,7 +61,7 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
               .deleteOtherEmploymentIncome(deleteRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(deleteRequest))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(deleteService.delete(deleteRequest))
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
         }
@@ -91,7 +91,7 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
           .retrieveOtherEmploymentIncome(retrieveRequest)
           .returns(Future.successful(outcome))
 
-        await(service.retrieve(retrieveRequest)) shouldBe outcome
+        await(retrieveService.retrieve(retrieveRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -103,7 +103,7 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
               .retrieveOtherEmploymentIncome(retrieveRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            val result: Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]] = await(service.retrieve(retrieveRequest))
+            val result: Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]] = await(retrieveService.retrieve(retrieveRequest))
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
         }
@@ -117,7 +117,7 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
         )
 
         val extraTysErrors = Seq(
-          ("NO_DATA_FOUND", TysNotFoundError),
+          ("NO_DATA_FOUND", NotFoundError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
 
@@ -130,8 +130,11 @@ class OtherEmploymentIncomeServiceSpec extends ServiceSpec {
   trait Test extends MockOtherEmploymentIncomeConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: OtherEmploymentIncomeService =
-      new OtherEmploymentIncomeService(otherEmploymentIncomeConnector)
+    val retrieveService: RetrieveOtherEmploymentIncomeService =
+      new RetrieveOtherEmploymentIncomeService(otherEmploymentIncomeConnector)
+
+    val deleteService: DeleteOtherEmploymentIncomeService =
+      new DeleteOtherEmploymentIncomeService(otherEmploymentIncomeConnector)
 
   }
 

@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
 import v1.fixtures.RetrieveOtherEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockOtherEmploymentIncomeRequestParser
-import v1.mocks.services.MockOtherEmploymentIncomeService
+import v1.mocks.services.MockRetrieveOtherEmploymentIncomeService
 import v1.models.response.retrieveOtherEmployment._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,7 +43,7 @@ class RetrieveOtherEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockOtherEmploymentIncomeService
+    with MockRetrieveOtherEmploymentIncomeService
     with MockHateoasFactory
     with MockOtherEmploymentIncomeRequestParser
     with HateoasLinks
@@ -88,7 +88,7 @@ class RetrieveOtherEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockOtherEmploymentIncomeRequestParser,
-      service = mockOtherEmploymentIncomeService,
+      service = mockRetrieveOtherEmploymentIncomeService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -106,7 +106,7 @@ class RetrieveOtherEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockOtherEmploymentIncomeService
+        MockRetrieveOtherEmploymentIncomeService
           .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))))
 
@@ -167,7 +167,7 @@ class RetrieveOtherEmploymentControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockOtherEmploymentIncomeService
+            MockRetrieveOtherEmploymentIncomeService
               .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
@@ -185,7 +185,7 @@ class RetrieveOtherEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (TysNotFoundError, NOT_FOUND),
+          (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 

@@ -28,7 +28,7 @@ import play.mvc.Http.MimeTypes
 import utils.{Logging, IdGenerator}
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentHateoasData
 import v1.requestParsers.OtherEmploymentIncomeRequestParser
-import v1.services.OtherEmploymentIncomeService
+import v1.services.RetrieveOtherEmploymentIncomeService
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
@@ -37,7 +37,7 @@ import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawDa
 class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
                                                    requestParser: OtherEmploymentIncomeRequestParser,
-                                                   service: OtherEmploymentIncomeService,
+                                                   service: RetrieveOtherEmploymentIncomeService,
                                                    hateoasFactory: HateoasFactory,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -96,7 +96,7 @@ class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAu
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
-      case TysNotFoundError        => NotFound(Json.toJson(errorWrapper))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
