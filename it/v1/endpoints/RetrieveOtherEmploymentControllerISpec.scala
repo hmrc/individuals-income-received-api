@@ -136,8 +136,6 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
             }
 
             val response: WSResponse = await(request.get)
-            println(Json.toJson(expectedBody))
-            println(response.json)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
