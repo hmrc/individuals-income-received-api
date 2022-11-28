@@ -19,20 +19,23 @@ package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import api.models.errors._
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountHateoasData
 import v1.requestParsers.AddUkSavingsAccountRequestParser
 import v1.services.AddUkSavingsAccountService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -40,6 +43,7 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
                                               val lookupService: MtdIdLookupService,
                                               requestParser: AddUkSavingsAccountRequestParser,
                                               service: AddUkSavingsAccountService,
+                                              auditService: AuditService,
                                               hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -75,6 +79,17 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - Success response received with CorrelationId: ${serviceResponse.correlationId}"
           )
 
+          auditSubmission(
+            FlattenedGenericAuditDetail(
+              versionNumber = Some("1.0"),
+              request.userDetails,
+              Map("nino" -> nino),
+              Some(request.body),
+              serviceResponse.correlationId,
+              AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(serviceResponse.responseData))))
+            )
+          )
+
           Ok(Json.toJson(hateoasResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -85,6 +100,17 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
         val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - Error response received with CorrelationId: $resCorrelationId")
+
+        auditSubmission(
+          FlattenedGenericAuditDetail(
+            Some("1.0"),
+            request.userDetails,
+            Map("nino" -> nino),
+            Some(request.body),
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
 
         result
       }.merge
@@ -101,6 +127,9 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
       case _                       => unhandledError(errorWrapper)
     }
 
-
+  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent("AddUkSavingsAccount", "add-uk-savings-account", details)
+    auditService.auditEvent(event)
+  }
 }
 

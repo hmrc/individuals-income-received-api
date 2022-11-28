@@ -108,7 +108,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
         contentAsString(result) shouldBe ""
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, Right(Some(testHateoasLinksJson)))
+        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, Right(None))
         MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
       }
     }

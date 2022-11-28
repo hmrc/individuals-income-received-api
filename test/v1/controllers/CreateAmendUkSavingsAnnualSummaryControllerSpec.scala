@@ -130,7 +130,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
         contentAsJson(result) shouldBe testHateoasLinksJson
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(testHateoasLinksJson)))
+        val auditResponse: AuditResponse = AuditResponse(OK, Right(None))
         MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
       }
     }
