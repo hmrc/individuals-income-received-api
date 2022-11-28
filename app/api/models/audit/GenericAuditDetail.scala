@@ -64,7 +64,8 @@ case class FlattenedGenericAuditDetail(versionNumber: Option[String],
                                        `X-CorrelationId`: String,
                                        response: String,
                                        httpStatusCode: Int,
-                                       errorCodes: Option[Seq[String]])
+                                       errorCodes: Option[Seq[String]],
+                                       responseBody: Option[JsValue])
 
 object FlattenedGenericAuditDetail {
 
@@ -77,7 +78,8 @@ object FlattenedGenericAuditDetail {
       (JsPath \ "X-CorrelationId").write[String] and
       (JsPath \ "response").write[String] and
       (JsPath \ "httpStatusCode").write[Int] and
-      (JsPath \ "errorCodes").writeNullable[Seq[String]]
+      (JsPath \ "errorCodes").writeNullable[Seq[String]] and
+      JsPath.writeNullable[JsValue]
   )(unlift(FlattenedGenericAuditDetail.unapply))
 
   def apply(versionNumber: Option[String] = None,
@@ -96,7 +98,8 @@ object FlattenedGenericAuditDetail {
       `X-CorrelationId` = `X-CorrelationId`,
       response = if (auditResponse.errors.exists(_.nonEmpty)) "error" else "success",
       httpStatusCode = auditResponse.httpStatus,
-      errorCodes = auditResponse.errors.map(_.map(_.errorCode))
+      errorCodes = auditResponse.errors.map(_.map(_.errorCode)),
+      responseBody = auditResponse.body
     )
   }
 
