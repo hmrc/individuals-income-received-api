@@ -22,7 +22,7 @@ import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -139,7 +139,7 @@ class CreateAmendOtherCgtControllerSpec
 
   val requestData: CreateAmendOtherCgtRequest = CreateAmendOtherCgtRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = requestModel
   )
 
@@ -263,8 +263,6 @@ class CreateAmendOtherCgtControllerSpec
           (AssetDescriptionFormatError, BAD_REQUEST),
           (AssetTypeFormatError, BAD_REQUEST),
           (ClaimOrElectionCodesFormatError, BAD_REQUEST),
-          (RuleDisposalDateError, BAD_REQUEST),
-          (RuleAcquisitionDateError, BAD_REQUEST),
           (RuleGainAfterReliefLossAfterReliefError, BAD_REQUEST)
         )
 
@@ -301,6 +299,9 @@ class CreateAmendOtherCgtControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
+          (RuleDisposalDateError, BAD_REQUEST),
+          (RuleAcquisitionDateError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 

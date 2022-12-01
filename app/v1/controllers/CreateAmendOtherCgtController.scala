@@ -99,7 +99,7 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -119,14 +119,31 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleGainLossError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(
-            DateFormatError.code) | CustomMtdError(AssetDescriptionFormatError.code) | CustomMtdError(AssetTypeFormatError.code) | CustomMtdError(
-            ClaimOrElectionCodesFormatError.code) | CustomMtdError(RuleDisposalDateError.code) | CustomMtdError(RuleAcquisitionDateError.code) |
-          CustomMtdError(RuleGainAfterReliefLossAfterReliefError.code) =>
+      case _
+        if errorWrapper.containsAnyOf(
+          BadRequestError,
+          NinoFormatError,
+          TaxYearFormatError,
+          RuleTaxYearNotSupportedError,
+          RuleTaxYearRangeInvalidError,
+        ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(RuleGainLossError.code) |
+           CustomMtdError(ValueFormatError.code) |
+           CustomMtdError(DateFormatError.code) |
+           CustomMtdError(AssetDescriptionFormatError.code) |
+           CustomMtdError(AssetTypeFormatError.code) |
+           CustomMtdError(ClaimOrElectionCodesFormatError.code) |
+           CustomMtdError(RuleDisposalDateError.code) |
+           CustomMtdError(RuleAcquisitionDateError.code) |
+           CustomMtdError(RuleGainAfterReliefLossAfterReliefError.code) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case RuleDisposalDateError |
+           RuleAcquisitionDateError =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case _ => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

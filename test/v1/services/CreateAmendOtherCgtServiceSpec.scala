@@ -17,8 +17,8 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.fixtures.other.CreateAmendOtherCgtConnectorServiceFixture.mtdRequestBody
@@ -30,7 +30,7 @@ import scala.concurrent.Future
 class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
+  private val taxYear = TaxYear.fromMtd("2019-20")
 
   val createAmendOtherCgtRequest: CreateAmendOtherCgtRequest = CreateAmendOtherCgtRequest(
     nino = Nino(nino),
@@ -61,39 +61,44 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
 
     "map errors according to spec" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the connector" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the connector" in new Test {
 
           MockCreateAmendOtherCgtConnector
             .createAndAmend(createAmendOtherCgtRequest)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error inside 'failures' array element is returned from the connector " in new Test {
+      def failuresArrayError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error inside 'failures' array element is returned from the connector " in new Test {
 
           MockCreateAmendOtherCgtConnector
             .createAndAmend(createAmendOtherCgtRequest)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(downstreamErrorCode)))))))
 
           await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_CORRELATIONID", StandardDownstreamError),
         ("INVALID_PAYLOAD", StandardDownstreamError),
-        ("INVALID_DISPOSAL_DATE", StandardDownstreamError),
-        ("INVALID_ACQUISITION_DATE", StandardDownstreamError),
+        ("INVALID_DISPOSAL_DATE", RuleDisposalDateError),
+        ("INVALID_ACQUISITION_DATE", RuleAcquisitionDateError),
         ("SERVER_ERROR", StandardDownstreamError),
         ("SERVICE_UNAVAILABLE", StandardDownstreamError)
       )
 
-      input.foreach(args => (serviceError _).tupled(args))
-      input.foreach(args => (failuresArrayError _).tupled(args))
+      val extraTysErrors = Seq(
+        ("INVALID_CORRELATION_ID" -> StandardDownstreamError),
+        ("TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError)
+      )
+
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => (failuresArrayError _).tupled(args))
     }
   }
 
