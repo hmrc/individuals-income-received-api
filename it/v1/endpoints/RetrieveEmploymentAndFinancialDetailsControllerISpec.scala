@@ -17,7 +17,17 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  EmploymentIdFormatError,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SourceFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -27,7 +37,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 
-class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
+class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -55,8 +65,9 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
   }
 
   "Calling retrieve financial details endpoint" should {
@@ -175,4 +186,5 @@ class RetrieveFinancialDetailsControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

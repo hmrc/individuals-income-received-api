@@ -236,7 +236,7 @@ object RetrieveFinancialDetailsControllerFixture {
       ))
   )
 
-  val model: RetrieveFinancialDetailsResponse = RetrieveFinancialDetailsResponse(
+  val model: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
     submittedOn = "2020-01-04T05:01:01Z",
     source = Some(MtdSourceEnum.latest),
     customerAdded = Some("2020-04-04T01:01:01Z"),

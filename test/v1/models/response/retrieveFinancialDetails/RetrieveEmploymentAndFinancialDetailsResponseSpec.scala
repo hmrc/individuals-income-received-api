@@ -24,18 +24,18 @@ import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 
-class RetrieveFinancialDetailsResponseSpec extends UnitSpec {
+class RetrieveEmploymentAndFinancialDetailsResponseSpec extends UnitSpec {
 
   "RetrieveFinancialDetailsResponse" when {
     "read from valid JSON" should {
       "produce the expected 'RetrieveFinancialDetailsResponse' object" in {
-        ifsJson.as[RetrieveFinancialDetailsResponse] shouldBe model
+        ifsJson.as[RetrieveEmploymentAndFinancialDetailsResponse] shouldBe model
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        JsObject.empty.validate[RetrieveFinancialDetailsResponse] shouldBe a[JsError]
+        JsObject.empty.validate[RetrieveEmploymentAndFinancialDetailsResponse] shouldBe a[JsError]
       }
     }
 
