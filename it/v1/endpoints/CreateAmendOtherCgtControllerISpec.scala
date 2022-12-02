@@ -16,8 +16,8 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{AssetDescriptionFormatError, AssetTypeFormatError, BadRequestError, ClaimOrElectionCodesFormatError, DateFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -427,13 +427,14 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def verifyNrs(payload: JsValue): Unit =
       verify(
         postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
           .withRequestBody(equalToJson(payload.toString())))
+
   }
 
   "Calling the 'create and amend other CGT' endpoint" should {
@@ -513,10 +514,10 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.put(validRequestJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -546,4 +547,5 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
       }
     }
   }
+
 }

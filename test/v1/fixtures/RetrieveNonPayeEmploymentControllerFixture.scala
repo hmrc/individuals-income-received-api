@@ -35,7 +35,7 @@ object RetrieveNonPayeEmploymentControllerFixture {
       |""".stripMargin
   )
 
-  val desResponse: JsValue = Json.parse(
+  val downstreamResponse: JsValue = Json.parse(
     """
       |{
       | "submittedOn": "2020-07-06T09:37:17Z",

@@ -16,20 +16,20 @@
 
 package v1.controllers
 
+import api.connectors.DownstreamUri
+import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
 import api.models.errors._
+import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.domain.MtdSourceEnum
-import api.models.domain.MtdSourceEnum.latest
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
-import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
+import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 import v1.models.response.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeHateoasData, RetrieveNonPayeEmploymentIncomeResponse}
 import v1.requestParsers.RetrieveNonPayeEmploymentRequestParser
 
@@ -43,6 +43,7 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
                                                      service: DeleteRetrieveService,
                                                      hateoasFactory: HateoasFactory,
                                                      cc: ControllerComponents,
+                                                     appConfig: AppConfig,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
@@ -67,20 +68,14 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
         source = source
       )
 
-      val ifsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
-        s"income-tax/income/employments/non-paye/$nino/$taxYear?view" +
-          s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveNonPayeEmploymentIncomeResponse](ifsUri, desErrorMap))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
-              .asRight[ErrorWrapper])
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          uri = downstreamUri(parsedRequest)
+          serviceResponse <- EitherT(service.retrieve[RetrieveNonPayeEmploymentIncomeResponse](uri, desErrorMap))
         } yield {
+          val vendorResponse = hateoasFactory.wrap(serviceResponse.responseData, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
+
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
@@ -110,6 +105,23 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
       case _                       => InternalServerError(Json.toJson(errorWrapper))
     }
 
+  private def downstreamUri(parsedRequest: RetrieveNonPayeEmploymentIncomeRequest): DownstreamUri[RetrieveNonPayeEmploymentIncomeResponse] = {
+    import parsedRequest._
+
+    implicit val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
+
+    if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[RetrieveNonPayeEmploymentIncomeResponse](
+        s"income-tax/income/employments/non-paye/${taxYear.asTysDownstream}/${nino.value}?view=${source.toDesViewString}"
+      )
+    } else {
+      Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
+        // Note tax year is in MTD format
+        s"income-tax/income/employments/non-paye/${nino.value}/${taxYear.asMtd}?view=${source.toDesViewString}"
+      )
+    }
+  }
+
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
@@ -117,6 +129,7 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
       "INVALID_VIEW"              -> StandardDownstreamError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
       "NO_DATA_FOUND"             -> NotFoundError,
+      "NOT_FOUND"                 -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
