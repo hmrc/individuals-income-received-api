@@ -68,7 +68,7 @@ class RetrieveFinancialDetailsController @Inject() (val authService: EnrolmentsA
         source = source
       )
 
-      implicit val desUri: Release6Uri[RetrieveFinancialDetailsResponse] = Release6Uri[RetrieveFinancialDetailsResponse](
+      val desUri: Release6Uri[RetrieveFinancialDetailsResponse] = Release6Uri[RetrieveFinancialDetailsResponse](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
@@ -76,7 +76,7 @@ class RetrieveFinancialDetailsController @Inject() (val authService: EnrolmentsA
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveFinancialDetailsResponse](ifsErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveFinancialDetailsResponse](desUri, ifsErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveFinancialDetailsHateoasData(nino, taxYear, employmentId))

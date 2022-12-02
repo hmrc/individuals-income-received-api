@@ -26,10 +26,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteRetrieveConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def delete()(implicit
+  def delete(downstreamUri: DownstreamUri[Unit])(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      downstreamUri: DownstreamUri[Unit],
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
@@ -37,10 +36,9 @@ class DeleteRetrieveConnector @Inject() (val http: HttpClient, val appConfig: Ap
     delete(uri = downstreamUri)
   }
 
-  def retrieve[Resp: Reads]()(implicit
+  def retrieve[Resp: Reads](downstreamUri: DownstreamUri[Resp])(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      downstreamUri: DownstreamUri[Resp],
       correlationId: String): Future[DownstreamOutcome[Resp]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._

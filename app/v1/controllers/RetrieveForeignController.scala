@@ -64,14 +64,14 @@ class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthServic
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveForeignResponse] = IfsUri[RetrieveForeignResponse](
+      val ifsUri: IfsUri[RetrieveForeignResponse] = IfsUri[RetrieveForeignResponse](
         s"income-tax/income/foreign/$nino/$taxYear"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveForeignResponse]())
+          serviceResponse <- EitherT(service.retrieve[RetrieveForeignResponse](ifsUri))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveForeignHateoasData(nino, taxYear))

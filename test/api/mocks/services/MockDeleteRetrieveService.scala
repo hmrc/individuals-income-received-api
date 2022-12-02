@@ -36,39 +36,37 @@ trait MockDeleteRetrieveService extends MockFactory {
 
     def delete(downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockDeleteRetrieveService
-        .delete(_: Map[String, MtdError])(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DownstreamUri[Unit], _: String))
-        .expects(downstreamErrorMap, *, *, *, *, *)
+        .delete(_: DownstreamUri[Unit], _: Map[String, MtdError])(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(*, downstreamErrorMap, *, *, *, *)
     }
 
     def retrieve[Resp: Reads](downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
       (
         mockDeleteRetrieveService
-          .retrieve[Resp](_: Map[String, MtdError])(
+          .retrieve[Resp](_: DownstreamUri[Resp], _: Map[String, MtdError])(
             _: Format[Resp],
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,
-            _: DownstreamUri[Resp],
             _: String
           )
         )
-        .expects(downstreamErrorMap, *, *, *, *, *, *)
+        .expects(*, downstreamErrorMap, *, *, *, *, *)
     }
 
     def retrieve[Resp: Reads](downstreamUri: DownstreamUri[Resp],
                               downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
       (
         mockDeleteRetrieveService
-          .retrieve[Resp](_: Map[String, MtdError])(
+          .retrieve[Resp](_: DownstreamUri[Resp], _: Map[String, MtdError])(
             _: Format[Resp],
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,
-            _: DownstreamUri[Resp],
             _: String
           )
         )
-        .expects(downstreamErrorMap, *, *, *, *, downstreamUri, *)
+        .expects(downstreamUri, downstreamErrorMap, *, *, *, *, *)
     }
 
   }

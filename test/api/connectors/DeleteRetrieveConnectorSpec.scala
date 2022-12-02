@@ -16,12 +16,11 @@
 
 package api.connectors
 
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.mocks.MockHttpClient
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 
@@ -31,62 +30,62 @@ class DeleteRetrieveConnectorSpec extends ConnectorSpec {
   val taxYear: String = "2019-20"
 
   class Test extends MockHttpClient with MockAppConfig {
+    case class Data(field: String)
+
+    object Data {
+      implicit val reads: Reads[Data] = Json.reads[Data]
+    }
 
     val connector: DeleteRetrieveConnector = new DeleteRetrieveConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "DeleteRetrieveConnector" when {
     "delete" must {
-      "return a 204 status for a success scenario" in new Test {
+      val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        val outcome                       = Right(ResponseWrapper(correlationId, ()))
-        implicit val desUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
+      "return a 204 status for a success scenario for a DesUri" in new Test with DesTest {
+        val desUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
 
-        MockedHttpClient
-          .delete(
-            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willDelete(s"$baseUrl/income-tax/income/savings/$nino/$taxYear")
           .returns(Future.successful(outcome))
 
-        await(connector.delete()) shouldBe outcome
+        await(connector.delete(desUri)) shouldBe outcome
+      }
+
+      "return a 204 status for a success scenario for a TaxYearSpecificIfsUri" in new Test with TysIfsTest {
+        val tysUri: TaxYearSpecificIfsUri[Unit] = TaxYearSpecificIfsUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
+
+        willDelete(s"$baseUrl/income-tax/income/savings/$nino/$taxYear")
+          .returns(Future.successful(outcome))
+
+        await(connector.delete(tysUri)) shouldBe outcome
       }
     }
 
     "retrieve" must {
-      "return a 200 status for a success scenario" in new Test {
 
-        case class Data(field: String)
+      "return a 200 status for a success scenario for a DesUri" in new Test with DesTest {
+        val outcome              = Right(ResponseWrapper(correlationId, Data("value")))
+        val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
 
-        object Data {
-          implicit val reads: Reads[Data] = Json.reads[Data]
-        }
-
-        val outcome                       = Right(ResponseWrapper(correlationId, Data("value")))
-        implicit val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
-
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willGet(s"$baseUrl/income-tax/income/savings/$nino/$taxYear")
           .returns(Future.successful(outcome))
 
-        await(connector.retrieve[Data]()) shouldBe outcome
+        await(connector.retrieve[Data](desUri)) shouldBe outcome
+      }
+
+      "return a 200 status for a success scenario for a TaxYearSpecificIfsUri" in new Test with TysIfsTest {
+        val outcome                             = Right(ResponseWrapper(correlationId, Data("value")))
+        val tysUri: TaxYearSpecificIfsUri[Data] = TaxYearSpecificIfsUri[Data](s"income-tax/income/savings/$nino/$taxYear")
+
+        willGet(s"$baseUrl/income-tax/income/savings/$nino/$taxYear")
+          .returns(Future.successful(outcome))
+
+        await(connector.retrieve[Data](tysUri)) shouldBe outcome
       }
     }
   }

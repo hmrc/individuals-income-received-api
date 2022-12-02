@@ -32,12 +32,12 @@ trait MockDeleteRetrieveConnector extends MockFactory {
 
     def delete(): CallHandler[Future[DownstreamOutcome[Unit]]] =
       (mockDeleteRetrieveConnector
-        .delete()(_: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Unit], _: String))
+        .delete(_: DownstreamUri[Unit])(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(*, *, *, *)
 
     def retrieve[Resp: Reads](): CallHandler[Future[DownstreamOutcome[Resp]]] =
       (mockDeleteRetrieveConnector
-        .retrieve[Resp]()(_: Reads[Resp], _: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Resp], _: String))
+        .retrieve[Resp](_: DownstreamUri[Resp])(_: Reads[Resp], _: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(*, *, *, *, *)
 
   }

@@ -54,7 +54,7 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
     )
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
-    implicit val ifsUri: IfsUri[Unit]  = IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear")
+    val ifsUri: IfsUri[Unit]  = IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear")
     implicit val correlationId: String = idGenerator.generateCorrelationId
     val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
 
@@ -66,7 +66,7 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
     val result =
       for {
         _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.delete())
+        serviceResponse <- EitherT(service.delete(ifsUri))
       } yield {
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

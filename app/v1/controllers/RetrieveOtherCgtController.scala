@@ -64,14 +64,14 @@ class RetrieveOtherCgtController @Inject() (val authService: EnrolmentsAuthServi
         taxYear = taxYear
       )
 
-      implicit val IfsUri: Api1661Uri[RetrieveOtherCgtResponse] = Api1661Uri[RetrieveOtherCgtResponse](
+      val ifsUri: Api1661Uri[RetrieveOtherCgtResponse] = Api1661Uri[RetrieveOtherCgtResponse](
         s"income-tax/income/disposals/other-gains/$nino/$taxYear"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveOtherCgtResponse]())
+          serviceResponse <- EitherT(service.retrieve[RetrieveOtherCgtResponse](ifsUri))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveOtherCgtHateoasData(nino, taxYear))

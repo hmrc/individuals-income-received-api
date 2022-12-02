@@ -66,14 +66,14 @@ class DeleteEmploymentFinancialDetailsController @Inject() (val authService: Enr
         employmentId = employmentId
       )
 
-      implicit val downstreamUri: Release6Uri[Unit] = Release6Uri[Unit](
+      val downstreamUri: Release6Uri[Unit] = Release6Uri[Unit](
         s"income-tax/income/employments/$nino/$taxYear/$employmentId"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete(desErrorMap))
+          serviceResponse <- EitherT(service.delete(downstreamUri, desErrorMap))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

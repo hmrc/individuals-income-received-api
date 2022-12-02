@@ -65,14 +65,14 @@ class DeleteForeignController @Inject() (val authService: EnrolmentsAuthService,
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[Unit] = IfsUri[Unit](
+      val ifsUri: IfsUri[Unit] = IfsUri[Unit](
         s"income-tax/income/foreign/$nino/$taxYear"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete())
+          serviceResponse <- EitherT(service.delete(ifsUri))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

@@ -39,8 +39,8 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
     }
 
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-    implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
+    val deleteDownstreamUri: DesUri[Unit]       = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
+    val retrieveDownstreamUri: DesUri[Data]     = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
 
     val service: DeleteRetrieveService = new DeleteRetrieveService(
       connector = mockDeleteRetrieveConnector
@@ -57,19 +57,19 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
           .delete()
           .returns(Future.successful(outcome))
 
-        await(service.delete()) shouldBe outcome
+        await(service.delete(deleteDownstreamUri)) shouldBe outcome
       }
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockDeleteRetrieveConnector
               .delete()
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.delete()) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.delete(deleteDownstreamUri)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(
@@ -93,7 +93,7 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
           .retrieve[Data]()
           .returns(Future.successful(outcome))
 
-        await(service.retrieve[Data]()) shouldBe outcome
+        await(service.retrieve[Data](retrieveDownstreamUri)) shouldBe outcome
       }
 
       "return a NotFoundError for an empty response" in new Test {
@@ -103,19 +103,19 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
           .retrieve[Data]()
           .returns(Future.successful(outcome))
 
-        await(service.retrieve[Data]()) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
+        await(service.retrieve[Data](retrieveDownstreamUri)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
       }
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockDeleteRetrieveConnector
               .retrieve[Data]()
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.retrieve[Data]()) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.retrieve[Data](retrieveDownstreamUri)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

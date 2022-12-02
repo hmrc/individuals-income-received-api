@@ -16,8 +16,13 @@
 
 package v1.controllers
 
+import api.connectors.DownstreamUri.IfsUri
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
+import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.DeleteRetrieveRequestParser
+import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -26,11 +31,6 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.IfsUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -55,7 +55,7 @@ class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
 
   def deleteSaving(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
     val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
-    implicit val ifsUri: IfsUri[Unit]  = IfsUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
+    val ifsUri: IfsUri[Unit]           = IfsUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
     implicit val correlationId: String = idGenerator.generateCorrelationId
 
     logger.info(
@@ -66,7 +66,7 @@ class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
     val result =
       for {
         _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.delete())
+        serviceResponse <- EitherT(service.delete(ifsUri))
       } yield {
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

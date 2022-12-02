@@ -33,36 +33,30 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def delete(desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit
+  def delete(downstreamUri: DownstreamUri[Unit], downstreamErrorMap: Map[String, MtdError] = defaultDownstreamErrorMap)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      downstreamUri: DownstreamUri[Unit],
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.delete()).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    EitherT(connector.delete(downstreamUri)).leftMap(mapDownstreamErrors(downstreamErrorMap)).value
   }
 
-  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = defaultDesErrorMap)(implicit
+  def retrieve[Resp: Format](downstreamUri: DownstreamUri[Resp], downstreamErrorMap: Map[String, MtdError] = defaultDownstreamErrorMap)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      downstreamUri: DownstreamUri[Resp],
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve[Resp]()).leftMap(mapDownstreamErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieve[Resp](downstreamUri)).leftMap(mapDownstreamErrors(downstreamErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
   }
 
-  private def defaultDesErrorMap: Map[String, MtdError] =
+  private def defaultDownstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

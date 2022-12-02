@@ -64,14 +64,14 @@ class RetrieveDividendsController @Inject() (val authService: EnrolmentsAuthServ
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveDividendsResponse] = IfsUri[RetrieveDividendsResponse](
+      val ifsUri: IfsUri[RetrieveDividendsResponse] = IfsUri[RetrieveDividendsResponse](
         s"income-tax/income/dividends/$nino/$taxYear"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveDividendsResponse]())
+          serviceResponse <- EitherT(service.retrieve[RetrieveDividendsResponse](ifsUri))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveDividendsHateoasData(nino, taxYear))

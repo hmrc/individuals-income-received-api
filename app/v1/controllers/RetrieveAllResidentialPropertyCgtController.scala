@@ -67,7 +67,7 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
         source = source
       )
 
-      implicit val IfsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
+      val ifsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
         s"income-tax/income/disposals/residential-property/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
@@ -75,7 +75,7 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveAllResidentialPropertyCgtResponse](desErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveAllResidentialPropertyCgtResponse](ifsUri, desErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveAllResidentialPropertyCgtHateoasData(nino, taxYear))

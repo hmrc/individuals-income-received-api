@@ -67,7 +67,7 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
         source = source
       )
 
-      implicit val IfsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
+      val ifsUri: Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse] = Api1661Uri[RetrieveNonPayeEmploymentIncomeResponse](
         s"income-tax/income/employments/non-paye/$nino/$taxYear?view" +
           s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
       )
@@ -75,7 +75,7 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveNonPayeEmploymentIncomeResponse](desErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveNonPayeEmploymentIncomeResponse](ifsUri, desErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))

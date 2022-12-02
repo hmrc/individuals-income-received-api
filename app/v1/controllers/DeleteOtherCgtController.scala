@@ -65,14 +65,14 @@ class DeleteOtherCgtController @Inject() (val authService: EnrolmentsAuthService
         taxYear = taxYear
       )
 
-      implicit val IfsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
+      val ifsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
         s"income-tax/income/disposals/other-gains/$nino/$taxYear"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete())
+          serviceResponse <- EitherT(service.delete(ifsUri))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

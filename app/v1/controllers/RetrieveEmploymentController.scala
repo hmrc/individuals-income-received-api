@@ -65,14 +65,14 @@ class RetrieveEmploymentController @Inject() (val authService: EnrolmentsAuthSer
         employmentId = employmentId
       )
 
-      implicit val IfsUri: Release6Uri[RetrieveEmploymentResponse] = Release6Uri[RetrieveEmploymentResponse](
+      val ifsUri: Release6Uri[RetrieveEmploymentResponse] = Release6Uri[RetrieveEmploymentResponse](
         s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
       )
 
       val result =
         for {
           _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](ifsErrorMap))
+          serviceResponse <- EitherT(service.retrieve[RetrieveEmploymentResponse](ifsUri, ifsErrorMap))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, serviceResponse.responseData))
