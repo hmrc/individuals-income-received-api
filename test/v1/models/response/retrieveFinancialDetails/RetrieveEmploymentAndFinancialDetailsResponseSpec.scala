@@ -29,7 +29,7 @@ class RetrieveEmploymentAndFinancialDetailsResponseSpec extends UnitSpec {
   "RetrieveFinancialDetailsResponse" when {
     "read from valid JSON" should {
       "produce the expected 'RetrieveFinancialDetailsResponse' object" in {
-        ifsJson.as[RetrieveEmploymentAndFinancialDetailsResponse] shouldBe model
+        downstreamJson.as[RetrieveEmploymentAndFinancialDetailsResponse] shouldBe model
       }
     }
 

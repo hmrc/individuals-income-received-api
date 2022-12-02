@@ -42,43 +42,65 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
   private trait Test {
 
     val nino: String           = "AA123456A"
-    val taxYear: String        = "2019-20"
     val employmentId: String   = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    val source: Option[String] = Some("latest")
+    val source: Option[String] = Some("hmrcHeld")
 
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
+    def taxYear: String
 
-    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+    def mtdUri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
-    def queryParams: Seq[(String, String)] =
+    def mtdQueryParams: Seq[(String, String)] =
       Seq("source" -> source)
         .collect { case (k, Some(v)) =>
           (k, v)
         }
 
+    def downstreamTaxYear: String
+    def downstreamUri: String
+
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
       setupStubs()
-      buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
+      buildRequest(mtdUri)
+        .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
 
+    def errorBody(code: String): String =
+      s"""
+         |{
+         |   "code": "$code",
+         |   "reason": "downstream message"
+         |}
+            """.stripMargin
+
   }
 
-  "Calling retrieve financial details endpoint" should {
-    "return `latest` financial details with status 200" when {
-      "a valid request with employment source as `latest` is made" in new Test {
+  private trait NonTysTest extends Test {
+    def taxYear: String           = "2019-20"
+    def downstreamTaxYear: String = "2019-20"
+    def downstreamUri: String     = s"/income-tax/income/employments/$nino/$downstreamTaxYear/$employmentId"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String           = "2023-24"
+    def downstreamTaxYear: String = "23-24"
+    def downstreamUri: String     = s"/income-tax/income/employments/$downstreamTaxYear/$nino/$employmentId"
+  }
+
+  "Calling retrieve employment and financial details endpoint" should {
+    "return 200 status code" when {
+      "a valid request with all parameters is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), OK, ifsJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "HMRC-HELD"), OK, downstreamJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -87,7 +109,22 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "a valid request with out any employment source is made" in new Test {
+      "a valid request with all parameters and a Tax Year Specific (TYS) tax year is made" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "HMRC-HELD"), OK, downstreamJson)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponseWithHateoas(nino, taxYear, employmentId)
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "a valid request without employment source is made" in new NonTysTest {
 
         override val source: Option[String] = None
 
@@ -95,7 +132,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), OK, ifsJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamJson)
         }
 
         val response: WSResponse = await(request.get)
@@ -114,7 +151,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
                                 empSource: Option[String],
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String           = requestNino
             override val taxYear: String        = requestTaxYear
@@ -145,15 +182,15 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, Map("view" -> "HMRC-HELD"), downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -162,14 +199,6 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
             response.header("Content-Type") shouldBe Some("application/json")
           }
         }
-
-        def errorBody(code: String): String =
-          s"""
-             |{
-             |   "code": "$code",
-             |   "reason": "ifs message"
-             |}
-            """.stripMargin
 
         val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
