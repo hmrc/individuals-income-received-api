@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
@@ -29,16 +29,9 @@ import scala.concurrent.Future
 
 class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
-  private val taxYear: String = "2019-20"
+  private val nino: String = "AA111111A"
 
-  private val createAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = requestBodyModel
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test extends MockHttpClient with MockAppConfig {
 
     val connector: CreateAmendCgtPpdOverridesConnector = new CreateAmendCgtPpdOverridesConnector(
       http = mockHttpClient,
@@ -53,24 +46,53 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
 
   "CreateAmendCgtPpdOverridesConnector" when {
     "createAndAmend" must {
-      "return a 204 status for a success scenario" in new Test {
-        val outcome                                          = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                       = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredApi1661HeadersPut: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
+      "return a 204 status for a success scenario" in new Api1661Test with Test {
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = requestBodyModel,
-            requiredHeaders = requiredApi1661HeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        val taxYear = TaxYear.fromMtd("2019-20")
+
+        val request = CreateAmendCgtPpdOverridesRequest(
+          nino = Nino(nino),
+          taxYear,
+          body = requestBodyModel
+        )
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(
+          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asDownstream}",
+          body = requestBodyModel
+        )
           .returns(Future.successful(outcome))
 
-        await(connector.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
+        await(connector.createAmend(request)) shouldBe outcome
       }
     }
+
+    "createandAmend called for a Tax Year Specific tax year" must {
+      "return a 200 status for a success scenario" in
+        new TysIfsTest with Test {
+          def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+          override implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+
+          val outcome = Right(ResponseWrapper(correlationId, ()))
+
+          val request = CreateAmendCgtPpdOverridesRequest(
+            nino = Nino(nino),
+            taxYear,
+            body = requestBodyModel
+          )
+
+          willPut(
+            s"$baseUrl/income-tax/income/disposals/residential-property/ppd/${taxYear.asTysDownstream}/${nino}",
+            requestBodyModel) returns Future
+            .successful(outcome)
+
+          val result = await(connector.createAmend(request))
+          result shouldBe outcome
+        }
+    }
+
   }
 
 }

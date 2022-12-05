@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{
   DownstreamErrorCode,
   DownstreamErrors,
@@ -29,6 +29,7 @@ import api.models.errors.{
   RuleDuplicatedPpdSubmissionIdError,
   RuleIncorrectDisposalTypeError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
@@ -47,7 +48,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
 
   val createAmendCgtPpdOverridesRequest: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = requestBodyModel
   )
 
@@ -72,6 +73,22 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
       }
 
+      "return correct result for a success in a tys year" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        val tysYearRequest: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
+          nino = Nino(nino),
+          taxYear = TaxYear.fromMtd("2023-24"),
+          body = requestBodyModel
+        )
+
+        MockCreateAmendCgtPpdOverridesConnector
+          .createAmend(tysYearRequest)
+          .returns(Future.successful(outcome))
+
+        await(service.createAmend(tysYearRequest)) shouldBe outcome
+      }
+
       "map errors according to spec" when {
 
         def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -94,7 +111,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
@@ -108,8 +125,12 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
-        input.foreach(args => (failuresArrayError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => (failuresArrayError _).tupled(args))
       }
     }
   }

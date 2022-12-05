@@ -26,6 +26,7 @@ import api.models.errors.{
   RuleDuplicatedPpdSubmissionIdError,
   RuleIncorrectDisposalTypeError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
@@ -70,6 +71,10 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
       "INVALID_DISPOSAL_TYPE"           -> RuleIncorrectDisposalTypeError,
       "SERVER_ERROR"                    -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
-    )
+    ) ++ tysIfErrorMap
+
+  private def tysIfErrorMap = Map(
+    "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+  )
 
 }

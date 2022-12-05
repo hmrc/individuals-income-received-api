@@ -19,9 +19,10 @@ package v1.connectors
 import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
+import play.api.http.Status.OK
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
@@ -34,12 +35,20 @@ class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val a
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
     val nino    = request.nino.nino
     val taxYear = request.taxYear
 
+    implicit val successCode: SuccessCode = SuccessCode(OK)
+
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"income-tax/income/disposals/residential-property/ppd/${taxYear.asTysDownstream}/$nino")
+      } else {
+        Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asDownstream}")
+      }
+
     put(
-      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"),
+      uri = downstreamUri,
       body = request.body
     )
   }

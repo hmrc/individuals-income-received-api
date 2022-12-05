@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, DateFormatError, ErrorWrapper, NinoFormatError, PpdSubmissionIdFormatError, ValueFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
@@ -27,7 +27,6 @@ import v1.models.request.createAmendCgtPpdOverrides._
 class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
-  val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -133,12 +132,6 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
       Some(singlePropertyDisposalsModels)
     )
 
-  private val createAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
-    nino = nino,
-    taxYear = taxYear,
-    body = validRawRequestBody
-  )
-
   trait Test extends MockCreateAmendCgtPpdOverridesValidator {
 
     lazy val parser: CreateAmendCgtPpdOverridesRequestParser = new CreateAmendCgtPpdOverridesRequestParser(
@@ -150,15 +143,41 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
+        val taxYear = "2019-20"
+        private val createAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
+          nino = nino,
+          taxYear = taxYear,
+          body = validRawRequestBody
+        )
+
         MockCreateAmendCgtPpdOverridesValidator.validate(createAmendCgtPpdOverridesRawData).returns(Nil)
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData) shouldBe
-          Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), taxYear, requestBody))
+          Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody))
+      }
+
+      "valid request data is supplied for a tys year" in new Test {
+        private val createAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
+          nino = nino,
+          taxYear = "2023-24",
+          body = validRawRequestBody
+        )
+
+        MockCreateAmendCgtPpdOverridesValidator.validate(createAmendCgtPpdOverridesRawData).returns(Nil)
+
+        parser.parseRequest(createAmendCgtPpdOverridesRawData) shouldBe
+          Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), TaxYear.fromMtd("2023-24"), requestBody))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation occurs" in new Test {
+        private val createAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
+          nino = nino,
+          taxYear = "2019-20",
+          body = validRawRequestBody
+        )
+
         MockCreateAmendCgtPpdOverridesValidator
           .validate(createAmendCgtPpdOverridesRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
@@ -169,6 +188,12 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur" in new Test {
+
+        private val createAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
+          nino = nino,
+          taxYear = "2019-20",
+          body = validRawRequestBody
+        )
 
         private val allInvalidValueBodyJson: JsValue = Json.parse(
           """

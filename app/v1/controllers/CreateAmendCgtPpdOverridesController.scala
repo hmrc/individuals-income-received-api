@@ -120,11 +120,19 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
-            RuleAmountGainLossError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(DateFormatError.code) | CustomMtdError(
-            PpdSubmissionIdFormatError.code) | CustomMtdError(RuleLossesGreaterThanGainError.code) | CustomMtdError(RuleTaxYearNotEndedError.code) |
-          CustomMtdError(RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleDuplicatedPpdSubmissionIdError.code) =>
-        BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError |
+           NinoFormatError |
+           TaxYearFormatError |
+           RuleTaxYearRangeInvalidError |
+           RuleTaxYearNotSupportedError |
+           CustomMtdError(RuleAmountGainLossError.code) |
+           CustomMtdError(ValueFormatError.code) |
+           CustomMtdError(DateFormatError.code) |
+           CustomMtdError(PpdSubmissionIdFormatError.code) |
+           CustomMtdError(RuleLossesGreaterThanGainError.code) |
+           CustomMtdError(RuleTaxYearNotEndedError.code) |
+           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
+           CustomMtdError(RuleDuplicatedPpdSubmissionIdError.code) => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError | PpdSubmissionIdNotFoundError => NotFound(Json.toJson(errorWrapper))
       case RuleIncorrectDisposalTypeError               => Forbidden(Json.toJson(errorWrapper))
       case StandardDownstreamError                      => InternalServerError(Json.toJson(errorWrapper))
