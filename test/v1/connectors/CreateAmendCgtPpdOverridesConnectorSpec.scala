@@ -55,7 +55,7 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willPut(
-          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asDownstream}",
+          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}",
           body = requestBodyModel
         )
           .returns(Future.successful(outcome))
