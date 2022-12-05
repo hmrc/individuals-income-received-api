@@ -38,10 +38,6 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.api1661BaseUrl returns baseUrl
-    MockedAppConfig.api1661Token returns "api1661-token"
-    MockedAppConfig.api1661Environment returns "api1661-environment"
-    MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "CreateAmendCgtPpdOverridesConnector" when {
@@ -68,7 +64,7 @@ class CreateAmendCgtPpdOverridesConnectorSpec extends ConnectorSpec {
       }
     }
 
-    "createandAmend called for a Tax Year Specific tax year" must {
+    "createAndAmend called for a Tax Year Specific tax year" must {
       "return a 200 status for a success scenario" in
         new TysIfsTest with Test {
           def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
