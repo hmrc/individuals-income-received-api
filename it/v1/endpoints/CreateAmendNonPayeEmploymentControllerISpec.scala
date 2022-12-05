@@ -179,7 +179,6 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           (validNino, "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None, None),
           (validNino, "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None, None),
           (validNino, "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None, None),
-          (validNino, getCurrentTaxYear, validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotEndedError, None, None),
 
           // Body Errors
           (validNino, "2020-21", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),

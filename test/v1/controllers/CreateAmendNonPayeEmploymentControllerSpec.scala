@@ -183,7 +183,6 @@ class CreateAmendNonPayeEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST)
         )
