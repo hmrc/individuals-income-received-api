@@ -377,8 +377,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
 
   private trait Test {
 
-    val nino: String    = "AA123456A"
-    val taxYear: String = "2020-21"
+    def nino: String = "AA123456A"
+    def taxYear: String
+    def downstreamUri: String
+    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd "
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -404,10 +406,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
     """.stripMargin
     )
 
-    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd "
-
-    def ifsUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
-
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
@@ -426,14 +424,40 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
 
   }
 
+  private trait NonTysTest extends Test {
+    def taxYear                        = "2020-21"
+    override def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
+  }
+
+  private trait TysIfTest extends Test {
+    def taxYear                        = "2023-24"
+    override def downstreamUri: String = s"income-tax/disposals/residential-property/ppd/23-24/$nino"
+  }
+
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request.put(validRequestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+
+        verifyNrs(validRequestBodyJson)
+      }
+
+      "any valid request is made for a TYS tax year" in new TysIfTest {
+
+        override def setupStubs(): StubMapping = {
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request.put(validRequestBodyJson))
@@ -454,7 +478,23 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
                                 expectedError: MtdError,
                                 expectedErrors: Option[ErrorWrapper],
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
+          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new NonTysTest {
+            override val nino: String    = requestNino
+            override val taxYear: String = requestTaxYear
+
+            override def setupStubs(): StubMapping = {
+              AuditStub.audit()
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+            }
+
+            val response: WSResponse = await(request.put(requestBody))
+            response.status shouldBe expectedStatus
+            response.json shouldBe expectedErrors.fold(Json.toJson(expectedError))(errorWrapper => Json.toJson(errorWrapper))
+            response.header("Content-Type") shouldBe Some("application/json")
+          }
+
+          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")} for TYS tax year" in new TysIfTest {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
@@ -502,13 +542,30 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
 
       "ifs service error" when {
         def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
+            }
+
+            val response: WSResponse = await(request.put(validRequestBodyJson))
+            response.status shouldBe expectedStatus
+            response.json shouldBe Json.toJson(expectedBody)
+            response.header("Content-Type") shouldBe Some("application/json")
+
+            verifyNrs(validRequestBodyJson)
+          }
+
+          s"ifs returns an $ifsCode error and status $ifsStatus for a TYS tax year" in new TysIfTest {
+
+            override def setupStubs(): StubMapping = {
+              AuditStub.audit()
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request.put(validRequestBodyJson))
@@ -528,7 +585,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -541,7 +598,12 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }

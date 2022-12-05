@@ -22,7 +22,6 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
-import play.api.http.Status.OK
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
@@ -37,8 +36,6 @@ class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val a
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     val nino    = request.nino.nino
     val taxYear = request.taxYear
-
-    implicit val successCode: SuccessCode = SuccessCode(OK)
 
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {
