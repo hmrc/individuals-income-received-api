@@ -42,7 +42,7 @@ class AmendOtherEmploymentConnector @Inject() (val http: HttpClient, val appConf
     val taxYear = request.taxYear
 
     put(
-      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/$taxYear"),
+      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/${taxYear.asMtd}"),
       body = request.body
     )
   }
