@@ -53,31 +53,7 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
     "return the expected response for a non-TYS request" when {
 
       "downstream returns OK" when {
-        "the connector sends a request with a tax year parameter provided is supplied" in new Release6Test with Test {
-          val expected = Right(ResponseWrapper(correlationId, response))
-
-          stubHttpResponse(expected)
-
-          await(connector.retrieve(request)) shouldBe expected
-        }
-
-        "the connector sends a request with a income source id parameter provided is supplied" in new Release6Test with Test {
-          val expected = Right(ResponseWrapper(correlationId, response))
-
-          stubHttpResponse(expected)
-
-          await(connector.retrieve(request)) shouldBe expected
-        }
-
-        "a valid non-TYS request with a income source type parameter provided is supplied" in new Release6Test with Test {
-          val expected = Right(ResponseWrapper(correlationId, response))
-
-          stubHttpResponse(expected)
-
-          await(connector.retrieve(request)) shouldBe expected
-        }
-
-        "a valid non-TYS request with all parameters provided is supplied" in new Release6Test with Test {
+        "the connector sends a valid request downstream" in new Release6Test with Test {
           val expected = Right(ResponseWrapper(correlationId, response))
 
           stubHttpResponse(expected)
@@ -100,16 +76,7 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
     "return the expected response for a TYS request" when {
 
       "downstream returns OK" when {
-        "the connector sends a request with a tax year parameter provided is supplied" in new TysIfsTest with Test {
-          override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-          val expected                  = Right(ResponseWrapper(correlationId, response))
-
-          stubTysHttpResponse(expected)
-
-          await(connector.retrieve(request)) shouldBe expected
-        }
-
-        "a valid non-TYS request with all parameters provided is supplied" in new TysIfsTest with Test {
+        "the connector sends a valid request downstream with a Tax Year Specific (TYS) tax year" in new TysIfsTest with Test {
           override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
           val expected                  = Right(ResponseWrapper(correlationId, response))
 
