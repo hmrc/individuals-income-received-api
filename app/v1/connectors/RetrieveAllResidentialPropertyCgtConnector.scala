@@ -21,6 +21,7 @@ import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +32,7 @@ class RetrieveAllResidentialPropertyCgtConnector @Inject() (val http: HttpClient
   def retrieve(request: RetrieveAllResidentialPropertyCgtRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      correlationId: String): Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -41,13 +42,14 @@ class RetrieveAllResidentialPropertyCgtConnector @Inject() (val http: HttpClient
 
     if (taxYear.useTaxYearSpecificApi) {
       get(
-        uri = TaxYearSpecificIfsUri[Unit](s"income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/${nino.value}"),
+        uri = TaxYearSpecificIfsUri[RetrieveAllResidentialPropertyCgtResponse](
+          s"income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/${nino.value}"),
         queryParams
       )
 
     } else {
       get(
-        uri = DesUri[Unit](s"income-tax/income/disposals/residential-property/${nino.value}/${taxYear.asMtd}")
+        uri = DesUri[RetrieveAllResidentialPropertyCgtResponse](s"income-tax/income/disposals/residential-property/${nino.value}/${taxYear.asMtd}")
       )
     }
   }
