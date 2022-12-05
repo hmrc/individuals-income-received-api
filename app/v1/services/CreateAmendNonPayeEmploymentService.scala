@@ -23,6 +23,7 @@ import api.models.errors.{
   NinoFormatError,
   NotFoundError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
@@ -48,14 +49,14 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(errorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,
       "INVALID_CORRELATIONID"           -> StandardDownstreamError,
@@ -65,5 +66,13 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
       "SERVER_ERROR"                    -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

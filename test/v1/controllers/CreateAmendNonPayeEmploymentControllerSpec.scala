@@ -22,7 +22,7 @@ import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -86,7 +86,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
 
   val requestData: CreateAmendNonPayeEmploymentRequest = CreateAmendNonPayeEmploymentRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = requestModel
   )
 
@@ -218,6 +218,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
