@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{MtdSourceEnum, Nino}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -31,11 +31,9 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveAllResidentialPropertyCgtControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveAllResidentialPropertyCgtRequestParser
+import v1.mocks.services.MockRetrieveAllResidentialPropertyCgtService
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
-import v1.models.response.retrieveAllResidentialPropertyCgt.{
-  RetrieveAllResidentialPropertyCgtHateoasData,
-  RetrieveAllResidentialPropertyCgtResponse
-}
+import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,7 +42,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveAllResidentialPropertyCgtService
     with MockHateoasFactory
     with MockRetrieveAllResidentialPropertyCgtRequestParser
     with HateoasLinks
@@ -109,7 +107,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRetrieveAllResidentialPropertyCgtRequestParser,
-      service = mockDeleteRetrieveService,
+      service = mockRetrieveAllResidentialPropertyCgtService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -141,7 +139,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
+        MockRetrieveAllResidentialPropertyCgtService
           .retrieve[RetrieveAllResidentialPropertyCgtResponse](desErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, model))))
 
@@ -203,7 +201,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
+            MockRetrieveAllResidentialPropertyCgtService
               .retrieve[RetrieveAllResidentialPropertyCgtResponse](desErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 

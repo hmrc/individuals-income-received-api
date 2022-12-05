@@ -28,10 +28,11 @@ import api.controllers.{AuthorisedController, BaseController, EndpointLogContext
 import api.hateoas.HateoasFactory
 import api.models.domain.MtdSourceEnum
 import api.models.domain.MtdSourceEnum.latest
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
 import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
 import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
+import v1.services.RetrieveAllResidentialPropertyCgtService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +41,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: EnrolmentsAuthService,
                                                              val lookupService: MtdIdLookupService,
                                                              requestParser: RetrieveAllResidentialPropertyCgtRequestParser,
-                                                             service: DeleteRetrieveService,
+                                                             service: RetrieveAllResidentialPropertyCgtService,
                                                              hateoasFactory: HateoasFactory,
                                                              cc: ControllerComponents,
                                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
