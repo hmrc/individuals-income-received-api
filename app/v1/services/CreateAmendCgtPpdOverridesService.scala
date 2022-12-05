@@ -58,8 +58,8 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def desErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,
       "INVALID_CORRELATIONID"           -> StandardDownstreamError,
@@ -71,10 +71,13 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
       "INVALID_DISPOSAL_TYPE"           -> RuleIncorrectDisposalTypeError,
       "SERVER_ERROR"                    -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
-    ) ++ tysIfErrorMap
+    )
 
-  private def tysIfErrorMap = Map(
-    "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
-  )
+    val extraTysErrorMap = Map(
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrorMap
+  }
 
 }

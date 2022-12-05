@@ -44,7 +44,7 @@ class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val a
       if (taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri[Unit](s"income-tax/income/disposals/residential-property/ppd/${taxYear.asTysDownstream}/$nino")
       } else {
-        Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asDownstream}")
+        Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}")
       }
 
     put(

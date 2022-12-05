@@ -295,31 +295,31 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
 
   def jsonWithIds(multipleSubmissionId: String, singleSubmissionId: String): JsValue = Json.parse(
     s"""
-      |{
-      |    "multiplePropertyDisposals": [
-      |         {
-      |            "ppdSubmissionId": "$multipleSubmissionId",
-      |            "amountOfNetGain": 1234.78
-      |         }
-      |    ],
-      |    "singlePropertyDisposals": [
-      |         {
-      |             "ppdSubmissionId": "$singleSubmissionId",
-      |             "completionDate": "2020-02-28",
-      |             "disposalProceeds": 454.24,
-      |             "acquisitionDate": "2020-03-29",
-      |             "acquisitionAmount": 3434.45,
-      |             "improvementCosts": 233.45,
-      |             "additionalCosts": 423.34,
-      |             "prfAmount": 2324.67,
-      |             "otherReliefAmount": 3434.23,
-      |             "lossesFromThisYear": 436.23,
-      |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetGain": 4567.89
-      |         }
-      |    ]
-      |}
-      |""".stripMargin
+       |{
+       |    "multiplePropertyDisposals": [
+       |         {
+       |            "ppdSubmissionId": "$multipleSubmissionId",
+       |            "amountOfNetGain": 1234.78
+       |         }
+       |    ],
+       |    "singlePropertyDisposals": [
+       |         {
+       |             "ppdSubmissionId": "$singleSubmissionId",
+       |             "completionDate": "2020-02-28",
+       |             "disposalProceeds": 454.24,
+       |             "acquisitionDate": "2020-03-29",
+       |             "acquisitionAmount": 3434.45,
+       |             "improvementCosts": 233.45,
+       |             "additionalCosts": 423.34,
+       |             "prfAmount": 2324.67,
+       |             "otherReliefAmount": 3434.23,
+       |             "lossesFromThisYear": 436.23,
+       |             "lossesFromPreviousYear": 234.23,
+       |             "amountOfNetGain": 4567.89
+       |         }
+       |    ]
+       |}
+       |""".stripMargin
   )
 
   val ppdSubmissionFormatError: MtdError = PpdSubmissionIdFormatError.copy(
@@ -375,75 +375,39 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
       ))
   )
 
-  private trait TysIfTest extends Test {
-    def taxYear              = "2023-24"
-    override def uri: String = s"/disposals/residential-property/ppd/${taxYear}/${nino}"
-
-    override def ifsUri: String = s"income-tax/disposals/residential-property/ppd/${taxYear}/${nino}"
-
-    def hateoasResponse: JsValue = Json.parse(s"""
-      |{
-      |   "links":[
-      |      {
-      |         "href":"/individuals/income-received/disposals/residential-property/ppd/${taxYear}/${nino}",
-      |         "method":"PUT",
-      |         "rel":"create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/disposals/residential-property/ppd/${taxYear}/${nino}",
-      |         "method":"DELETE",
-      |         "rel":"delete-report-and-pay-capital-gains-tax-on-property-overrides"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/disposals/residential-property/ppd/${taxYear}/${nino}",
-      |         "method":"GET",
-      |         "rel":"self"
-      |      }
-      |   ]
-      |}
-      """.stripMargin)
-
-  }
-
-  private trait NonTysTest extends Test {
-    def taxYear = "2019-20"
-
-    def hateoasResponse: JsValue = Json.parse(s"""
-          |{
-          |   "links":[
-          |      {
-          |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
-          |         "method":"PUT",
-          |         "rel":"create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
-          |      },
-          |      {
-          |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
-          |         "method":"DELETE",
-          |         "rel":"delete-report-and-pay-capital-gains-tax-on-property-overrides"
-          |      },
-          |      {
-          |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
-          |         "method":"GET",
-          |         "rel":"self"
-          |      }
-          |   ]
-          |}
-      """.stripMargin)
-
-    override def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd "
-
-    override def ifsUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
-
-  }
-
   private trait Test {
 
-    def nino: String = "AA123456A"
-    def taxYear: String
-    def uri: String
-    def ifsUri: String
+    val nino: String    = "AA123456A"
+    val taxYear: String = "2020-21"
 
-    def hateoasResponse: JsValue
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
+         |         "method":"DELETE",
+         |         "rel":"delete-report-and-pay-capital-gains-tax-on-property-overrides"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      }
+         |   ]
+         |}
+    """.stripMargin
+    )
+
+    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd "
+
+    def ifsUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
+
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
@@ -464,23 +428,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new NonTysTest {
-
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
-        }
-
-        val response: WSResponse = await(request.put(validRequestBodyJson))
-        response.status shouldBe OK
-        response.body[JsValue] shouldBe hateoasResponse
-        response.header("Content-Type") shouldBe Some("application/json")
-
-        verifyNrs(validRequestBodyJson)
-      }
-
-      "any valid request is made for a TYS tax year" in new TysIfTest {
+      "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -506,23 +454,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
                                 expectedError: MtdError,
                                 expectedErrors: Option[ErrorWrapper],
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new NonTysTest {
-            override val nino: String    = requestNino
-            override val taxYear: String = requestTaxYear
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
-
-            val response: WSResponse = await(request.put(requestBody))
-            response.status shouldBe expectedStatus
-            response.json shouldBe expectedErrors.fold(Json.toJson(expectedError))(errorWrapper => Json.toJson(errorWrapper))
-            response.header("Content-Type") shouldBe Some("application/json")
-          }
-
-          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")} for TYS tax year" in new TysIfTest {
+          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
@@ -556,31 +488,21 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
           ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
-          ("AA123456A", "2020-21", jsonWithIds("DuplicatedId", "DuplicatedId"), BAD_REQUEST, ppdDuplicatedIdError("DuplicatedId"), None, Some("duplicatedIDs"))
+          (
+            "AA123456A",
+            "2020-21",
+            jsonWithIds("DuplicatedId", "DuplicatedId"),
+            BAD_REQUEST,
+            ppdDuplicatedIdError("DuplicatedId"),
+            None,
+            Some("duplicatedIDs"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "ifs service error" when {
         def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new NonTysTest {
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
-            }
-
-            val response: WSResponse = await(request.put(validRequestBodyJson))
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
-
-            verifyNrs(validRequestBodyJson)
-          }
-
-          s"ifs returns an $ifsCode error and status $ifsStatus for a TYS tax year" in new TysIfTest {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -606,7 +528,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
              |}
             """.stripMargin
 
-        val errors = Seq(
+        val input = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -619,12 +541,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-
-        val extraTysErrors = Seq(
-          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
-        )
-
-        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+        input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
