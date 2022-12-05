@@ -22,7 +22,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,13 +37,17 @@ class AmendOtherEmploymentConnector @Inject() (val http: HttpClient, val appConf
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/other/employments/${taxYear.asTysDownstream}/${nino.nino}")
+    } else {
+      DesUri[Unit](s"income-tax/income/other/employments/${nino.nino}/${taxYear.asMtd}")
+    }
 
     put(
-      uri = DesUri[Unit](s"income-tax/income/other/employments/$nino/${taxYear.asMtd}"),
-      body = request.body
+      uri = downstreamUri,
+      body = body
     )
   }
 
