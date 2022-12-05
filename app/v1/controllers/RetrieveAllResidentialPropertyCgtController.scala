@@ -50,7 +50,7 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveAllResidentialPropertyCgtController",
-      endpointName = "retrieveAll"
+      endpointName = "retrieveAllResidentialPropertyCgtController"
     )
 
   def retrieveAll(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] =
@@ -108,17 +108,5 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
-
-//  private def desErrorMap: Map[String, MtdError] =
-//    Map(
-//      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-//      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-//      "INVALID_VIEW"              -> SourceFormatError,
-//      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-//      "NO_DATA_FOUND"             -> NotFoundError,
-//      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-//      "SERVER_ERROR"              -> StandardDownstreamError,
-//      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
-//    )
 
 }

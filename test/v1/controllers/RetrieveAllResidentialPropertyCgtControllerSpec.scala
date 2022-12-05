@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link, RelType}
@@ -33,7 +33,7 @@ import v1.fixtures.RetrieveAllResidentialPropertyCgtControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveAllResidentialPropertyCgtRequestParser
 import v1.mocks.services.MockRetrieveAllResidentialPropertyCgtService
 import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
-import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -61,7 +61,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
 
   val requestData: RetrieveAllResidentialPropertyCgtRequest = RetrieveAllResidentialPropertyCgtRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     source = MtdSourceEnum.latest
   )
 
@@ -140,7 +140,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
           .returns(Right(requestData))
 
         MockRetrieveAllResidentialPropertyCgtService
-          .retrieve[RetrieveAllResidentialPropertyCgtResponse](desErrorMap)
+          .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, model))))
 
         MockHateoasFactory
@@ -202,7 +202,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
               .returns(Right(requestData))
 
             MockRetrieveAllResidentialPropertyCgtService
-              .retrieve[RetrieveAllResidentialPropertyCgtResponse](desErrorMap)
+              .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)

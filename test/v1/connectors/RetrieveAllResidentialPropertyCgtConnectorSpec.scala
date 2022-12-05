@@ -16,67 +16,72 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.DesUri
-import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.HeaderCarrier
+import org.scalamock.handlers.CallHandler
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
+import v1.models.response.retrieveAllResidentialPropertyCgt.{PpdService, RetrieveAllResidentialPropertyCgtResponse}
 
 import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2019-20"
+  val nino: String          = "AA111111A"
+  val source: MtdSourceEnum = MtdSourceEnum.latest
 
-  private val retrieveAllResidentialPropertyCgtRequest = RetrieveAllResidentialPropertyCgtRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    source = MtdSourceEnum.latest
+  val queryParams: Seq[(String, String)] = Seq(("view", source.toDesViewString))
+
+  val response: RetrieveAllResidentialPropertyCgtResponse = RetrieveAllResidentialPropertyCgtResponse(
+    ppdService = Some(
+      PpdService(
+        ppdYearToDate = Some(2000.99),
+        multiplePropertyDisposals = None,
+        singlePropertyDisposals = None
+      )
+    ),
+    customerAddedDisposals = None
   )
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test {
+    _: ConnectorTest =>
 
-    val connector: RetrieveAllResidentialPropertyCgtConnector = new RetrieveAllResidentialPropertyCgtConnector(
-      http = mockHttpClient,
-      appConfig = mockAppConfig
-    )
+    def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    val request: RetrieveAllResidentialPropertyCgtRequest =
+      RetrieveAllResidentialPropertyCgtRequest(Nino(nino), taxYear, source)
+
+    val connector: RetrieveAllResidentialPropertyCgtConnector =
+      new RetrieveAllResidentialPropertyCgtConnector(http = mockHttpClient, appConfig = mockAppConfig)
+
+    protected def stubHttpResponse(outcome: DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse])
+        : CallHandler[Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]]]#Derived = {
+      willGet(
+        url = s"$baseUrl/income-tax/income/disposals/residential-property/$nino/${taxYear.asMtd}",
+        queryParams
+      ).returns(Future.successful(outcome))
+    }
+
+    protected def stubTysHttpResponse(outcome: DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse])
+        : CallHandler[Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]]]#Derived = {
+      willGet(
+        url = s"$baseUrl/income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/$nino",
+        queryParams
+      ).returns(Future.successful(outcome))
+    }
+
   }
 
   "RetrieveAllResidentialPropertyCgtConnector" when {
 
     "retrieve" must {
-      "return a 200 status for a success scenario" in new Test {
+      "return a 200 status for a success scenario" in new DesTest with Test {
 
-        case class Data(field: String)
+        val outcome = Right(ResponseWrapper(correlationId, response))
 
-        object Data {
-          implicit val reads: Reads[Data] = Json.reads[Data]
-        }
+        stubHttpResponse(outcome)
 
-        val outcome                       = Right(ResponseWrapper(correlationId, Data("value")))
-        implicit val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
-
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.retrieve(retrieveAllResidentialPropertyCgtRequest)) shouldBe outcome
+        await(connector.retrieve(request)) shouldBe outcome
       }
     }
   }

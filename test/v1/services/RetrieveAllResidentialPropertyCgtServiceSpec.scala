@@ -16,16 +16,15 @@
 
 package v1.services
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import v1.mocks.connectors.MockRetrieveAllResidentialPropertyCgtConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
-import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtResponse}
+import v1.models.response.retrieveAllResidentialPropertyCgt.{PpdService, RetrieveAllResidentialPropertyCgtResponse}
 
 import scala.concurrent.Future
 
@@ -41,21 +40,20 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
   )
 
   val response: RetrieveAllResidentialPropertyCgtResponse = RetrieveAllResidentialPropertyCgtResponse(
-    ppdService = None,
+    ppdService = Some(
+      PpdService(
+        ppdYearToDate = Some(2000.99),
+        multiplePropertyDisposals = None,
+        singlePropertyDisposals = None
+      )
+    ),
     customerAddedDisposals = None
   )
 
   trait Test extends MockRetrieveAllResidentialPropertyCgtConnector {
 
-    case class Data(field: Option[String])
-
-    object Data {
-      implicit val reads: Format[Data] = Json.format[Data]
-    }
-
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-    implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveAllResidentialPropertyCgt")
 
     val service: RetrieveAllResidentialPropertyCgtService = new RetrieveAllResidentialPropertyCgtService(
       connector = mockRetrieveAllResidentialPropertyCgtConnector

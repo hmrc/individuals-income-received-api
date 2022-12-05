@@ -40,18 +40,15 @@ class RetrieveAllResidentialPropertyCgtConnector @Inject() (val http: HttpClient
     val view        = source.toDesViewString
     val queryParams = Seq(("view", view))
 
-    if (taxYear.useTaxYearSpecificApi) {
-      get(
-        uri = TaxYearSpecificIfsUri[RetrieveAllResidentialPropertyCgtResponse](
-          s"income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/${nino.value}"),
-        queryParams
-      )
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[RetrieveAllResidentialPropertyCgtResponse](
+          s"income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/${nino.value}")
+      } else {
+        DesUri[RetrieveAllResidentialPropertyCgtResponse](s"income-tax/income/disposals/residential-property/${nino.value}/${taxYear.asMtd}")
+      }
 
-    } else {
-      get(
-        uri = DesUri[RetrieveAllResidentialPropertyCgtResponse](s"income-tax/income/disposals/residential-property/${nino.value}/${taxYear.asMtd}")
-      )
-    }
+    get(downstreamUri, queryParams)
   }
 
 }
