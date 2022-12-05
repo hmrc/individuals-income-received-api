@@ -30,7 +30,6 @@ import api.models.errors.{
   RuleIncorrectDisposalTypeError,
   RuleIncorrectOrEmptyBodyError,
   RuleLossesGreaterThanGainError,
-  RuleTaxYearNotEndedError,
   RuleTaxYearNotSupportedError,
   RuleTaxYearRangeInvalidError,
   StandardDownstreamError,
@@ -380,7 +379,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
     def nino: String = "AA123456A"
     def taxYear: String
     def downstreamUri: String
-    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd "
+    def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -429,9 +428,9 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
     override def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
   }
 
-  private trait TysIfTest extends Test {
+  private trait TysIfsTest extends Test {
     def taxYear                        = "2023-24"
-    override def downstreamUri: String = s"income-tax/disposals/residential-property/ppd/23-24/$nino"
+    override def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/23-24/$nino"
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
@@ -452,7 +451,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
         verifyNrs(validRequestBodyJson)
       }
 
-      "any valid request is made for a TYS tax year" in new TysIfTest {
+      "any valid request is made for a TYS tax year" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -494,7 +493,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
             response.header("Content-Type") shouldBe Some("application/json")
           }
 
-          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")} for TYS tax year" in new TysIfTest {
+          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")} for TYS tax year" in new TysIfsTest {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
@@ -559,7 +558,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
             verifyNrs(validRequestBodyJson)
           }
 
-          s"ifs returns an $ifsCode error and status $ifsStatus for a TYS tax year" in new TysIfTest {
+          s"ifs returns an $ifsCode error and status $ifsStatus for a TYS tax year" in new TysIfsTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -593,7 +592,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PpdSubmissionIdNotFoundError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
           (CONFLICT, "DUPLICATE_SUBMISSION", BAD_REQUEST, RuleDuplicatedPpdSubmissionIdError),
-          (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_BEFORE_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", FORBIDDEN, RuleIncorrectDisposalTypeError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)

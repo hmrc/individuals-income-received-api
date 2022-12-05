@@ -279,7 +279,6 @@ class CreateAmendCgtPpdOverridesControllerSpec
           (withPath(DateFormatError), BAD_REQUEST),
           (withPath(PpdSubmissionIdFormatError), BAD_REQUEST),
           (withPath(RuleLossesGreaterThanGainError), BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
           (withPath(RuleDuplicatedPpdSubmissionIdError), BAD_REQUEST)
         )
 
