@@ -18,17 +18,16 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockDeleteNonPayeEmploymentService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.requestParsers.MockDeleteNonPayeEmploymentRequestParser
+import v1.models.request.deleteNonPayeEmployment.{DeleteNonPayeEmploymentRawData, DeleteNonPayeEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,8 +36,8 @@ class DeleteNonPayeEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveRequestParser
-    with MockDeleteRetrieveService
+    with MockDeleteNonPayeEmploymentRequestParser
+    with MockDeleteNonPayeEmploymentService
     with MockAuditService
     with MockIdGenerator {
 
@@ -60,14 +59,14 @@ class DeleteNonPayeEmploymentControllerSpec
       )
     )
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: DeleteNonPayeEmploymentRawData = DeleteNonPayeEmploymentRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  val requestData: DeleteNonPayeEmploymentRequest = DeleteNonPayeEmploymentRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   trait Test {
@@ -76,8 +75,8 @@ class DeleteNonPayeEmploymentControllerSpec
     val controller = new DeleteNonPayeEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockDeleteNonPayeEmploymentRequestParser,
+      service = mockDeleteNonPayeEmploymentService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -92,12 +91,12 @@ class DeleteNonPayeEmploymentControllerSpec
     "delete" should {
       "return a 204 NO_CONTENT" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockDeleteNonPayeEmploymentRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .delete(defaultDownstreamErrorMap)
+        MockDeleteNonPayeEmploymentService
+          .deleteNonPayeEmployment(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.delete(nino, taxYear)(fakeDeleteRequest)
@@ -115,7 +114,7 @@ class DeleteNonPayeEmploymentControllerSpec
           def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
             s"a ${error.code} error is returned from the parser" in new Test {
 
-              MockDeleteRetrieveRequestParser
+              MockDeleteNonPayeEmploymentRequestParser
                 .parse(rawData)
                 .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -145,12 +144,12 @@ class DeleteNonPayeEmploymentControllerSpec
           def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
             s"a $mtdError error is returned from the service" in new Test {
 
-              MockDeleteRetrieveRequestParser
+              MockDeleteNonPayeEmploymentRequestParser
                 .parse(rawData)
                 .returns(Right(requestData))
 
-              MockDeleteRetrieveService
-                .delete(defaultDownstreamErrorMap)
+              MockDeleteNonPayeEmploymentService
+                .deleteNonPayeEmployment(requestData)
                 .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
               val result: Future[Result] = controller.delete(nino, taxYear)(fakeDeleteRequest)
