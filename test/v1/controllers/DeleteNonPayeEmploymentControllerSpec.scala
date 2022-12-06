@@ -33,7 +33,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteNonPayeEmploymentControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteNonPayeEmploymentRequestParser
@@ -41,8 +41,8 @@ class DeleteNonPayeEmploymentControllerSpec
     with MockAuditService
     with MockIdGenerator {
 
-  val nino: String = "AC203948B"
-  val taxYear: String = "2020-21"
+  val nino: String          = "AC203948B"
+  val taxYear: String       = "2020-21"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f0123456"
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
