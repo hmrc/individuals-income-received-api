@@ -419,6 +419,7 @@ class AmendOtherEmploymentControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
