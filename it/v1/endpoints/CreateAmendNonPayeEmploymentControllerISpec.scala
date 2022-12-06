@@ -16,9 +16,8 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import api.models.errors._
+import api.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -67,13 +66,12 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
 
   val invalidTipsError: MtdError = ValueFormatError.copy(paths = Some(Seq("/tips")))
 
-  val validNino: String    = "AA123456A"
-  val validTaxYear: String = "2020-21"
+  val validNino: String = "AA123456A"
 
   private trait Test {
 
-    val nino: String    = validNino
-    val taxYear: String = validTaxYear
+    val nino: String = validNino
+    def taxYear: String
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -99,31 +97,53 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
-    def uri: String = s"/employments/non-paye/$nino/$taxYear "
+    def downstreamUri: String
 
-    def ifsUri: String = s"/income-tax/income/employments/non-paye/$nino/$taxYear"
-
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = ()
 
     def request(): WSRequest = {
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/employments/non-paye/$nino/$taxYear ")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String = "2020-21"
+
+    override def downstreamUri: String = s"/income-tax/income/employments/non-paye/$nino/2020-21"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String = "2023-24"
+
+    override def downstreamUri: String = s"/income-tax/income/employments/non-paye/23-24/$nino"
   }
 
   "Calling Create and amend Non-PAYE employment income endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new Test with NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
-        }
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+
+        val response: WSResponse = await(request().put(validRequestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for a TYS tax year" in new Test with TysIfsTest {
+
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
 
         val response: WSResponse = await(request().put(validRequestBodyJson))
         response.status shouldBe OK
@@ -141,15 +161,10 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
                                 expectedError: MtdError,
                                 expectedErrors: Option[ErrorWrapper],
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
+          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test
+            with NonTysTest {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
 
             val response: WSResponse = await(request().put(requestBody))
             response.status shouldBe expectedStatus
@@ -160,32 +175,27 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
 
         val input = Seq(
           // Path errors
-          ("AA1123A", validTaxYear, validRequestBodyJson, BAD_REQUEST, NinoFormatError, None, None),
+          ("AA1123A", "2020-21", validRequestBodyJson, BAD_REQUEST, NinoFormatError, None, None),
           (validNino, "20177", validRequestBodyJson, BAD_REQUEST, TaxYearFormatError, None, None),
           (validNino, "2015-17", validRequestBodyJson, BAD_REQUEST, RuleTaxYearRangeInvalidError, None, None),
           (validNino, "2018-19", validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotSupportedError, None, None),
-          (validNino, getCurrentTaxYear, validRequestBodyJson, BAD_REQUEST, RuleTaxYearNotEndedError, None, None),
 
           // Body Errors
-          (validNino, validTaxYear, JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
-          (validNino, validTaxYear, nonsenseBodyJson, BAD_REQUEST, nonsenseBodyError, None, Some("nonsenseBody")),
-          (validNino, validTaxYear, missingFieldsJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("missingFields")),
-          (validNino, validTaxYear, invalidTipsRequestBodyJson, BAD_REQUEST, invalidTipsError, None, Some("tipsRule"))
+          (validNino, "2020-21", JsObject.empty, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("emptyBody")),
+          (validNino, "2020-21", nonsenseBodyJson, BAD_REQUEST, nonsenseBodyError, None, Some("nonsenseBody")),
+          (validNino, "2020-21", missingFieldsJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None, Some("missingFields")),
+          (validNino, "2020-21", invalidTipsRequestBodyJson, BAD_REQUEST, invalidTipsError, None, Some("tipsRule"))
         )
 
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamErrorCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamErrorCode error and status $downstreamStatus" in new Test with NonTysTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
-            }
+            override def setupStubs(): Unit =
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamErrorCode))
 
             val response: WSResponse = await(request().put(validRequestBodyJson))
             response.status shouldBe expectedStatus
@@ -198,11 +208,11 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "message"
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -212,8 +222,15 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }
