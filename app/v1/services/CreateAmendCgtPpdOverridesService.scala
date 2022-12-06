@@ -52,13 +52,13 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+      downstreamResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDownstreamErrors(errorMap))
+    } yield downstreamResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] = {
+  private def errorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,

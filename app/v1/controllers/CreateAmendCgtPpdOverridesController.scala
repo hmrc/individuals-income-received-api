@@ -118,25 +118,29 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
       }.merge
     }
 
+  private val badRequestErrors: Seq[MtdError] = Seq(
+    BadRequestError,
+    NinoFormatError,
+    TaxYearFormatError,
+    RuleTaxYearRangeInvalidError,
+    RuleTaxYearNotSupportedError,
+    RuleAmountGainLossError,
+    ValueFormatError,
+    DateFormatError,
+    PpdSubmissionIdFormatError,
+    RuleLossesGreaterThanGainError,
+    RuleTaxYearNotEndedError,
+    RuleIncorrectOrEmptyBodyError,
+    RuleDuplicatedPpdSubmissionIdError
+  )
+
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError |
-           NinoFormatError |
-           TaxYearFormatError |
-           RuleTaxYearRangeInvalidError |
-           RuleTaxYearNotSupportedError |
-           CustomMtdError(RuleAmountGainLossError.code) |
-           CustomMtdError(ValueFormatError.code) |
-           CustomMtdError(DateFormatError.code) |
-           CustomMtdError(PpdSubmissionIdFormatError.code) |
-           CustomMtdError(RuleLossesGreaterThanGainError.code) |
-           CustomMtdError(RuleTaxYearNotEndedError.code) |
-           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
-           CustomMtdError(RuleDuplicatedPpdSubmissionIdError.code) => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError | PpdSubmissionIdNotFoundError => NotFound(Json.toJson(errorWrapper))
-      case RuleIncorrectDisposalTypeError               => Forbidden(Json.toJson(errorWrapper))
-      case StandardDownstreamError                      => InternalServerError(Json.toJson(errorWrapper))
-      case _                                            => unhandledError(errorWrapper)
+      case NotFoundError | PpdSubmissionIdNotFoundError          => NotFound(Json.toJson(errorWrapper))
+      case RuleIncorrectDisposalTypeError                        => Forbidden(Json.toJson(errorWrapper))
+      case StandardDownstreamError                               => InternalServerError(Json.toJson(errorWrapper))
+      case _ if errorWrapper.containsAnyOf(badRequestErrors: _*) => BadRequest(Json.toJson(errorWrapper))
+      case _                                                     => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: CreateAmendCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
