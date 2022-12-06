@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendOtherEmployment
+package v1.models.request.deleteNonPayeEmployment
 
-import api.models.domain.{Nino, TaxYear}
+import api.models.request.RawData
 
-case class AmendOtherEmploymentRequest(nino: Nino, taxYear: TaxYear, body: AmendOtherEmploymentRequestBody)
+case class DeleteNonPayeEmploymentRawData(nino: String, taxYear: String) extends RawData

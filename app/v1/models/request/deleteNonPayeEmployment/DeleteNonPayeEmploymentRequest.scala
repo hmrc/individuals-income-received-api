@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendOtherEmployment
+package v1.models.request.deleteNonPayeEmployment
 
 import api.models.domain.{Nino, TaxYear}
 
-case class AmendOtherEmploymentRequest(nino: Nino, taxYear: TaxYear, body: AmendOtherEmploymentRequestBody)
+case class DeleteNonPayeEmploymentRequest(nino: Nino, taxYear: TaxYear)
