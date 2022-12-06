@@ -167,7 +167,7 @@ class DeleteNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait TysIfsTest extends Test {
     def taxYear: String       = "2023-24"
-    def downstreamUri: String = s"/income-tax/employments/non-paye/${TaxYear.fromMtd(taxYear).asTysDownstream}/$nino"
+    def downstreamUri: String = s"/income-tax/employments/non-paye/23-24/$nino"
   }
 
 }
