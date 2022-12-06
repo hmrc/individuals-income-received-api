@@ -16,15 +16,14 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
+import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Api1661Uri
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 class CreateAmendNonPayeEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
@@ -34,14 +33,16 @@ class CreateAmendNonPayeEmploymentConnector @Inject() (val http: HttpClient, val
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    val uri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/employments/non-paye/${taxYear.asTysDownstream}/${nino.nino}")
+    } else {
+      // Pre-tys uses MTD tax year format
+      Api1661Uri[Unit](s"income-tax/income/employments/non-paye/${nino.nino}/${taxYear.asMtd}")
+    }
 
-    put(
-      uri = Api1661Uri[Unit](s"income-tax/income/employments/non-paye/$nino/$taxYear"),
-      body = request.body
-    )
+    put(body, uri)
   }
 
 }

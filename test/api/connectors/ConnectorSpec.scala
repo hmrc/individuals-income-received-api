@@ -203,7 +203,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     MockedAppConfig.api1661BaseUrl returns baseUrl
     MockedAppConfig.api1661Token returns "api1661-token"
-    MockedAppConfig.api1661Environment returns "release6-environment"
+    MockedAppConfig.api1661Environment returns "api1661-environment"
     MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
 
     MockedAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)

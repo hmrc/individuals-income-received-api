@@ -127,11 +127,24 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
-            ValueFormatError.code) | CustomMtdError(CustomerRefFormatError.code) | CustomMtdError(EmployerNameFormatError.code) | CustomMtdError(
-            EmployerRefFormatError.code) | CustomMtdError(DateFormatError.code) | CustomMtdError(ClassOfSharesAwardedFormatError.code) |
-          CustomMtdError(ClassOfSharesAcquiredFormatError.code) | CustomMtdError(SchemePlanTypeFormatError.code) | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleLumpSumsError.code) =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            ValueFormatError,
+            CustomerRefFormatError,
+            EmployerNameFormatError,
+            EmployerRefFormatError,
+            DateFormatError,
+            ClassOfSharesAwardedFormatError,
+            ClassOfSharesAcquiredFormatError,
+            SchemePlanTypeFormatError,
+            RuleIncorrectOrEmptyBodyError,
+            RuleLumpSumsError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)

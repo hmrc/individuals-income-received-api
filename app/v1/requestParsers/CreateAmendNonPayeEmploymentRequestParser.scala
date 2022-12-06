@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 import v1.models.request.createAmendNonPayeEmployment._
 import v1.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
@@ -28,6 +28,6 @@ class CreateAmendNonPayeEmploymentRequestParser @Inject() (val validator: Create
     extends RequestParser[CreateAmendNonPayeEmploymentRawData, CreateAmendNonPayeEmploymentRequest] {
 
   override protected def requestFor(data: CreateAmendNonPayeEmploymentRawData): CreateAmendNonPayeEmploymentRequest =
-    CreateAmendNonPayeEmploymentRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendNonPayeEmploymentRequestBody])
+    CreateAmendNonPayeEmploymentRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[CreateAmendNonPayeEmploymentRequestBody])
 
 }

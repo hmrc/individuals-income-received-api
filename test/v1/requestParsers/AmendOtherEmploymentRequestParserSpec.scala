@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors
 import api.models.errors.{
   BadRequestError,
@@ -295,7 +295,7 @@ class AmendOtherEmploymentRequestParserSpec extends UnitSpec {
 
   private val requestData = AmendOtherEmploymentRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = amendOtherEmploymentRequestBody
   )
 

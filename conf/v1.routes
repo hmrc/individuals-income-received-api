@@ -44,7 +44,7 @@ POST       /employments/:nino/:taxYear/:employmentId/unignore               v1.c
 
 PUT        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.AmendFinancialDetailsController.amendFinancialDetails(nino: String, taxYear: String, employmentId: String)
 DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.DeleteEmploymentFinancialDetailsController.deleteEmploymentFinancialDetails(nino: String, taxYear: String, employmentId: String)
-GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
+GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveEmploymentAndFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
 
 # Capital Gains Tax endpoints
 PUT        /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.CreateAmendCgtPpdOverridesController.createAmendCgtPpdOverrides(nino: String, taxYear: String)
