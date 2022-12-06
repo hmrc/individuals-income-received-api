@@ -26,7 +26,6 @@ import utils.Logging
 import v1.connectors.RetrieveAllResidentialPropertyCgtConnector
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
 import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -42,17 +41,16 @@ class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAll
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllResidentialPropertyCgtResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(defaultDesErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
   }
 
-  private def defaultDesErrorMap: Map[String, MtdError] =
+  private def errorMap: Map[String, MtdError] = {
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_VIEW"              -> SourceFormatError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
@@ -61,5 +59,6 @@ class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAll
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+  }
 
 }

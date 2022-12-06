@@ -76,17 +76,17 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockRetrieveAllResidentialPropertyCgtConnector
               .retrieve(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
@@ -97,7 +97,7 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        errors.foreach(args => (serviceError _).tupled(args))
       }
     }
   }

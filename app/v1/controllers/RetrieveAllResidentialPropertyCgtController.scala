@@ -23,12 +23,11 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-//import api.connectors.DownstreamUri.Api1661Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtHateoasData
 import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 import v1.services.RetrieveAllResidentialPropertyCgtService
 
@@ -97,7 +96,15 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SourceFormatError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            SourceFormatError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))

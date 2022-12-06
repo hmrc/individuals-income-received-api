@@ -22,7 +22,6 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
 import v1.models.response.retrieveAllResidentialPropertyCgt.{PpdService, RetrieveAllResidentialPropertyCgtResponse}
-
 import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
@@ -74,14 +73,28 @@ class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
 
   "RetrieveAllResidentialPropertyCgtConnector" when {
 
-    "retrieve" must {
+    "retrieveAllResidentialPropertyCgt" must {
       "return a 200 status for a success scenario" in new DesTest with Test {
 
         val outcome = Right(ResponseWrapper(correlationId, response))
 
         stubHttpResponse(outcome)
 
-        await(connector.retrieve(request)) shouldBe outcome
+        val result: DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse] = await(connector.retrieve(request))
+        result shouldBe outcome
+      }
+    }
+
+    "retrieveAllResidentialPropertyCgt for Tax Year Specific (TYS)" must {
+      "return a 200 status for a success scenario" in new TysIfsTest with Test {
+        override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, response))
+
+        stubTysHttpResponse(outcome)
+
+        val result: DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse] = await(connector.retrieve(request))
+        result shouldBe outcome
       }
     }
   }
