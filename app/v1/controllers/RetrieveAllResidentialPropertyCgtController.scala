@@ -66,11 +66,6 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
         source = source
       )
 
-//      implicit val IfsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
-//        s"income-tax/income/disposals/residential-property/$nino/$taxYear?view" +
-//          s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
-//      )
-
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))

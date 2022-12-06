@@ -17,7 +17,16 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SourceFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -57,8 +66,9 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
   }
 
   "Calling the 'retrieve all residential property cgt' endpoint" should {
@@ -124,7 +134,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -156,4 +166,5 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
       }
     }
   }
+
 }

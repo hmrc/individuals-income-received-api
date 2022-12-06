@@ -74,16 +74,6 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
         await(service.retrieve(request)) shouldBe outcome
       }
 
-//      "return a NotFoundError for an empty response" in new Test {
-//        val outcome = Right(ResponseWrapper(correlationId, Data(None)))
-//
-//        MockRetrieveAllResidentialPropertyCgtConnector
-//          .retrieve(request)
-//          .returns(Future.successful(outcome))
-//
-//        await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
-//      }
-
       "map errors according to spec" when {
 
         def serviceError(desErrorCode: String, error: MtdError): Unit =
@@ -102,7 +92,9 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATIONID", StandardDownstreamError),
           ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("SERVICE_UNAVAILABLE", StandardDownstreamError),
+          ("INVALID_VIEW", SourceFormatError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))
