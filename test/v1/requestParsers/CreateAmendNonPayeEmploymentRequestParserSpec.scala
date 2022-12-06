@@ -16,13 +16,12 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.mocks.validators.MockCreateAmendNonPayeEmploymentValidator
-import api.models.errors.BadRequestError
 import v1.models.request.createAmendNonPayeEmployment._
 
 class CreateAmendNonPayeEmploymentRequestParserSpec extends UnitSpec {
@@ -65,7 +64,7 @@ class CreateAmendNonPayeEmploymentRequestParserSpec extends UnitSpec {
         MockCreateAmendNonPayeEmploymentValidator.validate(rawData).returns(Nil)
 
         parser.parseRequest(rawData) shouldBe
-          Right(CreateAmendNonPayeEmploymentRequest(Nino(nino), taxYear, requestBody))
+          Right(CreateAmendNonPayeEmploymentRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody))
       }
     }
 

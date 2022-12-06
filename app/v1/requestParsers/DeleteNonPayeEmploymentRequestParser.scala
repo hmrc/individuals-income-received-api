@@ -18,16 +18,17 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-import v1.models.request.createAmendNonPayeEmployment._
-import v1.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
+import v1.models.request.deleteNonPayeEmployment.{DeleteNonPayeEmploymentRawData, DeleteNonPayeEmploymentRequest}
+import v1.requestParsers.validators.DeleteNonPayeEmploymentValidator
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
-@Singleton
-class CreateAmendNonPayeEmploymentRequestParser @Inject() (val validator: CreateAmendNonPayeEmploymentValidator)
-    extends RequestParser[CreateAmendNonPayeEmploymentRawData, CreateAmendNonPayeEmploymentRequest] {
+class DeleteNonPayeEmploymentRequestParser @Inject()(val validator: DeleteNonPayeEmploymentValidator)
+  extends RequestParser[DeleteNonPayeEmploymentRawData, DeleteNonPayeEmploymentRequest] {
 
-  override protected def requestFor(data: CreateAmendNonPayeEmploymentRawData): CreateAmendNonPayeEmploymentRequest =
-    CreateAmendNonPayeEmploymentRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[CreateAmendNonPayeEmploymentRequestBody])
+  override protected def requestFor(data: DeleteNonPayeEmploymentRawData): DeleteNonPayeEmploymentRequest =
+    DeleteNonPayeEmploymentRequest(
+      Nino(data.nino),
+      TaxYear.fromMtd(data.taxYear))
 
 }

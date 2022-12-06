@@ -20,8 +20,8 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveEmploymentAndFinancialDetailsService}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_EMPLOYMENT_FINANCIAL_DETAILS, DELETE_EMPLOYMENT_FINANCIAL_DETAILS, SELF}
@@ -31,21 +31,20 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
-import v1.mocks.requestParsers.MockRetrieveFinancialDetailsRequestParser
-import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
+import v1.mocks.requestParsers.MockRetrieveEmploymentAndFinancialDetailsRequestParser
+import v1.models.request.retrieveFinancialDetails.{RetrieveEmploymentAndFinancialDetailsRequest, RetrieveFinancialDetailsRawData}
 import v1.models.response.retrieveFinancialDetails._
-import v1.models.response.retrieveOther._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveFinancialDetailsControllerSpec
+class RetrieveEmploymentAndFinancialDetailsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveEmploymentAndFinancialDetailsService
     with MockHateoasFactory
-    with MockRetrieveFinancialDetailsRequestParser
+    with MockRetrieveEmploymentAndFinancialDetailsRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -62,9 +61,9 @@ class RetrieveFinancialDetailsControllerSpec
     source = Some(source)
   )
 
-  val requestData: RetrieveFinancialDetailsRequest = RetrieveFinancialDetailsRequest(
+  val requestData: RetrieveEmploymentAndFinancialDetailsRequest = RetrieveEmploymentAndFinancialDetailsRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId,
     source = MtdSourceEnum.latest
   )
@@ -95,11 +94,11 @@ class RetrieveFinancialDetailsControllerSpec
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new RetrieveFinancialDetailsController(
+    val controller = new RetrieveEmploymentAndFinancialDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRetrieveFinancialDetailsRequestParser,
-      service = mockDeleteRetrieveService,
+      service = mockRetrieveEmploymentAndFinancialDetailsService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -131,8 +130,8 @@ class RetrieveFinancialDetailsControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrieveFinancialDetailsResponse](downstreamErrorMap)
+        MockRetrieveEmploymentAndFinancialDetailsService
+          .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, model))))
 
         MockHateoasFactory
@@ -192,8 +191,8 @@ class RetrieveFinancialDetailsControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .retrieve[RetrieveOtherResponse](downstreamErrorMap)
+            MockRetrieveEmploymentAndFinancialDetailsService
+              .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieve(nino, taxYear, employmentId, Some(source))(fakeGetRequest)

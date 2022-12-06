@@ -16,13 +16,13 @@
 
 package v1.requestParsers
 
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, SourceFormatError, TaxYearFormatError}
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveFinancialDetailsValidator
-import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
+import v1.models.request.retrieveFinancialDetails.{RetrieveEmploymentAndFinancialDetailsRequest, RetrieveFinancialDetailsRawData}
 
-class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
+class RetrieveEmploymentAndFinancialDetailsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2021-22"
@@ -51,14 +51,14 @@ class RetrieveFinancialDetailsRequestParserSpec extends UnitSpec {
         MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData).returns(Nil)
 
         parser.parseRequest(retrieveFinancialDetailsRawData) shouldBe
-          Right(RetrieveFinancialDetailsRequest(Nino(nino), taxYear, employmentId, MtdSourceEnum.latest))
+          Right(RetrieveEmploymentAndFinancialDetailsRequest(Nino(nino), TaxYear.fromMtd(taxYear), employmentId, MtdSourceEnum.latest))
       }
 
       "valid request data with out source is supplied" in new Test {
         MockRetrieveFinancialDetailsValidator.validate(retrieveFinancialDetailsRawData.copy(source = None)).returns(Nil)
 
         parser.parseRequest(retrieveFinancialDetailsRawData.copy(source = None)) shouldBe
-          Right(RetrieveFinancialDetailsRequest(Nino(nino), taxYear, employmentId, MtdSourceEnum.latest))
+          Right(RetrieveEmploymentAndFinancialDetailsRequest(Nino(nino), TaxYear.fromMtd(taxYear), employmentId, MtdSourceEnum.latest))
       }
     }
 

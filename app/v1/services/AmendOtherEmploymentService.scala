@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -40,15 +40,13 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendOtherEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.amendOtherEmployment(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    def errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
@@ -57,5 +55,13 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    def extraTysErrors: Map[String, MtdError] = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

@@ -23,25 +23,25 @@ import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class RetrieveFinancialDetailsResponse(submittedOn: String,
-                                            source: Option[MtdSourceEnum],
-                                            customerAdded: Option[String],
-                                            dateIgnored: Option[String],
-                                            employment: Employment)
+case class RetrieveEmploymentAndFinancialDetailsResponse(submittedOn: String,
+                                                         source: Option[MtdSourceEnum],
+                                                         customerAdded: Option[String],
+                                                         dateIgnored: Option[String],
+                                                         employment: Employment)
 
-object RetrieveFinancialDetailsResponse extends HateoasLinks {
-  implicit val writes: OWrites[RetrieveFinancialDetailsResponse] = Json.writes[RetrieveFinancialDetailsResponse]
+object RetrieveEmploymentAndFinancialDetailsResponse extends HateoasLinks {
+  implicit val writes: OWrites[RetrieveEmploymentAndFinancialDetailsResponse] = Json.writes[RetrieveEmploymentAndFinancialDetailsResponse]
 
-  implicit val reads: Reads[RetrieveFinancialDetailsResponse] = (
+  implicit val reads: Reads[RetrieveEmploymentAndFinancialDetailsResponse] = (
     (JsPath \ "submittedOn").read[String] and
       (JsPath \ "source").readNullable[DesSourceEnum].map(_.map(_.toMtdEnum)) and
       (JsPath \ "customerAdded").readNullable[String] and
       (JsPath \ "dateIgnored").readNullable[String] and
       (JsPath \ "employment").read[Employment]
-  )(RetrieveFinancialDetailsResponse.apply _)
+  )(RetrieveEmploymentAndFinancialDetailsResponse.apply _)
 
   implicit object RetrieveFinancialDetailsLinksFactory
-      extends HateoasLinksFactory[RetrieveFinancialDetailsResponse, RetrieveFinancialDetailsHateoasData] {
+      extends HateoasLinksFactory[RetrieveEmploymentAndFinancialDetailsResponse, RetrieveFinancialDetailsHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveFinancialDetailsHateoasData): Seq[Link] = {
       import data._

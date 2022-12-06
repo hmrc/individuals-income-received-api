@@ -20,15 +20,15 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.requestParsers.RetrieveFinancialDetailsRequestParser
-import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveFinancialDetailsRequest}
+import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveEmploymentAndFinancialDetailsRequest}
 
-trait MockRetrieveFinancialDetailsRequestParser extends MockFactory {
+trait MockRetrieveEmploymentAndFinancialDetailsRequestParser extends MockFactory {
 
   val mockRetrieveFinancialDetailsRequestParser: RetrieveFinancialDetailsRequestParser = mock[RetrieveFinancialDetailsRequestParser]
 
   object MockRetrieveFinancialDetailsRequestParser {
 
-    def parse(data: RetrieveFinancialDetailsRawData): CallHandler[Either[ErrorWrapper, RetrieveFinancialDetailsRequest]] = {
+    def parse(data: RetrieveFinancialDetailsRawData): CallHandler[Either[ErrorWrapper, RetrieveEmploymentAndFinancialDetailsRequest]] = {
       (mockRetrieveFinancialDetailsRequestParser.parseRequest(_: RetrieveFinancialDetailsRawData)(_: String)).expects(data, *)
     }
 
