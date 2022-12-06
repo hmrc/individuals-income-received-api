@@ -190,12 +190,12 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test with NonTysTest {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamErrorCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamErrorCode error and status $downstreamStatus" in new Test with NonTysTest {
 
             override def setupStubs(): Unit =
-              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamErrorCode))
 
             val response: WSResponse = await(request().put(validRequestBodyJson))
             response.status shouldBe expectedStatus
@@ -208,7 +208,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "message"
              |}
             """.stripMargin
 

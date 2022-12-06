@@ -17,19 +17,10 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import cats.syntax.either._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendNonPayeEmploymentConnector
@@ -48,11 +39,7 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {
