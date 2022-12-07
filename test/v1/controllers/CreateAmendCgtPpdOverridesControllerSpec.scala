@@ -22,7 +22,7 @@ import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -158,7 +158,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
 
   val requestData: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = requestModel
   )
 
@@ -279,7 +279,6 @@ class CreateAmendCgtPpdOverridesControllerSpec
           (withPath(DateFormatError), BAD_REQUEST),
           (withPath(PpdSubmissionIdFormatError), BAD_REQUEST),
           (withPath(RuleLossesGreaterThanGainError), BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
           (withPath(RuleDuplicatedPpdSubmissionIdError), BAD_REQUEST)
         )
 
@@ -311,7 +310,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           }
         }
 
-        val input = Seq(
+        val errors = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
@@ -322,7 +321,11 @@ class CreateAmendCgtPpdOverridesControllerSpec
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
-        input.foreach(args => (serviceErrors _).tupled(args))
+        val extraTysErrors = Seq(
+          (RuleTaxYearNotSupportedError, BAD_REQUEST)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }
