@@ -17,7 +17,7 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -29,47 +29,30 @@ import v1.fixtures.RetrieveNonPayeEmploymentControllerFixture
 
 class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
 
-  private trait Test {
-
-    val nino: String           = "AA123456A"
-    val taxYear: String        = "2019-20"
-    val source: Option[String] = Some("latest")
-
-    val desResponse: JsValue = RetrieveNonPayeEmploymentControllerFixture.desResponse
-    val mtdResponse: JsValue = RetrieveNonPayeEmploymentControllerFixture.mtdResponseWithHateoas(nino, taxYear)
-
-    def uri: String = s"/employments/non-paye/$nino/$taxYear"
-
-    def desUri: String = s"/income-tax/income/employments/non-paye/$nino/$taxYear"
-
-    def queryParams: Seq[(String, String)] =
-      Seq("source" -> source)
-        .collect { case (k, Some(v)) =>
-          (k, v)
-        }
-
-    def setupStubs(): StubMapping
-
-    def request: WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
-  }
-
   "Calling the 'retrieve non-paye' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -87,7 +70,7 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
                                 empSource: Option[String],
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String           = requestNino
             override val taxYear: String        = requestTaxYear
@@ -116,15 +99,15 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -138,7 +121,7 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "des message"
+             |   "reason": "downstream error message"
              |}
             """.stripMargin
 
@@ -148,6 +131,7 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_VIEW", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
@@ -156,4 +140,47 @@ class RetrieveNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
+  private trait Test {
+
+    val nino: String           = "AA123456A"
+    val source: Option[String] = Some("latest")
+
+    def taxYear: String
+    def downstreamUri: String
+
+    def uri: String                 = s"/employments/non-paye/$nino/$taxYear"
+    val downstreamResponse: JsValue = RetrieveNonPayeEmploymentControllerFixture.downstreamResponse
+    val mtdResponse: JsValue        = RetrieveNonPayeEmploymentControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+
+    def queryParams: Seq[(String, String)] =
+      Seq("source" -> source)
+        .collect { case (k, Some(v)) =>
+          (k, v)
+        }
+
+    def setupStubs(): StubMapping
+
+    def request: WSRequest = {
+      setupStubs()
+      buildRequest(uri)
+        .addQueryStringParameters(queryParams: _*)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String       = "2019-20"
+    def downstreamUri: String = s"/income-tax/income/employments/non-paye/$nino/$taxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/employments/non-paye/23-24/$nino"
+  }
+
 }
