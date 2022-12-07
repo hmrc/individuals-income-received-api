@@ -73,22 +73,6 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe outcome
       }
 
-      "return correct result for a success in a tys year" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-
-        val tysYearRequest: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
-          nino = Nino(nino),
-          taxYear = TaxYear.fromMtd("2023-24"),
-          body = requestBodyModel
-        )
-
-        MockCreateAmendCgtPpdOverridesConnector
-          .createAmend(tysYearRequest)
-          .returns(Future.successful(outcome))
-
-        await(service.createAmend(tysYearRequest)) shouldBe outcome
-      }
-
       "map errors according to spec" when {
 
         def serviceError(desErrorCode: String, error: MtdError): Unit =

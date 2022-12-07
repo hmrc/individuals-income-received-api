@@ -424,13 +424,13 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
   }
 
   private trait NonTysTest extends Test {
-    def taxYear                        = "2020-21"
-    override def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
+    def taxYear               = "2020-21"
+    def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear                        = "2023-24"
-    override def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/23-24/$nino"
+    def taxYear               = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/23-24/$nino"
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
@@ -558,22 +558,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
             verifyNrs(validRequestBodyJson)
           }
 
-          s"ifs returns an $ifsCode error and status $ifsStatus for a TYS tax year" in new TysIfsTest {
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
-            }
-
-            val response: WSResponse = await(request.put(validRequestBodyJson))
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
-
-            verifyNrs(validRequestBodyJson)
-          }
         }
 
         def errorBody(code: String): String =

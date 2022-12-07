@@ -156,18 +156,6 @@ class CreateAmendCgtPpdOverridesRequestParserSpec extends UnitSpec {
           Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody))
       }
 
-      "valid request data is supplied for a tys year" in new Test {
-        private val createAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
-          nino = nino,
-          taxYear = "2023-24",
-          body = validRawRequestBody
-        )
-
-        MockCreateAmendCgtPpdOverridesValidator.validate(createAmendCgtPpdOverridesRawData).returns(Nil)
-
-        parser.parseRequest(createAmendCgtPpdOverridesRawData) shouldBe
-          Right(CreateAmendCgtPpdOverridesRequest(Nino(nino), TaxYear.fromMtd("2023-24"), requestBody))
-      }
     }
 
     "return an ErrorWrapper" when {
