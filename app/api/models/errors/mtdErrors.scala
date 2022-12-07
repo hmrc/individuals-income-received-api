@@ -158,7 +158,7 @@ object RuleGainLossError
 object RuleDisposalDateError
     extends MtdError(
       code = "RULE_DISPOSAL_DATE",
-      message = ""
+      message = "The disposalDate must be in the specified tax year and no later than today's date"
     )
 
 object RuleAcquisitionDateError
