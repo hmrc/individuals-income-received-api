@@ -75,22 +75,22 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the connector" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the connector" in new Test {
 
             MockCreateAmendCgtPpdOverridesConnector
               .createAmend(createAmendCgtPpdOverridesRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
+        def failuresArrayError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the connector in a failures array" in new Test {
 
             MockCreateAmendCgtPpdOverridesConnector
               .createAmend(createAmendCgtPpdOverridesRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(downstreamErrorCode)))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
