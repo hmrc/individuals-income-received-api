@@ -16,13 +16,7 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors.{
-  MtdError,
-  RuleAcquisitionDateAfterDisposalDateError,
-  RuleCompletionDateBeforeDisposalDateError,
-  RuleGainLossError,
-  RuleIncorrectOrEmptyBodyError
-}
+import api.models.errors.{MtdError, RuleCompletionDateBeforeDisposalDateError, RuleGainLossError, RuleIncorrectOrEmptyBodyError}
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
@@ -35,7 +29,6 @@ import v1.requestParsers.validators.validations.{
   DateFormatValidation,
   DecimalValueValidation,
   DisposalDateErrorMessages,
-  DisposalDateValidation,
   JsonFormatValidation,
   NinoValidation,
   TaxYearNotSupportedValidation,
@@ -190,23 +183,10 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
         path = s"/disposals/$index",
         error = RuleCompletionDateBeforeDisposalDateError
       ),
-      DateAfterDateValidation.validate(
-        dateWhichShouldBeEarlier = disposal.acquisitionDate,
-        dateWhichShouldBeLater = disposal.disposalDate,
-        path = s"/disposals/$index",
-        error = RuleAcquisitionDateAfterDisposalDateError
-      ),
       CompletionDateValidation.validate(
         date = disposal.completionDate,
         path = s"/disposals/$index",
         taxYear = taxYear
-      ),
-      DisposalDateValidation.validate(
-        date = disposal.disposalDate,
-        taxYear = taxYear,
-        path = s"/disposals/$index",
-        validateToday = false,
-        errorMessage = IN_YEAR
       )
     ).flatten
   }

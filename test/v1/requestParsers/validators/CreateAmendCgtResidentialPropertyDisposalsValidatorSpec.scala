@@ -21,10 +21,8 @@ import api.models.errors.{
   CustomerRefFormatError,
   DateFormatError,
   NinoFormatError,
-  RuleAcquisitionDateAfterDisposalDateError,
   RuleCompletionDateBeforeDisposalDateError,
   RuleCompletionDateError,
-  RuleDisposalDateError,
   RuleGainLossError,
   RuleIncorrectOrEmptyBodyError,
   RuleLossesGreaterThanGainError,
@@ -790,20 +788,6 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
       }
     }
 
-    "return RuleAcquisitionDateBeforeDisposalDateError error" when {
-      "supplied acquisition date is after supplied disposal date" in new Test {
-        validator.validate(
-          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, acquisitionDateAfterDisposalDateRawRequestBody)) shouldBe
-          List(
-            RuleAcquisitionDateAfterDisposalDateError.copy(
-              paths = Some(
-                Seq(
-                  "/disposals/0"
-                ))
-            ))
-      }
-    }
-
     "return RuleCompletionDateError error" when {
       "supplied completion date is too late" in new Test {
         validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, completionDateInFutureRawRequestBody)) shouldBe
@@ -824,21 +808,6 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
                 Seq(
                   "/disposals/0"
                 ))
-            ))
-      }
-    }
-
-    "return RuleDisposalDateError error" when {
-      "supplied disposal date is invalid" in new Test {
-        validator.validate(
-          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, disposalDateNotInTaxYearRawRequestBody)) shouldBe
-          List(
-            RuleDisposalDateError.copy(
-              paths = Some(
-                Seq(
-                  "/disposals/0"
-                )),
-              message = IN_YEAR
             ))
       }
     }
