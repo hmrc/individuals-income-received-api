@@ -41,8 +41,8 @@ class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAll
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllResidentialPropertyCgtResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveResponse(desResponseWrapper))
+      downstreamResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
+      mtdResponseWrapper        <- EitherT.fromEither[Future](validateRetrieveResponse(downstreamResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value

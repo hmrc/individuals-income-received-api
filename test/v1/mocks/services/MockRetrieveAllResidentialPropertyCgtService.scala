@@ -49,22 +49,6 @@ trait MockRetrieveAllResidentialPropertyCgtService extends MockFactory {
         .expects(requestData, *, *, *, *)
     }
 
-//    def retrieve[Resp: Reads](downstreamUri: DownstreamUri[Resp],
-//                              downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
-//      (
-//        mockRetrieveAllResidentialPropertyCgtService
-//          .retrieve[Resp](_: Map[String, MtdError])(
-//            _: Format[Resp],
-//            _: HeaderCarrier,
-//            _: ExecutionContext,
-//            _: EndpointLogContext,
-//            _: DownstreamUri[Resp],
-//            _: String
-//          )
-//        )
-//        .expects(downstreamErrorMap, *, *, *, *, downstreamUri, *)
-//    }
-
   }
 
 }

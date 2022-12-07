@@ -21,7 +21,7 @@ import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
-import v1.models.response.retrieveAllResidentialPropertyCgt.{PpdService, RetrieveAllResidentialPropertyCgtResponse}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
 import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
@@ -32,13 +32,7 @@ class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
   val queryParams: Seq[(String, String)] = Seq(("view", source.toDesViewString))
 
   val response: RetrieveAllResidentialPropertyCgtResponse = RetrieveAllResidentialPropertyCgtResponse(
-    ppdService = Some(
-      PpdService(
-        ppdYearToDate = Some(2000.99),
-        multiplePropertyDisposals = None,
-        singlePropertyDisposals = None
-      )
-    ),
+    ppdService = None,
     customerAddedDisposals = None
   )
 
