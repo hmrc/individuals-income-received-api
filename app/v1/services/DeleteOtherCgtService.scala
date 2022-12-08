@@ -44,8 +44,8 @@ class DeleteOtherCgtService @Inject() (connector: DeleteOtherCgtConnector) exten
     result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
@@ -53,5 +53,14 @@ class DeleteOtherCgtService @Inject() (connector: DeleteOtherCgtConnector) exten
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "NOT_FOUND"              -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }
