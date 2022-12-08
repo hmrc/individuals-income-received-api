@@ -23,15 +23,13 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.Api1661Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
-import api.models.domain.MtdSourceEnum
-import api.models.domain.MtdSourceEnum.latest
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import v1.models.response.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtHateoasData, RetrieveAllResidentialPropertyCgtResponse}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtHateoasData
 import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
+import v1.services.RetrieveAllResidentialPropertyCgtService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -40,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: EnrolmentsAuthService,
                                                              val lookupService: MtdIdLookupService,
                                                              requestParser: RetrieveAllResidentialPropertyCgtRequestParser,
-                                                             service: DeleteRetrieveService,
+                                                             service: RetrieveAllResidentialPropertyCgtService,
                                                              hateoasFactory: HateoasFactory,
                                                              cc: ControllerComponents,
                                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -51,7 +49,7 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveAllResidentialPropertyCgtController",
-      endpointName = "retrieveAll"
+      endpointName = "retrieveAllResidentialPropertyCgtController"
     )
 
   def retrieveAll(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] =
@@ -67,15 +65,10 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
         source = source
       )
 
-      implicit val IfsUri: Api1661Uri[RetrieveAllResidentialPropertyCgtResponse] = Api1661Uri[RetrieveAllResidentialPropertyCgtResponse](
-        s"income-tax/income/disposals/residential-property/$nino/$taxYear?view" +
-          s"=${source.flatMap(MtdSourceEnum.parser.lift).getOrElse(latest).toDesViewString}"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveAllResidentialPropertyCgtResponse](desErrorMap))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieve(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrieveAllResidentialPropertyCgtHateoasData(nino, taxYear))
@@ -103,23 +96,19 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | SourceFormatError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            SourceFormatError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
-
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_VIEW"              -> SourceFormatError,
-      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
-    )
 
 }
