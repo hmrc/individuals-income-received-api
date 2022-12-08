@@ -98,7 +98,7 @@ class DeleteCgtPpdOverridesControllerSpec
           .returns(Right(requestData))
 
         MockDeleteCgtPpdOverridesService
-          .delete(requestData)
+          .deleteCgtPpdOverrides(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
@@ -152,7 +152,7 @@ class DeleteCgtPpdOverridesControllerSpec
               .returns(Right(requestData))
 
             MockDeleteCgtPpdOverridesService
-              .delete(requestData)
+              .deleteCgtPpdOverrides(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)

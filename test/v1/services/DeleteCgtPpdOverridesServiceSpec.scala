@@ -51,7 +51,7 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
       "return a mapped result" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
         MockDeleteCgtPpdOverridesConnector
-          .delete(requestData)
+          .deleteCgtPpdOverrides(requestData)
           .returns(Future.successful(outcome))
 
         await(service.deleteCgtPpdOverrides(requestData)) shouldBe outcome
@@ -62,7 +62,7 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
         s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
           val outcome = Left(ErrorWrapper(correlationId, error))
           MockDeleteCgtPpdOverridesConnector
-            .delete(requestData)
+            .deleteCgtPpdOverrides(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.deleteCgtPpdOverrides(requestData)) shouldBe outcome

@@ -33,10 +33,10 @@ trait MockDeleteCgtPpdOverridesService extends MockFactory {
 
   object MockDeleteCgtPpdOverridesService {
 
-    def delete(requestData: DeleteCgtPpdOverridesRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def deleteCgtPpdOverrides(requestData: DeleteCgtPpdOverridesRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (
         mockDeleteCgtPpdOverridesService
-          .delete(_: DeleteCgtPpdOverridesRequest)(
+          .deleteCgtPpdOverrides(_: DeleteCgtPpdOverridesRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,

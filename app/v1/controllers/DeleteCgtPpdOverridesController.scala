@@ -64,7 +64,7 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete(parsedRequest))
+          serviceResponse <- EitherT(service.deleteCgtPpdOverrides(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

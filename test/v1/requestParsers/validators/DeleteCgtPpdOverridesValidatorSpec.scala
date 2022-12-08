@@ -25,7 +25,7 @@ import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
 class DeleteCgtPpdOverridesValidatorSpec extends UnitSpec {
 
   private val validNino    = "AA123456A"
-  private val validTaxYear = "2017-18"
+  private val validTaxYear = "2019-20"
 
   class Test extends MockAppConfig {
 
@@ -34,7 +34,7 @@ class DeleteCgtPpdOverridesValidatorSpec extends UnitSpec {
     val validator = new DeleteCgtPpdOverridesValidator()
 
     MockedAppConfig.minimumPermittedTaxYear
-      .returns(2018)
+      .returns(2020)
       .anyNumberOfTimes()
 
   }
