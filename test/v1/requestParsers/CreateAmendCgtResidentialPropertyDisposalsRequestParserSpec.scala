@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
@@ -65,7 +65,7 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestParserSpec extends UnitSp
         MockCreateAmendCgtResidentialPropertyDisposalsValidator.validate(createAmendCgtPpdOverridesRawData).returns(Nil)
 
         parser.parseRequest(createAmendCgtPpdOverridesRawData) shouldBe
-          Right(CreateAmendCgtResidentialPropertyDisposalsRequest(Nino(nino), taxYear, requestBody))
+          Right(CreateAmendCgtResidentialPropertyDisposalsRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody))
       }
     }
 

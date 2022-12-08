@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 import v1.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
@@ -30,7 +30,7 @@ class CreateAmendCgtResidentialPropertyDisposalsRequestParser @Inject() (val val
   override protected def requestFor(data: CreateAmendCgtResidentialPropertyDisposalsRawData): CreateAmendCgtResidentialPropertyDisposalsRequest =
     CreateAmendCgtResidentialPropertyDisposalsRequest(
       Nino(data.nino),
-      data.taxYear,
+      TaxYear.fromMtd(data.taxYear),
       data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody])
 
 }
