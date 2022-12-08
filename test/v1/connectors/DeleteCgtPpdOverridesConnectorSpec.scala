@@ -17,29 +17,27 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{NinoFormatError, StandardDownstreamError}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRequest
-
 import scala.concurrent.Future
 
 class DeleteCgtPpdOverridesConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA123456A"
 
-  trait Test extends MockHttpClient with MockAppConfig {
+  trait Test {
+    _: ConnectorTest =>
 
     def taxYear: TaxYear
 
-    val connector: DeleteCgtPpdOverridesConnector = new DeleteCgtPpdOverridesConnector(
+    protected val connector: DeleteCgtPpdOverridesConnector = new DeleteCgtPpdOverridesConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    val request: DeleteCgtPpdOverridesRequest = DeleteCgtPpdOverridesRequest(Nino(nino), taxYear)
+    protected val request: DeleteCgtPpdOverridesRequest = DeleteCgtPpdOverridesRequest(Nino(nino), taxYear)
 
   }
 
@@ -48,38 +46,38 @@ class DeleteCgtPpdOverridesConnectorSpec extends ConnectorSpec {
       "a valid request is made" in new DesTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}"
-        ).returns(Future.successful(expected))
+          s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}"
+        ).returns(Future.successful(outcome))
 
-        await(connector.deleteCgtPpdOverrides(request)) shouldBe expected
+        await(connector.deleteCgtPpdOverrides(request)) shouldBe outcome
       }
 
       "downstream returns a single error" in new DesTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, NinoFormatError))
+        val outcome = Left(ResponseWrapper(correlationId, NinoFormatError))
 
         willDelete(
-          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}"
-        ).returns(Future.successful(expected))
+          s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}"
+        ).returns(Future.successful(outcome))
 
-        await(connector.deleteCgtPpdOverrides(request)) shouldBe expected
+        await(connector.deleteCgtPpdOverrides(request)) shouldBe outcome
       }
 
       "downstream returns multiple errors" in new DesTest with Test {
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        val expected = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
+        val outcome = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
 
         willDelete(
-          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}"
-        ).returns(Future.successful(expected))
+          s"$baseUrl/income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}"
+        ).returns(Future.successful(outcome))
 
-        await(connector.deleteCgtPpdOverrides(request)) shouldBe expected
+        await(connector.deleteCgtPpdOverrides(request)) shouldBe outcome
       }
 
     }
@@ -87,13 +85,13 @@ class DeleteCgtPpdOverridesConnectorSpec extends ConnectorSpec {
       "a valid request is made" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val expected = Right(ResponseWrapper(correlationId, ()))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/income/disposals/residential-property/ppd/${taxYear.asTysDownstream}/$nino"
-        ).returns(Future.successful(expected))
+          s"$baseUrl/income-tax/income/disposals/residential-property/ppd/${taxYear.asTysDownstream}/$nino"
+        ).returns(Future.successful(outcome))
 
-        await(connector.deleteCgtPpdOverrides(request)) shouldBe expected
+        await(connector.deleteCgtPpdOverrides(request)) shouldBe outcome
       }
     }
   }
