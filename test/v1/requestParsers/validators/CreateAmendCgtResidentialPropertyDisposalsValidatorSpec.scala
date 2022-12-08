@@ -353,30 +353,6 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |""".stripMargin
     )
 
-    private val acquisitionDateAfterDisposalDateJson: JsValue = Json.parse(
-      s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"2020-04-01",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue
-        |    }
-        |  ]
-        |}
-        |""".stripMargin
-    )
-
     private val completionDateInFutureJson: JsValue = Json.parse(
       s"""
         |{
@@ -411,30 +387,6 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |      "completionDate":"2020-03-06",
         |      "disposalProceeds":$validValue,
         |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue
-        |    }
-        |  ]
-        |}
-        |""".stripMargin
-    )
-
-    private val disposalDateNotInTaxYearJson: JsValue = Json.parse(
-      s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"2018-06-01",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"2018-05-01",
         |      "acquisitionAmount":$validValue,
         |      "improvementCosts":$validValue,
         |      "additionalCosts":$validValue,
@@ -532,10 +484,8 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val badDateRawRequestBody: AnyContentAsJson                             = AnyContentAsJson(badDateJson)
     val badCustomerReferenceRawRequestBody: AnyContentAsJson                = AnyContentAsJson(badCustomerReferenceJson)
     val completionDateBeforeDisposalDateRawRequestBody: AnyContentAsJson    = AnyContentAsJson(completionDateBeforeDisposalDateJson)
-    val acquisitionDateAfterDisposalDateRawRequestBody: AnyContentAsJson    = AnyContentAsJson(acquisitionDateAfterDisposalDateJson)
     val completionDateInFutureRawRequestBody: AnyContentAsJson              = AnyContentAsJson(completionDateInFutureJson)
     val completionDateBefore7thMarchRawRequestBody: AnyContentAsJson        = AnyContentAsJson(completionDateBefore7thMarchJson)
-    val disposalDateNotInTaxYearRawRequestBody: AnyContentAsJson            = AnyContentAsJson(disposalDateNotInTaxYearJson)
     val gainAndLossRawRequestBody: AnyContentAsJson                         = AnyContentAsJson(gainAndLossJson)
     val lossFromThisYearGreaterThanGainRawRequestBody: AnyContentAsJson     = AnyContentAsJson(lossFromThisYearGreaterThanGainJson)
     val lossFromPreviousYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(lossFromPreviousYearGreaterThanGainJson)
