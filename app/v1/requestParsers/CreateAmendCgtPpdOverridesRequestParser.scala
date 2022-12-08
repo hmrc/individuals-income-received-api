@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 
 import javax.inject.{Inject, Singleton}
@@ -28,6 +28,6 @@ class CreateAmendCgtPpdOverridesRequestParser @Inject() (val validator: CreateAm
     extends RequestParser[CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest] {
 
   override protected def requestFor(data: CreateAmendCgtPpdOverridesRawData): CreateAmendCgtPpdOverridesRequest =
-    CreateAmendCgtPpdOverridesRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendCgtPpdOverridesRequestBody])
+    CreateAmendCgtPpdOverridesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[CreateAmendCgtPpdOverridesRequestBody])
 
 }

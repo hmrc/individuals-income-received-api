@@ -16,29 +16,12 @@
 
 package v1.requestParsers.validators
 
-import api.mocks.MockCurrentDateTime
-import api.models.errors.{
-  DateFormatError,
-  NinoFormatError,
-  PpdSubmissionIdFormatError,
-  RuleAmountGainLossError,
-  RuleDuplicatedPpdSubmissionIdError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleLossesGreaterThanGainError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json, JsValue}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import utils.CurrentDateTime
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
@@ -626,22 +609,14 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val neitherGainsOrLossSinglePropertyDisposalsRequestBody   = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
   private val currentYearLossesGreaterThanGainsRequestBody           = AnyContentAsJson(currentYearLossesGreaterThanGainsJson)
 
-  class Test extends MockCurrentDateTime with MockAppConfig {
+  class Test extends MockAppConfig {
 
-    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
-    implicit val appConfig: AppConfig              = mockAppConfig
+    implicit val appConfig: AppConfig = mockAppConfig
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
 
-    MockCurrentDateTime.getDateTime
-      .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
-      .anyNumberOfTimes()
-
-    private val MINIMUM_PERMITTED_TAX_YEAR = 2020
-
     MockedAppConfig.minimumPermittedTaxYear
-      .returns(MINIMUM_PERMITTED_TAX_YEAR)
+      .returns(2020)
       .anyNumberOfTimes()
 
   }
@@ -674,13 +649,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "an invalid tax year is supplied" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "20178", validRequestBody)) shouldBe
           List(TaxYearFormatError)
-      }
-    }
-
-    "return a RuleTaxYearNotEnded error" when {
-      "the current tax year is provided" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2021-22", validRequestBody)) shouldBe
-          List(RuleTaxYearNotEndedError)
       }
     }
 
