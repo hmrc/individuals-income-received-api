@@ -17,15 +17,8 @@
 package v1.endpoints
 
 import api.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -44,11 +37,9 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/disposals/residential-property/$nino/$taxYear/ppd"
 
-    def setupStubs(): Unit
+    def setupStubs(): StubMapping
 
     def request(): WSRequest = {
-      AuthStub.authorised()
-      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
@@ -73,7 +64,9 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
     "return a 204 status code" when {
       "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): Unit = {
+        override def setupStubs(): StubMapping = {
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
@@ -86,7 +79,9 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
 
-        override def setupStubs(): Unit = {
+        override def setupStubs(): StubMapping = {
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
@@ -107,7 +102,10 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            override def setupStubs(): Unit = {}
+            override def setupStubs(): StubMapping = {
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+            }
 
             val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
@@ -125,12 +123,12 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new NonTysTest {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): Unit = {
-              DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().delete)
@@ -144,7 +142,7 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "downstream message"
              |}
             """.stripMargin
 
