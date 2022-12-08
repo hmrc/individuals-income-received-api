@@ -27,12 +27,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockDeleteCgtPpdOverridesConnector extends MockFactory {
 
-  val mockConnector: DeleteCgtPpdOverridesConnector = mock[DeleteCgtPpdOverridesConnector]
+  val mockDeleteCgtPpdOverridesConnector: DeleteCgtPpdOverridesConnector = mock[DeleteCgtPpdOverridesConnector]
 
   object MockDeleteCgtPpdOverridesConnector {
 
     def delete(requestData: DeleteCgtPpdOverridesRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
-      (mockConnector
+      (mockDeleteCgtPpdOverridesConnector
         .deleteCgtPpdOverrides(_: DeleteCgtPpdOverridesRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }

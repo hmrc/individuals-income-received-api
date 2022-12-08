@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCgtPpdOverridesService @Inject() (connector: DeleteCgtPpdOverridesConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def delete(request: DeleteCgtPpdOverridesRequest)(implicit
+  def deleteCgtPpdOverrides(request: DeleteCgtPpdOverridesRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,

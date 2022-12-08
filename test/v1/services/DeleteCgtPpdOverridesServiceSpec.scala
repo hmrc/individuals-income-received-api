@@ -30,41 +30,42 @@ import scala.concurrent.Future
 
 class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
 
-  val validNino: String              = "AA123456A"
-  val validTaxYear: String           = "2019-20"
-  implicit val correlationId: String = "X-123"
+  private val nino: String           = "AA123456A"
+  private val taxYear: String        = "2019-20"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val requestData: DeleteCgtPpdOverridesRequest = DeleteCgtPpdOverridesRequest(Nino(validNino), TaxYear.fromMtd(validTaxYear))
+  private val requestData: DeleteCgtPpdOverridesRequest = DeleteCgtPpdOverridesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
   trait Test extends MockDeleteCgtPpdOverridesConnector {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new DeleteCgtPpdOverridesService(
-      connector = mockConnector
+      connector = mockDeleteCgtPpdOverridesConnector
     )
 
   }
 
-  "service" when {
+  "Delete CGT PPD Overrides service" when {
     "a service call is successful" should {
       "return a mapped result" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
         MockDeleteCgtPpdOverridesConnector
           .delete(requestData)
-          .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
+          .returns(Future.successful(outcome))
 
-        await(service.delete(requestData)) shouldBe Right(ResponseWrapper("resultId", ()))
+        await(service.deleteCgtPpdOverrides(requestData)) shouldBe outcome
       }
     }
     "a service call is unsuccessful" should {
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
-
+          val outcome = Left(ErrorWrapper(correlationId, error))
           MockDeleteCgtPpdOverridesConnector
             .delete(requestData)
-            .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          await(service.delete(requestData)) shouldBe Left(ErrorWrapper("resultId", error))
+          await(service.deleteCgtPpdOverrides(requestData)) shouldBe outcome
         }
 
       val errors = Seq(
