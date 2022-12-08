@@ -25,12 +25,12 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.Api1661Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.audit.DeleteCgtPpdOverridesAuditDetail
+import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
+import v1.requestParsers.DeleteCgtPpdOverridesRequestParser
+import v1.services.DeleteCgtPpdOverridesService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,8 +38,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
-                                                 requestParser: DeleteRetrieveRequestParser,
-                                                 service: DeleteRetrieveService,
+                                                 requestParser: DeleteCgtPpdOverridesRequestParser,
+                                                 service: DeleteCgtPpdOverridesService,
                                                  auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -47,11 +47,10 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
     with BaseController
     with Logging {
 
-  implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(
-      controllerName = "DeleteCgtPpdOverridesController",
-      endpointName = "deleteCgtPpdOverrides"
-    )
+  implicit val endpointLogContext: EndpointLogContext = EndpointLogContext(
+    controllerName = "DeleteCgtPpdOverridesController",
+    endpointName = "Delete 'Report and Pay Capital Gains Tax on Residential Property' Overrides (PPD)"
+  )
 
   def deleteCgtPpdOverrides(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
@@ -60,19 +59,12 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
-        nino = nino,
-        taxYear = taxYear
-      )
-
-      implicit val IfsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
-        s"income-tax/income/disposals/residential-property/ppd/$nino/$taxYear"
-      )
+      val rawData = DeleteCgtPpdOverridesRawData(nino = nino, taxYear = taxYear)
 
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete())
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.deleteCgtPpdOverrides(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -112,7 +104,13 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
