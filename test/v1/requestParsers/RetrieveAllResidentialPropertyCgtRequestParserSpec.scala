@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, SourceFormatError, TaxYearFormatError}
 import support.UnitSpec
 import v1.mocks.validators.MockRetrieveAllResidentialPropertyCgtValidator
@@ -49,14 +49,14 @@ class RetrieveAllResidentialPropertyCgtRequestParserSpec extends UnitSpec {
         MockRetrieveAllResidentialPropertyCgtValidator.validate(retrieveAllResidentialPropertyCgtRawData).returns(Nil)
 
         parser.parseRequest(retrieveAllResidentialPropertyCgtRawData) shouldBe
-          Right(RetrieveAllResidentialPropertyCgtRequest(Nino(nino), taxYear, MtdSourceEnum.hmrcHeld))
+          Right(RetrieveAllResidentialPropertyCgtRequest(Nino(nino), TaxYear.fromMtd(taxYear), MtdSourceEnum.hmrcHeld))
       }
 
       "valid request with no source is supplied" in new Test {
         MockRetrieveAllResidentialPropertyCgtValidator.validate(retrieveAllResidentialPropertyCgtRawData.copy(source = None)).returns(Nil)
 
         parser.parseRequest(retrieveAllResidentialPropertyCgtRawData.copy(source = None)) shouldBe
-          Right(RetrieveAllResidentialPropertyCgtRequest(Nino(nino), taxYear, MtdSourceEnum.latest))
+          Right(RetrieveAllResidentialPropertyCgtRequest(Nino(nino), TaxYear.fromMtd(taxYear), MtdSourceEnum.latest))
       }
     }
 

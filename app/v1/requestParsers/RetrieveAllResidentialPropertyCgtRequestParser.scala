@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.requestParsers.RequestParser
 
 import javax.inject.{Inject, Singleton}
@@ -30,7 +30,7 @@ class RetrieveAllResidentialPropertyCgtRequestParser @Inject() (val validator: R
   override protected def requestFor(data: RetrieveAllResidentialPropertyCgtRawData): RetrieveAllResidentialPropertyCgtRequest =
     RetrieveAllResidentialPropertyCgtRequest(
       Nino(data.nino),
-      data.taxYear,
+      TaxYear.fromMtd(data.taxYear),
       data.source.flatMap(MtdSourceEnum.parser.lift).getOrElse(MtdSourceEnum.latest)
     )
 
