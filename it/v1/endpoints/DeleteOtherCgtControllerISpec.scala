@@ -140,7 +140,6 @@ class DeleteOtherCgtControllerISpec extends IntegrationBaseSpec {
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
-//        (errors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
