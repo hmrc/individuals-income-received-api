@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{
   DownstreamErrorCode,
   DownstreamErrors,
@@ -29,6 +29,7 @@ import api.models.errors.{
   RuleDuplicatedPpdSubmissionIdError,
   RuleIncorrectDisposalTypeError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
@@ -47,7 +48,7 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
 
   val createAmendCgtPpdOverridesRequest: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = requestBodyModel
   )
 
@@ -74,27 +75,27 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the connector" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the connector" in new Test {
 
             MockCreateAmendCgtPpdOverridesConnector
               .createAmend(createAmendCgtPpdOverridesRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
+        def failuresArrayError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the connector in a failures array" in new Test {
 
             MockCreateAmendCgtPpdOverridesConnector
               .createAmend(createAmendCgtPpdOverridesRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(downstreamErrorCode)))))))
 
             await(service.createAmend(createAmendCgtPpdOverridesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
@@ -108,8 +109,12 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
-        input.foreach(args => (failuresArrayError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => (failuresArrayError _).tupled(args))
       }
     }
   }

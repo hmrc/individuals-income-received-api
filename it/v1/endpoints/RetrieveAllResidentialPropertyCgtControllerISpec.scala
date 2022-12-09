@@ -17,7 +17,16 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, SourceFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  SourceFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -31,18 +40,18 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
 
   private trait Test {
 
-    val nino: String           = "AA123456A"
-    val taxYear: String        = "2019-20"
-    val source: Option[String] = Some("latest")
+    def nino: String           = "AA123456A"
+    def source: Option[String] = Some("latest")
 
-    val ifsResponse: JsValue = RetrieveAllResidentialPropertyCgtControllerFixture.ifsJson
+    def taxYear: String
+
+    def downstreamUri: String
+    val downstreamResponse: JsValue = RetrieveAllResidentialPropertyCgtControllerFixture.ifsJson
+
+    def mtdUri: String       = s"/disposals/residential-property/$nino/$taxYear"
     val mtdResponse: JsValue = RetrieveAllResidentialPropertyCgtControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
-    def uri: String = s"/disposals/residential-property/$nino/$taxYear"
-
-    def ifsUri: String = s"/income-tax/income/disposals/residential-property/$nino/$taxYear"
-
-    def queryParams: Seq[(String, String)] =
+    def mtdQueryParams: Seq[(String, String)] =
       Seq("source" -> source)
         .collect { case (k, Some(v)) =>
           (k, v)
@@ -50,29 +59,71 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
 
     def setupStubs(): StubMapping
 
-    def request: WSRequest = {
+    def mtdRequest: WSRequest = {
       setupStubs()
-      buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
+      buildRequest(mtdUri)
+        .addQueryStringParameters(mtdQueryParams: _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String       = "2020-21"
+    def downstreamUri: String = s"/income-tax/income/disposals/residential-property/$nino/2020-21"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/disposals/residential-property/23-24/$nino"
   }
 
   "Calling the 'retrieve all residential property cgt' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, Map("view" -> "LATEST"), OK, ifsResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(mtdRequest.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for Tax Year Specific (TYS)" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamResponse)
+        }
+
+        val response: WSResponse = await(mtdRequest.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made without source" in new NonTysTest {
+        override def source: Option[String] = None
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamResponse)
+        }
+
+        val response: WSResponse = await(mtdRequest.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -87,7 +138,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
                                 requestSource: String,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String           = requestNino
             override val taxYear: String        = requestTaxYear
@@ -99,7 +150,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(mtdRequest.get)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -116,18 +167,18 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(mtdRequest.get)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -138,7 +189,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "downstream message"
              |}
             """.stripMargin
 
@@ -156,4 +207,5 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
       }
     }
   }
+
 }

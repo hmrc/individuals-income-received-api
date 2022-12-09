@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveAllResidentialPropertyCgt
 
-import api.models.domain.{MtdSourceEnum, Nino}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 
-case class RetrieveAllResidentialPropertyCgtRequest(nino: Nino, taxYear: String, source: MtdSourceEnum)
+case class RetrieveAllResidentialPropertyCgtRequest(nino: Nino, taxYear: TaxYear, source: MtdSourceEnum)

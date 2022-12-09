@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.createAmendCgtPpdOverrides
+package v1.models.request.deleteCgtPpdOverrides
 
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{TaxYear, Nino}
 
-case class CreateAmendCgtPpdOverridesRequest(nino: Nino, taxYear: TaxYear, body: CreateAmendCgtPpdOverridesRequestBody)
+case class DeleteCgtPpdOverridesRequest(nino: Nino, taxYear: TaxYear)

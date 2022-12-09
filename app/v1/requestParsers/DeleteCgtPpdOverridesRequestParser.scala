@@ -18,16 +18,16 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
+import v1.models.request.deleteCgtPpdOverrides.{DeleteCgtPpdOverridesRawData, DeleteCgtPpdOverridesRequest}
+import v1.requestParsers.validators.DeleteCgtPpdOverridesValidator
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.createAmendCgtPpdOverrides._
-import v1.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
 
 @Singleton
-class CreateAmendCgtPpdOverridesRequestParser @Inject() (val validator: CreateAmendCgtPpdOverridesValidator)
-    extends RequestParser[CreateAmendCgtPpdOverridesRawData, CreateAmendCgtPpdOverridesRequest] {
+class DeleteCgtPpdOverridesRequestParser @Inject() (val validator: DeleteCgtPpdOverridesValidator)
+    extends RequestParser[DeleteCgtPpdOverridesRawData, DeleteCgtPpdOverridesRequest] {
 
-  override protected def requestFor(data: CreateAmendCgtPpdOverridesRawData): CreateAmendCgtPpdOverridesRequest =
-    CreateAmendCgtPpdOverridesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[CreateAmendCgtPpdOverridesRequestBody])
+  override protected def requestFor(data: DeleteCgtPpdOverridesRawData): DeleteCgtPpdOverridesRequest =
+    DeleteCgtPpdOverridesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))
 
 }
