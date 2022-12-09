@@ -16,8 +16,10 @@
 
 package v1.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -25,12 +27,10 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.Api1661Uri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.audit.DeleteCgtNonPpdAuditDetail
+import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
+import v1.requestParsers.DeleteCgtNonPpdRequestParser
+import v1.services.DeleteCgtNonPpdService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,8 +38,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
-                                           requestParser: DeleteRetrieveRequestParser,
-                                           service: DeleteRetrieveService,
+                                           requestParser: DeleteCgtNonPpdRequestParser,
+                                           service: DeleteCgtNonPpdService,
                                            auditService: AuditService,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -60,19 +60,15 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+      val rawData: DeleteCgtNonPpdRawData = DeleteCgtNonPpdRawData(
         nino = nino,
         taxYear = taxYear
       )
 
-      implicit val IfsUri: Api1661Uri[Unit] = Api1661Uri[Unit](
-        s"income-tax/income/disposals/residential-property/$nino/$taxYear"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete())
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.deleteCgtNonPpd(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -107,7 +103,13 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
