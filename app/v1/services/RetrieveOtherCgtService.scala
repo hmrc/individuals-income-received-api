@@ -17,56 +17,50 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleAcquisitionDateAfterDisposalDateError,
-  RuleCompletionDateError,
-  RuleDisposalDateError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
-
-import javax.inject.Inject
+import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
-import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
+import v1.connectors.RetrieveOtherCgtConnector
+import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRequest
+import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+@Singleton
+class RetrieveOtherCgtService @Inject() (connector: RetrieveOtherCgtConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit
+  def retrieve(request: RetrieveOtherCgtRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherCgtResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.retrieveOtherCgt(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "INVALID_DISPOSAL_DATE"     -> RuleDisposalDateError,
-      "INVALID_COMPLETION_DATE"   -> RuleCompletionDateError,
-      "INVALID_ACQUISITION_DATE"  -> RuleAcquisitionDateAfterDisposalDateError,
+      "NO_DATA_FOUND"             -> NotFoundError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

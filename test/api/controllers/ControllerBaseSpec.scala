@@ -65,5 +65,4 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
-
 }

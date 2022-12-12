@@ -17,56 +17,47 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleAcquisitionDateAfterDisposalDateError,
-  RuleCompletionDateError,
-  RuleDisposalDateError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
-
-import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
-import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
+import v1.connectors.DeleteCgtPpdOverridesConnector
+import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+@Singleton
+class DeleteCgtPpdOverridesService @Inject() (connector: DeleteCgtPpdOverridesConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit
+  def deleteCgtPpdOverrides(request: DeleteCgtPpdOverridesRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.deleteCgtPpdOverrides(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "INVALID_DISPOSAL_DATE"     -> RuleDisposalDateError,
-      "INVALID_COMPLETION_DATE"   -> RuleCompletionDateError,
-      "INVALID_ACQUISITION_DATE"  -> RuleAcquisitionDateAfterDisposalDateError,
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "NO_DATA_FOUND"             -> NotFoundError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }
