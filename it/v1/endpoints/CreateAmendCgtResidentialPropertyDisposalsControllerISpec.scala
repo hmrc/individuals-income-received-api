@@ -17,7 +17,26 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{BadRequestError, CustomerRefFormatError, DateFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateAfterDisposalDateError, RuleCompletionDateBeforeDisposalDateError, RuleCompletionDateError, RuleDisposalDateError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleLossesGreaterThanGainError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CustomerRefFormatError,
+  DateFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleAcquisitionDateAfterDisposalDateError,
+  RuleCompletionDateBeforeDisposalDateError,
+  RuleCompletionDateError,
+  RuleDisposalDateError,
+  RuleGainLossError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleLossesGreaterThanGainError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -535,7 +554,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def verifyNrs(payload: JsValue): Unit =
@@ -608,13 +627,41 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           ("AA123456A", "2019-20", datesNotFormattedJson, BAD_REQUEST, datesNotFormattedError, None, Some("incorrect date formats")),
           ("AA123456A", "2019-20", customerRefTooLongJson, BAD_REQUEST, customerRefError, None, Some("bad customer reference")),
           ("AA123456A", "2019-20", customerRefTooShortJson, BAD_REQUEST, customerRefError, None, Some("empty customer reference string")),
-          ("AA123456A", "2019-20", completionBeforeDisposalJson, BAD_REQUEST, completionBeforeDisposalError, None, Some("completion date before disposal date")),
-          ("AA123456A", "2019-20", acquisitionAfterDisposalJson, BAD_REQUEST, acquisitionAfterDisposalError, None, Some("acquisition date after disposal date")),
-          ("AA123456A", "2019-20", completionDateJson, BAD_REQUEST, completionDateError, None, Some("completion date outside valid submission window")),
+          (
+            "AA123456A",
+            "2019-20",
+            completionBeforeDisposalJson,
+            BAD_REQUEST,
+            completionBeforeDisposalError,
+            None,
+            Some("completion date before disposal date")),
+          (
+            "AA123456A",
+            "2019-20",
+            acquisitionAfterDisposalJson,
+            BAD_REQUEST,
+            acquisitionAfterDisposalError,
+            None,
+            Some("acquisition date after disposal date")),
+          (
+            "AA123456A",
+            "2019-20",
+            completionDateJson,
+            BAD_REQUEST,
+            completionDateError,
+            None,
+            Some("completion date outside valid submission window")),
           ("AA123456A", "2019-20", disposalDateJson, BAD_REQUEST, disposalDateError, None, Some("disposal date outside tax year")),
           ("AA123456A", "2019-20", gainLossJson, BAD_REQUEST, gainLossError, None, Some("gain and loss provided")),
           ("AA123456A", "2019-20", lossGreaterThanGainJson, BAD_REQUEST, lossGreaterThanGainError, None, Some("loss is greater than gain")),
-          ("AA123456A", "2019-20", lossGreaterThanGainAndLossJson, BAD_REQUEST, BadRequestError, Some(lossGreaterThanGainAndLossError), Some("loss is greater than gain and bith gain and loss provided"))
+          (
+            "AA123456A",
+            "2019-20",
+            lossGreaterThanGainAndLossJson,
+            BAD_REQUEST,
+            BadRequestError,
+            Some(lossGreaterThanGainAndLossError),
+            Some("loss is greater than gain and bith gain and loss provided"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -652,9 +699,9 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_COMPLETION_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", BAD_REQUEST, RuleDisposalDateError),
+          (UNPROCESSABLE_ENTITY, "INVALID_COMPLETION_DATE", BAD_REQUEST, RuleCompletionDateError),
+          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", BAD_REQUEST, RuleAcquisitionDateAfterDisposalDateError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
@@ -662,4 +709,5 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
       }
     }
   }
+
 }
