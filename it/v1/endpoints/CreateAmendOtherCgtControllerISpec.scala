@@ -443,6 +443,9 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
 
     override val taxYear: String = "2023-24"
 
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
+
     def downstreamUrl: String = s"/income-tax/income/disposals/other-gains/23-24/$nino"
 
     val mtdResponse: JsValue = Json.parse(

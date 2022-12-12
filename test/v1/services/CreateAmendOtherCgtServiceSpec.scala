@@ -71,16 +71,6 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
           await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      def failuresArrayError(downstreamErrorCode: String, error: MtdError): Unit =
-        s"a $downstreamErrorCode error inside 'failures' array element is returned from the connector " in new Test {
-
-          MockCreateAmendOtherCgtConnector
-            .createAndAmend(createAmendOtherCgtRequest)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(downstreamErrorCode)))))))
-
-          await(service.createAmend(createAmendOtherCgtRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
-        }
-
       val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
@@ -98,7 +88,6 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
       )
 
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
-      (errors ++ extraTysErrors).foreach(args => (failuresArrayError _).tupled(args))
     }
   }
 

@@ -49,15 +49,10 @@ class CreateAmendOtherCgtConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/disposals/other-gains/$nino/${taxYear.asMtd}",
-            config = dummyIfsHeaderCarrierConfig,
-            body = mtdRequestBody,
-            requiredHeaders = requiredHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(
+          url = s"$baseUrl/income-tax/income/disposals/other-gains/$nino/2019-20",
+          body = mtdRequestBody
+        ).returns(Future.successful(outcome))
 
         await(connector.createAndAmend(createAmendOtherCgtRequest)) shouldBe outcome
       }
@@ -72,15 +67,10 @@ class CreateAmendOtherCgtConnectorSpec extends ConnectorSpec {
         )
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/disposals/other-gains/${taxYear.asTysDownstream}/$nino",
-            config = dummyIfsHeaderCarrierConfig,
-            body = mtdRequestBody,
-            requiredHeaders = requiredHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(
+          url = s"$baseUrl/income-tax/income/disposals/other-gains/23-24/$nino",
+          body = mtdRequestBody,
+        ).returns(Future.successful(outcome))
 
         await(connector.createAndAmend(createAmendOtherCgtRequest)) shouldBe outcome
       }
