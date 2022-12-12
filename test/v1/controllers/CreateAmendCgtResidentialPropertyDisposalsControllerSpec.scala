@@ -22,10 +22,11 @@ import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -108,7 +109,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
 
   val requestData: CreateAmendCgtResidentialPropertyDisposalsRequest = CreateAmendCgtResidentialPropertyDisposalsRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = requestModel
   )
 
@@ -151,6 +152,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
@@ -266,6 +268,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 

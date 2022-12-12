@@ -21,7 +21,7 @@ import config.AppConfig
 
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -36,13 +36,16 @@ class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject() (val http: H
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    import request._
 
-    put(
-      uri = Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/$nino/$taxYear"),
-      body = request.body
-    )
+    val uri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/${nino.nino}")
+    } else {
+      // Pre-tys uses MTD tax year format
+      Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/${nino.nino}/${taxYear.asMtd}")
+    }
+
+    put(request.body, uri)
   }
 
 }

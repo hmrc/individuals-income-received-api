@@ -174,14 +174,14 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
       Validator.flattenErrors(
         List(
           requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
-            validateDisposalRule(disposal, index, data.taxYear)
+            validateDisposalRule(disposal, index, data.taxYear, data.temporalValidationEnabled)
           }
         ).map(_.toList)
       )
     )
   }
 
-  private def validateDisposalRule(disposal: Disposal, index: Int, taxYear: String): List[MtdError] = {
+  private def validateDisposalRule(disposal: Disposal, index: Int, taxYear: String, temporalValidationEnabled: Boolean): List[MtdError] = {
     List(
       DateAfterDateValidation.validate(
         dateWhichShouldBeEarlier = disposal.disposalDate,
@@ -195,18 +195,18 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
         path = s"/disposals/$index",
         error = RuleAcquisitionDateAfterDisposalDateError
       ),
-      CompletionDateValidation.validate(
+      if (temporalValidationEnabled) CompletionDateValidation.validate(
         date = disposal.completionDate,
         path = s"/disposals/$index",
         taxYear = taxYear
-      ),
-      DisposalDateValidation.validate(
+      ) else Nil,
+      if (temporalValidationEnabled) DisposalDateValidation.validate(
         date = disposal.disposalDate,
         taxYear = taxYear,
         path = s"/disposals/$index",
         validateToday = false,
         errorMessage = IN_YEAR
-      )
+      ) else Nil
     ).flatten
   }
 

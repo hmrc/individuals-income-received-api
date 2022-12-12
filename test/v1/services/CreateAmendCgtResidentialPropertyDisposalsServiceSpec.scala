@@ -17,22 +17,12 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
-import api.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleAcquisitionDateAfterDisposalDateError,
-  RuleCompletionDateError,
-  RuleDisposalDateError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v1.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture.requestBodyModel
+import v1.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture.requestBody
 import v1.mocks.connectors.MockCreateAmendCgtResidentialPropertyDisposalsConnector
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
 
@@ -40,14 +30,11 @@ import scala.concurrent.Future
 
 class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
-
   val createAmendCgtResidentialPropertyDisposalsRequest: CreateAmendCgtResidentialPropertyDisposalsRequest =
     CreateAmendCgtResidentialPropertyDisposalsRequest(
-      nino = Nino(nino),
-      taxYear = taxYear,
-      body = requestBodyModel
+      nino = Nino("AA112233A"),
+      taxYear = TaxYear.fromMtd("2019-20"),
+      body = requestBody
     )
 
   trait Test extends MockCreateAmendCgtResidentialPropertyDisposalsConnector {
@@ -73,27 +60,17 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the connector" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the connector" in new Test {
 
             MockCreateAmendCgtResidentialPropertyDisposalsConnector
               .createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        def failuresArrayError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the connector in a failures array" in new Test {
-
-            MockCreateAmendCgtResidentialPropertyDisposalsConnector
-              .createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode(desErrorCode)))))))
-
-            await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
-          }
-
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
@@ -105,8 +82,12 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
-        input.foreach(args => (failuresArrayError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+          ("INVALID_CORRELATION_ID", StandardDownstreamError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

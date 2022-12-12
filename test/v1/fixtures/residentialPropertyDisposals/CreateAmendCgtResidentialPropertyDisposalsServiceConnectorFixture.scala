@@ -56,7 +56,7 @@ object CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture {
       )
     )
 
-  val requestBodyModel: CreateAmendCgtResidentialPropertyDisposalsRequestBody =
+  val requestBody: CreateAmendCgtResidentialPropertyDisposalsRequestBody =
     CreateAmendCgtResidentialPropertyDisposalsRequestBody(
       disposalsModels
     )
