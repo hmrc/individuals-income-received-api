@@ -57,7 +57,7 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: Cr
 
     val extraTysErrors = Map(
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "INVALID_CORRELATIONID"  -> StandardDownstreamError
+      "INVALID_CORRELATION_ID"  -> StandardDownstreamError
     )
 
     errors ++ extraTysErrors
