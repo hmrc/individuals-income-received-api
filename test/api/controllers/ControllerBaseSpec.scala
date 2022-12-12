@@ -19,8 +19,6 @@ package api.controllers
 import api.models.errors._
 import api.models.hateoas.Link
 import api.models.hateoas.Method.GET
-import mocks.MockAppConfig
-import play.api.Configuration
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
@@ -29,7 +27,6 @@ import play.api.test.{FakeRequest, ResultExtractors}
 import support.UnitSpec
 
 class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with HeaderNames with ResultExtractors {
-  _: MockAppConfig =>
 
   implicit lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
@@ -68,8 +65,4 @@ class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with Header
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
-
-  def temporalValidation(enabled: Boolean): Unit =
-    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> enabled) anyNumberOfTimes ()
-
 }
