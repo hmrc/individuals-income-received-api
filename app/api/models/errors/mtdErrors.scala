@@ -77,7 +77,7 @@ object RuleDuplicateAccountName
 object RuleTaxYearNotSupportedError
     extends MtdError(
       code = "RULE_TAX_YEAR_NOT_SUPPORTED",
-      message = "The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value"
+      message = "The tax year specified does not lie within the supported range"
     )
 
 object RuleIncorrectOrEmptyBodyError
