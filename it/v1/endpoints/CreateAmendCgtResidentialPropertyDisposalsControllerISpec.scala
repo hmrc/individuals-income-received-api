@@ -571,6 +571,9 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
   trait TysTest extends Test {
     def taxYear: String = "2023-24"
 
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
+
     def downstreamUri: String = s"/income-tax/income/disposals/residential-property/23-24/$nino"
   }
 
@@ -603,8 +606,8 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
         }
 
         val response: WSResponse = await(request.put(validRequestJson))
-        response.status shouldBe OK
         response.json shouldBe mtdResponse
+        response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
 
         verifyNrs(validRequestJson)
