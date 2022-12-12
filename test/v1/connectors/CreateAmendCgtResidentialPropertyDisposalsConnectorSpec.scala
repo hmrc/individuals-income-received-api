@@ -17,11 +17,8 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture._
 import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 
@@ -29,43 +26,51 @@ import scala.concurrent.Future
 
 class CreateAmendCgtResidentialPropertyDisposalsConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
-  private val taxYear: String = "2019-20"
+  private val nino: String = "AA111111A"
 
-  private val createAmendCgtResidentialPropertyDisposalsRequest = CreateAmendCgtResidentialPropertyDisposalsRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = requestBodyModel
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test { _: ConnectorTest =>
 
     val connector: CreateAmendCgtResidentialPropertyDisposalsConnector = new CreateAmendCgtResidentialPropertyDisposalsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.api1661BaseUrl returns baseUrl
-    MockedAppConfig.api1661Token returns "api1661-token"
-    MockedAppConfig.api1661Environment returns "api1661-environment"
-    MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
+    val taxYear: TaxYear
+
+    val createAmendCgtResidentialPropertyDisposalsRequest: CreateAmendCgtResidentialPropertyDisposalsRequest =
+      CreateAmendCgtResidentialPropertyDisposalsRequest(
+        nino = Nino(nino),
+        taxYear = taxYear,
+        body = requestBody
+      )
+
   }
 
   "createAndAmend" should {
     "return a 204 status" when {
-      "a valid request is made" in new Test {
-        val outcome                                          = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                       = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredApi1661HeadersPut: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
+      "a valid request is made" in new Api1661Test with Test {
+        lazy val taxYear = TaxYear.fromMtd("2019-20")
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/disposals/residential-property/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = requestBodyModel,
-            requiredHeaders = requiredApi1661HeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(
+          url = s"$baseUrl/income-tax/income/disposals/residential-property/$nino/2019-20",
+          body = requestBody
+        )
+          .returns(Future.successful(outcome))
+
+        await(connector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe outcome
+      }
+
+      "a valid request is made for a TYS tax year" in new TysIfsTest with Test {
+        lazy val taxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(
+          url = s"$baseUrl/income-tax/income/disposals/residential-property/23-24/$nino",
+          body = requestBody
+        )
           .returns(Future.successful(outcome))
 
         await(connector.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe outcome

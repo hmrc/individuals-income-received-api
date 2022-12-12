@@ -22,7 +22,7 @@ import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import cats.data.EitherT
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -66,6 +66,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
       val rawData: CreateAmendCgtResidentialPropertyDisposalsRawData = CreateAmendCgtResidentialPropertyDisposalsRawData(
         nino = nino,
         taxYear = taxYear,
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled,
         body = AnyContentAsJson(request.body)
       )
 
