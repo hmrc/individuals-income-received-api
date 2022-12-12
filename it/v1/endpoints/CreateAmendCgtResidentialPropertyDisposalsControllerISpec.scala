@@ -638,11 +638,20 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           (
             "AA123456A",
             "2019-20",
+            acquisitionAfterDisposalJson,
+            BAD_REQUEST,
+            acquisitionAfterDisposalError,
+            None,
+            Some("acquisition date after disposal date")),
+          (
+            "AA123456A",
+            "2019-20",
             completionDateJson,
             BAD_REQUEST,
             completionDateError,
             None,
             Some("completion date outside valid submission window")),
+          ("AA123456A", "2019-20", disposalDateJson, BAD_REQUEST, disposalDateError, None, Some("disposal date outside tax year")),
           ("AA123456A", "2019-20", gainLossJson, BAD_REQUEST, gainLossError, None, Some("gain and loss provided")),
           ("AA123456A", "2019-20", lossGreaterThanGainJson, BAD_REQUEST, lossGreaterThanGainError, None, Some("loss is greater than gain")),
           (

@@ -21,8 +21,10 @@ import api.models.errors.{
   CustomerRefFormatError,
   DateFormatError,
   NinoFormatError,
+  RuleAcquisitionDateAfterDisposalDateError,
   RuleCompletionDateBeforeDisposalDateError,
   RuleCompletionDateError,
+  RuleDisposalDateError,
   RuleGainLossError,
   RuleIncorrectOrEmptyBodyError,
   RuleLossesGreaterThanGainError,
@@ -353,6 +355,30 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |""".stripMargin
     )
 
+    private val acquisitionDateAfterDisposalDateJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":$validValue,
+         |      "acquisitionDate":"2020-04-01",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue
+         |    }
+         |  ]
+         |}
+         |""".stripMargin
+    )
+
     private val completionDateInFutureJson: JsValue = Json.parse(
       s"""
         |{
@@ -399,6 +425,30 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
         |  ]
         |}
         |""".stripMargin
+    )
+
+    private val disposalDateNotInTaxYearJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"2018-06-01",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":$validValue,
+         |      "acquisitionDate":"2018-05-01",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue
+         |    }
+         |  ]
+         |}
+         |""".stripMargin
     )
 
     private val lossFromThisYearGreaterThanGainJson: JsValue = Json.parse(
@@ -482,10 +532,12 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
     val allBadValueFieldsWithLossesRawRequestBody: AnyContentAsJson         = AnyContentAsJson(allBadValueFieldsWithLossesJson)
     val allBadValueFieldsMultipleDisposalsRawRequestBody: AnyContentAsJson  = AnyContentAsJson(allBadValueFieldsMultipleDisposalsJson)
     val badDateRawRequestBody: AnyContentAsJson                             = AnyContentAsJson(badDateJson)
+    val acquisitionDateAfterDisposalDateRawRequestBody: AnyContentAsJson    = AnyContentAsJson(acquisitionDateAfterDisposalDateJson)
     val badCustomerReferenceRawRequestBody: AnyContentAsJson                = AnyContentAsJson(badCustomerReferenceJson)
     val completionDateBeforeDisposalDateRawRequestBody: AnyContentAsJson    = AnyContentAsJson(completionDateBeforeDisposalDateJson)
     val completionDateInFutureRawRequestBody: AnyContentAsJson              = AnyContentAsJson(completionDateInFutureJson)
     val completionDateBefore7thMarchRawRequestBody: AnyContentAsJson        = AnyContentAsJson(completionDateBefore7thMarchJson)
+    val disposalDateNotInTaxYearRawRequestBody: AnyContentAsJson            = AnyContentAsJson(disposalDateNotInTaxYearJson)
     val gainAndLossRawRequestBody: AnyContentAsJson                         = AnyContentAsJson(gainAndLossJson)
     val lossFromThisYearGreaterThanGainRawRequestBody: AnyContentAsJson     = AnyContentAsJson(lossFromThisYearGreaterThanGainJson)
     val lossFromPreviousYearGreaterThanGainRawRequestBody: AnyContentAsJson = AnyContentAsJson(lossFromPreviousYearGreaterThanGainJson)
@@ -737,7 +789,19 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
             ))
       }
     }
-
+    "return RuleAcquisitionDateBeforeDisposalDateError error" when {
+      "supplied acquisition date is after supplied disposal date" in new Test {
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, acquisitionDateAfterDisposalDateRawRequestBody)) shouldBe
+          List(
+            RuleAcquisitionDateAfterDisposalDateError.copy(
+              paths = Some(
+                Seq(
+                  "/disposals/0"
+                ))
+            ))
+      }
+    }
     "return RuleCompletionDateError error" when {
       "supplied completion date is too late" in new Test {
         validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, completionDateInFutureRawRequestBody)) shouldBe
@@ -761,7 +825,20 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
             ))
       }
     }
-
+    "return RuleDisposalDateError error" when {
+      "supplied disposal date is invalid" in new Test {
+        validator.validate(
+          CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, disposalDateNotInTaxYearRawRequestBody)) shouldBe
+          List(
+            RuleDisposalDateError.copy(
+              paths = Some(
+                Seq(
+                  "/disposals/0"
+                )),
+              message = IN_YEAR
+            ))
+      }
+    }
     "return RuleGainLossError error" when {
       "gain and loss fields are both supplied" in new Test {
         validator.validate(CreateAmendCgtResidentialPropertyDisposalsRawData(validNino, validTaxYear, gainAndLossRawRequestBody)) shouldBe
