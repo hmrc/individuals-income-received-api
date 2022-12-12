@@ -103,7 +103,7 @@ class FeatureSwitchesSpec extends UnitSpec {
         featureSwitches.isTemporalValidationEnabled(requestWith(headers(suspend = "true"))) shouldBe true
       }
 
-      "return true even if the suspend header is not present" in {
+      "return true if the suspend header is not present" in {
         featureSwitches.isTemporalValidationEnabled(requestWith(Headers())) shouldBe true
       }
     }
