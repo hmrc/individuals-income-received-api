@@ -35,7 +35,6 @@ import v1.requestParsers.validators.validations.{
   DateFormatValidation,
   DecimalValueValidation,
   DisposalDateErrorMessages,
-  DisposalDateValidation,
   JsonFormatValidation,
   NinoValidation,
   TaxYearNotSupportedValidation,

@@ -22,7 +22,6 @@ import config.AppConfig
 import v1.requestParsers.validators.validations._
 import v1.models.request.createAmendOtherCgt._
 import v1.requestParsers.validators.validations.{
-  AcquisitionDateValidation,
   AssetDescriptionValidation,
   AssetTypeValidation,
   ClaimOrElectionCodesValidation,

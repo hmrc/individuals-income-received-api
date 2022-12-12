@@ -17,8 +17,9 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
+
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.fixtures.residentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture.requestBody
@@ -74,9 +75,9 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
           ("INVALID_PAYLOAD", StandardDownstreamError),
-          ("INVALID_DISPOSAL_DATE", StandardDownstreamError),
-          ("INVALID_COMPLETION_DATE", StandardDownstreamError),
-          ("INVALID_ACQUISITION_DATE", StandardDownstreamError),
+          ("INVALID_DISPOSAL_DATE", RuleDisposalDateError),
+          ("INVALID_COMPLETION_DATE", RuleCompletionDateError),
+          ("INVALID_ACQUISITION_DATE", RuleAcquisitionDateAfterDisposalDateError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
