@@ -16,17 +16,8 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import api.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -40,9 +31,7 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
     "return a 204 status code" when {
       "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
@@ -55,9 +44,7 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
 
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
@@ -78,10 +65,7 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            override def setupStubs(): StubMapping = {
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
+            override def setupStubs(): Unit = {}
 
             val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
@@ -103,9 +87,7 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
-            override def setupStubs(): StubMapping = {
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
+            override def setupStubs(): Unit = {
               DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
@@ -152,10 +134,13 @@ class DeleteCgtNonPpdControllerISpec extends IntegrationBaseSpec {
     def taxYear: String
     def downstreamUri: String
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit
 
     def request(): WSRequest = {
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
+
       buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
