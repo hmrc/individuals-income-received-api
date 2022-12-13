@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendOtherCgtConnector
@@ -30,6 +30,7 @@ import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendOtherCgtService @Inject() (connector: CreateAmendOtherCgtConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def createAmend(request: CreateAmendOtherCgtRequest)(implicit

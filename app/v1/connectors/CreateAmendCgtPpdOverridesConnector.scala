@@ -25,7 +25,9 @@ import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRe
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import com.google.inject.Singleton
 
+@Singleton
 class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit

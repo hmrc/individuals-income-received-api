@@ -17,19 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  PpdSubmissionIdNotFoundError,
-  RuleDuplicatedPpdSubmissionIdError,
-  RuleIncorrectDisposalTypeError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -38,9 +26,10 @@ import utils.Logging
 import v1.connectors.CreateAmendCgtPpdOverridesConnector
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdOverridesConnector)
     extends DownstreamResponseMappingSupport
     with Logging {
