@@ -21,7 +21,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Api1661Uri
+import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,18 +31,22 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 class CreateAmendOtherCgtConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAndAmend(request: CreateAmendOtherCgtRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                          hc: HeaderCarrier,
+                                                          ec: ExecutionContext,
+                                                          correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
-
+    val downstreamUri =
+      if (taxYear.useTaxYearSpecificApi) {
+        TaxYearSpecificIfsUri[Unit](s"income-tax/income/disposals/other-gains/${taxYear.asTysDownstream}/${nino.nino}")
+      } else {
+        Api1661Uri[Unit](s"income-tax/income/disposals/other-gains/${nino.nino}/${taxYear.asMtd}")
+      }
     put(
-      uri = Api1661Uri[Unit](s"income-tax/income/disposals/other-gains/$nino/$taxYear"),
-      body = request.body
+      uri = downstreamUri,
+      body = body
     )
   }
 

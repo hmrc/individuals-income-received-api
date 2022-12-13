@@ -19,10 +19,10 @@ package v1.controllers
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.AmendHateoasBody
 import api.models.audit.{AuditEvent, AuditResponse}
-import api.models.errors._
+import api.models.errors.{RuleGainAfterReliefLossAfterReliefError, RuleIncorrectOrEmptyBodyError, _}
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import cats.data.EitherT
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -67,7 +67,8 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
       val rawData: CreateAmendOtherCgtRawData = CreateAmendOtherCgtRawData(
         nino = nino,
         taxYear = taxYear,
-        body = AnyContentAsJson(request.body)
+        body = AnyContentAsJson(request.body),
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled,
       )
 
       val result =
@@ -99,7 +100,7 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -119,14 +120,27 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleGainLossError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(
-            DateFormatError.code) | CustomMtdError(AssetDescriptionFormatError.code) | CustomMtdError(AssetTypeFormatError.code) | CustomMtdError(
-            ClaimOrElectionCodesFormatError.code) | CustomMtdError(RuleDisposalDateError.code) | CustomMtdError(RuleAcquisitionDateError.code) |
-          CustomMtdError(RuleGainAfterReliefLossAfterReliefError.code) =>
+      case _
+        if errorWrapper.containsAnyOf(
+          BadRequestError,
+          NinoFormatError,
+          TaxYearFormatError,
+          ValueFormatError,
+          DateFormatError,
+          AssetTypeFormatError,
+          AssetDescriptionFormatError,
+          ClaimOrElectionCodesFormatError,
+          RuleTaxYearNotSupportedError,
+          RuleTaxYearRangeInvalidError,
+          RuleIncorrectOrEmptyBodyError,
+          RuleGainAfterReliefLossAfterReliefError,
+          RuleGainLossError,
+          RuleAcquisitionDateError,
+          RuleDisposalDateError
+        ) =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case _ => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

@@ -16,22 +16,7 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors.{
-  AssetDescriptionFormatError,
-  AssetTypeFormatError,
-  ClaimOrElectionCodesFormatError,
-  DateFormatError,
-  NinoFormatError,
-  RuleAcquisitionDateError,
-  RuleDisposalDateError,
-  RuleGainAfterReliefLossAfterReliefError,
-  RuleGainLossError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors.{AssetDescriptionFormatError, AssetTypeFormatError, ClaimOrElectionCodesFormatError, DateFormatError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
@@ -470,8 +455,8 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
     val badAssetDescriptionRawRequestBody: AnyContentAsJson                = AnyContentAsJson(badAssetDescriptionJson)
     val badAssetTypeRawRequestBody: AnyContentAsJson                       = AnyContentAsJson(badAssetTypeJson)
     val badClaimOrElectionCodesRawRequestBody: AnyContentAsJson            = AnyContentAsJson(badClaimOrElectionCodesJson)
-    val badDisposalDateRawRequestBody: AnyContentAsJson                    = AnyContentAsJson(badDisposalDateJson)
-    val badAcquisitionDateRawRequestBody: AnyContentAsJson                 = AnyContentAsJson(badAcquisitionDateJson)
+    val badDisposalDateRawRequestBody: AnyContentAsJson = AnyContentAsJson(badDisposalDateJson)
+    val badAcquisitionDateRawRequestBody: AnyContentAsJson = AnyContentAsJson(badAcquisitionDateJson)
     val badGainAfterReliefLossAfterReliefRawRequestBody: AnyContentAsJson  = AnyContentAsJson(badGainAfterReliefLossAfterReliefJson)
     val allThreeGainsMissingRequestBody: AnyContentAsJson                  = AnyContentAsJson(allThreeGainsMissingJson)
   }

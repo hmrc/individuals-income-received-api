@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 import v1.models.request.createAmendOtherCgt._
 import v1.requestParsers.validators.CreateAmendOtherCgtValidator
@@ -27,7 +27,9 @@ import javax.inject.{Inject, Singleton}
 class CreateAmendOtherCgtRequestParser @Inject() (val validator: CreateAmendOtherCgtValidator)
     extends RequestParser[CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest] {
 
-  override protected def requestFor(data: CreateAmendOtherCgtRawData): CreateAmendOtherCgtRequest =
-    CreateAmendOtherCgtRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendOtherCgtRequestBody])
+  override protected def requestFor(data: CreateAmendOtherCgtRawData): CreateAmendOtherCgtRequest = {
+    val taxYear = TaxYear.fromMtd(data.taxYear)
+    CreateAmendOtherCgtRequest(Nino(data.nino), taxYear, data.body.json.as[CreateAmendOtherCgtRequestBody])
+  }
 
 }
