@@ -33,9 +33,10 @@ import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmployme
 import v1.requestParsers.CreateAmendNonPayeEmploymentRequestParser
 import v1.services.CreateAmendNonPayeEmploymentService
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                         val lookupService: MtdIdLookupService,
                                                         appConfig: AppConfig,
@@ -120,7 +121,7 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
           RuleTaxYearNotEndedError | CustomMtdError(ValueFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson((errorWrapper)))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }

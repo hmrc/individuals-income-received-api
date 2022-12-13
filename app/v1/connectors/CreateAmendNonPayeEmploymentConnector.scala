@@ -22,9 +22,10 @@ import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendNonPayeEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit

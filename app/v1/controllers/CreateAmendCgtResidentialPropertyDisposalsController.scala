@@ -33,9 +33,10 @@ import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendC
 import v1.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.services._
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authService: EnrolmentsAuthService,
                                                                       val lookupService: MtdIdLookupService,
                                                                       appConfig: AppConfig,

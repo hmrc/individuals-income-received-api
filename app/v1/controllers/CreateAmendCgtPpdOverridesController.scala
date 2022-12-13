@@ -33,9 +33,10 @@ import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRa
 import v1.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.services._
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
                                                       val lookupService: MtdIdLookupService,
                                                       appConfig: AppConfig,
