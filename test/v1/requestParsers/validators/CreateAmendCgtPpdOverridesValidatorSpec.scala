@@ -16,12 +16,16 @@
 
 package v1.requestParsers.validators
 
+import api.mocks.MockCurrentDateTime
 import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
-import play.api.libs.json.{JsObject, Json, JsValue}
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import utils.CurrentDateTime
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
@@ -609,11 +613,17 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val neitherGainsOrLossSinglePropertyDisposalsRequestBody   = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
   private val currentYearLossesGreaterThanGainsRequestBody           = AnyContentAsJson(currentYearLossesGreaterThanGainsJson)
 
-  class Test extends MockAppConfig {
+  class Test extends MockCurrentDateTime with MockAppConfig {
 
-    implicit val appConfig: AppConfig = mockAppConfig
+    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    implicit val appConfig: AppConfig              = mockAppConfig
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
+
+    MockCurrentDateTime.getDateTime
+      .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
+      .anyNumberOfTimes()
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2020)
@@ -649,6 +659,13 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "an invalid tax year is supplied" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "20178", validRequestBody)) shouldBe
           List(TaxYearFormatError)
+      }
+    }
+
+    "return a RuleTaxYearNotEnded error" when {
+      "the current tax year is provided" in new Test {
+        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2021-22", validRequestBody)) shouldBe
+          List(RuleTaxYearNotEndedError)
       }
     }
 

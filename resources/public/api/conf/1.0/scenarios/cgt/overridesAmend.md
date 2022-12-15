@@ -23,9 +23,5 @@
             <td><p>INCORRECT_DISPOSAL_TYPE</p></td>
             <td><p>Simulate the scenario where a ppdSubmissionId in the request is being used for the incorrect disposal type.</p></td>
         </tr>
-        <tr>
-            <td><p>TAX_YEAR_NOT_ENDED</p></td>
-            <td><p>Simulates the scenario where the tax year has not ended.</p></td>
-        </tr>
     </tbody>
 </table>
