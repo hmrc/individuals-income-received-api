@@ -431,6 +431,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
   private trait TysIfsTest extends Test {
     def taxYear               = "2023-24"
     def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/23-24/$nino"
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {

@@ -19,13 +19,15 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
+import utils.CurrentDateTime
+import v1.requestParsers.validators.validations._
 import v1.models.request.createAmendNonPayeEmployment._
 import v1.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendNonPayeEmploymentValidator @Inject() (implicit appConfig: AppConfig)
+class CreateAmendNonPayeEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[CreateAmendNonPayeEmploymentRawData] {
 
   private val validationSet = List(
@@ -48,7 +50,8 @@ class CreateAmendNonPayeEmploymentValidator @Inject() (implicit appConfig: AppCo
 
   private def parameterRuleValidation: CreateAmendNonPayeEmploymentRawData => List[List[MtdError]] = data => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
+      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 
