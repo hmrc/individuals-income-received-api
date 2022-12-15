@@ -101,7 +101,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): Unit = ()
 
-    def request(): WSRequest = {
+    def request: WSRequest = {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
 
@@ -125,6 +125,9 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
     def taxYear: String = "2023-24"
 
     override def downstreamUri: String = s"/income-tax/income/employments/non-paye/23-24/$nino"
+
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
   }
 
   "Calling Create and amend Non-PAYE employment income endpoint" should {
@@ -134,7 +137,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
 
-        val response: WSResponse = await(request().put(validRequestBodyJson))
+        val response: WSResponse = await(request.put(validRequestBodyJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -145,7 +148,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
 
-        val response: WSResponse = await(request().put(validRequestBodyJson))
+        val response: WSResponse = await(request.put(validRequestBodyJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -166,7 +169,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            val response: WSResponse = await(request().put(requestBody))
+            val response: WSResponse = await(request.put(requestBody))
             response.status shouldBe expectedStatus
             response.json shouldBe expectedErrors.fold(Json.toJson(expectedError))(errorWrapper => Json.toJson(errorWrapper))
             response.header("Content-Type") shouldBe Some("application/json")
@@ -197,7 +200,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamErrorCode))
 
-            val response: WSResponse = await(request().put(validRequestBodyJson))
+            val response: WSResponse = await(request.put(validRequestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
