@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
@@ -78,13 +78,13 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
     overseasPensionContributions = Some(overseasPensionContributionsModel)
   )
 
-  private val amendPensionsRequest: AmendPensionsRequest = AmendPensionsRequest(
+  private def amendPensionsRequest(taxYear: String): AmendPensionsRequest = AmendPensionsRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = amendPensionsRequestBody
   )
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test extends MockHttpClient with MockAppConfig {
 
     val connector: AmendPensionsConnector = new AmendPensionsConnector(
       http = mockHttpClient,
@@ -98,11 +98,11 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
   }
 
   "AmendPensionsConnector" when {
+    val outcome                                      = Right(ResponseWrapper(correlationId, ()))
+    val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
     "amendPensions" must {
-      "return a 204 status for a success scenario" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+      "return a 204 status for a success scenario" in new IfsTest with Test {
+        implicit override val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
         MockedHttpClient
           .put(
@@ -114,7 +114,27 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.amendPensions(amendPensionsRequest)) shouldBe outcome
+        await(connector.amendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
+      }
+    }
+    "amend pensions for a TYS tax year" must {
+      "return a 204 status for a success scenario" in new TysIfsTest with Test {
+        implicit override val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+
+        lazy val taxYear: String = "2023-24"
+
+        MockedHttpClient
+          .put(
+            url = s"$baseUrl/income-tax/income/pensions/23-24/$nino",
+            config = dummyIfsHeaderCarrierConfig,
+            body = amendPensionsRequestBody,
+            requiredHeaders = requiredTysIfsHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(outcome))
+
+        await(connector.amendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
+
       }
     }
   }
