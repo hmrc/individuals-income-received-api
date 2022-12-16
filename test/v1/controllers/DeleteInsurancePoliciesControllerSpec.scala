@@ -18,17 +18,17 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.requestParsers.MockDeleteInsurancePoliciesParser
+import v1.mocks.services.MockDeleteInsurancePoliciesService
+import v1.models.request.deleteInsurancePolicies.{DeleteInsurancePoliciesRawData, DeleteInsurancePoliciesRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,8 +37,8 @@ class DeleteInsurancePoliciesControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
-    with MockDeleteRetrieveRequestParser
+    with MockDeleteInsurancePoliciesService
+    with MockDeleteInsurancePoliciesParser
     with MockAuditService
     with MockIdGenerator {
 
@@ -66,8 +66,8 @@ class DeleteInsurancePoliciesControllerSpec
     val controller = new DeleteInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockDeleteInsurancePoliciesParser,
+      service = mockDeleteInsurancePoliciesService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -78,26 +78,26 @@ class DeleteInsurancePoliciesControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: DeleteInsurancePoliciesRawData = DeleteInsurancePoliciesRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  val requestData: DeleteInsurancePoliciesRequest = DeleteInsurancePoliciesRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   "DeleteInsurancePoliciesController" should {
     "return status 204" when {
       "a valid request is supplied" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockDeleteInsurancePoliciesParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .delete(defaultDownstreamErrorMap)
+        MockDeleteInsurancePoliciesService
+          .deleteInsurancePoliciesService(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.delete(nino, taxYear)(fakeDeleteRequest)
@@ -116,7 +116,7 @@ class DeleteInsurancePoliciesControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockDeleteInsurancePoliciesParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -146,12 +146,12 @@ class DeleteInsurancePoliciesControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockDeleteInsurancePoliciesParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .delete(defaultDownstreamErrorMap)
+            MockDeleteInsurancePoliciesService
+              .deleteInsurancePoliciesService(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.delete(nino, taxYear)(fakeDeleteRequest)
