@@ -42,7 +42,7 @@ class DeleteInsurancePoliciesServiceSpec extends ServiceSpec {
   }
 
   "DeleteInsurancePoliciesService" when {
-    "deleteInsurancePoliciesConnecto" must {
+    "delete" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 

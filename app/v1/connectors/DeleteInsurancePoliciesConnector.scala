@@ -37,7 +37,7 @@ class DeleteInsurancePoliciesConnector @Inject()(val http: HttpClient, val appCo
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](
-        s"income-tax/insurance-policies/income/${taxYear.asTysDownstream}/${nino.value}"
+        s"income-tax/insurance-policies/income/${taxYear.asTysDownstream}/$nino"
       )
     } else {
       IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/${taxYear.asMtd}")
