@@ -17,8 +17,17 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  RuleTaxYearNotSupportedError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendInsurancePoliciesConnector
@@ -29,7 +38,7 @@ import scala.concurrent.Future
 class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
+  private val taxYear = TaxYear.fromMtd("2019-20")
 
   private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
     customerReference = Some("INPOLY123A"),
@@ -114,12 +123,12 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downStreamErrorCode: String, error: MtdError): Unit =
+          s"a $downStreamErrorCode error is returned from the service" in new Test {
 
             MockAmendInsurancePoliciesConnector
               .amendInsurancePolicies(amendInsurancePoliciesRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downStreamErrorCode))))))
 
             await(service.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -128,6 +137,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("INVALID_PAYLOAD", StandardDownstreamError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)

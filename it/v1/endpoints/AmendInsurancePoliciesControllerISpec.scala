@@ -18,7 +18,20 @@ package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CustomerRefFormatError, ErrorWrapper, EventFormatError, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CustomerRefFormatError,
+  ErrorWrapper,
+  EventFormatError,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -31,9 +44,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String          = "AA123456A"
     val correlationId: String = "X-123"
+
+    def taxYear: String
+    def downstreamUri: String
+    def uri: String = s"/insurance-policies/$nino/$taxYear"
 
     val requestBodyJson: JsValue = Json.parse(
       """
@@ -158,10 +174,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         """.stripMargin
     )
 
-    def uri: String = s"/insurance-policies/$nino/$taxYear"
-
-    def ifsUri: String = s"/income-tax/insurance-policies/income/$nino/$taxYear"
-
     def setupStubs(): StubMapping
 
     def request(): WSRequest = {
@@ -170,19 +182,49 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String = "2020-21"
+
+    def downstreamUri: String = s"/income-tax/insurance-policies/income/$nino/$taxYear"
+
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String = "2023-24"
+
+    def downstreamUri: String = s"/income-tax/insurance-policies/income/23-24/$nino"
+
   }
 
   "Calling 'Amend Insurance Policies' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
+        def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, CREATED)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, CREATED)
+        }
+
+        val response: WSResponse = await(request().put(requestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for a TYS tax year" in new TysIfsTest {
+
+        def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, CREATED)
         }
 
         val response: WSResponse = await(request().put(requestBodyJson))
@@ -193,7 +235,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a 400 with multiple errors" when {
-      "all field value validations fail on the request body" in new Test {
+      "all field value validations fail on the request body" in new NonTysTest {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
@@ -348,7 +390,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           errors = Some(allInvalidValueErrors)
         )
 
-        override def setupStubs(): StubMapping = {
+        def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
@@ -894,10 +936,27 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: ErrorWrapper): Unit = {
-          s"validation fails with ${expectedBody.error} error" in new Test {
+          s"validation fails with ${expectedBody.error} error" in new NonTysTest {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
+            override val requestBodyJson: JsValue = requestBody
+
+            override def setupStubs(): StubMapping = {
+              AuditStub.audit()
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+            }
+
+            val response: WSResponse = await(request().put(requestBodyJson))
+            response.status shouldBe expectedStatus
+            response.json shouldBe Json.toJson(expectedBody)
+          }
+
+          s"validation fails with ${expectedBody.error} error for TYS tax year" in new TysIfsTest {
+
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -917,7 +976,12 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "20177", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None)),
           ("AA123456A", "2018-19", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None)),
           ("AA123456A", "2019-21", validRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None)),
-          ("AA123456A", "2019-20", allInvalidValueRequestBodyJson, BAD_REQUEST, errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
+          (
+            "AA123456A",
+            "2019-20",
+            allInvalidValueRequestBodyJson,
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors))),
           ("AA123456A", "2019-20", invalidCustomerRefRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", customerRefFormatError, None)),
           ("AA123456A", "2019-20", invalidEventRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", eventFormatError, None)),
           ("AA123456A", "2019-20", nonsenseRequestBody, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None)),
@@ -929,13 +993,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
       "ifs service error" when {
         def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new TysIfsTest with Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().put(requestBodyJson))
@@ -964,4 +1028,5 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }
