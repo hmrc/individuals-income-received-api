@@ -133,7 +133,6 @@ class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
         val outcome                             = Right(ResponseWrapper(correlationId, ()))
         override implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        // val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         willPut(s"$baseUrl/income-tax/insurance-policies/income/${taxYear.asTysDownstream}/${nino}", amendInsurancePoliciesBody) returns Future
           .successful(outcome)
