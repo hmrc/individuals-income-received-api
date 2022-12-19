@@ -45,7 +45,7 @@ class AmendInsurancePoliciesControllerSpec
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
-  val taxYear               = TaxYear.fromMtd("2019-20")
+  val taxYear               = "2019-20"
   val correlationId: String = "X-123"
 
   def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -55,7 +55,7 @@ class AmendInsurancePoliciesControllerSpec
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear.asMtd),
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
         request = auditRequest,
         `X-CorrelationId` = correlationId,
         response = auditResponse
@@ -183,7 +183,7 @@ class AmendInsurancePoliciesControllerSpec
 
   val rawData: AmendInsurancePoliciesRawData = AmendInsurancePoliciesRawData(
     nino = nino,
-    taxYear = taxYear.asMtd,
+    taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
@@ -294,7 +294,7 @@ class AmendInsurancePoliciesControllerSpec
 
   val requestData: AmendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = amendInsurancePoliciesRequestBody
   )
 
@@ -303,17 +303,17 @@ class AmendInsurancePoliciesControllerSpec
        |{
        |   "links":[
        |      {
-       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear.asMtd}",
+       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear}",
        |         "rel":"create-and-amend-insurance-policies-income",
        |         "method":"PUT"
        |      },
        |      {
-       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear.asMtd}",
+       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear}",
        |         "rel":"self",
        |         "method":"GET"
        |      },
        |      {
-       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear.asMtd}",
+       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear}",
        |         "rel":"delete-insurance-policies-income",
        |         "method":"DELETE"
        |      }
@@ -334,7 +334,7 @@ class AmendInsurancePoliciesControllerSpec
           .amendInsurancePolicies(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear.asMtd)(fakePutRequest(requestBodyJson))
+        val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear)(fakePutRequest(requestBodyJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
@@ -354,7 +354,7 @@ class AmendInsurancePoliciesControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear.asMtd)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -392,7 +392,7 @@ class AmendInsurancePoliciesControllerSpec
               .amendInsurancePolicies(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear.asMtd)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.amendInsurancePolicies(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

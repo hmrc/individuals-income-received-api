@@ -953,22 +953,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             response.json shouldBe Json.toJson(expectedBody)
           }
 
-          s"validation fails with ${expectedBody.error} error for TYS tax year" in new TysIfsTest {
-
-            override val nino: String             = requestNino
-            override val taxYear: String          = requestTaxYear
-            override val requestBodyJson: JsValue = requestBody
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
-
-            val response: WSResponse = await(request().put(requestBodyJson))
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-          }
         }
 
         val input = Seq(
@@ -1021,6 +1005,7 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
