@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 
 import javax.inject.{Inject, Singleton}
@@ -28,6 +28,6 @@ class CreateAmendOtherRequestParser @Inject() (val validator: CreateAmendOtherVa
     extends RequestParser[CreateAmendOtherRawData, CreateAmendOtherRequest] {
 
   override protected def requestFor(data: CreateAmendOtherRawData): CreateAmendOtherRequest =
-    CreateAmendOtherRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendOtherRequestBody])
+    CreateAmendOtherRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[CreateAmendOtherRequestBody])
 
 }

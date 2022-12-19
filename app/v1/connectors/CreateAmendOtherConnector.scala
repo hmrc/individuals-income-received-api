@@ -16,8 +16,9 @@
 
 package v1.connectors
 
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.connectors.DownstreamUri.IfsUri
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendOther.CreateAmendOtherRequest
@@ -26,19 +27,20 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendOtherConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def createAmend(request: CreateAmendOtherRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def createAmend(
+      request: CreateAmendOtherRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    val url = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/other/${taxYear.asTysDownstream}/$nino")
+    } else {
+      IfsUri[Unit](s"income-tax/income/other/$nino/${taxYear.asMtd}")
+    }
 
-    put(
-      uri = IfsUri[Unit](s"income-tax/income/other/$nino/$taxYear"),
-      body = request.body
-    )
+    put(body, url)
   }
 
 }
