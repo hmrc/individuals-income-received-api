@@ -37,8 +37,8 @@ class AmendPensionsConnector @Inject() (val http: HttpClient, val appConfig: App
     import request._
 
     val downstreamUrl = if (taxYear.useTaxYearSpecificApi) {
-      TaxYearSpecificIfsUri[Unit](s"income-tax/income/pensions/${taxYear.asTysDownstream}/${nino.value}")
-    } else IfsUri[Unit](s"income-tax/income/pensions/${nino.value}/${taxYear.asMtd}")
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/pensions/${taxYear.asTysDownstream}/$nino")
+    } else IfsUri[Unit](s"income-tax/income/pensions/$nino/${taxYear.asMtd}")
 
     put(
       uri = downstreamUrl,

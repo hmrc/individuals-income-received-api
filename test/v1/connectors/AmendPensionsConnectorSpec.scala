@@ -21,7 +21,6 @@ import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributions, AmendPensionsRequest, AmendPensionsRequestBody}
 
 import scala.concurrent.Future
@@ -98,42 +97,24 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
   }
 
   "AmendPensionsConnector" when {
-    val outcome                                      = Right(ResponseWrapper(correlationId, ()))
-    val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+    val outcome = Right(ResponseWrapper(correlationId, ()))
     "amendPensions" must {
       "return a 204 status for a success scenario" in new IfsTest with Test {
-        implicit override val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/pensions/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = amendPensionsRequestBody,
-            requiredHeaders = requiredIfsHeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(s"$baseUrl/income-tax/income/pensions/$nino/$taxYear", amendPensionsRequestBody).returns(Future.successful(outcome))
 
         await(connector.amendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
       }
     }
     "amend pensions for a TYS tax year" must {
       "return a 204 status for a success scenario" in new TysIfsTest with Test {
-        implicit override val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
 
-        lazy val taxYear: String = "2023-24"
+        willPut(
+          s"$baseUrl/income-tax/income/pensions/23-24/$nino",
+          amendPensionsRequestBody
+        ).returns(Future.successful(outcome))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/pensions/23-24/$nino",
-            config = dummyIfsHeaderCarrierConfig,
-            body = amendPensionsRequestBody,
-            requiredHeaders = requiredTysIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.amendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
+        await(connector.amendPensions(amendPensionsRequest("2023-24"))) shouldBe outcome
 
       }
     }
