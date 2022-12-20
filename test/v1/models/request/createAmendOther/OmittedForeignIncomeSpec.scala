@@ -24,7 +24,7 @@ class OmittedForeignIncomeSpec extends UnitSpec {
 
   "OmittedForeignIncome" when {
     "read from valid JSON" should {
-      "produce the expected AmendOmittedForeignIncome object" in {
+      "produce the expected OmittedForeignIncome object" in {
         omittedForeignIncomeJson.as[OmittedForeignIncome] shouldBe omittedForeignIncomeModel
       }
     }

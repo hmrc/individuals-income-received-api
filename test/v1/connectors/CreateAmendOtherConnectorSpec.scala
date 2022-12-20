@@ -26,11 +26,28 @@ import scala.concurrent.Future
 
 class CreateAmendOtherConnectorSpec extends ConnectorSpec {
 
+  trait Test { _: ConnectorTest =>
+
+    val taxYear: String
+
+    val connector: CreateAmendOtherConnector = new CreateAmendOtherConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
+
+    lazy val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
+      nino = Nino("AA111111A"),
+      taxYear = TaxYear.fromMtd(taxYear),
+      body = requestBodyModel
+    )
+
+  }
+
   "CreateAmendOtherConnector" when {
     "createAmend" must {
       "return a 204 status for a success scenario" in new IfsTest with Test {
-        val taxYear: String = "2019-20"
-        val outcome         = Right(ResponseWrapper(correlationId, ()))
+        val taxYear = "2019-20"
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willPut(
           url = s"$baseUrl/income-tax/income/other/AA111111A/2019-20",
@@ -41,9 +58,9 @@ class CreateAmendOtherConnectorSpec extends ConnectorSpec {
         await(connector.createAmend(createAmendOtherRequest)) shouldBe outcome
       }
 
-      "return a 204 status for a success scenario (TYS)" in new TysIfsTest with Test {
-        val taxYear: String = "2023-24"
-        val outcome         = Right(ResponseWrapper(correlationId, ()))
+      "return a 204 status for a success scenario for a Tax Year Specific (TYS) tax year" in new TysIfsTest with Test {
+        val taxYear = "2023-24"
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willPut(
           url = s"$baseUrl/income-tax/income/other/23-24/AA111111A",
@@ -54,24 +71,6 @@ class CreateAmendOtherConnectorSpec extends ConnectorSpec {
         await(connector.createAmend(createAmendOtherRequest)) shouldBe outcome
       }
     }
-  }
-
-  trait Test {
-    _: ConnectorTest =>
-
-    val connector: CreateAmendOtherConnector = new CreateAmendOtherConnector(
-      http = mockHttpClient,
-      appConfig = mockAppConfig
-    )
-
-    val taxYear: String
-
-    lazy val createAmendOtherRequest = CreateAmendOtherRequest(
-      nino = Nino("AA111111A"),
-      taxYear = TaxYear.fromMtd(taxYear),
-      body = requestBodyModel
-    )
-
   }
 
 }

@@ -20,25 +20,31 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
+import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.CreateAmendOtherConnector
-import v1.models.request.createAmendOther.CreateAmendOtherRequest
+import v1.connectors.RetrieveInsurancePoliciesConnector
+import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRequest
+import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveInsurancePoliciesService @Inject() (connector: RetrieveInsurancePoliciesConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
-  def createAmend(request: CreateAmendOtherRequest)(implicit
+  def retrieve(request: RetrieveInsurancePoliciesRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveInsurancePoliciesResponse]]] = {
 
-    connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+    val result = EitherT(connector.retrieveInsurancePolicies(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+
+    result.value
   }
 
   private def downstreamErrorMap: Map[String, MtdError] = {
@@ -46,8 +52,7 @@ class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector) e
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "UNPROCESSABLE_ENTITY"      -> StandardDownstreamError,
+      "NO_DATA_FOUND"             -> NotFoundError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )

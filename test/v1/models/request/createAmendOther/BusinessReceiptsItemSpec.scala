@@ -24,7 +24,7 @@ class BusinessReceiptsItemSpec extends UnitSpec {
 
   "BusinessReceiptsItem" when {
     "read from valid JSON" should {
-      "produce the expected AmendBusinessReceiptsItem object" in {
+      "produce the expected BusinessReceiptsItem object" in {
         businessReceiptsJson.as[BusinessReceiptsItem] shouldBe businessReceiptsModel
       }
     }

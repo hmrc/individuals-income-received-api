@@ -18,13 +18,14 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v1.fixtures.other.CreateAmendOtherFixtures.{allOtherIncomeReceivedWhilstAbroadJson, allOtherIncomeReceivedWhilstAbroadModel}
+
+import v1.fixtures.other.CreateAmendOtherFixtures._
 
 class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
 
   "AllOtherIncomeReceivedWhilstAbroadItem" when {
     "read from valid JSON" should {
-      "produce the expected AmendAllOtherIncomeReceivedWhilstAbroadItem object" in {
+      "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object" in {
         allOtherIncomeReceivedWhilstAbroadJson.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel
       }
     }

@@ -681,7 +681,6 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
                                 expectedBody: MtdError,
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new NonTysTest {
-
             override val nino: String       = requestNino
             override val mtdTaxYear: String = requestTaxYear
 

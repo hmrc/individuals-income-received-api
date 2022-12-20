@@ -24,13 +24,13 @@ class ChargeableForeignBenefitsAndGiftsSpec extends UnitSpec {
 
   "ChargeableForeignBenefitsAndGifts" when {
     "read from valid JSON" should {
-      "produce the expected AmendChargeableForeignBenefitsAndGifts object" in {
+      "produce the expected ChargeableForeignBenefitsAndGifts object" in {
         chargeableForeignBenefitsAndGiftsJson.as[ChargeableForeignBenefitsAndGifts] shouldBe chargeableForeignBenefitsAndGiftsModel
       }
     }
 
     "read from empty JSON" should {
-      "produce an empty AmendChargeableForeignBenefitsAndGifts object" in {
+      "produce an empty ChargeableForeignBenefitsAndGifts object" in {
         val emptyJson = JsObject.empty
 
         emptyJson.as[ChargeableForeignBenefitsAndGifts] shouldBe ChargeableForeignBenefitsAndGifts.empty

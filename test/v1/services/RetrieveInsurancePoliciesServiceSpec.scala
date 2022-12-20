@@ -18,79 +18,50 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleTaxYearNotSupportedError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v1.fixtures.other.CreateAmendOtherFixtures._
-import v1.mocks.connectors.MockCreateAmendOtherConnector
-import v1.models.request.createAmendOther.CreateAmendOtherRequest
+import v1.mocks.connectors.MockRetrieveInsurancePoliciesConnector
+import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRequest
+import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
 
 import scala.concurrent.Future
 
-class CreateAmendOtherServiceSpec extends ServiceSpec {
+class RetrieveInsurancePoliciesServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
-
-  val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    body = requestBodyModel
-  )
-
-  trait Test extends MockCreateAmendOtherConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "createAmend")
-
-    val service: CreateAmendOtherService = new CreateAmendOtherService(
-      connector = mockCreateAmendOtherConnector
-    )
-
-  }
-
-  "CreateAmendOtherService" when {
-    "createAmend" must {
+  "RetrieveInsurancePoliciesServiceSpec" should {
+    "retrieveInsurancePolicies" must {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome = Right(ResponseWrapper(correlationId, response))
 
-        MockCreateAmendOtherConnector
-          .createAmendOther(createAmendOtherRequest)
+        MockRetrieveInsurancePoliciesConnector
+          .retrieve(request)
           .returns(Future.successful(outcome))
 
-        await(service.createAmend(createAmendOtherRequest)) shouldBe outcome
+        await(service.retrieve(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
-
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
           s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-            MockCreateAmendOtherConnector
-              .createAmendOther(createAmendOtherRequest)
+            MockRetrieveInsurancePoliciesConnector
+              .retrieve(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.createAmend(createAmendOtherRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = List(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
-          ("UNPROCESSABLE_ENTITY", StandardDownstreamError),
+          ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        val extraTysErrors = List(
+        val extraTysErrors = Seq(
           ("INVALID_CORRELATION_ID", StandardDownstreamError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
@@ -98,6 +69,32 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockRetrieveInsurancePoliciesConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    private val nino    = Nino("AA112233A")
+    private val taxYear = TaxYear.fromMtd("2019-20")
+
+    val request: RetrieveInsurancePoliciesRequest = RetrieveInsurancePoliciesRequest(
+      nino = nino,
+      taxYear = taxYear
+    )
+
+    val response: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(
+      submittedOn = "",
+      lifeInsurance = None,
+      capitalRedemption = None,
+      lifeAnnuity = None,
+      voidedIsa = None,
+      foreign = None
+    )
+
+    val service: RetrieveInsurancePoliciesService = new RetrieveInsurancePoliciesService(
+      connector = mockRetrieveInsurancePoliciesConnector
+    )
+
   }
 
 }
