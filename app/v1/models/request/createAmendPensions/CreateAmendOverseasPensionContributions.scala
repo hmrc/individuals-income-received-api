@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendPensions
+package v1.models.request.createAmendPensions
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendOverseasPensionContributions(customerReference: Option[String],
-                                             exemptEmployersPensionContribs: BigDecimal,
-                                             migrantMemReliefQopsRefNo: Option[String],
-                                             dblTaxationRelief: Option[BigDecimal],
-                                             dblTaxationCountryCode: Option[String],
-                                             dblTaxationArticle: Option[String],
-                                             dblTaxationTreaty: Option[String],
-                                             sf74reference: Option[String])
+case class CreateAmendOverseasPensionContributions(customerReference: Option[String],
+                                                   exemptEmployersPensionContribs: BigDecimal,
+                                                   migrantMemReliefQopsRefNo: Option[String],
+                                                   dblTaxationRelief: Option[BigDecimal],
+                                                   dblTaxationCountryCode: Option[String],
+                                                   dblTaxationArticle: Option[String],
+                                                   dblTaxationTreaty: Option[String],
+                                                   sf74reference: Option[String])
 
-object AmendOverseasPensionContributions {
-  implicit val reads: Reads[AmendOverseasPensionContributions] = Json.reads[AmendOverseasPensionContributions]
+object CreateAmendOverseasPensionContributions {
+  implicit val reads: Reads[CreateAmendOverseasPensionContributions] = Json.reads[CreateAmendOverseasPensionContributions]
 
-  implicit val writes: OWrites[AmendOverseasPensionContributions] = (
+  implicit val writes: OWrites[CreateAmendOverseasPensionContributions] = (
     (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "exemptEmployersPensionContribs").write[BigDecimal] and
       (JsPath \ "migrantMemReliefQopsRefNo").writeNullable[String] and
@@ -40,6 +40,6 @@ object AmendOverseasPensionContributions {
       (JsPath \ "dblTaxationArticle").writeNullable[String] and
       (JsPath \ "dblTaxationTreaty").writeNullable[String] and
       (JsPath \ "sf74Reference").writeNullable[String]
-  )(unlift(AmendOverseasPensionContributions.unapply))
+  )(unlift(CreateAmendOverseasPensionContributions.unapply))
 
 }

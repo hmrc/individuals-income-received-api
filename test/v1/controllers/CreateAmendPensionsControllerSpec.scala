@@ -27,21 +27,21 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockAmendPensionsRequestParser
-import v1.mocks.services.MockAmendPensionsService
-import v1.models.request.amendPensions._
+import v1.mocks.requestParsers.MockCreateAmendPensionsRequestParser
+import v1.mocks.services.MockCreateAmendPensionsService
+import v1.models.request.createAmendPensions._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendPensionsControllerSpec
+class CreateAmendPensionsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
     with MockAuditService
-    with MockAmendPensionsService
-    with MockAmendPensionsRequestParser
+    with MockCreateAmendPensionsService
+    with MockCreateAmendPensionsRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
@@ -51,7 +51,7 @@ class AmendPensionsControllerSpec
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new AmendPensionsController(
+    val controller = new CreateAmendPensionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
@@ -115,14 +115,14 @@ class AmendPensionsControllerSpec
     """.stripMargin
   )
 
-  val rawData: AmendPensionsRawData = AmendPensionsRawData(
+  val rawData: CreateAmendPensionsRawData = CreateAmendPensionsRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
-  val foreignPensionsItem: Seq[AmendForeignPensionsItem] = Seq(
-    AmendForeignPensionsItem(
+  val foreignPensionsItem: Seq[CreateAmendForeignPensionsItem] = Seq(
+    CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
@@ -130,7 +130,7 @@ class AmendPensionsControllerSpec
       foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "FRA",
       amountBeforeTax = Some(200.25),
       taxTakenOff = Some(1.27),
@@ -140,8 +140,8 @@ class AmendPensionsControllerSpec
     )
   )
 
-  val overseasPensionContributionsItem: Seq[AmendOverseasPensionContributions] = Seq(
-    AmendOverseasPensionContributions(
+  val overseasPensionContributionsItem: Seq[CreateAmendOverseasPensionContributions] = Seq(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -151,7 +151,7 @@ class AmendPensionsControllerSpec
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),
@@ -163,12 +163,12 @@ class AmendPensionsControllerSpec
     )
   )
 
-  val amendPensionsRequestBody: AmendPensionsRequestBody = AmendPensionsRequestBody(
+  val amendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
     foreignPensions = Some(foreignPensionsItem),
     overseasPensionContributions = Some(overseasPensionContributionsItem)
   )
 
-  val requestData: AmendPensionsRequest = AmendPensionsRequest(
+  val requestData: CreateAmendPensionsRequest = CreateAmendPensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = amendPensionsRequestBody

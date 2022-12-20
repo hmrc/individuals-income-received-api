@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package v1.mocks.services
+package v1.mocks.connectors
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.amendPensions.AmendPensionsRequest
-import v1.services.AmendPensionsService
+import v1.connectors.CreateAmendPensionsConnector
+import v1.models.request.createAmendPensions.CreateAmendPensionsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAmendPensionsService extends MockFactory {
+trait MockCreateAmendPensionsConnector extends MockFactory {
 
-  val mockAmendPensionsService: AmendPensionsService = mock[AmendPensionsService]
+  val mockAmendPensionsConnector: CreateAmendPensionsConnector = mock[CreateAmendPensionsConnector]
 
-  object MockAmendPensionsService {
+  object MockAmendPensionsConnector {
 
-    def amendPensions(requestData: AmendPensionsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockAmendPensionsService
-        .amendPensions(_: AmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+    def amendPensions(request: CreateAmendPensionsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+      (mockAmendPensionsConnector
+        .amendPensions(_: CreateAmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
 
   }

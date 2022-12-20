@@ -45,7 +45,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
-class AmendPensionsControllerISpec extends IntegrationBaseSpec {
+class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
