@@ -22,7 +22,6 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{Json, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
-
 import scala.concurrent.Future
 
 class DeleteRetrieveConnectorSpec extends ConnectorSpec {

@@ -22,12 +22,13 @@ import api.requestParsers.RequestParser
 import javax.inject.{Inject, Singleton}
 import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody}
 import v1.requestParsers.validators.AmendInsurancePoliciesValidator
+import api.models.domain.TaxYear
 
 @Singleton
 class AmendInsurancePoliciesRequestParser @Inject() (val validator: AmendInsurancePoliciesValidator)
     extends RequestParser[AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest] {
 
   override protected def requestFor(data: AmendInsurancePoliciesRawData): AmendInsurancePoliciesRequest =
-    AmendInsurancePoliciesRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendInsurancePoliciesRequestBody])
+    AmendInsurancePoliciesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[AmendInsurancePoliciesRequestBody])
 
 }

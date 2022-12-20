@@ -20,22 +20,21 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.Nino
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_OTHER_INCOME, DELETE_OTHER_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveOtherControllerFixture
+import v1.mocks.requestParsers.MockRetrieveOtherRequestParser
+import v1.mocks.services.MockRetrieveOtherService
+import v1.models.request.retrieveOther.{RetrieveOtherRawData, RetrieveOtherRequest}
 import v1.models.response.retrieveOther._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -43,9 +42,9 @@ class RetrieveOtherControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveOtherService
     with MockHateoasFactory
-    with MockDeleteRetrieveRequestParser
+    with MockRetrieveOtherRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -53,14 +52,14 @@ class RetrieveOtherControllerSpec
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: RetrieveOtherRawData = RetrieveOtherRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  val requestData: RetrieveOtherRequest = RetrieveOtherRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   val amendOtherLink: Link =
@@ -147,8 +146,8 @@ class RetrieveOtherControllerSpec
     val controller = new RetrieveOtherController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockRetrieveOtherRequestParser,
+      service = mockRetrieveOtherService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -163,12 +162,12 @@ class RetrieveOtherControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockRetrieveOtherRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrieveOtherResponse](defaultDownstreamErrorMap)
+        MockRetrieveOtherService
+          .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveOtherResponseModel))))
 
         MockHateoasFactory
@@ -195,7 +194,7 @@ class RetrieveOtherControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveOtherRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -222,12 +221,12 @@ class RetrieveOtherControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveOtherRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .retrieve[RetrieveOtherResponse](defaultDownstreamErrorMap)
+            MockRetrieveOtherService
+              .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveOther(nino, taxYear)(fakeGetRequest)

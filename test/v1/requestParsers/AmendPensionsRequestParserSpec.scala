@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{
   BadRequestError,
   CountryCodeFormatError,
@@ -159,7 +159,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
         MockAmendPensionsValidator.validate(amendPensionsRawData).returns(Nil)
 
         parser.parseRequest(amendPensionsRawData) shouldBe
-          Right(AmendPensionsRequest(Nino(nino), taxYear, validRequestBodyModel))
+          Right(AmendPensionsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
       }
     }
 

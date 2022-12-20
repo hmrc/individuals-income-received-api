@@ -123,11 +123,24 @@ class AmendPensionsController @Inject() (val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
-          CustomMtdError(CountryCodeRuleError.code) | CustomMtdError(CustomerRefFormatError.code) | CustomMtdError(QOPSRefFormatError.code) |
-          CustomMtdError(DoubleTaxationArticleFormatError.code) | CustomMtdError(DoubleTaxationTreatyFormatError.code) | CustomMtdError(
-            SF74RefFormatError.code) =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleIncorrectOrEmptyBodyError,
+            ValueFormatError,
+            CountryCodeFormatError,
+            CountryCodeRuleError,
+            CustomerRefFormatError,
+            QOPSRefFormatError,
+            DoubleTaxationArticleFormatError,
+            DoubleTaxationTreatyFormatError,
+            SF74RefFormatError,
+            RuleTaxYearNotSupportedError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)

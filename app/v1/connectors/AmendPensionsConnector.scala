@@ -19,7 +19,7 @@ package v1.connectors
 import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import v1.models.request.amendPensions.AmendPensionsRequest
 
 import javax.inject.{Inject, Singleton}
@@ -34,11 +34,14 @@ class AmendPensionsConnector @Inject() (val http: HttpClient, val appConfig: App
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    import request._
+
+    val downstreamUrl = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/pensions/${taxYear.asTysDownstream}/$nino")
+    } else IfsUri[Unit](s"income-tax/income/pensions/$nino/${taxYear.asMtd}")
 
     put(
-      uri = IfsUri[Unit](s"income-tax/income/pensions/$nino/$taxYear"),
+      uri = downstreamUrl,
       body = request.body
     )
   }
