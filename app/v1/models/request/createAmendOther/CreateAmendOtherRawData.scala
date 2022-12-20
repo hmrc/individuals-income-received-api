@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendInsurancePolicies
+package v1.models.request.createAmendOther
 
-import api.models.domain.{Nino, TaxYear}
+import api.models.request.RawData
+import play.api.mvc.AnyContentAsJson
 
-case class AmendInsurancePoliciesRequest(nino: Nino, taxYear: TaxYear, body: AmendInsurancePoliciesRequestBody)
+case class CreateAmendOtherRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -45,7 +45,7 @@ class AmendInsurancePoliciesControllerSpec
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
+  val taxYear               = "2019-20"
   val correlationId: String = "X-123"
 
   def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -294,7 +294,7 @@ class AmendInsurancePoliciesControllerSpec
 
   val requestData: AmendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = amendInsurancePoliciesRequestBody
   )
 
@@ -303,17 +303,17 @@ class AmendInsurancePoliciesControllerSpec
        |{
        |   "links":[
        |      {
-       |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
+       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear}",
        |         "rel":"create-and-amend-insurance-policies-income",
        |         "method":"PUT"
        |      },
        |      {
-       |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
+       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear}",
        |         "rel":"self",
        |         "method":"GET"
        |      },
        |      {
-       |         "href":"/baseUrl/insurance-policies/$nino/$taxYear",
+       |         "href":"/baseUrl/insurance-policies/$nino/${taxYear}",
        |         "rel":"delete-insurance-policies-income",
        |         "method":"DELETE"
        |      }

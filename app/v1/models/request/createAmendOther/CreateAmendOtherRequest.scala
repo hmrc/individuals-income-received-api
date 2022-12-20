@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendInsurancePolicies
+package v1.models.request.createAmendOther
 
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.Nino
 
-case class AmendInsurancePoliciesRequest(nino: Nino, taxYear: TaxYear, body: AmendInsurancePoliciesRequestBody)
+case class CreateAmendOtherRequest(nino: Nino, taxYear: String, body: CreateAmendOtherRequestBody)

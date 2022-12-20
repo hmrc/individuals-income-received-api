@@ -20,15 +20,14 @@ import api.models.domain.Nino
 import api.requestParsers.RequestParser
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody}
-import v1.requestParsers.validators.AmendInsurancePoliciesValidator
-import api.models.domain.TaxYear
+import v1.models.request.createAmendOther.{CreateAmendOtherRawData, CreateAmendOtherRequest, CreateAmendOtherRequestBody}
+import v1.requestParsers.validators.CreateAmendOtherValidator
 
 @Singleton
-class AmendInsurancePoliciesRequestParser @Inject() (val validator: AmendInsurancePoliciesValidator)
-    extends RequestParser[AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest] {
+class CreateAmendOtherRequestParser @Inject() (val validator: CreateAmendOtherValidator)
+    extends RequestParser[CreateAmendOtherRawData, CreateAmendOtherRequest] {
 
-  override protected def requestFor(data: AmendInsurancePoliciesRawData): AmendInsurancePoliciesRequest =
-    AmendInsurancePoliciesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[AmendInsurancePoliciesRequestBody])
+  override protected def requestFor(data: CreateAmendOtherRawData): CreateAmendOtherRequest =
+    CreateAmendOtherRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendOtherRequestBody])
 
 }

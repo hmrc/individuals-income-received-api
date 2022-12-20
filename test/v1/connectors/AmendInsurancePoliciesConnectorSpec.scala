@@ -17,111 +17,111 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendInsurancePolicies._
 
 import scala.concurrent.Future
 
 class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2019-20"
+  trait Test { _: ConnectorTest =>
 
-  private val voidedIsaModel = AmendVoidedIsaPoliciesItem(
-    customerReference = Some("INPOLY123A"),
-    event = Some("Death of spouse"),
-    gainAmount = 2000.99,
-    taxPaidAmount = Some(5000.99),
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12)
-  )
+    val nino: String = "AA111111A"
+    val taxYear: TaxYear
 
-  private val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
-    customerReference = Some("INPOLY123A"),
-    event = Some("Death of spouse"),
-    gainAmount = 2000.99,
-    taxPaid = true,
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12),
-    deficiencyRelief = Some(5000.99)
-  )
+    val voidedIsaModel = AmendVoidedIsaPoliciesItem(
+      customerReference = Some("INPOLY123A"),
+      event = Some("Death of spouse"),
+      gainAmount = 2000.99,
+      taxPaidAmount = Some(5000.99),
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12)
+    )
 
-  private val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
-    customerReference = Some("INPOLY123A"),
-    event = Some("Death of spouse"),
-    gainAmount = 2000.99,
-    taxPaid = true,
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12),
-    deficiencyRelief = Some(5000.99)
-  )
+    val lifeInsuranceModel = AmendCommonInsurancePoliciesItem(
+      customerReference = Some("INPOLY123A"),
+      event = Some("Death of spouse"),
+      gainAmount = 2000.99,
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    )
 
-  private val foreignModel = AmendForeignPoliciesItem(
-    customerReference = Some("INPOLY123A"),
-    gainAmount = 2000.99,
-    taxPaidAmount = Some(5000.99),
-    yearsHeld = Some(15)
-  )
+    val lifeAnnuityModel = AmendCommonInsurancePoliciesItem(
+      customerReference = Some("INPOLY123A"),
+      event = Some("Death of spouse"),
+      gainAmount = 2000.99,
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    )
 
-  private val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
-    customerReference = Some("INPOLY123A"),
-    event = Some("Death of spouse"),
-    gainAmount = 2000.99,
-    taxPaid = true,
-    yearsHeld = Some(15),
-    yearsHeldSinceLastGain = Some(12),
-    deficiencyRelief = Some(5000.99)
-  )
+    val foreignModel = AmendForeignPoliciesItem(
+      customerReference = Some("INPOLY123A"),
+      gainAmount = 2000.99,
+      taxPaidAmount = Some(5000.99),
+      yearsHeld = Some(15)
+    )
 
-  private val amendInsurancePoliciesBody = AmendInsurancePoliciesRequestBody(
-    lifeInsurance = Some(Seq(lifeInsuranceModel)),
-    capitalRedemption = Some(Seq(capitalRedemptionModel)),
-    lifeAnnuity = Some(Seq(lifeAnnuityModel)),
-    voidedIsa = Some(Seq(voidedIsaModel)),
-    foreign = Some(Seq(foreignModel))
-  )
+    val capitalRedemptionModel = AmendCommonInsurancePoliciesItem(
+      customerReference = Some("INPOLY123A"),
+      event = Some("Death of spouse"),
+      gainAmount = 2000.99,
+      taxPaid = true,
+      yearsHeld = Some(15),
+      yearsHeldSinceLastGain = Some(12),
+      deficiencyRelief = Some(5000.99)
+    )
 
-  private val amendInsurancePoliciesRequest = AmendInsurancePoliciesRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = amendInsurancePoliciesBody
-  )
+    val amendInsurancePoliciesBody = AmendInsurancePoliciesRequestBody(
+      lifeInsurance = Some(Seq(lifeInsuranceModel)),
+      capitalRedemption = Some(Seq(capitalRedemptionModel)),
+      lifeAnnuity = Some(Seq(lifeAnnuityModel)),
+      voidedIsa = Some(Seq(voidedIsaModel)),
+      foreign = Some(Seq(foreignModel))
+    )
 
-  class Test extends MockHttpClient with MockAppConfig {
+    def request = AmendInsurancePoliciesRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      body = amendInsurancePoliciesBody
+    )
 
     val connector: AmendInsurancePoliciesConnector = new AmendInsurancePoliciesConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "AmendInsurancePoliciesConnector" when {
     "amendInsurancePolicies" must {
-      "return a 201 status for a success scenario" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+      "return a 201 status for a success scenario" in new IfsTest with Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val taxYear = TaxYear.fromMtd("2019-20")
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/insurance-policies/income/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = amendInsurancePoliciesBody,
-            requiredHeaders = requiredIfsHeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(s"$baseUrl/income-tax/insurance-policies/income/$nino/2019-20", amendInsurancePoliciesBody) returns Future
+          .successful(outcome)
 
-        await(connector.amendInsurancePolicies(amendInsurancePoliciesRequest)) shouldBe outcome
+        val result = await(connector.amendInsurancePolicies(request))
+        result shouldBe outcome
+
+      }
+    }
+
+    "amendInsurancePolicies called for a TYS tax year" must {
+      "return a 201 status for a success scenario" in new TysIfsTest with Test {
+        val taxYear = TaxYear.fromMtd("2023-24")
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(s"$baseUrl/income-tax/insurance-policies/income/23-24/${nino}", amendInsurancePoliciesBody) returns Future
+          .successful(outcome)
+
+        val result = await(connector.amendInsurancePolicies(request))
+        result shouldBe outcome
       }
     }
   }

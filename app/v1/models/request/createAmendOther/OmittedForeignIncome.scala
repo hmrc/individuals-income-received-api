@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendInsurancePolicies
+package v1.models.request.createAmendOther
 
-import api.models.domain.{Nino, TaxYear}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AmendInsurancePoliciesRequest(nino: Nino, taxYear: TaxYear, body: AmendInsurancePoliciesRequestBody)
+case class OmittedForeignIncome(amount: BigDecimal)
+
+object OmittedForeignIncome {
+  implicit val reads: Reads[OmittedForeignIncome] = Json.reads[OmittedForeignIncome]
+
+  implicit val writes: OWrites[OmittedForeignIncome] = (JsPath \ "amount").write[BigDecimal].contramap(_.amount)
+}

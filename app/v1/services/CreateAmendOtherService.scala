@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -26,43 +26,36 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendInsurancePoliciesConnector
-import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
+import v1.connectors.CreateAmendOtherConnector
+import v1.models.request.createAmendOther.CreateAmendOtherRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendInsurancePoliciesService @Inject() (connector: AmendInsurancePoliciesConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendOtherService @Inject()(connector: CreateAmendOtherConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendInsurancePolicies(request: AmendInsurancePoliciesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmend(request: CreateAmendOtherRequest)(implicit
+                                                    hc: HeaderCarrier,
+                                                    ec: ExecutionContext,
+                                                    logContext: EndpointLogContext,
+                                                    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendInsurancePolicies(request)).leftMap(mapDownstreamErrors(errorMap))
+      desResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def errorMap: Map[String, MtdError] = {
-    val errors = Map(
+  private def desErrorMap: Map[String, MtdError] =
+    Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
       "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "UNPROCESSABLE_ENTITY"      -> StandardDownstreamError,
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
-
-    val extraTysErrors = Map(
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "INVALID_CORRELATION_ID" -> StandardDownstreamError
-    )
-
-    errors ++ extraTysErrors
-  }
 
 }

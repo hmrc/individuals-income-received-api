@@ -160,6 +160,7 @@ class CreateAmendPensionsRequestParserSpec extends UnitSpec {
 
         parser.parseRequest(amendPensionsRawData) shouldBe
           Right(CreateAmendPensionsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
+
       }
     }
 
