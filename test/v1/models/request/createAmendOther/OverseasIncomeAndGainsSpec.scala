@@ -33,7 +33,7 @@ class OverseasIncomeAndGainsSpec extends UnitSpec {
 
   "OverseasIncomeAndGains" when {
     "read from valid JSON" should {
-      "produce the expected AmendOverseasIncomeAndGains object" in {
+      "produce the expected OverseasIncomeAndGains object" in {
         json.as[OverseasIncomeAndGains] shouldBe model
       }
     }

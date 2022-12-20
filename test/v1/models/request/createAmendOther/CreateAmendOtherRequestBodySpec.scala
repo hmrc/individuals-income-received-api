@@ -129,13 +129,13 @@ class CreateAmendOtherRequestBodySpec extends UnitSpec {
 
   "CreateAmendOtherRequestBody" when {
     "read from valid JSON" should {
-      "produce the expected AmendOtherRequestBody object" in {
+      "produce the expected CreateAmendOtherRequestBody object" in {
         json.as[CreateAmendOtherRequestBody] shouldBe requestBodyModel
       }
     }
 
     "read from valid JSON with empty chargeableForeignBenefitsAndGifts object, businessReceipts and allOtherIncomeReceivedWhilstAbroad arrays" should {
-      "produce an empty AmendOtherRequestBody object" in {
+      "produce an empty CreateAmendOtherRequestBody object" in {
         val json = Json.parse(
           """
             |{
@@ -151,7 +151,7 @@ class CreateAmendOtherRequestBodySpec extends UnitSpec {
     }
 
     "read from empty JSON" should {
-      "produce an empty AmendOtherRequestBody object" in {
+      "produce an empty CreateAmendOtherRequestBody object" in {
         val emptyJson = JsObject.empty
 
         emptyJson.as[CreateAmendOtherRequestBody] shouldBe CreateAmendOtherRequestBody.empty

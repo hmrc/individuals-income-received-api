@@ -49,7 +49,7 @@ class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
 
   "AllOtherIncomeReceivedWhilstAbroadItem" when {
     "read from valid JSON" should {
-      "produce the expected AmendAllOtherIncomeReceivedWhilstAbroadItem object" in {
+      "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object" in {
         json.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe model
       }
     }
