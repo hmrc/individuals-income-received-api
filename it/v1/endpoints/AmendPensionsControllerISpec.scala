@@ -49,8 +49,7 @@ class AmendPensionsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    // val taxYear: String       = "2019-20"
+    val nino: String          = "AA123456A"
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
