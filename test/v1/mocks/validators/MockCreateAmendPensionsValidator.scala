@@ -24,12 +24,12 @@ import v1.models.request.createAmendPensions.CreateAmendPensionsRawData
 
 trait MockCreateAmendPensionsValidator extends MockFactory {
 
-  val mockAmendPensionsValidator: CreateAmendPensionsValidator = mock[CreateAmendPensionsValidator]
+  val mockCreateAmendPensionsValidator: CreateAmendPensionsValidator = mock[CreateAmendPensionsValidator]
 
-  object MockAmendPensionsValidator {
+  object MockCreateAmendPensionsValidator {
 
     def validate(data: CreateAmendPensionsRawData): CallHandler1[CreateAmendPensionsRawData, List[MtdError]] = {
-      (mockAmendPensionsValidator
+      (mockCreateAmendPensionsValidator
         .validate(_: CreateAmendPensionsRawData))
         .expects(data)
     }

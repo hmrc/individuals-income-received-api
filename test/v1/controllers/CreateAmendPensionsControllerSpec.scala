@@ -55,8 +55,8 @@ class CreateAmendPensionsControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockAmendPensionsRequestParser,
-      service = mockAmendPensionsService,
+      requestParser = mockCreateAmendPensionsRequestParser,
+      service = mockCreateAmendPensionsService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -163,7 +163,7 @@ class CreateAmendPensionsControllerSpec
     )
   )
 
-  val amendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
+  val createAmendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
     foreignPensions = Some(foreignPensionsItem),
     overseasPensionContributions = Some(overseasPensionContributionsItem)
   )
@@ -171,7 +171,7 @@ class CreateAmendPensionsControllerSpec
   val requestData: CreateAmendPensionsRequest = CreateAmendPensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
-    body = amendPensionsRequestBody
+    body = createAmendPensionsRequestBody
   )
 
   val hateoasResponse: JsValue = Json.parse(
@@ -216,11 +216,11 @@ class CreateAmendPensionsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockAmendPensionsRequestParser
+        MockCreateAmendPensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockAmendPensionsService
+        MockCreateAmendPensionsService
           .createAmendPensions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
@@ -240,7 +240,7 @@ class CreateAmendPensionsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockAmendPensionsRequestParser
+            MockCreateAmendPensionsRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -279,11 +279,11 @@ class CreateAmendPensionsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockAmendPensionsRequestParser
+            MockCreateAmendPensionsRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockAmendPensionsService
+            MockCreateAmendPensionsService
               .createAmendPensions(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 

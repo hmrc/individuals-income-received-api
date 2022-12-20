@@ -148,7 +148,7 @@ class CreateAmendPensionsRequestParserSpec extends UnitSpec {
   trait Test extends MockCreateAmendPensionsValidator {
 
     lazy val parser: CreateAmendPensionsRequestParser = new CreateAmendPensionsRequestParser(
-      validator = mockAmendPensionsValidator
+      validator = mockCreateAmendPensionsValidator
     )
 
   }
@@ -156,7 +156,7 @@ class CreateAmendPensionsRequestParserSpec extends UnitSpec {
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockAmendPensionsValidator.validate(amendPensionsRawData).returns(Nil)
+        MockCreateAmendPensionsValidator.validate(amendPensionsRawData).returns(Nil)
 
         parser.parseRequest(amendPensionsRawData) shouldBe
           Right(CreateAmendPensionsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
@@ -166,7 +166,7 @@ class CreateAmendPensionsRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendPensionsValidator
+        MockCreateAmendPensionsValidator
           .validate(amendPensionsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
@@ -175,7 +175,7 @@ class CreateAmendPensionsRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendPensionsValidator
+        MockCreateAmendPensionsValidator
           .validate(amendPensionsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
@@ -304,7 +304,7 @@ class CreateAmendPensionsRequestParserSpec extends UnitSpec {
           )
         )
 
-        MockAmendPensionsValidator
+        MockCreateAmendPensionsValidator
           .validate(amendPensionsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 

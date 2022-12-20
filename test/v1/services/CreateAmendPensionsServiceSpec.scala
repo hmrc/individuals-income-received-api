@@ -86,7 +86,7 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: CreateAmendPensionsService = new CreateAmendPensionsService(
-      connector = mockAmendPensionsConnector
+      connector = mockCreateAmendPensionsConnector
     )
 
   }
@@ -96,7 +96,7 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendPensionsConnector
+        MockCreateAmendPensionsConnector
           .createAmendPensions(amendPensionsRequest)
           .returns(Future.successful(outcome))
 
@@ -108,7 +108,7 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendPensionsConnector
+            MockCreateAmendPensionsConnector
               .createAmendPensions(amendPensionsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 

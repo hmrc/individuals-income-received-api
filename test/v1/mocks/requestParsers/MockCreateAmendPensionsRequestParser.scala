@@ -24,12 +24,12 @@ import v1.models.request.createAmendPensions.{CreateAmendPensionsRawData, Create
 
 trait MockCreateAmendPensionsRequestParser extends MockFactory {
 
-  val mockAmendPensionsRequestParser: CreateAmendPensionsRequestParser = mock[CreateAmendPensionsRequestParser]
+  val mockCreateAmendPensionsRequestParser: CreateAmendPensionsRequestParser = mock[CreateAmendPensionsRequestParser]
 
-  object MockAmendPensionsRequestParser {
+  object MockCreateAmendPensionsRequestParser {
 
     def parse(data: CreateAmendPensionsRawData): CallHandler[Either[ErrorWrapper, CreateAmendPensionsRequest]] = {
-      (mockAmendPensionsRequestParser.parseRequest(_: CreateAmendPensionsRawData)(_: String)).expects(data, *)
+      (mockCreateAmendPensionsRequestParser.parseRequest(_: CreateAmendPensionsRawData)(_: String)).expects(data, *)
     }
 
   }
