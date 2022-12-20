@@ -28,7 +28,6 @@ import v1.models.request.createAmendPensions.{
   CreateAmendPensionsRequestBody
 }
 
-
 import scala.concurrent.Future
 
 class CreateAmendPensionsConnectorSpec extends ConnectorSpec {
@@ -83,11 +82,7 @@ class CreateAmendPensionsConnectorSpec extends ConnectorSpec {
     overseasPensionContributions = Some(overseasPensionContributionsModel)
   )
 
-<<<<<<< HEAD:test/v1/connectors/CreateAmendPensionsConnectorSpec.scala
   private def amendPensionsRequest(taxYear: String): CreateAmendPensionsRequest = CreateAmendPensionsRequest(
-=======
-  private def amendPensionsRequest(taxYear: String): AmendPensionsRequest = AmendPensionsRequest(
->>>>>>> main:test/v1/connectors/AmendPensionsConnectorSpec.scala
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = amendPensionsRequestBody
