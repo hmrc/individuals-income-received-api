@@ -24,9 +24,10 @@ import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
+import v1.connectors.RetrieveOtherConnector
 import v1.models.request.retrieveOther.RetrieveOtherRequest
 import v1.models.response.retrieveOther.RetrieveOtherResponse
-import v1.connectors.RetrieveOtherConnector
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -40,8 +41,8 @@ class RetrieveOtherService @Inject() (connector: RetrieveOtherConnector) extends
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateRetrieveResponse(desResponseWrapper))
+      downstreamResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+      mtdResponseWrapper        <- EitherT.fromEither[Future](validateRetrieveResponse(downstreamResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value

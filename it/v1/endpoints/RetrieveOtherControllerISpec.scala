@@ -16,16 +16,8 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -37,44 +29,10 @@ import v1.fixtures.RetrieveOtherControllerFixture
 
 class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
 
-  private trait Test {
-
-    def nino: String = "AA123456A"
-    def taxYear: String
-
-    def downstreamUri: String
-    val downstreamResponse: JsValue = RetrieveOtherControllerFixture.fullRetrieveOtherResponse
-
-    def mtdUri: String       = s"/other/$nino/$taxYear"
-    val mtdResponse: JsValue = RetrieveOtherControllerFixture.mtdResponseWithHateoas(nino, taxYear)
-
-    def setupStubs(): StubMapping
-
-    def request: WSRequest = {
-      setupStubs()
-      buildRequest(mtdUri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-  }
-
-  private trait NonTysTest extends Test {
-    def taxYear: String       = "2019-20"
-    def downstreamUri: String = s"/income-tax/income/other/$nino/$taxYear"
-  }
-
-  private trait TysIfsTest extends Test {
-    def taxYear: String       = "2023-24"
-    def downstreamUri: String = s"/income-tax/income/other/23-24/$nino"
-  }
-
   "Calling the 'retrieve other' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new NonTysTest {
 
+      "any valid request is made" in new NonTysTest {
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
@@ -90,7 +48,6 @@ class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
     }
 
     "any valid request is made for Tax Year Specific (TYS)" in new TysIfsTest {
-
       override def setupStubs(): StubMapping = {
         AuditStub.audit()
         AuthStub.authorised()
@@ -111,7 +68,8 @@ class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
       def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
-          override def nino: String    = requestNino
+          override def nino: String = requestNino
+
           override def taxYear: String = requestTaxYear
 
           override def setupStubs(): StubMapping = {
@@ -156,10 +114,10 @@ class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
 
       def errorBody(code: String): String =
         s"""
-             |{
-             |   "code": "$code",
-             |   "reason": "downstream message"
-             |}
+           |{
+           |   "code": "$code",
+           |   "reason": "downstream message"
+           |}
             """.stripMargin
 
       val errors = Seq(
@@ -178,6 +136,40 @@ class RetrieveOtherControllerISpec extends IntegrationBaseSpec {
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
+  }
+
+  private trait Test {
+
+    def nino: String = "AA123456A"
+    def taxYear: String
+
+    def downstreamUri: String
+    val downstreamResponse: JsValue = RetrieveOtherControllerFixture.fullRetrieveOtherResponse
+
+    def mtdUri: String       = s"/other/$nino/$taxYear"
+    val mtdResponse: JsValue = RetrieveOtherControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+
+    def setupStubs(): StubMapping
+
+    def request: WSRequest = {
+      setupStubs()
+      buildRequest(mtdUri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String       = "2019-20"
+    def downstreamUri: String = s"/income-tax/income/other/$nino/$taxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/other/23-24/$nino"
   }
 
 }

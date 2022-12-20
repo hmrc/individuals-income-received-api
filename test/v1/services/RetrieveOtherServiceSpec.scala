@@ -29,37 +29,9 @@ import scala.concurrent.Future
 
 class RetrieveOtherServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
-
-  trait Test extends MockRetrieveOtherConnector {
-
-    val request: RetrieveOtherRequest = RetrieveOtherRequest(
-      nino = Nino(nino),
-      taxYear = TaxYear.fromMtd(taxYear)
-    )
-
-    val response: RetrieveOtherResponse = RetrieveOtherResponse(
-      submittedOn = "None",
-      businessReceipts = None,
-      allOtherIncomeReceivedWhilstAbroad = None,
-      overseasIncomeAndGains = None,
-      chargeableForeignBenefitsAndGifts = None,
-      omittedForeignIncome = None
-    )
-
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveOther")
-
-    val service: RetrieveOtherService = new RetrieveOtherService(
-      connector = mockRetrieveOtherConnector
-    )
-
-  }
-
-  "RetrieveOtherService" when {
-    "retrieve" must {
-      "return correct result for a success" in new Test {
+  "RetrieveOtherService" should {
+    "return the expected response for a non-TYS request" when {
+      "a valid request is made" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, response))
 
         MockRetrieveOtherConnector
@@ -98,6 +70,34 @@ class RetrieveOtherServiceSpec extends ServiceSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockRetrieveOtherConnector {
+
+    private val nino    = "AA112233A"
+    private val taxYear = "2019-20"
+
+    val request: RetrieveOtherRequest = RetrieveOtherRequest(
+      nino = Nino(nino),
+      taxYear = TaxYear.fromMtd(taxYear)
+    )
+
+    val response: RetrieveOtherResponse = RetrieveOtherResponse(
+      submittedOn = "None",
+      businessReceipts = None,
+      allOtherIncomeReceivedWhilstAbroad = None,
+      overseasIncomeAndGains = None,
+      chargeableForeignBenefitsAndGifts = None,
+      omittedForeignIncome = None
+    )
+
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveOther")
+
+    val service: RetrieveOtherService = new RetrieveOtherService(
+      connector = mockRetrieveOtherConnector
+    )
+
   }
 
 }

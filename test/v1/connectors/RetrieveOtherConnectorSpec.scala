@@ -27,12 +27,38 @@ import scala.concurrent.Future
 
 class RetrieveOtherConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  "RetrieveOtherConnector" should {
+
+    "return the expected response for a non-TYS request" when {
+      "a valid request is made" in new DesTest with Test {
+        val outcome = Right(ResponseWrapper(correlationId, response))
+
+        stubHttpResponse(outcome)
+
+        val result: DownstreamOutcome[RetrieveOtherResponse] = await(connector.retrieve(request))
+        result shouldBe outcome
+      }
+    }
+
+    "return the expected response for a TYS request" when {
+      "a valid request is made" in new TysIfsTest with Test {
+        override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, response))
+
+        stubTysHttpResponse(outcome)
+
+        val result: DownstreamOutcome[RetrieveOtherResponse] = await(connector.retrieve(request))
+        result shouldBe outcome
+      }
+    }
+  }
 
   trait Test {
     _: ConnectorTest =>
 
-    def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+    protected val nino: String = "AA111111A"
+    def taxYear: TaxYear       = TaxYear.fromMtd("2019-20")
 
     val request: RetrieveOtherRequest =
       RetrieveOtherRequest(Nino(nino), taxYear)
@@ -63,34 +89,6 @@ class RetrieveOtherConnectorSpec extends ConnectorSpec {
       ).returns(Future.successful(outcome))
     }
 
-  }
-
-  "RetrieveOtherConnector" when {
-
-    "retrieveOther" must {
-      "return a 200 status for a success scenario" in new DesTest with Test {
-
-        val outcome = Right(ResponseWrapper(correlationId, response))
-
-        stubHttpResponse(outcome)
-
-        val result: DownstreamOutcome[RetrieveOtherResponse] = await(connector.retrieve(request))
-        result shouldBe outcome
-      }
-    }
-
-    "retrieveOther for Tax Year Specific (TYS)" must {
-      "return a 200 status for a success scenario" in new TysIfsTest with Test {
-        override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-
-        val outcome = Right(ResponseWrapper(correlationId, response))
-
-        stubTysHttpResponse(outcome)
-
-        val result: DownstreamOutcome[RetrieveOtherResponse] = await(connector.retrieve(request))
-        result shouldBe outcome
-      }
-    }
   }
 
 }
