@@ -30,7 +30,7 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 @Singleton
 class CreateAmendPensionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendPensions(request: CreateAmendPensionsRequest)(implicit
+  def createAmendPensions(request: CreateAmendPensionsRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {

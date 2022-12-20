@@ -57,7 +57,7 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
       endpointName = "amendPensions"
     )
 
-  def amendPensions(nino: String, taxYear: String): Action[JsValue] =
+  def createAmendPensions(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
@@ -73,7 +73,7 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendPensions(parsedRequest))
+          serviceResponse <- EitherT(service.createAmendPensions(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -87,12 +87,12 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
               `X-CorrelationId` = serviceResponse.correlationId,
               auditResponse = AuditResponse(
                 httpStatus = OK,
-                response = Right(Some(amendPensionsHateoasBody(appConfig, nino, taxYear)))
+                response = Right(Some(createAmendPensionsHateoasBody(appConfig, nino, taxYear)))
               )
             )
           )
 
-          Ok(amendPensionsHateoasBody(appConfig, nino, taxYear))
+          Ok(createAmendPensionsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }

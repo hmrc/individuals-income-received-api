@@ -97,10 +97,10 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockAmendPensionsConnector
-          .amendPensions(amendPensionsRequest)
+          .createAmendPensions(amendPensionsRequest)
           .returns(Future.successful(outcome))
 
-        await(service.amendPensions(amendPensionsRequest)) shouldBe outcome
+        await(service.createAmendPensions(amendPensionsRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -109,10 +109,10 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
             MockAmendPensionsConnector
-              .amendPensions(amendPensionsRequest)
+              .createAmendPensions(amendPensionsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
-            await(service.amendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

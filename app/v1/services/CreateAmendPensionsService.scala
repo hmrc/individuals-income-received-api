@@ -34,13 +34,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendPensionsService @Inject() (connector: CreateAmendPensionsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendPensions(request: CreateAmendPensionsRequest)(implicit
+  def createAmendPensions(request: CreateAmendPensionsRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.amendPensions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    val result = EitherT(connector.createAmendPensions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }

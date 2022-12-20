@@ -221,10 +221,10 @@ class CreateAmendPensionsControllerSpec
           .returns(Right(requestData))
 
         MockAmendPensionsService
-          .amendPensions(requestData)
+          .createAmendPensions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.amendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
+        val result: Future[Result] = controller.createAmendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
@@ -244,7 +244,7 @@ class CreateAmendPensionsControllerSpec
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.amendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.createAmendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -284,10 +284,10 @@ class CreateAmendPensionsControllerSpec
               .returns(Right(requestData))
 
             MockAmendPensionsService
-              .amendPensions(requestData)
+              .createAmendPensions(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.amendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.createAmendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

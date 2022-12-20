@@ -108,7 +108,7 @@ class CreateAmendPensionsConnectorSpec extends ConnectorSpec {
 
         willPut(s"$baseUrl/income-tax/income/pensions/$nino/$taxYear", amendPensionsRequestBody).returns(Future.successful(outcome))
 
-        await(connector.amendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
+        await(connector.createAmendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
       }
     }
     "amend pensions for a TYS tax year" must {
@@ -119,7 +119,7 @@ class CreateAmendPensionsConnectorSpec extends ConnectorSpec {
           amendPensionsRequestBody
         ).returns(Future.successful(outcome))
 
-        await(connector.amendPensions(amendPensionsRequest("2023-24"))) shouldBe outcome
+        await(connector.createAmendPensions(amendPensionsRequest("2023-24"))) shouldBe outcome
 
       }
     }

@@ -33,9 +33,9 @@ trait MockCreateAmendPensionsService extends MockFactory {
 
   object MockAmendPensionsService {
 
-    def amendPensions(requestData: CreateAmendPensionsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def createAmendPensions(requestData: CreateAmendPensionsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendPensionsService
-        .amendPensions(_: CreateAmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .createAmendPensions(_: CreateAmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
 
