@@ -26,11 +26,11 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.IfsUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.request.deleteInsurancePolicies.DeleteInsurancePoliciesRawData
+import v1.requestParsers.DeleteInsurancePoliciesRequestParser
+import v1.services.DeleteInsurancePoliciesService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,8 +38,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
-                                                   requestParser: DeleteRetrieveRequestParser,
-                                                   service: DeleteRetrieveService,
+                                                   requestParser: DeleteInsurancePoliciesRequestParser,
+                                                   service: DeleteInsurancePoliciesService,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -54,9 +54,8 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
     )
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
-    implicit val ifsUri: IfsUri[Unit]  = IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/$taxYear")
     implicit val correlationId: String = idGenerator.generateCorrelationId
-    val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
+    val rawData: DeleteInsurancePoliciesRawData = DeleteInsurancePoliciesRawData(nino = nino, taxYear = taxYear)
 
     logger.info(
       s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -65,8 +64,8 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
 
     val result =
       for {
-        _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.delete())
+        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+        serviceResponse <- EitherT(service.delete(parsedRequest))
       } yield {
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -112,11 +111,15 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case _ if errorWrapper.containsAnyOf(
+        BadRequestError,
+        NinoFormatError,
+        TaxYearFormatError,
+        RuleTaxYearRangeInvalidError,
+        RuleTaxYearNotSupportedError) => BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError              => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError    => InternalServerError(Json.toJson(errorWrapper))
+      case _                          => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

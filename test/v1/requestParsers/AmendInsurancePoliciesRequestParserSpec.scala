@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{
   BadRequestError,
   CustomerRefFormatError,
@@ -35,7 +35,7 @@ import v1.models.request.amendInsurancePolicies._
 class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
-  val taxYear: String                = "2020-21"
+  val taxYear                        = TaxYear.fromMtd("2020-21")
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -141,7 +141,7 @@ class AmendInsurancePoliciesRequestParserSpec extends UnitSpec {
 
   val rawData: AmendInsurancePoliciesRawData = AmendInsurancePoliciesRawData(
     nino = nino,
-    taxYear = taxYear,
+    taxYear = taxYear.asMtd,
     body = validRawRequestBody
   )
 

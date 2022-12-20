@@ -117,12 +117,21 @@ class AmendInsurancePoliciesController @Inject() (val authService: EnrolmentsAut
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CustomerRefFormatError.code) |
-          CustomMtdError(EventFormatError.code) =>
-        BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleIncorrectOrEmptyBodyError,
+            ValueFormatError,
+            CustomerRefFormatError,
+            EventFormatError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case _ => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
