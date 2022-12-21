@@ -120,7 +120,7 @@ class UnignoreEmploymentController @Inject() (val authService: EnrolmentsAuthSer
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
           RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError =>
         BadRequest(Json.toJson(errorWrapper))
-      case RuleCustomEmploymentUnignoreError => Forbidden(Json.toJson(errorWrapper))
+      case RuleCustomEmploymentUnignoreError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                     => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError           => InternalServerError(Json.toJson(errorWrapper))
       case _                                 => unhandledError(errorWrapper)

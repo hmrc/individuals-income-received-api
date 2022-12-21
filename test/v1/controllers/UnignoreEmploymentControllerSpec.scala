@@ -198,7 +198,7 @@ class UnignoreEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (RuleCustomEmploymentUnignoreError, FORBIDDEN),
+          (RuleCustomEmploymentUnignoreError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )

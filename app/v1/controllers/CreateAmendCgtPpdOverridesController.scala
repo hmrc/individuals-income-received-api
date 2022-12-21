@@ -139,7 +139,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case NotFoundError | PpdSubmissionIdNotFoundError          => NotFound(Json.toJson(errorWrapper))
-      case RuleIncorrectDisposalTypeError                        => Forbidden(Json.toJson(errorWrapper))
+      case RuleIncorrectDisposalTypeError                        => BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError                               => InternalServerError(Json.toJson(errorWrapper))
       case _ if errorWrapper.containsAnyOf(badRequestErrors: _*) => BadRequest(Json.toJson(errorWrapper))
       case _                                                     => unhandledError(errorWrapper)
