@@ -19,18 +19,18 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.AmendPensionsValidator
-import v1.models.request.amendPensions.AmendPensionsRawData
+import v1.requestParsers.validators.CreateAmendPensionsValidator
+import v1.models.request.createAmendPensions.CreateAmendPensionsRawData
 
-trait MockAmendPensionsValidator extends MockFactory {
+trait MockCreateAmendPensionsValidator extends MockFactory {
 
-  val mockAmendPensionsValidator: AmendPensionsValidator = mock[AmendPensionsValidator]
+  val mockCreateAmendPensionsValidator: CreateAmendPensionsValidator = mock[CreateAmendPensionsValidator]
 
-  object MockAmendPensionsValidator {
+  object MockCreateAmendPensionsValidator {
 
-    def validate(data: AmendPensionsRawData): CallHandler1[AmendPensionsRawData, List[MtdError]] = {
-      (mockAmendPensionsValidator
-        .validate(_: AmendPensionsRawData))
+    def validate(data: CreateAmendPensionsRawData): CallHandler1[CreateAmendPensionsRawData, List[MtdError]] = {
+      (mockCreateAmendPensionsValidator
+        .validate(_: CreateAmendPensionsRawData))
         .expects(data)
     }
 

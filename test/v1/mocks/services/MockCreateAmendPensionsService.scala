@@ -22,20 +22,20 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.amendPensions.AmendPensionsRequest
-import v1.services.AmendPensionsService
+import v1.models.request.createAmendPensions.CreateAmendPensionsRequest
+import v1.services.CreateAmendPensionsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAmendPensionsService extends MockFactory {
+trait MockCreateAmendPensionsService extends MockFactory {
 
-  val mockAmendPensionsService: AmendPensionsService = mock[AmendPensionsService]
+  val mockCreateAmendPensionsService: CreateAmendPensionsService = mock[CreateAmendPensionsService]
 
-  object MockAmendPensionsService {
+  object MockCreateAmendPensionsService {
 
-    def amendPensions(requestData: AmendPensionsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockAmendPensionsService
-        .amendPensions(_: AmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+    def createAmendPensions(requestData: CreateAmendPensionsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (mockCreateAmendPensionsService
+        .createAmendPensions(_: CreateAmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
 

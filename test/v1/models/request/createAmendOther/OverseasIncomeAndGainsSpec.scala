@@ -18,23 +18,14 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.{overseasIncomeAndGainsJson, overseasIncomeAndGainsModel}
 
 class OverseasIncomeAndGainsSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "gainAmount": 3000.99
-      |}
-    """.stripMargin
-  )
-
-  private val model = OverseasIncomeAndGains(gainAmount = 3000.99)
 
   "OverseasIncomeAndGains" when {
     "read from valid JSON" should {
       "produce the expected OverseasIncomeAndGains object" in {
-        json.as[OverseasIncomeAndGains] shouldBe model
+        overseasIncomeAndGainsJson.as[OverseasIncomeAndGains] shouldBe overseasIncomeAndGainsModel
       }
     }
 
@@ -48,7 +39,7 @@ class OverseasIncomeAndGainsSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(overseasIncomeAndGainsModel) shouldBe overseasIncomeAndGainsJson
       }
     }
   }

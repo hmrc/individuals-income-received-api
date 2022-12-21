@@ -22,7 +22,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import v1.requestParsers.validators.validations._
-import v1.models.request.amendPensions._
+import v1.models.request.createAmendPensions._
 import v1.requestParsers.validators.validations.{
   CountryCodeValidation,
   CustomerRefValidation,
@@ -39,35 +39,37 @@ import v1.requestParsers.validators.validations.{
 }
 
 @Singleton
-class AmendPensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendPensionsRawData] with ValueFormatErrorMessages {
+class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
+    extends Validator[CreateAmendPensionsRawData]
+    with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendPensionsRawData): List[MtdError] = {
+  override def validate(data: CreateAmendPensionsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: AmendPensionsRawData => List[List[MtdError]] = (data: AmendPensionsRawData) => {
+  private def parameterFormatValidation: CreateAmendPensionsRawData => List[List[MtdError]] = (data: CreateAmendPensionsRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: AmendPensionsRawData => List[List[MtdError]] = (data: AmendPensionsRawData) => {
+  private def parameterRuleValidation: CreateAmendPensionsRawData => List[List[MtdError]] = (data: CreateAmendPensionsRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 
-  private def bodyFormatValidator: AmendPensionsRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: CreateAmendPensionsRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendPensionsRequestBody](data.body.json)
+      JsonFormatValidation.validate[CreateAmendPensionsRequestBody](data.body.json)
     )
   }
 
-  private def bodyValueValidator: AmendPensionsRawData => List[List[MtdError]] = { data =>
-    val requestBodyData = data.body.json.as[AmendPensionsRequestBody]
+  private def bodyValueValidator: CreateAmendPensionsRawData => List[List[MtdError]] = { data =>
+    val requestBodyData = data.body.json.as[CreateAmendPensionsRequestBody]
 
     List(
       Validator.flattenErrors(
@@ -88,7 +90,7 @@ class AmendPensionsValidator @Inject() (implicit appConfig: AppConfig) extends V
       ))
   }
 
-  private def validateForeignPensions(foreignPensions: AmendForeignPensionsItem, arrayIndex: Int): List[MtdError] = {
+  private def validateForeignPensions(foreignPensions: CreateAmendForeignPensionsItem, arrayIndex: Int): List[MtdError] = {
     List(
       CountryCodeValidation
         .validate(foreignPensions.countryCode)
@@ -114,7 +116,7 @@ class AmendPensionsValidator @Inject() (implicit appConfig: AppConfig) extends V
     ).flatten
   }
 
-  private def validateOverseasPensionContributions(overseasPensionContributions: AmendOverseasPensionContributions,
+  private def validateOverseasPensionContributions(overseasPensionContributions: CreateAmendOverseasPensionContributions,
                                                    arrayIndex: Int): List[MtdError] = {
     List(
       CustomerRefValidation

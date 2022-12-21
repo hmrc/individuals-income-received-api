@@ -18,33 +18,14 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.{chargeableForeignBenefitsAndGiftsJson, chargeableForeignBenefitsAndGiftsModel}
 
 class ChargeableForeignBenefitsAndGiftsSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "transactionBenefit": 1999.99,
-      |   "protectedForeignIncomeSourceBenefit": 2999.99,
-      |   "protectedForeignIncomeOnwardGift": 3999.99,
-      |   "benefitReceivedAsASettler": 4999.99,
-      |   "onwardGiftReceivedAsASettler": 5999.99
-      |}
-    """.stripMargin
-  )
-
-  private val model = ChargeableForeignBenefitsAndGifts(
-    transactionBenefit = Some(1999.99),
-    protectedForeignIncomeSourceBenefit = Some(2999.99),
-    protectedForeignIncomeOnwardGift = Some(3999.99),
-    benefitReceivedAsASettler = Some(4999.99),
-    onwardGiftReceivedAsASettler = Some(5999.99)
-  )
 
   "ChargeableForeignBenefitsAndGifts" when {
     "read from valid JSON" should {
       "produce the expected ChargeableForeignBenefitsAndGifts object" in {
-        json.as[ChargeableForeignBenefitsAndGifts] shouldBe model
+        chargeableForeignBenefitsAndGiftsJson.as[ChargeableForeignBenefitsAndGifts] shouldBe chargeableForeignBenefitsAndGiftsModel
       }
     }
 
@@ -76,7 +57,7 @@ class ChargeableForeignBenefitsAndGiftsSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(chargeableForeignBenefitsAndGiftsModel) shouldBe chargeableForeignBenefitsAndGiftsJson
       }
     }
   }

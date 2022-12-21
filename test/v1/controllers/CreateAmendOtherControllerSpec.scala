@@ -20,13 +20,14 @@ import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel, responseWithHateoasLinks}
 import v1.mocks.requestParsers.MockCreateAmendOtherRequestParser
 import v1.mocks.services.MockCreateAmendOtherService
 import v1.models.request.createAmendOther._
@@ -68,153 +69,16 @@ class CreateAmendOtherControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  val requestBodyJson: JsValue = Json.parse(
-    """
-      |{
-      |   "businessReceipts": [
-      |      {
-      |         "grossAmount": 5000.99,
-      |         "taxYear": "2018-19"
-      |      },
-      |      {
-      |         "grossAmount": 6000.99,
-      |         "taxYear": "2019-20"
-      |      }
-      |   ],
-      |   "allOtherIncomeReceivedWhilstAbroad": [
-      |      {
-      |         "countryCode": "FRA",
-      |         "amountBeforeTax": 1999.99,
-      |         "taxTakenOff": 2.23,
-      |         "specialWithholdingTax": 3.23,
-      |         "foreignTaxCreditRelief": false,
-      |         "taxableAmount": 4.23,
-      |         "residentialFinancialCostAmount": 2999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 1999.99
-      |      },
-      |      {
-      |         "countryCode": "IND",
-      |         "amountBeforeTax": 2999.99,
-      |         "taxTakenOff": 3.23,
-      |         "specialWithholdingTax": 4.23,
-      |         "foreignTaxCreditRelief": true,
-      |         "taxableAmount": 5.23,
-      |         "residentialFinancialCostAmount": 3999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 2999.99
-      |      }
-      |   ],
-      |   "overseasIncomeAndGains": {
-      |      "gainAmount": 3000.99
-      |   },
-      |   "chargeableForeignBenefitsAndGifts": {
-      |      "transactionBenefit": 1999.99,
-      |      "protectedForeignIncomeSourceBenefit": 2999.99,
-      |      "protectedForeignIncomeOnwardGift": 3999.99,
-      |      "benefitReceivedAsASettler": 4999.99,
-      |      "onwardGiftReceivedAsASettler": 5999.99
-      |   },
-      |   "omittedForeignIncome": {
-      |      "amount": 4000.99
-      |   }
-      |}
-    """.stripMargin
-  )
-
   val rawData: CreateAmendOtherRawData = CreateAmendOtherRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
-  val businessReceipts: Seq[BusinessReceiptsItem] = Seq(
-    BusinessReceiptsItem(
-      grossAmount = 5000.99,
-      taxYear = "2018-19"
-    ),
-    BusinessReceiptsItem(
-      grossAmount = 6000.99,
-      taxYear = "2019-20"
-    )
-  )
-
-  val allOtherIncomeReceivedWhilstAbroad: Seq[AllOtherIncomeReceivedWhilstAbroadItem] = Seq(
-    AllOtherIncomeReceivedWhilstAbroadItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1999.99),
-      taxTakenOff = Some(2.23),
-      specialWithholdingTax = Some(3.23),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 4.23,
-      residentialFinancialCostAmount = Some(2999.99),
-      broughtFwdResidentialFinancialCostAmount = Some(1999.99)
-    ),
-    AllOtherIncomeReceivedWhilstAbroadItem(
-      countryCode = "IND",
-      amountBeforeTax = Some(2999.99),
-      taxTakenOff = Some(3.23),
-      specialWithholdingTax = Some(4.23),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 5.23,
-      residentialFinancialCostAmount = Some(3999.99),
-      broughtFwdResidentialFinancialCostAmount = Some(2999.99)
-    )
-  )
-
-  val overseasIncomeAndGains: OverseasIncomeAndGains =
-    OverseasIncomeAndGains(
-      gainAmount = 3000.99
-    )
-
-  val chargeableForeignBenefitsAndGifts: ChargeableForeignBenefitsAndGifts =
-    ChargeableForeignBenefitsAndGifts(
-      transactionBenefit = Some(1999.99),
-      protectedForeignIncomeSourceBenefit = Some(2999.99),
-      protectedForeignIncomeOnwardGift = Some(3999.99),
-      benefitReceivedAsASettler = Some(4999.99),
-      onwardGiftReceivedAsASettler = Some(5999.99)
-    )
-
-  val omittedForeignIncome: OmittedForeignIncome =
-    OmittedForeignIncome(
-      amount = 4000.99
-    )
-
-  val createAmendOtherRequestBody: CreateAmendOtherRequestBody = CreateAmendOtherRequestBody(
-    businessReceipts = Some(businessReceipts),
-    allOtherIncomeReceivedWhilstAbroad = Some(allOtherIncomeReceivedWhilstAbroad),
-    overseasIncomeAndGains = Some(overseasIncomeAndGains),
-    chargeableForeignBenefitsAndGifts = Some(chargeableForeignBenefitsAndGifts),
-    omittedForeignIncome = Some(omittedForeignIncome)
-  )
-
   val requestData: CreateAmendOtherRequest = CreateAmendOtherRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
-    body = createAmendOtherRequestBody
-  )
-
-  val hateoasResponse: JsValue = Json.parse(
-    s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/other/$nino/$taxYear",
-       |         "rel":"create-and-amend-other-income",
-       |         "method":"PUT"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/other/$nino/$taxYear",
-       |         "rel":"self",
-       |         "method":"GET"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/other/$nino/$taxYear",
-       |         "rel":"delete-other-income",
-       |         "method":"DELETE"
-       |      }
-       |   ]
-       |}
-    """.stripMargin
+    taxYear = TaxYear.fromMtd(taxYear),
+    body = requestBodyModel
   )
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -246,10 +110,10 @@ class CreateAmendOtherControllerSpec
         val result: Future[Result] = controller.createAmendOther(nino, taxYear)(fakePutRequest(requestBodyJson))
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe hateoasResponse
+        contentAsJson(result) shouldBe responseWithHateoasLinks(taxYear)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(responseWithHateoasLinks(taxYear)))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
@@ -312,13 +176,17 @@ class CreateAmendOtherControllerSpec
           }
         }
 
-        val input = Seq(
+        val errors = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
-        input.foreach(args => (serviceErrors _).tupled(args))
+        val extraTysErrors = List(
+          (RuleTaxYearNotSupportedError, BAD_REQUEST)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }

@@ -31,6 +31,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.requestBodyJson
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
 import v1.models.request.createAmendOther.CreateAmendOtherRawData
 
@@ -39,57 +40,7 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
   private val validNino    = "AA123456A"
   private val validTaxYear = "2019-20"
 
-  private val validRequestBodyJson: JsValue = Json.parse(
-    """
-      |{
-      |   "businessReceipts": [
-      |      {
-      |         "grossAmount": 5000.99,
-      |         "taxYear": "2018-19"
-      |      },
-      |      {
-      |         "grossAmount": 6000.99,
-      |         "taxYear": "2019-20"
-      |      }
-      |   ],
-      |   "allOtherIncomeReceivedWhilstAbroad": [
-      |      {
-      |         "countryCode": "FRA",
-      |         "amountBeforeTax": 1999.99,
-      |         "taxTakenOff": 2.23,
-      |         "specialWithholdingTax": 3.23,
-      |         "foreignTaxCreditRelief": false,
-      |         "taxableAmount": 4.23,
-      |         "residentialFinancialCostAmount": 2999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 1999.99
-      |      },
-      |      {
-      |         "countryCode": "IND",
-      |         "amountBeforeTax": 2999.99,
-      |         "taxTakenOff": 3.23,
-      |         "specialWithholdingTax": 4.23,
-      |         "foreignTaxCreditRelief": true,
-      |         "taxableAmount": 5.23,
-      |         "residentialFinancialCostAmount": 3999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 2999.99
-      |      }
-      |   ],
-      |   "overseasIncomeAndGains": {
-      |      "gainAmount": 3000.99
-      |   },
-      |   "chargeableForeignBenefitsAndGifts": {
-      |      "transactionBenefit": 1999.99,
-      |      "protectedForeignIncomeSourceBenefit": 2999.99,
-      |      "protectedForeignIncomeOnwardGift": 3999.99,
-      |      "benefitReceivedAsASettler": 4999.99,
-      |      "onwardGiftReceivedAsASettler": 5999.99
-      |   },
-      |   "omittedForeignIncome": {
-      |      "amount": 4000.99
-      |   }
-      |}
-    """.stripMargin
-  )
+  private val validRequestBodyJson: JsValue = requestBodyJson
 
   private val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
 

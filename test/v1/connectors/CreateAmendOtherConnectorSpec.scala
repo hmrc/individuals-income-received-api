@@ -17,55 +17,55 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.other.CreateAmendOtherServiceConnectorFixture.requestBodyModel
+import v1.fixtures.other.CreateAmendOtherFixtures.requestBodyModel
 import v1.models.request.createAmendOther.CreateAmendOtherRequest
 
 import scala.concurrent.Future
 
 class CreateAmendOtherConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
-  private val taxYear: String = "2019-20"
+  trait Test { _: ConnectorTest =>
 
-  private val createAmendOtherRequest = CreateAmendOtherRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = requestBodyModel
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
+    val taxYear: String
 
     val connector: CreateAmendOtherConnector = new CreateAmendOtherConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    lazy val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
+      nino = Nino("AA111111A"),
+      taxYear = TaxYear.fromMtd(taxYear),
+      body = requestBodyModel
+    )
+
   }
 
   "CreateAmendOtherConnector" when {
     "createAmend" must {
-      "return a 204 status for a success scenario" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+      "return a 204 status for a success scenario" in new IfsTest with Test {
+        val taxYear = "2019-20"
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/other/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = requestBodyModel,
-            requiredHeaders = requiredIfsHeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        willPut(
+          url = s"$baseUrl/income-tax/income/other/AA111111A/2019-20",
+          body = requestBodyModel
+        )
+          .returns(Future.successful(outcome))
+
+        await(connector.createAmend(createAmendOtherRequest)) shouldBe outcome
+      }
+
+      "return a 204 status for a success scenario for a Tax Year Specific (TYS) tax year" in new TysIfsTest with Test {
+        val taxYear = "2023-24"
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(
+          url = s"$baseUrl/income-tax/income/other/23-24/AA111111A",
+          body = requestBodyModel
+        )
           .returns(Future.successful(outcome))
 
         await(connector.createAmend(createAmendOtherRequest)) shouldBe outcome

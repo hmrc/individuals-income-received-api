@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendPensions
+package v1.models.request.createAmendPensions
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendPensionsRequestBodySpec extends UnitSpec {
+class CreateAmendPensionsRequestBodySpec extends UnitSpec {
 
   private val mtdJson = Json.parse(
     """
@@ -116,7 +116,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
   )
 
   private val foreignPensionsModel = Seq(
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
@@ -124,7 +124,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
       foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "FRA",
       amountBeforeTax = Some(200.25),
       taxTakenOff = Some(1.27),
@@ -135,7 +135,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
   )
 
   private val overseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -145,7 +145,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),
@@ -157,7 +157,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
     )
   )
 
-  private val requestBodyModel = AmendPensionsRequestBody(
+  private val requestBodyModel = CreateAmendPensionsRequestBody(
     Some(foreignPensionsModel),
     Some(overseasPensionContributionsModel)
   )
@@ -165,14 +165,14 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
   "AmendPensionsRequestBody" when {
     "read from valid JSON" should {
       "produce the expected AmendPensionsRequestBody object" in {
-        mtdJson.as[AmendPensionsRequestBody] shouldBe requestBodyModel
+        mtdJson.as[CreateAmendPensionsRequestBody] shouldBe requestBodyModel
       }
     }
 
     "read from empty JSON" should {
       "produce the expected AmendPensionsRequestBody object" in {
         val emptyJson = JsObject.empty
-        emptyJson.as[AmendPensionsRequestBody] shouldBe AmendPensionsRequestBody.empty
+        emptyJson.as[CreateAmendPensionsRequestBody] shouldBe CreateAmendPensionsRequestBody.empty
       }
     }
 
@@ -187,7 +187,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
           """.stripMargin
         )
 
-        json.as[AmendPensionsRequestBody] shouldBe requestBodyModel.copy(foreignPensions = None, overseasPensionContributions = None)
+        json.as[CreateAmendPensionsRequestBody] shouldBe requestBodyModel.copy(foreignPensions = None, overseasPensionContributions = None)
       }
     }
 
@@ -210,7 +210,7 @@ class AmendPensionsRequestBodySpec extends UnitSpec {
           """.stripMargin
         )
 
-        json.validate[AmendPensionsRequestBody] shouldBe a[JsError]
+        json.validate[CreateAmendPensionsRequestBody] shouldBe a[JsError]
       }
     }
 

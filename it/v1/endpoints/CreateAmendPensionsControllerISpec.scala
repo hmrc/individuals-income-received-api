@@ -45,11 +45,12 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
-class AmendPensionsControllerISpec extends IntegrationBaseSpec {
+class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String          = "AA123456A"
+    val nino: String = "AA123456A"
+
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(

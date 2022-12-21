@@ -21,17 +21,22 @@ import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import v1.models.request.amendPensions.{AmendForeignPensionsItem, AmendOverseasPensionContributions, AmendPensionsRequest, AmendPensionsRequestBody}
+import v1.models.request.createAmendPensions.{
+  CreateAmendForeignPensionsItem,
+  CreateAmendOverseasPensionContributions,
+  CreateAmendPensionsRequest,
+  CreateAmendPensionsRequestBody
+}
 
 import scala.concurrent.Future
 
-class AmendPensionsConnectorSpec extends ConnectorSpec {
+class CreateAmendPensionsConnectorSpec extends ConnectorSpec {
 
   private val nino: String    = "AA111111A"
   private val taxYear: String = "2019-20"
 
   private val foreignPensionsModel = Seq(
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
@@ -39,7 +44,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
       foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "FRA",
       amountBeforeTax = Some(200.23),
       taxTakenOff = Some(3.21),
@@ -50,7 +55,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
   )
 
   private val overseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME555"),
       exemptEmployersPensionContribs = 300.33,
       migrantMemReliefQopsRefNo = Some("QOPS000001"),
@@ -60,7 +65,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-654321")
     ),
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -72,12 +77,12 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
     )
   )
 
-  private val amendPensionsRequestBody: AmendPensionsRequestBody = AmendPensionsRequestBody(
+  private val amendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
     foreignPensions = Some(foreignPensionsModel),
     overseasPensionContributions = Some(overseasPensionContributionsModel)
   )
 
-  private def amendPensionsRequest(taxYear: String): AmendPensionsRequest = AmendPensionsRequest(
+  private def amendPensionsRequest(taxYear: String): CreateAmendPensionsRequest = CreateAmendPensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = amendPensionsRequestBody
@@ -85,7 +90,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
 
   trait Test extends MockHttpClient with MockAppConfig {
 
-    val connector: AmendPensionsConnector = new AmendPensionsConnector(
+    val connector: CreateAmendPensionsConnector = new CreateAmendPensionsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -103,7 +108,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
 
         willPut(s"$baseUrl/income-tax/income/pensions/$nino/$taxYear", amendPensionsRequestBody).returns(Future.successful(outcome))
 
-        await(connector.amendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
+        await(connector.createAmendPensions(amendPensionsRequest(taxYear))) shouldBe outcome
       }
     }
     "amend pensions for a TYS tax year" must {
@@ -114,7 +119,7 @@ class AmendPensionsConnectorSpec extends ConnectorSpec {
           amendPensionsRequestBody
         ).returns(Future.successful(outcome))
 
-        await(connector.amendPensions(amendPensionsRequest("2023-24"))) shouldBe outcome
+        await(connector.createAmendPensions(amendPensionsRequest("2023-24"))) shouldBe outcome
 
       }
     }

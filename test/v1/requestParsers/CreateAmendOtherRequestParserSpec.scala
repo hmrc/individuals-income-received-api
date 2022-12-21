@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{
   BadRequestError,
   CountryCodeFormatError,
@@ -30,6 +30,7 @@ import api.models.errors.{
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
 import v1.mocks.validators.MockCreateAmendOtherValidator
 import v1.models.request.createAmendOther._
 
@@ -39,113 +40,7 @@ class CreateAmendOtherRequestParserSpec extends UnitSpec {
   val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  private val validRequestBodyJson: JsValue = Json.parse(
-    """
-      |{
-      |   "businessReceipts": [
-      |      {
-      |         "grossAmount": 5000.99,
-      |         "taxYear": "2018-19"
-      |      },
-      |      {
-      |         "grossAmount": 6000.99,
-      |         "taxYear": "2019-20"
-      |      }
-      |   ],
-      |   "allOtherIncomeReceivedWhilstAbroad": [
-      |      {
-      |         "countryCode": "FRA",
-      |         "amountBeforeTax": 1999.99,
-      |         "taxTakenOff": 2.23,
-      |         "specialWithholdingTax": 3.23,
-      |         "foreignTaxCreditRelief": false,
-      |         "taxableAmount": 4.23,
-      |         "residentialFinancialCostAmount": 2999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 1999.99
-      |      },
-      |      {
-      |         "countryCode": "IND",
-      |         "amountBeforeTax": 2999.99,
-      |         "taxTakenOff": 3.23,
-      |         "specialWithholdingTax": 4.23,
-      |         "foreignTaxCreditRelief": true,
-      |         "taxableAmount": 5.23,
-      |         "residentialFinancialCostAmount": 3999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 2999.99
-      |      }
-      |   ],
-      |   "overseasIncomeAndGains": {
-      |      "gainAmount": 3000.99
-      |   },
-      |   "chargeableForeignBenefitsAndGifts": {
-      |      "transactionBenefit": 1999.99,
-      |      "protectedForeignIncomeSourceBenefit": 2999.99,
-      |      "protectedForeignIncomeOnwardGift": 3999.99,
-      |      "benefitReceivedAsASettler": 4999.99,
-      |      "onwardGiftReceivedAsASettler": 5999.99
-      |   },
-      |   "omittedForeignIncome": {
-      |      "amount": 4000.99
-      |   }
-      |}
-    """.stripMargin
-  )
-
-  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
-
-  private val fullBusinessReceiptsModel = Seq(
-    BusinessReceiptsItem(
-      grossAmount = 5000.99,
-      taxYear = "2018-19"
-    ),
-    BusinessReceiptsItem(
-      grossAmount = 6000.99,
-      taxYear = "2019-20"
-    )
-  )
-
-  private val fullAllOtherIncomeReceivedWhilstAbroadModel = Seq(
-    AllOtherIncomeReceivedWhilstAbroadItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1999.99),
-      taxTakenOff = Some(2.23),
-      specialWithholdingTax = Some(3.23),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 4.23,
-      residentialFinancialCostAmount = Some(2999.99),
-      broughtFwdResidentialFinancialCostAmount = Some(1999.99)
-    ),
-    AllOtherIncomeReceivedWhilstAbroadItem(
-      countryCode = "IND",
-      amountBeforeTax = Some(2999.99),
-      taxTakenOff = Some(3.23),
-      specialWithholdingTax = Some(4.23),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 5.23,
-      residentialFinancialCostAmount = Some(3999.99),
-      broughtFwdResidentialFinancialCostAmount = Some(2999.99)
-    )
-  )
-
-  private val fullOverseasIncomeAndGainsModel = OverseasIncomeAndGains(gainAmount = 3000.99)
-
-  private val fullChargeableForeignBenefitsAndGiftsModel = ChargeableForeignBenefitsAndGifts(
-    transactionBenefit = Some(1999.99),
-    protectedForeignIncomeSourceBenefit = Some(2999.99),
-    protectedForeignIncomeOnwardGift = Some(3999.99),
-    benefitReceivedAsASettler = Some(4999.99),
-    onwardGiftReceivedAsASettler = Some(5999.99)
-  )
-
-  private val fullOmittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
-
-  private val validRequestBodyModel = CreateAmendOtherRequestBody(
-    Some(fullBusinessReceiptsModel),
-    Some(fullAllOtherIncomeReceivedWhilstAbroadModel),
-    Some(fullOverseasIncomeAndGainsModel),
-    Some(fullChargeableForeignBenefitsAndGiftsModel),
-    Some(fullOmittedForeignIncomeModel)
-  )
+  private val validRawRequestBody = AnyContentAsJson(requestBodyJson)
 
   private val createAmendOtherRawData = CreateAmendOtherRawData(
     nino = nino,
@@ -167,7 +62,7 @@ class CreateAmendOtherRequestParserSpec extends UnitSpec {
         MockCreateAmendOtherValidator.validate(createAmendOtherRawData).returns(Nil)
 
         parser.parseRequest(createAmendOtherRawData) shouldBe
-          Right(CreateAmendOtherRequest(Nino(nino), taxYear, validRequestBodyModel))
+          Right(CreateAmendOtherRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBodyModel))
       }
     }
 

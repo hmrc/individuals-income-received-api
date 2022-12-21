@@ -30,22 +30,22 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1.models.request.amendPensions.AmendPensionsRawData
-import v1.requestParsers.AmendPensionsRequestParser
-import v1.services.AmendPensionsService
+import v1.models.request.createAmendPensions.CreateAmendPensionsRawData
+import v1.requestParsers.CreateAmendPensionsRequestParser
+import v1.services.CreateAmendPensionsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionsController @Inject() (val authService: EnrolmentsAuthService,
-                                         val lookupService: MtdIdLookupService,
-                                         appConfig: AppConfig,
-                                         requestParser: AmendPensionsRequestParser,
-                                         service: AmendPensionsService,
-                                         auditService: AuditService,
-                                         cc: ControllerComponents,
-                                         val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthService,
+                                               val lookupService: MtdIdLookupService,
+                                               appConfig: AppConfig,
+                                               requestParser: CreateAmendPensionsRequestParser,
+                                               service: CreateAmendPensionsService,
+                                               auditService: AuditService,
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -57,14 +57,14 @@ class AmendPensionsController @Inject() (val authService: EnrolmentsAuthService,
       endpointName = "amendPensions"
     )
 
-  def amendPensions(nino: String, taxYear: String): Action[JsValue] =
+  def createAmendPensions(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: AmendPensionsRawData = AmendPensionsRawData(
+      val rawData: CreateAmendPensionsRawData = CreateAmendPensionsRawData(
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body)
@@ -73,7 +73,7 @@ class AmendPensionsController @Inject() (val authService: EnrolmentsAuthService,
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendPensions(parsedRequest))
+          serviceResponse <- EitherT(service.createAmendPensions(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -87,12 +87,12 @@ class AmendPensionsController @Inject() (val authService: EnrolmentsAuthService,
               `X-CorrelationId` = serviceResponse.correlationId,
               auditResponse = AuditResponse(
                 httpStatus = OK,
-                response = Right(Some(amendPensionsHateoasBody(appConfig, nino, taxYear)))
+                response = Right(Some(createAmendPensionsHateoasBody(appConfig, nino, taxYear)))
               )
             )
           )
 
-          Ok(amendPensionsHateoasBody(appConfig, nino, taxYear))
+          Ok(createAmendPensionsHateoasBody(appConfig, nino, taxYear))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }

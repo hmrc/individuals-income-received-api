@@ -34,10 +34,10 @@ import api.models.errors.{
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.mocks.validators.MockAmendPensionsValidator
-import v1.models.request.amendPensions._
+import v1.mocks.validators.MockCreateAmendPensionsValidator
+import v1.models.request.createAmendPensions._
 
-class AmendPensionsRequestParserSpec extends UnitSpec {
+class CreateAmendPensionsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2020-21"
@@ -93,7 +93,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
   private val fullForeignPensionsModel = Seq(
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
@@ -101,7 +101,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
       foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "FRA",
       amountBeforeTax = Some(200.25),
       taxTakenOff = Some(1.27),
@@ -112,7 +112,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
   )
 
   private val fullOverseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -122,7 +122,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),
@@ -134,21 +134,21 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
     )
   )
 
-  private val validRequestBodyModel = AmendPensionsRequestBody(
+  private val validRequestBodyModel = CreateAmendPensionsRequestBody(
     Some(fullForeignPensionsModel),
     Some(fullOverseasPensionContributionsModel)
   )
 
-  private val amendPensionsRawData = AmendPensionsRawData(
+  private val amendPensionsRawData = CreateAmendPensionsRawData(
     nino = nino,
     taxYear = taxYear,
     body = validRawRequestBody
   )
 
-  trait Test extends MockAmendPensionsValidator {
+  trait Test extends MockCreateAmendPensionsValidator {
 
-    lazy val parser: AmendPensionsRequestParser = new AmendPensionsRequestParser(
-      validator = mockAmendPensionsValidator
+    lazy val parser: CreateAmendPensionsRequestParser = new CreateAmendPensionsRequestParser(
+      validator = mockCreateAmendPensionsValidator
     )
 
   }
@@ -156,16 +156,17 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockAmendPensionsValidator.validate(amendPensionsRawData).returns(Nil)
+        MockCreateAmendPensionsValidator.validate(amendPensionsRawData).returns(Nil)
 
         parser.parseRequest(amendPensionsRawData) shouldBe
-          Right(AmendPensionsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
+          Right(CreateAmendPensionsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
+
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendPensionsValidator
+        MockCreateAmendPensionsValidator
           .validate(amendPensionsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
@@ -174,7 +175,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendPensionsValidator
+        MockCreateAmendPensionsValidator
           .validate(amendPensionsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
@@ -303,7 +304,7 @@ class AmendPensionsRequestParserSpec extends UnitSpec {
           )
         )
 
-        MockAmendPensionsValidator
+        MockCreateAmendPensionsValidator
           .validate(amendPensionsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
