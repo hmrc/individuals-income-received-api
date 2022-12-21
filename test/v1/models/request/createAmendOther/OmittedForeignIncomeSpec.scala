@@ -18,23 +18,14 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.{omittedForeignIncomeJson, omittedForeignIncomeModel}
 
 class OmittedForeignIncomeSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "amount": 4000.99
-      |}
-    """.stripMargin
-  )
-
-  private val model = OmittedForeignIncome(amount = 4000.99)
 
   "OmittedForeignIncome" when {
     "read from valid JSON" should {
       "produce the expected OmittedForeignIncome object" in {
-        json.as[OmittedForeignIncome] shouldBe model
+        omittedForeignIncomeJson.as[OmittedForeignIncome] shouldBe omittedForeignIncomeModel
       }
     }
 
@@ -48,7 +39,7 @@ class OmittedForeignIncomeSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(omittedForeignIncomeModel) shouldBe omittedForeignIncomeJson
       }
     }
   }

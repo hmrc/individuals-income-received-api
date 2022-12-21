@@ -18,27 +18,14 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.{businessReceiptsJson, businessReceiptsModel}
 
 class BusinessReceiptsItemSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "grossAmount": 5000.99,
-      |   "taxYear": "2018-19"
-      |}
-    """.stripMargin
-  )
-
-  private val model = BusinessReceiptsItem(
-    grossAmount = 5000.99,
-    taxYear = "2018-19"
-  )
 
   "BusinessReceiptsItem" when {
     "read from valid JSON" should {
       "produce the expected BusinessReceiptsItem object" in {
-        json.as[BusinessReceiptsItem] shouldBe model
+        businessReceiptsJson.as[BusinessReceiptsItem] shouldBe businessReceiptsModel
       }
     }
 
@@ -52,7 +39,7 @@ class BusinessReceiptsItemSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(businessReceiptsModel) shouldBe businessReceiptsJson
       }
     }
   }

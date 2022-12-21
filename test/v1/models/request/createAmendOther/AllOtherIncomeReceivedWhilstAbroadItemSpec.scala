@@ -19,38 +19,14 @@ package v1.models.request.createAmendOther
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
+import v1.fixtures.other.CreateAmendOtherFixtures._
+
 class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "countryCode": "FRA",
-      |   "amountBeforeTax": 1999.99,
-      |   "taxTakenOff": 2.23,
-      |   "specialWithholdingTax": 3.23,
-      |   "foreignTaxCreditRelief": false,
-      |   "taxableAmount": 4.23,
-      |   "residentialFinancialCostAmount": 2999.99,
-      |   "broughtFwdResidentialFinancialCostAmount": 1999.99
-      |}
-    """.stripMargin
-  )
-
-  private val model = AllOtherIncomeReceivedWhilstAbroadItem(
-    countryCode = "FRA",
-    amountBeforeTax = Some(1999.99),
-    taxTakenOff = Some(2.23),
-    specialWithholdingTax = Some(3.23),
-    foreignTaxCreditRelief = false,
-    taxableAmount = 4.23,
-    residentialFinancialCostAmount = Some(2999.99),
-    broughtFwdResidentialFinancialCostAmount = Some(1999.99)
-  )
 
   "AllOtherIncomeReceivedWhilstAbroadItem" when {
     "read from valid JSON" should {
       "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object" in {
-        json.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe model
+        allOtherIncomeReceivedWhilstAbroadJson.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel
       }
     }
 
@@ -64,7 +40,7 @@ class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(allOtherIncomeReceivedWhilstAbroadModel) shouldBe allOtherIncomeReceivedWhilstAbroadJson
       }
     }
   }

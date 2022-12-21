@@ -18,119 +18,14 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
 
 class CreateAmendOtherRequestBodySpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "businessReceipts": [
-      |      {
-      |         "grossAmount": 5000.99,
-      |         "taxYear": "2018-19"
-      |      },
-      |      {
-      |         "grossAmount": 6000.99,
-      |         "taxYear": "2019-20"
-      |      }
-      |   ],
-      |   "allOtherIncomeReceivedWhilstAbroad": [
-      |      {
-      |         "countryCode": "FRA",
-      |         "amountBeforeTax": 1999.99,
-      |         "taxTakenOff": 2.23,
-      |         "specialWithholdingTax": 3.23,
-      |         "foreignTaxCreditRelief": false,
-      |         "taxableAmount": 4.23,
-      |         "residentialFinancialCostAmount": 2999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 1999.99
-      |      },
-      |      {
-      |         "countryCode": "IND",
-      |         "amountBeforeTax": 2999.99,
-      |         "taxTakenOff": 3.23,
-      |         "specialWithholdingTax": 4.23,
-      |         "foreignTaxCreditRelief": true,
-      |         "taxableAmount": 5.23,
-      |         "residentialFinancialCostAmount": 3999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 2999.99
-      |      }
-      |   ],
-      |   "overseasIncomeAndGains": {
-      |      "gainAmount": 3000.99
-      |   },
-      |   "chargeableForeignBenefitsAndGifts": {
-      |      "transactionBenefit": 1999.99,
-      |      "protectedForeignIncomeSourceBenefit": 2999.99,
-      |      "protectedForeignIncomeOnwardGift": 3999.99,
-      |      "benefitReceivedAsASettler": 4999.99,
-      |      "onwardGiftReceivedAsASettler": 5999.99
-      |   },
-      |   "omittedForeignIncome": {
-      |      "amount": 4000.99
-      |   }
-      |}
-    """.stripMargin
-  )
-
-  private val businessReceiptsModel = Seq(
-    BusinessReceiptsItem(
-      grossAmount = 5000.99,
-      taxYear = "2018-19"
-    ),
-    BusinessReceiptsItem(
-      grossAmount = 6000.99,
-      taxYear = "2019-20"
-    )
-  )
-
-  private val allOtherIncomeReceivedWhilstAbroadModel = Seq(
-    AllOtherIncomeReceivedWhilstAbroadItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1999.99),
-      taxTakenOff = Some(2.23),
-      specialWithholdingTax = Some(3.23),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 4.23,
-      residentialFinancialCostAmount = Some(2999.99),
-      broughtFwdResidentialFinancialCostAmount = Some(1999.99)
-    ),
-    AllOtherIncomeReceivedWhilstAbroadItem(
-      countryCode = "IND",
-      amountBeforeTax = Some(2999.99),
-      taxTakenOff = Some(3.23),
-      specialWithholdingTax = Some(4.23),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 5.23,
-      residentialFinancialCostAmount = Some(3999.99),
-      broughtFwdResidentialFinancialCostAmount = Some(2999.99)
-    )
-  )
-
-  private val overseasIncomeAndGainsModel = OverseasIncomeAndGains(gainAmount = 3000.99)
-
-  private val chargeableForeignBenefitsAndGiftsModel = ChargeableForeignBenefitsAndGifts(
-    transactionBenefit = Some(1999.99),
-    protectedForeignIncomeSourceBenefit = Some(2999.99),
-    protectedForeignIncomeOnwardGift = Some(3999.99),
-    benefitReceivedAsASettler = Some(4999.99),
-    onwardGiftReceivedAsASettler = Some(5999.99)
-  )
-
-  private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
-
-  private val requestBodyModel = CreateAmendOtherRequestBody(
-    Some(businessReceiptsModel),
-    Some(allOtherIncomeReceivedWhilstAbroadModel),
-    Some(overseasIncomeAndGainsModel),
-    Some(chargeableForeignBenefitsAndGiftsModel),
-    Some(omittedForeignIncomeModel)
-  )
 
   "CreateAmendOtherRequestBody" when {
     "read from valid JSON" should {
       "produce the expected CreateAmendOtherRequestBody object" in {
-        json.as[CreateAmendOtherRequestBody] shouldBe requestBodyModel
+        requestBodyJson.as[CreateAmendOtherRequestBody] shouldBe requestBodyModel
       }
     }
 
@@ -179,7 +74,7 @@ class CreateAmendOtherRequestBodySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(requestBodyModel) shouldBe json
+        Json.toJson(requestBodyModel) shouldBe requestBodyJson
       }
     }
   }
