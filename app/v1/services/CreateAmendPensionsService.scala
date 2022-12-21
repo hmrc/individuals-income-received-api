@@ -26,21 +26,21 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendPensionsConnector
-import v1.models.request.amendPensions.AmendPensionsRequest
+import v1.connectors.CreateAmendPensionsConnector
+import v1.models.request.createAmendPensions.CreateAmendPensionsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendPensionsService @Inject() (connector: AmendPensionsConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendPensionsService @Inject() (connector: CreateAmendPensionsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendPensions(request: AmendPensionsRequest)(implicit
+  def createAmendPensions(request: CreateAmendPensionsRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.amendPensions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    val result = EitherT(connector.createAmendPensions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }

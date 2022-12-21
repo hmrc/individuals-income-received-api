@@ -21,18 +21,18 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v1.mocks.connectors.MockAmendPensionsConnector
-import v1.models.request.amendPensions._
+import v1.mocks.connectors.MockCreateAmendPensionsConnector
+import v1.models.request.createAmendPensions._
 
 import scala.concurrent.Future
 
-class AmendPensionsServiceSpec extends ServiceSpec {
+class CreateAmendPensionsServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val foreignPensionsModel = Seq(
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
@@ -40,7 +40,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
       foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "FRA",
       amountBeforeTax = Some(200.23),
       taxTakenOff = Some(3.21),
@@ -51,7 +51,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
   )
 
   private val overseasPensionContributionsModel = Seq(
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME555"),
       exemptEmployersPensionContribs = 300.33,
       migrantMemReliefQopsRefNo = Some("QOPS000001"),
@@ -61,7 +61,7 @@ class AmendPensionsServiceSpec extends ServiceSpec {
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-654321")
     ),
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -73,20 +73,20 @@ class AmendPensionsServiceSpec extends ServiceSpec {
     )
   )
 
-  val amendPensionsRequest: AmendPensionsRequest = AmendPensionsRequest(
+  val amendPensionsRequest: CreateAmendPensionsRequest = CreateAmendPensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
-    body = AmendPensionsRequestBody(
+    body = CreateAmendPensionsRequestBody(
       foreignPensions = Some(foreignPensionsModel),
       overseasPensionContributions = Some(overseasPensionContributionsModel)
     )
   )
 
-  trait Test extends MockAmendPensionsConnector {
+  trait Test extends MockCreateAmendPensionsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val service: AmendPensionsService = new AmendPensionsService(
-      connector = mockAmendPensionsConnector
+    val service: CreateAmendPensionsService = new CreateAmendPensionsService(
+      connector = mockCreateAmendPensionsConnector
     )
 
   }
@@ -96,11 +96,11 @@ class AmendPensionsServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockAmendPensionsConnector
-          .amendPensions(amendPensionsRequest)
+        MockCreateAmendPensionsConnector
+          .createAmendPensions(amendPensionsRequest)
           .returns(Future.successful(outcome))
 
-        await(service.amendPensions(amendPensionsRequest)) shouldBe outcome
+        await(service.createAmendPensions(amendPensionsRequest)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -108,11 +108,11 @@ class AmendPensionsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockAmendPensionsConnector
-              .amendPensions(amendPensionsRequest)
+            MockCreateAmendPensionsConnector
+              .createAmendPensions(amendPensionsRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
-            await(service.amendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.createAmendPensions(amendPensionsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(

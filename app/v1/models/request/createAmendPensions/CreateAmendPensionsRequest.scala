@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendPensions
+package v1.models.request.createAmendPensions
 
-import api.models.request.RawData
-import play.api.mvc.AnyContentAsJson
+import api.models.domain.{Nino, TaxYear}
 
-case class AmendPensionsRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+case class CreateAmendPensionsRequest(nino: Nino, taxYear: TaxYear, body: CreateAmendPensionsRequestBody)

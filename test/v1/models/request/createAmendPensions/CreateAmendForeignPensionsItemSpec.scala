@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendPensions
+package v1.models.request.createAmendPensions
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendForeignPensionsItemSpec extends UnitSpec {
+class CreateAmendForeignPensionsItemSpec extends UnitSpec {
 
   private val json = Json.parse(
     """
@@ -34,7 +34,7 @@ class AmendForeignPensionsItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = AmendForeignPensionsItem(
+  private val model = CreateAmendForeignPensionsItem(
     countryCode = "DEU",
     amountBeforeTax = Some(100.23),
     taxTakenOff = Some(1.23),
@@ -46,14 +46,14 @@ class AmendForeignPensionsItemSpec extends UnitSpec {
   "AmendForeignPensionsItem" when {
     "read from valid JSON" should {
       "produce the expected AmendForeignPensionsItem object" in {
-        json.as[AmendForeignPensionsItem] shouldBe model
+        json.as[CreateAmendForeignPensionsItem] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendForeignPensionsItem] shouldBe a[JsError]
+        invalidJson.validate[CreateAmendForeignPensionsItem] shouldBe a[JsError]
       }
     }
 

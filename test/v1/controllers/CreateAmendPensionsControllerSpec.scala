@@ -27,21 +27,21 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockAmendPensionsRequestParser
-import v1.mocks.services.MockAmendPensionsService
-import v1.models.request.amendPensions._
+import v1.mocks.requestParsers.MockCreateAmendPensionsRequestParser
+import v1.mocks.services.MockCreateAmendPensionsService
+import v1.models.request.createAmendPensions._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendPensionsControllerSpec
+class CreateAmendPensionsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
     with MockAuditService
-    with MockAmendPensionsService
-    with MockAmendPensionsRequestParser
+    with MockCreateAmendPensionsService
+    with MockCreateAmendPensionsRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
@@ -51,12 +51,12 @@ class AmendPensionsControllerSpec
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new AmendPensionsController(
+    val controller = new CreateAmendPensionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockAmendPensionsRequestParser,
-      service = mockAmendPensionsService,
+      requestParser = mockCreateAmendPensionsRequestParser,
+      service = mockCreateAmendPensionsService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -115,14 +115,14 @@ class AmendPensionsControllerSpec
     """.stripMargin
   )
 
-  val rawData: AmendPensionsRawData = AmendPensionsRawData(
+  val rawData: CreateAmendPensionsRawData = CreateAmendPensionsRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
-  val foreignPensionsItem: Seq[AmendForeignPensionsItem] = Seq(
-    AmendForeignPensionsItem(
+  val foreignPensionsItem: Seq[CreateAmendForeignPensionsItem] = Seq(
+    CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
@@ -130,7 +130,7 @@ class AmendPensionsControllerSpec
       foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
-    AmendForeignPensionsItem(
+    CreateAmendForeignPensionsItem(
       countryCode = "FRA",
       amountBeforeTax = Some(200.25),
       taxTakenOff = Some(1.27),
@@ -140,8 +140,8 @@ class AmendPensionsControllerSpec
     )
   )
 
-  val overseasPensionContributionsItem: Seq[AmendOverseasPensionContributions] = Seq(
-    AmendOverseasPensionContributions(
+  val overseasPensionContributionsItem: Seq[CreateAmendOverseasPensionContributions] = Seq(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
       migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -151,7 +151,7 @@ class AmendPensionsControllerSpec
       dblTaxationTreaty = Some("Treaty"),
       sf74reference = Some("SF74-123456")
     ),
-    AmendOverseasPensionContributions(
+    CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME275"),
       exemptEmployersPensionContribs = 270.50,
       migrantMemReliefQopsRefNo = Some("QOPS000245"),
@@ -163,15 +163,15 @@ class AmendPensionsControllerSpec
     )
   )
 
-  val amendPensionsRequestBody: AmendPensionsRequestBody = AmendPensionsRequestBody(
+  val createAmendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
     foreignPensions = Some(foreignPensionsItem),
     overseasPensionContributions = Some(overseasPensionContributionsItem)
   )
 
-  val requestData: AmendPensionsRequest = AmendPensionsRequest(
+  val requestData: CreateAmendPensionsRequest = CreateAmendPensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
-    body = amendPensionsRequestBody
+    body = createAmendPensionsRequestBody
   )
 
   val hateoasResponse: JsValue = Json.parse(
@@ -216,15 +216,15 @@ class AmendPensionsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockAmendPensionsRequestParser
+        MockCreateAmendPensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockAmendPensionsService
-          .amendPensions(requestData)
+        MockCreateAmendPensionsService
+          .createAmendPensions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.amendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
+        val result: Future[Result] = controller.createAmendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
@@ -240,11 +240,11 @@ class AmendPensionsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockAmendPensionsRequestParser
+            MockCreateAmendPensionsRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.amendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.createAmendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -279,15 +279,15 @@ class AmendPensionsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockAmendPensionsRequestParser
+            MockCreateAmendPensionsRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockAmendPensionsService
-              .amendPensions(requestData)
+            MockCreateAmendPensionsService
+              .createAmendPensions(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.amendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.createAmendPensions(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.request.amendPensions
+package v1.models.request.createAmendPensions
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
-class AmendOverseasPensionContributionsSpec extends UnitSpec {
+class CreateAmendOverseasPensionContributionsSpec extends UnitSpec {
 
   private val mtdJson = Json.parse(
     """
@@ -51,7 +51,7 @@ class AmendOverseasPensionContributionsSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = AmendOverseasPensionContributions(
+  private val model = CreateAmendOverseasPensionContributions(
     customerReference = Some("PENSIONINCOME245"),
     exemptEmployersPensionContribs = 200.23,
     migrantMemReliefQopsRefNo = Some("QOPS000000"),
@@ -65,14 +65,14 @@ class AmendOverseasPensionContributionsSpec extends UnitSpec {
   "AmendOverseasPensionContributionsItem" when {
     "read from valid JSON" should {
       "produce the expected AmendOverseasPensionContributionsItem object" in {
-        mtdJson.as[AmendOverseasPensionContributions] shouldBe model
+        mtdJson.as[CreateAmendOverseasPensionContributions] shouldBe model
       }
     }
 
     "read from empty JSON" should {
       "produce a JsError" in {
         val invalidJson = JsObject.empty
-        invalidJson.validate[AmendOverseasPensionContributions] shouldBe a[JsError]
+        invalidJson.validate[CreateAmendOverseasPensionContributions] shouldBe a[JsError]
       }
     }
 

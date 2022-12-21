@@ -20,20 +20,20 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.AmendPensionsConnector
-import v1.models.request.amendPensions.AmendPensionsRequest
+import v1.connectors.CreateAmendPensionsConnector
+import v1.models.request.createAmendPensions.CreateAmendPensionsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAmendPensionsConnector extends MockFactory {
+trait MockCreateAmendPensionsConnector extends MockFactory {
 
-  val mockAmendPensionsConnector: AmendPensionsConnector = mock[AmendPensionsConnector]
+  val mockCreateAmendPensionsConnector: CreateAmendPensionsConnector = mock[CreateAmendPensionsConnector]
 
-  object MockAmendPensionsConnector {
+  object MockCreateAmendPensionsConnector {
 
-    def amendPensions(request: AmendPensionsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
-      (mockAmendPensionsConnector
-        .amendPensions(_: AmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def createAmendPensions(request: CreateAmendPensionsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+      (mockCreateAmendPensionsConnector
+        .createAmendPensions(_: CreateAmendPensionsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
 

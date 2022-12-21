@@ -37,9 +37,9 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.requestParsers.validators.validations.ValueFormatErrorMessages
-import v1.models.request.amendPensions.AmendPensionsRawData
+import v1.models.request.createAmendPensions.CreateAmendPensionsRawData
 
-class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
+class CreateAmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
@@ -354,7 +354,7 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
 
     implicit val appConfig: AppConfig = mockAppConfig
 
-    val validator = new AmendPensionsValidator()
+    val validator = new CreateAmendPensionsValidator()
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
@@ -365,60 +365,60 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, validRawRequestBody)) shouldBe Nil
       }
     }
 
     // parameter format error scenarios
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(AmendPensionsRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData("A12344A", validTaxYear, validRawRequestBody)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, "20178", validRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, "20178", validRawRequestBody)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearRangeInvalidError error for an invalid tax year range" in new Test {
-      validator.validate(AmendPensionsRawData(validNino, "2020-22", validRawRequestBody)) shouldBe
+      validator.validate(CreateAmendPensionsRawData(validNino, "2020-22", validRawRequestBody)) shouldBe
         List(RuleTaxYearRangeInvalidError)
     }
 
     "return multiple errors for multiple invalid request parameters" in new Test {
-      validator.validate(AmendPensionsRawData("notValid", "2020-22", validRawRequestBody)) shouldBe
+      validator.validate(CreateAmendPensionsRawData("notValid", "2020-22", validRawRequestBody)) shouldBe
         List(NinoFormatError, RuleTaxYearRangeInvalidError)
     }
 
     // parameter rule error scenarios
     "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
-      validator.validate(AmendPensionsRawData(validNino, "2019-20", validRawRequestBody)) shouldBe
+      validator.validate(CreateAmendPensionsRawData(validNino, "2019-20", validRawRequestBody)) shouldBe
         List(RuleTaxYearNotSupportedError)
     }
 
     // body format error scenarios
     "return RuleIncorrectOrEmptyBodyError error" when {
       "an empty JSON body is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, emptyRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
       "a non-empty JSON body is submitted without any expected fields" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, nonsenseRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError)
       }
 
       "the submitted request body is not in the correct format" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/foreignPensions/0/taxTakenOff"))))
       }
 
       "the submitted request body has missing mandatory fields" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
           List(
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(
               Seq(
@@ -432,56 +432,56 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
     // body value error scenarios
     "return CustomerRefFormatError error" when {
       "an incorrectly formatted customer reference is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/overseasPensionContributions/0/customerReference"))))
       }
     }
 
     "return QOPSRefFormatError error" when {
       "an incorrectly formatted migrantMemReliefQopsRefNo is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidQOPSRefRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidQOPSRefRawRequestBody)) shouldBe
           List(QOPSRefFormatError.copy(paths = Some(List("/overseasPensionContributions/0/migrantMemReliefQopsRefNo"))))
       }
     }
 
     "return SF74RefFormatError error" when {
       "an incorrectly formatted sf74reference is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidSF74RefRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidSF74RefRawRequestBody)) shouldBe
           List(SF74RefFormatError.copy(paths = Some(List("/overseasPensionContributions/0/sf74reference"))))
       }
     }
 
     "return DoubleTaxationArticleFormatError error" when {
       "an incorrectly formatted dblTaxationArticle is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidDoubleTaxationArticleRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidDoubleTaxationArticleRawRequestBody)) shouldBe
           List(DoubleTaxationArticleFormatError.copy(paths = Some(List("/overseasPensionContributions/0/dblTaxationArticle"))))
       }
     }
 
     "return DoubleTaxationTreatyFormatError error" when {
       "an incorrectly formatted dblTaxationTreaty is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidDoubleTaxationTreatyRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidDoubleTaxationTreatyRawRequestBody)) shouldBe
           List(DoubleTaxationTreatyFormatError.copy(paths = Some(List("/overseasPensionContributions/0/dblTaxationTreaty"))))
       }
     }
 
     "return CountryCodeFormatError error" when {
       "an incorrectly formatted dblTaxationCountryCode is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidCountryCodeRawRequestBody)) shouldBe
           List(CountryCodeFormatError.copy(paths = Some(List("/overseasPensionContributions/0/dblTaxationCountryCode"))))
       }
     }
 
     "return CountryCodeRuleError error" when {
       "an invalid country code is submitted" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidCountryCodeRuleRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidCountryCodeRuleRawRequestBody)) shouldBe
           List(CountryCodeRuleError.copy(paths = Some(List("/foreignPensions/0/countryCode"))))
       }
     }
 
     "return ValueFormatError error (single failure)" when {
       "one field fails value validation (foreign pensions)" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidForeignPensionsRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidForeignPensionsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -490,7 +490,7 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
       }
 
       "one field fails value validation (Overseas Pension Contributions)" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, invalidOverseasPensionContributionsRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, invalidOverseasPensionContributionsRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -501,7 +501,7 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
 
     "return ValueFormatError error (multiple failures)" when {
       "multiple fields fail value validation" in new Test {
-        validator.validate(AmendPensionsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
@@ -575,7 +575,7 @@ class AmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMessages 
 
     "return multiple errors" when {
       "request supplied has multiple errors (path parameters)" in new Test {
-        validator.validate(AmendPensionsRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
+        validator.validate(CreateAmendPensionsRawData("A12344A", "20178", emptyRawRequestBody)) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }
