@@ -318,7 +318,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (PpdSubmissionIdNotFoundError, NOT_FOUND),
           (RuleDuplicatedPpdSubmissionIdError, BAD_REQUEST),
-          (RuleIncorrectDisposalTypeError, FORBIDDEN),
+          (RuleIncorrectDisposalTypeError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )

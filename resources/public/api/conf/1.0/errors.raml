@@ -393,7 +393,7 @@ traits:
                   code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START
   ruleCustomEmployment:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -602,7 +602,7 @@ traits:
                   code: RULE_DUPLICATED_PPD_SUBMISSION_ID
   ruleIncorrectDisposalType:
     responses:
-      403:
+      400:
         body:
          application/json:
             type: types.errorResponse

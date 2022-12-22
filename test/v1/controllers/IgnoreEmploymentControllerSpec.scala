@@ -199,7 +199,7 @@ class IgnoreEmploymentControllerSpec
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (RuleCustomEmploymentError, FORBIDDEN),
+          (RuleCustomEmploymentError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
