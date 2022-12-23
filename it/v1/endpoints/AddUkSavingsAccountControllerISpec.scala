@@ -29,27 +29,23 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String             = "AA123456A"
     val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
-    val taxYear: String = "2020-21"
+    val taxYear: String          = "2020-21"
 
-
-    val requestBodyJson: JsValue = Json.parse(
-      """
+    val requestBodyJson: JsValue = Json.parse("""
         |{
         |   "accountName": "Shares savings account"
         |}
         |""".stripMargin)
 
-    val desResponseJson: JsValue = Json.parse(
-      s"""
+    val desResponseJson: JsValue = Json.parse(s"""
          |{
          |   "incomeSourceId": "$savingsAccountId"
          |}
          |""".stripMargin)
 
-    val responseJson: JsValue = Json.parse(
-      s"""
+    val responseJson: JsValue = Json.parse(s"""
          |{
          |   "savingsAccountId": "$savingsAccountId",
          |   "links":[
@@ -76,6 +72,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
   }
 
   "calling the 'add uk savings account' endpoint" should {
@@ -98,8 +95,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestJson: JsValue = Json.parse(
-        """
+      val validRequestJson: JsValue = Json.parse("""
           |{
           |   "accountName": "Shares savings account"
           |}
@@ -107,8 +103,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
 
       val emptyRequestJson: JsValue = JsObject.empty
 
-      val nonValidRequestBodyJson: JsValue = Json.parse(
-        """
+      val nonValidRequestBodyJson: JsValue = Json.parse("""
           |{
           |   "accountName": "Shares savings account!"
           |}
@@ -123,8 +118,8 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -139,7 +134,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(
+        val input = List(
           ("AA1123A", "2019-20", validRequestJson, BAD_REQUEST, NinoFormatError, None),
           ("AA123456A", "2019-20", emptyRequestJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
           ("AA123456A", "2019-20", nonValidRequestBodyJson, BAD_REQUEST, AccountNameFormatError, None)
@@ -147,7 +142,7 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when  {
+      "ifs service error" when {
         def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
 
@@ -172,12 +167,12 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
              |}
             """.stripMargin
 
-        val input = Seq(
+        val input = List(
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (CONFLICT, "MAX_ACCOUNTS_REACHED", FORBIDDEN, RuleMaximumSavingsAccountsLimitError),
-          (CONFLICT, "ALREADY_EXISTS", FORBIDDEN, RuleDuplicateAccountName),
+          (CONFLICT, "MAX_ACCOUNTS_REACHED", BAD_REQUEST, RuleMaximumSavingsAccountsLimitError),
+          (CONFLICT, "ALREADY_EXISTS", BAD_REQUEST, RuleDuplicateAccountNameError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
@@ -185,4 +180,5 @@ class AddUkSavingsAccountControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

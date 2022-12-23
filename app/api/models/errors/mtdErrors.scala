@@ -68,11 +68,6 @@ object AccountNameFormatError           extends MtdError("FORMAT_ACCOUNT_NAME", 
 object SavingsAccountIdFormatError      extends MtdError("FORMAT_SAVINGS_ACCOUNT_ID", "The format of the supplied savings account ID is not valid")
 
 // Rule Errors
-object RuleDuplicateAccountName
-    extends MtdError(
-      code = "RULE_DUPLICATE_ACCOUNT_NAME",
-      message = "Duplicate account name given for supplied NINO"
-    )
 
 object RuleTaxYearNotSupportedError
     extends MtdError(

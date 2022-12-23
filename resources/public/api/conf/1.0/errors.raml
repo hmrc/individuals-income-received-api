@@ -580,7 +580,7 @@ traits:
                   code: RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE
   ruleUpdateForbidden:
     responses:
-      403:
+      400:
         body:
           application/json:
             type: types.errorResponse
@@ -635,7 +635,7 @@ traits:
                  code: FORMAT_ACCOUNT_NAME
   maximumSavingsAccountLimit:
    responses:
-    403:
+    400:
       body:
         application/json:
           type: types.errorResponse
