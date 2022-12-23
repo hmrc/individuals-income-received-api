@@ -18,17 +18,17 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.requestParsers.MockDeleteForeignRequestParser
+import v1.mocks.services.MockDeleteForeignService
+import v1.models.request.deleteForeign.{DeleteForeignRawData, DeleteForeignRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,22 +38,22 @@ class DeleteForeignControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAuditService
-    with MockDeleteRetrieveService
-    with MockDeleteRetrieveRequestParser
+    with MockDeleteForeignService
+    with MockDeleteForeignRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
   val taxYear: String       = "2019-20"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: DeleteForeignRawData = DeleteForeignRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  val requestData: DeleteForeignRequest = DeleteForeignRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
@@ -76,8 +76,8 @@ class DeleteForeignControllerSpec
     val controller = new DeleteForeignController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockDeleteForeignRequestParser,
+      service = mockDeleteForeignService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -92,12 +92,12 @@ class DeleteForeignControllerSpec
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockDeleteForeignRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .delete(defaultDownstreamErrorMap)
+        MockDeleteForeignService
+          .deleteForeign(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteForeign(nino, taxYear)(fakeDeleteRequest)
@@ -116,7 +116,7 @@ class DeleteForeignControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockDeleteForeignRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -146,12 +146,12 @@ class DeleteForeignControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockDeleteForeignRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .delete(defaultDownstreamErrorMap)
+            MockDeleteForeignService
+              .deleteForeign(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteForeign(nino, taxYear)(fakeDeleteRequest)

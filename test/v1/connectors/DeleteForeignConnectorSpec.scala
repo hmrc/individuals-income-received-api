@@ -19,58 +19,49 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.deleteOther.DeleteOtherRequest
+import v1.models.request.deleteForeign.DeleteForeignRequest
 
 import scala.concurrent.Future
 
-class DeleteOtherConnectorSpec extends ConnectorSpec {
+class DeleteForeignConnectorSpec extends ConnectorSpec {
 
-  "DeleteOtherConnector" should {
+  "DeleteForeignConnector" should {
     "return the expected response for a non-TYS request" when {
-      "a valid request is made" in new Api1661Test with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-        val outcome          = Right(ResponseWrapper(correlationId, ()))
+      "a valid request is made" in new IfsTest with Test {
+        val taxYear = "2019-20"
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/income/other/$nino/2019-20"
+          url = s"$baseUrl/income-tax/income/foreign/AA111111A/2019-20"
         ).returns(Future.successful(outcome))
 
-        await(connector.deleteOther(request)) shouldBe outcome
+        await(connector.deleteForeign(request)) shouldBe outcome
       }
     }
 
     "return the expected response for a TYS request" when {
       "a valid request is made" in new TysIfsTest with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-        val outcome          = Right(ResponseWrapper(correlationId, ()))
+        val taxYear = "2023-24"
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/income/other/23-24/$nino"
+          url = s"$baseUrl/income-tax/income/foreign/23-24/AA111111A"
         ).returns(Future.successful(outcome))
 
-        await(connector.deleteOther(request)) shouldBe outcome
+        await(connector.deleteForeign(request)) shouldBe outcome
       }
     }
   }
 
-  trait Test {
-    _: ConnectorTest =>
+  trait Test { _: ConnectorTest =>
+    val taxYear: String
 
-    def taxYear: TaxYear
-
-    protected val nino: String = "AA111111A"
-
-    protected val request: DeleteOtherRequest =
-      DeleteOtherRequest(
-        nino = Nino(nino),
-        taxYear = taxYear
-      )
-
-    val connector: DeleteOtherConnector = new DeleteOtherConnector(
+    val connector: DeleteForeignConnector = new DeleteForeignConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
+    lazy val request: DeleteForeignRequest = DeleteForeignRequest(Nino("AA111111A"), TaxYear.fromMtd(taxYear))
   }
 
 }
