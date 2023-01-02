@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -41,21 +41,29 @@ class AmendForeignService @Inject() (connector: AmendForeignConnector) extends D
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendForeign(request)).leftMap(mapDownstreamErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendForeign(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "UNPROCESSABLE_ENTITY"      -> StandardDownstreamError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> StandardDownstreamError,
+      "INVALID_PAYLOAD" -> StandardDownstreamError,
+      "UNPROCESSABLE_ENTITY" -> StandardDownstreamError,
+      "SERVER_ERROR" -> StandardDownstreamError,
+      "SERVICE_UNAVAILABLE" -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+    errors ++ extraTysErrors
+
+  }
 
 }

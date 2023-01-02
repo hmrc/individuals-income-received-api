@@ -17,8 +17,8 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendForeignConnector
@@ -54,11 +54,7 @@ class AmendForeignServiceSpec extends ServiceSpec {
     unremittableForeignIncome = Some(unremittableForeignIncomeModel)
   )
 
-  val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = amendForeignRequestBody
-  )
+  val amendForeignRequest: AmendForeignRequest = AmendForeignRequest(nino = Nino(nino), taxYear = TaxYear.fromMtd(taxYear), body = amendForeignRequestBody)
 
   trait Test extends MockAmendForeignConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
@@ -93,7 +89,7 @@ class AmendForeignServiceSpec extends ServiceSpec {
             await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
@@ -103,7 +99,12 @@ class AmendForeignServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

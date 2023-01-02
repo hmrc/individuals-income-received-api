@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
 
 import javax.inject.{Inject, Singleton}
@@ -27,6 +27,6 @@ import v1.requestParsers.validators.AmendForeignValidator
 class AmendForeignRequestParser @Inject() (val validator: AmendForeignValidator) extends RequestParser[AmendForeignRawData, AmendForeignRequest] {
 
   override protected def requestFor(data: AmendForeignRawData): AmendForeignRequest =
-    AmendForeignRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendForeignRequestBody])
+    AmendForeignRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[AmendForeignRequestBody])
 
 }

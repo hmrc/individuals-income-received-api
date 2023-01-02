@@ -19,7 +19,6 @@ package v1.endpoints
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
 import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -29,84 +28,24 @@ import support.IntegrationBaseSpec
 
 class AmendForeignControllerISpec extends IntegrationBaseSpec {
 
-  private trait Test {
-
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
-    val correlationId: String = "X-123"
-
-    val requestBodyJson: JsValue = Json.parse(
-      """
-        |{
-        |   "foreignEarnings": {
-        |      "customerReference": "FOREIGNINCME123A",
-        |      "earningsNotTaxableUK": 1999.99
-        |   },
-        |   "unremittableForeignIncome": [
-        |       {
-        |          "countryCode": "FRA",
-        |          "amountInForeignCurrency": 1999.99,
-        |          "amountTaxPaid": 1999.99
-        |       },
-        |       {
-        |          "countryCode": "IND",
-        |          "amountInForeignCurrency": 2999.99,
-        |          "amountTaxPaid": 2999.99
-        |       }
-        |    ]
-        |}
-      """.stripMargin
-    )
-
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links":[
-         |      {
-         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-         |         "rel":"create-and-amend-foreign-income",
-         |         "method":"PUT"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-         |         "rel":"self",
-         |         "method":"GET"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-         |         "rel":"delete-foreign-income",
-         |         "method":"DELETE"
-         |      }
-         |   ]
-         |}
-       """.stripMargin
-    )
-
-    def uri: String = s"/foreign/$nino/$taxYear"
-
-    def ifsUri: String = s"/income-tax/income/foreign/$nino/$taxYear"
-
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
-  }
-
   "Calling the 'amend foreign' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().put(requestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request().put(requestBodyJson))
@@ -117,7 +56,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a 400 with multiple errors" when {
-      "all field value validations fail on the request body" in new Test {
+      "all field value validations fail on the request body" in new NonTysTest {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
@@ -171,11 +110,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
           errors = Some(allInvalidValueRequestError)
         )
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-        }
+        override def setupStubs(): Unit = {}
 
         val response: WSResponse = await(request().put(allInvalidValueRequestBodyJson))
         response.status shouldBe BAD_REQUEST
@@ -386,17 +321,13 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
                                 expectedStatus: Int,
                                 expectedBody: MtdError,
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new NonTysTest {
 
             override val nino: String = requestNino
             override val taxYear: String = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
+            override def setupStubs(): Unit = {}
 
             val response: WSResponse = await(request().put(requestBodyJson))
             response.status shouldBe expectedStatus
@@ -425,13 +356,10 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
 
       "ifs service error" when {
         def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new TysIfsTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
+            override def setupStubs(): Unit = {
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().put(requestBodyJson))
@@ -448,7 +376,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -457,8 +385,96 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = List(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
+  }
+
+  private trait Test {
+
+    val nino: String = "AA123456A"
+    val correlationId: String = "X-123"
+    def uri: String = s"/foreign/$nino/$taxYear"
+
+    def taxYear: String
+    def downstreamUri: String
+
+    val requestBodyJson: JsValue = Json.parse(
+      """
+        |{
+        |   "foreignEarnings": {
+        |      "customerReference": "FOREIGNINCME123A",
+        |      "earningsNotTaxableUK": 1999.99
+        |   },
+        |   "unremittableForeignIncome": [
+        |       {
+        |          "countryCode": "FRA",
+        |          "amountInForeignCurrency": 1999.99,
+        |          "amountTaxPaid": 1999.99
+        |       },
+        |       {
+        |          "countryCode": "IND",
+        |          "amountInForeignCurrency": 2999.99,
+        |          "amountTaxPaid": 2999.99
+        |       }
+        |    ]
+        |}
+      """.stripMargin
+    )
+
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+         |         "rel":"create-and-amend-foreign-income",
+         |         "method":"PUT"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+         |         "rel":"self",
+         |         "method":"GET"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+         |         "rel":"delete-foreign-income",
+         |         "method":"DELETE"
+         |      }
+         |   ]
+         |}
+       """.stripMargin
+    )
+
+    def setupStubs(): Unit
+
+    def request(): WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      setupStubs()
+      buildRequest(uri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String = "2019-20"
+
+    def downstreamUri: String = s"/income-tax/income/foreign/$nino/$taxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String = "2023-24"
+    def downstreamUri: String = s"/income-tax/foreign-income/23-24/$nino"
   }
 }

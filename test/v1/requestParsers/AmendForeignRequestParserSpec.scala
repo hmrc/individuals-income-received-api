@@ -16,17 +16,8 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
-import api.models.errors.{
-  BadRequestError,
-  CountryCodeFormatError,
-  CountryCodeRuleError,
-  CustomerRefFormatError,
-  ErrorWrapper,
-  NinoFormatError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -95,7 +86,7 @@ class AmendForeignRequestParserSpec extends UnitSpec {
         MockAmendForeignValidator.validate(amendForeignRawData).returns(Nil)
 
         parser.parseRequest(amendForeignRawData) shouldBe
-          Right(AmendForeignRequest(Nino(nino), taxYear, validRequestBodyModel))
+          Right(AmendForeignRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
       }
     }
 

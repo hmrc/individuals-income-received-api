@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -120,11 +120,7 @@ class AmendForeignControllerSpec
     unremittableForeignIncome = Some(unremittableForeignIncomeItems)
   )
 
-  val requestData: AmendForeignRequest = AmendForeignRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = amendForeignRequestBody
-  )
+  val requestData: AmendForeignRequest = AmendForeignRequest(nino = Nino(nino), taxYear = TaxYear.fromMtd(taxYear), body = amendForeignRequestBody)
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
@@ -249,6 +245,7 @@ class AmendForeignControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
