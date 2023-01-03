@@ -35,11 +35,11 @@ class UnignoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino         = request.nino.nino
+    val nino         = request.nino
     val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
-    delete(IfsUri[Unit](s"income-tax/employments/$nino/$taxYear/ignore/$employmentId"))
+    delete(IfsUri[Unit](s"income-tax/employments/${nino.nino}/${taxYear.asMtd}/ignore/$employmentId"))
   }
 
 }

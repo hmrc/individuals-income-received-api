@@ -37,7 +37,7 @@ class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino         = request.nino.nino
-    val taxYear      = request.taxYear
+    val taxYear      = request.taxYear.asMtd
     val employmentId = request.employmentId
 
     put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))

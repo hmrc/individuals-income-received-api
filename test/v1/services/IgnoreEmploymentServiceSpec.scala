@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -34,7 +34,7 @@ class IgnoreEmploymentServiceSpec extends ServiceSpec {
 
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId
   )
 
