@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,8 +92,8 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        "des returns a 200 response" in new NonTysTest with Test {
+      "service error" when {
+        "downstream returns a 200 response" in new NonTysTest with Test {
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
             AuthStub.authorised()
@@ -149,7 +149,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
           (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "INCOME_SOURCE_DATA_NOT_FOUND", NOT_FOUND, NotFoundError),
           (NOT_FOUND, "PERIOD_NOT_FOUND", NOT_FOUND, NotFoundError),
-          (GONE, "PERIOD_ALREADY_DELETED", BAD_REQUEST, NotFoundError)
+          (GONE, "PERIOD_ALREADY_DELETED", NOT_FOUND, NotFoundError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
