@@ -22,7 +22,7 @@ import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import cats.data.EitherT
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -33,9 +33,10 @@ import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRa
 import v1.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.services._
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
                                                       val lookupService: MtdIdLookupService,
                                                       appConfig: AppConfig,
@@ -66,7 +67,8 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
       val rawData: CreateAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
         nino = nino,
         taxYear = taxYear,
-        body = AnyContentAsJson(request.body)
+        body = AnyContentAsJson(request.body),
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
       )
 
       val result =
@@ -137,7 +139,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case NotFoundError | PpdSubmissionIdNotFoundError          => NotFound(Json.toJson(errorWrapper))
-      case RuleIncorrectDisposalTypeError                        => Forbidden(Json.toJson(errorWrapper))
+      case RuleIncorrectDisposalTypeError                        => BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError                               => InternalServerError(Json.toJson(errorWrapper))
       case _ if errorWrapper.containsAnyOf(badRequestErrors: _*) => BadRequest(Json.toJson(errorWrapper))
       case _                                                     => unhandledError(errorWrapper)

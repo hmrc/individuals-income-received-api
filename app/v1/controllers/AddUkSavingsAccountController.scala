@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
@@ -39,18 +38,17 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              requestParser: AddUkSavingsAccountRequestParser,
-                                              service: AddUkSavingsAccountService,
-                                              auditService: AuditService,
-                                              hateoasFactory: HateoasFactory,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-
-  extends AuthorisedController(cc)
-  with BaseController
-  with Logging {
+class AddUkSavingsAccountController @Inject() (val authService: EnrolmentsAuthService,
+                                               val lookupService: MtdIdLookupService,
+                                               requestParser: AddUkSavingsAccountRequestParser,
+                                               service: AddUkSavingsAccountService,
+                                               auditService: AuditService,
+                                               hateoasFactory: HateoasFactory,
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -118,11 +116,10 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError |
-           AccountNameFormatError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+      case BadRequestError | NinoFormatError | AccountNameFormatError | RuleMaximumSavingsAccountsLimitError | RuleDuplicateAccountNameError |
+          CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case RuleMaximumSavingsAccountsLimitError | RuleDuplicateAccountNameError =>
-        Forbidden(Json.toJson(errorWrapper))
+
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
@@ -131,5 +128,5 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
     val event = AuditEvent("AddUkSavingsAccount", "add-uk-savings-account", details)
     auditService.auditEvent(event)
   }
-}
 
+}

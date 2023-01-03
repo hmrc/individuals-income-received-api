@@ -16,26 +16,8 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{
-  DateFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  PpdSubmissionIdFormatError,
-  PpdSubmissionIdNotFoundError,
-  RuleAmountGainLossError,
-  RuleDuplicatedPpdSubmissionIdError,
-  RuleIncorrectDisposalTypeError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleLossesGreaterThanGainError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
-  TaxYearFormatError,
-  ValueFormatError
-}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -431,6 +413,10 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
   private trait TysIfsTest extends Test {
     def taxYear               = "2023-24"
     def downstreamUri: String = s"/income-tax/income/disposals/residential-property/ppd/23-24/$nino"
+
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
+
   }
 
   "Calling Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides endpoint" should {
@@ -576,7 +562,7 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PpdSubmissionIdNotFoundError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
           (CONFLICT, "DUPLICATE_SUBMISSION", BAD_REQUEST, RuleDuplicatedPpdSubmissionIdError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", FORBIDDEN, RuleIncorrectDisposalTypeError),
+          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", BAD_REQUEST, RuleIncorrectDisposalTypeError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )

@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AddUkSavingsAccountControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -51,11 +51,10 @@ class AddUkSavingsAccountControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-
-  val nino: String = "AA123456A"
-  val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
+  val nino: String             = "AA123456A"
+  val correlationId: String    = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
   val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
-  val mtdId: String         = "test-mtd-id"
+  val mtdId: String            = "test-mtd-id"
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -80,8 +79,7 @@ class AddUkSavingsAccountControllerSpec
       listUkSavings(mockAppConfig, nino)
     )
 
-    val requestBodyJson: JsValue = Json.parse(
-      """
+    val requestBodyJson: JsValue = Json.parse("""
         |{
         |   "accountName": "Shares savings account"
         |}
@@ -105,8 +103,7 @@ class AddUkSavingsAccountControllerSpec
       savingsAccountId = savingsAccountId
     )
 
-    val responseJson: JsValue = Json.parse(
-      s"""
+    val responseJson: JsValue = Json.parse(s"""
          |{
          |    "savingsAccountId": "$savingsAccountId",
          |    "links":[
@@ -132,6 +129,7 @@ class AddUkSavingsAccountControllerSpec
           auditResponse = auditResponse
         )
       )
+
   }
 
   "AddUkSavingsAccountController" should {
@@ -180,7 +178,7 @@ class AddUkSavingsAccountControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (AccountNameFormatError, BAD_REQUEST)
@@ -212,10 +210,10 @@ class AddUkSavingsAccountControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (NinoFormatError, BAD_REQUEST),
-          (RuleMaximumSavingsAccountsLimitError, FORBIDDEN),
-          (RuleDuplicateAccountNameError, FORBIDDEN),
+          (RuleMaximumSavingsAccountsLimitError, BAD_REQUEST),
+          (RuleDuplicateAccountNameError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
@@ -223,4 +221,5 @@ class AddUkSavingsAccountControllerSpec
       }
     }
   }
+
 }

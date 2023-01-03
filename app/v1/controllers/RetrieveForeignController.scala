@@ -16,20 +16,20 @@
 
 package v1.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
 import api.models.errors._
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.IfsUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
-import v1.models.response.retrieveForeign.{RetrieveForeignHateoasData, RetrieveForeignResponse}
+import v1.models.request.retrieveForeign.RetrieveForeignRawData
+import v1.models.response.retrieveForeign.RetrieveForeignHateoasData
+import v1.requestParsers.RetrieveForeignRequestParser
+import v1.services.RetrieveForeignService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,8 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
-                                           requestParser: DeleteRetrieveRequestParser,
-                                           service: DeleteRetrieveService,
+                                           requestParser: RetrieveForeignRequestParser,
+                                           service: RetrieveForeignService,
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -59,24 +59,18 @@ class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthServic
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+      val rawData: RetrieveForeignRawData = RetrieveForeignRawData(
         nino = nino,
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveForeignResponse] = IfsUri[RetrieveForeignResponse](
-        s"income-tax/income/foreign/$nino/$taxYear"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveForeignResponse]())
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveForeignHateoasData(nino, taxYear))
-              .asRight[ErrorWrapper])
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieve(parsedRequest))
         } yield {
+          val vendorResponse = hateoasFactory
+            .wrap(serviceResponse.responseData, RetrieveForeignHateoasData(nino, taxYear))
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
@@ -99,7 +93,14 @@ class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthServic
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))

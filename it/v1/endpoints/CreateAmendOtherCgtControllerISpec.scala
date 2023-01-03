@@ -17,9 +17,8 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{AssetDescriptionFormatError, AssetTypeFormatError, BadRequestError, ClaimOrElectionCodesFormatError, DateFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.client.WireMock._
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -346,7 +345,7 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
       |      }
       |   ]
       |}
-     """.stripMargin
+   """.stripMargin
   )
 
   val ruleDateErrors: ErrorWrapper = ErrorWrapper(
@@ -387,9 +386,33 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
   )
 
   private trait Test {
-
     val nino: String    = "AA123456A"
     val taxYear: String = "2021-22"
+
+    def uri: String = s"/disposals/other-gains/$nino/$taxYear"
+
+    def setupStubs(): Unit = ()
+
+    def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      setupStubs()
+      buildRequest(uri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+    def verifyNrs(payload: JsValue): Unit =
+      verify(
+        postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
+          .withRequestBody(equalToJson(payload.toString())))
+  }
+
+  private trait NonTysTest extends Test {
+    def downstreamUrl: String = s"/income-tax/income/disposals/other-gains/$nino/$taxYear"
 
     val mtdResponse: JsValue = Json.parse(
       s"""
@@ -412,39 +435,64 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
          |      }
          |   ]
          |}
-       """.stripMargin
+   """.stripMargin
     )
+  }
 
-    def uri: String = s"/disposals/other-gains/$nino/$taxYear"
+  private trait TysIfsTest extends Test {
 
-    def ifsUri: String = s"/income-tax/income/disposals/other-gains/$nino/$taxYear"
+    override val taxYear: String = "2023-24"
 
-    def setupStubs(): StubMapping
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
 
-    def request: WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
+    def downstreamUrl: String = s"/income-tax/income/disposals/other-gains/23-24/$nino"
 
-    def verifyNrs(payload: JsValue): Unit =
-      verify(
-        postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
-          .withRequestBody(equalToJson(payload.toString())))
+    val mtdResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-other-capital-gains-and-disposals"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-other-capital-gains-and-disposals"
+         |      }
+         |   ]
+         |}
+   """.stripMargin
+    )
   }
 
   "Calling the 'create and amend other CGT' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT, JsObject.empty)
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, NO_CONTENT, JsObject.empty)
+        }
+
+        val response: WSResponse = await(request.put(validRequestJson))
+        response.status shouldBe OK
+        response.json shouldBe mtdResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+
+        verifyNrs(validRequestJson)
+      }
+
+      "any valid request is made TYS" in new TysIfsTest {
+
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, NO_CONTENT, JsObject.empty)
         }
 
         val response: WSResponse = await(request.put(validRequestJson))
@@ -465,16 +513,10 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
                                 expectedError: MtdError,
                                 expectedErrors: Option[ErrorWrapper],
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new Test {
+          s"validation fails with ${expectedError.code} error${scenario.fold("")(scenario => s" for $scenario scenario")}" in new NonTysTest {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
 
             val response: WSResponse = await(request.put(requestBody))
             response.status shouldBe expectedStatus
@@ -505,23 +547,18 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new TysIfsTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
+            override def setupStubs(): Unit = {
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.put(validRequestJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
-
-            verifyNrs(validRequestJson)
           }
         }
 
@@ -529,20 +566,26 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "downstream message"
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errorInput = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", BAD_REQUEST, RuleDisposalDateError),
+          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", BAD_REQUEST, RuleAcquisitionDateError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val tysErrorInput = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+        )
+        (errorInput ++ tysErrorInput).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }

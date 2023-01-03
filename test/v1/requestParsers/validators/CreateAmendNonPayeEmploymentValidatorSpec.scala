@@ -16,12 +16,24 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors._
+import api.mocks.MockCurrentDateTime
+import api.models.errors.{
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import config.AppConfig
 import mocks.MockAppConfig
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import utils.CurrentDateTime
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 
 class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppConfig {
@@ -65,13 +77,20 @@ class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppCon
 
   import Data._
 
-  class Test extends MockAppConfig {
+  class Test extends MockAppConfig with MockCurrentDateTime {
 
     implicit val appConfig: AppConfig              = mockAppConfig
+    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
+    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     val validator = new CreateAmendNonPayeEmploymentValidator()
 
-    MockedAppConfig.minimumPermittedTaxYear returns 2020
+    MockCurrentDateTime.getDateTime
+      .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
+      .anyNumberOfTimes()
+
+    private val MINIMUM_YEAR = 2020
+    MockedAppConfig.minimumPermittedTaxYear returns MINIMUM_YEAR
   }
 
   "running validation" should {
@@ -106,6 +125,13 @@ class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppCon
       "an invalid tax year is supplied" in new Test {
         validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, "2019-23", validRawRequestBody)) shouldBe
           List(RuleTaxYearRangeInvalidError)
+      }
+    }
+
+    "return RuleTaxYearNotEnded error" when {
+      "a tax year in the current year is supplied" in new Test {
+        validator.validate(CreateAmendNonPayeEmploymentRawData(validNino, "2021-22", validRawRequestBody)) shouldBe
+          List(RuleTaxYearNotEndedError)
       }
     }
 

@@ -18,19 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  EmploymentIdFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleCustomEmploymentUnignoreError,
-  RuleTaxYearNotEndedError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockUnignoreEmploymentConnector

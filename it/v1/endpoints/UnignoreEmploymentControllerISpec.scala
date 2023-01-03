@@ -16,8 +16,8 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleCustomEmploymentUnignoreError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -65,8 +65,9 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
   }
 
   "Calling the 'unignore employment' endpoint" should {
@@ -155,7 +156,7 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (FORBIDDEN, "CUSTOMER_ADDED", FORBIDDEN, RuleCustomEmploymentUnignoreError),
+          (FORBIDDEN, "CUSTOMER_ADDED", BAD_REQUEST, RuleCustomEmploymentUnignoreError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (UNPROCESSABLE_ENTITY, "BEFORE_TAX_YEAR_ENDED", BAD_REQUEST, RuleTaxYearNotEndedError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -165,4 +166,5 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

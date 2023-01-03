@@ -129,7 +129,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
           requestBodyData.disposals
             .map(_.toList)
             .map(_.zipWithIndex.flatMap { case (disposal, index) =>
-              validateDisposalRules(disposal, data.taxYear, index)
+              validateDisposalRules(data.temporalValidationEnabled, disposal, data.taxYear, index)
             })
             .getOrElse(NoValidationErrors),
           requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation).getOrElse(NoValidationErrors)
@@ -241,7 +241,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     ).flatten
   }
 
-  private def validateDisposalRules(disposal: Disposal, taxYear: String, arrayIndex: Int): List[MtdError] = {
+  private def validateDisposalRules(temporalValidationEnabled: Boolean, disposal: Disposal, taxYear: String, arrayIndex: Int): List[MtdError] = {
     List(
       GainLossValidation.validate(gain = disposal.gain, loss = disposal.loss, error = RuleGainLossError, path = s"/disposals/$arrayIndex"),
       GainLossValidation.validate(
@@ -250,18 +250,18 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
         error = RuleGainAfterReliefLossAfterReliefError,
         path = s"/disposals/$arrayIndex"
       ),
-      DisposalDateValidation.validate(
+      if (temporalValidationEnabled) DisposalDateValidation.validate(
         date = disposal.disposalDate,
         taxYear = taxYear,
         path = s"/disposals/$arrayIndex",
         validateToday = true,
         errorMessage = IN_YEAR_NO_LATER_THAN_TODAY
-      ),
-      AcquisitionDateValidation.validate(
+      ) else Nil,
+      if (temporalValidationEnabled) AcquisitionDateValidation.validate(
         disposalDate = disposal.disposalDate,
         acquisitionDate = disposal.acquisitionDate,
         path = s"/disposals/$arrayIndex"
-      )
+      ) else Nil
     ).flatten
   }
 

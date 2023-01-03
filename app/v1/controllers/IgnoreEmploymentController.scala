@@ -118,12 +118,12 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
-          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError =>
+          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError | RuleCustomEmploymentError =>
         BadRequest(Json.toJson(errorWrapper))
-      case RuleCustomEmploymentError => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError             => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError   => InternalServerError(Json.toJson(errorWrapper))
-      case _                         => unhandledError(errorWrapper)
+
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

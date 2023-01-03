@@ -22,7 +22,7 @@ import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -33,9 +33,10 @@ import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmployme
 import v1.requestParsers.CreateAmendNonPayeEmploymentRequestParser
 import v1.services.CreateAmendNonPayeEmploymentService
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class CreateAmendNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                         val lookupService: MtdIdLookupService,
                                                         appConfig: AppConfig,
@@ -65,7 +66,8 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
       val rawData: CreateAmendNonPayeEmploymentRawData = CreateAmendNonPayeEmploymentRawData(
         nino = nino,
         taxYear = taxYear,
-        body = AnyContentAsJson(request.body)
+        body = AnyContentAsJson(request.body),
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
       )
 
       val result =
@@ -120,7 +122,7 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
           RuleTaxYearNotEndedError | CustomMtdError(ValueFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson((errorWrapper)))
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }

@@ -25,6 +25,7 @@ import api.models.errors.{
 }
 import api.requestParsers.validators.Validator
 import config.AppConfig
+import utils.CurrentDateTime
 import v1.requestParsers.validators.validations._
 import v1.models.request.createAmendCgtPpdOverrides._
 import v1.requestParsers.validators.validations.{
@@ -33,6 +34,7 @@ import v1.requestParsers.validators.validations.{
   JsonFormatValidation,
   NinoValidation,
   PpdSubmissionIdValidation,
+  TaxYearNotEndedValidation,
   TaxYearNotSupportedValidation,
   TaxYearValidation,
   ValueFormatErrorMessages,
@@ -42,7 +44,7 @@ import v1.requestParsers.validators.validations.{
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConfig)
+class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
     extends Validator[CreateAmendCgtPpdOverridesRawData]
     with ValueFormatErrorMessages {
 
@@ -61,7 +63,8 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConf
 
   private def parameterRuleValidation: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
+      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 
