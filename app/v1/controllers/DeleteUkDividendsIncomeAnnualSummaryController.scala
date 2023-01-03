@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,16 +74,16 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-        auditSubmission(
-          FlattenedGenericAuditDetail(
-            versionNumber = Some("1.0"),
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
-            serviceResponse.correlationId,
-            AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+          auditSubmission(
+            FlattenedGenericAuditDetail(
+              versionNumber = Some("1.0"),
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
+              serviceResponse.correlationId,
+              AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+            )
           )
-        )
 
           NoContent
             .withApiHeaders(serviceResponse.correlationId)
@@ -97,16 +97,16 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
-          auditSubmission(
-            FlattenedGenericAuditDetail(
-              Some("1.0"),
-              request.userDetails,
-              Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
-              resCorrelationId,
-              AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-            )
+        auditSubmission(
+          FlattenedGenericAuditDetail(
+            Some("1.0"),
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
+        )
 
         result
       }.merge
@@ -114,7 +114,13 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
@@ -125,4 +131,5 @@ class DeleteUkDividendsIncomeAnnualSummaryController @Inject() (val authService:
     val event = AuditEvent("DeleteUkDividendsIncome", "delete-uk-dividends-income", details)
     auditService.auditEvent(event)
   }
+
 }

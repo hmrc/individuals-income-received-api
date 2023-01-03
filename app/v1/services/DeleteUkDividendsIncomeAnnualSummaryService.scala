@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,15 +40,13 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.delete(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.delete(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TYPE"                      -> StandardDownstreamError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,
@@ -64,5 +62,18 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       "GONE"                              -> NotFoundError,
       "NOT_FOUND"                         -> NotFoundError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_INCOMESOURCE_TYPE"    -> StandardDownstreamError,
+      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+      "INVALID_CORRELATION_ID"       -> StandardDownstreamError,
+      "INVALID_INCOMESOURCE_ID"      -> StandardDownstreamError,
+      "INCOME_SOURCE_DATA_NOT_FOUND" -> NotFoundError,
+      "PERIOD_NOT_FOUND"             -> NotFoundError,
+      "PERIOD_ALREADY_DELETED"       -> NotFoundError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

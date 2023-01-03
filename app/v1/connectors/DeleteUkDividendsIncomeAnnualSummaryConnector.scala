@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,14 @@
 package v1.connectors
 
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
-import play.api.http.Status.NO_CONTENT
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,17 +36,18 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear.asDownstream
-
-    implicit val successCode: SuccessCode = SuccessCode(NO_CONTENT)
-
-    post(
-      uri = DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/$taxYear"),
-      body = JsObject.empty
-    )
+    if (taxYear.useTaxYearSpecificApi) {
+      delete(
+        uri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/${nino.nino}/income-source/dividends/annual")
+      )
+    } else {
+      post(
+        uri = DesUri[Unit](s"income-tax/nino/${nino.nino}/income-source/dividends/annual/${taxYear.asDownstream}"),
+        body = JsObject.empty
+      )
+    }
   }
 
 }
