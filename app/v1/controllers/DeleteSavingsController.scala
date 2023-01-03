@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@ import utils.{IdGenerator, Logging}
 import api.connectors.DownstreamUri.IfsUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
 import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.requestParsers.DeleteSavingsRequestParser
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
                                          val lookupService: MtdIdLookupService,
-                                         requestParser: DeleteRetrieveRequestParser,
+                                         requestParser: DeleteSavingsRequestParser,
                                          service: DeleteRetrieveService,
                                          auditService: AuditService,
                                          cc: ControllerComponents,
