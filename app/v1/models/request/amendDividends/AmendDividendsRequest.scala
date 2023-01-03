@@ -16,6 +16,6 @@
 
 package v1.models.request.amendDividends
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
-case class AmendDividendsRequest(nino: Nino, taxYear: String, body: AmendDividendsRequestBody)
+case class AmendDividendsRequest(nino: Nino, taxYear: TaxYear, body: AmendDividendsRequestBody)

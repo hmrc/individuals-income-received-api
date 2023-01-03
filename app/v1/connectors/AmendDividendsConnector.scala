@@ -17,14 +17,14 @@
 package v1.connectors
 
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import v1.models.request.amendDividends.AmendDividendsRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
 @Singleton
 class AmendDividendsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -32,15 +32,16 @@ class AmendDividendsConnector @Inject() (val http: HttpClient, val appConfig: Ap
   def amendDividends(
       request: AmendDividendsRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    val uri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/income/dividends/${taxYear.asTysDownstream}/$nino")
+    } else {
+      // MTD format used pre-TYS
+      IfsUri[Unit](s"income-tax/income/dividends/$nino/${taxYear.asMtd}")
+    }
 
-    put(
-      uri = IfsUri[Unit](s"income-tax/income/dividends/$nino/$taxYear"),
-      body = request.body
-    )
+    put(request.body, uri)
   }
 
 }

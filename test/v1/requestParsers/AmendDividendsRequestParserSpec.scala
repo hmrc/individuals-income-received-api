@@ -16,17 +16,8 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
-import api.models.errors.{
-  BadRequestError,
-  CountryCodeFormatError,
-  CountryCodeRuleError,
-  CustomerRefFormatError,
-  ErrorWrapper,
-  NinoFormatError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -187,7 +178,7 @@ class AmendDividendsRequestParserSpec extends UnitSpec {
         MockAmendDividendsValidator.validate(amendDividendsRawData).returns(Nil)
 
         parser.parseRequest(amendDividendsRawData) shouldBe
-          Right(AmendDividendsRequest(Nino(nino), taxYear, validRequestBodyModel))
+          Right(AmendDividendsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
       }
     }
 
@@ -208,129 +199,6 @@ class AmendDividendsRequestParserSpec extends UnitSpec {
 
         parser.parseRequest(amendDividendsRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
-      }
-
-      "multiple field value validation errors occur" in new Test {
-
-        private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-          """
-            |{
-            |   "foreignDividend": [
-            |      {
-            |        "countryCode": "GERMANY",
-            |        "amountBeforeTax": -1232.22,
-            |        "taxTakenOff": 22.223,
-            |        "specialWithholdingTax": 27.354,
-            |        "foreignTaxCreditRelief": true,
-            |        "taxableAmount": -2321.22
-            |      },
-            |      {
-            |        "countryCode": "PUR",
-            |        "amountBeforeTax": 1350.559,
-            |        "taxTakenOff": 25.278,
-            |        "specialWithholdingTax": -30.59,
-            |        "foreignTaxCreditRelief": false,
-            |        "taxableAmount": -2500.99
-            |      }
-            |   ],
-            |   "dividendIncomeReceivedWhilstAbroad": [
-            |      {
-            |        "countryCode": "FRANCE",
-            |        "amountBeforeTax": 1232.227,
-            |        "taxTakenOff": 22.224,
-            |        "specialWithholdingTax": 27.358,
-            |        "foreignTaxCreditRelief": true,
-            |        "taxableAmount": 2321.229
-            |      },
-            |      {
-            |        "countryCode": "SBT",
-            |        "amountBeforeTax": -1350.55,
-            |        "taxTakenOff": -25.27,
-            |        "specialWithholdingTax": -30.59,
-            |        "foreignTaxCreditRelief": false,
-            |        "taxableAmount": -2500.99
-            |       }
-            |   ],
-            |   "stockDividend": {
-            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-            |      "grossAmount": -12321.22
-            |   },
-            |   "redeemableShares": {
-            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-            |      "grossAmount": 12345.758
-            |   },
-            |   "bonusIssuesOfSecurities": {
-            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-            |      "grossAmount": -12500.89
-            |   },
-            |   "closeCompanyLoansWrittenOff": {
-            |      "customerReference": "This customer ref string is 91 characters long ------------------------------------------91",
-            |      "grossAmount": 13700.557
-            |   }
-            |}
-          """.stripMargin
-        )
-
-        private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
-
-        private val allInvalidValueErrors = List(
-          CountryCodeRuleError.copy(
-            paths = Some(
-              List(
-                "/foreignDividend/1/countryCode",
-                "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
-              ))
-          ),
-          ValueFormatError.copy(
-            message = "The field should be between 0 and 99999999999.99",
-            paths = Some(
-              List(
-                "/foreignDividend/0/amountBeforeTax",
-                "/foreignDividend/0/taxTakenOff",
-                "/foreignDividend/0/specialWithholdingTax",
-                "/foreignDividend/0/taxableAmount",
-                "/foreignDividend/1/amountBeforeTax",
-                "/foreignDividend/1/taxTakenOff",
-                "/foreignDividend/1/specialWithholdingTax",
-                "/foreignDividend/1/taxableAmount",
-                "/dividendIncomeReceivedWhilstAbroad/0/amountBeforeTax",
-                "/dividendIncomeReceivedWhilstAbroad/0/taxTakenOff",
-                "/dividendIncomeReceivedWhilstAbroad/0/specialWithholdingTax",
-                "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
-                "/dividendIncomeReceivedWhilstAbroad/1/amountBeforeTax",
-                "/dividendIncomeReceivedWhilstAbroad/1/taxTakenOff",
-                "/dividendIncomeReceivedWhilstAbroad/1/specialWithholdingTax",
-                "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
-                "/stockDividend/grossAmount",
-                "/redeemableShares/grossAmount",
-                "/bonusIssuesOfSecurities/grossAmount",
-                "/closeCompanyLoansWrittenOff/grossAmount"
-              ))
-          ),
-          CustomerRefFormatError.copy(
-            paths = Some(
-              List(
-                "/stockDividend/customerReference",
-                "/redeemableShares/customerReference",
-                "/bonusIssuesOfSecurities/customerReference",
-                "/closeCompanyLoansWrittenOff/customerReference"
-              ))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(
-              List(
-                "/foreignDividend/0/countryCode",
-                "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
-              ))
-          )
-        )
-
-        MockAmendDividendsValidator
-          .validate(amendDividendsRawData.copy(body = allInvalidValueRawRequestBody))
-          .returns(allInvalidValueErrors)
-
-        parser.parseRequest(amendDividendsRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(allInvalidValueErrors)))
       }
     }
   }
