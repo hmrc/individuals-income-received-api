@@ -28,6 +28,23 @@ import scala.concurrent.Future
 
 class DeletePensionsServiceSpec extends ServiceSpec {
 
+  trait Test extends MockDeletePensionsIncomeConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    private val nino    = Nino("AA112233A")
+    private val taxYear = TaxYear.fromMtd("2019-20")
+
+    val request: DeletePensionsRequest = DeletePensionsRequest(
+      nino = nino,
+      taxYear = taxYear
+    )
+
+    val service: DeletePensionsService = new DeletePensionsService(
+      connector = mockDeletePensionsIncomeConnector
+    )
+
+  }
+
   "DeletePensionsIncomeService" should {
     "deletePensionsIncome" must {
       "return correct result for a success" in new Test {
@@ -68,23 +85,6 @@ class DeletePensionsServiceSpec extends ServiceSpec {
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
-  }
-
-  trait Test extends MockDeletePensionsIncomeConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    private val nino    = Nino("AA112233A")
-    private val taxYear = TaxYear.fromMtd("2019-20")
-
-    val request: DeletePensionsRequest = DeletePensionsRequest(
-      nino = nino,
-      taxYear = taxYear
-    )
-
-    val service: DeletePensionsService = new DeletePensionsService(
-      connector = mockDeletePensionsIncomeConnector
-    )
-
   }
 
 }

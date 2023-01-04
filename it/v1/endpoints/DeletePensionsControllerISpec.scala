@@ -77,9 +77,7 @@ class DeletePensionsControllerISpec extends IntegrationBaseSpec {
     "return a 204 status code" when {
       "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
-        }
+        override def setupStubs(): Unit = DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
 
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
@@ -147,7 +145,7 @@ class DeletePensionsControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        val extraTysErrors = List(
+        val extraTysErrors = Seq(
           (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
