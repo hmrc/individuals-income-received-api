@@ -4,7 +4,7 @@ PUT        /employments/non-paye/:nino/:taxYear                             v1.c
 DELETE     /employments/non-paye/:nino/:taxYear                             v1.controllers.DeleteNonPayeEmploymentController.delete(nino: String, taxYear: String)
 
 # Additional Income endpoints
-PUT        /savings/:nino/:taxYear                                          v1.controllers.AmendSavingsController.amendSaving(nino: String, taxYear: String)
+PUT        /savings/:nino/:taxYear                                          v1.controllers.CreateAmendSavingsController.createAmendSaving(nino: String, taxYear: String)
 DELETE     /savings/:nino/:taxYear                                          v1.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
 GET        /savings/:nino/:taxYear                                          v1.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
 

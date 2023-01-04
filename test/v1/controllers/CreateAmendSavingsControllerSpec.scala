@@ -20,28 +20,28 @@ import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockCreateAmendSavingsRequestParser
-import v1.mocks.services.MockAmendSavingsService
+import v1.mocks.requestParsers.MockCreateCreateAmendSavingsRequestParser
+import v1.mocks.services.MockCreateAmendSavingsService
 import v1.models.request.amendSavings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AmendSavingsControllerSpec
+class CreateAmendSavingsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
-    with MockAmendSavingsService
+    with MockCreateAmendSavingsService
     with MockAuditService
-    with MockCreateAmendSavingsRequestParser
+    with MockCreateCreateAmendSavingsRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
@@ -65,12 +65,12 @@ class AmendSavingsControllerSpec
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new AmendSavingsController(
+    val controller = new CreateAmendSavingsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockAmendSavingsRequestParser,
-      service = mockAmendSavingsService,
+      requestParser = mockCreateAmendSavingsRequestParser,
+      service = mockCreateAmendSavingsService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -113,7 +113,7 @@ class AmendSavingsControllerSpec
     """.stripMargin
   )
 
-  val rawData: AmendSavingsRawData = AmendSavingsRawData(
+  val rawData: CreateAmendSavingsRawData = CreateAmendSavingsRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
@@ -151,7 +151,7 @@ class AmendSavingsControllerSpec
 
   val requestData: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     body = amendSavingsRequestBody
   )
 
@@ -183,15 +183,15 @@ class AmendSavingsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockAmendSavingsRequestParser
+        MockCreateAmendSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockAmendSavingsService
-          .amendSaving(requestData)
+        MockCreateAmendSavingsService
+          .createAmendSaving(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.amendSaving(nino, taxYear)(fakePutRequest(requestBodyJson))
+        val result: Future[Result] = controller.createAmendSaving(nino, taxYear)(fakePutRequest(requestBodyJson))
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe hateoasResponse
@@ -207,11 +207,11 @@ class AmendSavingsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockAmendSavingsRequestParser
+            MockCreateAmendSavingsRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.amendSaving(nino, taxYear)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.createAmendSaving(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -241,15 +241,15 @@ class AmendSavingsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockAmendSavingsRequestParser
+            MockCreateAmendSavingsRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockAmendSavingsService
-              .amendSaving(requestData)
+            MockCreateAmendSavingsService
+              .createAmendSaving(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.amendSaving(nino, taxYear)(fakePutRequest(requestBodyJson))
+            val result: Future[Result] = controller.createAmendSaving(nino, taxYear)(fakePutRequest(requestBodyJson))
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

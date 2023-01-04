@@ -17,70 +17,78 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
 class CreateAmendSavingsConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2019-20"
+  "CreateAmendSavingsConnector" when {
+    "createAmendSaving" must {
+      "return a 204 status for a success scenario" in new IfsTest with Test {
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-  val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
-    amountBeforeTax = None,
-    countryCode = "FRA",
-    taxTakenOff = None,
-    specialWithholdingTax = None,
-    taxableAmount = 233.11,
-    foreignTaxCreditRelief = false
-  )
+        MockedHttpClient
+          .put(
+            url = s"$baseUrl/income-tax/income/savings/$nino/${taxYear.asMtd}",
+            config = dummyIfsHeaderCarrierConfig,
+            body = requestBody,
+            requiredHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(outcome))
 
-  val amendSavingsRequestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+        await(connector.createAmendSavings(request)) shouldBe outcome
+      }
 
-  val amendSavingsRequest: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = amendSavingsRequestBody
-  )
+      "return a 204 status for a success scenario for Tax Year Specific (TYS)" in new TysIfsTest with Test {
+        override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+        val outcome                   = Right(ResponseWrapper(correlationId, ()))
 
-  class Test extends MockHttpClient with MockAppConfig {
+        MockedHttpClient
+          .put(
+            url = s"$baseUrl/income-tax/income/savings/${taxYear.asTysDownstream}/$nino",
+            config = dummyIfsHeaderCarrierConfig,
+            body = requestBody,
+            requiredHeaders,
+            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(outcome))
+
+        await(connector.createAmendSavings(request)) shouldBe outcome
+      }
+    }
+  }
+
+  trait Test {
+    _: ConnectorTest =>
+    def nino: String     = "AA111111A"
+    def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+    val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
+      amountBeforeTax = None,
+      countryCode = "FRA",
+      taxTakenOff = None,
+      specialWithholdingTax = None,
+      taxableAmount = 233.11,
+      foreignTaxCreditRelief = false
+    )
+
+    val requestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+
+    val request: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      body = requestBody
+    )
 
     val connector: CreateAmendSavingsConnector = new CreateAmendSavingsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
-  }
-
-  "AmendSavingsConnector" when {
-    "amendSaving" must {
-      "return a 204 status for a success scenario" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
-
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = amendSavingsRequestBody,
-            requiredHeaders = requiredIfsHeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.createAmendSavings(amendSavingsRequest)) shouldBe outcome
-      }
-    }
   }
 
 }

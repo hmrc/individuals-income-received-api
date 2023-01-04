@@ -16,15 +16,15 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, CountryCodeFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.mocks.validators.MockAmendSavingsValidator
+import v1.mocks.validators.MockCreateCreateAmendSavingsValidator
 import v1.models.request.amendSavings._
 
-class CreateAmendSavingsRequestParserSpec extends UnitSpec {
+class CreateCreateAmendSavingsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2019-20"
@@ -90,16 +90,16 @@ class CreateAmendSavingsRequestParserSpec extends UnitSpec {
       ))
   )
 
-  private val amendSavingsRawData = AmendSavingsRawData(
+  private val amendSavingsRawData = CreateAmendSavingsRawData(
     nino = nino,
     taxYear = taxYear,
     body = validRawRequestBody
   )
 
-  trait Test extends MockAmendSavingsValidator {
+  trait Test extends MockCreateCreateAmendSavingsValidator {
 
-    lazy val parser: AmendSavingsRequestParser = new AmendSavingsRequestParser(
-      validator = mockAmendSavingsValidator
+    lazy val parser: CreateAmendSavingsRequestParser = new CreateAmendSavingsRequestParser(
+      validator = mockCreateAmendSavingsValidator
     )
 
   }
@@ -107,16 +107,16 @@ class CreateAmendSavingsRequestParserSpec extends UnitSpec {
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockAmendSavingsValidator.validate(amendSavingsRawData).returns(Nil)
+        MockCreateAmendSavingsValidator.validate(amendSavingsRawData).returns(Nil)
 
         parser.parseRequest(amendSavingsRawData) shouldBe
-          Right(CreateAmendSavingsRequest(Nino(nino), taxYear, validRequestBodyModel))
+          Right(CreateAmendSavingsRequest(Nino(nino), TaxYear.fromMtd(taxYear), validRequestBodyModel))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockAmendSavingsValidator
+        MockCreateAmendSavingsValidator
           .validate(amendSavingsRawData.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
@@ -125,7 +125,7 @@ class CreateAmendSavingsRequestParserSpec extends UnitSpec {
       }
 
       "multiple path parameter validation errors occur" in new Test {
-        MockAmendSavingsValidator
+        MockCreateAmendSavingsValidator
           .validate(amendSavingsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
@@ -194,7 +194,7 @@ class CreateAmendSavingsRequestParserSpec extends UnitSpec {
           )
         )
 
-        MockAmendSavingsValidator
+        MockCreateAmendSavingsValidator
           .validate(amendSavingsRawData.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 

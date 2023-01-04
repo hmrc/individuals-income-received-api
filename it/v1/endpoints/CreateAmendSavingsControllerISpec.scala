@@ -18,7 +18,20 @@ package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  CountryCodeFormatError,
+  CountryCodeRuleError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -27,94 +40,32 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 
-class AmendSavingsControllerISpec extends IntegrationBaseSpec {
+class CreateAmendSavingsControllerISpec extends IntegrationBaseSpec {
 
-  private trait Test {
-
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
-    val correlationId: String = "X-123"
-
-    val requestBodyJson: JsValue = Json.parse(
-      """
-        |{
-        |  "securities":
-        |      {
-        |        "taxTakenOff": 100.11,
-        |        "grossAmount": 100.22,
-        |        "netAmount": 100.33
-        |      },
-        |  "foreignInterest":   [
-        |     {
-        |        "amountBeforeTax": 101.11,
-        |        "countryCode": "FRA",
-        |        "taxTakenOff": 102.22,
-        |        "specialWithholdingTax": 103.33,
-        |        "taxableAmount": 104.44,
-        |        "foreignTaxCreditRelief": true
-        |      },
-        |      {
-        |        "amountBeforeTax": 201.11,
-        |        "countryCode": "DEU",
-        |        "taxTakenOff": 202.22,
-        |        "specialWithholdingTax": 203.33,
-        |        "taxableAmount": 204.44,
-        |        "foreignTaxCreditRelief": true
-        |      }
-        |   ]
-        |}
-    """.stripMargin
-    )
-
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links":[
-         |      {
-         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-         |         "rel":"create-and-amend-savings-income",
-         |         "method":"PUT"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-         |         "rel":"self",
-         |         "method":"GET"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-         |         "rel":"delete-savings-income",
-         |         "method":"DELETE"
-         |      }
-         |   ]
-         |}
-    """.stripMargin
-    )
-
-    def uri: String = s"/savings/$nino/$taxYear"
-
-    def ifsUri: String = s"/income-tax/income/savings/$nino/$taxYear"
-
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
-  }
-
-  "Calling the 'amend savings' endpoint" should {
+  "Calling the 'create amend savings' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().put(requestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for Tax Year Specific (TYS)" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
         val response: WSResponse = await(request().put(requestBodyJson))
@@ -125,7 +76,7 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a 400 with multiple errors" when {
-      "all field value validations fail on the request body" in new Test {
+      "all field value validations fail on the request body" in new NonTysTest {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
@@ -409,10 +360,10 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
                                 expectedStatus: Int,
                                 expectedBody: MtdError,
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new NonTysTest {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): StubMapping = {
@@ -442,15 +393,15 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
             val response: WSResponse = await(request().put(requestBodyJson))
@@ -463,11 +414,11 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "downstream message"
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -475,8 +426,101 @@ class AmendSavingsControllerISpec extends IntegrationBaseSpec {
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
+  private trait Test {
+    def nino: String = "AA123456A"
+    def taxYear: String
+
+    val correlationId: String = "X-123"
+
+    val requestBodyJson: JsValue = Json.parse(
+      """
+        |{
+        |  "securities":
+        |      {
+        |        "taxTakenOff": 100.11,
+        |        "grossAmount": 100.22,
+        |        "netAmount": 100.33
+        |      },
+        |  "foreignInterest":   [
+        |     {
+        |        "amountBeforeTax": 101.11,
+        |        "countryCode": "FRA",
+        |        "taxTakenOff": 102.22,
+        |        "specialWithholdingTax": 103.33,
+        |        "taxableAmount": 104.44,
+        |        "foreignTaxCreditRelief": true
+        |      },
+        |      {
+        |        "amountBeforeTax": 201.11,
+        |        "countryCode": "DEU",
+        |        "taxTakenOff": 202.22,
+        |        "specialWithholdingTax": 203.33,
+        |        "taxableAmount": 204.44,
+        |        "foreignTaxCreditRelief": true
+        |      }
+        |   ]
+        |}
+    """.stripMargin
+    )
+
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+         |         "rel":"create-and-amend-savings-income",
+         |         "method":"PUT"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+         |         "rel":"self",
+         |         "method":"GET"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+         |         "rel":"delete-savings-income",
+         |         "method":"DELETE"
+         |      }
+         |   ]
+         |}
+    """.stripMargin
+    )
+
+    def mtdUri: String = s"/savings/$nino/$taxYear"
+    def downstreamUri: String
+    def setupStubs(): StubMapping
+
+    def request(): WSRequest = {
+      setupStubs()
+      buildRequest(mtdUri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String       = "2019-20"
+    def downstreamUri: String = s"/income-tax/income/savings/$nino/2019-20"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/savings/23-24/$nino"
+  }
+
 }

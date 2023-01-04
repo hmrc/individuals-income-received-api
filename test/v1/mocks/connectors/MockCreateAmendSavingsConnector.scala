@@ -27,12 +27,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendSavingsConnector extends MockFactory {
 
-  val mockAmendSavingsConnector: CreateAmendSavingsConnector = mock[CreateAmendSavingsConnector]
+  val mockCreateAmendSavingsConnector: CreateAmendSavingsConnector = mock[CreateAmendSavingsConnector]
 
-  object MockAmendSavingsConnector {
+  object MockCreateAmendSavingsConnector {
 
-    def amendSaving(request: CreateAmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
-      (mockAmendSavingsConnector
+    def createAmendSaving(request: CreateAmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+      (mockCreateAmendSavingsConnector
         .createAmendSavings(_: CreateAmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }

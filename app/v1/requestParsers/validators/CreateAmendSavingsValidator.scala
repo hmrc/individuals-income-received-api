@@ -22,7 +22,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import v1.requestParsers.validators.validations._
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, CreateAmendSavingsRequestBody, AmendSecurities}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRawData, CreateAmendSavingsRequestBody, AmendSecurities}
 import v1.requestParsers.validators.validations.{
   CountryCodeValidation,
   DecimalValueValidation,
@@ -34,34 +34,34 @@ import v1.requestParsers.validators.validations.{
 }
 
 @Singleton
-class AmendSavingsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendSavingsRawData] with ValueFormatErrorMessages {
+class CreateAmendSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateAmendSavingsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendSavingsRawData): List[MtdError] = {
+  override def validate(data: CreateAmendSavingsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: AmendSavingsRawData => List[List[MtdError]] = (data: AmendSavingsRawData) => {
+  private def parameterFormatValidation: CreateAmendSavingsRawData => List[List[MtdError]] = (data: CreateAmendSavingsRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: AmendSavingsRawData => List[List[MtdError]] = { data =>
+  private def parameterRuleValidation: CreateAmendSavingsRawData => List[List[MtdError]] = { data =>
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 
-  private def bodyFormatValidator: AmendSavingsRawData => List[List[MtdError]] = { data =>
+  private def bodyFormatValidator: CreateAmendSavingsRawData => List[List[MtdError]] = { data =>
     List(
       JsonFormatValidation.validate[CreateAmendSavingsRequestBody](data.body.json)
     )
   }
 
-  private def bodyValueValidator: AmendSavingsRawData => List[List[MtdError]] = { data =>
+  private def bodyValueValidator: CreateAmendSavingsRawData => List[List[MtdError]] = { data =>
     val requestBodyData = data.body.json.as[CreateAmendSavingsRequestBody]
 
     List(

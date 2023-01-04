@@ -17,38 +17,37 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
-
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateAmendSavingsConnector
 import v1.models.request.amendSavings.CreateAmendSavingsRequest
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendSavingsService @Inject() (connector: CreateAmendSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendSavingsService @Inject() (connector: CreateAmendSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendSaving(request: CreateAmendSavingsRequest)(implicit
-                                                      hc: HeaderCarrier,
-                                                      ec: ExecutionContext,
-                                                      logContext: EndpointLogContext,
-                                                      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmendSaving(request: CreateAmendSavingsRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.createAmendSavings(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+      downstreamResponseWrapper <- EitherT(connector.createAmendSavings(request)).leftMap(mapDownstreamErrors(errorMap))
+    } yield downstreamResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def errorMap: Map[String, MtdError] = {
+
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> StandardDownstreamError,
@@ -56,5 +55,13 @@ class AmendSavingsService @Inject() (connector: CreateAmendSavingsConnector) ext
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    val extraTysErros = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErros
+  }
 
 }
