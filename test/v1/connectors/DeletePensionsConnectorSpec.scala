@@ -20,11 +20,11 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{NinoFormatError, StandardDownstreamError}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRequest
+import v1.models.request.deletePensions.DeletePensionsRequest
 
 import scala.concurrent.Future
 
-class DeletePensionsIncomeConnectorSpec extends ConnectorSpec {
+class DeletePensionsConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
@@ -33,8 +33,8 @@ class DeletePensionsIncomeConnectorSpec extends ConnectorSpec {
 
     val nino: String = "AA111111A"
 
-    protected val request: DeletePensionsIncomeRequest =
-      DeletePensionsIncomeRequest(
+    protected val request: DeletePensionsRequest =
+      DeletePensionsRequest(
         nino = Nino(nino),
         taxYear = taxYear
       )

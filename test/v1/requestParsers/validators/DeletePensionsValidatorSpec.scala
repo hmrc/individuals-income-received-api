@@ -20,9 +20,9 @@ import api.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTax
 import config.AppConfig
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRawData
+import v1.models.request.deletePensions.DeletePensionsRawData
 
-class DeletePensionsIncomeValidatorSpec extends UnitSpec {
+class DeletePensionsValidatorSpec extends UnitSpec {
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
@@ -31,7 +31,7 @@ class DeletePensionsIncomeValidatorSpec extends UnitSpec {
 
     implicit val appConfig: AppConfig = mockAppConfig
 
-    val validator = new DeletePensionsIncomeValidator
+    val validator = new DeletePensionsValidator
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
@@ -42,41 +42,41 @@ class DeletePensionsIncomeValidatorSpec extends UnitSpec {
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(DeletePensionsIncomeRawData(validNino, validTaxYear)) shouldBe Nil
+        validator.validate(DeletePensionsRawData(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(DeletePensionsIncomeRawData("A12344A", validTaxYear)) shouldBe
+        validator.validate(DeletePensionsRawData("A12344A", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(DeletePensionsIncomeRawData(validNino, "20178")) shouldBe
+        validator.validate(DeletePensionsRawData(validNino, "20178")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearRangeInvalidError error" when {
       "an invalid tax year range is supplied" in new Test {
-        validator.validate(DeletePensionsIncomeRawData(validNino, "2019-21")) shouldBe
+        validator.validate(DeletePensionsRawData(validNino, "2019-21")) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(DeletePensionsIncomeRawData(validNino, "2018-19")) shouldBe
+        validator.validate(DeletePensionsRawData(validNino, "2018-19")) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return multiple errors" when {
       "request supplied has multiple errors" in new Test {
-        validator.validate(DeletePensionsIncomeRawData("A12344A", "20178")) shouldBe
+        validator.validate(DeletePensionsRawData("A12344A", "20178")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }

@@ -19,23 +19,23 @@ package v1.requestParsers
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import support.UnitSpec
-import v1.mocks.validators.MockDeletePensionsIncomeValidator
-import v1.models.request.deletePensionsIncome.{DeletePensionsIncomeRawData, DeletePensionsIncomeRequest}
+import v1.mocks.validators.MockDeletePensionsValidator
+import v1.models.request.deletePensions.{DeletePensionsRawData, DeletePensionsRequest}
 
-class DeletePensionsIncomeRequestParserSpec extends UnitSpec {
+class DeletePensionsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2021-22"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val rawData: DeletePensionsIncomeRawData = DeletePensionsIncomeRawData(
+  val rawData: DeletePensionsRawData = DeletePensionsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  trait Test extends MockDeletePensionsIncomeValidator {
+  trait Test extends MockDeletePensionsValidator {
 
-    lazy val parser: DeletePensionsIncomeRequestParser = new DeletePensionsIncomeRequestParser(
+    lazy val parser: DeletePensionsRequestParser = new DeletePensionsRequestParser(
       validator = mockDeletePensionsIncomeValidator
     )
 
@@ -47,7 +47,7 @@ class DeletePensionsIncomeRequestParserSpec extends UnitSpec {
         MockDeletePensionsIncomeValidator.validate(rawData).returns(Nil)
 
         parser.parseRequest(rawData) shouldBe
-          Right(DeletePensionsIncomeRequest(Nino(nino), TaxYear.fromMtd(taxYear)))
+          Right(DeletePensionsRequest(Nino(nino), TaxYear.fromMtd(taxYear)))
       }
     }
 

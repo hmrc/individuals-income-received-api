@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRequest
+import v1.models.request.deletePensions.DeletePensionsRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,10 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeletePensionsIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deletePensionsIncome(request: DeletePensionsIncomeRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def deletePensionsIncome(
+      request: DeletePensionsRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 
@@ -41,7 +39,7 @@ class DeletePensionsIncomeConnector @Inject() (val http: HttpClient, val appConf
         s"income-tax/income/pensions/${taxYear.asTysDownstream}/$nino"
       )
     } else {
-      IfsUri[Unit](s"/income-tax/income/pensions/$nino/${taxYear.asMtd}")
+      IfsUri[Unit](s"income-tax/income/pensions/$nino/${taxYear.asMtd}")
     }
 
     delete(downstreamUri)

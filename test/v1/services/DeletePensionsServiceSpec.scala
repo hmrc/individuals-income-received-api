@@ -22,11 +22,11 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockDeletePensionsIncomeConnector
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRequest
+import v1.models.request.deletePensions.DeletePensionsRequest
 
 import scala.concurrent.Future
 
-class DeletePensionsIncomeServiceSpec extends ServiceSpec {
+class DeletePensionsServiceSpec extends ServiceSpec {
 
   "DeletePensionsIncomeService" should {
     "deletePensionsIncome" must {
@@ -76,12 +76,12 @@ class DeletePensionsIncomeServiceSpec extends ServiceSpec {
     private val nino    = Nino("AA112233A")
     private val taxYear = TaxYear.fromMtd("2019-20")
 
-    val request: DeletePensionsIncomeRequest = DeletePensionsIncomeRequest(
+    val request: DeletePensionsRequest = DeletePensionsRequest(
       nino = nino,
       taxYear = taxYear
     )
 
-    val service: DeletePensionsIncomeService = new DeletePensionsIncomeService(
+    val service: DeletePensionsService = new DeletePensionsService(
       connector = mockDeletePensionsIncomeConnector
     )
 

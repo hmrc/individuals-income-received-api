@@ -19,28 +19,28 @@ package v1.requestParsers.validators
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
 import config.AppConfig
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRawData
+import v1.models.request.deletePensions.DeletePensionsRawData
 import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeletePensionsIncomeValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeletePensionsIncomeRawData] {
+class DeletePensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeletePensionsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeletePensionsIncomeRawData): List[MtdError] = {
+  override def validate(data: DeletePensionsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: DeletePensionsIncomeRawData => List[List[MtdError]] = (data: DeletePensionsIncomeRawData) => {
+  private def parameterFormatValidation: DeletePensionsRawData => List[List[MtdError]] = (data: DeletePensionsRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: DeletePensionsIncomeRawData => List[List[MtdError]] = (data: DeletePensionsIncomeRawData) => {
+  private def parameterRuleValidation: DeletePensionsRawData => List[List[MtdError]] = (data: DeletePensionsRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )

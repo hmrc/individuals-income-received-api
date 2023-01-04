@@ -24,15 +24,15 @@ import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.DeletePensionsIncomeConnector
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRequest
+import v1.models.request.deletePensions.DeletePensionsRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionsIncomeService @Inject() (connector: DeletePensionsIncomeConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeletePensionsService @Inject() (connector: DeletePensionsIncomeConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def delete(request: DeletePensionsIncomeRequest)(implicit
+  def delete(request: DeletePensionsRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,

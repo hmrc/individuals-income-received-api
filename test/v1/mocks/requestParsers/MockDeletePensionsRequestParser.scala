@@ -19,17 +19,17 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.deletePensionsIncome.{DeletePensionsIncomeRawData, DeletePensionsIncomeRequest}
-import v1.requestParsers.DeletePensionsIncomeRequestParser
+import v1.models.request.deletePensions.{DeletePensionsRawData, DeletePensionsRequest}
+import v1.requestParsers.DeletePensionsRequestParser
 
-trait MockDeletePensionsIncomeRequestParser extends MockFactory {
+trait MockDeletePensionsRequestParser extends MockFactory {
 
-  val mockDeletePensionsIncomeRequestParser = mock[DeletePensionsIncomeRequestParser]
+  val mockDeletePensionsRequestParser = mock[DeletePensionsRequestParser]
 
-  object MockDeletePensionsIncomeRequestParser {
+  object MockDeletePensionsRequestParser {
 
-    def parse(data: DeletePensionsIncomeRawData): CallHandler[Either[ErrorWrapper, DeletePensionsIncomeRequest]] =
-      (mockDeletePensionsIncomeRequestParser.parseRequest(_: DeletePensionsIncomeRawData)(_: String)).expects(data, *)
+    def parse(data: DeletePensionsRawData): CallHandler[Either[ErrorWrapper, DeletePensionsRequest]] =
+      (mockDeletePensionsRequestParser.parseRequest(_: DeletePensionsRawData)(_: String)).expects(data, *)
 
   }
 

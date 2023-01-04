@@ -22,21 +22,21 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRequest
-import v1.services.DeletePensionsIncomeService
+import v1.models.request.deletePensions.DeletePensionsRequest
+import v1.services.DeletePensionsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeletePensionsIncomeService extends MockFactory {
+trait MockDeletePensionsService extends MockFactory {
 
-  val mockDeletePensionsIncomeService: DeletePensionsIncomeService =
-    mock[DeletePensionsIncomeService]
+  val mockDeletePensionsService: DeletePensionsService =
+    mock[DeletePensionsService]
 
   object MockDeletePensionsIncomeService {
 
-    def delete(requestData: DeletePensionsIncomeRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
-      mockDeletePensionsIncomeService
-        .delete(_: DeletePensionsIncomeRequest)(
+    def delete(requestData: DeletePensionsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
+      mockDeletePensionsService
+        .delete(_: DeletePensionsRequest)(
           _: HeaderCarrier,
           _: ExecutionContext,
           _: EndpointLogContext,

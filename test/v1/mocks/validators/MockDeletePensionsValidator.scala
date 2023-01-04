@@ -19,18 +19,18 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.deletePensionsIncome.DeletePensionsIncomeRawData
-import v1.requestParsers.validators.DeletePensionsIncomeValidator
+import v1.models.request.deletePensions.DeletePensionsRawData
+import v1.requestParsers.validators.DeletePensionsValidator
 
-trait MockDeletePensionsIncomeValidator extends MockFactory {
+trait MockDeletePensionsValidator extends MockFactory {
 
-  val mockDeletePensionsIncomeValidator: DeletePensionsIncomeValidator = mock[DeletePensionsIncomeValidator]
+  val mockDeletePensionsIncomeValidator: DeletePensionsValidator = mock[DeletePensionsValidator]
 
   object MockDeletePensionsIncomeValidator {
 
-    def validate(data: DeletePensionsIncomeRawData): CallHandler1[DeletePensionsIncomeRawData, List[MtdError]] = {
+    def validate(data: DeletePensionsRawData): CallHandler1[DeletePensionsRawData, List[MtdError]] = {
       (mockDeletePensionsIncomeValidator
-        .validate(_: DeletePensionsIncomeRawData))
+        .validate(_: DeletePensionsRawData))
         .expects(data)
     }
 
