@@ -184,7 +184,7 @@ class RetrieveDividendsControllerSpec
           }
         }
 
-        val errors = Seq(
+        val errors = List(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),

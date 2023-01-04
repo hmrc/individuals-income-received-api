@@ -20,7 +20,6 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
@@ -40,11 +39,7 @@ class RetrieveDividendsService @Inject() (connector: RetrieveDividendsConnector)
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveDividendsResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private def downstreamErrorMap: Map[String, MtdError] = {
