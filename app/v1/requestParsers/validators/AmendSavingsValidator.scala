@@ -22,7 +22,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import v1.requestParsers.validators.validations._
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, AmendSavingsRequestBody, AmendSecurities}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRawData, CreateAmendSavingsRequestBody, AmendSecurities}
 import v1.requestParsers.validators.validations.{
   CountryCodeValidation,
   DecimalValueValidation,
@@ -57,12 +57,12 @@ class AmendSavingsValidator @Inject() (implicit appConfig: AppConfig) extends Va
 
   private def bodyFormatValidator: AmendSavingsRawData => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[AmendSavingsRequestBody](data.body.json)
+      JsonFormatValidation.validate[CreateAmendSavingsRequestBody](data.body.json)
     )
   }
 
   private def bodyValueValidator: AmendSavingsRawData => List[List[MtdError]] = { data =>
-    val requestBodyData = data.body.json.as[AmendSavingsRequestBody]
+    val requestBodyData = data.body.json.as[CreateAmendSavingsRequestBody]
 
     List(
       Validator.flattenErrors(

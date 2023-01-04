@@ -21,8 +21,8 @@ import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v1.mocks.connectors.MockAmendSavingsConnector
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.mocks.connectors.MockCreateAmendSavingsConnector
+import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
@@ -40,13 +40,13 @@ class AmendSavingsServiceSpec extends ServiceSpec {
     foreignTaxCreditRelief = false
   )
 
-  private val amendSavingsRequest = AmendSavingsRequest(
+  private val amendSavingsRequest = CreateAmendSavingsRequest(
     nino = Nino(nino),
     taxYear = taxYear,
-    body = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+    body = CreateAmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
   )
 
-  trait Test extends MockAmendSavingsConnector {
+  trait Test extends MockCreateAmendSavingsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: AmendSavingsService = new AmendSavingsService(

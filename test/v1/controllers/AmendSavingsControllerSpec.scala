@@ -27,7 +27,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockAmendSavingsRequestParser
+import v1.mocks.requestParsers.MockCreateAmendSavingsRequestParser
 import v1.mocks.services.MockAmendSavingsService
 import v1.models.request.amendSavings._
 
@@ -41,7 +41,7 @@ class AmendSavingsControllerSpec
     with MockAppConfig
     with MockAmendSavingsService
     with MockAuditService
-    with MockAmendSavingsRequestParser
+    with MockCreateAmendSavingsRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
@@ -144,12 +144,12 @@ class AmendSavingsControllerSpec
     )
   )
 
-  val amendSavingsRequestBody: AmendSavingsRequestBody = AmendSavingsRequestBody(
+  val amendSavingsRequestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(
     securities = Some(security),
     foreignInterest = Some(foreignInterests)
   )
 
-  val requestData: AmendSavingsRequest = AmendSavingsRequest(
+  val requestData: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
     nino = Nino(nino),
     taxYear = taxYear,
     body = amendSavingsRequestBody

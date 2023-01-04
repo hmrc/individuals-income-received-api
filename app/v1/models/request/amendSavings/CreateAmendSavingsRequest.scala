@@ -16,6 +16,6 @@
 
 package v1.models.request.amendSavings
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
-case class AmendSavingsRequest(nino: Nino, taxYear: String, body: AmendSavingsRequestBody)
+case class CreateAmendSavingsRequest(nino: Nino, taxYear: TaxYear, body: CreateAmendSavingsRequestBody)

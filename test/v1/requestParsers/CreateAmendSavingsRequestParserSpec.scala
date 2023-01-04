@@ -24,7 +24,7 @@ import support.UnitSpec
 import v1.mocks.validators.MockAmendSavingsValidator
 import v1.models.request.amendSavings._
 
-class AmendSavingsRequestParserSpec extends UnitSpec {
+class CreateAmendSavingsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2019-20"
@@ -62,7 +62,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
 
   private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
 
-  private val validRequestBodyModel = AmendSavingsRequestBody(
+  private val validRequestBodyModel = CreateAmendSavingsRequestBody(
     securities = Some(
       AmendSecurities(
         taxTakenOff = Some(100.11),
@@ -110,7 +110,7 @@ class AmendSavingsRequestParserSpec extends UnitSpec {
         MockAmendSavingsValidator.validate(amendSavingsRawData).returns(Nil)
 
         parser.parseRequest(amendSavingsRawData) shouldBe
-          Right(AmendSavingsRequest(Nino(nino), taxYear, validRequestBodyModel))
+          Right(CreateAmendSavingsRequest(Nino(nino), taxYear, validRequestBodyModel))
       }
     }
 

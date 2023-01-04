@@ -20,20 +20,20 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.AmendSavingsConnector
-import v1.models.request.amendSavings.AmendSavingsRequest
+import v1.connectors.CreateAmendSavingsConnector
+import v1.models.request.amendSavings.CreateAmendSavingsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockAmendSavingsConnector extends MockFactory {
+trait MockCreateAmendSavingsConnector extends MockFactory {
 
-  val mockAmendSavingsConnector: AmendSavingsConnector = mock[AmendSavingsConnector]
+  val mockAmendSavingsConnector: CreateAmendSavingsConnector = mock[CreateAmendSavingsConnector]
 
   object MockAmendSavingsConnector {
 
-    def amendSaving(request: AmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def amendSaving(request: CreateAmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendSavingsConnector
-        .amendSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .createAmendSavings(_: CreateAmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
 

@@ -26,22 +26,22 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.AmendSavingsConnector
-import v1.models.request.amendSavings.AmendSavingsRequest
+import v1.connectors.CreateAmendSavingsConnector
+import v1.models.request.amendSavings.CreateAmendSavingsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendSavingsService @Inject() (connector: AmendSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendSavingsService @Inject() (connector: CreateAmendSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
 
-  def amendSaving(request: AmendSavingsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendSaving(request: CreateAmendSavingsRequest)(implicit
+                                                      hc: HeaderCarrier,
+                                                      ec: ExecutionContext,
+                                                      logContext: EndpointLogContext,
+                                                      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendSavings(request)).leftMap(mapDownstreamErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.createAmendSavings(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

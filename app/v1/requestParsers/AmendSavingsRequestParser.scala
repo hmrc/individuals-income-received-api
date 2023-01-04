@@ -20,13 +20,13 @@ import api.models.domain.Nino
 import api.requestParsers.RequestParser
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendSavings.{AmendSavingsRawData, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.amendSavings.{AmendSavingsRawData, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
 import v1.requestParsers.validators.AmendSavingsValidator
 
 @Singleton
-class AmendSavingsRequestParser @Inject() (val validator: AmendSavingsValidator) extends RequestParser[AmendSavingsRawData, AmendSavingsRequest] {
+class AmendSavingsRequestParser @Inject() (val validator: AmendSavingsValidator) extends RequestParser[AmendSavingsRawData, CreateAmendSavingsRequest] {
 
-  override protected def requestFor(data: AmendSavingsRawData): AmendSavingsRequest =
-    AmendSavingsRequest(Nino(data.nino), data.taxYear, data.body.json.as[AmendSavingsRequestBody])
+  override protected def requestFor(data: AmendSavingsRawData): CreateAmendSavingsRequest =
+    CreateAmendSavingsRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateAmendSavingsRequestBody])
 
 }

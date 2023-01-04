@@ -22,11 +22,11 @@ import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSavingsRequest, AmendSavingsRequestBody}
+import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
-class AmendSavingsConnectorSpec extends ConnectorSpec {
+class CreateAmendSavingsConnectorSpec extends ConnectorSpec {
 
   val nino: String    = "AA111111A"
   val taxYear: String = "2019-20"
@@ -40,9 +40,9 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
     foreignTaxCreditRelief = false
   )
 
-  val amendSavingsRequestBody: AmendSavingsRequestBody = AmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+  val amendSavingsRequestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
 
-  val amendSavingsRequest: AmendSavingsRequest = AmendSavingsRequest(
+  val amendSavingsRequest: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
     nino = Nino(nino),
     taxYear = taxYear,
     body = amendSavingsRequestBody
@@ -50,7 +50,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: AmendSavingsConnector = new AmendSavingsConnector(
+    val connector: CreateAmendSavingsConnector = new CreateAmendSavingsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
@@ -78,7 +78,7 @@ class AmendSavingsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.amendSavings(amendSavingsRequest)) shouldBe outcome
+        await(connector.createAmendSavings(amendSavingsRequest)) shouldBe outcome
       }
     }
   }

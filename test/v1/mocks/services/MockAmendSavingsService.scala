@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.amendSavings.AmendSavingsRequest
+import v1.models.request.amendSavings.CreateAmendSavingsRequest
 import v1.services.AmendSavingsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,9 +33,9 @@ trait MockAmendSavingsService extends MockFactory {
 
   object MockAmendSavingsService {
 
-    def amendSaving(requestData: AmendSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def amendSaving(requestData: CreateAmendSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockAmendSavingsService
-        .amendSaving(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .amendSaving(_: CreateAmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
 
