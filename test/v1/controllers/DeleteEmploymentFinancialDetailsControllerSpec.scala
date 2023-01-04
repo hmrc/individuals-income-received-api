@@ -18,16 +18,17 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockDeleteCustomEmploymentRequestParser
-import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
+import v1.mocks.requestParsers.MockDeleteEmploymentFinancialDetailsRequestParser
+import v1.mocks.services.MockDeleteEmploymentFinancialDetailsService
+import v1.models.request.deleteEmploymentFinancialDetails.{DeleteEmploymentFinancialDetailsRawData, DeleteEmploymentFinancialDetailsRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,9 +37,9 @@ class DeleteEmploymentFinancialDetailsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockDeleteEmploymentFinancialDetailsService
     with MockAuditService
-    with MockDeleteCustomEmploymentRequestParser
+    with MockDeleteEmploymentFinancialDetailsRequestParser
     with MockIdGenerator {
 
   val nino: String          = "AA123456A"
@@ -46,15 +47,15 @@ class DeleteEmploymentFinancialDetailsControllerSpec
   val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val rawData: DeleteCustomEmploymentRawData = DeleteCustomEmploymentRawData(
+  val rawData: DeleteEmploymentFinancialDetailsRawData = DeleteEmploymentFinancialDetailsRawData(
     nino = nino,
     taxYear = taxYear,
     employmentId = employmentId
   )
 
-  val requestData: DeleteCustomEmploymentRequest = DeleteCustomEmploymentRequest(
+  val requestData: DeleteEmploymentFinancialDetailsRequest = DeleteEmploymentFinancialDetailsRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId
   )
 
@@ -78,8 +79,8 @@ class DeleteEmploymentFinancialDetailsControllerSpec
     val controller = new DeleteEmploymentFinancialDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteCustomEmploymentRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockDeleteEmploymentFinancialDetailsRequestParser,
+      service = mockDeleteEmploymentFinancialDetailsService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -88,30 +89,18 @@ class DeleteEmploymentFinancialDetailsControllerSpec
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-    def downstreamErrorMap: Map[String, MtdError] =
-      Map(
-        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-        "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-        "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-        "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-        "NO_DATA_FOUND"             -> NotFoundError,
-        "SERVER_ERROR"              -> StandardDownstreamError,
-        "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
-      )
-
   }
 
   "deleteEmploymentFinancialDetailsController" should {
     "return NO_content" when {
       "happy path" in new Test {
 
-        MockDeleteCustomEmploymentRequestParser
+        MockDeleteEmploymentFinancialDetailsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .delete(downstreamErrorMap)
+        MockDeleteEmploymentFinancialDetailsService
+          .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         val result: Future[Result] = controller.deleteEmploymentFinancialDetails(nino, taxYear, employmentId)(fakeDeleteRequest)
@@ -130,7 +119,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteCustomEmploymentRequestParser
+            MockDeleteEmploymentFinancialDetailsRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -161,12 +150,12 @@ class DeleteEmploymentFinancialDetailsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteCustomEmploymentRequestParser
+            MockDeleteEmploymentFinancialDetailsRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .delete(downstreamErrorMap)
+            MockDeleteEmploymentFinancialDetailsService
+              .delete(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.deleteEmploymentFinancialDetails(nino, taxYear, employmentId)(fakeDeleteRequest)
@@ -185,7 +174,8 @@ class DeleteEmploymentFinancialDetailsControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
