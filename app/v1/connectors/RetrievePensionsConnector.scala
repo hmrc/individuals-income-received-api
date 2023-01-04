@@ -21,7 +21,7 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
-import v1.models.request.retirevePensions.RetrievePensionsRequest
+import v1.models.request.retrievePensions.RetrievePensionsRequest
 import v1.models.response.retrievePensions.RetrievePensionsResponse
 
 import javax.inject.{Inject, Singleton}

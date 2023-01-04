@@ -34,7 +34,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrievePensionsControllerFixture
 import v1.mocks.requestParsers.MockRetrievePensionsRequestParser
 import v1.mocks.services.MockRetrievePensionsService
-import v1.models.request.retirevePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
+import v1.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
 import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
 
 import scala.concurrent.Future

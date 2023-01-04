@@ -20,7 +20,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import support.UnitSpec
 import v1.mocks.validators.MockRetrievePensionsValidator
-import v1.models.request.retirevePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
+import v1.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
 
 class RetrievePensionsRequestParserSpec extends UnitSpec {
 

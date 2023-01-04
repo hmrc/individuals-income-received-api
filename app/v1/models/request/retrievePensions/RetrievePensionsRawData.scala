@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retirevePensions
+package v1.models.request.retrievePensions
 
-import api.models.domain.{Nino, TaxYear}
+import api.models.request.RawData
 
-case class RetrievePensionsRequest(nino: Nino, taxYear: TaxYear)
+case class RetrievePensionsRawData(nino: String, taxYear: String) extends RawData

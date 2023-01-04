@@ -33,7 +33,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import play.api.libs.json.{Format, Json}
 import v1.mocks.connectors.MockRetrievePensionsConnector
-import v1.models.request.retirevePensions.RetrievePensionsRequest
+import v1.models.request.retrievePensions.RetrievePensionsRequest
 import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsResponse}
 
 import scala.concurrent.Future

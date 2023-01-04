@@ -18,7 +18,7 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-import v1.models.request.retirevePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
+import v1.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
 import v1.requestParsers.validators.RetrievePensionsValidator
 
 import javax.inject.Inject
