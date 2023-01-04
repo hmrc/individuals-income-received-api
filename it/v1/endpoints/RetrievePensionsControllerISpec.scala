@@ -42,8 +42,55 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
 
     def taxYear: String
 
-    val downstreamResponseBody: JsValue = RetrievePensionsControllerFixture.fullRetrievePensionsResponse
-    val mtdResponseBody: JsValue        = RetrievePensionsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+    val downstreamResponseBody: JsValue = Json.parse(
+      """
+        |{
+        |   "submittedOn": "2020-07-06T09:37:17Z",
+        |   "foreignPension": [
+        |      {
+        |         "countryCode": "DEU",
+        |         "amountBeforeTax": 100.23,
+        |         "taxTakenOff": 1.23,
+        |         "specialWithholdingTax": 2.23,
+        |         "foreignTaxCreditRelief": false,
+        |         "taxableAmount": 3.23
+        |      },
+        |      {
+        |         "countryCode": "FRA",
+        |         "amountBeforeTax": 200.25,
+        |         "taxTakenOff": 1.27,
+        |         "specialWithholdingTax": 2.50,
+        |         "foreignTaxCreditRelief": true,
+        |         "taxableAmount": 3.50
+        |      }
+        |   ],
+        |   "overseasPensionContribution": [
+        |      {
+        |         "customerReference": "PENSIONINCOME245",
+        |         "exemptEmployersPensionContribs": 200.23,
+        |         "migrantMemReliefQopsRefNo": "QOPS000000",
+        |         "dblTaxationRelief": 4.23,
+        |         "dblTaxationCountry": "FRA",
+        |         "dblTaxationArticle": "AB3211-1",
+        |         "dblTaxationTreaty": "Treaty",
+        |         "sf74Reference": "SF74-123456"
+        |      },
+        |      {
+        |         "customerReference": "PENSIONINCOME275",
+        |         "exemptEmployersPensionContribs": 270.50,
+        |         "migrantMemReliefQopsRefNo": "QOPS000245",
+        |         "dblTaxationRelief": 5.50,
+        |         "dblTaxationCountry": "NGA",
+        |         "dblTaxationArticle": "AB3477-5",
+        |         "dblTaxationTreaty": "Treaty",
+        |         "sf74Reference": "SF74-1235"
+        |      }
+        |   ]
+        |}
+    """.stripMargin
+    )
+
+    val mtdResponseBody: JsValue = RetrievePensionsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
     def mtdUri: String = s"/pensions/$nino/$taxYear"
 
@@ -68,7 +115,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
   private trait NonTysTest extends Test {
 
     def taxYear: String       = "2021-22"
-    def downstreamUri: String = s"/income-tax/expenses/other/$nino/$taxYear"
+    def downstreamUri: String = s"/income-tax/income/pensions/$nino/$taxYear"
   }
 
   private trait TysIfsTest extends Test {
@@ -132,7 +179,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest with Test {
 
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
