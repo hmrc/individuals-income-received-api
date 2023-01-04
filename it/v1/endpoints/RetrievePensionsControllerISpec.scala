@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,15 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import api.models.errors.{
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError
+}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -31,107 +38,81 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String    = "AA123456A"
-    val taxYear: String = "2019-20"
+    val nino: String = "AA123456A"
 
-    val ifsResponse: JsValue = Json.parse(
-      """
-        |{
-        |   "submittedOn": "2020-07-06T09:37:17Z",
-        |   "foreignPension": [
-        |      {
-        |         "countryCode": "DEU",
-        |         "amountBeforeTax": 100.23,
-        |         "taxTakenOff": 1.23,
-        |         "specialWithholdingTax": 2.23,
-        |         "foreignTaxCreditRelief": false,
-        |         "taxableAmount": 3.23
-        |      },
-        |      {
-        |         "countryCode": "FRA",
-        |         "amountBeforeTax": 200.25,
-        |         "taxTakenOff": 1.27,
-        |         "specialWithholdingTax": 2.50,
-        |         "foreignTaxCreditRelief": true,
-        |         "taxableAmount": 3.50
-        |      }
-        |   ],
-        |   "overseasPensionContribution": [
-        |      {
-        |         "customerReference": "PENSIONINCOME245",
-        |         "exemptEmployersPensionContribs": 200.23,
-        |         "migrantMemReliefQopsRefNo": "QOPS000000",
-        |         "dblTaxationRelief": 4.23,
-        |         "dblTaxationCountry": "FRA",
-        |         "dblTaxationArticle": "AB3211-1",
-        |         "dblTaxationTreaty": "Treaty",
-        |         "sf74Reference": "SF74-123456"
-        |      },
-        |      {
-        |         "customerReference": "PENSIONINCOME275",
-        |         "exemptEmployersPensionContribs": 270.50,
-        |         "migrantMemReliefQopsRefNo": "QOPS000245",
-        |         "dblTaxationRelief": 5.50,
-        |         "dblTaxationCountry": "NGA",
-        |         "dblTaxationArticle": "AB3477-5",
-        |         "dblTaxationTreaty": "Treaty",
-        |         "sf74Reference": "SF74-1235"
-        |      }
-        |   ]
-        |}
-    """.stripMargin
-    )
+    def taxYear: String
 
-    val mtdResponse: JsValue = RetrievePensionsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+    val downstreamResponseBody: JsValue = RetrievePensionsControllerFixture.fullRetrievePensionsResponse
+    val mtdResponseBody: JsValue        = RetrievePensionsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
-    def uri: String = s"/pensions/$nino/$taxYear"
+    def mtdUri: String = s"/pensions/$nino/$taxYear"
 
-    def ifsUri: String = s"/income-tax/income/pensions/$nino/$taxYear"
+    def downstreamUri: String
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = ()
 
     def request: WSRequest = {
+      AuthStub.authorised()
+      AuditStub.audit()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
+  }
+
+  private trait NonTysTest extends Test {
+
+    def taxYear: String       = "2021-22"
+    def downstreamUri: String = s"/income-tax/expenses/other/$nino/$taxYear"
+  }
+
+  private trait TysIfsTest extends Test {
+
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/pensions/23-24/$nino"
   }
 
   "Calling the 'retrieve pensions' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest with Test {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, OK, ifsResponse)
-        }
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseBody)
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
-        response.json shouldBe mtdResponse
+        response.json shouldBe mtdResponseBody
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid TYS request is made" in new TysIfsTest with Test {
+
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseBody)
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe OK
+        response.json shouldBe mtdResponseBody
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
     "return error according to spec" when {
-
       "validation error" when {
+
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest with Test {
 
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
+            override def setupStubs(): Unit =
               MtdIdLookupStub.ninoFound(nino)
-            }
 
             val response: WSResponse = await(request.get)
             response.status shouldBe expectedStatus
@@ -149,16 +130,12 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
-            }
+            override def setupStubs(): Unit =
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
             val response: WSResponse = await(request.get)
             response.status shouldBe expectedStatus
@@ -171,11 +148,11 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |   "code": "$code",
-             |   "reason": "ifs message"
+             |   "reason": "message"
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
@@ -183,8 +160,14 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }
