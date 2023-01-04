@@ -117,8 +117,16 @@ class UnignoreEmploymentController @Inject() (val authService: EnrolmentsAuthSer
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
-          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            EmploymentIdFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotEndedError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case RuleCustomEmploymentUnignoreError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                     => NotFound(Json.toJson(errorWrapper))

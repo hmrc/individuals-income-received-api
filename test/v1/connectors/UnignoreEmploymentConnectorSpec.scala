@@ -17,59 +17,58 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
 
 class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String         = "AA111111A"
-  val taxYear: String      = "2021-22"
-  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  "UnignoreEmploymentConnector" should {
+    "return the expected response for a non-TYS request" when {
+      "a valid request is made" in new IfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+        val outcome          = Right(ResponseWrapper(correlationId, ()))
 
-  val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    employmentId = employmentId
-  )
+        willDelete(
+          url = s"$baseUrl/income-tax/employments/$nino/2019-20/ignore/$employmentId"
+        ).returns(Future.successful(outcome))
 
-  class Test extends MockHttpClient with MockAppConfig {
+        await(connector.unignoreEmployment(request)) shouldBe outcome
+      }
+    }
+    "return the expected response for a TYS request" when {
+      "a valid request is made" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+        val outcome          = Right(ResponseWrapper(correlationId, ()))
+
+        willDelete(
+          url = s"$baseUrl/income-tax/23-24/employments/$nino/ignore/$employmentId"
+        ).returns(Future.successful(outcome))
+
+        await(connector.unignoreEmployment(request)) shouldBe outcome
+      }
+    }
+  }
+
+  trait Test { _: ConnectorTest =>
+    def taxYear: TaxYear
+
+    val nino: String         = "AA111111A"
+    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+
+    val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      employmentId = employmentId
+    )
 
     val connector: UnignoreEmploymentConnector = new UnignoreEmploymentConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
-  }
-
-  "UnignoreEmploymentConnector" when {
-    "unignoreEmployment" should {
-      "return a 204 status upon HttpClient success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
-
-        MockedHttpClient
-          .delete(
-            url = s"$baseUrl/income-tax/employments/$nino/$taxYear/ignore/$employmentId",
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.unignoreEmployment(request)) shouldBe outcome
-      }
-    }
   }
 
 }
