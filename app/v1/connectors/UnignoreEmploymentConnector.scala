@@ -39,7 +39,8 @@ class UnignoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig
     val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
-    delete(IfsUri[Unit](s"income-tax/employments/$nino/$taxYear/ignore/$employmentId"))
+    // Pre-tys uses MTD tax year format
+    delete(IfsUri[Unit](s"income-tax/employments/$nino/${taxYear.asMtd}/ignore/$employmentId"))
   }
 
 }

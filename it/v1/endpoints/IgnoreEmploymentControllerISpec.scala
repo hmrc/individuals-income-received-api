@@ -18,7 +18,6 @@ package v1.endpoints
 
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -30,9 +29,10 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String         = "AA123456A"
-    val taxYear: String      = "2019-20"
+    val nino: String = "AA123456A"
+
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    def taxYear: String
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -53,35 +53,57 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
        """.stripMargin
     )
 
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/ignore"
+    def downstreamUri: String
 
-    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"
+    def setupStubs(): Unit = ()
 
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
+    def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/employments/$nino/$taxYear/$employmentId/ignore")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 
   }
 
+  private class NonTysTest extends Test {
+    def taxYear: String = "2019-20"
+
+    def downstreamUri: String = s"/income-tax/income/employments/$nino/2019-20/$employmentId/ignore"
+  }
+
+  private class TysTest extends Test {
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId/ignore"
+
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
+  }
+
   "Calling the 'ignore employment' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
-        }
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
 
-        val response: WSResponse = await(request().post(JsObject.empty))
+        val response: WSResponse = await(request.post(JsObject.empty))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made (TYS)" in new TysTest {
+
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+
+        val response: WSResponse = await(request.post(JsObject.empty))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -95,49 +117,38 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
                                 requestTaxYear: String,
                                 requestEmploymentId: String,
                                 expectedStatus: Int,
-                                expectedBody: MtdError,
-                                scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
+                                expectedBody: MtdError): Unit = {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String         = requestNino
             override val taxYear: String      = requestTaxYear
             override val employmentId: String = requestEmploymentId
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
-
-            val response: WSResponse = await(request().post(JsObject.empty))
+            val response: WSResponse = await(request.post(JsObject.empty))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, NinoFormatError, None),
-          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, TaxYearFormatError, None),
-          ("AA123456A", "2019-20", "ABCDE12345FG", BAD_REQUEST, EmploymentIdFormatError, None),
-          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotSupportedError, None),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError, None),
-          ("AA123456A", getCurrentTaxYear, "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotEndedError, None)
+          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, NinoFormatError),
+          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, TaxYearFormatError),
+          ("AA123456A", "2019-20", "ABCDE12345FG", BAD_REQUEST, EmploymentIdFormatError),
+          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", BAD_REQUEST, RuleTaxYearRangeInvalidError),
+          ("AA123456A", getCurrentTaxYear, "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", BAD_REQUEST, RuleTaxYearNotEndedError)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
-            }
+            override def setupStubs(): Unit =
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request().post(JsObject.empty))
+            val response: WSResponse = await(request.post(JsObject.empty))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
