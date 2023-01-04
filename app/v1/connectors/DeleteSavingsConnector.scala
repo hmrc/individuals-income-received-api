@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -37,7 +37,7 @@ class DeleteSavingsConnector @Inject() (val http: HttpClient, val appConfig: App
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/income/savings/${taxYear.asTysDownstream}/$nino")
     } else {
-      DesUri[Unit](s"income-tax/income/savings/$nino/${taxYear.asMtd}")
+      IfsUri[Unit](s"income-tax/income/savings/$nino/${taxYear.asMtd}")
     }
 
     delete(downstreamUri)

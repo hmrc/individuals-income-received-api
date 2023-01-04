@@ -26,11 +26,11 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.IfsUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.request.DeleteRetrieveRawData
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.request.deleteSavings.DeleteSavingsRawData
 import v1.requestParsers.DeleteSavingsRequestParser
+import v1.services.DeleteSavingsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
                                          val lookupService: MtdIdLookupService,
                                          requestParser: DeleteSavingsRequestParser,
-                                         service: DeleteRetrieveService,
+                                         service: DeleteSavingsService,
                                          auditService: AuditService,
                                          cc: ControllerComponents,
                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -54,19 +54,18 @@ class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
     )
 
   def deleteSaving(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
-    val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(nino = nino, taxYear = taxYear)
-    implicit val ifsUri: IfsUri[Unit]  = IfsUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
     implicit val correlationId: String = idGenerator.generateCorrelationId
-
     logger.info(
       s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
         s"with CorrelationId: $correlationId"
     )
 
+    val rawData: DeleteSavingsRawData = DeleteSavingsRawData(nino = nino, taxYear = taxYear)
+
     val result =
       for {
-        _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.delete())
+        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+        serviceResponse <- EitherT(service.deleteSavings(parsedRequest))
       } yield {
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -108,7 +107,13 @@ class DeleteSavingsController @Inject() (val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))

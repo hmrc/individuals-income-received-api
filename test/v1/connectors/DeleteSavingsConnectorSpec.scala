@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ import v1.models.request.deleteSavings.DeleteSavingsRequest
 
 import scala.concurrent.Future
 
-class DeleteSavingsSpec extends ConnectorSpec {
+class DeleteSavingsConnectorSpec extends ConnectorSpec {
 
   "DeleteSavingsConnector" should {
     "return the expected response for a non-TYS request" when {
-      "a valid request is made" in new DesTest with Test {
+      "a valid request is made" in new IfsTest with Test {
         val taxYear = "2021-22"
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
