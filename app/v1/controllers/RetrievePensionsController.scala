@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,13 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.IfsUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
-import v1.models.response.retrievePensions.{RetrievePensionsHateoasData, RetrievePensionsResponse}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.models.request.retirevePensions.RetrievePensionsRawData
+import v1.models.response.retrievePensions.{RetrievePensionsHateoasData}
+import v1.requestParsers.RetrievePensionsRequestParser
+import v1.services.RetrievePensionsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,8 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrievePensionsController @Inject() (val authService: EnrolmentsAuthService,
                                             val lookupService: MtdIdLookupService,
-                                            requestParser: DeleteRetrieveRequestParser,
-                                            service: DeleteRetrieveService,
+                                            requestParser: RetrievePensionsRequestParser,
+                                            service: RetrievePensionsService,
                                             hateoasFactory: HateoasFactory,
                                             cc: ControllerComponents,
                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -52,26 +52,22 @@ class RetrievePensionsController @Inject() (val authService: EnrolmentsAuthServi
       endpointName = "retrievePensions"
     )
 
-  def retrievePensions(nino: String, taxYear: String): Action[AnyContent] =
+  def handleRequest(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+      val rawData: RetrievePensionsRawData = RetrievePensionsRawData(
         nino = nino,
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrievePensionsResponse] = IfsUri[RetrievePensionsResponse](
-        s"income-tax/income/pensions/$nino/$taxYear"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrievePensionsResponse]())
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrievePensions(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, RetrievePensionsHateoasData(nino, taxYear))
@@ -97,13 +93,22 @@ class RetrievePensionsController @Inject() (val authService: EnrolmentsAuthServi
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
+  private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
+
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
+  }
 
 }
