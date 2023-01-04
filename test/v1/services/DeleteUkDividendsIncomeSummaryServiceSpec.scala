@@ -77,7 +77,8 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
           ("INVALID_INCOMESOURCE_ID", StandardDownstreamError),
           ("INCOME_SOURCE_DATA_NOT_FOUND", NotFoundError),
           ("PERIOD_NOT_FOUND", NotFoundError),
-          ("PERIOD_ALREADY_DELETED", NotFoundError)
+          ("PERIOD_ALREADY_DELETED", NotFoundError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))

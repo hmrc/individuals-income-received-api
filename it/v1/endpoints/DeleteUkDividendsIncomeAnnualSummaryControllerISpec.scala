@@ -149,7 +149,8 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
           (BAD_REQUEST, "INVALID_INCOMESOURCE_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (NOT_FOUND, "INCOME_SOURCE_DATA_NOT_FOUND", NOT_FOUND, NotFoundError),
           (NOT_FOUND, "PERIOD_NOT_FOUND", NOT_FOUND, NotFoundError),
-          (GONE, "PERIOD_ALREADY_DELETED", NOT_FOUND, NotFoundError)
+          (GONE, "PERIOD_ALREADY_DELETED", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
