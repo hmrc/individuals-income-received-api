@@ -158,9 +158,6 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            override def setupStubs(): Unit =
-              MtdIdLookupStub.ninoFound(nino)
-
             val response: WSResponse = await(request.get)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
