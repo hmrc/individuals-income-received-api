@@ -40,7 +40,7 @@ class DeleteSavingsConnector @Inject() (val http: HttpClient, val appConfig: App
       IfsUri[Unit](s"income-tax/income/savings/$nino/${taxYear.asMtd}")
     }
 
-    delete(downstreamUri)
+    delete(uri = downstreamUri)
   }
 
 }

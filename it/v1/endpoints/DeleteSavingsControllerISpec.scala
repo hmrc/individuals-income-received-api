@@ -33,7 +33,7 @@ class DeleteSavingsControllerISpec extends IntegrationBaseSpec {
     def taxYear: String
     def downstreamUri: String
 
-    def uri: String = s"/savings/$nino/$taxYear"
+    def mtdUri: String = s"/savings/$nino/$taxYear"
 
     def setupStubs(): Unit = {}
 
@@ -42,7 +42,7 @@ class DeleteSavingsControllerISpec extends IntegrationBaseSpec {
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
