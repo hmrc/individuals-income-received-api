@@ -22,97 +22,14 @@ import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class RetrieveDividendsResponseSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |    "submittedOn": "2020-07-06T09:37:17Z",
-      |    "foreignDividend": [
-      |      {
-      |        "countryCode": "DEU",
-      |        "amountBeforeTax": 1232.22,
-      |        "taxTakenOff": 22.22,
-      |        "specialWithholdingTax": 22.22,
-      |        "foreignTaxCreditRelief": true,
-      |        "taxableAmount": 2321.22
-      |      }
-      |    ],
-      |    "dividendIncomeReceivedWhilstAbroad": [
-      |      {
-      |        "countryCode": "DEU",
-      |        "amountBeforeTax": 1232.22,
-      |        "taxTakenOff": 22.22,
-      |        "specialWithholdingTax": 22.22,
-      |        "foreignTaxCreditRelief": true,
-      |        "taxableAmount": 2321.22
-      |      }
-      |    ],
-      |    "stockDividend": {
-      |      "customerReference": "my divs",
-      |      "grossAmount": 12321.22
-      |      },
-      |    "redeemableShares": {
-      |      "customerReference": "my shares",
-      |      "grossAmount": 12321.22
-      |    },
-      |      "bonusIssuesOfSecurities": {
-      |        "customerReference": "my secs",
-      |        "grossAmount": 12321.22
-      |    },
-      |    "closeCompanyLoansWrittenOff": {
-      |      "customerReference": "write off",
-      |      "grossAmount": 12321.22
-      |    }
-      |}
-    """.stripMargin
-  )
-
-  private val foreignDividendModel = Seq(
-    ForeignDividendItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(22.22),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    )
-  )
-
-  private val dividendIncomeReceivedWhilstAbroadModel = Seq(
-    DividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(22.22),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    )
-  )
-
-  private val stockDividendModel = StockDividend(customerReference = Some("my divs"), grossAmount = 12321.22)
-
-  private val redeemableSharesModel = RedeemableShares(customerReference = Some("my shares"), grossAmount = 12321.22)
-
-  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(customerReference = Some("my secs"), grossAmount = 12321.22)
-
-  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(customerReference = Some("write off"), grossAmount = 12321.22)
-
-  private val responseModel = RetrieveDividendsResponse(
-    "2020-07-06T09:37:17Z",
-    Some(foreignDividendModel),
-    Some(dividendIncomeReceivedWhilstAbroadModel),
-    Some(stockDividendModel),
-    Some(redeemableSharesModel),
-    Some(bonusIssuesOfSecuritiesModel),
-    Some(closeCompanyLoansWrittenOffModel)
-  )
 
   "RetrieveDividendsResponse" when {
     "read from valid JSON" should {
       "produce the expected RetrieveDividendsResponse object" in {
-        json.as[RetrieveDividendsResponse] shouldBe responseModel
+        responseJson.as[RetrieveDividendsResponse] shouldBe responseModel
       }
     }
 
@@ -139,7 +56,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
     }
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(responseModel) shouldBe json
+        Json.toJson(responseModel) shouldBe responseJson
       }
     }
   }

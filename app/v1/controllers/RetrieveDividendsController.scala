@@ -16,20 +16,20 @@
 
 package v1.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
 import api.models.errors._
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import api.connectors.DownstreamUri.IfsUri
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.DeleteRetrieveRequestParser
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
-import v1.models.response.retrieveDividends.{RetrieveDividendsHateoasData, RetrieveDividendsResponse}
+import v1.models.request.retrieveDividends.RetrieveDividendsRawData
+import v1.models.response.retrieveDividends.RetrieveDividendsHateoasData
+import v1.requestParsers.RetrieveDividendsRequestParser
+import v1.services.RetrieveDividendsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,8 +37,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveDividendsController @Inject() (val authService: EnrolmentsAuthService,
                                              val lookupService: MtdIdLookupService,
-                                             requestParser: DeleteRetrieveRequestParser,
-                                             service: DeleteRetrieveService,
+                                             requestParser: RetrieveDividendsRequestParser,
+                                             service: RetrieveDividendsService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -59,19 +59,15 @@ class RetrieveDividendsController @Inject() (val authService: EnrolmentsAuthServ
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+      val rawData: RetrieveDividendsRawData = RetrieveDividendsRawData(
         nino = nino,
         taxYear = taxYear
       )
 
-      implicit val ifsUri: IfsUri[RetrieveDividendsResponse] = IfsUri[RetrieveDividendsResponse](
-        s"income-tax/income/dividends/$nino/$taxYear"
-      )
-
       val result =
         for {
-          _               <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieve[RetrieveDividendsResponse]())
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.retrieve(parsedRequest))
         } yield {
           val vendorResponse = hateoasFactory.wrap(serviceResponse.responseData, RetrieveDividendsHateoasData(nino, taxYear))
 

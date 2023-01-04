@@ -20,20 +20,21 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.Nino
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_DIVIDENDS_INCOME, DELETE_DIVIDENDS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveDividendsControllerFixture
+import v1.fixtures.RetrieveDividendsFixtures
+import v1.fixtures.RetrieveDividendsFixtures.responseModel
+import v1.mocks.requestParsers.MockRetrieveDividendsRequestParser
+import v1.mocks.services.MockRetrieveDividendsService
+import v1.models.request.retrieveDividends.{RetrieveDividendsRawData, RetrieveDividendsRequest}
 import v1.models.response.retrieveDividends._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,9 +44,9 @@ class RetrieveDividendsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveDividendsService
     with MockHateoasFactory
-    with MockDeleteRetrieveRequestParser
+    with MockRetrieveDividendsRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -53,14 +54,14 @@ class RetrieveDividendsControllerSpec
   private val taxYear: String       = "2019-20"
   private val correlationId: String = "X-123"
 
-  private val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  private val rawData: RetrieveDividendsRawData = RetrieveDividendsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  private val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  private val requestData: RetrieveDividendsRequest = RetrieveDividendsRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val amendDividendsLink: Link =
@@ -84,75 +85,7 @@ class RetrieveDividendsControllerSpec
       rel = DELETE_DIVIDENDS_INCOME
     )
 
-  private val foreignDividendItemModel = Seq(
-    ForeignDividendItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(27.35),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    ),
-    ForeignDividendItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1350.55),
-      taxTakenOff = Some(25.27),
-      specialWithholdingTax = Some(30.59),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 2500.99
-    )
-  )
-
-  private val dividendIncomeReceivedWhilstAbroadItemModel = Seq(
-    DividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(27.35),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    ),
-    DividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1350.55),
-      taxTakenOff = Some(25.27),
-      specialWithholdingTax = Some(30.59),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 2500.99
-    )
-  )
-
-  private val stockDividendModel = StockDividend(
-    customerReference = Some("my divs"),
-    grossAmount = 12321.22
-  )
-
-  private val redeemableSharesModel = RedeemableShares(
-    customerReference = Some("my shares"),
-    grossAmount = 12345.75
-  )
-
-  private val bonusIssuesOfSecuritiesModel = BonusIssuesOfSecurities(
-    customerReference = Some("my secs"),
-    grossAmount = 12500.89
-  )
-
-  private val closeCompanyLoansWrittenOffModel = CloseCompanyLoansWrittenOff(
-    customerReference = Some("write off"),
-    grossAmount = 13700.55
-  )
-
-  private val retrieveDividendsResponseModel = RetrieveDividendsResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
-    foreignDividend = Some(foreignDividendItemModel),
-    dividendIncomeReceivedWhilstAbroad = Some(dividendIncomeReceivedWhilstAbroadItemModel),
-    stockDividend = Some(stockDividendModel),
-    redeemableShares = Some(redeemableSharesModel),
-    bonusIssuesOfSecurities = Some(bonusIssuesOfSecuritiesModel),
-    closeCompanyLoansWrittenOff = Some(closeCompanyLoansWrittenOffModel)
-  )
-
-  private val mtdResponse = RetrieveDividendsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
+  private val mtdResponse = RetrieveDividendsFixtures.mtdResponseWithHateoas(nino, taxYear)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -160,8 +93,8 @@ class RetrieveDividendsControllerSpec
     val controller = new RetrieveDividendsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockRetrieveDividendsRequestParser,
+      service = mockRetrieveDividendsService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -176,19 +109,19 @@ class RetrieveDividendsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockRetrieveDividendsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrieveDividendsResponse](defaultDownstreamErrorMap)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveDividendsResponseModel))))
+        MockRetrieveDividendsService
+          .retrieve(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
         MockHateoasFactory
-          .wrap(retrieveDividendsResponseModel, RetrieveDividendsHateoasData(nino, taxYear))
+          .wrap(responseModel, RetrieveDividendsHateoasData(nino, taxYear))
           .returns(
             HateoasWrapper(
-              retrieveDividendsResponseModel,
+              responseModel,
               Seq(
                 amendDividendsLink,
                 retrieveDividendsLink,
@@ -208,7 +141,7 @@ class RetrieveDividendsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveDividendsRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -235,12 +168,12 @@ class RetrieveDividendsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveDividendsRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .retrieve[RetrieveDividendsResponse](defaultDownstreamErrorMap)
+            MockRetrieveDividendsService
+              .retrieve(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveDividends(nino, taxYear)(fakeGetRequest)
@@ -251,14 +184,18 @@ class RetrieveDividendsControllerSpec
           }
         }
 
-        val input = Seq(
+        val errors = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
-        input.foreach(args => (serviceErrors _).tupled(args))
+        val extraTysErrors = List(
+          (RuleTaxYearNotSupportedError, BAD_REQUEST)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }

@@ -18,24 +18,14 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class BonusIssuesOfSecuritiesSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "customerReference": "my secs",
-      |   "grossAmount": 12321.22
-      |}
-    """.stripMargin
-  )
-
-  private val model = BonusIssuesOfSecurities(customerReference = Some("my secs"), grossAmount = 12321.22)
 
   "BonusIssuesOfSecurities" when {
     "read from valid JSON" should {
       "produce the expected BonusIssuesOfSecurities object" in {
-        json.as[BonusIssuesOfSecurities] shouldBe model
+        bonusIssuesOfSecuritiesJson.as[BonusIssuesOfSecurities] shouldBe bonusIssuesOfSecuritiesModel
       }
     }
 
@@ -49,7 +39,7 @@ class BonusIssuesOfSecuritiesSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(bonusIssuesOfSecuritiesModel) shouldBe bonusIssuesOfSecuritiesJson
       }
     }
   }
