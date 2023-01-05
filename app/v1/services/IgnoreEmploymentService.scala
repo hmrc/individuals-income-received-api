@@ -39,9 +39,7 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      responseWrapper <- EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield responseWrapper
+    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }

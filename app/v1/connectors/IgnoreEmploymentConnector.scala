@@ -38,7 +38,6 @@ class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: 
     val uri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/income/employments/$nino/$employmentId/ignore")
     } else {
-      // Pre-tys uses MTD tax year format
       Release6Uri[Unit](s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId/ignore")
     }
 

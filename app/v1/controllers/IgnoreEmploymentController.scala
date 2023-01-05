@@ -118,8 +118,17 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
-          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError | RuleCustomEmploymentError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            EmploymentIdFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotEndedError,
+            RuleCustomEmploymentError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
 
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))
