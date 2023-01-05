@@ -34,7 +34,7 @@ import api.services.ServiceSpec
 import play.api.libs.json.{Format, Json}
 import v1.mocks.connectors.MockRetrievePensionsConnector
 import v1.models.request.retrievePensions.RetrievePensionsRequest
-import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsResponse}
+import v1.models.response.retrievePensions.RetrievePensionsResponse
 
 import scala.concurrent.Future
 
@@ -43,52 +43,10 @@ class RetrievePensionsServiceSpec extends ServiceSpec {
   private val nino    = Nino("AA112233A")
   private val taxYear = "2019-20"
 
-  private val foreignPensionsItemModel = Seq(
-    ForeignPensionsItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(100.23),
-      taxTakenOff = Some(1.23),
-      specialWithholdingTax = Some(2.23),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 3.23
-    ),
-    ForeignPensionsItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(200.25),
-      taxTakenOff = Some(1.27),
-      specialWithholdingTax = Some(2.50),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 3.50
-    )
-  )
-
-  private val overseasPensionContributionsItemModel = Seq(
-    OverseasPensionContributions(
-      customerReference = Some("PENSIONINCOME245"),
-      exemptEmployersPensionContribs = 200.23,
-      migrantMemReliefQopsRefNo = Some("QOPS000000"),
-      dblTaxationRelief = Some(4.23),
-      dblTaxationCountryCode = Some("FRA"),
-      dblTaxationArticle = Some("AB3211-1"),
-      dblTaxationTreaty = Some("Treaty"),
-      sf74reference = Some("SF74-123456")
-    ),
-    OverseasPensionContributions(
-      customerReference = Some("PENSIONINCOME275"),
-      exemptEmployersPensionContribs = 270.50,
-      migrantMemReliefQopsRefNo = Some("QOPS000245"),
-      dblTaxationRelief = Some(5.50),
-      dblTaxationCountryCode = Some("NGA"),
-      dblTaxationArticle = Some("AB3477-5"),
-      dblTaxationTreaty = Some("Treaty"),
-      sf74reference = Some("SF74-1235")
-    )
-  )
-
   val responseBody: RetrievePensionsResponse = RetrievePensionsResponse(
     submittedOn = "2020-07-06T09:37:17Z",
-    foreignPensions = Some(foreignPensionsItemModel),
-    overseasPensionContributions = Some(overseasPensionContributionsItemModel)
+    foreignPensions = None,
+    overseasPensionContributions = None
   )
 
   private val requestData = RetrievePensionsRequest(nino, TaxYear.fromMtd(taxYear))
