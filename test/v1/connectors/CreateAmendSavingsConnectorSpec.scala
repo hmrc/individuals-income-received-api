@@ -19,7 +19,7 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
+import v1.models.request.amendSavings.{CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
@@ -28,34 +28,16 @@ class CreateAmendSavingsConnectorSpec extends ConnectorSpec {
   "CreateAmendSavingsConnector" when {
     "createAmendSaving" must {
       "return a 204 status for a success scenario" in new IfsTest with Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/savings/$nino/${taxYear.asMtd}",
-            config = dummyIfsHeaderCarrierConfig,
-            body = requestBody,
-            requiredHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(url = s"$baseUrl/income-tax/income/savings/$nino/${taxYear.asMtd}", body = requestBody).returns(Future.successful(outcome))
 
         await(connector.createAmendSavings(request)) shouldBe outcome
       }
 
       "return a 204 status for a success scenario for Tax Year Specific (TYS)" in new TysIfsTest with Test {
         override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-        val outcome                   = Right(ResponseWrapper(correlationId, ()))
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/savings/${taxYear.asTysDownstream}/$nino",
-            config = dummyIfsHeaderCarrierConfig,
-            body = requestBody,
-            requiredHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(url = s"$baseUrl/income-tax/income/savings/${taxYear.asTysDownstream}/$nino", body = requestBody).returns(Future.successful(outcome))
 
         await(connector.createAmendSavings(request)) shouldBe outcome
       }
@@ -67,16 +49,7 @@ class CreateAmendSavingsConnectorSpec extends ConnectorSpec {
     def nino: String     = "AA111111A"
     def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-    val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
-      amountBeforeTax = None,
-      countryCode = "FRA",
-      taxTakenOff = None,
-      specialWithholdingTax = None,
-      taxableAmount = 233.11,
-      foreignTaxCreditRelief = false
-    )
-
-    val requestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+    val requestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(securities = None, foreignInterest = None)
 
     val request: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
       nino = Nino(nino),
@@ -88,6 +61,8 @@ class CreateAmendSavingsConnectorSpec extends ConnectorSpec {
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
+
+    val outcome = Right(ResponseWrapper(correlationId, ()))
 
   }
 

@@ -38,9 +38,7 @@ class CreateAmendSavingsService @Inject() (connector: CreateAmendSavingsConnecto
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      downstreamResponseWrapper <- EitherT(connector.createAmendSavings(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield downstreamResponseWrapper
+    val result = EitherT(connector.createAmendSavings(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }

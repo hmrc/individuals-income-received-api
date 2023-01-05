@@ -22,7 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateAmendSavingsConnector
-import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
+import v1.models.request.amendSavings.{CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
 
 import scala.concurrent.Future
 
@@ -75,19 +75,10 @@ class CreateAmendSavingsServiceSpec extends ServiceSpec {
     private val nino    = "AA112233A"
     private val taxYear = "2019-20"
 
-    val foreignInterest: AmendForeignInterestItem = AmendForeignInterestItem(
-      amountBeforeTax = None,
-      countryCode = "FRA",
-      taxTakenOff = None,
-      specialWithholdingTax = None,
-      taxableAmount = 233.11,
-      foreignTaxCreditRelief = false
-    )
-
     val request = CreateAmendSavingsRequest(
       nino = Nino(nino),
       taxYear = TaxYear.fromMtd(taxYear),
-      body = CreateAmendSavingsRequestBody(securities = None, foreignInterest = Some(Seq(foreignInterest)))
+      body = CreateAmendSavingsRequestBody(securities = None, foreignInterest = None)
     )
 
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
