@@ -18,24 +18,14 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class RedeemableSharesSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "customerReference": "my shares",
-      |   "grossAmount": 12321.22
-      |}
-    """.stripMargin
-  )
-
-  private val model = RedeemableShares(customerReference = Some("my shares"), grossAmount = 12321.22)
 
   "RedeemableShares" when {
     "read from valid JSON" should {
       "produce the expected RedeemableShares object" in {
-        json.as[RedeemableShares] shouldBe model
+        redeemableSharesJson.as[RedeemableShares] shouldBe redeemableSharesModel
       }
     }
 
@@ -49,7 +39,7 @@ class RedeemableSharesSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(redeemableSharesModel) shouldBe redeemableSharesJson
       }
     }
   }

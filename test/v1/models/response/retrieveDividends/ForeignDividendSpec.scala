@@ -18,35 +18,14 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class ForeignDividendSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      | {
-      |    "countryCode": "DEU",
-      |    "amountBeforeTax": 1232.22,
-      |    "taxTakenOff": 22.22,
-      |    "specialWithholdingTax": 22.22,
-      |    "foreignTaxCreditRelief": true,
-      |    "taxableAmount": 2321.22
-      |  }
-    """.stripMargin
-  )
-
-  private val model = ForeignDividendItem(
-    countryCode = "DEU",
-    amountBeforeTax = Some(1232.22),
-    taxTakenOff = Some(22.22),
-    specialWithholdingTax = Some(22.22),
-    foreignTaxCreditRelief = true,
-    taxableAmount = 2321.22
-  )
 
   "ForeignDividendItem" when {
     "read from valid JSON" should {
       "produce the expected ForeignDividendItem object" in {
-        json.as[ForeignDividendItem] shouldBe model
+        foreignDividendJson.as[ForeignDividendItem] shouldBe foreignDividendModel
       }
     }
 
@@ -60,7 +39,7 @@ class ForeignDividendSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(foreignDividendModel) shouldBe foreignDividendJson
       }
     }
   }
