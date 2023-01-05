@@ -17,122 +17,55 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendDividends._
 
 import scala.concurrent.Future
 
 class AmendDividendsConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
-  private val taxYear: String = "2019-20"
+  private val nino: String = "AA111111A"
 
-  private val foreignDividendModel = Seq(
-    AmendForeignDividendItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(27.35),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    ),
-    AmendForeignDividendItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1350.55),
-      taxTakenOff = Some(25.27),
-      specialWithholdingTax = Some(30.59),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 2500.99
+  private val amendDividendsRequestBody: AmendDividendsRequestBody = AmendDividendsRequestBody(None, None, None, None, None, None)
+
+  trait Test { _: ConnectorTest =>
+    def taxYear: TaxYear
+
+    val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      body = amendDividendsRequestBody
     )
-  )
-
-  private val dividendIncomeReceivedWhilstAbroadModel = Seq(
-    AmendDividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(27.35),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    ),
-    AmendDividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1350.55),
-      taxTakenOff = Some(25.27),
-      specialWithholdingTax = Some(30.59),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 2500.99
-    )
-  )
-
-  private val stockDividendModel = AmendCommonDividends(
-    customerReference = Some("my divs"),
-    grossAmount = 12321.22
-  )
-
-  private val redeemableSharesModel = AmendCommonDividends(
-    customerReference = Some("my shares"),
-    grossAmount = 12345.75
-  )
-
-  private val bonusIssuesOfSecuritiesModel = AmendCommonDividends(
-    customerReference = Some("my secs"),
-    grossAmount = 12500.89
-  )
-
-  private val closeCompanyLoansWrittenOffModel = AmendCommonDividends(
-    customerReference = Some("write off"),
-    grossAmount = 13700.55
-  )
-
-  private val amendDividendsRequestBody: AmendDividendsRequestBody = AmendDividendsRequestBody(
-    Some(foreignDividendModel),
-    Some(dividendIncomeReceivedWhilstAbroadModel),
-    Some(stockDividendModel),
-    Some(redeemableSharesModel),
-    Some(bonusIssuesOfSecuritiesModel),
-    Some(closeCompanyLoansWrittenOffModel)
-  )
-
-  val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = amendDividendsRequestBody
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
 
     val connector: AmendDividendsConnector = new AmendDividendsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.ifsBaseUrl returns baseUrl
-    MockedAppConfig.ifsToken returns "ifs-token"
-    MockedAppConfig.ifsEnvironment returns "ifs-environment"
-    MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    val outcome = Right(ResponseWrapper(correlationId, ()))
   }
 
   "AmendDividendsConnector" when {
     "amendDividends" must {
-      "return a 204 status for a success scenario" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+      "work for a success scenario" in new IfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/dividends/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = amendDividendsRequestBody,
-            requiredHeaders = requiredIfsHeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(
+          url = s"$baseUrl/income-tax/income/dividends/$nino/2019-20",
+          body = amendDividendsRequestBody
+        ) returns Future.successful(outcome)
+
+        await(connector.amendDividends(amendDividendsRequest)) shouldBe outcome
+      }
+
+      "work for a success scenario (TYS)" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        willPut(
+          url = s"$baseUrl/income-tax/income/dividends/23-24/$nino",
+          body = amendDividendsRequestBody
+        ) returns Future.successful(outcome)
 
         await(connector.amendDividends(amendDividendsRequest)) shouldBe outcome
       }
