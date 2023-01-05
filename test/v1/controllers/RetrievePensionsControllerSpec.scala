@@ -20,37 +20,32 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockDeleteRetrieveRequestParser
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.Nino
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_PENSIONS_INCOME, DELETE_PENSIONS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import api.models.request
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
+import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrievePensionsControllerFixture
-import v1.models.response.retrievePensions.{
-  ForeignPensionsItem,
-  OverseasPensionContributions,
-  RetrievePensionsHateoasData,
-  RetrievePensionsResponse
-}
+import v1.mocks.requestParsers.MockRetrievePensionsRequestParser
+import v1.mocks.services.MockRetrievePensionsService
+import v1.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
+import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrievePensionsControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrievePensionsService
     with MockHateoasFactory
-    with MockDeleteRetrieveRequestParser
+    with MockRetrievePensionsRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -58,14 +53,14 @@ class RetrievePensionsControllerSpec
   val taxYear: String       = "2019-20"
   val correlationId: String = "X-123"
 
-  val rawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: RetrievePensionsRawData = RetrievePensionsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteRetrieveRequest = request.DeleteRetrieveRequest(
+  val requestData: RetrievePensionsRequest = RetrievePensionsRequest(
     nino = Nino(nino),
-    taxYear = taxYear
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   val amendPensionsLink: Link =
@@ -145,8 +140,8 @@ class RetrievePensionsControllerSpec
     val controller = new RetrievePensionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteRetrieveRequestParser,
-      service = mockDeleteRetrieveService,
+      requestParser = mockRetrievePensionsRequestParser,
+      service = mockRetrievePensionsService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -159,14 +154,14 @@ class RetrievePensionsControllerSpec
 
   "RetrievePensionsController" should {
     "return OK" when {
-      "happy path" in new Test {
+      "the request is valid" in new Test {
 
-        MockDeleteRetrieveRequestParser
+        MockRetrievePensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
-          .retrieve[RetrievePensionsResponse](defaultDownstreamErrorMap)
+        MockRetrievePensionsService
+          .retrievePensions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrievePensionsResponseModel))))
 
         MockHateoasFactory
@@ -180,7 +175,7 @@ class RetrievePensionsControllerSpec
                 deletePensionsLink
               )))
 
-        val result: Future[Result] = controller.retrievePensions(nino, taxYear)(fakeGetRequest)
+        val result: Future[Result] = controller.handleRequest(nino, taxYear)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
@@ -193,11 +188,11 @@ class RetrievePensionsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrievePensionsRequestParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.retrievePensions(nino, taxYear)(fakeGetRequest)
+            val result: Future[Result] = controller.handleRequest(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -220,15 +215,15 @@ class RetrievePensionsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrievePensionsRequestParser
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
-              .retrieve[RetrievePensionsResponse](defaultDownstreamErrorMap)
+            MockRetrievePensionsService
+              .retrievePensions(requestData)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-            val result: Future[Result] = controller.retrievePensions(nino, taxYear)(fakeGetRequest)
+            val result: Future[Result] = controller.handleRequest(nino, taxYear)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -239,6 +234,7 @@ class RetrievePensionsControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )

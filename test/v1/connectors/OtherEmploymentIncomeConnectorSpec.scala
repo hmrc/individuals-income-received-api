@@ -19,9 +19,9 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import v1.fixtures.OtherIncomeEmploymentFixture.retrieveResponse
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
-import v1.fixtures.OtherIncomeEmploymentFixture.retrieveResponse
 
 import scala.concurrent.Future
 
