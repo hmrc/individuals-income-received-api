@@ -27,7 +27,7 @@ class DeleteEmploymentFinancialDetailsConnectorSpec extends ConnectorSpec {
 
   "DeleteEmploymentFinancialDetailsConnector" should {
     "return the expected response for a non-TYS request" when {
-      "a valid request is made" in new Api1661Test with Test {
+      "a valid request is made" in new Release6Test with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 

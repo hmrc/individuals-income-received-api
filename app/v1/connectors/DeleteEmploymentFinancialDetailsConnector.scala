@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -38,11 +38,11 @@ class DeleteEmploymentFinancialDetailsConnector @Inject() (val http: HttpClient,
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](
-        s"income-tax/${taxYear.asTysDownstream}/income/employments/${nino.value}/$employmentId"
+        s"income-tax/${taxYear.asTysDownstream}/income/employments/$nino/$employmentId"
       )
     } else {
-      Api1661Uri[Unit](
-        s"income-tax/income/employments/${nino.value}/${taxYear.asMtd}/$employmentId"
+      Release6Uri[Unit](
+        s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId"
       )
     }
 
