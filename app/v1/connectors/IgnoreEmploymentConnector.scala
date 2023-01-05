@@ -16,17 +16,16 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
+import api.models.request.EmptyBody
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Release6Uri
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.models.request.EmptyBody
 
 @Singleton
 class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -34,13 +33,15 @@ class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: 
   def ignoreEmployment(
       request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino         = request.nino.nino
-    val taxYear      = request.taxYear
-    val employmentId = request.employmentId
+    val uri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/income/employments/$nino/$employmentId/ignore")
+    } else {
+      Release6Uri[Unit](s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId/ignore")
+    }
 
-    put(EmptyBody, Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId/ignore"))
+    put(EmptyBody, uri)
   }
 
 }

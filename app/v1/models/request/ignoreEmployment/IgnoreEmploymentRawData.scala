@@ -18,4 +18,4 @@ package v1.models.request.ignoreEmployment
 
 import api.models.request.RawData
 
-case class IgnoreEmploymentRawData(nino: String, taxYear: String, employmentId: String) extends RawData
+case class IgnoreEmploymentRawData(nino: String, taxYear: String, employmentId: String, temporalValidationEnabled: Boolean = true) extends RawData
