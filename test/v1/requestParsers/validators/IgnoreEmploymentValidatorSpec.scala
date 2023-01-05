@@ -56,7 +56,6 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
         validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId)) shouldBe Nil
       }
 
-      // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(IgnoreEmploymentRawData("A12344A", validTaxYear, validEmploymentId)) shouldBe
           List(NinoFormatError)
@@ -82,7 +81,6 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
           List(NinoFormatError, RuleTaxYearRangeInvalidError, EmploymentIdFormatError)
       }
 
-      // parameter rule error scenarios
       "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
         validator.validate(IgnoreEmploymentRawData(validNino, "2019-20", validEmploymentId)) shouldBe
           List(RuleTaxYearNotSupportedError)
