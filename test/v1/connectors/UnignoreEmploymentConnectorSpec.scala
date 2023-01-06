@@ -26,9 +26,7 @@ import scala.concurrent.Future
 class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
 
   "UnignoreEmploymentConnector" should {
-
     "return the expected response for a non-TYS request" when {
-
       "a valid request is made" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
         val expectedOutcome  = Right(ResponseWrapper(correlationId, ()))
@@ -43,7 +41,6 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
     }
 
     "return the expected response for a TYS request" when {
-
       "a valid request is made" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
         val expectedOutcome  = Right(ResponseWrapper(correlationId, ()))
@@ -55,7 +52,6 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
         val result: DownstreamOutcome[Unit] = await(connector.unignoreEmployment(request))
         result shouldBe expectedOutcome
       }
-
     }
   }
 
