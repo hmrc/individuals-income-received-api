@@ -19,8 +19,11 @@ is:
   - errors.ruleDuplicatedPpdSubmissionId
   - errors.ruleIncorrectDisposalType
 
-displayName: Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides
-description: "This endpoint allows the developer to override residential property disposals submissions previously submitted via the HMRC 'Report and pay Capital Gains Tax on UK property' (PDD) for a given NINO and tax year. <strong>This endpoint can only be used after the tax year has ended.</strong> The user may override one or more PPD submissions. User submitted overrides will be combined with any other submissions already held by HMRC. You cannot remove a PPD submission by excluding it from your overrides."
+displayName: Create and Amend 'Report and Pay Capital Gains Tax on Property' Overrides (PPD)
+description: |
+  This endpoint allows the developer to override residential property disposal submissions previously submitted via 
+  HMRC for payment for property disposal (PPD) 'Report and pay Capital Gains Tax on UK property' for a given NINO and
+  tax year. This endpoint can only be used after the tax year has ended.
 (annotations.sandboxData): !include ../../../scenarios/cgt/overridesAmend.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

@@ -7,8 +7,10 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: Delete 'Report and Pay Capital Gains Tax on residential property' Overrides
-description: "This endpoint allows the developer to delete user submitted overrides for previously submitted disposals reported via the HMRC residential property service for a given NINO and tax year."
+displayName: Delete 'Report and Pay Capital Gains Tax on Residential Property' Overrides (PPD)
+description: | 
+  This endpoint enables you to delete user submitted overrides for previously submitted disposals for payment for 
+  property disposal (PPD) reported via the HMRC 'Report and pay Capital Gains Tax on UK property' service.
 (annotations.sandboxData): !include ../../../scenarios/defaultAndNotFound.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
