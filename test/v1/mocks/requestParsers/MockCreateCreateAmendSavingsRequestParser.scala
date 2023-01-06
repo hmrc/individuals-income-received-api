@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package v1.mocks.connectors
+package v1.mocks.requestParsers
 
-import api.connectors.DownstreamOutcome
+import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.AmendSavingsConnector
-import v1.models.request.amendSavings.AmendSavingsRequest
+import v1.requestParsers.CreateAmendSavingsRequestParser
+import v1.models.request.amendSavings.{CreateAmendSavingsRawData, CreateAmendSavingsRequest}
 
-import scala.concurrent.{ExecutionContext, Future}
+trait MockCreateCreateAmendSavingsRequestParser extends MockFactory {
 
-trait MockAmendSavingsConnector extends MockFactory {
+  val mockCreateAmendSavingsRequestParser: CreateAmendSavingsRequestParser = mock[CreateAmendSavingsRequestParser]
 
-  val mockAmendSavingsConnector: AmendSavingsConnector = mock[AmendSavingsConnector]
+  object MockCreateAmendSavingsRequestParser {
 
-  object MockAmendSavingsConnector {
-
-    def amendSaving(request: AmendSavingsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
-      (mockAmendSavingsConnector
-        .amendSavings(_: AmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(request, *, *, *)
+    def parse(data: CreateAmendSavingsRawData): CallHandler[Either[ErrorWrapper, CreateAmendSavingsRequest]] = {
+      (mockCreateAmendSavingsRequestParser.parseRequest(_: CreateAmendSavingsRawData)(_: String)).expects(data, *)
     }
 
   }
