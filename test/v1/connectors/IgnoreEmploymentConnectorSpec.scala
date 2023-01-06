@@ -17,12 +17,9 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.EmptyBody
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
@@ -30,44 +27,46 @@ import scala.concurrent.Future
 class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
 
   val nino: String         = "AA111111A"
-  val taxYear: String      = "2021-22"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    employmentId = employmentId
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test { _: ConnectorTest =>
+    def taxYear: TaxYear
 
     val connector: IgnoreEmploymentConnector = new IgnoreEmploymentConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.release6BaseUrl returns baseUrl
-    MockedAppConfig.release6Token returns "release6-token"
-    MockedAppConfig.release6Environment returns "release6-environment"
-    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
+    val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      employmentId = employmentId
+    )
+
+    val outcome = Right(ResponseWrapper(correlationId, ()))
   }
 
   "IgnoreEmploymentConnector" when {
     "ignoreEmployment" should {
-      "return a 204 status upon HttpClient success" in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredRelease6HeadersPut: Seq[(String, String)] = requiredRelease6Headers ++ Seq("Content-Type" -> "application/json")
+      "work" in new Release6Test with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId/ignore",
-            config = dummyIfsHeaderCarrierConfig,
-            body = EmptyBody,
-            requiredHeaders = requiredRelease6HeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willPut(
+          url = s"$baseUrl/income-tax/income/employments/$nino/2021-22/$employmentId/ignore",
+          body = EmptyBody
+        ) returns Future.successful(outcome)
+
+        await(connector.ignoreEmployment(request)) shouldBe outcome
+
+      }
+
+      "work for TYS" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        willPut(
+          url = s"$baseUrl/income-tax/23-24/income/employments/$nino/$employmentId/ignore",
+          body = EmptyBody
+        ) returns Future.successful(outcome)
 
         await(connector.ignoreEmployment(request)) shouldBe outcome
       }

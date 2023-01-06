@@ -18,24 +18,14 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class StockDividendSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "customerReference": "my divs",
-      |   "grossAmount": 12321.22
-      |}
-    """.stripMargin
-  )
-
-  private val model = StockDividend(customerReference = Some("my divs"), grossAmount = 12321.22)
 
   "StockDividend" when {
     "read from valid JSON" should {
       "produce the expected StockDividend object" in {
-        json.as[StockDividend] shouldBe model
+        stockDividendJson.as[StockDividend] shouldBe stockDividendModel
       }
     }
 
@@ -49,7 +39,7 @@ class StockDividendSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(stockDividendModel) shouldBe stockDividendJson
       }
     }
   }

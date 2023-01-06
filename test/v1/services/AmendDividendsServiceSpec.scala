@@ -17,8 +17,8 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendDividendsConnector
@@ -29,77 +29,12 @@ import scala.concurrent.Future
 class AmendDividendsServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
-
-  private val foreignDividendModel = Seq(
-    AmendForeignDividendItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(27.35),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    ),
-    AmendForeignDividendItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1350.55),
-      taxTakenOff = Some(25.27),
-      specialWithholdingTax = Some(30.59),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 2500.99
-    )
-  )
-
-  private val dividendIncomeReceivedWhilstAbroadModel = Seq(
-    AmendDividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "DEU",
-      amountBeforeTax = Some(1232.22),
-      taxTakenOff = Some(22.22),
-      specialWithholdingTax = Some(27.35),
-      foreignTaxCreditRelief = true,
-      taxableAmount = 2321.22
-    ),
-    AmendDividendIncomeReceivedWhilstAbroadItem(
-      countryCode = "FRA",
-      amountBeforeTax = Some(1350.55),
-      taxTakenOff = Some(25.27),
-      specialWithholdingTax = Some(30.59),
-      foreignTaxCreditRelief = false,
-      taxableAmount = 2500.99
-    )
-  )
-
-  private val stockDividendModel = AmendCommonDividends(
-    customerReference = Some("my divs"),
-    grossAmount = 12321.22
-  )
-
-  private val redeemableSharesModel = AmendCommonDividends(
-    customerReference = Some("my shares"),
-    grossAmount = 12345.75
-  )
-
-  private val bonusIssuesOfSecuritiesModel = AmendCommonDividends(
-    customerReference = Some("my secs"),
-    grossAmount = 12500.89
-  )
-
-  private val closeCompanyLoansWrittenOffModel = AmendCommonDividends(
-    customerReference = Some("write off"),
-    grossAmount = 13700.55
-  )
+  private val taxYear = TaxYear.fromMtd("2019-20")
 
   val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(
     nino = Nino(nino),
     taxYear = taxYear,
-    body = AmendDividendsRequestBody(
-      Some(foreignDividendModel),
-      Some(dividendIncomeReceivedWhilstAbroadModel),
-      Some(stockDividendModel),
-      Some(redeemableSharesModel),
-      Some(bonusIssuesOfSecuritiesModel),
-      Some(closeCompanyLoansWrittenOffModel)
-    )
+    body = AmendDividendsRequestBody(None, None, None, None, None, None)
   )
 
   trait Test extends MockAmendDividendsConnector {
@@ -125,17 +60,17 @@ class AmendDividendsServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(errorCode: String, error: MtdError): Unit =
+          s"a $errorCode error is returned from the service" in new Test {
 
             MockAmendDividendsConnector
               .amendDividends(amendDividendsRequest)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(errorCode))))))
 
             await(service.amendDividends(amendDividendsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
@@ -144,7 +79,12 @@ class AmendDividendsServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("INVALID_CORRELATION_ID", StandardDownstreamError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

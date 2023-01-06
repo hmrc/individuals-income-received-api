@@ -18,24 +18,14 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class CloseCompanyLoansWrittenOffSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |   "customerReference": "write off",
-      |   "grossAmount": 12321.22
-      |}
-    """.stripMargin
-  )
-
-  private val model = CloseCompanyLoansWrittenOff(customerReference = Some("write off"), grossAmount = 12321.22)
 
   "CloseCompanyLoansWrittenOff" when {
     "read from valid JSON" should {
       "produce the expected CloseCompanyLoansWrittenOff object" in {
-        json.as[CloseCompanyLoansWrittenOff] shouldBe model
+        closeCompanyLoansWrittenOffJson.as[CloseCompanyLoansWrittenOff] shouldBe closeCompanyLoansWrittenOffModel
       }
     }
 
@@ -49,7 +39,7 @@ class CloseCompanyLoansWrittenOffSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(closeCompanyLoansWrittenOffModel) shouldBe closeCompanyLoansWrittenOffJson
       }
     }
   }

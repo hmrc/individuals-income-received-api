@@ -85,20 +85,20 @@ class UnignoreEmploymentControllerSpec
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
-      |{
-      |   "links": [
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-      |         "rel": "list-employments",
-      |         "method": "GET"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "rel": "self",
-      |         "method": "GET"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "links": [
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+       |         "rel": "list-employments",
+       |         "method": "GET"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "rel": "self",
+       |         "method": "GET"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 
