@@ -19,7 +19,6 @@ package v1.connectors
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import org.scalamock.handlers.CallHandler
 import v1.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 
@@ -34,7 +33,9 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, response))
 
-        stubHttpResponse(outcome)
+        willGet(
+          url = s"$baseUrl/income-tax/income/savings/$nino/${taxYear.asMtd}"
+        ).returns(Future.successful(outcome))
 
         val result: DownstreamOutcome[RetrieveSavingsResponse] = await(connector.retrieveSavings(request))
         result shouldBe outcome
@@ -47,7 +48,9 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, response))
 
-        stubTysHttpResponse(outcome)
+        willGet(
+          url = s"$baseUrl/income-tax/income/savings/${taxYear.asTysDownstream}/$nino"
+        ).returns(Future.successful(outcome))
 
         val result: DownstreamOutcome[RetrieveSavingsResponse] = await(connector.retrieveSavings(request))
         result shouldBe outcome
@@ -72,20 +75,6 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
 
     val connector: RetrieveSavingsConnector =
       new RetrieveSavingsConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    protected def stubHttpResponse(
-        outcome: DownstreamOutcome[RetrieveSavingsResponse]): CallHandler[Future[DownstreamOutcome[RetrieveSavingsResponse]]]#Derived = {
-      willGet(
-        url = s"$baseUrl/income-tax/income/savings/$nino/${taxYear.asMtd}"
-      ).returns(Future.successful(outcome))
-    }
-
-    protected def stubTysHttpResponse(
-        outcome: DownstreamOutcome[RetrieveSavingsResponse]): CallHandler[Future[DownstreamOutcome[RetrieveSavingsResponse]]]#Derived = {
-      willGet(
-        url = s"$baseUrl/income-tax/income/savings/${taxYear.asTysDownstream}/$nino"
-      ).returns(Future.successful(outcome))
-    }
 
   }
 

@@ -18,7 +18,6 @@ package v1.endpoints
 
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -33,10 +32,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
     "return a 200 status code" when {
       "any valid request is made" in new NonTysTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
@@ -48,10 +44,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
 
       "any valid request with a Tax Year Specific (TYS) tax year is made" in new TysIfsTest {
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
+        override def setupStubs(): Unit = {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
@@ -70,11 +63,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
+            override def setupStubs(): Unit = {}
 
             val response: WSResponse = await(request.get)
             response.status shouldBe expectedStatus
@@ -96,10 +85,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
+            override def setupStubs(): Unit = {
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
@@ -171,9 +157,12 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/savings/$nino/$taxYear"
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit
 
     def request: WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
