@@ -20,19 +20,19 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
 
-case class AmendSavingsRequestBody(securities: Option[AmendSecurities], foreignInterest: Option[Seq[AmendForeignInterestItem]])
+case class CreateAmendSavingsRequestBody(securities: Option[AmendSecurities], foreignInterest: Option[Seq[AmendForeignInterestItem]])
 
-object AmendSavingsRequestBody extends JsonUtils {
-  val empty: AmendSavingsRequestBody = AmendSavingsRequestBody(None, None)
+object CreateAmendSavingsRequestBody extends JsonUtils {
+  val empty: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(None, None)
 
-  implicit val reads: Reads[AmendSavingsRequestBody] = (
+  implicit val reads: Reads[CreateAmendSavingsRequestBody] = (
     (JsPath \ "securities").readNullable[AmendSecurities] and
       (JsPath \ "foreignInterest").readNullable[Seq[AmendForeignInterestItem]].mapEmptySeqToNone
-  )(AmendSavingsRequestBody.apply _)
+  )(CreateAmendSavingsRequestBody.apply _)
 
-  implicit val writes: OWrites[AmendSavingsRequestBody] = (
+  implicit val writes: OWrites[CreateAmendSavingsRequestBody] = (
     (JsPath \ "securities").writeNullable[AmendSecurities] and
       (JsPath \ "foreignInterest").writeNullable[Seq[AmendForeignInterestItem]]
-  )(unlift(AmendSavingsRequestBody.unapply))
+  )(unlift(CreateAmendSavingsRequestBody.unapply))
 
 }

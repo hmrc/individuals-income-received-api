@@ -30,22 +30,22 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
-import v1.models.request.amendSavings.AmendSavingsRawData
-import v1.requestParsers.AmendSavingsRequestParser
-import v1.services.AmendSavingsService
+import v1.models.request.amendSavings.CreateAmendSavingsRawData
+import v1.requestParsers.CreateAmendSavingsRequestParser
+import v1.services.CreateAmendSavingsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
-                                        val lookupService: MtdIdLookupService,
-                                        appConfig: AppConfig,
-                                        requestParser: AmendSavingsRequestParser,
-                                        service: AmendSavingsService,
-                                        auditService: AuditService,
-                                        cc: ControllerComponents,
-                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
+                                              val lookupService: MtdIdLookupService,
+                                              appConfig: AppConfig,
+                                              requestParser: CreateAmendSavingsRequestParser,
+                                              service: CreateAmendSavingsService,
+                                              auditService: AuditService,
+                                              cc: ControllerComponents,
+                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -53,17 +53,17 @@ class AmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "AmendSavingsController",
-      endpointName = "amendSaving"
+      controllerName = "CreateAmendSavingsController",
+      endpointName = "createAmendSaving"
     )
 
-  def amendSaving(nino: String, taxYear: String): Action[JsValue] =
+  def createAmendSaving(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
-      val rawData: AmendSavingsRawData = AmendSavingsRawData(
+      val rawData: CreateAmendSavingsRawData = CreateAmendSavingsRawData(
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body)
@@ -71,7 +71,7 @@ class AmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendSaving(parsedRequest))
+          serviceResponse <- EitherT(service.createAmendSaving(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -110,9 +110,18 @@ class AmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
-          CustomMtdError(CountryCodeRuleError.code) =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError,
+            RuleIncorrectOrEmptyBodyError,
+            ValueFormatError,
+            CountryCodeFormatError,
+            CountryCodeRuleError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)

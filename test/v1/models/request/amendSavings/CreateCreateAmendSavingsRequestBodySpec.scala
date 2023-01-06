@@ -19,7 +19,7 @@ package v1.models.request.amendSavings
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
-class AmendSavingsRequestBodySpec extends UnitSpec {
+class CreateCreateAmendSavingsRequestBodySpec extends UnitSpec {
 
   val mtdJson: JsValue = Json.parse(
     """
@@ -61,8 +61,8 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
       foreignTaxCreditRelief = true
     )
 
-  val requestBodyModel: AmendSavingsRequestBody =
-    AmendSavingsRequestBody(
+  val requestBodyModel: CreateAmendSavingsRequestBody =
+    CreateAmendSavingsRequestBody(
       securities = Some(securitiesModel),
       foreignInterest = Some(Seq(foreignInterestItemModel))
     )
@@ -118,19 +118,19 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
   "AmendSavingsRequestBody" when {
     "read from valid JSON" should {
       "produce the expected AmendSavingsRequestBody object" in {
-        mtdJson.as[AmendSavingsRequestBody] shouldBe requestBodyModel
+        mtdJson.as[CreateAmendSavingsRequestBody] shouldBe requestBodyModel
       }
     }
 
     "read from invalid JSON" should {
       "produce a JsError" in {
-        invalidJson.validate[AmendSavingsRequestBody] shouldBe a[JsError]
+        invalidJson.validate[CreateAmendSavingsRequestBody] shouldBe a[JsError]
       }
     }
 
     "read from empty JSON" should {
       "produce an empty AmendSavingsRequestBody object" in {
-        emptyJson.as[AmendSavingsRequestBody] shouldBe AmendSavingsRequestBody.empty
+        emptyJson.as[CreateAmendSavingsRequestBody] shouldBe CreateAmendSavingsRequestBody.empty
       }
     }
 
@@ -142,7 +142,7 @@ class AmendSavingsRequestBodySpec extends UnitSpec {
 
     "written from an empty object" should {
       "produce empty JSON" in {
-        Json.toJson(AmendSavingsRequestBody.empty) shouldBe emptyJson
+        Json.toJson(CreateAmendSavingsRequestBody.empty) shouldBe emptyJson
       }
     }
   }

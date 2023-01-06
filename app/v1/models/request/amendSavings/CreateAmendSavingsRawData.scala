@@ -19,4 +19,4 @@ package v1.models.request.amendSavings
 import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 
-case class AmendSavingsRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+case class CreateAmendSavingsRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

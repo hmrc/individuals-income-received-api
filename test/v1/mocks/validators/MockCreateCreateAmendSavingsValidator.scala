@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package v1.mocks.validators
 
-import api.models.errors.ErrorWrapper
-import org.scalamock.handlers.CallHandler
+import api.models.errors.MtdError
+import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.AmendSavingsRequestParser
-import v1.models.request.amendSavings.{AmendSavingsRawData, AmendSavingsRequest}
+import v1.requestParsers.validators.CreateAmendSavingsValidator
+import v1.models.request.amendSavings.CreateAmendSavingsRawData
 
-trait MockAmendSavingsRequestParser extends MockFactory {
+trait MockCreateCreateAmendSavingsValidator extends MockFactory {
 
-  val mockAmendSavingsRequestParser: AmendSavingsRequestParser = mock[AmendSavingsRequestParser]
+  val mockCreateAmendSavingsValidator: CreateAmendSavingsValidator = mock[CreateAmendSavingsValidator]
 
-  object MockAmendSavingsRequestParser {
+  object MockCreateAmendSavingsValidator {
 
-    def parse(data: AmendSavingsRawData): CallHandler[Either[ErrorWrapper, AmendSavingsRequest]] = {
-      (mockAmendSavingsRequestParser.parseRequest(_: AmendSavingsRawData)(_: String)).expects(data, *)
+    def validate(data: CreateAmendSavingsRawData): CallHandler1[CreateAmendSavingsRawData, List[MtdError]] = {
+      (mockCreateAmendSavingsValidator
+        .validate(_: CreateAmendSavingsRawData))
+        .expects(data)
     }
 
   }
