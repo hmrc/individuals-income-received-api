@@ -56,7 +56,7 @@ class UnignoreEmploymentService @Inject() (connector: UnignoreEmploymentConnecto
     )
 
     val extraTysErrors = Map(
-      "INVALID_CORRELATIONID"  -> StandardDownstreamError,
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 
