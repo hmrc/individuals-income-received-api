@@ -21,6 +21,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockUnignoreEmploymentConnector
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
@@ -28,50 +29,35 @@ import scala.concurrent.Future
 
 class UnignoreEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino         = "AA112233A"
-  private val taxYear      = TaxYear.fromMtd("2021-22")
-  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-
-  val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    employmentId = employmentId
-  )
-
-  trait Test extends MockUnignoreEmploymentConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    val service: UnignoreEmploymentService = new UnignoreEmploymentService(
-      connector = mockUnignoreEmploymentConnector
-    )
-
-  }
-
   "UnignoreEmploymentService" when {
     "unignoreEmployment" should {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val expectedOutcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockUnignoreEmploymentConnector
           .unignoreEmployment(request)
-          .returns(Future.successful(outcome))
+          .returns(Future.successful(expectedOutcome))
 
-        await(service.unignoreEmployment(request)) shouldBe outcome
+        val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.unignoreEmployment(request))
+
+        result shouldBe expectedOutcome
       }
 
-      "map errors according to spec" when {
-
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+      "map errors according to spec" should {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
+            val expectedOutcome: Left[ErrorWrapper, Nothing] = Left(ErrorWrapper(correlationId, error))
 
             MockUnignoreEmploymentConnector
               .unignoreEmployment(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.unignoreEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.unignoreEmployment(request))
+
+            result shouldBe expectedOutcome
           }
 
-        val input = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
@@ -83,9 +69,34 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = List(
+          ("INVALID_CORRELATION_ID", StandardDownstreamError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockUnignoreEmploymentConnector {
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    val nino         = "AA112233A"
+    val taxYear      = "2021-22"
+    val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+
+    val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
+      nino = Nino(nino),
+      taxYear = TaxYear.fromMtd(taxYear),
+      employmentId = employmentId
+    )
+
+    val service: UnignoreEmploymentService = new UnignoreEmploymentService(
+      connector = mockUnignoreEmploymentConnector
+    )
+
   }
 
 }

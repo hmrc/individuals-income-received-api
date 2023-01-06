@@ -16,13 +16,13 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
@@ -33,14 +33,15 @@ class UnignoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig
   def unignoreEmployment(
       request: IgnoreEmploymentRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
 
-    val nino         = request.nino.nino
-    val taxYear      = request.taxYear
-    val employmentId = request.employmentId
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/employments/$nino/ignore/$employmentId")
+    } else {
+      IfsUri[Unit](s"income-tax/employments/$nino/${taxYear.asMtd}/ignore/$employmentId")
+    }
 
-    // Pre-tys uses MTD tax year format
-    delete(IfsUri[Unit](s"income-tax/employments/$nino/${taxYear.asMtd}/ignore/$employmentId"))
+    delete(downstreamUri)
   }
 
 }

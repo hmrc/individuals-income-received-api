@@ -46,7 +46,7 @@ class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDate
   private def parameterRuleValidation: IgnoreEmploymentRawData => List[List[MtdError]] = (data: IgnoreEmploymentRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
+      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 

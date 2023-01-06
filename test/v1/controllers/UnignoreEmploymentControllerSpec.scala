@@ -24,6 +24,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -63,6 +64,7 @@ class UnignoreEmploymentControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
@@ -83,20 +85,20 @@ class UnignoreEmploymentControllerSpec
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
-      |{
-      |   "links": [
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-      |         "rel": "list-employments",
-      |         "method": "GET"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "rel": "self",
-      |         "method": "GET"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "links": [
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+       |         "rel": "list-employments",
+       |         "method": "GET"
+       |      },
+       |      {
+       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+       |         "rel": "self",
+       |         "method": "GET"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 
