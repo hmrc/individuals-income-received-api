@@ -117,10 +117,18 @@ class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
-          CustomMtdError(CountryCodeRuleError.code) | CustomMtdError(CustomerRefFormatError.code) | RuleTaxYearNotSupportedError =>
-        BadRequest(Json.toJson(errorWrapper))
+      case _ if errorWrapper.containsAnyOf(
+        BadRequestError,
+        NinoFormatError,
+        TaxYearFormatError,
+        RuleTaxYearRangeInvalidError,
+        RuleIncorrectOrEmptyBodyError,
+        ValueFormatError,
+        CountryCodeFormatError,
+        CountryCodeRuleError,
+        CustomerRefFormatError,
+        RuleTaxYearNotSupportedError
+      ) => BadRequest(Json.toJson(errorWrapper))
       case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _                       => unhandledError(errorWrapper)
     }
