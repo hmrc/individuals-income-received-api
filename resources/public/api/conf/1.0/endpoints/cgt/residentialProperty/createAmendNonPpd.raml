@@ -18,8 +18,9 @@ is:
   - errors.ruleLossesGreaterThanGain
   - errors.clientOrAgentNotAuthorised
 
-displayName: Create and Amend CGT Residential Property Disposals
-description: !include resources/linkDescription.md
+displayName: Create and Amend CGT Residential Property Disposals (non-PPD)
+description: "This endpoint allows the developer to submit residential property disposals that are not reported via the Report and pay Capital Gains Tax on UK property service for a given NINO and tax year for non payment for property disposals (non-PPD).
+              The disposal date must be within the specified tax year. The completion date must be within the specific tax year and not in the future. If the specified tax year has not ended, the completion date must be between 7th March and 5th April."
 (annotations.sandboxData): !include ../../../scenarios/defaultOnly.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
