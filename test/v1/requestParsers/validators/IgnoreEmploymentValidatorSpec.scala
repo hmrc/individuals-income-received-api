@@ -18,12 +18,10 @@ package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
 import api.models.errors._
-import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.Configuration
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
@@ -35,7 +33,7 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
   private val validTaxYear      = "2021-22"
   private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
+  class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
@@ -46,10 +44,6 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
-
-    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"""
-         |taxYearNotEndedRule.enabled = $errorFeatureSwitch
-      """.stripMargin)))
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -62,11 +56,6 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
         validator.validate(IgnoreEmploymentRawData(validNino, validTaxYear, validEmploymentId)) shouldBe Nil
       }
 
-      "return no errors when config for RuleTaxYearNotEndedError is set to false" in new Test(false) {
-        validator.validate(IgnoreEmploymentRawData(validNino, "2022-23", validEmploymentId)) shouldBe List.empty
-      }
-
-      // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(IgnoreEmploymentRawData("A12344A", validTaxYear, validEmploymentId)) shouldBe
           List(NinoFormatError)
@@ -92,7 +81,6 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
           List(NinoFormatError, RuleTaxYearRangeInvalidError, EmploymentIdFormatError)
       }
 
-      // parameter rule error scenarios
       "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
         validator.validate(IgnoreEmploymentRawData(validNino, "2019-20", validEmploymentId)) shouldBe
           List(RuleTaxYearNotSupportedError)

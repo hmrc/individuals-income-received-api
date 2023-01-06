@@ -23,7 +23,7 @@ import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -67,7 +67,8 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
       val rawData: IgnoreEmploymentRawData = IgnoreEmploymentRawData(
         nino = nino,
         taxYear = taxYear,
-        employmentId = employmentId
+        employmentId = employmentId,
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
       )
 
       val result =
@@ -117,8 +118,17 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
-          RuleTaxYearRangeInvalidError | RuleTaxYearNotEndedError | RuleCustomEmploymentError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            EmploymentIdFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotEndedError,
+            RuleCustomEmploymentError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
 
       case NotFoundError           => NotFound(Json.toJson(errorWrapper))

@@ -16,7 +16,8 @@
 
 package v1.connectors
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.connectors.ConnectorSpec
+import api.connectors.DownstreamOutcome
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsObject, Json}

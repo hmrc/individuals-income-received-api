@@ -20,10 +20,11 @@ import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -63,6 +64,7 @@ class IgnoreEmploymentControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
@@ -77,7 +79,7 @@ class IgnoreEmploymentControllerSpec
 
   val requestData: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId
   )
 
@@ -198,6 +200,7 @@ class IgnoreEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (RuleCustomEmploymentError, BAD_REQUEST),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)

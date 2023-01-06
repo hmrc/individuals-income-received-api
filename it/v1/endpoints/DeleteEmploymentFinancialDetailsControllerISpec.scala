@@ -16,8 +16,8 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{EmploymentIdFormatError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -28,31 +28,24 @@ import support.IntegrationBaseSpec
 
 class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
-  private trait Test {
-
-    val nino: String         = "AA123456A"
-    val taxYear: String      = "2019-20"
-    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
-
-    def downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
-
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
-  }
-
   "Calling the 'delete employment financial details' endpoint" should {
     "return a 204 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().delete)
+        response.status shouldBe NO_CONTENT
+        response.body shouldBe ""
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request with a Tax Year Specific (TYS) tax year is made" in new TysIfsTest {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -76,7 +69,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpe
                                 requestEmploymentId: String,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
             override val nino: String         = requestNino
             override val taxYear: String      = requestTaxYear
@@ -107,7 +100,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpe
 
       "downstream service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -131,7 +124,7 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpe
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
@@ -140,8 +133,47 @@ class DeleteEmploymentFinancialDetailsControllerISpec extends IntegrationBaseSpe
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
+  private trait Test {
+
+    val nino: String         = "AA123456A"
+    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    def taxYear: String
+    def downstreamUri: String
+
+    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
+
+    def setupStubs(): StubMapping
+
+    def request(): WSRequest = {
+      setupStubs()
+      buildRequest(uri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String       = "2019-20"
+    def downstreamUri: String = s"/income-tax/income/employments/$nino/2019-20/$employmentId"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId"
+  }
+
 }

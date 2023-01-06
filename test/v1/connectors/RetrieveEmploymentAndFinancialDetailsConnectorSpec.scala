@@ -16,9 +16,10 @@
 
 package v1.connectors
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
+import api.connectors.ConnectorSpec
+import api.connectors.DownstreamOutcome
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v1.models.request.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsRequest

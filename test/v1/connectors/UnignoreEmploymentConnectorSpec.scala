@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
@@ -34,7 +34,7 @@ class UnignoreEmploymentConnectorSpec extends ConnectorSpec {
 
   val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId
   )
 

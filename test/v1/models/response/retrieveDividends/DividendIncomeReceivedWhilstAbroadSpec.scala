@@ -18,35 +18,14 @@ package v1.models.response.retrieveDividends
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveDividendsFixtures._
 
 class DividendIncomeReceivedWhilstAbroadSpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      | {
-      |    "countryCode": "DEU",
-      |    "amountBeforeTax": 1232.22,
-      |    "taxTakenOff": 22.22,
-      |    "specialWithholdingTax": 22.22,
-      |    "foreignTaxCreditRelief": true,
-      |    "taxableAmount": 2321.22
-      |  }
-    """.stripMargin
-  )
-
-  private val model = DividendIncomeReceivedWhilstAbroadItem(
-    countryCode = "DEU",
-    amountBeforeTax = Some(1232.22),
-    taxTakenOff = Some(22.22),
-    specialWithholdingTax = Some(22.22),
-    foreignTaxCreditRelief = true,
-    taxableAmount = 2321.22
-  )
 
   "DividendIncomeReceivedWhilstAbroadItem" when {
     "read from valid JSON" should {
       "produce the expected DividendIncomeReceivedWhilstAbroadItem object" in {
-        json.as[DividendIncomeReceivedWhilstAbroadItem] shouldBe model
+        dividendIncomeReceivedWhilstAbroadJson.as[DividendIncomeReceivedWhilstAbroadItem] shouldBe dividendIncomeReceivedWhilstAbroadModel
       }
     }
 
@@ -60,7 +39,7 @@ class DividendIncomeReceivedWhilstAbroadSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(dividendIncomeReceivedWhilstAbroadModel) shouldBe dividendIncomeReceivedWhilstAbroadJson
       }
     }
   }

@@ -39,15 +39,13 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private val errorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID"           -> EmploymentIdFormatError,
@@ -58,5 +56,13 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       "SERVER_ERROR"                    -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }
