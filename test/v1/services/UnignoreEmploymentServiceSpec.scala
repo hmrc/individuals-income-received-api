@@ -29,30 +29,35 @@ import scala.concurrent.Future
 
 class UnignoreEmploymentServiceSpec extends ServiceSpec {
 
-  "UnignoreEmploymentService" should {
-    "unignoreEmployment" must {
+  "UnignoreEmploymentService" when {
+    "unignoreEmployment" should {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val expectedOutcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockUnignoreEmploymentConnector
           .unignoreEmployment(request)
-          .returns(Future.successful(outcome))
+          .returns(Future.successful(expectedOutcome))
 
-        await(service.unignoreEmployment(request)) shouldBe outcome
+        val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.unignoreEmployment(request))
+
+        result shouldBe expectedOutcome
       }
 
-      "map errors according to spec" when {
+      "map errors according to spec" should {
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
           s"return ${error.code} error when $downstreamErrorCode error is returned from the connector" in new Test {
+            val expectedOutcome: Left[ErrorWrapper, Nothing] = Left(ErrorWrapper(correlationId, error))
 
             MockUnignoreEmploymentConnector
               .unignoreEmployment(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.unignoreEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.unignoreEmployment(request))
+
+            result shouldBe expectedOutcome
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),
@@ -64,7 +69,7 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("INVALID_CORRELATION_ID", StandardDownstreamError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
