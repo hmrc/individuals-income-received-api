@@ -10,10 +10,13 @@ is:
   - errors.notFound
   - queryParameters.source
 displayName: Retrieve all CGT Residential Property Disposals and Overrides
-description: "This API provides the capability to retrieve the residential property disposals subject tocapital gains tax for payment for property disposal (PPD) and non payment for property disposal (non-PPD).  This includes:<br>
-                • User submitted residential property disposals<br>
-                • Disposals previously reported via the HMRC 'Report and Pay Capital Gains Tax on UK Property'<br>
-                • User submitted disposal overrides"
+description: | 
+  This API provides the capability to retrieve the residential property disposals subject to capital gains tax for 
+  payment for property disposal (PPD) and non payment for property disposal (non-PPD).  This includes:<br>
+  
+      • User submitted residential property disposals<br>
+      • Disposals previously reported via the HMRC 'Report and Pay Capital Gains Tax on UK Property'<br>
+      • User submitted disposal overrides
 (annotations.sandboxData): !include ../../../scenarios/cgt/disposalsAndOverridesRetrieve.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
