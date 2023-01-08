@@ -22,7 +22,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import api.connectors.DownstreamUri.Release6Uri
+import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -42,8 +42,14 @@ class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appCon
     val taxYear      = request.taxYear
     val employmentId = request.employmentId
 
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-received/employments/${nino}/${taxYear.asTysDownstream}/${employmentId}/financial-details")
+    } else {
+      Release6Uri[Unit](s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId")
+    }
+
     put(
-      uri = Release6Uri[Unit](s"income-tax/income/employments/$nino/$taxYear/$employmentId"),
+      uri = downstreamUri,
       body = request.body
     )
   }

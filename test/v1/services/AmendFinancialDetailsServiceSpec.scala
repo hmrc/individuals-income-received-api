@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{
   DownstreamErrorCode,
   DownstreamErrors,
@@ -99,7 +99,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
     employment = employmentModel
   )
 
-  val request: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
+  val request: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(Nino(nino), TaxYear.fromMtd(taxYear), employmentId, requestBody)
 
   trait Test extends MockAmendFinancialDetailsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")

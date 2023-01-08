@@ -23,6 +23,7 @@ import api.models.errors.{
   NinoFormatError,
   NotFoundError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
@@ -56,8 +57,8 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def desErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID"     -> NotFoundError,
@@ -67,5 +68,12 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
+    )
+    errors ++ extraTysErrors
+  }
 
 }

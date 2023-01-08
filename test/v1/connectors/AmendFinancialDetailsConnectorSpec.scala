@@ -17,11 +17,8 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
@@ -30,98 +27,105 @@ import scala.concurrent.Future
 
 class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
-  private val taxYear: String = "2019-20"
-  private val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  trait Test { _: ConnectorTest =>
 
-  private val payModel = AmendPay(
-    taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92
-  )
+    def taxYear: TaxYear
+    val nino: String = "AA111111A"
+    val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  private val studentLoansModel = AmendStudentLoans(
-    uglDeductionAmount = Some(13343.45),
-    pglDeductionAmount = Some(24242.56)
-  )
-
-  private val deductionsModel = AmendDeductions(
-    studentLoans = Some(studentLoansModel)
-  )
-
-  private val benefitsInKindModel = AmendBenefitsInKind(
-    accommodation = Some(455.67),
-    assets = Some(435.54),
-    assetTransfer = Some(24.58),
-    beneficialLoan = Some(33.89),
-    car = Some(3434.78),
-    carFuel = Some(34.56),
-    educationalServices = Some(445.67),
-    entertaining = Some(434.45),
-    expenses = Some(3444.32),
-    medicalInsurance = Some(4542.47),
-    telephone = Some(243.43),
-    service = Some(45.67),
-    taxableExpenses = Some(24.56),
-    van = Some(56.29),
-    vanFuel = Some(14.56),
-    mileage = Some(34.23),
-    nonQualifyingRelocationExpenses = Some(54.62),
-    nurseryPlaces = Some(84.29),
-    otherItems = Some(67.67),
-    paymentsOnEmployeesBehalf = Some(67.23),
-    personalIncidentalExpenses = Some(74.29),
-    qualifyingRelocationExpenses = Some(78.24),
-    employerProvidedProfessionalSubscriptions = Some(84.56),
-    employerProvidedServices = Some(56.34),
-    incomeTaxPaidByDirector = Some(67.34),
-    travelAndSubsistence = Some(56.89),
-    vouchersAndCreditCards = Some(34.90),
-    nonCash = Some(23.89)
-  )
-
-  private val employmentModel = AmendEmployment(
-    pay = payModel,
-    deductions = Some(deductionsModel),
-    benefitsInKind = Some(benefitsInKindModel)
-  )
-
-  private val requestBody = AmendFinancialDetailsRequestBody(
-    employment = employmentModel
-  )
-
-  val request: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, requestBody)
-
-  class Test extends MockHttpClient with MockAppConfig {
-
-    val connector: AmendFinancialDetailsConnector = new AmendFinancialDetailsConnector(
+    protected val connector: AmendFinancialDetailsConnector = new AmendFinancialDetailsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.release6BaseUrl returns baseUrl
-    MockedAppConfig.release6Token returns "release6-token"
-    MockedAppConfig.release6Environment returns "release6-environment"
-    MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
+    protected val payModel = AmendPay(
+      taxablePayToDate = 3500.75,
+      totalTaxToDate = 6782.92
+    )
+
+    protected val studentLoansModel = AmendStudentLoans(
+      uglDeductionAmount = Some(13343.45),
+      pglDeductionAmount = Some(24242.56)
+    )
+
+    protected val deductionsModel = AmendDeductions(
+      studentLoans = Some(studentLoansModel)
+    )
+
+    protected val benefitsInKindModel = AmendBenefitsInKind(
+      accommodation = Some(455.67),
+      assets = Some(435.54),
+      assetTransfer = Some(24.58),
+      beneficialLoan = Some(33.89),
+      car = Some(3434.78),
+      carFuel = Some(34.56),
+      educationalServices = Some(445.67),
+      entertaining = Some(434.45),
+      expenses = Some(3444.32),
+      medicalInsurance = Some(4542.47),
+      telephone = Some(243.43),
+      service = Some(45.67),
+      taxableExpenses = Some(24.56),
+      van = Some(56.29),
+      vanFuel = Some(14.56),
+      mileage = Some(34.23),
+      nonQualifyingRelocationExpenses = Some(54.62),
+      nurseryPlaces = Some(84.29),
+      otherItems = Some(67.67),
+      paymentsOnEmployeesBehalf = Some(67.23),
+      personalIncidentalExpenses = Some(74.29),
+      qualifyingRelocationExpenses = Some(78.24),
+      employerProvidedProfessionalSubscriptions = Some(84.56),
+      employerProvidedServices = Some(56.34),
+      incomeTaxPaidByDirector = Some(67.34),
+      travelAndSubsistence = Some(56.89),
+      vouchersAndCreditCards = Some(34.90),
+      nonCash = Some(23.89)
+    )
+
+    protected val employmentModel = AmendEmployment(
+      pay = payModel,
+      deductions = Some(deductionsModel),
+      benefitsInKind = Some(benefitsInKindModel)
+    )
+
+    protected val amendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
+      employment = employmentModel
+    )
+
+    protected val amendFinancialDetailsRequest: AmendFinancialDetailsRequest =
+      AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, amendFinancialDetailsRequestBody)
+
   }
 
   "AmendFinancialDetailsConnector" should {
     "return a 204 status for a success scenario" when {
-      "a valid request is submitted" in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, ()))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredRelease6HeadersPut: Seq[(String, String)] = requiredRelease6Headers ++ Seq("Content-Type" -> "application/json")
+      "a valid request is submitted" in new Release6Test with Test {
+        def taxYear = TaxYear.fromMtd("2019-20")
 
-        MockedHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear/$employmentId",
-            config = dummyIfsHeaderCarrierConfig,
-            body = requestBody,
-            requiredHeaders = requiredRelease6HeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        await(connector.amendFinancialDetails(request)) shouldBe outcome
+        willPut(
+          url = s"$baseUrl/income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId",
+          body = amendFinancialDetailsRequestBody
+        ).returns(Future.successful(outcome))
+
+        await(connector.amendFinancialDetails(amendFinancialDetailsRequest)) shouldBe outcome
+
+      }
+
+      "a valid request is submitted for a TYS tax year" in new TysIfsTest with Test {
+        def taxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(
+          url = s"$baseUrl/income-received/employments/$nino/23-24/$employmentId/financial-details",
+          body = amendFinancialDetailsRequestBody
+        ).returns(Future.successful(outcome))
+
+        await(connector.amendFinancialDetails(amendFinancialDetailsRequest)) shouldBe outcome
+
       }
     }
   }
