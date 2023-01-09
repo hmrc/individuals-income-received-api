@@ -120,7 +120,7 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willPut(
-          url = s"$baseUrl/income-received/employments/$nino/23-24/$employmentId/financial-details",
+          url = s"$baseUrl/income-tax/23-24/income/employments/${nino}/${employmentId}",
           body = amendFinancialDetailsRequestBody
         ).returns(Future.successful(outcome))
 
