@@ -16,7 +16,7 @@
 
 package v1.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
@@ -148,7 +148,7 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
 
   private val amendFinancialDetailsRequest = AmendFinancialDetailsRequest(
     nino = Nino(nino),
-    taxYear = taxYear,
+    taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId,
     body = validRequestBodyModel
   )
