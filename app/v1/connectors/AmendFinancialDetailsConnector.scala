@@ -37,10 +37,7 @@ class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appCon
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
-    val nino         = request.nino.nino
-    val taxYear      = request.taxYear
-    val employmentId = request.employmentId
+    import request._
 
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {

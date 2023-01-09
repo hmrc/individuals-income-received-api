@@ -51,13 +51,13 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
+      downstreamResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    } yield downstreamResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
@@ -71,6 +71,7 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
 
     val extraTysErrors = Map(
       "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
+      "INVALID_CORRELATION_ID"  -> StandardDownstreamError,
       "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
     )
     errors ++ extraTysErrors

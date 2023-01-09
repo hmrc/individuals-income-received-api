@@ -32,9 +32,8 @@ import api.models.errors.{
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendFinancialDetailsConnector
-import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
-import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
+import v1.models.request.amendFinancialDetails.emploment.{AmendEmployment, AmendPay}
 
 import scala.concurrent.Future
 
@@ -49,50 +48,10 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
     totalTaxToDate = 6782.92
   )
 
-  private val studentLoansModel = AmendStudentLoans(
-    uglDeductionAmount = Some(13343.45),
-    pglDeductionAmount = Some(24242.56)
-  )
-
-  private val deductionsModel = AmendDeductions(
-    studentLoans = Some(studentLoansModel)
-  )
-
-  private val benefitsInKindModel = AmendBenefitsInKind(
-    accommodation = Some(455.67),
-    assets = Some(435.54),
-    assetTransfer = Some(24.58),
-    beneficialLoan = Some(33.89),
-    car = Some(3434.78),
-    carFuel = Some(34.56),
-    educationalServices = Some(445.67),
-    entertaining = Some(434.45),
-    expenses = Some(3444.32),
-    medicalInsurance = Some(4542.47),
-    telephone = Some(243.43),
-    service = Some(45.67),
-    taxableExpenses = Some(24.56),
-    van = Some(56.29),
-    vanFuel = Some(14.56),
-    mileage = Some(34.23),
-    nonQualifyingRelocationExpenses = Some(54.62),
-    nurseryPlaces = Some(84.29),
-    otherItems = Some(67.67),
-    paymentsOnEmployeesBehalf = Some(67.23),
-    personalIncidentalExpenses = Some(74.29),
-    qualifyingRelocationExpenses = Some(78.24),
-    employerProvidedProfessionalSubscriptions = Some(84.56),
-    employerProvidedServices = Some(56.34),
-    incomeTaxPaidByDirector = Some(67.34),
-    travelAndSubsistence = Some(56.89),
-    vouchersAndCreditCards = Some(34.90),
-    nonCash = Some(23.89)
-  )
-
   private val employmentModel = AmendEmployment(
     pay = payModel,
-    deductions = Some(deductionsModel),
-    benefitsInKind = Some(benefitsInKindModel)
+    deductions = None,
+    benefitsInKind = None
   )
 
   private val requestBody = AmendFinancialDetailsRequestBody(
@@ -100,15 +59,6 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
   )
 
   val request: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(Nino(nino), TaxYear.fromMtd(taxYear), employmentId, requestBody)
-
-  trait Test extends MockAmendFinancialDetailsConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-
-    val service: AmendFinancialDetailsService = new AmendFinancialDetailsService(
-      connector = mockAmendFinancialDetailsConnector
-    )
-
-  }
 
   "AmendFinancialDetailsService" when {
     "amendFinancialDetails" must {
@@ -124,23 +74,24 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockAmendFinancialDetailsConnector
               .amendFinancialDetails(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", NotFoundError),
           ("INVALID_PAYLOAD", StandardDownstreamError),
           ("BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
@@ -148,6 +99,15 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
         input.foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockAmendFinancialDetailsConnector {
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    val service: AmendFinancialDetailsService = new AmendFinancialDetailsService(
+      connector = mockAmendFinancialDetailsConnector
+    )
+
   }
 
 }
