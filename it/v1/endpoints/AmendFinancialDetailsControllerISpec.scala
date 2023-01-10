@@ -697,7 +697,11 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
   private trait TysIfsTest extends Test {
     val taxYear: String = "2023-24"
 
-    val downstreamUri: String = s"income-tax/23-24/income/employments/$nino/$employmentId"
+    val downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId"
+
+    override def request(): WSRequest =
+      super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
+
   }
 
   private trait Test {

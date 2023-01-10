@@ -16,24 +16,23 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers.{BaseController, AuthorisedController, EndpointLogContext}
 import api.hateoas.AmendHateoasBody
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{GenericAuditDetail, AuditResponse, AuditEvent}
 import api.models.errors._
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService, AuditService}
 import cats.data.EitherT
 import cats.implicits._
-import config.AppConfig
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
+import config.{AppConfig, FeatureSwitches}
+import play.api.libs.json.{Json, JsValue}
+import play.api.mvc.{Action, ControllerComponents, AnyContentAsJson}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.{Logging, IdGenerator}
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
 import v1.requestParsers.AmendFinancialDetailsRequestParser
 import v1.services.AmendFinancialDetailsService
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -68,7 +67,8 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
         nino = nino,
         taxYear = taxYear,
         employmentId = employmentId,
-        body = AnyContentAsJson(request.body)
+        body = AnyContentAsJson(request.body),
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
       )
 
       val result =
