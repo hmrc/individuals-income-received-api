@@ -20,7 +20,7 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import cats.implicits.toBifunctorOps
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveEmploymentAndFinancialDetailsConnector
@@ -41,15 +41,11 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
 
-    val result = for {
-      downstreamResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper        <- EitherT.fromEither[Future](validateRetrieveResponse(downstreamResponseWrapper))
-    } yield mtdResponseWrapper
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
 
-    result.value
   }
 
-  private def errorMap: Map[String, MtdError] = Map(
+  private val errorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
     "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
