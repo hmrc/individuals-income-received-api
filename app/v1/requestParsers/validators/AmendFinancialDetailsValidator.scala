@@ -18,7 +18,7 @@ package v1.requestParsers.validators
 
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import api.requestParsers.validators.Validator
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import utils.CurrentDateTime
 import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
@@ -48,7 +48,7 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
   private def parameterRuleValidation: AmendFinancialDetailsRawData => List[List[MtdError]] = (data: AmendFinancialDetailsRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (FeatureSwitches().isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
+      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 

@@ -21,9 +21,8 @@ import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue, Json}
+import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
+import play.api.libs.json.{JsObject, Json, JsValue}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
@@ -322,7 +321,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
   private val missingDeductionsRawRequestBody          = AnyContentAsJson(missingDeductionsBody)
   private val missingMultipleObjectBodiesRequestBody   = AnyContentAsJson(missingMultipleObjectBodies)
 
-  class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
+  class Test() extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
@@ -333,11 +332,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
-
-    MockedAppConfig.featureSwitches.returns(
-      Configuration(
-        "taxYearNotEndedRule.enabled" -> errorFeatureSwitch
-      ))
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -350,8 +344,9 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
       }
 
-      "return no errors when config for TaxYearNotEndedError is set to false" in new Test(false) {
-        validator.validate(AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe
+      "return no errors when config for TaxYearNotEndedError is set to false" in new Test {
+        validator.validate(
+          AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody, temporalValidationEnabled = false)) shouldBe
           List.empty
       }
 

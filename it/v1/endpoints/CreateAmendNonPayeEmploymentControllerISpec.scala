@@ -128,6 +128,7 @@ class CreateAmendNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
 
     override def request: WSRequest =
       super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
+
   }
 
   "Calling Create and amend Non-PAYE employment income endpoint" should {

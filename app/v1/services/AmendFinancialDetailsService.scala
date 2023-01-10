@@ -23,10 +23,10 @@ import api.models.errors.{
   NinoFormatError,
   NotFoundError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
-import cats.data.EitherT
 import cats.implicits._
 
 import javax.inject.{Inject, Singleton}
@@ -47,17 +47,11 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] =
+    connector.amendFinancialDetails(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
-  }
-
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID"     -> NotFoundError,
@@ -67,5 +61,13 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       "SERVER_ERROR"              -> StandardDownstreamError,
       "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
+      "INVALID_CORRELATION_ID"  -> StandardDownstreamError,
+      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
+    )
+    errors ++ extraTysErrors
+  }
 
 }
