@@ -51,30 +51,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val hateoasResponse: JsValue = Json.parse(
-          s"""
-             |{
-             |   "links":[
-             |      {
-             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"self",
-             |         "method":"GET"
-             |      },
-             |      {
-             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"create-and-amend-employment-financial-details",
-             |         "method":"PUT"
-             |      },
-             |      {
-             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"delete-employment-financial-details",
-             |         "method":"DELETE"
-             |      }
-             |   ]
-             |}
-           """.stripMargin
-        )
-
         val response: WSResponse = await(request().put(requestBodyJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
@@ -86,30 +62,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
-
-        val hateoasResponse: JsValue = Json.parse(
-          s"""
-             |{
-             |   "links":[
-             |      {
-             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"self",
-             |         "method":"GET"
-             |      },
-             |      {
-             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"create-and-amend-employment-financial-details",
-             |         "method":"PUT"
-             |      },
-             |      {
-             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-             |         "rel":"delete-employment-financial-details",
-             |         "method":"DELETE"
-             |      }
-             |   ]
-             |}
-           """.stripMargin
-        )
 
         val response: WSResponse = await(request().put(requestBodyJson))
         response.status shouldBe OK
@@ -552,7 +504,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        val input = Seq(
+        val input = List(
           (
             "AA1123A",
             "2019-20",
@@ -646,12 +598,12 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "ifs service error" when {
-        def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new NonTysTest {
+      "downStream service error" when {
+        def serviceErrorTest(downStreamStatus: Int, downStreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downStream returns an $downStreamCode error and status $downStreamStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
-              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downStreamStatus, errorBody(downStreamCode))
             }
 
             val response: WSResponse = await(request().put(requestBodyJson))
@@ -668,7 +620,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
              |}
             """.stripMargin
 
-        val errors = Seq(
+        val errors = List(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", NOT_FOUND, NotFoundError),
@@ -688,26 +640,10 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  private trait NonTysTest extends Test {
-    val taxYear: String = "2019-20"
-
-    val downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
-  }
-
-  private trait TysIfsTest extends Test {
-    val taxYear: String = "2023-24"
-
-    val downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId"
-
-    override def request(): WSRequest =
-      super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
-
-  }
-
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String
+    def taxYear: String
     val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val correlationId: String = "X-123"
 
@@ -760,6 +696,30 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
     )
 
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "rel":"self",
+         |         "method":"GET"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "rel":"create-and-amend-employment-financial-details",
+         |         "method":"PUT"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "rel":"delete-employment-financial-details",
+         |         "method":"DELETE"
+         |      }
+         |   ]
+         |}
+       """.stripMargin
+    )
+
     def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
 
     val downstreamUri: String
@@ -777,6 +737,22 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+  }
+
+  private trait NonTysTest extends Test {
+    def taxYear: String = "2019-20"
+
+    val downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+  }
+
+  private trait TysIfsTest extends Test {
+    def taxYear: String = "2023-24"
+
+    val downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId"
+
+    override def request(): WSRequest =
+      super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
 
   }
 
