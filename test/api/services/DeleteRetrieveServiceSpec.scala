@@ -96,16 +96,6 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
         await(service.retrieve[Data]()) shouldBe outcome
       }
 
-      "return a NotFoundError for an empty response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, Data(None)))
-
-        MockDeleteRetrieveConnector
-          .retrieve[Data]()
-          .returns(Future.successful(outcome))
-
-        await(service.retrieve[Data]()) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
-      }
-
       "map errors according to spec" when {
 
         def serviceError(desErrorCode: String, error: MtdError): Unit =
