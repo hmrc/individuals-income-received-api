@@ -20,7 +20,7 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import cats.implicits.toBifunctorOps
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveEmploymentAndFinancialDetailsConnector
@@ -41,9 +41,8 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
 
-    val result = EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
 
-    result.value
   }
 
   private val errorMap: Map[String, MtdError] = Map(

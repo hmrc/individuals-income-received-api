@@ -20,7 +20,6 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
@@ -40,9 +39,8 @@ class RetrieveOtherService @Inject() (connector: RetrieveOtherConnector) extends
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherResponse]]] = {
 
-    val result = EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {

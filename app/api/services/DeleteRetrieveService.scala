@@ -21,7 +21,6 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.HeaderCarrier
@@ -40,9 +39,8 @@ class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) exten
       downstreamUri: DownstreamUri[Unit],
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.delete()).leftMap(mapDownstreamErrors(desErrorMap))
+    connector.delete().map(_.leftMap(mapDownstreamErrors(desErrorMap)))
 
-    result.value
   }
 
   def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = errorMap)(implicit
@@ -52,9 +50,8 @@ class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) exten
       downstreamUri: DownstreamUri[Resp],
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
 
-    val result = EitherT(connector.retrieve[Resp]()).leftMap(mapDownstreamErrors(desErrorMap))
+    connector.retrieve[Resp]().map(_.leftMap(mapDownstreamErrors(desErrorMap)))
 
-    result.value
   }
 
   private val errorMap: Map[String, MtdError] =
