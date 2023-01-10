@@ -637,12 +637,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
 
-        ("INCOME_SOURCE_NOT_FOUND", NotFoundError)
-        ,
-        ("INVALID_CORRELATION_ID", StandardDownstreamError)
-        ,
-        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
-
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
