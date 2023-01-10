@@ -26,6 +26,7 @@ import api.models.errors.{
   NinoFormatError,
   NotFoundError,
   RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
   StandardDownstreamError,
   TaxYearFormatError
 }
@@ -84,19 +85,23 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
             await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = List(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", NotFoundError),
           ("INVALID_PAYLOAD", StandardDownstreamError),
           ("BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
           ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
           ("SERVER_ERROR", StandardDownstreamError),
           ("SERVICE_UNAVAILABLE", StandardDownstreamError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = List(
+          ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

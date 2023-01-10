@@ -27,7 +27,6 @@ import api.models.errors.{
   StandardDownstreamError,
   TaxYearFormatError
 }
-import cats.data.EitherT
 import cats.implicits._
 
 import javax.inject.{Inject, Singleton}
@@ -48,14 +47,8 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    val result = for {
-      downstreamResponseWrapper <- EitherT(connector.amendFinancialDetails(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield downstreamResponseWrapper
-
-    result.value
-  }
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] =
+    connector.amendFinancialDetails(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(

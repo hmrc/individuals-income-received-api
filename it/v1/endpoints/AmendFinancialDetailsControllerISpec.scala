@@ -18,7 +18,21 @@ package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors.{
+  BadRequestError,
+  EmploymentIdFormatError,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  NotFoundError,
+  RuleIncorrectOrEmptyBodyError,
+  RuleTaxYearNotEndedError,
+  RuleTaxYearNotSupportedError,
+  RuleTaxYearRangeInvalidError,
+  StandardDownstreamError,
+  TaxYearFormatError,
+  ValueFormatError
+}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -29,87 +43,48 @@ import support.IntegrationBaseSpec
 
 class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
-  private trait Test {
-
-    val nino: String = "AA123456A"
-    val taxYear: String = "2019-20"
-    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    val correlationId: String = "X-123"
-
-    val requestBodyJson: JsValue = Json.parse(
-      """
-        |{
-        |    "employment": {
-        |        "pay": {
-        |            "taxablePayToDate": 3500.75,
-        |            "totalTaxToDate": 6782.92
-        |        },
-        |        "deductions": {
-        |            "studentLoans": {
-        |                "uglDeductionAmount": 13343.45,
-        |                "pglDeductionAmount": 24242.56
-        |            }
-        |        },
-        |        "benefitsInKind": {
-        |            "accommodation": 455.67,
-        |            "assets": 435.54,
-        |            "assetTransfer": 24.58,
-        |            "beneficialLoan": 33.89,
-        |            "car": 3434.78,
-        |            "carFuel": 34.56,
-        |            "educationalServices": 445.67,
-        |            "entertaining": 434.45,
-        |            "expenses": 3444.32,
-        |            "medicalInsurance": 4542.47,
-        |            "telephone": 243.43,
-        |            "service": 45.67,
-        |            "taxableExpenses": 24.56,
-        |            "van": 56.29,
-        |            "vanFuel": 14.56,
-        |            "mileage": 34.23,
-        |            "nonQualifyingRelocationExpenses": 54.62,
-        |            "nurseryPlaces": 84.29,
-        |            "otherItems": 67.67,
-        |            "paymentsOnEmployeesBehalf": 67.23,
-        |            "personalIncidentalExpenses": 74.29,
-        |            "qualifyingRelocationExpenses": 78.24,
-        |            "employerProvidedProfessionalSubscriptions": 84.56,
-        |            "employerProvidedServices": 56.34,
-        |            "incomeTaxPaidByDirector": 67.34,
-        |            "travelAndSubsistence": 56.89,
-        |            "vouchersAndCreditCards": 34.90,
-        |            "nonCash": 23.89
-        |        }
-        |    }
-        |}
-      """.stripMargin
-    )
-
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
-
-    def ifsUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
-
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(uri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
-    }
-  }
-
   "Calling the amend employment financial details endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new Test {
+      "any valid request is made" in new NonTysTest {
 
         override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, ifsUri, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val hateoasResponse: JsValue = Json.parse(
+          s"""
+             |{
+             |   "links":[
+             |      {
+             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+             |         "rel":"self",
+             |         "method":"GET"
+             |      },
+             |      {
+             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+             |         "rel":"create-and-amend-employment-financial-details",
+             |         "method":"PUT"
+             |      },
+             |      {
+             |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+             |         "rel":"delete-employment-financial-details",
+             |         "method":"DELETE"
+             |      }
+             |   ]
+             |}
+           """.stripMargin
+        )
+
+        val response: WSResponse = await(request().put(requestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+
+        override def setupStubs(): StubMapping = {
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
         val hateoasResponse: JsValue = Json.parse(
@@ -144,7 +119,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a 400 with multiple errors" when {
-      "all field value validations fail on the request body" in new Test {
+      "all field value validations fail on the request body" in new NonTysTest {
 
         val allInvalidValueRequestBodyJson: JsValue = Json.parse(
           """
@@ -245,18 +220,12 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           errors = Some(allInvalidValueRequestError)
         )
 
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-        }
-
         val response: WSResponse = await(request().put(allInvalidValueRequestBodyJson))
         response.status shouldBe BAD_REQUEST
         response.json shouldBe Json.toJson(wrappedErrors)
       }
 
-      "complex error scenario" in new Test {
+      "complex error scenario" in new NonTysTest {
 
         val iirFinancialDetailsAmendErrorsRequest: JsValue = Json.parse(
           """
@@ -339,12 +308,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             |}
           """.stripMargin
         )
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-        }
 
         val response: WSResponse = await(request().put(iirFinancialDetailsAmendErrorsRequest))
         response.status shouldBe BAD_REQUEST
@@ -576,18 +539,12 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
                                 expectedStatus: Int,
                                 expectedBody: ErrorWrapper,
                                 scenario: Option[String]): Unit = {
-          s"validation fails with ${expectedBody.error} error ${scenario.getOrElse("")}" in new Test {
+          s"validation fails with ${expectedBody.error} error ${scenario.getOrElse("")}" in new NonTysTest {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
-            override val employmentId: String = requestEmploymentId
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
+            override val employmentId: String     = requestEmploymentId
             override val requestBodyJson: JsValue = requestBody
-
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
 
             val response: WSResponse = await(request().put(requestBodyJson))
             response.status shouldBe expectedStatus
@@ -596,31 +553,105 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None), None),
-          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None), None),
+          (
+            "AA1123A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", NinoFormatError, None),
+            None),
+          (
+            "AA123456A",
+            "20199",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", TaxYearFormatError, None),
+            None),
           ("AA123456A", "2019-20", "ABCDE12345FG", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
-          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None), None),
-          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None), None),
-          ("AA123456A", getCurrentTaxYear, "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotEndedError, None), None),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None), None),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", invalidFieldTypeErrors, None), Some("(invalid field type)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingEmploymentObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None), Some("(missing mandatory employment object)")),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", missingPayObjectRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryPayObjectError, None), Some("(missing mandatory pay object)")),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldsRequestBodyJson, BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldsErrors, None), Some("(missing mandatory fields)")),
-          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", allInvalidValueRequestBodyJson, BAD_REQUEST, errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)), None)
+          (
+            "AA123456A",
+            "2018-19",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None),
+            None),
+          (
+            "AA123456A",
+            "2019-21",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None),
+            None),
+          (
+            "AA123456A",
+            getCurrentTaxYear,
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            validRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleTaxYearNotEndedError, None),
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            emptyRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None),
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            nonValidRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", invalidFieldTypeErrors, None),
+            Some("(invalid field type)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            missingEmploymentObjectRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None),
+            Some("(missing mandatory employment object)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            missingPayObjectRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", missingMandatoryPayObjectError, None),
+            Some("(missing mandatory pay object)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
+            missingFieldsRequestBodyJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", missingMandatoryFieldsErrors, None),
+            Some("(missing mandatory fields)")),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            allInvalidValueRequestBodyJson,
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
+            None)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
       "ifs service error" when {
         def serviceErrorTest(ifsStatus: Int, ifsCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"ifs returns an $ifsCode error and status $ifsStatus" in new Test {
+          s"ifs returns an $ifsCode error and status $ifsStatus" in new NonTysTest {
 
             override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.PUT, ifsUri, ifsStatus, errorBody(ifsCode))
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, ifsStatus, errorBody(ifsCode))
             }
 
             val response: WSResponse = await(request().put(requestBodyJson))
@@ -637,7 +668,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
              |}
             """.stripMargin
 
-        val input = Seq(
+        val errors = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", NOT_FOUND, NotFoundError),
@@ -647,8 +678,102 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
         )
-        input.foreach(args => (serviceErrorTest _).tupled(args))
+
+        val extraTysErrors = List(
+          (BAD_REQUEST, "INCOME_SOURCE_NOT_FOUND", NOT_FOUND, NotFoundError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
+  private trait NonTysTest extends Test {
+    val taxYear: String = "2019-20"
+
+    val downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+  }
+
+  private trait TysIfsTest extends Test {
+    val taxYear: String = "2023-24"
+
+    val downstreamUri: String = s"income-tax/23-24/income/employments/$nino/$employmentId"
+  }
+
+  private trait Test {
+
+    val nino: String = "AA123456A"
+    val taxYear: String
+    val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val correlationId: String = "X-123"
+
+    val requestBodyJson: JsValue = Json.parse(
+      """
+        |{
+        |    "employment": {
+        |        "pay": {
+        |            "taxablePayToDate": 3500.75,
+        |            "totalTaxToDate": 6782.92
+        |        },
+        |        "deductions": {
+        |            "studentLoans": {
+        |                "uglDeductionAmount": 13343.45,
+        |                "pglDeductionAmount": 24242.56
+        |            }
+        |        },
+        |        "benefitsInKind": {
+        |            "accommodation": 455.67,
+        |            "assets": 435.54,
+        |            "assetTransfer": 24.58,
+        |            "beneficialLoan": 33.89,
+        |            "car": 3434.78,
+        |            "carFuel": 34.56,
+        |            "educationalServices": 445.67,
+        |            "entertaining": 434.45,
+        |            "expenses": 3444.32,
+        |            "medicalInsurance": 4542.47,
+        |            "telephone": 243.43,
+        |            "service": 45.67,
+        |            "taxableExpenses": 24.56,
+        |            "van": 56.29,
+        |            "vanFuel": 14.56,
+        |            "mileage": 34.23,
+        |            "nonQualifyingRelocationExpenses": 54.62,
+        |            "nurseryPlaces": 84.29,
+        |            "otherItems": 67.67,
+        |            "paymentsOnEmployeesBehalf": 67.23,
+        |            "personalIncidentalExpenses": 74.29,
+        |            "qualifyingRelocationExpenses": 78.24,
+        |            "employerProvidedProfessionalSubscriptions": 84.56,
+        |            "employerProvidedServices": 56.34,
+        |            "incomeTaxPaidByDirector": 67.34,
+        |            "travelAndSubsistence": 56.89,
+        |            "vouchersAndCreditCards": 34.90,
+        |            "nonCash": 23.89
+        |        }
+        |    }
+        |}
+      """.stripMargin
+    )
+
+    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
+
+    val downstreamUri: String
+
+    def setupStubs(): StubMapping = StubMapping.NOT_CONFIGURED
+
+    def request(): WSRequest = {
+      AuditStub.audit()
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
+      setupStubs()
+      buildRequest(uri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+        )
+    }
+
+  }
+
 }

@@ -24,6 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
 import scala.concurrent.{ExecutionContext, Future}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
@@ -36,7 +37,6 @@ class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appCon
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
 
     val downstreamUri =
@@ -48,7 +48,7 @@ class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appCon
 
     put(
       uri = downstreamUri,
-      body = request.body
+      body = body
     )
   }
 
