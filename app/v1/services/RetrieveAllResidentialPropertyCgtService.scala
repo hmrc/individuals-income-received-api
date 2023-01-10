@@ -40,15 +40,12 @@ class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAll
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllResidentialPropertyCgtResponse]]] = {
 
-    val result = for {
-      downstreamResponseWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper        <- EitherT.fromEither[Future](validateRetrieveResponse(downstreamResponseWrapper))
-    } yield mtdResponseWrapper
+    val result = EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
 
     result.value
   }
 
-  private def errorMap: Map[String, MtdError] = {
+  private val errorMap: Map[String, MtdError] = {
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
