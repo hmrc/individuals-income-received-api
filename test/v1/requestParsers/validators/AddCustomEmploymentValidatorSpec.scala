@@ -18,13 +18,11 @@ package v1.requestParsers.validators
 
 import api.mocks.MockCurrentDateTime
 import api.models.errors._
-import com.typesafe.config.ConfigFactory
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
@@ -36,22 +34,22 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
   private val validNino    = "AA123456A"
   private val validTaxYear = "2020-21"
 
-  private val validRequestJson: JsValue = Json.parse(
-    """
-      |{
-      |  "employerRef": "123/AZ12334",
-      |  "employerName": "AMD infotech Ltd",
-      |  "startDate": "2019-01-01",
-      |  "cessationDate": "2020-06-01",
-      |  "payrollId": "124214112412",
-      |  "occupationalPension": false
-      |}
-    """.stripMargin
-  )
+  private def requestJsonWithDates(startDate: String = "2019-01-01", cessationDate: String = "2020-06-01") = AnyContentAsJson(Json.parse(s"""
+       |{
+       |  "employerRef": "123/AZ12334",
+       |  "employerName": "AMD infotech Ltd",
+       |  "startDate": "$startDate",
+       |  "cessationDate": "$cessationDate",
+       |  "payrollId": "124214112412",
+       |  "occupationalPension": false
+       |}
+  """.stripMargin))
 
-  private val emptyRequestJson: JsValue = JsObject.empty
+  private val validRawBody = requestJsonWithDates()
 
-  private val incorrectFormatRequestJson: JsValue = Json.parse(
+  private val emptyRawBody = AnyContentAsJson(JsObject.empty)
+
+  private val incorrectFormatRawBody = AnyContentAsJson(Json.parse(
     """
       |{
       |  "employerRef": true,
@@ -60,9 +58,9 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
       |  "occupationalPension": 20
       |}
     """.stripMargin
-  )
+  ))
 
-  private val invalidValueRequestJson: JsValue = Json.parse(
+  private val incorrectValueRawBody = AnyContentAsJson(Json.parse(
     s"""
        |{
        |  "employerRef": "notValid",
@@ -73,42 +71,10 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
        |  "occupationalPension": false
        |}
     """.stripMargin
-  )
+  ))
 
-  private val invalidDatesRequestJson1: JsValue = Json.parse(
-    s"""
-       |{
-       |  "employerRef": "123/AZ12334",
-       |  "employerName": "AMD infotech Ltd",
-       |  "startDate": "2019-01-01",
-       |  "cessationDate": "2018-06-01",
-       |  "payrollId": "124214112412",
-       |  "occupationalPension": true
-       |}
-    """.stripMargin
-  )
 
-  private val invalidDatesRequestJson2: JsValue = Json.parse(
-    s"""
-       |{
-       |  "employerRef": "123/AZ12334",
-       |  "employerName": "AMD infotech Ltd",
-       |  "startDate": "2023-01-01",
-       |  "cessationDate": "2022-06-01",
-       |  "payrollId": "124214112412",
-       |  "occupationalPension": false
-       |}
-    """.stripMargin
-  )
-
-  private val validRawBody           = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody           = AnyContentAsJson(emptyRequestJson)
-  private val incorrectFormatRawBody = AnyContentAsJson(incorrectFormatRequestJson)
-  private val incorrectValueRawBody  = AnyContentAsJson(invalidValueRequestJson)
-  private val incorrectDatesRawBody1 = AnyContentAsJson(invalidDatesRequestJson1)
-  private val incorrectDatesRawBody2 = AnyContentAsJson(invalidDatesRequestJson2)
-
-  class Test(errorFeatureSwitch: Boolean = true) extends MockCurrentDateTime with MockAppConfig {
+  class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
     val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
@@ -119,10 +85,6 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
     MockedAppConfig.minimumPermittedTaxYear
       .returns(2021)
-
-    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"""
-         |taxYearNotEndedRule.enabled = $errorFeatureSwitch
-      """.stripMargin)))
 
     implicit val appConfig: AppConfig = mockAppConfig
 
@@ -135,8 +97,9 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
         validator.validate(AddCustomEmploymentRawData(validNino, validTaxYear, validRawBody)) shouldBe Nil
       }
 
-      "return RuleCessationDateBeforeTaxYearStart error when config for TaxYearNotEndedError is set to false" in new Test(false) {
-        validator.validate(AddCustomEmploymentRawData(validNino, "2022-23", validRawBody)) shouldBe List(RuleCessationDateBeforeTaxYearStartError)
+      "return RuleCessationDateBeforeTaxYearStart error when config when cessationDate is too early" in new Test {
+        validator.validate(AddCustomEmploymentRawData(validNino, validTaxYear, requestJsonWithDates(cessationDate = "2020-04-01"))) shouldBe List(
+          RuleCessationDateBeforeTaxYearStartError)
       }
 
       // parameter format error scenarios
@@ -171,6 +134,15 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
           List(RuleTaxYearNotEndedError)
       }
 
+      "not return RuleTaxYearNotEndedError error for a tax year which hasn't ended but temporal validation is disabled" in new Test {
+        validator.validate(
+          AddCustomEmploymentRawData(
+            validNino,
+            "2022-23",
+            requestJsonWithDates(cessationDate = "2022-05-01"),
+            temporalValidationEnabled = false)) shouldBe Nil
+      }
+
       // body format error scenarios
       "return RuleIncorrectOrEmptyBodyError error for an empty request body" in new Test {
         validator.validate(AddCustomEmploymentRawData(validNino, validTaxYear, emptyRawBody)) shouldBe
@@ -191,13 +163,15 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
       }
 
       "return multiple errors for dates which precede the current tax year and are incorrectly ordered" in new Test {
-        validator.validate(AddCustomEmploymentRawData(validNino, validTaxYear, incorrectDatesRawBody1)) shouldBe
-          List(RuleCessationDateBeforeTaxYearStartError, RuleCessationDateBeforeStartDateError)
+        validator.validate(
+          AddCustomEmploymentRawData(validNino, validTaxYear, requestJsonWithDates(cessationDate = "2018-06-01"))
+        ) shouldBe List(RuleCessationDateBeforeTaxYearStartError, RuleCessationDateBeforeStartDateError)
       }
 
       "return multiple errors for dates which exceed the current tax year and are incorrectly ordered" in new Test {
-        validator.validate(AddCustomEmploymentRawData(validNino, validTaxYear, incorrectDatesRawBody2)) shouldBe
-          List(RuleStartDateAfterTaxYearEndError, RuleCessationDateBeforeStartDateError)
+        validator.validate(
+          AddCustomEmploymentRawData(validNino, validTaxYear, requestJsonWithDates(startDate = "2023-01-01", cessationDate = "2022-06-01"))
+        ) shouldBe List(RuleStartDateAfterTaxYearEndError, RuleCessationDateBeforeStartDateError)
       }
     }
   }

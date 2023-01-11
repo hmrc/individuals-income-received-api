@@ -27,6 +27,7 @@ import api.models.errors._
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -61,6 +62,7 @@ class AddCustomEmploymentControllerSpec
     val controller = new AddCustomEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
       requestParser = mockAddCustomEmploymentRequestParser,
       service = mockAddCustomEmploymentService,
       auditService = mockAuditService,
@@ -69,6 +71,7 @@ class AddCustomEmploymentControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()

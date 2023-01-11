@@ -18,7 +18,7 @@ package v1.requestParsers.validators
 
 import api.models.errors.MtdError
 import api.requestParsers.validators.Validator
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import utils.CurrentDateTime
 import v1.models.request.addCustomEmployment._
 import v1.requestParsers.validators.validations._
@@ -45,7 +45,7 @@ class AddCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentD
   private def parameterRuleValidation: AddCustomEmploymentRawData => List[List[MtdError]] = (data: AddCustomEmploymentRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (FeatureSwitches().isTaxYearNotEndedRuleEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else List.empty[MtdError]
+      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 

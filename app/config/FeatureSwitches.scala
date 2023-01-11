@@ -40,7 +40,6 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
   }
 
   val isV1R7cRoutingEnabled: Boolean        = isEnabled("v1r7c-endpoints.enabled")
-  val isTaxYearNotEndedRuleEnabled: Boolean = isEnabled("taxYearNotEndedRule.enabled")
   val isTaxYearSpecificApiEnabled: Boolean  = isEnabled("tys-api.enabled")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
