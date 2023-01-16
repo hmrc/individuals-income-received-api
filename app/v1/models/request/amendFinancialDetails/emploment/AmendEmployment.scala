@@ -18,7 +18,7 @@ package v1.models.request.amendFinancialDetails.emploment
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendEmployment(pay: AmendPay, deductions: Option[AmendDeductions], benefitsInKind: Option[AmendBenefitsInKind])
+case class AmendEmployment(pay: AmendPay, deductions: Option[AmendDeductions], benefitsInKind: Option[AmendBenefitsInKind], offPayrollWorker: Option[Boolean])
 
 object AmendEmployment {
   implicit val format: OFormat[AmendEmployment] = Json.format[AmendEmployment]

@@ -52,7 +52,8 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
   private val employmentModel = AmendEmployment(
     pay = payModel,
     deductions = None,
-    benefitsInKind = None
+    benefitsInKind = None,
+    offPayrollWorker = Some(true)
   )
 
   private val requestBody = AmendFinancialDetailsRequestBody(
