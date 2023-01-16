@@ -28,6 +28,7 @@ case class Employment(employmentSequenceNumber: Option[String],
                       cessationDate: Option[String],
                       occupationalPension: Option[Boolean],
                       disguisedRemuneration: Option[Boolean],
+                      offPayrollWorker: Option[Boolean],
                       employer: Employer,
                       pay: Option[Pay],
                       customerEstimatedPay: Option[CustomerEstimatedPay],
@@ -47,6 +48,7 @@ object Employment {
       (JsPath \ "cessationDate").readNullable[String] and
       (JsPath \ "occPen").readNullable[Boolean] and
       (JsPath \ "disguisedRemuneration").readNullable[Boolean] and
+      (JsPath \ "offPayrollWorker").readNullable[Boolean] and
       (JsPath \ "employer").read[Employer] and
       (JsPath \ "pay").readNullable[Pay] and
       (JsPath \ "estimatedPay").readNullable[CustomerEstimatedPay].map {
