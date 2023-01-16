@@ -344,12 +344,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
       }
 
-      "return no errors when config for TaxYearNotEndedError is set to false" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody, temporalValidationEnabled = false)) shouldBe
-          List.empty
-      }
-
       // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(AmendFinancialDetailsRawData("A12344A", validTaxYear, validEmploymentId, validRawBody)) shouldBe
@@ -385,6 +379,11 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       "return RuleTaxYearNotEndedError error for a tax year which hasn't ended" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe
           List(RuleTaxYearNotEndedError)
+      }
+
+      "not return RuleTaxYearNotEndedError error for a tax year which hasn't ended but temporal validation is disabled" in new Test {
+        validator.validate(
+          AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody, temporalValidationEnabled = false)) shouldBe Nil
       }
 
       // body format error scenarios

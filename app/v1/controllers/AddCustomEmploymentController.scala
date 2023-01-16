@@ -23,6 +23,7 @@ import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -40,6 +41,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                val lookupService: MtdIdLookupService,
+                                               appConfig: AppConfig,
                                                requestParser: AddCustomEmploymentRequestParser,
                                                service: AddCustomEmploymentService,
                                                auditService: AuditService,
@@ -61,7 +63,11 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] with CorrelationId: $correlationId")
 
-      val rawData: AddCustomEmploymentRawData = AddCustomEmploymentRawData(nino = nino, taxYear = taxYear, body = AnyContentAsJson(request.body))
+      val rawData: AddCustomEmploymentRawData = AddCustomEmploymentRawData(
+        nino = nino,
+        taxYear = taxYear,
+        body = AnyContentAsJson(request.body),
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
 
       val result =
         for {

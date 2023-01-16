@@ -19,4 +19,5 @@ package v1.models.request.addCustomEmployment
 import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 
-case class AddCustomEmploymentRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+case class AddCustomEmploymentRawData(nino: String, taxYear: String, body: AnyContentAsJson, temporalValidationEnabled: Boolean = true)
+    extends RawData
