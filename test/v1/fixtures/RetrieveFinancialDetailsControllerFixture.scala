@@ -39,6 +39,7 @@ object RetrieveFinancialDetailsControllerFixture {
       |    "cessationDate": "2020-03-11",
       |    "occPen": false,
       |    "disguisedRemuneration": false,
+      |    "offPayrollWorker": false,
       |    "employer": {
       |      "employerRef": "223/AB12399",
       |      "employerName": "maggie"
@@ -112,6 +113,7 @@ object RetrieveFinancialDetailsControllerFixture {
       |    "cessationDate": "2020-03-11",
       |    "occupationalPension": false,
       |    "disguisedRemuneration": false,
+      |    "offPayrollWorker": false,
       |    "employer": {
       |      "employerRef": "223/AB12399",
       |      "employerName": "maggie"
@@ -178,6 +180,7 @@ object RetrieveFinancialDetailsControllerFixture {
     cessationDate = Some("2020-03-11"),
     occupationalPension = Some(false),
     disguisedRemuneration = Some(false),
+    offPayrollWorker = Some(false),
     employer = Employer(
       employerRef = Some("223/AB12399"),
       employerName = "maggie"

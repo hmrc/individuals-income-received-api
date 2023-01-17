@@ -40,7 +40,7 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
     employerName = "employer name"
   )
 
-  val employment: Employment = Employment(None, None, None, None, None, None, None, None, None, employer = employer, None, None, None, None)
+  val employment: Employment = Employment(None, None, None, None, None, None, None, None, None, None, employer = employer, None, None, None, None)
 
   val response: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
     submittedOn = "",
