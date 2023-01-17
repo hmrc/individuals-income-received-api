@@ -65,7 +65,8 @@ class AmendEmploymentSpec extends UnitSpec {
       |        "travelAndSubsistence": 56.89,
       |        "vouchersAndCreditCards": 34.90,
       |        "nonCash": 23.89
-      |    }
+      |    },
+      |    "offPayrollWorker": true
       |}
     """.stripMargin
   )
@@ -118,7 +119,8 @@ class AmendEmploymentSpec extends UnitSpec {
   private val employmentModel = AmendEmployment(
     pay = payModel,
     deductions = Some(deductionsModel),
-    benefitsInKind = Some(benefitsInKindModel)
+    benefitsInKind = Some(benefitsInKindModel),
+    offPayrollWorker = Some(true)
   )
 
   "AmendEmployment" when {

@@ -115,7 +115,8 @@ class AmendFinancialDetailsControllerSpec
       |            "travelAndSubsistence": 56.89,
       |            "vouchersAndCreditCards": 34.90,
       |            "nonCash": 23.89
-      |        }
+      |        },
+      |        "offPayrollWorker": true
       |    }
       |}
     """.stripMargin
@@ -176,7 +177,8 @@ class AmendFinancialDetailsControllerSpec
   val employment: AmendEmployment = AmendEmployment(
     pay = pay,
     deductions = Some(deductions),
-    benefitsInKind = Some(benefitsInKind)
+    benefitsInKind = Some(benefitsInKind),
+    offPayrollWorker = Some(true)
   )
 
   val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(

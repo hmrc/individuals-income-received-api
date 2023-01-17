@@ -76,7 +76,8 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       |            "travelAndSubsistence": 56.89,
       |            "vouchersAndCreditCards": 34.90,
       |            "nonCash": 23.89
-      |        }
+      |        },
+      |        "offPayrollWorker": true
       |    }
       |}
     """.stripMargin
@@ -139,7 +140,8 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
   private val employmentModel = AmendEmployment(
     pay = payModel,
     deductions = Some(deductionsModel),
-    benefitsInKind = Some(benefitsInKindModel)
+    benefitsInKind = Some(benefitsInKindModel),
+    offPayrollWorker = Some(true)
   )
 
   private val validRequestBodyModel = AmendFinancialDetailsRequestBody(

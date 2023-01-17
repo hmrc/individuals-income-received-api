@@ -79,7 +79,8 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
     protected val employmentModel = AmendEmployment(
       pay = payModel,
       deductions = None,
-      benefitsInKind = None
+      benefitsInKind = None,
+      offPayrollWorker = None
     )
 
     protected val amendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
