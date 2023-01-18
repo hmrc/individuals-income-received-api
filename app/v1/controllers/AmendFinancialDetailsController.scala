@@ -128,6 +128,8 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
             RuleTaxYearRangeInvalidError,
             RuleTaxYearNotEndedError,
             RuleIncorrectOrEmptyBodyError,
+            RuleNotAllowedOffPayrollWorker,
+            RuleMissingOffPayrollWorker,
             ValueFormatError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
