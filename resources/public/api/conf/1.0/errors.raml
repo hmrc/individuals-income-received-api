@@ -127,6 +127,28 @@ traits:
                 description: 'Tax year range invalid. A tax year range of one year is required.'
                 value:
                   code: RULE_TAX_YEAR_RANGE_INVALID
+  notAllowedOffPayrollWorker:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              notAllowedOffPayrollWorker:
+                description: 'The offPayrollWorker field is not allowed for tax years prior to 2023-24.'
+                value:
+                  code: NOT_ALLOWED_OFF_PAYROLL_WORKER
+  missingOffPayrollWorker:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              missingOffPayrollWorker:
+                description: 'The offPayrollWorker field was not provided; it must be provided for tax year 2023-24 or later.'
+                value:
+                  code: MISSING_OFF_PAYROLL_WORKER
   formatValue:
     responses:
       400:

@@ -12,8 +12,10 @@ is:
   - errors.formatValue
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
+  - errors.missingOffPayrollWorker
+  - errors.notAllowedOffPayrollWorker
 displayName: Create and Amend Employment Financial Details
-description: This endpoint enables you to submit or overwrite financial data for an individual employment. A National Insurance number, tax year and Employment ID are required.
+description: "This endpoint enables you to submit or overwrite financial data for an individual employment. A National Insurance number, tax year and Employment ID are required."
 (annotations.sandboxData): !include ../../../scenarios/defaultAndNotFound.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

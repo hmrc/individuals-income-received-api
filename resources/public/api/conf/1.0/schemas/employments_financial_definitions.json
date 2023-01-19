@@ -165,7 +165,8 @@
           ]
         },
         "deductions": {"$ref": "#/definitions/deductions"},
-        "benefitsInKind": {"$ref": "#/definitions/benefitsInKind"}
+        "benefitsInKind": {"$ref": "#/definitions/benefitsInKind"},
+        "offPayrollWorker": {"$ref": "#/definitions/offPayrollWorker"}
       },
       "required": [
         "pay"
@@ -211,6 +212,11 @@
         "vouchersAndCreditCards": {"$ref": "#/definitions/vouchersAndCreditCards"},
         "nonCash": {"$ref": "#/definitions/nonCash"}
       }
+    },
+    "offPayrollWorker": {
+      "type": "boolean",
+      "description": "This indicator indicates the customer's off payroll working status for employment. Valid if and only if value is true",
+      "example": "true"
     },
     "taxablePayToDate": {
       "type": "number",
