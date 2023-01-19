@@ -93,7 +93,11 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
       )
     }
 
-    jsonFormatError ++ emptyObjectValidation ++ offPayrollWorkerAllowedValidation
+    if (offPayrollWorkerAllowedValidation.contains(List(RuleMissingOffPayrollWorker))) {
+      offPayrollWorkerAllowedValidation
+    } else {
+      jsonFormatError ++ emptyObjectValidation ++ offPayrollWorkerAllowedValidation
+    }
   }
 
   private def bodyValueValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>
