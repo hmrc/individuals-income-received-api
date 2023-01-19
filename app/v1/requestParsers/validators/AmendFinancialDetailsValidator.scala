@@ -82,12 +82,12 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
       val offPayrollWorker: Option[Boolean] = requestBodyObj.flatMap(entity => entity.employment.offPayrollWorker)
       val myTaxYear                         = TaxYear.fromMtd(data.taxYear).year
       List(
-        offPayrollWorker match {
-          case Some(false) if (myTaxYear >= 2023) => List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/offPayrollWorker"))))
-          case Some(true) if (myTaxYear >= 2023)  => NoValidationErrors
-          case _ if (myTaxYear >= 2023)           => List(RuleMissingOffPayrollWorker)
-          case Some(true) if (myTaxYear < 2023)   => List(RuleNotAllowedOffPayrollWorker)
-          case _                                  => NoValidationErrors
+        (myTaxYear >= 2023, offPayrollWorker) match {
+          case (true, Some(true))  => NoValidationErrors
+          case (true, Some(false)) => List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/offPayrollWorker"))))
+          case (true, None)        => List(RuleMissingOffPayrollWorker)
+          case (false, Some(true)) => List(RuleNotAllowedOffPayrollWorker)
+          case _                   => NoValidationErrors
         }
       )
     }
