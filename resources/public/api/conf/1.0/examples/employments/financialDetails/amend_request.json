@@ -39,6 +39,7 @@
       "travelAndSubsistence": 1024.99,
       "vouchersAndCreditCards": 1024.99,
       "nonCash": 1024.99
-    }
+    },
+    "offPayrollWorker": true
   }
 }
