@@ -516,8 +516,13 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
           List(RuleMissingOffPayrollWorker)
       }
 
-      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided before 23-24" in new Test {
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & true before 23-24" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOPWorker(true))) shouldBe
+          List(RuleNotAllowedOffPayrollWorker)
+      }
+
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & false before 23-24" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOPWorker(false))) shouldBe
           List(RuleNotAllowedOffPayrollWorker)
       }
 
