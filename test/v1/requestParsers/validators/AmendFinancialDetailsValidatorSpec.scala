@@ -395,6 +395,16 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
       }
 
+      "return no errors for a valid request for a taxYear 23-24 or later with offPayrollWorker set to false" in new Test {
+        validator.validate(
+          AmendFinancialDetailsRawData(
+            validNino,
+            "2023-24",
+            validEmploymentId,
+            AnyContentAsJson(requestJsonWithOPWorker(false)),
+            temporalValidationEnabled = false)) shouldBe Nil
+      }
+
       // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(AmendFinancialDetailsRawData("A12344A", validTaxYear, validEmploymentId, validRawBody)) shouldBe
@@ -497,17 +507,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
-      }
-
-      "return RuleIncorrectOrEmptyBodyError error when offPayrollWorker is false for a taxYear 23-24 or later" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2023-24",
-            validEmploymentId,
-            rawBodyWithOPWorker(false),
-            temporalValidationEnabled = false)) shouldBe
-          List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/offPayrollWorker"))))
       }
 
       "return RuleMissingOffPayrollWorker error when offPayrollWorker is missing for a taxYear 23-24 or later" in new Test {

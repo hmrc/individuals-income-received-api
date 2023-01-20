@@ -84,7 +84,7 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
       List(
         (myTaxYear >= 2023, offPayrollWorker) match {
           case (true, Some(true))   => NoValidationErrors
-          case (true, Some(false))  => List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/employment/offPayrollWorker"))))
+          case (true, Some(false))  => NoValidationErrors
           case (true, None)         => List(RuleMissingOffPayrollWorker)
           case (false, Some(true))  => List(RuleNotAllowedOffPayrollWorker)
           case (false, Some(false)) => List(RuleNotAllowedOffPayrollWorker)
