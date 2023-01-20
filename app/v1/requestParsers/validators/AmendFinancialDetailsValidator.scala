@@ -93,10 +93,12 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
       )
     }
 
-    if (offPayrollWorkerAllowedValidation.contains(List(RuleMissingOffPayrollWorker))) {
-      offPayrollWorkerAllowedValidation
+    val initialValidation = jsonFormatError ++ emptyObjectValidation
+
+    if (initialValidation.flatten.isEmpty) {
+      initialValidation ++ offPayrollWorkerAllowedValidation
     } else {
-      jsonFormatError ++ emptyObjectValidation ++ offPayrollWorkerAllowedValidation
+      initialValidation
     }
   }
 

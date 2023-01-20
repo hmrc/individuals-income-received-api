@@ -526,6 +526,11 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
           List(RuleNotAllowedOffPayrollWorker)
       }
 
+      "return only RuleIncorrectOrEmptyBody error when validating an empty body" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, AnyContentAsJson(Json.parse("{}")))) shouldBe
+          List(RuleIncorrectOrEmptyBodyError)
+      }
+
       // body value error scenarios
       "return ValueFormatError error for incorrect field formats" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, allInvalidValueRawRequestBody)) shouldBe
