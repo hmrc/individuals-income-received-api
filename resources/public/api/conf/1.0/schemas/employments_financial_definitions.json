@@ -215,7 +215,7 @@
     },
     "offPayrollWorker": {
       "type": "boolean",
-      "description": "This indicator indicates the customer's off payroll working status for employment. Valid if and only if value is true",
+      "description": "Indicates the employee's off-payroll working status for employment. Required for tax year 2023-4 or later. Not supported for earlier tax years.",
       "example": "true"
     },
     "taxablePayToDate": {
