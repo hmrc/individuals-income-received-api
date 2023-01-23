@@ -84,6 +84,56 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
+  private def requestJsonWithOPWorker(offPayrollWorker: Boolean): JsValue = Json.parse(
+    s"""
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": 13343.45,
+      |                "pglDeductionAmount": 24242.56
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": 455.67,
+      |            "assets": 435.54,
+      |            "assetTransfer": 24.58,
+      |            "beneficialLoan": 33.89,
+      |            "car": 3434.78,
+      |            "carFuel": 34.56,
+      |            "educationalServices": 445.67,
+      |            "entertaining": 434.45,
+      |            "expenses": 3444.32,
+      |            "medicalInsurance": 4542.47,
+      |            "telephone": 243.43,
+      |            "service": 45.67,
+      |            "taxableExpenses": 24.56,
+      |            "van": 56.29,
+      |            "vanFuel": 14.56,
+      |            "mileage": 34.23,
+      |            "nonQualifyingRelocationExpenses": 54.62,
+      |            "nurseryPlaces": 84.29,
+      |            "otherItems": 67.67,
+      |            "paymentsOnEmployeesBehalf": 67.23,
+      |            "personalIncidentalExpenses": 74.29,
+      |            "qualifyingRelocationExpenses": 78.24,
+      |            "employerProvidedProfessionalSubscriptions": 84.56,
+      |            "employerProvidedServices": 56.34,
+      |            "incomeTaxPaidByDirector": 67.34,
+      |            "travelAndSubsistence": 56.89,
+      |            "vouchersAndCreditCards": 34.90,
+      |            "nonCash": 23.89
+      |        },
+      |        "offPayrollWorker" : $offPayrollWorker
+      |    }
+      |}
+    """.stripMargin
+  )
+
   private val emptyRequestJson: JsValue = JsObject.empty
 
   private val missingMandatoryEmploymentObjectJson: JsValue = Json.parse("""{"field": "value"}""")
@@ -309,17 +359,18 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
-  private val validRawBody                             = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody                             = AnyContentAsJson(emptyRequestJson)
-  private val missingMandatoryEmploymentRawRequestBody = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
-  private val missingMandatoryPayRawRequestBody        = AnyContentAsJson(missingMandatoryPayObjectJson)
-  private val missingMandatoryFieldsRawRequestBody     = AnyContentAsJson(missingMandatoryFieldsJson)
-  private val incorrectFormatRawBody                   = AnyContentAsJson(incorrectFormatRequestJson)
-  private val allInvalidValueRawRequestBody            = AnyContentAsJson(allInvalidValueRequestBodyJson)
-  private val missingStudentLoansRawRequestBody        = AnyContentAsJson(missingStudentLoansBody)
-  private val missingBenefitsInKindRawRequestBody      = AnyContentAsJson(missingBenefitsInKindBody)
-  private val missingDeductionsRawRequestBody          = AnyContentAsJson(missingDeductionsBody)
-  private val missingMultipleObjectBodiesRequestBody   = AnyContentAsJson(missingMultipleObjectBodies)
+  private val validRawBody                                   = AnyContentAsJson(validRequestJson)
+  private val emptyRawBody                                   = AnyContentAsJson(emptyRequestJson)
+  private val missingMandatoryEmploymentRawRequestBody       = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
+  private val missingMandatoryPayRawRequestBody              = AnyContentAsJson(missingMandatoryPayObjectJson)
+  private val missingMandatoryFieldsRawRequestBody           = AnyContentAsJson(missingMandatoryFieldsJson)
+  private val incorrectFormatRawBody                         = AnyContentAsJson(incorrectFormatRequestJson)
+  private val allInvalidValueRawRequestBody                  = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val missingStudentLoansRawRequestBody              = AnyContentAsJson(missingStudentLoansBody)
+  private val missingBenefitsInKindRawRequestBody            = AnyContentAsJson(missingBenefitsInKindBody)
+  private val missingDeductionsRawRequestBody                = AnyContentAsJson(missingDeductionsBody)
+  private val missingMultipleObjectBodiesRequestBody         = AnyContentAsJson(missingMultipleObjectBodies)
+  private def rawBodyWithOPWorker(offPayrollWorker: Boolean) = AnyContentAsJson(requestJsonWithOPWorker(offPayrollWorker))
 
   class Test() extends MockCurrentDateTime with MockAppConfig {
 
@@ -342,6 +393,16 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     "running a validation" should {
       "return no errors for a valid request" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
+      }
+
+      "return no errors for a valid request for a taxYear 23-24 or later with offPayrollWorker set to false" in new Test {
+        validator.validate(
+          AmendFinancialDetailsRawData(
+            validNino,
+            "2023-24",
+            validEmploymentId,
+            AnyContentAsJson(requestJsonWithOPWorker(false)),
+            temporalValidationEnabled = false)) shouldBe Nil
       }
 
       // parameter format error scenarios
@@ -383,7 +444,12 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
       "not return RuleTaxYearNotEndedError error for a tax year which hasn't ended but temporal validation is disabled" in new Test {
         validator.validate(
-          AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody, temporalValidationEnabled = false)) shouldBe Nil
+          AmendFinancialDetailsRawData(
+            validNino,
+            "2022-23",
+            validEmploymentId,
+            AnyContentAsJson(requestJsonWithOPWorker(true)),
+            temporalValidationEnabled = false)) shouldBe Nil
       }
 
       // body format error scenarios
@@ -441,6 +507,27 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe
           List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
+      }
+
+      "return RuleMissingOffPayrollWorker error when offPayrollWorker is missing for a taxYear 23-24 or later" in new Test {
+        validator.validate(
+          AmendFinancialDetailsRawData(validNino, "2023-24", validEmploymentId, validRawBody, temporalValidationEnabled = false)) shouldBe
+          List(RuleMissingOffPayrollWorker)
+      }
+
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & true before 23-24" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOPWorker(true))) shouldBe
+          List(RuleNotAllowedOffPayrollWorker)
+      }
+
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & false before 23-24" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOPWorker(false))) shouldBe
+          List(RuleNotAllowedOffPayrollWorker)
+      }
+
+      "return only RuleIncorrectOrEmptyBody error when validating an empty body" in new Test {
+        validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, AnyContentAsJson(Json.parse("{}")))) shouldBe
+          List(RuleIncorrectOrEmptyBodyError)
       }
 
       // body value error scenarios

@@ -16,7 +16,8 @@
 
 package v1.requestParsers.validators
 
-import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import api.models.domain.TaxYear
+import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, RuleMissingOffPayrollWorker, RuleNotAllowedOffPayrollWorker}
 import api.requestParsers.validators.Validator
 import config.AppConfig
 import utils.CurrentDateTime
@@ -77,7 +78,28 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
         }
         .getOrElse(NoValidationErrors))
 
-    jsonFormatError ++ emptyObjectValidation
+    val offPayrollWorkerAllowedValidation = {
+      val offPayrollWorker: Option[Boolean] = requestBodyObj.flatMap(entity => entity.employment.offPayrollWorker)
+      val myTaxYear                         = TaxYear.fromMtd(data.taxYear).year
+      List(
+        (myTaxYear >= 2023, offPayrollWorker) match {
+          case (true, Some(true))   => NoValidationErrors
+          case (true, Some(false))  => NoValidationErrors
+          case (true, None)         => List(RuleMissingOffPayrollWorker)
+          case (false, Some(true))  => List(RuleNotAllowedOffPayrollWorker)
+          case (false, Some(false)) => List(RuleNotAllowedOffPayrollWorker)
+          case (false, None)        => NoValidationErrors
+        }
+      )
+    }
+
+    val initialValidation = jsonFormatError ++ emptyObjectValidation
+
+    if (initialValidation.flatten.isEmpty) {
+      initialValidation ++ offPayrollWorkerAllowedValidation
+    } else {
+      initialValidation
+    }
   }
 
   private def bodyValueValidator: AmendFinancialDetailsRawData => List[List[MtdError]] = { data =>

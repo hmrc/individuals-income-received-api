@@ -215,6 +215,18 @@ object RuleDuplicateAccountNameError
       message = "Duplicate account name given for supplied NINO"
     )
 
+object RuleNotAllowedOffPayrollWorker
+    extends MtdError(
+      code = "NOT_ALLOWED_OFF_PAYROLL_WORKER",
+      message = "offPayrollWorker field is not allowed for tax years prior to 2023-24"
+    )
+
+object RuleMissingOffPayrollWorker
+    extends MtdError(
+      code = "MISSING_OFF_PAYROLL_WORKER",
+      message = "The offPayrollWorker field was not provided"
+    )
+
 // Not found errors
 object PpdSubmissionIdNotFoundError
     extends MtdError(

@@ -26,6 +26,8 @@ import api.models.errors.{
   NinoFormatError,
   NotFoundError,
   RuleIncorrectOrEmptyBodyError,
+  RuleMissingOffPayrollWorker,
+  RuleNotAllowedOffPayrollWorker,
   RuleTaxYearNotEndedError,
   RuleTaxYearNotSupportedError,
   RuleTaxYearRangeInvalidError,
@@ -63,7 +65,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request().put(offPayrollRequestBodyJson(true)))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -269,7 +271,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      val validRequestJson: JsValue = Json.parse(
+      val standardRequestJson: JsValue = Json.parse(
         """
           |{
           |    "employment": {
@@ -483,6 +485,54 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         )
       )
 
+      def offPayrollRequestBodyJson(boolean: Boolean): JsValue = Json.parse(s"""
+           |{
+           |    "employment": {
+           |        "pay": {
+           |            "taxablePayToDate": 3500.75,
+           |            "totalTaxToDate": 6782.92
+           |        },
+           |        "deductions": {
+           |            "studentLoans": {
+           |                "uglDeductionAmount": 13343.45,
+           |                "pglDeductionAmount": 24242.56
+           |            }
+           |        },
+           |        "benefitsInKind": {
+           |            "accommodation": 455.67,
+           |            "assets": 435.54,
+           |            "assetTransfer": 24.58,
+           |            "beneficialLoan": 33.89,
+           |            "car": 3434.78,
+           |            "carFuel": 34.56,
+           |            "educationalServices": 445.67,
+           |            "entertaining": 434.45,
+           |            "expenses": 3444.32,
+           |            "medicalInsurance": 4542.47,
+           |            "telephone": 243.43,
+           |            "service": 45.67,
+           |            "taxableExpenses": 24.56,
+           |            "van": 56.29,
+           |            "vanFuel": 14.56,
+           |            "mileage": 34.23,
+           |            "nonQualifyingRelocationExpenses": 54.62,
+           |            "nurseryPlaces": 84.29,
+           |            "otherItems": 67.67,
+           |            "paymentsOnEmployeesBehalf": 67.23,
+           |            "personalIncidentalExpenses": 74.29,
+           |            "qualifyingRelocationExpenses": 78.24,
+           |            "employerProvidedProfessionalSubscriptions": 84.56,
+           |            "employerProvidedServices": 56.34,
+           |            "incomeTaxPaidByDirector": 67.34,
+           |            "travelAndSubsistence": 56.89,
+           |            "vouchersAndCreditCards": 34.90,
+           |            "nonCash": 23.89
+           |        },
+           |        "offPayrollWorker": $boolean
+           |    }
+           |}
+      """.stripMargin)
+
       "validation error" when {
         def validationErrorTest(requestNino: String,
                                 requestTaxYear: String,
@@ -498,9 +548,16 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             override val employmentId: String     = requestEmploymentId
             override val requestBodyJson: JsValue = requestBody
 
+            override def request: WSRequest = if (taxYear == "2023-24") {
+              super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
+            } else {
+              super.request()
+            }
+
             val response: WSResponse = await(request().put(requestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
+
           }
         }
 
@@ -509,7 +566,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             "AA1123A",
             "2019-20",
             "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            validRequestJson,
+            standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", NinoFormatError, None),
             None),
@@ -517,16 +574,16 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "20199",
             "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            validRequestJson,
+            standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", TaxYearFormatError, None),
             None),
-          ("AA123456A", "2019-20", "ABCDE12345FG", validRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
+          ("AA123456A", "2019-20", "ABCDE12345FG", standardRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
           (
             "AA123456A",
             "2018-19",
             "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            validRequestJson,
+            standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None),
             None),
@@ -534,7 +591,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             "2019-21",
             "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            validRequestJson,
+            standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None),
             None),
@@ -542,7 +599,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             "AA123456A",
             getCurrentTaxYear,
             "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            validRequestJson,
+            standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleTaxYearNotEndedError, None),
             None),
@@ -593,6 +650,22 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             allInvalidValueRequestBodyJson,
             BAD_REQUEST,
             errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
+            None),
+          (
+            "AA123456A",
+            "2019-20",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            offPayrollRequestBodyJson(true),
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", RuleNotAllowedOffPayrollWorker, None),
+            None),
+          (
+            "AA123456A",
+            "2023-24",
+            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
+            standardRequestJson,
+            BAD_REQUEST,
+            errors.ErrorWrapper("X-123", RuleMissingOffPayrollWorker, None),
             None)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
@@ -650,53 +723,101 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
     val correlationId: String = "X-123"
 
     val requestBodyJson: JsValue = Json.parse(
-      """
-        |{
-        |    "employment": {
-        |        "pay": {
-        |            "taxablePayToDate": 3500.75,
-        |            "totalTaxToDate": 6782.92
-        |        },
-        |        "deductions": {
-        |            "studentLoans": {
-        |                "uglDeductionAmount": 13343.45,
-        |                "pglDeductionAmount": 24242.56
-        |            }
-        |        },
-        |        "benefitsInKind": {
-        |            "accommodation": 455.67,
-        |            "assets": 435.54,
-        |            "assetTransfer": 24.58,
-        |            "beneficialLoan": 33.89,
-        |            "car": 3434.78,
-        |            "carFuel": 34.56,
-        |            "educationalServices": 445.67,
-        |            "entertaining": 434.45,
-        |            "expenses": 3444.32,
-        |            "medicalInsurance": 4542.47,
-        |            "telephone": 243.43,
-        |            "service": 45.67,
-        |            "taxableExpenses": 24.56,
-        |            "van": 56.29,
-        |            "vanFuel": 14.56,
-        |            "mileage": 34.23,
-        |            "nonQualifyingRelocationExpenses": 54.62,
-        |            "nurseryPlaces": 84.29,
-        |            "otherItems": 67.67,
-        |            "paymentsOnEmployeesBehalf": 67.23,
-        |            "personalIncidentalExpenses": 74.29,
-        |            "qualifyingRelocationExpenses": 78.24,
-        |            "employerProvidedProfessionalSubscriptions": 84.56,
-        |            "employerProvidedServices": 56.34,
-        |            "incomeTaxPaidByDirector": 67.34,
-        |            "travelAndSubsistence": 56.89,
-        |            "vouchersAndCreditCards": 34.90,
-        |            "nonCash": 23.89
-        |        }
-        |    }
-        |}
+      s"""
+         |{
+         |    "employment": {
+         |        "pay": {
+         |            "taxablePayToDate": 3500.75,
+         |            "totalTaxToDate": 6782.92
+         |        },
+         |        "deductions": {
+         |            "studentLoans": {
+         |                "uglDeductionAmount": 13343.45,
+         |                "pglDeductionAmount": 24242.56
+         |            }
+         |        },
+         |        "benefitsInKind": {
+         |            "accommodation": 455.67,
+         |            "assets": 435.54,
+         |            "assetTransfer": 24.58,
+         |            "beneficialLoan": 33.89,
+         |            "car": 3434.78,
+         |            "carFuel": 34.56,
+         |            "educationalServices": 445.67,
+         |            "entertaining": 434.45,
+         |            "expenses": 3444.32,
+         |            "medicalInsurance": 4542.47,
+         |            "telephone": 243.43,
+         |            "service": 45.67,
+         |            "taxableExpenses": 24.56,
+         |            "van": 56.29,
+         |            "vanFuel": 14.56,
+         |            "mileage": 34.23,
+         |            "nonQualifyingRelocationExpenses": 54.62,
+         |            "nurseryPlaces": 84.29,
+         |            "otherItems": 67.67,
+         |            "paymentsOnEmployeesBehalf": 67.23,
+         |            "personalIncidentalExpenses": 74.29,
+         |            "qualifyingRelocationExpenses": 78.24,
+         |            "employerProvidedProfessionalSubscriptions": 84.56,
+         |            "employerProvidedServices": 56.34,
+         |            "incomeTaxPaidByDirector": 67.34,
+         |            "travelAndSubsistence": 56.89,
+         |            "vouchersAndCreditCards": 34.90,
+         |            "nonCash": 23.89
+         |        }
+         |    }
+         |}
       """.stripMargin
     )
+
+    def offPayrollRequestBodyJson(boolean: Boolean): JsValue = Json.parse(s"""
+         |{
+         |    "employment": {
+         |        "pay": {
+         |            "taxablePayToDate": 3500.75,
+         |            "totalTaxToDate": 6782.92
+         |        },
+         |        "deductions": {
+         |            "studentLoans": {
+         |                "uglDeductionAmount": 13343.45,
+         |                "pglDeductionAmount": 24242.56
+         |            }
+         |        },
+         |        "benefitsInKind": {
+         |            "accommodation": 455.67,
+         |            "assets": 435.54,
+         |            "assetTransfer": 24.58,
+         |            "beneficialLoan": 33.89,
+         |            "car": 3434.78,
+         |            "carFuel": 34.56,
+         |            "educationalServices": 445.67,
+         |            "entertaining": 434.45,
+         |            "expenses": 3444.32,
+         |            "medicalInsurance": 4542.47,
+         |            "telephone": 243.43,
+         |            "service": 45.67,
+         |            "taxableExpenses": 24.56,
+         |            "van": 56.29,
+         |            "vanFuel": 14.56,
+         |            "mileage": 34.23,
+         |            "nonQualifyingRelocationExpenses": 54.62,
+         |            "nurseryPlaces": 84.29,
+         |            "otherItems": 67.67,
+         |            "paymentsOnEmployeesBehalf": 67.23,
+         |            "personalIncidentalExpenses": 74.29,
+         |            "qualifyingRelocationExpenses": 78.24,
+         |            "employerProvidedProfessionalSubscriptions": 84.56,
+         |            "employerProvidedServices": 56.34,
+         |            "incomeTaxPaidByDirector": 67.34,
+         |            "travelAndSubsistence": 56.89,
+         |            "vouchersAndCreditCards": 34.90,
+         |            "nonCash": 23.89
+         |        },
+         |        "offPayrollWorker": $boolean
+         |    }
+         |}
+      """.stripMargin)
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -746,6 +867,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
     def taxYear: String = "2019-20"
 
     val downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+
   }
 
   private trait TysIfsTest extends Test {
