@@ -71,7 +71,11 @@
           "description": "Indicates that the employee is declaring disguised remuneration when set to True.",
           "example": "false"
         },
-        "offPayrollWorker": {"$ref": "#/definitions/offPayrollWorker"},
+        "offPayrollWorker": {
+          "type": "boolean",
+          "description": "[test only] Indicates the employee's off-payroll working status for employment. Only present for tax year 2023-24 or later.",
+          "example": "true"
+        },
         "employer": {
           "type": "object",
           "description": "Object containing pay details for a single employment.",
