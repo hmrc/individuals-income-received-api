@@ -24,7 +24,7 @@ case class AmendForeignInterestItem(amountBeforeTax: Option[BigDecimal],
                                     taxTakenOff: Option[BigDecimal],
                                     specialWithholdingTax: Option[BigDecimal],
                                     taxableAmount: BigDecimal,
-                                    foreignTaxCreditRelief: Boolean)
+                                    foreignTaxCreditRelief: Option[Boolean])
 
 object AmendForeignInterestItem {
   implicit val reads: Reads[AmendForeignInterestItem] = Json.reads[AmendForeignInterestItem]
@@ -35,7 +35,7 @@ object AmendForeignInterestItem {
       (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").writeNullable[BigDecimal] and
       (JsPath \ "taxableAmount").write[BigDecimal] and
-      (JsPath \ "foreignTaxCreditRelief").write[Boolean]
+      (JsPath \ "foreignTaxCreditRelief").writeNullable[Boolean]
   )(unlift(AmendForeignInterestItem.unapply))
 
 }

@@ -87,8 +87,7 @@
         },
         "required": [
           "countryCode",
-          "taxableAmount",
-          "foreignTaxCreditRelief"
+          "taxableAmount"
         ]
       }
     },

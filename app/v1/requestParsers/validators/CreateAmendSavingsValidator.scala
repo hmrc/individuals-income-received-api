@@ -34,7 +34,9 @@ import v1.requestParsers.validators.validations.{
 }
 
 @Singleton
-class CreateAmendSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateAmendSavingsRawData] with ValueFormatErrorMessages {
+class CreateAmendSavingsValidator @Inject() (implicit appConfig: AppConfig)
+    extends Validator[CreateAmendSavingsRawData]
+    with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 

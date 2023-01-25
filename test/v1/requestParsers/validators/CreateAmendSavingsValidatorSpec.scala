@@ -57,12 +57,19 @@ class CreateAmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMess
       |          "foreignTaxCreditRelief": false
       |       },
       |       {
+      |          "amountBeforeTax": 45.11,
+      |          "countryCode": "GBR",
+      |          "taxTakenOff": 10.12,
+      |          "specialWithholdingTax": 45.11,
+      |          "taxableAmount": 36.14,
+      |          "foreignTaxCreditRelief": true
+      |       },
+      |       {
       |          "amountBeforeTax": 300.11,
       |          "countryCode": "GBR",
       |          "taxTakenOff": 300.12,
       |          "specialWithholdingTax": 300.13,
-      |          "taxableAmount": 300.14,
-      |          "foreignTaxCreditRelief": true
+      |          "taxableAmount": 300.14
       |       }
       |    ]
       |}
@@ -97,8 +104,7 @@ class CreateAmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMess
       |          "countryCode": "GBR",
       |          "taxTakenOff": 300.12,
       |          "specialWithholdingTax": 300.13,
-      |          "taxableAmount": 300.14,
-      |          "foreignTaxCreditRelief": true
+      |          "taxableAmount": 300.14
       |       }
       |    ]
       |}
@@ -267,8 +273,7 @@ class CreateAmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMess
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(
               Seq(
                 "/foreignInterest/0/countryCode",
-                "/foreignInterest/0/taxableAmount",
-                "/foreignInterest/0/foreignTaxCreditRelief"
+                "/foreignInterest/0/taxableAmount"
               ))))
       }
     }
