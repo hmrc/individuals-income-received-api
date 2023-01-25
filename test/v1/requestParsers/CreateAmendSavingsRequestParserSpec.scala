@@ -24,7 +24,7 @@ import support.UnitSpec
 import v1.mocks.validators.MockCreateCreateAmendSavingsValidator
 import v1.models.request.amendSavings._
 
-class CreateCreateAmendSavingsRequestParserSpec extends UnitSpec {
+class CreateAmendSavingsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2019-20"
