@@ -132,7 +132,7 @@ class CreateAmendSavingsControllerSpec
       taxTakenOff = Some(102.22),
       specialWithholdingTax = Some(103.33),
       taxableAmount = 104.44,
-      foreignTaxCreditRelief = false
+      foreignTaxCreditRelief = Some(false)
     ),
     AmendForeignInterestItem(
       amountBeforeTax = Some(201.11),
@@ -140,7 +140,7 @@ class CreateAmendSavingsControllerSpec
       taxTakenOff = Some(202.22),
       specialWithholdingTax = Some(203.33),
       taxableAmount = 204.44,
-      foreignTaxCreditRelief = false
+      foreignTaxCreditRelief = Some(false)
     )
   )
 

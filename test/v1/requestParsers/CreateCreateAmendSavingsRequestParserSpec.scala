@@ -77,7 +77,7 @@ class CreateCreateAmendSavingsRequestParserSpec extends UnitSpec {
           taxTakenOff = Some(200.12),
           specialWithholdingTax = Some(200.13),
           taxableAmount = 200.14,
-          foreignTaxCreditRelief = false
+          foreignTaxCreditRelief = Some(false)
         ),
         AmendForeignInterestItem(
           amountBeforeTax = Some(300.11),
@@ -85,7 +85,7 @@ class CreateCreateAmendSavingsRequestParserSpec extends UnitSpec {
           taxTakenOff = Some(300.12),
           specialWithholdingTax = Some(300.13),
           taxableAmount = 300.14,
-          foreignTaxCreditRelief = true
+          foreignTaxCreditRelief = Some(true)
         )
       ))
   )
