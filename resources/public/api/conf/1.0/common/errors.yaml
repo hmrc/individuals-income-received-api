@@ -1,0 +1,390 @@
+components:
+  examples:
+
+    # 400
+
+    formatNino:
+      description: The format of the supplied NINO field is not valid.
+      value:
+        code: FORMAT_NINO
+        message: The provided NINO is invalid
+
+    formatTaxYear:
+      description: The format of the supplied tax year field is not valid.
+      value:
+        code: FORMAT_TAX_YEAR
+        message: The provided tax year is invalid
+
+    incorrectOrEmptyBody:
+      description: An empty or non-matching body was submitted.
+      value:
+        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+        message: An empty or non-matching body was submitted
+
+    ruleTaxYearNotSupported:
+      description: |
+        The specified tax year is not supported.
+        Either the tax year specified is before the minimum tax year value, or it is after the maximum tax year value.
+      value:
+        code: RULE_TAX_YEAR_NOT_SUPPORTED
+        message: The tax year specified does not lie within the supported range
+
+    ruleTaxYearNotSupportedMinus4Years:
+      description: |
+        The specified tax year is not supported.
+        That is, the tax year specified is before the minimum tax year value.
+        The tax year must not exceed current tax year minus 4.
+      value:
+        code: RULE_TAX_YEAR_NOT_SUPPORTED
+        message: The tax year specified does not lie within the supported range
+        
+    ruleTaxYearRangeInvalid:
+      description: Tax year range invalid. A tax year range of one year is required.
+      value:
+        code: RULE_TAX_YEAR_RANGE_INVALID
+        message: Tax year range invalid. A tax year range of one year is required
+        
+    notAllowedOffPayrollWorker:
+      description: The offPayrollWorker field is not allowed for tax years prior to 2023-24.
+      value:
+        code: NOT_ALLOWED_OFF_PAYROLL_WORKER
+        message: offPayrollWorker field is not allowed for tax years prior to 2023-24
+        
+    missingOffPayrollWorker:
+      description: The offPayrollWorker field was not provided; it must be provided for tax year 2023-24 or later.
+      value:
+        code: MISSING_OFF_PAYROLL_WORKER
+        message: The offPayrollWorker field was not provided
+        
+    formatValue:
+      description: One or more values have been added with the incorrect format.
+      value:
+        code: FORMAT_VALUE
+        message: The value must be between 0.00 and 99999999999.99
+        
+    formatCountryCode:
+      description: The format of the supplied country code is not valid.
+      value:
+        code: FORMAT_COUNTRY_CODE
+        message: The format of the country code is invalid
+        
+    ruleCountryCode:
+      description: Not a valid ISO 3166-1 alpha-3 country code.
+      value:
+        code: RULE_COUNTRY_CODE
+        message: The country code is not a valid ISO 3166-1 alpha-3 country code
+        
+    formatCustomerRef:
+      description: The format of the supplied customer reference is not valid.
+      value:
+        code: FORMAT_CUSTOMER_REF
+        message: The provided customer reference is invalid
+        
+    formatEvent:
+      description: The format of policy event is not valid.
+      value:
+        code: FORMAT_EVENT
+        message: The provided policy event is invalid
+
+    formatQOPsRef:
+      description: The format of QOPS reference number is not valid.
+      value:
+        code: FORMAT_QOPS_REF
+        message: The provided QOPS reference number is invalid
+
+    formatDoubleTaxationArticle:
+      description: The format of double taxation article is not valid.
+      value:
+        code: FORMAT_DOUBLE_TAXATION_ARTICLE
+        message: The provided double taxation article is invalid
+
+    formatDoubleTaxationTreaty:
+      description: The format of double taxation treaty is not valid.
+      value:
+        code: FORMAT_DOUBLE_TAXATION_TREATY
+        message: The provided double taxation treaty is invalid
+
+    formatSF74Ref:
+      description: The format of SF74 reference is not valid.
+      value:
+        code: FORMAT_SF74_REF
+        message: The provided SF74 reference is invalid
+
+    formatEmployerName:
+      description: The format of the employer name is not valid.
+      value:
+        code: FORMAT_EMPLOYER_NAME
+        message: The provided employer name is invalid
+
+    formatEmployerRef:
+      description: The format of the supplied employer ref is not valid.
+      value:
+        code: FORMAT_EMPLOYER_REF
+        message: The provided employer ref is invalid
+
+    formatDate:
+      description: The supplied date format is not valid.
+      value:
+        code: FORMAT_DATE
+        message: The field should be in the format YYYY-MM-DD
+
+    formatClassOfSharesAwarded:
+      description: The format of class of shares awarded is not valid.
+      value:
+        code: FORMAT_CLASS_OF_SHARES_AWARDED
+        message: The provided class of shares awarded is invalid
+
+    formatClassOfSharesAcquired:
+      description: The format of class of shares acquired is not valid.
+      value:
+        code: FORMAT_CLASS_OF_SHARES_ACQUIRED
+        message: The provided class of shares acquired is invalid
+
+    formatSchemePlanType:
+      description: The format or value of scheme plan type is not valid.
+      value:
+        code: FORMAT_SCHEME_PLAN_TYPE
+        message: The provided scheme plan type is invalid
+
+    formatEmploymentId:
+      description: The format of the supplied employment ID field is not valid.
+      value:
+        code: FORMAT_EMPLOYMENT_ID
+        message: The provided employment ID is invalid
+
+    formatStartDate:
+      description: The format of the supplied start date field is not valid.
+      value:
+        code: FORMAT_START_DATE
+        message: The provided start date is invalid
+
+    formatCessationDate:
+      description: The format of the supplied cessation date is not valid.
+      value:
+        code: FORMAT_CESSATION_DATE
+        message: The provided cessation date is invalid
+
+    formatPayrollId:
+      description: The format of the supplied payroll ID field is not valid.
+      value:
+        code: FORMAT_PAYROLL_ID
+        message: The provided payroll ID is invalid
+
+    formatPpdSubmissionId:
+      description: The format of the supplied PPD submission ID is invalid.
+      value:
+        code: FORMAT_PPD_SUBMISSION_ID
+        message: The provided ppdSubmissionId is invalid
+
+    emptyOrIncorrectBody:
+      description: An empty or non-matching body was submitted.
+      value:
+        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+        message: An empty or non-matching body was submitted
+
+    cessationDateBeforeStartDate:
+      description: The cessation date is earlier than the start date.
+      value:
+        code: RULE_CESSATION_DATE_BEFORE_START_DATE
+        message: The cessation date cannot be earlier than the start date
+
+    startDateAfterTaxYearEnd:
+      description: The employment is listed as starting after the tax year ended.
+      value:
+        code: RULE_START_DATE_AFTER_TAX_YEAR_END
+        message: The start date cannot be later than the tax year end
+
+    cessationDateBeforeTaxYearStart:
+      description: The employment is listed as ending before the tax year began.
+      value:
+        code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START
+        message: The cessation date cannot be before the tax year starts
+
+    ruleCustomEmployment:
+      description: The Employment ID provided is for a custom (user-provided) employment.
+      value:
+        code: RULE_CUSTOM_EMPLOYMENT
+        message: A custom employment cannot be ignored
+
+    ruleTaxYearNotEnded:
+      description: The submission has been made before the tax year it relates to has ended.
+      value:
+        code: RULE_TAX_YEAR_NOT_ENDED
+        message: Tax year not ended
+
+    ruleAmountGainLoss:
+      description: Either amountOfGain or amountOfLoss, must be provided but not both.
+      value:
+        code: RULE_AMOUNT_GAIN_LOSS
+        message: Either amountOfGain or amountOfLoss, must be provided but not both
+
+    ruleLossesGreaterThanGain:
+      description: The total losses from this year or the previous year must not be greater than the gain.
+      value:
+        code: RULE_LOSSES_GREATER_THAN_GAIN
+        message: The total losses from this year or the previous year must not be greater than the gain
+
+    formatSource:
+      description: The format of the supplied source is not valid.
+      value:
+        code: FORMAT_SOURCE
+        message: The provided source is invalid
+
+    ruleLumpSums:
+      description: Where lumpSums have been provided at least one child object is required.
+      value:
+        code: RULE_LUMP_SUMS
+        message: At least one child object is required when lumpSums are provided
+
+    ruleGainLoss:
+      description: Only one of gain or loss values can be provided.
+      value:
+        code: RULE_GAIN_LOSS
+        message: Only one of gain or loss values can be provided
+
+    cgtOtherFormatAssetDescription:
+      description: The format of the supplied asset description is not valid.
+      value:
+        code: FORMAT_ASSET_DESCRIPTION
+        message: The provided asset description is invalid
+
+    cgtOtherFormatAssetType:
+      description: The format of the supplied assetType value is invalid.
+      value:
+        code: FORMAT_ASSET_TYPE
+        message: The format of the assetType value is invalid
+
+    cgtOtherFormatClaimOrElectionCodes:
+      description: The format of the supplied claimOrElectionCodes value is invalid.
+      value:
+        code: FORMAT_CLAIM_OR_ELECTION_CODES
+        message: The format of the claimOrElectionCodes value is invalid
+
+    ruleDisposalDate:
+      description: The disposalDate must be in the specified tax year and no later than today's date.
+      value:
+        code: RULE_DISPOSAL_DATE
+        message: The disposalDate must be in the specified tax year and no later than today's date
+
+    nonPpdRuleDisposalDate:
+      description: The disposalDate must be within the specified tax year.
+      value:
+        code: RULE_DISPOSAL_DATE
+        message: The disposalDate must be in the specified tax year and no later than today's date
+
+    cgtOtherRuleAcquisitionDate:
+      description: The acquisitionDate must not be later than disposalDate.
+      value:
+        code: RULE_ACQUISITION_DATE
+        message: The acquisitionDate must not be later than disposalDate
+
+    cgtOtherRuleGainAfterReliefLossAfterRelief:
+      description: Only one of gainAfterRelief or lossAfterRelief values can be provided.
+      value:
+        code: RULE_GAIN_AFTER_RELIEF_LOSS_AFTER_RELIEF
+        message: Only one of gainAfterRelief or lossAfterRelief values can be provided
+
+    ruleCompletionDate:
+      description: |
+        The completionDate must be within the specific tax year and not in the future.
+        If the specified tax year has not ended, the completionDate must be between 7th March and 5th April.
+      value:
+        code: RULE_COMPLETION_DATE
+        message: | 
+          The completionDate must be within the specific tax year and not in the future.
+          If the specified tax year has not ended, the completionDate must be between 7th March and 5th April
+
+    ruleCompletionDateBeforeDisposalDate:
+      description: The completionDate must not be earlier than the disposalDate.
+      value:
+        code: RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE
+        message: The completionDate must not be earlier than the disposalDate
+
+    ruleAcquisitionDateAfterDisposalDate:
+      description: The acquisitionDate must not be later than disposalDate.
+      value:
+        code: RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE
+        message: The acquisitionDate must not be later than disposalDate
+
+    ruleUpdateForbidden:
+      description: The update for an HMRC held employment is not permitted.
+      value:
+        code: RULE_UPDATE_FORBIDDEN
+        message: The update for an HMRC held employment is not permitted
+
+    ruleDuplicatedPpdSubmissionId:
+      description: A PPD submission ID must only be used once.
+      value:
+        code: RULE_DUPLICATED_PPD_SUBMISSION_ID
+        message: A provided ppdSubmissionId is duplicated
+
+    ruleIncorrectDisposalType:
+      description: A PPD submission ID in the request is being used for the incorrect disposal type.
+      value:
+        code: RULE_INCORRECT_DISPOSAL_TYPE
+        message: A provided ppdSubmissionId is being used for the incorrect disposal type
+
+    formatAccountName:
+      description: The format of the supplied account name field is not valid.
+      value:
+        code: FORMAT_ACCOUNT_NAME
+        message: The provided account name is invalid
+
+    maximumSavingsAccountLimit:
+      description: The maximum number of 1000 savings accounts exceeded.
+      value:
+        code: RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT
+        message: The 1000 savings account limit exceeded
+
+    formatSavingsAccountId:
+      description: The format of the supplied savings account ID is not valid
+      value:
+        code: FORMAT_SAVINGS_ACCOUNT_ID
+        message: The format of the supplied savings account ID is not valid
+
+    # 403
+
+    clientOrAgentNotAuthorised:
+      description: |
+        The client or agent is not authorised. This is because: the client is not subscribed to MTD, 
+        the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+      value:
+        code: CLIENT_OR_AGENT_NOT_AUTHORISED
+
+    ruleDeleteForbidden:
+      description: A deletion for an HMRC held employment is not permitted.
+      value:
+        code: RULE_DELETE_FORBIDDEN
+        message: A deletion of an HMRC held employment is not permitted
+
+    duplicateAccountName:
+      description: A duplicate account name was supplied for that National Insurance Number.
+      value:
+        code: RULE_DUPLICATE_ACCOUNT_NAME
+        message: Duplicate account name given for supplied NINO
+
+    # 404
+
+    notFound:
+      description: The supplied income source could not be found.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
+
+    notFoundOtherCgtAndDisposals:
+      description: Other Capital Gains and disposals could not be found for the supplied nino and taxYear.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
+
+    notFoundCgtOverrides:
+      description: There are no submissions found.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
+
+    notFoundPpdSubmissionId:
+      description: The PPD submission ID was not found.
+      value:
+        code: PPD_SUBMISSION_ID_NOT_FOUND
+        message: Matching resource not found
