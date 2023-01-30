@@ -635,7 +635,7 @@ traits:
                   code: RULE_INCORRECT_DISPOSAL_TYPE
   ruleDeleteForbidden:
     responses:
-      403:
+      400:
         body:
          application/json:
             type: types.errorResponse
@@ -679,7 +679,7 @@ traits:
           code: FORMAT_SAVINGS_ACCOUNT_ID
   duplicateAccountName:
    responses:
-    403:
+    400:
       body:
         application/json:
           type: types.errorResponse
