@@ -146,7 +146,7 @@ class DeleteCustomEmploymentControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
@@ -181,12 +181,12 @@ class DeleteCustomEmploymentControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
+          (RuleDeleteForbiddenError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (RuleDeleteForbiddenError, FORBIDDEN),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
 
