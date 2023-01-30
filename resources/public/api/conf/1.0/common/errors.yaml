@@ -15,7 +15,7 @@ components:
         code: FORMAT_TAX_YEAR
         message: The provided tax year is invalid
 
-    incorrectOrEmptyBody:
+    ruleIncorrectOrEmptyBody:
       description: An empty or non-matching body was submitted.
       value:
         code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
@@ -176,12 +176,6 @@ components:
         code: FORMAT_PPD_SUBMISSION_ID
         message: The provided ppdSubmissionId is invalid
 
-    emptyOrIncorrectBody:
-      description: An empty or non-matching body was submitted.
-      value:
-        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
-        message: An empty or non-matching body was submitted
-
     cessationDateBeforeStartDate:
       description: The cessation date is earlier than the start date.
       value:
@@ -260,7 +254,7 @@ components:
         code: FORMAT_CLAIM_OR_ELECTION_CODES
         message: The format of the claimOrElectionCodes value is invalid
 
-    ruleDisposalDate:
+    cgtOtherRuleDisposalDate:
       description: The disposalDate must be in the specified tax year and no later than today's date.
       value:
         code: RULE_DISPOSAL_DATE
@@ -330,7 +324,7 @@ components:
         code: FORMAT_ACCOUNT_NAME
         message: The provided account name is invalid
 
-    maximumSavingsAccountLimit:
+    ruleMaximumSavingsAccountLimit:
       description: The maximum number of 1000 savings accounts exceeded.
       value:
         code: RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT
@@ -357,7 +351,7 @@ components:
         code: RULE_DELETE_FORBIDDEN
         message: A deletion of an HMRC held employment is not permitted
 
-    duplicateAccountName:
+    ruleDuplicateAccountName:
       description: A duplicate account name was supplied for that National Insurance Number.
       value:
         code: RULE_DUPLICATE_ACCOUNT_NAME
