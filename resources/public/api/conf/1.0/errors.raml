@@ -233,7 +233,7 @@ traits:
               application/json:
                 type: types.errorResponse
                 examples:
-                  formatEvent:
+                  formatDoubleTaxationTreaty:
                     description: 'The format of double taxation treaty is not valid.'
                     value:
                       code: FORMAT_DOUBLE_TAXATION_TREATY
@@ -379,7 +379,7 @@ traits:
               emptyOrIncorrectBody:
                 description: 'An empty or non-matching body was submitted.'
                 value:
-                  code: RULE_EMPTY_OR_INCORRECT_BODY_SUBMITTED
+                  code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
   cessationDateBeforeStartDate:
     responses:
       400:
@@ -390,7 +390,7 @@ traits:
               cessationDateBeforeStartDate:
                 description: 'The cessation date is earlier than the start date.'
                 value:
-                  code: RULE_END_DATE_BEFORE_START_DATE
+                  code: RULE_CESSATION_DATE_BEFORE_START_DATE
   startDateAfterTaxYearEnd:
     responses:
       400:
