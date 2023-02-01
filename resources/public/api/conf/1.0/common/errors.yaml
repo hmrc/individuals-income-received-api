@@ -336,15 +336,6 @@ components:
         code: FORMAT_SAVINGS_ACCOUNT_ID
         message: The format of the supplied savings account ID is not valid
 
-    # 403
-
-    clientOrAgentNotAuthorised:
-      description: |
-        The client or agent is not authorised. This is because: the client is not subscribed to MTD, 
-        the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
-      value:
-        code: CLIENT_OR_AGENT_NOT_AUTHORISED
-
     ruleDeleteForbidden:
       description: A deletion for an HMRC held employment is not permitted.
       value:
@@ -356,6 +347,16 @@ components:
       value:
         code: RULE_DUPLICATE_ACCOUNT_NAME
         message: Duplicate account name given for supplied NINO
+
+    # 403
+
+    clientOrAgentNotAuthorised:
+      description: |
+        The client or agent is not authorised. This is because: the client is not subscribed to MTD, 
+        the agent is not subscribed to Agent Services, or the client has not authorised the agent to act on their behalf.
+      value:
+        code: CLIENT_OR_AGENT_NOT_AUTHORISED
+        message: The client and/or agent is not authorised
 
     # 404
 

@@ -118,12 +118,11 @@ class DeleteCustomEmploymentController @Inject() (val authService: EnrolmentsAut
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
-          RuleTaxYearRangeInvalidError =>
+          RuleTaxYearRangeInvalidError | RuleDeleteForbiddenError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError            => NotFound(Json.toJson(errorWrapper))
-      case RuleDeleteForbiddenError => Forbidden(Json.toJson(errorWrapper))
-      case StandardDownstreamError  => InternalServerError(Json.toJson(errorWrapper))
-      case _                        => unhandledError(errorWrapper)
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def desErrorMap: Map[String, MtdError] =

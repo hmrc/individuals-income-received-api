@@ -192,7 +192,7 @@ class AmendCustomEmploymentControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
@@ -237,12 +237,12 @@ class AmendCustomEmploymentControllerSpec
           }
         }
 
-        val input = Seq(
+        val input = List(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (RuleUpdateForbiddenError, FORBIDDEN),
+          (RuleUpdateForbiddenError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (StandardDownstreamError, INTERNAL_SERVER_ERROR)
         )
