@@ -1,0 +1,22 @@
+get:
+  $ref: "./employments_non_paye_retrieve.yaml"
+  summary: Retrieve Non-PAYE Employment Income
+  security:
+    - User-Restricted:
+      - read:self-assessment
+  parameters:
+    - $ref: './common/queryParameters.yaml#/components/parameters/source'
+
+put:
+  $ref: "./employments_non_paye_create_amend.yaml"
+  summary: Create and Amend Non-PAYE Employment Income
+  security:
+    - User-Restricted:
+      - write:self-assessment
+
+delete:
+  $ref: "./employments_non_paye_delete.yaml"
+  summary: Delete Non-PAYE Employment Income
+  security:
+    - User-Restricted:
+      - write:self-assessment

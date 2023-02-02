@@ -1,0 +1,20 @@
+get:
+  $ref: "./employments_other_retrieve.yaml"
+  summary: Retrieve Other Employment Income
+  security:
+    - User-Restricted:
+      - read:self-assessment
+
+put:
+  $ref: "./employments_other_create_amend.yaml"
+  summary: Create and Amend Other Employment Income
+  security:
+    - User-Restricted:
+      - write:self-assessment
+
+delete:
+  $ref: "./employments_other_delete.yaml"
+  summary: Delete Other Employment Income
+  security:
+    - User-Restricted:
+      - write:self-assessment

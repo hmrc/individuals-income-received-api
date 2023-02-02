@@ -176,19 +176,19 @@ components:
         code: FORMAT_PPD_SUBMISSION_ID
         message: The provided ppdSubmissionId is invalid
 
-    cessationDateBeforeStartDate:
+    ruleCessationDateBeforeStartDate:
       description: The cessation date is earlier than the start date.
       value:
         code: RULE_CESSATION_DATE_BEFORE_START_DATE
         message: The cessation date cannot be earlier than the start date
 
-    startDateAfterTaxYearEnd:
+    ruleStartDateAfterTaxYearEnd:
       description: The employment is listed as starting after the tax year ended.
       value:
         code: RULE_START_DATE_AFTER_TAX_YEAR_END
         message: The start date cannot be later than the tax year end
 
-    cessationDateBeforeTaxYearStart:
+    ruleCessationDateBeforeTaxYearStart:
       description: The employment is listed as ending before the tax year began.
       value:
         code: RULE_CESSATION_DATE_BEFORE_TAX_YEAR_START
