@@ -176,6 +176,34 @@ class RetrieveOtherResponseSpec extends UnitSpec {
       }
     }
 
+    "read from a valid JSON with missing foreignTaxCreditRelief field in allOtherIncomeReceivedWhilstAbroad" should {
+      "produce an expected RetrieveOtherResponse object with foreignTaxCreditRelief as false" in {
+        val json = Json.parse(
+          """
+            |{
+            |   "submittedOn": "2019-04-04T01:01:01Z",
+            |   "allOtherIncomeReceivedWhilstAbroad": [
+            |      {
+            |         "countryCode": "FRA",
+            |         "taxableAmount": 4.23
+            |      }
+            |   ]
+            |}
+          """.stripMargin
+        )
+
+        json.as[RetrieveOtherResponse] shouldBe
+          RetrieveOtherResponse(
+            submittedOn = "2019-04-04T01:01:01Z",
+            None,
+            Some(Seq(AllOtherIncomeReceivedWhilstAbroadItem("FRA", None, None, None, false, 4.23, None, None))),
+            None,
+            None,
+            None)
+
+      }
+    }
+
     "written to JSON" should {
       "produce the expected JsObject" in {
         Json.toJson(responseModel) shouldBe json
