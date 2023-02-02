@@ -120,13 +120,13 @@ class AmendCustomEmploymentController @Inject() (val authService: EnrolmentsAuth
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | EmploymentIdFormatError | StartDateFormatError |
           CessationDateFormatError | PayrollIdFormatError | RuleTaxYearNotSupportedError | RuleCessationDateBeforeStartDateError |
-          RuleTaxYearNotEndedError | RuleStartDateAfterTaxYearEndError | RuleCessationDateBeforeTaxYearStartError | CustomMtdError(
-            EmployerNameFormatError.code) | CustomMtdError(EmployerRefFormatError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
+          RuleTaxYearNotEndedError | RuleStartDateAfterTaxYearEndError | RuleCessationDateBeforeTaxYearStartError | RuleUpdateForbiddenError |
+          CustomMtdError(EmployerNameFormatError.code) | CustomMtdError(EmployerRefFormatError.code) | CustomMtdError(
+            RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case RuleUpdateForbiddenError => Forbidden(Json.toJson(errorWrapper))
-      case NotFoundError            => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError  => InternalServerError(Json.toJson(errorWrapper))
-      case _                        => unhandledError(errorWrapper)
+      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
+      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _                       => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
