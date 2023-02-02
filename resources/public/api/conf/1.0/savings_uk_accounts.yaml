@@ -1,0 +1,15 @@
+get:
+  $ref: "./savings_uk_accounts_list.yaml"
+  summary: List All UK Savings Accounts
+  security:
+    - User-Restricted:
+        - read:self-assessment
+  parameters:
+    - $ref: './common/queryParameters.yaml#/components/parameters/savingsAccountId'
+
+post:
+  $ref: "./savings_uk_accounts_add.yaml"
+  summary: Add a UK Savings Account
+  security:
+    - User-Restricted:
+        - write:self-assessment
