@@ -11,3 +11,12 @@ components:
         enum: [ user, hmrcHeld, latest ]
         example: latest
       required: false
+    savingsAccountId:
+      in: query
+      name: savingsAccountId
+      description: The unique identifier of a savings account.
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9]{15}$
+        example: SAVKB2UVwUTBQGJ
+      required: false
