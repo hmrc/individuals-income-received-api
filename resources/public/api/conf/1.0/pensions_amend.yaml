@@ -1,8 +1,7 @@
 summary:
-  Create and Amend Foreign Income
+  Create and Amend Pensions Income
 description: |
-  This endpoint enables you to create and amend foreign income:
-  foreign earnings and unremittable foreign income.
+  This endpoint enables you to create and amend foreign pensions and overseas pension contributions. 
   A National Insurance number and tax year must be provided.
   
   ###  Test data
@@ -23,7 +22,7 @@ description: |
   </table>
 
 tags:
-  - Foreign Income
+  - Pensions Income
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
@@ -41,12 +40,12 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/foreign_amend_request.json'
+        $ref: './schemas/pensions_amend_request.json'
       examples:
         full_amendment:
-          description: Full Foreign Income Amendment
+          description: Full Pensions Income Amendment
           value:
-            $ref: './examples/foreignIncome/amend_foreign_request.json'
+            $ref: './examples/pensionsIncome/amend_request.json'
 
 responses:
   "200":
@@ -57,13 +56,12 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/foreign_amend_response.json'
+          $ref: './schemas/pensions_amend_response.json'
         examples:
           example-response:
             description: Example Response
             value:
-              $ref: './examples/foreignIncome/amend_response.json'
-
+              $ref: './examples/pensionsIncome/amend_response.json'
 
   "400":
     description: Bad request
@@ -80,14 +78,23 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
-          FORMAT_CUSTOMER_REF:
-            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
           FORMAT_COUNTRY_CODE:
             $ref: './common/errors.yaml#/components/examples/formatCountryCode'
           RULE_COUNTRY_CODE:
             $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
           FORMAT_VALUE:
             $ref: './common/errors.yaml#/components/examples/formatValue'
+          FORMAT_CUSTOMER_REF:
+            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
+          FORMAT_QOPS_REF:
+            $ref: './common/errors.yaml#/components/examples/formatQOPsRef'
+          FORMAT_DOUBLE_TAXATION_ARTICLE:
+            $ref: './common/errors.yaml#/components/examples/formatDoubleTaxationArticle'
+          FORMAT_DOUBLE_TAXATION_TREATY:
+            $ref: './common/errors.yaml#/components/examples/formatDoubleTaxationTreaty'
+          FORMAT_SF74_REF:
+            $ref: './common/errors.yaml#/components/examples/formatSF74Ref'
+
           RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
 

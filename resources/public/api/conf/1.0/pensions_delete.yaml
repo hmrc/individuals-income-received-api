@@ -1,11 +1,10 @@
 summary:
-  Create and Amend Foreign Income
+  Delete Dividends Income
 description: |
-  This endpoint enables you to create and amend foreign income:
-  foreign earnings and unremittable foreign income.
+  This endpoint allows the developer to delete foreign pensions and overseas pension contributions. 
   A National Insurance number and tax year must be provided.
   
-  ###  Test data
+  ### Test data
   <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
   <table>
   <thead>
@@ -19,17 +18,20 @@ description: |
   <td><p>N/A - DEFAULT</p></td>
   <td><p>Simulates success response.</p></td>
   </tr>
-  </tbody>
+      <tr>
+        <td><p>NOT_FOUND</p></td>
+        <td><p>Simulates the scenario where no data is found.</p></td>
+      </tr>
+    </tbody>
   </table>
 
 tags:
-  - Foreign Income
+  - Pensions Income
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
   - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'
   - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
-  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
   - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
   - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
@@ -37,33 +39,12 @@ security:
   - User-Restricted:
       - write:self-assessment
 
-requestBody:
-  content:
-    application/json:
-      schema:
-        $ref: './schemas/foreign_amend_request.json'
-      examples:
-        full_amendment:
-          description: Full Foreign Income Amendment
-          value:
-            $ref: './examples/foreignIncome/amend_foreign_request.json'
-
 responses:
-  "200":
-    description: Success
+  "204":
+    description: No Content
     headers:
       X-CorrelationId:
         $ref: './common/headers.yaml#/components/parameters/correlationId'
-    content:
-      application/json:
-        schema:
-          $ref: './schemas/foreign_amend_response.json'
-        examples:
-          example-response:
-            description: Example Response
-            value:
-              $ref: './examples/foreignIncome/amend_response.json'
-
 
   "400":
     description: Bad request
@@ -76,21 +57,10 @@ responses:
             $ref: './common/errors.yaml#/components/examples/formatNino'
           FORMAT_TAX_YEAR:
             $ref: './common/errors.yaml#/components/examples/formatTaxYear'
-          RULE_TAX_YEAR_NOT_SUPPORTED:
-            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
-          FORMAT_CUSTOMER_REF:
-            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
-          FORMAT_COUNTRY_CODE:
-            $ref: './common/errors.yaml#/components/examples/formatCountryCode'
-          RULE_COUNTRY_CODE:
-            $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
-          FORMAT_VALUE:
-            $ref: './common/errors.yaml#/components/examples/formatValue'
-          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
-            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
-
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
 
   "403":
     description: Forbidden
@@ -101,3 +71,13 @@ responses:
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "404":
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/notFound'

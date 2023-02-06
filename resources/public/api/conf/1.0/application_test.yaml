@@ -77,7 +77,8 @@ tags:
 
   - name: Insurance Income
     description: Resources relating to an individual's insurance
-
+  - name: Pensions Income
+    description: Resources relating to an individual's pension
   - name: Other Income
     description: Resources relating to an individual’s other
 
@@ -118,6 +119,8 @@ paths:
     $ref: "./foreign.yaml"
   /individuals/income-received/insurance-policies/{nino}/{taxYear}:
     $ref: "./insurance.yaml"
+  /individuals/income-received/pensions/{nino}/{taxYear}:
+    $ref: "./pensions.yaml"
   /individuals/income-received/other/{nino}/{taxYear}:
     $ref: "./other.yaml"
 
