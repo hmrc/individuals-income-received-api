@@ -12,8 +12,8 @@ is:
 displayName: Retrieve UK Savings Account Annual Summary
 description: This endpoint enables you to retrieve a UK savings account annual summary for a tax year. Use it to get the annual savings interest for a previously added savings account.
 (annotations.sandboxData): !include ../../scenarios/ukSavingsAccount/retrieve.md
-(annotations.scope): "write:self-assessment"
-securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:
   200:
     body:
