@@ -1,0 +1,18 @@
+get:
+  $ref: "./uk_dividends_retrieve.yaml"
+  summary: Retrieve a UK Dividends Income Annual Summary
+  security:
+    - User-Restricted:
+        - read:self-assessment
+put:
+  $ref: "./uk_dividends_amend.yaml"
+  summary: Create and Amend a UK Dividends Income Annual Summary
+  security:
+    - User-Restricted:
+        - write:self-assessment
+delete:
+  $ref: "./uk_dividends_delete.yaml"
+  summary: Delete a UK Dividends Income Annual Summary
+  security:
+    - User-Restricted:
+        - write:self-assessment

@@ -21,6 +21,7 @@ info:
     
     * Raise non-technical or platform-related issues with the [Software Development Support Team (SDST)](https://developer.service.hmrc.gov.uk/developer/support).
     * Raise technical issues on the [income-tax-mtd-changelog](https://github.com/hmrc/income-tax-mtd-changelog/issues) GitHub page.
+
 servers:
   - url: https://test-api.service.hmrc.gov.uk
     description: Sandbox
@@ -43,16 +44,32 @@ components:
 
 tags:
   - name: Employments
-    description: Resources relating to an individual's employments (please note, an occupational pension is classed as employment income and is identified by the occupationalPension property)
-  - name: Non-PAYE Employment Income
-    description: |
-      These endpoints allow a user to create, amend, retrieve and delete Non-PAYE employment income and tips
-      
-      Resources relating to an individual's Non-PAYE employment income
+    description: Resources relating to an individual's employments
+
+  - name: Non-Paye Employment Income
+    description: These endpoints allow a user to create, amend, retrieve and delete Non-PAYE employment income and tips
+
   - name: Other Employment Income
     description: Resources relating to an individual's other employment income
 
+  - name: Dividends Income
+    description: These endpoints allow a user to create, amend, retrieve and delete Dividends
+
+  - name: UK Dividends Income
+    description: Resources relating to an individual's uk dividends
+
+  - name: Foreign Income
+    description: Resources relating to an individual's employments
+
+  - name: Insurance Income
+    description: Resources relating to an individual's insurance
+
+  - name: Other Income
+    description: Resources relating to an individual’s other
+
+
 paths:
+
   /individuals/income-received/employments/{nino}/{taxYear}:
     $ref: "./employments.yaml"
   /individuals/income-received/employments/{nino}/{taxYear}/{employmentId}:
@@ -67,3 +84,16 @@ paths:
     $ref: "./employments_non_paye.yaml"
   /individuals/income-received/employments/other/{nino}/{taxYear}:
     $ref: "./employments_other.yaml"
+
+  /individuals/income-received/dividends/{nino}/{taxYear}/:
+    $ref: "./dividends.yaml"
+  /individuals/income-received/uk-dividends/{nino}/{taxYear}:
+    $ref: "./uk_dividends.yaml"
+  /individuals/income-received/foreign/{nino}/{taxYear}:
+    $ref: "./foreign.yaml"
+  /individuals/income-received/insurance-policies/{nino}/{taxYear}:
+    $ref: "./insurance.yaml"
+  /individuals/income-received/other/{nino}/{taxYear}:
+    $ref: "./other.yaml"
+
+
