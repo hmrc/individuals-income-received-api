@@ -35,7 +35,7 @@ object AllOtherIncomeReceivedWhilstAbroadItem {
       (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
-      (JsPath \ "foreignTaxCreditRelief").read[Boolean] and
+      (JsPath \ "foreignTaxCreditRelief").readNullable[Boolean].map(_.getOrElse(false)) and
       (JsPath \ "taxableAmount").read[BigDecimal] and
       (JsPath \ "residentialFinancialCostAmount").readNullable[BigDecimal] and
       (JsPath \ "broughtFwdResidentialFinancialCostAmount").readNullable[BigDecimal]
