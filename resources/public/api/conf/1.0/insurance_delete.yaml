@@ -27,7 +27,7 @@ description: |
   </table>
 
 tags:
-  - Insurance Income
+  - Insurance Policies Income
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
   - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'

@@ -24,7 +24,7 @@ description: |
 
 
 tags:
-  - Insurance Income
+  - Insurance Policies Income
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
