@@ -51,20 +51,6 @@ tags:
 
   - name: Other Employment Income
     description: Resources relating to an individual's other employment income
-  - name: UK Savings Account
-    description: Resources relating to an individual’s UK savings account
-  - name: Savings Income
-    description: Resources relating to an individual's savings income
-  - name: Capital Gains on Residential Property Disposals
-    description: |
-      These endpoints allow a user to create, delete or amend Capitals Gains income from residential property disposals
-      
-      Resources relating to an individual's residential property disposals
-  - name: Other Capital Gains and Disposals
-    description: |
-      These endpoints allow a user to create, delete or amend income from other Capital Gains and disposals
-    
-      Resources relating to an individual's other capital gains and disposals
 
   - name: Dividends Income
     description: These endpoints allow a user to create, amend, retrieve and delete Dividends
@@ -77,11 +63,30 @@ tags:
 
   - name: Insurance Policies Income
     description: Resources relating to an individual's insurance policies
+
   - name: Pensions Income
     description: Resources relating to an individual's pensions income (please note, an occupational pension is classed as pensions income and is identified by the occupationalPension property)
+
   - name: Other Income
     description: Resources relating to an individual’s other income
 
+  - name: UK Savings Account
+    description: Resources relating to an individual’s UK savings account
+
+  - name: Savings Income
+    description: Resources relating to an individual's savings income
+
+  - name: Capital Gains on Residential Property Disposals
+    description: |
+      These endpoints allow a user to create, delete or amend Capitals Gains income from residential property disposals
+      
+      Resources relating to an individual's residential property disposals
+
+  - name: Other Capital Gains and Disposals
+    description: |
+      These endpoints allow a user to create, delete or amend income from other Capital Gains and disposals
+    
+      Resources relating to an individual's other capital gains and disposals
 
 paths:
   /individuals/income-received/employments/{nino}/{taxYear}:
@@ -98,18 +103,6 @@ paths:
     $ref: "./employments_non_paye.yaml"
   /individuals/income-received/employments/other/{nino}/{taxYear}:
     $ref: "./employments_other.yaml"
-  /individuals/income-received/savings/uk-accounts/{nino}:
-    $ref: "./savings_uk_accounts.yaml"
-  /individuals/income-received/savings/uk-accounts/{nino}/{taxYear}/{savingsAccountId}:
-    $ref: "./savings_uk_accounts_id.yaml"
-  /individuals/income-received/savings/{nino}/{taxYear}:
-    $ref: "./savings.yaml"
-  /individuals/income-received/disposals/residential-property/{nino}/{taxYear}:
-    $ref: "./cgt_residential.yaml"
-  /individuals/income-received/disposals/residential-property/{nino}/{taxYear}/ppd:
-    $ref: "./cgt_residential_ppd.yaml"
-  /individuals/income-received/disposals/other-gains/{nino}/{taxYear}:
-    $ref: "./cgt_other.yaml"
   /individuals/income-received/dividends/{nino}/{taxYear}:
     $ref: "./dividends.yaml"
   /individuals/income-received/uk-dividends/{nino}/{taxYear}:
@@ -122,5 +115,15 @@ paths:
     $ref: "./pensions.yaml"
   /individuals/income-received/other/{nino}/{taxYear}:
     $ref: "./other.yaml"
-
-
+  /individuals/income-received/savings/uk-accounts/{nino}:
+    $ref: "./savings_uk_accounts.yaml"
+  /individuals/income-received/savings/uk-accounts/{nino}/{taxYear}/{savingsAccountId}:
+    $ref: "./savings_uk_accounts_id.yaml"
+  /individuals/income-received/savings/{nino}/{taxYear}:
+    $ref: "./savings.yaml"
+  /individuals/income-received/disposals/residential-property/{nino}/{taxYear}:
+    $ref: "./cgt_residential.yaml"
+  /individuals/income-received/disposals/residential-property/{nino}/{taxYear}/ppd:
+    $ref: "./cgt_residential_ppd.yaml"
+  /individuals/income-received/disposals/other-gains/{nino}/{taxYear}:
+    $ref: "./cgt_other.yaml"

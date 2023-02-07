@@ -14,7 +14,7 @@ put:
 
 delete:
   $ref: "./dividends_delete.yaml"
-  summary: Delete Foreign Income
+  summary: Delete Dividends Income
   security:
     - User-Restricted:
         - write:self-assessment
