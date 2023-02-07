@@ -127,5 +127,3 @@ paths:
     $ref: "./cgt_residential_ppd.yaml"
   /individuals/income-received/disposals/other-gains/{nino}/{taxYear}:
     $ref: "./cgt_other.yaml"
-
-
