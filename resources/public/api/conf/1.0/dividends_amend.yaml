@@ -1,24 +1,25 @@
 summary:
   Create and Amend Dividends Income
 description: |
-  This endpoint enables you to create and amend UK dividends income. 
-  A National Insurance number and tax year must be provided.
+  This endpoint enables you to create and amend UK dividends income: 
+  foreign dividend, dividend income received whilst abroad, stock dividend, redeemable shares, bonus issues of securities and close company loans written off
+  A National Insurance number and tax year must be provided. 
   
   ###  Test data
   <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
   <table>
-  <thead>
-  <tr>
-  <th>Header Value (Gov-Test-Scenario)</th>
-  <th>Scenario</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-  <td><p>N/A - DEFAULT</p></td>
-  <td><p>Simulates success response.</p></td>
-  </tr>
-  </tbody>
+    <thead>
+      <tr>
+        <th>Header Value (Gov-Test-Scenario)</th>
+        <th>Scenario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><p>N/A - DEFAULT</p></td>
+        <td><p>Simulates success response.</p></td>
+      </tr>
+    </tbody>
   </table>
 
 tags:

@@ -45,7 +45,7 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/pensionss_retrieve_response.json'
+          $ref: './schemas/pensions_retrieve_response.json'
         examples:
           default:
             description: Full Pensions Income

@@ -44,9 +44,9 @@ components:
 
 tags:
   - name: Employments
-    description: Resources relating to an individual's employments
+    description: Resources relating to an individual's employments (please note, an occupational pension is classed as employment income and is identified by the occupationalPension property)
 
-  - name: Non-Paye Employment Income
+  - name: Non-PAYE Employment Income
     description: These endpoints allow a user to create, amend, retrieve and delete Non-PAYE employment income and tips
 
   - name: Other Employment Income
@@ -75,12 +75,12 @@ tags:
   - name: Foreign Income
     description: Resources relating to an individual's employments
 
-  - name: Insurance Income
+  - name: Insurance Policies Income
     description: Resources relating to an individual's insurance
   - name: Pensions Income
-    description: Resources relating to an individual's pension
+    description: Resources relating to an individual's pensions income (please note, an occupational pension is classed as pensions income and is identified by the occupationalPension property)
   - name: Other Income
-    description: Resources relating to an individual’s other
+    description: Resources relating to an individual’s other income
 
 
 paths:
@@ -111,7 +111,7 @@ paths:
   /individuals/income-received/disposals/other-gains/{nino}/{taxYear}:
     $ref: "./cgt_other.yaml"
 
-  /individuals/income-received/dividends/{nino}/{taxYear}/:
+  /individuals/income-received/dividends/{nino}/{taxYear}:
     $ref: "./dividends.yaml"
   /individuals/income-received/uk-dividends/{nino}/{taxYear}:
     $ref: "./uk_dividends.yaml"
