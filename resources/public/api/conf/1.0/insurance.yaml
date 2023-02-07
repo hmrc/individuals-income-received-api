@@ -1,0 +1,18 @@
+get:
+  $ref: "./insurance_retrieve.yaml"
+  summary: Retrieve Insurance Policies Income
+  security:
+    - User-Restricted:
+        - read:self-assessment
+put:
+  $ref: "./insurance_amend.yaml"
+  summary: Create and Amend Insurance Policies Income
+  security:
+    - User-Restricted:
+        - write:self-assessment
+delete:
+  $ref: "./insurance_delete.yaml"
+  summary: Delete Insurance Policies Income
+  security:
+    - User-Restricted:
+        - write:self-assessment

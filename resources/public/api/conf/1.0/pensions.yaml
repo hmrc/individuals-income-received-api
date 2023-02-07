@@ -1,0 +1,20 @@
+get:
+  $ref: "./pensions_retrieve.yaml"
+  summary: Retrieve Pensions Income
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+put:
+  $ref: "./pensions_amend.yaml"
+  summary: Create and Amend Pensions Income
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+delete:
+  $ref: "./pensions_delete.yaml"
+  summary: Delete Pensions Income
+  security:
+    - User-Restricted:
+        - write:self-assessment
