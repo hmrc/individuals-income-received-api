@@ -76,7 +76,7 @@ tags:
     description: Resources relating to an individual's employments
 
   - name: Insurance Policies Income
-    description: Resources relating to an individual's insurance
+    description: Resources relating to an individual's insurance policies
   - name: Pensions Income
     description: Resources relating to an individual's pensions income (please note, an occupational pension is classed as pensions income and is identified by the occupationalPension property)
   - name: Other Income
@@ -110,7 +110,6 @@ paths:
     $ref: "./cgt_residential_ppd.yaml"
   /individuals/income-received/disposals/other-gains/{nino}/{taxYear}:
     $ref: "./cgt_other.yaml"
-
   /individuals/income-received/dividends/{nino}/{taxYear}:
     $ref: "./dividends.yaml"
   /individuals/income-received/uk-dividends/{nino}/{taxYear}:

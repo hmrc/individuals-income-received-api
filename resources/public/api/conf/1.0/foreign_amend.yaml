@@ -62,7 +62,7 @@ responses:
           example-response:
             description: Example Response
             value:
-              $ref: './examples/foreignIncome/amend_response.json'
+              $ref: './examples/foreignIncome/amend_foreign_response.json'
 
 
   "400":
