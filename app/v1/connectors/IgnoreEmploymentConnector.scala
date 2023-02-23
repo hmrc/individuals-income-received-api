@@ -16,9 +16,9 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.TaxYearSpecificIfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.models.request.EmptyBody
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -35,13 +35,9 @@ class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: 
 
     import request._
 
-    val uri = if (taxYear.useTaxYearSpecificApi) {
-      TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/income/employments/$nino/$employmentId/ignore")
-    } else {
-      Release6Uri[Unit](s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId/ignore")
-    }
+    val downstreamUri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/income/employments/$nino/$employmentId/ignore")
 
-    put(EmptyBody, uri)
+    put(EmptyBody, downstreamUri)
   }
 
 }
