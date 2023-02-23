@@ -30,7 +30,7 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   trait Test { _: ConnectorTest =>
-    def taxYear: TaxYear
+    def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
     val connector: IgnoreEmploymentConnector = new IgnoreEmploymentConnector(
       http = mockHttpClient,
@@ -48,27 +48,14 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
 
   "IgnoreEmploymentConnector" when {
     "ignoreEmployment" should {
-      "work" in new Release6Test with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
-
+      "work" in new TysIfsTest with Test {
         willPut(
-          url = s"$baseUrl/income-tax/income/employments/$nino/2021-22/$employmentId/ignore",
+          url = s"$baseUrl/income-tax/21-22/income/employments/$nino/$employmentId/ignore",
           body = EmptyBody
         ) returns Future.successful(outcome)
 
         await(connector.ignoreEmployment(request)) shouldBe outcome
 
-      }
-
-      "work for TYS" in new TysIfsTest with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-
-        willPut(
-          url = s"$baseUrl/income-tax/23-24/income/employments/$nino/$employmentId/ignore",
-          body = EmptyBody
-        ) returns Future.successful(outcome)
-
-        await(connector.ignoreEmployment(request)) shouldBe outcome
       }
     }
   }
