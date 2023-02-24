@@ -32,7 +32,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
     val nino: String = "AA123456A"
 
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    def taxYear: String
+    def taxYear: String      = "2019-20"
 
     val hateoasResponse: JsValue = Json.parse(
       s"""
@@ -53,7 +53,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
        """.stripMargin
     )
 
-    def downstreamUri: String
+    def downstreamUri: String = s"/income-tax/19-20/income/employments/$nino/$employmentId/ignore"
 
     def setupStubs(): Unit = ()
 
@@ -71,34 +71,9 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
   }
 
-  private class NonTysTest extends Test {
-    def taxYear: String = "2019-20"
-
-    def downstreamUri: String = s"/income-tax/income/employments/$nino/2019-20/$employmentId/ignore"
-  }
-
-  private class TysTest extends Test {
-    def taxYear: String       = "2023-24"
-    def downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId/ignore"
-
-    override def request: WSRequest =
-      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
-  }
-
   "Calling the 'ignore employment' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new NonTysTest {
-
-        override def setupStubs(): Unit =
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
-
-        val response: WSResponse = await(request.post(JsObject.empty))
-        response.status shouldBe OK
-        response.body[JsValue] shouldBe hateoasResponse
-        response.header("Content-Type") shouldBe Some("application/json")
-      }
-
-      "any valid request is made (TYS)" in new TysTest {
+      "any valid request is made" in new Test {
 
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
@@ -118,7 +93,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
                                 requestEmploymentId: String,
                                 expectedStatus: Int,
                                 expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new NonTysTest {
+          s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String         = requestNino
             override val taxYear: String      = requestTaxYear
@@ -143,7 +118,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
       "service error" when {
         def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new NonTysTest {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))

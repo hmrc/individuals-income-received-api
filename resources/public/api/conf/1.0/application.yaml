@@ -6,6 +6,7 @@ info:
   description: |
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
+    
     <div class="govuk-warning-text warning-icon-fix">
       <span class="govuk-warning-text__icon warning-icon-ui-fix" aria-hidden="true">!</span>
       <strong class="govuk-warning-text__text">
@@ -13,7 +14,9 @@ info:
         You are required by law to submit header data for this API. This includes all associated APIs and endpoints.
       </strong>
     </div>
+    
     [Check the data you need to send](/guides/fraud-prevention/). You can also use the [Test API](/api-documentation/docs/api/service/txm-fph-validator-api/1.0) during initial development and as part of your quality assurance checks.
+    
     # Changelog
     The changelog is [available here](https://github.com/hmrc/income-tax-mtd-changelog).
     
@@ -51,15 +54,37 @@ tags:
 
   - name: Other Employment Income
     description: Resources relating to an individual's other employment income
+
+  - name: Dividends Income
+    description: These endpoints allow a user to create, amend, retrieve and delete Dividends
+
+  - name: UK Dividends Income
+    description: Resources relating to an individual's uk dividends
+
+  - name: Foreign Income
+    description: Resources relating to an individual's employments
+
+  - name: Insurance Policies Income
+    description: Resources relating to an individual's insurance policies
+
+  - name: Pensions Income
+    description: Resources relating to an individual's pensions income (please note, an occupational pension is classed as pensions income and is identified by the occupationalPension property)
+
+  - name: Other Income
+    description: Resources relating to an individual’s other income
+
   - name: UK Savings Account
     description: Resources relating to an individual’s UK savings account
+
   - name: Savings Income
     description: Resources relating to an individual's savings income
+
   - name: Capital Gains on Residential Property Disposals
     description: |
       These endpoints allow a user to create, delete or amend Capitals Gains income from residential property disposals
       
       Resources relating to an individual's residential property disposals
+
   - name: Other Capital Gains and Disposals
     description: |
       These endpoints allow a user to create, delete or amend income from other Capital Gains and disposals
@@ -98,6 +123,18 @@ paths:
     $ref: "./employments_non_paye.yaml"
   /individuals/income-received/employments/other/{nino}/{taxYear}:
     $ref: "./employments_other.yaml"
+  /individuals/income-received/dividends/{nino}/{taxYear}:
+    $ref: "./dividends.yaml"
+  /individuals/income-received/uk-dividends/{nino}/{taxYear}:
+    $ref: "./uk_dividends.yaml"
+  /individuals/income-received/foreign/{nino}/{taxYear}:
+    $ref: "./foreign.yaml"
+  /individuals/income-received/insurance-policies/{nino}/{taxYear}:
+    $ref: "./insurance.yaml"
+  /individuals/income-received/pensions/{nino}/{taxYear}:
+    $ref: "./pensions.yaml"
+  /individuals/income-received/other/{nino}/{taxYear}:
+    $ref: "./other.yaml"
   /individuals/income-received/savings/uk-accounts/{nino}:
     $ref: "./savings_uk_accounts.yaml"
   /individuals/income-received/savings/uk-accounts/{nino}/{taxYear}/{savingsAccountId}:

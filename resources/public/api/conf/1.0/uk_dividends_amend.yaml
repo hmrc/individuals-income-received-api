@@ -49,7 +49,7 @@ requestBody:
         full_amendment:
           description: Full Dividend Income Amendment
           value:
-            $ref: './examples/ukdividendsIncome/amend_request.json'
+            $ref: './examples/ukDividendsIncome/amend_request.json'
 responses:
   "200":
     description: Success
