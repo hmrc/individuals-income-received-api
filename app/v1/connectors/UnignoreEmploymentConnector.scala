@@ -20,7 +20,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.TaxYearSpecificIfsUri
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
@@ -35,11 +35,7 @@ class UnignoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig
 
     import request._
 
-    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
-      TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/employments/$nino/ignore/$employmentId")
-    } else {
-      IfsUri[Unit](s"income-tax/employments/$nino/${taxYear.asMtd}/ignore/$employmentId")
-    }
+    val downstreamUri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/employments/$nino/ignore/$employmentId")
 
     delete(downstreamUri)
   }

@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.models.domain.TaxYear
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
@@ -28,9 +29,80 @@ import support.IntegrationBaseSpec
 
 class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
+
+  private trait Test {
+
+    val nino: String         = "AA123456A"
+    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val taxYear: String = "2023-24"
+
+    def mtdUri: String = s"/employments/$nino/$taxYear/$employmentId/unignore"
+
+    def downstreamUri: String = s"/income-tax/${TaxYear.fromMtd(taxYear).asTysDownstream}/employments/$nino/ignore/$employmentId"
+
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links": [
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+         |         "rel": "list-employments",
+         |         "method": "GET"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "rel": "self",
+         |         "method": "GET"
+         |      }
+         |   ]
+         |}
+       """.stripMargin
+    )
+
+    def setupStubs(): StubMapping
+
+    def request(): WSRequest = {
+      setupStubs()
+      buildRequest(mtdUri)
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123")
+        )
+    }
+
+    def errorBody(code: String): String =
+      s"""
+         |{
+         |   "code": "$code",
+         |   "reason": "error message"
+         |}
+            """.stripMargin
+
+  }
+
   "Calling the 'unignore employment' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made" in new NonTysTest with Test {
+      "any valid request is made" in new Test {
+
+        override val taxYear: String = "2021-22"
+        override val hateoasResponse: JsValue = Json.parse(
+          s"""
+             |{
+             |   "links": [
+             |      {
+             |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+             |         "rel": "list-employments",
+             |         "method": "GET"
+             |      },
+             |      {
+             |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+             |         "rel": "self",
+             |         "method": "GET"
+             |      }
+             |   ]
+             |}
+       """.stripMargin
+        )
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -45,7 +117,7 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "any valid request with a Tax Year Specific (TYS) tax year is made" in new TysIfsTest with Test {
+      "any valid request with a Tax Year Specific (TYS) tax year is made" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -53,6 +125,9 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.ninoFound(nino)
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
+
+        override def request(): WSRequest =
+          super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
 
         val response: WSResponse = await(request().post(JsObject.empty))
         response.status shouldBe OK
@@ -68,10 +143,10 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
                               expectedStatus: Int,
                               expectedBody: MtdError,
                               scenario: Option[String]): Unit = {
-        s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new NonTysTest with Test {
+        s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
           override val nino: String         = requestNino
-          override val taxYear: String      = requestTaxYear
+          override val taxYear: String = requestTaxYear
           override val employmentId: String = requestEmploymentId
 
           override def setupStubs(): StubMapping = {
@@ -100,7 +175,7 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
     "return a service error according to spec" when {
       def serviceErrorTest(downstreamStatus: Int, downstreamErrorCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"downstream returns an $downstreamErrorCode error and status $downstreamStatus" in new NonTysTest with Test {
+        s"downstream returns an $downstreamErrorCode error and status $downstreamStatus" in new Test {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -109,6 +184,8 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamErrorCode))
           }
 
+          override def request(): WSRequest =
+            super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
           val response: WSResponse = await(request().post(JsObject.empty))
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
@@ -134,69 +211,6 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
       (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
     }
-
-  }
-
-  private trait Test {
-
-    val nino: String         = "AA123456A"
-    val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-
-    def taxYear: String
-    def mtdUri: String = s"/employments/$nino/$taxYear/$employmentId/unignore"
-    def downstreamUri: String
-
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links": [
-         |      {
-         |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-         |         "rel": "list-employments",
-         |         "method": "GET"
-         |      },
-         |      {
-         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-         |         "rel": "self",
-         |         "method": "GET"
-         |      }
-         |   ]
-         |}
-       """.stripMargin
-    )
-
-    def setupStubs(): StubMapping
-
-    def request(): WSRequest = {
-      setupStubs()
-      buildRequest(mtdUri)
-        .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
-    }
-
-    def errorBody(code: String): String =
-      s"""
-         |{
-         |   "code": "$code",
-         |   "reason": "error message"
-         |}
-            """.stripMargin
-
-  }
-
-  private trait NonTysTest extends Test {
-    def taxYear: String       = "2021-22"
-    def downstreamUri: String = s"/income-tax/employments/$nino/2021-22/ignore/$employmentId"
-  }
-
-  private trait TysIfsTest extends Test {
-    def taxYear: String       = "2023-24"
-    def downstreamUri: String = s"/income-tax/23-24/employments/$nino/ignore/$employmentId"
-
-    override def request: WSRequest =
-      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
 
   }
 
