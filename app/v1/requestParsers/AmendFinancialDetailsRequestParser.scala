@@ -18,10 +18,10 @@ package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.requestParsers.RequestParser
-
-import javax.inject.{Inject, Singleton}
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
 import v1.requestParsers.validators.AmendFinancialDetailsValidator
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AmendFinancialDetailsRequestParser @Inject() (val validator: AmendFinancialDetailsValidator)

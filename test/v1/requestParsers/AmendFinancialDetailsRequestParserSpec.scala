@@ -17,7 +17,7 @@
 package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -28,9 +28,9 @@ import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, Am
 
 class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
 
-  private val nino: String = "AA123456B"
-  private val taxYear: String = "2020-21"
-  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  private val nino: String           = "AA123456B"
+  private val taxYear: String        = "2020-21"
+  private val employmentId           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -131,6 +131,7 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
   private val validRawBody = AnyContentAsJson(validRequestJson)
 
   private val validRawBodyWithOpw = AnyContentAsJson(validRequestJsonWithOpw)
@@ -150,7 +151,6 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
     body = validRawBody,
     opwEnabled = false
   )
-
 
   private val payModel = AmendPay(
     taxablePayToDate = 3500.75,
@@ -204,7 +204,6 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
     offPayrollWorker = None
   )
 
-
   private val employmentModelWithOpw = AmendEmployment(
     pay = payModel,
     deductions = Some(deductionsModel),
@@ -215,7 +214,6 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
   private val validRequestBodyModel = AmendFinancialDetailsRequestBody(
     employment = employmentModel
   )
-
 
   private val validRequestBodyModelWithOpw = AmendFinancialDetailsRequestBody(
     employment = employmentModelWithOpw
@@ -259,8 +257,8 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       }
     }
 
-    "return an error when the offPayrollWorker is not provided" when{
-      "the opw enabled is true and the taxYear is a TYS specific one " in new Test{
+    "return an error when the offPayrollWorker is not provided" when {
+      "the opw enabled is true and the taxYear is a TYS specific one " in new Test {
         MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawDataWithOpw).returns(Nil)
         parser.parseRequest(amendFinancialDetailsRawDataWithOpw) shouldBe Right(amendFinancialDetailsRequestWithOpw)
       }
@@ -401,5 +399,5 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       }
     }
   }
-}
 
+}

@@ -18,13 +18,14 @@ package v1.models.request.amendFinancialDetails.emploment
 
 import play.api.libs.json.{JsObject, Json, Reads, Writes}
 
+case class AmendEmployment(pay: AmendPay,
+                           deductions: Option[AmendDeductions],
+                           benefitsInKind: Option[AmendBenefitsInKind],
+                           offPayrollWorker: Option[Boolean])
 
-
-
-case class AmendEmployment(pay: AmendPay, deductions: Option[AmendDeductions], benefitsInKind: Option[AmendBenefitsInKind], offPayrollWorker: Option[Boolean])
 object AmendEmployment {
 
-  implicit val reads: Reads[AmendEmployment] =   Json.reads[AmendEmployment]
+  implicit val reads: Reads[AmendEmployment] = Json.reads[AmendEmployment]
 
   implicit val amendEmploymentWrites = new Writes[AmendEmployment] {
 
@@ -32,18 +33,20 @@ object AmendEmployment {
 
       val append =
         if (amendEmployment.offPayrollWorker == Some(true))
-           Json.obj("offPayrollWorker" -> Some(true))
+          Json.obj("offPayrollWorker" -> Some(true))
         else
-           Json.obj()
+          Json.obj()
 
       val result = Json.obj(
-        "pay" -> amendEmployment.pay,
-        "deductions" -> amendEmployment.deductions,
+        "pay"            -> amendEmployment.pay,
+        "deductions"     -> amendEmployment.deductions,
         "benefitsInKind" -> amendEmployment.benefitsInKind
       )
 
-     result ++ append
+      result ++ append
 
     }
+
   }
+
 }

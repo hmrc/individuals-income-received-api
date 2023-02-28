@@ -24,52 +24,63 @@ import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
 
+  lazy val desDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
+  lazy val ifsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
+  lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
+  lazy val release6DownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = release6BaseUrl, env = release6Env, token = release6Token, environmentHeaders = release6EnvironmentHeaders)
+  lazy val api1661DownstreamConfig: DownstreamConfig =
+    DownstreamConfig(baseUrl = api1661BaseUrl, env = api1661Env, token = api1661Token, environmentHeaders = api1661EnvironmentHeaders)
+
   def mtdIdBaseUrl: String
 
   // DES Config
   def desBaseUrl: String
-  def desEnv: String
-  def desToken: String
-  def desEnvironmentHeaders: Option[Seq[String]]
 
-  lazy val desDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
+  def desEnv: String
+
+  def desToken: String
+
+  def desEnvironmentHeaders: Option[Seq[String]]
 
   // IFS Config
   def ifsBaseUrl: String
-  def ifsEnv: String
-  def ifsToken: String
-  def ifsEnvironmentHeaders: Option[Seq[String]]
 
-  lazy val ifsDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
+  def ifsEnv: String
+
+  def ifsToken: String
+
+  def ifsEnvironmentHeaders: Option[Seq[String]]
 
   // Tax Year Specific (TYS) IFS Config
   def tysIfsBaseUrl: String
-  def tysIfsEnv: String
-  def tysIfsToken: String
-  def tysIfsEnvironmentHeaders: Option[Seq[String]]
 
-  lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
+  def tysIfsEnv: String
+
+  def tysIfsToken: String
+
+  def tysIfsEnvironmentHeaders: Option[Seq[String]]
 
   // release6 Config
   def release6BaseUrl: String
-  def release6Env: String
-  def release6Token: String
-  def release6EnvironmentHeaders: Option[Seq[String]]
 
-  lazy val release6DownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = release6BaseUrl, env = release6Env, token = release6Token, environmentHeaders = release6EnvironmentHeaders)
+  def release6Env: String
+
+  def release6Token: String
+
+  def release6EnvironmentHeaders: Option[Seq[String]]
 
   // Api1661 Config
   def api1661BaseUrl: String
-  def api1661Env: String
-  def api1661Token: String
-  def api1661EnvironmentHeaders: Option[Seq[String]]
 
-  lazy val api1661DownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = api1661BaseUrl, env = api1661Env, token = api1661Token, environmentHeaders = api1661EnvironmentHeaders)
+  def api1661Env: String
+
+  def api1661Token: String
+
+  def api1661EnvironmentHeaders: Option[Seq[String]]
 
   def apiGatewayContext: String
   def minimumPermittedTaxYear: Int
@@ -124,16 +135,16 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val apiGatewayContext: String      = config.getString("api.gateway.context")
   val minimumPermittedTaxYear: Int   = config.getInt("minimumPermittedTaxYear")
   val ukDividendsMinimumTaxYear: Int = config.getInt("ukDividendsMinimumTaxYear")
+  val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
+  // NRS Config
+  val mtdNrsProxyBaseUrl: String = config.baseUrl("mtd-api-nrs-proxy")
 
   // API Config
   def apiStatus(version: String): String         = config.getString(s"api.$version.status")
+
   def featureSwitches: Configuration             = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
-
-  val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
-
-  // NRS Config
-  val mtdNrsProxyBaseUrl: String = config.baseUrl("mtd-api-nrs-proxy")
 }
 
 case class ConfidenceLevelConfig(definitionEnabled: Boolean, authValidationEnabled: Boolean)

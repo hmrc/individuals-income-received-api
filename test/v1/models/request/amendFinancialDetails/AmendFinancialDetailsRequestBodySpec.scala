@@ -18,62 +18,62 @@ package v1.models.request.amendFinancialDetails
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
+import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 
 class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
 
-  def json(isTrue: Boolean = true): JsValue = Json.parse(
+  def jsonRequest(offPayrollWorker: Boolean = true): JsValue = Json.parse(
     s"""
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92
-      |        },
-      |        "deductions": {
-      |            "studentLoans": {
-      |                "uglDeductionAmount": 13343.45,
-      |                "pglDeductionAmount": 24242.56
-      |            }
-      |        },
-      |        "benefitsInKind": {
-      |            "accommodation": 455.67,
-      |            "assets": 435.54,
-      |            "assetTransfer": 24.58,
-      |            "beneficialLoan": 33.89,
-      |            "car": 3434.78,
-      |            "carFuel": 34.56,
-      |            "educationalServices": 445.67,
-      |            "entertaining": 434.45,
-      |            "expenses": 3444.32,
-      |            "medicalInsurance": 4542.47,
-      |            "telephone": 243.43,
-      |            "service": 45.67,
-      |            "taxableExpenses": 24.56,
-      |            "van": 56.29,
-      |            "vanFuel": 14.56,
-      |            "mileage": 34.23,
-      |            "nonQualifyingRelocationExpenses": 54.62,
-      |            "nurseryPlaces": 84.29,
-      |            "otherItems": 67.67,
-      |            "paymentsOnEmployeesBehalf": 67.23,
-      |            "personalIncidentalExpenses": 74.29,
-      |            "qualifyingRelocationExpenses": 78.24,
-      |            "employerProvidedProfessionalSubscriptions": 84.56,
-      |            "employerProvidedServices": 56.34,
-      |            "incomeTaxPaidByDirector": 67.34,
-      |            "travelAndSubsistence": 56.89,
-      |            "vouchersAndCreditCards": 34.90,
-      |            "nonCash": 23.89
-      |        },
-      |        "offPayrollWorker": $isTrue
-      |    }
-      |}
+       |{
+       |    "employment": {
+       |        "pay": {
+       |            "taxablePayToDate": 3500.75,
+       |            "totalTaxToDate": 6782.92
+       |        },
+       |        "deductions": {
+       |            "studentLoans": {
+       |                "uglDeductionAmount": 13343.45,
+       |                "pglDeductionAmount": 24242.56
+       |            }
+       |        },
+       |        "benefitsInKind": {
+       |            "accommodation": 455.67,
+       |            "assets": 435.54,
+       |            "assetTransfer": 24.58,
+       |            "beneficialLoan": 33.89,
+       |            "car": 3434.78,
+       |            "carFuel": 34.56,
+       |            "educationalServices": 445.67,
+       |            "entertaining": 434.45,
+       |            "expenses": 3444.32,
+       |            "medicalInsurance": 4542.47,
+       |            "telephone": 243.43,
+       |            "service": 45.67,
+       |            "taxableExpenses": 24.56,
+       |            "van": 56.29,
+       |            "vanFuel": 14.56,
+       |            "mileage": 34.23,
+       |            "nonQualifyingRelocationExpenses": 54.62,
+       |            "nurseryPlaces": 84.29,
+       |            "otherItems": 67.67,
+       |            "paymentsOnEmployeesBehalf": 67.23,
+       |            "personalIncidentalExpenses": 74.29,
+       |            "qualifyingRelocationExpenses": 78.24,
+       |            "employerProvidedProfessionalSubscriptions": 84.56,
+       |            "employerProvidedServices": 56.34,
+       |            "incomeTaxPaidByDirector": 67.34,
+       |            "travelAndSubsistence": 56.89,
+       |            "vouchersAndCreditCards": 34.90,
+       |            "nonCash": 23.89
+       |        },
+       |        "offPayrollWorker": $offPayrollWorker
+       |    }
+       |}
     """.stripMargin
   )
 
-  def jsonWithoutOpw: JsValue = Json.parse(
+  def jsonRequestWithoutOpw: JsValue = Json.parse(
     s"""
        |{
        |    "employment": {
@@ -188,7 +188,7 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
   "AmendFinancialDetailsRequestBody" when {
     "read from valid JSON" should {
       "produce the expected AmendFinancialDetailsRequestBody object" in {
-        json().as[AmendFinancialDetailsRequestBody] shouldBe AmendFinancialDetailsRequestBody(
+        jsonRequest().as[AmendFinancialDetailsRequestBody] shouldBe AmendFinancialDetailsRequestBody(
           employment = employmentModel
         )
       }
@@ -204,7 +204,7 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(requestBodyModel) shouldBe json()
+        Json.toJson(requestBodyModel) shouldBe jsonRequest()
       }
     }
 
@@ -212,7 +212,7 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
       "produce the expected JsObject without offPayrollWorker" in {
         Json.toJson(AmendFinancialDetailsRequestBody(
           employment = employmentModelOpwIsFalse
-        )) shouldBe jsonWithoutOpw
+        )) shouldBe jsonRequestWithoutOpw
       }
     }
   }

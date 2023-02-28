@@ -16,23 +16,24 @@
 
 package v1.controllers
 
-import api.controllers.{BaseController, AuthorisedController, EndpointLogContext}
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.AmendHateoasBody
-import api.models.audit.{GenericAuditDetail, AuditResponse, AuditEvent}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.services.{EnrolmentsAuthService, MtdIdLookupService, AuditService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import config.{AppConfig, FeatureSwitches}
-import play.api.libs.json.{Json, JsValue}
-import play.api.mvc.{Action, ControllerComponents, AnyContentAsJson}
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{Logging, IdGenerator}
+import utils.{IdGenerator, Logging}
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
 import v1.requestParsers.AmendFinancialDetailsRequestParser
 import v1.services.AmendFinancialDetailsService
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -63,13 +64,14 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
+      val featureSwitches: FeatureSwitches = FeatureSwitches()(appConfig)
       val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
         nino = nino,
         taxYear = taxYear,
         employmentId = employmentId,
         body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled,
-        opwEnabled =  FeatureSwitches()(appConfig).isOpwEnabled
+        temporalValidationEnabled = featureSwitches.isTemporalValidationEnabled,
+        opwEnabled = featureSwitches.isOpwEnabled
       )
 
       val result =
