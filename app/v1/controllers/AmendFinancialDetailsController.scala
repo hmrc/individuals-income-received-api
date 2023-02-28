@@ -68,7 +68,8 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
         taxYear = taxYear,
         employmentId = employmentId,
         body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled,
+        opwEnabled =  FeatureSwitches()(appConfig).isOpwEnabled
       )
 
       val result =
