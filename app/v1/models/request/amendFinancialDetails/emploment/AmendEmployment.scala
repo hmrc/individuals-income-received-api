@@ -16,10 +16,34 @@
 
 package v1.models.request.amendFinancialDetails.emploment
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsObject, Json, Reads, Writes}
+
+
+
 
 case class AmendEmployment(pay: AmendPay, deductions: Option[AmendDeductions], benefitsInKind: Option[AmendBenefitsInKind], offPayrollWorker: Option[Boolean])
-
 object AmendEmployment {
-  implicit val format: OFormat[AmendEmployment] = Json.format[AmendEmployment]
+
+  implicit val reads: Reads[AmendEmployment] =   Json.reads[AmendEmployment]
+
+  implicit val amendEmploymentWrites = new Writes[AmendEmployment] {
+
+    def writes(amendEmployment: AmendEmployment): JsObject = {
+
+      val append =
+        if (amendEmployment.offPayrollWorker == Some(true))
+           Json.obj("offPayrollWorker" -> Some(true))
+        else
+           Json.obj()
+
+      val result = Json.obj(
+        "pay" -> amendEmployment.pay,
+        "deductions" -> amendEmployment.deductions,
+        "benefitsInKind" -> amendEmployment.benefitsInKind
+      )
+
+     result ++ append
+
+    }
+  }
 }
