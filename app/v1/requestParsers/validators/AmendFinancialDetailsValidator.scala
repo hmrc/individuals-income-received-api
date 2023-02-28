@@ -82,17 +82,12 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
 
       if (TaxYearValidation.validate(data.taxYear) == NoValidationErrors) {
         val isTysTaxYear = ((TaxYear.fromMtd(data.taxYear).year) >= 2024) & data.opwEnabled
-        val offPayrollWorker: Option[Boolean] = requestBodyObj.flatMap(entity => entity.employment.offPayrollWorker)
-        List(
-          (isTysTaxYear, offPayrollWorker) match {
-            case (true, Some(true)) => NoValidationErrors
-            case (true, Some(false)) => NoValidationErrors
-            case (true, None) => List(RuleMissingOffPayrollWorker)
-            case (false, Some(true)) => List(RuleNotAllowedOffPayrollWorker)
-            case (false, Some(false)) => List(RuleNotAllowedOffPayrollWorker)
-            case (false, None) => NoValidationErrors
-          }
-        )
+        val maybeOffPayrollWorker: Option[Boolean] = requestBodyObj.flatMap(entity => entity.employment.offPayrollWorker)
+        maybeOffPayrollWorker match {
+          case None if isTysTaxYear => List(List(RuleMissingOffPayrollWorker))
+          case Some(_) if !isTysTaxYear => List(List(RuleNotAllowedOffPayrollWorker))
+          case _ => NoValidationErrors
+        }
       }
       else {
         NoValidationErrors

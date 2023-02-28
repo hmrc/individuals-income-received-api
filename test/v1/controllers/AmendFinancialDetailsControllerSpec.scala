@@ -18,26 +18,27 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockMtdIdLookupService, MockEnrolmentsAuthService, MockAuditService}
-import api.models.audit.{GenericAuditDetail, AuditResponse, AuditError, AuditEvent}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendFinancialDetailsRequestParser
 import v1.mocks.services.MockAmendFinancialDetailsService
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
-import v1.models.request.amendFinancialDetails.emploment.{AmendPay, AmendEmployment, AmendBenefitsInKind, AmendDeductions}
-import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody, AmendFinancialDetailsRawData}
+import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
+import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendFinancialDetailsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -70,11 +71,12 @@ class AmendFinancialDetailsControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  trait opwTest extends Test{
-    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled"-> true)).anyNumberOfTimes()
+  trait OpwTest extends Test {
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true)).anyNumberOfTimes()
   }
-  trait preOpwTest extends Test{
-    MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> false, "allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled"-> true)).anyNumberOfTimes()
+
+  trait PreOpwTest extends Test {
+    MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> false, "allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true)).anyNumberOfTimes()
   }
 
   private val requestBodyJsonWithOpw: JsValue = Json.parse(
@@ -308,7 +310,7 @@ class AmendFinancialDetailsControllerSpec
     )
   "AmendFinancialDetailsController with Opw disabled" should {
     "return OK" when {
-      "happy path" in new preOpwTest {
+      "happy path in non opw test" in new PreOpwTest {
 
         MockAmendFinancialDetailsRequestParser
           .parse(rawData)
@@ -327,11 +329,8 @@ class AmendFinancialDetailsControllerSpec
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
-    }
 
-  "AmendFinancialDetailsController with Opw enabled" should {
-    "return OK" when {
-      "happy path" in new opwTest {
+      "happy path in opw test" in new OpwTest {
 
         MockAmendFinancialDetailsRequestParser
           .parse(rawDataOwpEnabled)
@@ -351,11 +350,10 @@ class AmendFinancialDetailsControllerSpec
         MockedAuditService.verifyAuditEvent(opwEvent(auditResponse)).once
       }
     }
-  }
 
-    "Payload includes offPayrollWorker" when {
-      " and opw feature switch is disabled" must {
-        "return  RuleNotAllowedOffPayrollWorker error" in new preOpwTest {
+    "Payload submitted with  offPayrollWorker property" when {
+      "opw feature switch is disabled" must {
+        "return  RuleNotAllowedOffPayrollWorker error" in new PreOpwTest {
           val error = RuleNotAllowedOffPayrollWorker
           MockAmendFinancialDetailsRequestParser
             .parse(AmendFinancialDetailsRawData(
@@ -380,9 +378,9 @@ class AmendFinancialDetailsControllerSpec
     }
 
 
-    "Payload does not include offPayrollWorker" when {
-      " and opw feature switch is enabled" must {
-        "return  RuleMissingOffPayrollWorker error" in new opwTest {
+    "Payload submitted without offPayrollWorker property" when {
+      "the opw feature switch is enabled and the tax year is 2024" must {
+        "return  RuleMissingOffPayrollWorker error" in new OpwTest {
           val error = RuleMissingOffPayrollWorker
           MockAmendFinancialDetailsRequestParser
             .parse(AmendFinancialDetailsRawData(
@@ -409,7 +407,7 @@ class AmendFinancialDetailsControllerSpec
     "return the error as per spec" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new preOpwTest {
+          s"a ${error.code} error is returned from the parser" in new PreOpwTest {
 
             MockAmendFinancialDetailsRequestParser
               .parse(rawData)
@@ -444,7 +442,7 @@ class AmendFinancialDetailsControllerSpec
 
       "service errors occur" must {
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new preOpwTest {
+          s"a $mtdError error is returned from the service" in new PreOpwTest {
 
             MockAmendFinancialDetailsRequestParser
               .parse(rawData)

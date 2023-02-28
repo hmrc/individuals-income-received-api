@@ -21,8 +21,8 @@ import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
-import play.api.libs.json.{JsObject, Json, JsValue}
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
@@ -83,6 +83,234 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
+  private val emptyRequestJson: JsValue = JsObject.empty
+  private val missingMandatoryEmploymentObjectJson: JsValue = Json.parse("""{"field": "value"}""")
+  private val missingMandatoryPayObjectJson: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {}
+      |}
+    """.stripMargin
+  )
+  private val missingMandatoryFieldsJson: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+  private val incorrectFormatRequestJson: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": true,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": []
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": "false"
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+  private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.758,
+      |            "totalTaxToDate": 6782.923
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": -13343.45,
+      |                "pglDeductionAmount": -24242.56
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": -455.67,
+      |            "assets": -435.54,
+      |            "assetTransfer": -24.58,
+      |            "beneficialLoan": -33.89,
+      |            "car": -3434.78,
+      |            "carFuel": 34.569,
+      |            "educationalServices": 445.677,
+      |            "entertaining": 434.458,
+      |            "expenses": 3444.324,
+      |            "medicalInsurance": 4542.475,
+      |            "telephone": 243.436,
+      |            "service": -45.67,
+      |            "taxableExpenses": -24.56,
+      |            "van": -56.29,
+      |            "vanFuel": -14.56,
+      |            "mileage": -34.23,
+      |            "nonQualifyingRelocationExpenses": 54.623,
+      |            "nurseryPlaces": 84.294,
+      |            "otherItems": 67.676,
+      |            "paymentsOnEmployeesBehalf": -67.23,
+      |            "personalIncidentalExpenses": -74.29,
+      |            "qualifyingRelocationExpenses": 78.244,
+      |            "employerProvidedProfessionalSubscriptions": -84.56,
+      |            "employerProvidedServices": -56.34,
+      |            "incomeTaxPaidByDirector": 67.342,
+      |            "travelAndSubsistence": -56.89,
+      |            "vouchersAndCreditCards": 34.905,
+      |            "nonCash": -23.89
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+  private val missingStudentLoansBody: JsValue = Json.parse(
+    """
+        |{
+        |    "employment": {
+        |        "pay": {
+        |            "taxablePayToDate": 3500.75,
+        |            "totalTaxToDate": 6782.92
+        |        },
+        |        "deductions": {
+        |            "studentLoans": {
+        |            }
+        |        },
+        |        "benefitsInKind": {
+        |            "accommodation": 455.67,
+        |            "assets": 435.54,
+        |            "assetTransfer": 24.58,
+        |            "beneficialLoan": 33.89,
+        |            "car": 3434.78,
+        |            "carFuel": 34.56,
+        |            "educationalServices": 445.67,
+        |            "entertaining": 434.45,
+        |            "expenses": 3444.32,
+        |            "medicalInsurance": 4542.47,
+        |            "telephone": 243.43,
+        |            "service": 45.67,
+        |            "taxableExpenses": 24.56,
+        |            "van": 56.29,
+        |            "vanFuel": 14.56,
+        |            "mileage": 34.23,
+        |            "nonQualifyingRelocationExpenses": 54.62,
+        |            "nurseryPlaces": 84.29,
+        |            "otherItems": 67.67,
+        |            "paymentsOnEmployeesBehalf": 67.23,
+        |            "personalIncidentalExpenses": 74.29,
+        |            "qualifyingRelocationExpenses": 78.24,
+        |            "employerProvidedProfessionalSubscriptions": 84.56,
+        |            "employerProvidedServices": 56.34,
+        |            "incomeTaxPaidByDirector": 67.34,
+        |            "travelAndSubsistence": 56.89,
+        |            "vouchersAndCreditCards": 34.90,
+        |            "nonCash": 23.89
+        |        }
+        |    }
+        |}
+        |""".stripMargin
+  )
+  private val missingDeductionsBody: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": 455.67,
+      |            "assets": 435.54,
+      |            "assetTransfer": 24.58,
+      |            "beneficialLoan": 33.89,
+      |            "car": 3434.78,
+      |            "carFuel": 34.56,
+      |            "educationalServices": 445.67,
+      |            "entertaining": 434.45,
+      |            "expenses": 3444.32,
+      |            "medicalInsurance": 4542.47,
+      |            "telephone": 243.43,
+      |            "service": 45.67,
+      |            "taxableExpenses": 24.56,
+      |            "van": 56.29,
+      |            "vanFuel": 14.56,
+      |            "mileage": 34.23,
+      |            "nonQualifyingRelocationExpenses": 54.62,
+      |            "nurseryPlaces": 84.29,
+      |            "otherItems": 67.67,
+      |            "paymentsOnEmployeesBehalf": 67.23,
+      |            "personalIncidentalExpenses": 74.29,
+      |            "qualifyingRelocationExpenses": 78.24,
+      |            "employerProvidedProfessionalSubscriptions": 84.56,
+      |            "employerProvidedServices": 56.34,
+      |            "incomeTaxPaidByDirector": 67.34,
+      |            "travelAndSubsistence": 56.89,
+      |            "vouchersAndCreditCards": 34.90,
+      |            "nonCash": 23.89
+      |        }
+      |    }
+      |}
+      |""".stripMargin
+  )
+  private val missingBenefitsInKindBody: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": 13343.45,
+      |                "pglDeductionAmount": 24242.56
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+  private val missingMultipleObjectBodies: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+  private val validRawBody                              = AnyContentAsJson(validRequestJson)
+  private val emptyRawBody                              = AnyContentAsJson(emptyRequestJson)
+  private val missingMandatoryEmploymentRawRequestBody  = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
+  private val missingMandatoryPayRawRequestBody         = AnyContentAsJson(missingMandatoryPayObjectJson)
+  private val missingMandatoryFieldsRawRequestBody      = AnyContentAsJson(missingMandatoryFieldsJson)
+  private val incorrectFormatRawBody                    = AnyContentAsJson(incorrectFormatRequestJson)
+  private val allInvalidValueRawRequestBody             = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val missingStudentLoansRawRequestBody         = AnyContentAsJson(missingStudentLoansBody)
+  private val missingBenefitsInKindRawRequestBody       = AnyContentAsJson(missingBenefitsInKindBody)
+  private val missingDeductionsRawRequestBody           = AnyContentAsJson(missingDeductionsBody)
+  private val missingMultipleObjectBodiesRequestBody    = AnyContentAsJson(missingMultipleObjectBodies)
+
+  private def rawBodyWithOpw(offPayrollWorker: Boolean) = AnyContentAsJson(requestJsonWithOpw(offPayrollWorker))
 
   private def requestJsonWithOpw(offPayrollWorker: Boolean): JsValue = Json.parse(
     s"""
@@ -134,244 +362,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
     """.stripMargin
   )
 
-  private val emptyRequestJson: JsValue = JsObject.empty
-
-  private val missingMandatoryEmploymentObjectJson: JsValue = Json.parse("""{"field": "value"}""")
-
-  private val missingMandatoryPayObjectJson: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {}
-      |}
-    """.stripMargin
-  )
-
-  private val missingMandatoryFieldsJson: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |        }
-      |    }
-      |}
-    """.stripMargin
-  )
-
-  private val incorrectFormatRequestJson: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": true,
-      |            "totalTaxToDate": 6782.92
-      |        },
-      |        "deductions": {
-      |            "studentLoans": {
-      |                "uglDeductionAmount": []
-      |            }
-      |        },
-      |        "benefitsInKind": {
-      |            "accommodation": "false"
-      |        }
-      |    }
-      |}
-    """.stripMargin
-  )
-
-  private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": 3500.758,
-      |            "totalTaxToDate": 6782.923
-      |        },
-      |        "deductions": {
-      |            "studentLoans": {
-      |                "uglDeductionAmount": -13343.45,
-      |                "pglDeductionAmount": -24242.56
-      |            }
-      |        },
-      |        "benefitsInKind": {
-      |            "accommodation": -455.67,
-      |            "assets": -435.54,
-      |            "assetTransfer": -24.58,
-      |            "beneficialLoan": -33.89,
-      |            "car": -3434.78,
-      |            "carFuel": 34.569,
-      |            "educationalServices": 445.677,
-      |            "entertaining": 434.458,
-      |            "expenses": 3444.324,
-      |            "medicalInsurance": 4542.475,
-      |            "telephone": 243.436,
-      |            "service": -45.67,
-      |            "taxableExpenses": -24.56,
-      |            "van": -56.29,
-      |            "vanFuel": -14.56,
-      |            "mileage": -34.23,
-      |            "nonQualifyingRelocationExpenses": 54.623,
-      |            "nurseryPlaces": 84.294,
-      |            "otherItems": 67.676,
-      |            "paymentsOnEmployeesBehalf": -67.23,
-      |            "personalIncidentalExpenses": -74.29,
-      |            "qualifyingRelocationExpenses": 78.244,
-      |            "employerProvidedProfessionalSubscriptions": -84.56,
-      |            "employerProvidedServices": -56.34,
-      |            "incomeTaxPaidByDirector": 67.342,
-      |            "travelAndSubsistence": -56.89,
-      |            "vouchersAndCreditCards": 34.905,
-      |            "nonCash": -23.89
-      |        }
-      |    }
-      |}
-    """.stripMargin
-  )
-
-  private val missingStudentLoansBody: JsValue = Json.parse(
-    """
-        |{
-        |    "employment": {
-        |        "pay": {
-        |            "taxablePayToDate": 3500.75,
-        |            "totalTaxToDate": 6782.92
-        |        },
-        |        "deductions": {
-        |            "studentLoans": {
-        |            }
-        |        },
-        |        "benefitsInKind": {
-        |            "accommodation": 455.67,
-        |            "assets": 435.54,
-        |            "assetTransfer": 24.58,
-        |            "beneficialLoan": 33.89,
-        |            "car": 3434.78,
-        |            "carFuel": 34.56,
-        |            "educationalServices": 445.67,
-        |            "entertaining": 434.45,
-        |            "expenses": 3444.32,
-        |            "medicalInsurance": 4542.47,
-        |            "telephone": 243.43,
-        |            "service": 45.67,
-        |            "taxableExpenses": 24.56,
-        |            "van": 56.29,
-        |            "vanFuel": 14.56,
-        |            "mileage": 34.23,
-        |            "nonQualifyingRelocationExpenses": 54.62,
-        |            "nurseryPlaces": 84.29,
-        |            "otherItems": 67.67,
-        |            "paymentsOnEmployeesBehalf": 67.23,
-        |            "personalIncidentalExpenses": 74.29,
-        |            "qualifyingRelocationExpenses": 78.24,
-        |            "employerProvidedProfessionalSubscriptions": 84.56,
-        |            "employerProvidedServices": 56.34,
-        |            "incomeTaxPaidByDirector": 67.34,
-        |            "travelAndSubsistence": 56.89,
-        |            "vouchersAndCreditCards": 34.90,
-        |            "nonCash": 23.89
-        |        }
-        |    }
-        |}
-        |""".stripMargin
-  )
-
-  private val missingDeductionsBody: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92
-      |        },
-      |        "deductions": {
-      |        },
-      |        "benefitsInKind": {
-      |            "accommodation": 455.67,
-      |            "assets": 435.54,
-      |            "assetTransfer": 24.58,
-      |            "beneficialLoan": 33.89,
-      |            "car": 3434.78,
-      |            "carFuel": 34.56,
-      |            "educationalServices": 445.67,
-      |            "entertaining": 434.45,
-      |            "expenses": 3444.32,
-      |            "medicalInsurance": 4542.47,
-      |            "telephone": 243.43,
-      |            "service": 45.67,
-      |            "taxableExpenses": 24.56,
-      |            "van": 56.29,
-      |            "vanFuel": 14.56,
-      |            "mileage": 34.23,
-      |            "nonQualifyingRelocationExpenses": 54.62,
-      |            "nurseryPlaces": 84.29,
-      |            "otherItems": 67.67,
-      |            "paymentsOnEmployeesBehalf": 67.23,
-      |            "personalIncidentalExpenses": 74.29,
-      |            "qualifyingRelocationExpenses": 78.24,
-      |            "employerProvidedProfessionalSubscriptions": 84.56,
-      |            "employerProvidedServices": 56.34,
-      |            "incomeTaxPaidByDirector": 67.34,
-      |            "travelAndSubsistence": 56.89,
-      |            "vouchersAndCreditCards": 34.90,
-      |            "nonCash": 23.89
-      |        }
-      |    }
-      |}
-      |""".stripMargin
-  )
-
-  private val missingBenefitsInKindBody: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92
-      |        },
-      |        "deductions": {
-      |            "studentLoans": {
-      |                "uglDeductionAmount": 13343.45,
-      |                "pglDeductionAmount": 24242.56
-      |            }
-      |        },
-      |        "benefitsInKind": {
-      |        }
-      |    }
-      |}
-    """.stripMargin
-  )
-
-  private val missingMultipleObjectBodies: JsValue = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92
-      |        },
-      |        "deductions": {
-      |            "studentLoans": {
-      |            }
-      |        },
-      |        "benefitsInKind": {
-      |        }
-      |    }
-      |}
-    """.stripMargin
-  )
-
-  private val validRawBody                                   = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody                                   = AnyContentAsJson(emptyRequestJson)
-  private val missingMandatoryEmploymentRawRequestBody       = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
-  private val missingMandatoryPayRawRequestBody              = AnyContentAsJson(missingMandatoryPayObjectJson)
-  private val missingMandatoryFieldsRawRequestBody           = AnyContentAsJson(missingMandatoryFieldsJson)
-  private val incorrectFormatRawBody                         = AnyContentAsJson(incorrectFormatRequestJson)
-  private val allInvalidValueRawRequestBody                  = AnyContentAsJson(allInvalidValueRequestBodyJson)
-  private val missingStudentLoansRawRequestBody              = AnyContentAsJson(missingStudentLoansBody)
-  private val missingBenefitsInKindRawRequestBody            = AnyContentAsJson(missingBenefitsInKindBody)
-  private val missingDeductionsRawRequestBody                = AnyContentAsJson(missingDeductionsBody)
-  private val missingMultipleObjectBodiesRequestBody         = AnyContentAsJson(missingMultipleObjectBodies)
-  private def rawBodyWithOpw(offPayrollWorker: Boolean) = AnyContentAsJson(requestJsonWithOpw(offPayrollWorker))
-
   class Test() extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
@@ -395,7 +385,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
       }
 
-      "return no errors for a valid request for a taxYear 23-24 or later with offPayrollWorker feature switch enabled and value set to false" in new Test {
+      "return no errors for a valid request with opw feature switch enabled" in new Test {
         validator.validate(
           AmendFinancialDetailsRawData(
             validNino,
@@ -406,40 +396,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
             opwEnabled = true)) shouldBe Nil
       }
 
-      "return NOT_ALLOWED_OFF_PAYROLL_WORKER for request with offPayrollWorker opwEnabled is false and taxYear is 2023-24" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2023-24",
-            validEmploymentId,
-            AnyContentAsJson(requestJsonWithOpw(true)),
-            temporalValidationEnabled = false,
-            opwEnabled = false)) shouldBe List(RuleNotAllowedOffPayrollWorker)
-      }
-
-      "return NOT_ALLOWED_OFF_PAYROLL_WORKER for request with offPayrollWorker opwEnabled is enabled and taxYear is 2021-22" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2021-22",
-            validEmploymentId,
-            AnyContentAsJson(requestJsonWithOpw(true)),
-            temporalValidationEnabled = false,
-            opwEnabled = true)) shouldBe List(RuleNotAllowedOffPayrollWorker)
-      }
-      "return MISSING_OFF_PAYROLL_WORKER for request without offPayrollWorker opwEnabled is true and taxYear is 2023-24" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2023-24",
-            validEmploymentId,
-            AnyContentAsJson(validRequestJson),
-            temporalValidationEnabled = false,
-            opwEnabled = true)) shouldBe List(RuleMissingOffPayrollWorker)
-      }
-
-
-      // parameter format error scenarios
+   // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(AmendFinancialDetailsRawData("A12344A", validTaxYear, validEmploymentId, validRawBody)) shouldBe
           List(NinoFormatError)
@@ -546,16 +503,22 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
       "return RuleMissingOffPayrollWorker error when opw is enabled, and is missing for a taxYear 23-24 or later" in new Test {
         validator.validate(
-          AmendFinancialDetailsRawData(validNino, "2023-24", validEmploymentId, validRawBody, temporalValidationEnabled = false, opwEnabled = true)) shouldBe
+          AmendFinancialDetailsRawData(
+            validNino,
+            "2023-24",
+            validEmploymentId,
+            validRawBody,
+            temporalValidationEnabled = false,
+            opwEnabled = true)) shouldBe
           List(RuleMissingOffPayrollWorker)
       }
 
-      "return RuleNotAllowedOffPayrollWorker error when opw is enabled, and offPayrollWorker is provided before 23-24" in new Test {
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & opw is enabled for a taxYear before 23-24" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOpw(true))) shouldBe
           List(RuleNotAllowedOffPayrollWorker)
       }
 
-      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & opw enabled is false before 23-24" in new Test {
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & opw is not enabled for a taxYear before 23-24" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOpw(false))) shouldBe
           List(RuleNotAllowedOffPayrollWorker)
       }
@@ -613,5 +576,4 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
     }
   }
-
 }
