@@ -23,5 +23,6 @@ case class AmendFinancialDetailsRawData(nino: String,
                                         taxYear: String,
                                         employmentId: String,
                                         body: AnyContentAsJson,
-                                        temporalValidationEnabled: Boolean = true)
+                                        temporalValidationEnabled: Boolean = true,
+                                        opwEnabled:Boolean = false)
     extends RawData
