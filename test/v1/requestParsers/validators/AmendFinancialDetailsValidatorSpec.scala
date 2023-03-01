@@ -83,8 +83,10 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
-  private val emptyRequestJson: JsValue = JsObject.empty
+
+  private val emptyRequestJson: JsValue                     = JsObject.empty
   private val missingMandatoryEmploymentObjectJson: JsValue = Json.parse("""{"field": "value"}""")
+
   private val missingMandatoryPayObjectJson: JsValue = Json.parse(
     """
       |{
@@ -92,6 +94,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
+
   private val missingMandatoryFieldsJson: JsValue = Json.parse(
     """
       |{
@@ -102,6 +105,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
+
   private val incorrectFormatRequestJson: JsValue = Json.parse(
     """
       |{
@@ -122,6 +126,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
+
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -170,6 +175,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
+
   private val missingStudentLoansBody: JsValue = Json.parse(
     """
         |{
@@ -216,6 +222,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         |}
         |""".stripMargin
   )
+
   private val missingDeductionsBody: JsValue = Json.parse(
     """
       |{
@@ -260,6 +267,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
       |""".stripMargin
   )
+
   private val missingBenefitsInKindBody: JsValue = Json.parse(
     """
       |{
@@ -280,6 +288,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
+
   private val missingMultipleObjectBodies: JsValue = Json.parse(
     """
       |{
@@ -298,17 +307,18 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       |}
     """.stripMargin
   )
-  private val validRawBody                              = AnyContentAsJson(validRequestJson)
-  private val emptyRawBody                              = AnyContentAsJson(emptyRequestJson)
-  private val missingMandatoryEmploymentRawRequestBody  = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
-  private val missingMandatoryPayRawRequestBody         = AnyContentAsJson(missingMandatoryPayObjectJson)
-  private val missingMandatoryFieldsRawRequestBody      = AnyContentAsJson(missingMandatoryFieldsJson)
-  private val incorrectFormatRawBody                    = AnyContentAsJson(incorrectFormatRequestJson)
-  private val allInvalidValueRawRequestBody             = AnyContentAsJson(allInvalidValueRequestBodyJson)
-  private val missingStudentLoansRawRequestBody         = AnyContentAsJson(missingStudentLoansBody)
-  private val missingBenefitsInKindRawRequestBody       = AnyContentAsJson(missingBenefitsInKindBody)
-  private val missingDeductionsRawRequestBody           = AnyContentAsJson(missingDeductionsBody)
-  private val missingMultipleObjectBodiesRequestBody    = AnyContentAsJson(missingMultipleObjectBodies)
+
+  private val validRawBody                             = AnyContentAsJson(validRequestJson)
+  private val emptyRawBody                             = AnyContentAsJson(emptyRequestJson)
+  private val missingMandatoryEmploymentRawRequestBody = AnyContentAsJson(missingMandatoryEmploymentObjectJson)
+  private val missingMandatoryPayRawRequestBody        = AnyContentAsJson(missingMandatoryPayObjectJson)
+  private val missingMandatoryFieldsRawRequestBody     = AnyContentAsJson(missingMandatoryFieldsJson)
+  private val incorrectFormatRawBody                   = AnyContentAsJson(incorrectFormatRequestJson)
+  private val allInvalidValueRawRequestBody            = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val missingStudentLoansRawRequestBody        = AnyContentAsJson(missingStudentLoansBody)
+  private val missingBenefitsInKindRawRequestBody      = AnyContentAsJson(missingBenefitsInKindBody)
+  private val missingDeductionsRawRequestBody          = AnyContentAsJson(missingDeductionsBody)
+  private val missingMultipleObjectBodiesRequestBody   = AnyContentAsJson(missingMultipleObjectBodies)
 
   private def rawBodyWithOpw(offPayrollWorker: Boolean) = AnyContentAsJson(requestJsonWithOpw(offPayrollWorker))
 
@@ -396,7 +406,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
             opwEnabled = true)) shouldBe Nil
       }
 
-   // parameter format error scenarios
+      // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(AmendFinancialDetailsRawData("A12344A", validTaxYear, validEmploymentId, validRawBody)) shouldBe
           List(NinoFormatError)
@@ -576,4 +586,5 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
     }
   }
+
 }

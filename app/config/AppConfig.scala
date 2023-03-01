@@ -26,12 +26,16 @@ trait AppConfig {
 
   lazy val desDownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
+
   lazy val ifsDownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = ifsBaseUrl, env = ifsEnv, token = ifsToken, environmentHeaders = ifsEnvironmentHeaders)
+
   lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
+
   lazy val release6DownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = release6BaseUrl, env = release6Env, token = release6Token, environmentHeaders = release6EnvironmentHeaders)
+
   lazy val api1661DownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = api1661BaseUrl, env = api1661Env, token = api1661Token, environmentHeaders = api1661EnvironmentHeaders)
 
@@ -132,17 +136,17 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val api1661Token: String                           = config.getString("microservice.services.api1661.token")
   val api1661EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.api1661.environmentHeaders")
 
-  val apiGatewayContext: String      = config.getString("api.gateway.context")
-  val minimumPermittedTaxYear: Int   = config.getInt("minimumPermittedTaxYear")
-  val ukDividendsMinimumTaxYear: Int = config.getInt("ukDividendsMinimumTaxYear")
+  val apiGatewayContext: String                    = config.getString("api.gateway.context")
+  val minimumPermittedTaxYear: Int                 = config.getInt("minimumPermittedTaxYear")
+  val ukDividendsMinimumTaxYear: Int               = config.getInt("ukDividendsMinimumTaxYear")
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
   // NRS Config
   val mtdNrsProxyBaseUrl: String = config.baseUrl("mtd-api-nrs-proxy")
 
   // API Config
-  def apiStatus(version: String): String         = config.getString(s"api.$version.status")
+  def apiStatus(version: String): String = config.getString(s"api.$version.status")
 
-  def featureSwitches: Configuration             = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def featureSwitches: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 }

@@ -33,7 +33,7 @@ object AmendEmployment {
 
       val append = amendEmployment.offPayrollWorker match {
         case Some(true) => Json.obj("offPayrollWorker" -> Some(true))
-        case _ => JsObject.empty
+        case _          => JsObject.empty
       }
 
       val result = Json.obj(

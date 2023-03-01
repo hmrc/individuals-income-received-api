@@ -701,9 +701,10 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String          = "AA123456A"
     val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val correlationId: String = "X-123"
+
     val requestBodyJson: JsValue = Json.parse(
       s"""
          |{
@@ -752,6 +753,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
          |}
       """.stripMargin
     )
+
     val hateoasResponse: JsValue = Json.parse(
       s"""
          |{
@@ -775,6 +777,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
          |}
        """.stripMargin
     )
+
     val downstreamUri: String
 
     def taxYear: String

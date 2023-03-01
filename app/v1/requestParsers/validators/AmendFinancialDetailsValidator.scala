@@ -78,21 +78,20 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
         }
         .getOrElse(NoValidationErrors))
 
-    def offPayrollWorkerAllowedValidation(data: AmendFinancialDetailsRawData): List[List[MtdError]] =  {
+    def offPayrollWorkerAllowedValidation(data: AmendFinancialDetailsRawData): List[List[MtdError]] = {
 
       if (TaxYearValidation.validate(data.taxYear) == NoValidationErrors) {
-        val isTysTaxYear = ((TaxYear.fromMtd(data.taxYear).year) >= 2024) & data.opwEnabled
+        val isTysTaxYear                           = ((TaxYear.fromMtd(data.taxYear).year) >= 2024) & data.opwEnabled
         val maybeOffPayrollWorker: Option[Boolean] = requestBodyObj.flatMap(entity => entity.employment.offPayrollWorker)
         maybeOffPayrollWorker match {
-          case None if isTysTaxYear => List(List(RuleMissingOffPayrollWorker))
+          case None if isTysTaxYear     => List(List(RuleMissingOffPayrollWorker))
           case Some(_) if !isTysTaxYear => List(List(RuleNotAllowedOffPayrollWorker))
-          case _ => NoValidationErrors
+          case _                        => NoValidationErrors
         }
-      }
-      else {
+      } else {
         NoValidationErrors
-       }
       }
+    }
 
     val initialValidation = jsonFormatError ++ emptyObjectValidation
 

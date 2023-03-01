@@ -35,24 +35,23 @@ class FeatureSwitchesSpec extends UnitSpec {
       }
 
       "enabled" in {
-        val configuration   = Configuration(
+        val configuration = Configuration(
           "tys-api.enabled" -> true,
-          "opw.enabled" -> true
+          "opw.enabled"     -> true
         )
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
         featureSwitches.isOpwEnabled shouldBe true
 
-
       }
     }
 
     "be false" when {
       "disabled" in {
-        val configuration   = Configuration(
+        val configuration = Configuration(
           "tys-api.enabled" -> false,
-          "opw.enabled" -> false
+          "opw.enabled"     -> false
         )
 
         val featureSwitches = FeatureSwitches(configuration)
@@ -105,7 +104,6 @@ class FeatureSwitchesSpec extends UnitSpec {
       FakeRequest("GET", "someUrl", headers, None)
 
     def headers(suspend: String) = Headers("suspend-temporal-validations" -> suspend)
-
 
     "the suspension enabling feature switch is false" should {
       val featureSwitches = FeatureSwitches(configuration(false))

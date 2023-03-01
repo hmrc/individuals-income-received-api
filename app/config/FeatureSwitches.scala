@@ -22,6 +22,8 @@ import play.api.mvc.Request
 
 case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
+  val isV1R7cRoutingEnabled: Boolean       = isEnabled("v1r7c-endpoints.enabled")
+  val isTaxYearSpecificApiEnabled: Boolean = isEnabled("tys-api.enabled")
   private val versionRegex = """(\d)\.\d""".r
 
   def isVersionEnabled(version: String): Boolean = {
@@ -39,10 +41,8 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
     enabled.getOrElse(false)
   }
 
-  val isV1R7cRoutingEnabled: Boolean        = isEnabled("v1r7c-endpoints.enabled")
-  val isTaxYearSpecificApiEnabled: Boolean  = isEnabled("tys-api.enabled")
-
   def isOpwEnabled: Boolean = isTaxYearSpecificApiEnabled & isEnabled("opw.enabled")
+
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension.enabled")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))

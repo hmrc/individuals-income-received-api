@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendFinancialDetailsControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -51,34 +51,100 @@ class AmendFinancialDetailsControllerSpec
   val taxYear: String       = "2019-20"
   val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new AmendFinancialDetailsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockAmendFinancialDetailsRequestParser,
-      service = mockAmendFinancialDetailsService,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-    MockedMtdIdLookupService.lookup(nino = nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  trait OpwTest extends Test {
-    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true)).anyNumberOfTimes()
-  }
-
-  trait PreOpwTest extends Test {
-    MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> false, "allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true)).anyNumberOfTimes()
-  }
-
+  val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
+    nino = nino,
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = AnyContentAsJson(requestBodyJson)
+  )
+  val rawDataOwpEnabled: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
+    nino = nino,
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = AnyContentAsJson(requestBodyJsonWithOpw),
+    opwEnabled = true
+  )
+  val pay: AmendPay = AmendPay(
+    taxablePayToDate = 3500.75,
+    totalTaxToDate = 6782.92
+  )
+  val studentLoans: AmendStudentLoans = AmendStudentLoans(
+    uglDeductionAmount = Some(13343.45),
+    pglDeductionAmount = Some(24242.56)
+  )
+  val deductions: AmendDeductions = AmendDeductions(
+    studentLoans = Some(studentLoans)
+  )
+  val benefitsInKind: AmendBenefitsInKind = AmendBenefitsInKind(
+    accommodation = Some(455.67),
+    assets = Some(435.54),
+    assetTransfer = Some(24.58),
+    beneficialLoan = Some(33.89),
+    car = Some(3434.78),
+    carFuel = Some(34.56),
+    educationalServices = Some(445.67),
+    entertaining = Some(434.45),
+    expenses = Some(3444.32),
+    medicalInsurance = Some(4542.47),
+    telephone = Some(243.43),
+    service = Some(45.67),
+    taxableExpenses = Some(24.56),
+    van = Some(56.29),
+    vanFuel = Some(14.56),
+    mileage = Some(34.23),
+    nonQualifyingRelocationExpenses = Some(54.62),
+    nurseryPlaces = Some(84.29),
+    otherItems = Some(67.67),
+    paymentsOnEmployeesBehalf = Some(67.23),
+    personalIncidentalExpenses = Some(74.29),
+    qualifyingRelocationExpenses = Some(78.24),
+    employerProvidedProfessionalSubscriptions = Some(84.56),
+    employerProvidedServices = Some(56.34),
+    incomeTaxPaidByDirector = Some(67.34),
+    travelAndSubsistence = Some(56.89),
+    vouchersAndCreditCards = Some(34.90),
+    nonCash = Some(23.89)
+  )
+  val employment: AmendEmployment = AmendEmployment(
+    pay = pay,
+    deductions = Some(deductions),
+    benefitsInKind = Some(benefitsInKind),
+    offPayrollWorker = None
+  )
+  val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
+    employment = employment
+  )
+  val requestData: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(
+    nino = Nino(nino),
+    taxYear = TaxYear.fromMtd(taxYear),
+    employmentId = employmentId,
+    body = amendFinancialDetailsRequestBody
+  )
+  val requestDataWithOpw: AmendFinancialDetailsRequest =
+    requestData.copy(body = amendFinancialDetailsRequestBody.copy(employment = employment.copy(offPayrollWorker = Some(true))))
+  val hateoasResponse: JsValue = Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+       |         "rel":"create-and-amend-employment-financial-details",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+       |         "rel":"delete-employment-financial-details",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  )
   private val requestBodyJsonWithOpw: JsValue = Json.parse(
     """
       |{
@@ -128,7 +194,6 @@ class AmendFinancialDetailsControllerSpec
       |}
     """.stripMargin
   )
-
   private val requestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -178,109 +243,6 @@ class AmendFinancialDetailsControllerSpec
     """.stripMargin
   )
 
-  val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
-    nino = nino,
-    taxYear = taxYear,
-    employmentId = employmentId,
-    body = AnyContentAsJson(requestBodyJson)
-  )
-  val rawDataOwpEnabled: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
-    nino = nino,
-    taxYear = taxYear,
-    employmentId = employmentId,
-    body = AnyContentAsJson(requestBodyJsonWithOpw),
-    opwEnabled = true
-  )
-
-  val pay: AmendPay = AmendPay(
-    taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92
-  )
-
-  val studentLoans: AmendStudentLoans = AmendStudentLoans(
-    uglDeductionAmount = Some(13343.45),
-    pglDeductionAmount = Some(24242.56)
-  )
-
-  val deductions: AmendDeductions = AmendDeductions(
-    studentLoans = Some(studentLoans)
-  )
-
-  val benefitsInKind: AmendBenefitsInKind = AmendBenefitsInKind(
-    accommodation = Some(455.67),
-    assets = Some(435.54),
-    assetTransfer = Some(24.58),
-    beneficialLoan = Some(33.89),
-    car = Some(3434.78),
-    carFuel = Some(34.56),
-    educationalServices = Some(445.67),
-    entertaining = Some(434.45),
-    expenses = Some(3444.32),
-    medicalInsurance = Some(4542.47),
-    telephone = Some(243.43),
-    service = Some(45.67),
-    taxableExpenses = Some(24.56),
-    van = Some(56.29),
-    vanFuel = Some(14.56),
-    mileage = Some(34.23),
-    nonQualifyingRelocationExpenses = Some(54.62),
-    nurseryPlaces = Some(84.29),
-    otherItems = Some(67.67),
-    paymentsOnEmployeesBehalf = Some(67.23),
-    personalIncidentalExpenses = Some(74.29),
-    qualifyingRelocationExpenses = Some(78.24),
-    employerProvidedProfessionalSubscriptions = Some(84.56),
-    employerProvidedServices = Some(56.34),
-    incomeTaxPaidByDirector = Some(67.34),
-    travelAndSubsistence = Some(56.89),
-    vouchersAndCreditCards = Some(34.90),
-    nonCash = Some(23.89)
-  )
-
-  val employment: AmendEmployment = AmendEmployment(
-    pay = pay,
-    deductions = Some(deductions),
-    benefitsInKind = Some(benefitsInKind),
-    offPayrollWorker = None
-  )
-
-  val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
-    employment = employment
-  )
-
-  val requestData: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    employmentId = employmentId,
-    body = amendFinancialDetailsRequestBody
-  )
-
-  val requestDataWithOpw:AmendFinancialDetailsRequest = requestData.copy(
-    body = amendFinancialDetailsRequestBody.copy(employment=employment.copy(offPayrollWorker = Some(true))))
-  val hateoasResponse: JsValue = Json.parse(
-    s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"self",
-       |         "method":"GET"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"create-and-amend-employment-financial-details",
-       |         "method":"PUT"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"delete-employment-financial-details",
-       |         "method":"DELETE"
-       |      }
-       |   ]
-       |}
-    """.stripMargin
-  )
-
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "AmendEmploymentFinancialDetails",
@@ -308,6 +270,43 @@ class AmendFinancialDetailsControllerSpec
         response = auditResponse
       )
     )
+
+  trait Test {
+    val hc: HeaderCarrier = HeaderCarrier()
+
+    val controller = new AmendFinancialDetailsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      requestParser = mockAmendFinancialDetailsRequestParser,
+      service = mockAmendFinancialDetailsService,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino = nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+  }
+
+  trait OpwTest extends Test {
+
+    MockedAppConfig.featureSwitches
+      .returns(Configuration("allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true))
+      .anyNumberOfTimes()
+
+  }
+
+  trait PreOpwTest extends Test {
+
+    MockedAppConfig.featureSwitches
+      .returns(Configuration("opw.enabled" -> false, "allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true))
+      .anyNumberOfTimes()
+
+  }
+
   "AmendFinancialDetailsController with Opw disabled" should {
     "return OK" when {
       "happy path in non opw test" in new PreOpwTest {
@@ -356,13 +355,14 @@ class AmendFinancialDetailsControllerSpec
         "return  RuleNotAllowedOffPayrollWorker error" in new PreOpwTest {
           val error = RuleNotAllowedOffPayrollWorker
           MockAmendFinancialDetailsRequestParser
-            .parse(AmendFinancialDetailsRawData(
-              nino = nino,
-              taxYear = taxYear,
-              employmentId = employmentId,
-              body = AnyContentAsJson(requestBodyJsonWithOpw),
-              opwEnabled = false
-            ))
+            .parse(
+              AmendFinancialDetailsRawData(
+                nino = nino,
+                taxYear = taxYear,
+                employmentId = employmentId,
+                body = AnyContentAsJson(requestBodyJsonWithOpw),
+                opwEnabled = false
+              ))
             .returns(Left(ErrorWrapper(correlationId, error, None)))
 
           val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJsonWithOpw))
@@ -377,19 +377,19 @@ class AmendFinancialDetailsControllerSpec
       }
     }
 
-
     "Payload submitted without offPayrollWorker property" when {
       "the opw feature switch is enabled and the tax year is 2024" must {
         "return  RuleMissingOffPayrollWorker error" in new OpwTest {
           val error = RuleMissingOffPayrollWorker
           MockAmendFinancialDetailsRequestParser
-            .parse(AmendFinancialDetailsRawData(
-              nino = nino,
-              taxYear = taxYear,
-              employmentId = employmentId,
-              body = AnyContentAsJson(requestBodyJson),
-              opwEnabled = true
-            ))
+            .parse(
+              AmendFinancialDetailsRawData(
+                nino = nino,
+                taxYear = taxYear,
+                employmentId = employmentId,
+                body = AnyContentAsJson(requestBodyJson),
+                opwEnabled = true
+              ))
             .returns(Left(ErrorWrapper(correlationId, error, None)))
 
           val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
