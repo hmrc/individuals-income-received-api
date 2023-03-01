@@ -51,100 +51,7 @@ class AmendFinancialDetailsControllerSpec
   val taxYear: String       = "2019-20"
   val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
-    nino = nino,
-    taxYear = taxYear,
-    employmentId = employmentId,
-    body = AnyContentAsJson(requestBodyJson)
-  )
-  val rawDataOwpEnabled: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
-    nino = nino,
-    taxYear = taxYear,
-    employmentId = employmentId,
-    body = AnyContentAsJson(requestBodyJsonWithOpw),
-    opwEnabled = true
-  )
-  val pay: AmendPay = AmendPay(
-    taxablePayToDate = 3500.75,
-    totalTaxToDate = 6782.92
-  )
-  val studentLoans: AmendStudentLoans = AmendStudentLoans(
-    uglDeductionAmount = Some(13343.45),
-    pglDeductionAmount = Some(24242.56)
-  )
-  val deductions: AmendDeductions = AmendDeductions(
-    studentLoans = Some(studentLoans)
-  )
-  val benefitsInKind: AmendBenefitsInKind = AmendBenefitsInKind(
-    accommodation = Some(455.67),
-    assets = Some(435.54),
-    assetTransfer = Some(24.58),
-    beneficialLoan = Some(33.89),
-    car = Some(3434.78),
-    carFuel = Some(34.56),
-    educationalServices = Some(445.67),
-    entertaining = Some(434.45),
-    expenses = Some(3444.32),
-    medicalInsurance = Some(4542.47),
-    telephone = Some(243.43),
-    service = Some(45.67),
-    taxableExpenses = Some(24.56),
-    van = Some(56.29),
-    vanFuel = Some(14.56),
-    mileage = Some(34.23),
-    nonQualifyingRelocationExpenses = Some(54.62),
-    nurseryPlaces = Some(84.29),
-    otherItems = Some(67.67),
-    paymentsOnEmployeesBehalf = Some(67.23),
-    personalIncidentalExpenses = Some(74.29),
-    qualifyingRelocationExpenses = Some(78.24),
-    employerProvidedProfessionalSubscriptions = Some(84.56),
-    employerProvidedServices = Some(56.34),
-    incomeTaxPaidByDirector = Some(67.34),
-    travelAndSubsistence = Some(56.89),
-    vouchersAndCreditCards = Some(34.90),
-    nonCash = Some(23.89)
-  )
-  val employment: AmendEmployment = AmendEmployment(
-    pay = pay,
-    deductions = Some(deductions),
-    benefitsInKind = Some(benefitsInKind),
-    offPayrollWorker = None
-  )
-  val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
-    employment = employment
-  )
-  val requestData: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    employmentId = employmentId,
-    body = amendFinancialDetailsRequestBody
-  )
-  val requestDataWithOpw: AmendFinancialDetailsRequest =
-    requestData.copy(body = amendFinancialDetailsRequestBody.copy(employment = employment.copy(offPayrollWorker = Some(true))))
-  val hateoasResponse: JsValue = Json.parse(
-    s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"self",
-       |         "method":"GET"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"create-and-amend-employment-financial-details",
-       |         "method":"PUT"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "rel":"delete-employment-financial-details",
-       |         "method":"DELETE"
-       |      }
-       |   ]
-       |}
-    """.stripMargin
-  )
+
   private val requestBodyJsonWithOpw: JsValue = Json.parse(
     """
       |{
@@ -242,6 +149,101 @@ class AmendFinancialDetailsControllerSpec
       |}
     """.stripMargin
   )
+  val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
+    nino = nino,
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = AnyContentAsJson(requestBodyJson)
+  )
+  val rawDataOwpEnabled: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
+    nino = nino,
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = AnyContentAsJson(requestBodyJsonWithOpw),
+    opwEnabled = true
+  )
+  val pay: AmendPay = AmendPay(
+    taxablePayToDate = 3500.75,
+    totalTaxToDate = 6782.92
+  )
+  val studentLoans: AmendStudentLoans = AmendStudentLoans(
+    uglDeductionAmount = Some(13343.45),
+    pglDeductionAmount = Some(24242.56)
+  )
+  val deductions: AmendDeductions = AmendDeductions(
+    studentLoans = Some(studentLoans)
+  )
+  val benefitsInKind: AmendBenefitsInKind = AmendBenefitsInKind(
+    accommodation = Some(455.67),
+    assets = Some(435.54),
+    assetTransfer = Some(24.58),
+    beneficialLoan = Some(33.89),
+    car = Some(3434.78),
+    carFuel = Some(34.56),
+    educationalServices = Some(445.67),
+    entertaining = Some(434.45),
+    expenses = Some(3444.32),
+    medicalInsurance = Some(4542.47),
+    telephone = Some(243.43),
+    service = Some(45.67),
+    taxableExpenses = Some(24.56),
+    van = Some(56.29),
+    vanFuel = Some(14.56),
+    mileage = Some(34.23),
+    nonQualifyingRelocationExpenses = Some(54.62),
+    nurseryPlaces = Some(84.29),
+    otherItems = Some(67.67),
+    paymentsOnEmployeesBehalf = Some(67.23),
+    personalIncidentalExpenses = Some(74.29),
+    qualifyingRelocationExpenses = Some(78.24),
+    employerProvidedProfessionalSubscriptions = Some(84.56),
+    employerProvidedServices = Some(56.34),
+    incomeTaxPaidByDirector = Some(67.34),
+    travelAndSubsistence = Some(56.89),
+    vouchersAndCreditCards = Some(34.90),
+    nonCash = Some(23.89)
+  )
+  val employment: AmendEmployment = AmendEmployment(
+    pay = pay,
+    deductions = Some(deductions),
+    benefitsInKind = Some(benefitsInKind),
+    offPayrollWorker = None
+  )
+  val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
+    employment = employment
+  )
+  val requestData: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(
+    nino = Nino(nino),
+    taxYear = TaxYear.fromMtd(taxYear),
+    employmentId = employmentId,
+    body = amendFinancialDetailsRequestBody
+  )
+  val requestDataWithOpw: AmendFinancialDetailsRequest =
+    requestData.copy(body = amendFinancialDetailsRequestBody.copy(employment = employment.copy(offPayrollWorker = Some(true))))
+  val hateoasResponse: JsValue = Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+       |         "rel":"create-and-amend-employment-financial-details",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+       |         "rel":"delete-employment-financial-details",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  )
+
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
