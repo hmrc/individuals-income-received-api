@@ -385,7 +385,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, validRawBody)) shouldBe Nil
       }
 
-      "return no errors for a valid request for a taxYear 23-24 or later with offPayrollWorker feature switch enabled and value set to false" in new Test {
+      "return no errors for a valid request with opw feature switch enabled" in new Test {
         validator.validate(
           AmendFinancialDetailsRawData(
             validNino,
@@ -396,39 +396,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
             opwEnabled = true)) shouldBe Nil
       }
 
-      "return NOT_ALLOWED_OFF_PAYROLL_WORKER for request with offPayrollWorker opwEnabled is false and taxYear is 2023-24" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2023-24",
-            validEmploymentId,
-            AnyContentAsJson(requestJsonWithOpw(true)),
-            temporalValidationEnabled = false,
-            opwEnabled = false)) shouldBe List(RuleNotAllowedOffPayrollWorker)
-      }
-
-      "return NOT_ALLOWED_OFF_PAYROLL_WORKER for request with offPayrollWorker opwEnabled is enabled and taxYear is 2021-22" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2021-22",
-            validEmploymentId,
-            AnyContentAsJson(requestJsonWithOpw(true)),
-            temporalValidationEnabled = false,
-            opwEnabled = true)) shouldBe List(RuleNotAllowedOffPayrollWorker)
-      }
-      "return MISSING_OFF_PAYROLL_WORKER for request without offPayrollWorker opwEnabled is true and taxYear is 2023-24" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2023-24",
-            validEmploymentId,
-            AnyContentAsJson(validRequestJson),
-            temporalValidationEnabled = false,
-            opwEnabled = true)) shouldBe List(RuleMissingOffPayrollWorker)
-      }
-
-      // parameter format error scenarios
+   // parameter format error scenarios
       "return NinoFormatError error when the supplied NINO is invalid" in new Test {
         validator.validate(AmendFinancialDetailsRawData("A12344A", validTaxYear, validEmploymentId, validRawBody)) shouldBe
           List(NinoFormatError)
@@ -545,12 +513,12 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
           List(RuleMissingOffPayrollWorker)
       }
 
-      "return RuleNotAllowedOffPayrollWorker error when opw is enabled, and offPayrollWorker is provided before 23-24" in new Test {
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & opw is enabled for a taxYear before 23-24" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOpw(true))) shouldBe
           List(RuleNotAllowedOffPayrollWorker)
       }
 
-      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & opw enabled is false before 23-24" in new Test {
+      "return RuleNotAllowedOffPayrollWorker error when offPayrollWorker is provided & opw is not enabled for a taxYear before 23-24" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, rawBodyWithOpw(false))) shouldBe
           List(RuleNotAllowedOffPayrollWorker)
       }
@@ -608,5 +576,4 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
     }
   }
-
 }

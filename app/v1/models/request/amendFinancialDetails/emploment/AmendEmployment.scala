@@ -31,11 +31,10 @@ object AmendEmployment {
 
     def writes(amendEmployment: AmendEmployment): JsObject = {
 
-      val append =
-        if (amendEmployment.offPayrollWorker == Some(true))
-          Json.obj("offPayrollWorker" -> Some(true))
-        else
-          Json.obj()
+      val append = amendEmployment.offPayrollWorker match {
+        case Some(true) => Json.obj("offPayrollWorker" -> Some(true))
+        case _ => JsObject.empty
+      }
 
       val result = Json.obj(
         "pay"            -> amendEmployment.pay,

@@ -174,13 +174,6 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
     offPayrollWorker = Some(true)
   )
 
-  private val employmentModelOpwIsFalse = AmendEmployment(
-    pay = payModel,
-    deductions = Some(deductionsModel),
-    benefitsInKind = Some(benefitsInKindModel),
-    offPayrollWorker = Some(false)
-  )
-
   private val requestBodyModel = AmendFinancialDetailsRequestBody(
     employment = employmentModel
   )
@@ -210,6 +203,7 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
 
     "written to JSON when offPayrollWorker is false" should {
       "produce the expected JsObject without offPayrollWorker" in {
+        val employmentModelOpwIsFalse = employmentModel.copy(offPayrollWorker = Some(false))
         Json.toJson(AmendFinancialDetailsRequestBody(
           employment = employmentModelOpwIsFalse
         )) shouldBe jsonRequestWithoutOpw
