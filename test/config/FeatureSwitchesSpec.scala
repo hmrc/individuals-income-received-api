@@ -31,23 +31,32 @@ class FeatureSwitchesSpec extends UnitSpec {
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
+        featureSwitches.isOpwEnabled shouldBe true
       }
 
       "enabled" in {
-        val configuration   = Configuration("tys-api.enabled" -> true)
+        val configuration = Configuration(
+          "tys-api.enabled" -> true,
+          "opw.enabled"     -> true
+        )
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
+        featureSwitches.isOpwEnabled shouldBe true
 
       }
     }
 
     "be false" when {
       "disabled" in {
-        val configuration   = Configuration("tys-api.enabled" -> false)
-        val featureSwitches = FeatureSwitches(configuration)
+        val configuration = Configuration(
+          "tys-api.enabled" -> false,
+          "opw.enabled"     -> false
+        )
 
+        val featureSwitches = FeatureSwitches(configuration)
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
+        featureSwitches.isOpwEnabled shouldBe false
       }
     }
   }

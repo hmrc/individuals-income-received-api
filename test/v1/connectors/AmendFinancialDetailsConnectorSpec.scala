@@ -62,33 +62,29 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
 
   trait Test { _: ConnectorTest =>
 
-    def taxYear: TaxYear
     val nino: String = "AA111111A"
     val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-
     protected val connector: AmendFinancialDetailsConnector = new AmendFinancialDetailsConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
-
     protected val payModel = AmendPay(
       taxablePayToDate = 3500.75,
       totalTaxToDate = 6782.92
     )
-
     protected val employmentModel = AmendEmployment(
       pay = payModel,
       deductions = None,
       benefitsInKind = None,
       offPayrollWorker = None
     )
-
     protected val amendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
       employment = employmentModel
     )
-
     protected val amendFinancialDetailsRequest: AmendFinancialDetailsRequest =
       AmendFinancialDetailsRequest(Nino(nino), taxYear, employmentId, amendFinancialDetailsRequestBody)
+
+    def taxYear: TaxYear
 
   }
 

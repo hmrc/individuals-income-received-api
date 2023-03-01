@@ -16,25 +16,9 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{
-  BadRequestError,
-  EmploymentIdFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleMissingOffPayrollWorker,
-  RuleNotAllowedOffPayrollWorker,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -717,8 +701,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    def taxYear: String
+    val nino: String          = "AA123456A"
     val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
     val correlationId: String = "X-123"
 
@@ -771,6 +754,34 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
     )
 
+    val hateoasResponse: JsValue = Json.parse(
+      s"""
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "rel":"self",
+         |         "method":"GET"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "rel":"create-and-amend-employment-financial-details",
+         |         "method":"PUT"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "rel":"delete-employment-financial-details",
+         |         "method":"DELETE"
+         |      }
+         |   ]
+         |}
+       """.stripMargin
+    )
+
+    val downstreamUri: String
+
+    def taxYear: String
+
     def offPayrollRequestBodyJson(boolean: Boolean): JsValue = Json.parse(s"""
          |{
          |    "employment": {
@@ -819,36 +830,6 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
          |}
       """.stripMargin)
 
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links":[
-         |      {
-         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-         |         "rel":"self",
-         |         "method":"GET"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-         |         "rel":"create-and-amend-employment-financial-details",
-         |         "method":"PUT"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-         |         "rel":"delete-employment-financial-details",
-         |         "method":"DELETE"
-         |      }
-         |   ]
-         |}
-       """.stripMargin
-    )
-
-    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
-
-    val downstreamUri: String
-
-    def setupStubs(): StubMapping = StubMapping.NOT_CONFIGURED
-
     def request(): WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
@@ -861,19 +842,23 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         )
     }
 
+    def uri: String = s"/employments/$nino/$taxYear/$employmentId/financial-details"
+
+    def setupStubs(): StubMapping = StubMapping.NOT_CONFIGURED
+
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: String = "2019-20"
-
     val downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
+
+    def taxYear: String = "2019-20"
 
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: String = "2023-24"
-
     val downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId"
+
+    def taxYear: String = "2023-24"
 
     override def request(): WSRequest =
       super.request().addHttpHeaders("suspend-temporal-validations" -> "true")

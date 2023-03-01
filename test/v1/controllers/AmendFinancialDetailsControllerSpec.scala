@@ -18,21 +18,22 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockMtdIdLookupService, MockEnrolmentsAuthService, MockAuditService}
-import api.models.audit.{GenericAuditDetail, AuditResponse, AuditError, AuditEvent}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendFinancialDetailsRequestParser
 import v1.mocks.services.MockAmendFinancialDetailsService
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
-import v1.models.request.amendFinancialDetails.emploment.{AmendPay, AmendEmployment, AmendBenefitsInKind, AmendDeductions}
-import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody, AmendFinancialDetailsRawData}
+import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
+import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequest, AmendFinancialDetailsRequestBody}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -51,28 +52,7 @@ class AmendFinancialDetailsControllerSpec
   val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new AmendFinancialDetailsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockAmendFinancialDetailsRequestParser,
-      service = mockAmendFinancialDetailsService,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
-    MockedMtdIdLookupService.lookup(nino = nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  private val requestBodyJson: JsValue = Json.parse(
+  private val requestBodyJsonWithOpw: JsValue = Json.parse(
     """
       |{
       |    "employment": {
@@ -121,28 +101,78 @@ class AmendFinancialDetailsControllerSpec
       |}
     """.stripMargin
   )
-
+  private val requestBodyJson: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": 13343.45,
+      |                "pglDeductionAmount": 24242.56
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": 455.67,
+      |            "assets": 435.54,
+      |            "assetTransfer": 24.58,
+      |            "beneficialLoan": 33.89,
+      |            "car": 3434.78,
+      |            "carFuel": 34.56,
+      |            "educationalServices": 445.67,
+      |            "entertaining": 434.45,
+      |            "expenses": 3444.32,
+      |            "medicalInsurance": 4542.47,
+      |            "telephone": 243.43,
+      |            "service": 45.67,
+      |            "taxableExpenses": 24.56,
+      |            "van": 56.29,
+      |            "vanFuel": 14.56,
+      |            "mileage": 34.23,
+      |            "nonQualifyingRelocationExpenses": 54.62,
+      |            "nurseryPlaces": 84.29,
+      |            "otherItems": 67.67,
+      |            "paymentsOnEmployeesBehalf": 67.23,
+      |            "personalIncidentalExpenses": 74.29,
+      |            "qualifyingRelocationExpenses": 78.24,
+      |            "employerProvidedProfessionalSubscriptions": 84.56,
+      |            "employerProvidedServices": 56.34,
+      |            "incomeTaxPaidByDirector": 67.34,
+      |            "travelAndSubsistence": 56.89,
+      |            "vouchersAndCreditCards": 34.90,
+      |            "nonCash": 23.89
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
   val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
     nino = nino,
     taxYear = taxYear,
     employmentId = employmentId,
     body = AnyContentAsJson(requestBodyJson)
   )
-
+  val rawDataOwpEnabled: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
+    nino = nino,
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = AnyContentAsJson(requestBodyJsonWithOpw),
+    opwEnabled = true
+  )
   val pay: AmendPay = AmendPay(
     taxablePayToDate = 3500.75,
     totalTaxToDate = 6782.92
   )
-
   val studentLoans: AmendStudentLoans = AmendStudentLoans(
     uglDeductionAmount = Some(13343.45),
     pglDeductionAmount = Some(24242.56)
   )
-
   val deductions: AmendDeductions = AmendDeductions(
     studentLoans = Some(studentLoans)
   )
-
   val benefitsInKind: AmendBenefitsInKind = AmendBenefitsInKind(
     accommodation = Some(455.67),
     assets = Some(435.54),
@@ -173,25 +203,23 @@ class AmendFinancialDetailsControllerSpec
     vouchersAndCreditCards = Some(34.90),
     nonCash = Some(23.89)
   )
-
   val employment: AmendEmployment = AmendEmployment(
     pay = pay,
     deductions = Some(deductions),
     benefitsInKind = Some(benefitsInKind),
-    offPayrollWorker = Some(true)
+    offPayrollWorker = None
   )
-
   val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
     employment = employment
   )
-
   val requestData: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId,
     body = amendFinancialDetailsRequestBody
   )
-
+  val requestDataWithOpw: AmendFinancialDetailsRequest =
+    requestData.copy(body = amendFinancialDetailsRequestBody.copy(employment = employment.copy(offPayrollWorker = Some(true))))
   val hateoasResponse: JsValue = Json.parse(
     s"""
        |{
@@ -216,6 +244,7 @@ class AmendFinancialDetailsControllerSpec
     """.stripMargin
   )
 
+
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "AmendEmploymentFinancialDetails",
@@ -230,9 +259,59 @@ class AmendFinancialDetailsControllerSpec
       )
     )
 
-  "AmendFinancialDetailsController" should {
+  def opwEvent(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "AmendEmploymentFinancialDetails",
+      transactionName = "amend-employment-financial-details",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+        request = Some(requestBodyJsonWithOpw),
+        `X-CorrelationId` = correlationId,
+        response = auditResponse
+      )
+    )
+
+  trait Test {
+    val hc: HeaderCarrier = HeaderCarrier()
+
+    val controller = new AmendFinancialDetailsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      requestParser = mockAmendFinancialDetailsRequestParser,
+      service = mockAmendFinancialDetailsService,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    MockedMtdIdLookupService.lookup(nino = nino).returns(Future.successful(Right("test-mtd-id")))
+    MockedEnrolmentsAuthService.authoriseUser()
+    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
+  }
+
+  trait OpwTest extends Test {
+
+    MockedAppConfig.featureSwitches
+      .returns(Configuration("allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true))
+      .anyNumberOfTimes()
+
+  }
+
+  trait PreOpwTest extends Test {
+
+    MockedAppConfig.featureSwitches
+      .returns(Configuration("opw.enabled" -> false, "allowTemporalValidationSuspension.enabled" -> true, "tys-api.enabled" -> true))
+      .anyNumberOfTimes()
+
+  }
+
+  "AmendFinancialDetailsController with Opw disabled" should {
     "return OK" when {
-      "happy path" in new Test {
+      "happy path in non opw test" in new PreOpwTest {
 
         MockAmendFinancialDetailsRequestParser
           .parse(rawData)
@@ -251,12 +330,86 @@ class AmendFinancialDetailsControllerSpec
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
+
+      "happy path in opw test" in new OpwTest {
+
+        MockAmendFinancialDetailsRequestParser
+          .parse(rawDataOwpEnabled)
+          .returns(Right(requestDataWithOpw))
+
+        MockAmendFinancialDetailsService
+          .amendFinancialDetails(requestDataWithOpw)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+
+        val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJsonWithOpw))
+
+        status(result) shouldBe 200
+        contentAsJson(result) shouldBe hateoasResponse
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
+        MockedAuditService.verifyAuditEvent(opwEvent(auditResponse)).once
+      }
+    }
+
+    "Payload submitted with  offPayrollWorker property" when {
+      "opw feature switch is disabled" must {
+        "return  RuleNotAllowedOffPayrollWorker error" in new PreOpwTest {
+          val error = RuleNotAllowedOffPayrollWorker
+          MockAmendFinancialDetailsRequestParser
+            .parse(
+              AmendFinancialDetailsRawData(
+                nino = nino,
+                taxYear = taxYear,
+                employmentId = employmentId,
+                body = AnyContentAsJson(requestBodyJsonWithOpw),
+                opwEnabled = false
+              ))
+            .returns(Left(ErrorWrapper(correlationId, error, None)))
+
+          val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJsonWithOpw))
+
+          status(result) shouldBe BAD_REQUEST
+          contentAsJson(result) shouldBe Json.toJson(error)
+          header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(400, Some(Seq(AuditError(error.code))), None)
+          MockedAuditService.verifyAuditEvent(opwEvent(auditResponse)).once
+        }
+      }
+    }
+
+    "Payload submitted without offPayrollWorker property" when {
+      "the opw feature switch is enabled and the tax year is 2024" must {
+        "return  RuleMissingOffPayrollWorker error" in new OpwTest {
+          val error = RuleMissingOffPayrollWorker
+          MockAmendFinancialDetailsRequestParser
+            .parse(
+              AmendFinancialDetailsRawData(
+                nino = nino,
+                taxYear = taxYear,
+                employmentId = employmentId,
+                body = AnyContentAsJson(requestBodyJson),
+                opwEnabled = true
+              ))
+            .returns(Left(ErrorWrapper(correlationId, error, None)))
+
+          val result: Future[Result] = controller.amendFinancialDetails(nino, taxYear, employmentId)(fakePutRequest(requestBodyJson))
+
+          status(result) shouldBe BAD_REQUEST
+          contentAsJson(result) shouldBe Json.toJson(error)
+          header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(400, Some(Seq(AuditError(error.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        }
+      }
     }
 
     "return the error as per spec" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+          s"a ${error.code} error is returned from the parser" in new PreOpwTest {
 
             MockAmendFinancialDetailsRequestParser
               .parse(rawData)
@@ -282,6 +435,7 @@ class AmendFinancialDetailsControllerSpec
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
+          (RuleNotAllowedOffPayrollWorker, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST)
         )
 
@@ -290,7 +444,7 @@ class AmendFinancialDetailsControllerSpec
 
       "service errors occur" must {
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+          s"a $mtdError error is returned from the service" in new PreOpwTest {
 
             MockAmendFinancialDetailsRequestParser
               .parse(rawData)

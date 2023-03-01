@@ -17,7 +17,7 @@
 package v1.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{BadRequestError, EmploymentIdFormatError, ErrorWrapper, NinoFormatError, TaxYearFormatError, ValueFormatError}
+import api.models.errors._
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
@@ -76,6 +76,55 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       |            "travelAndSubsistence": 56.89,
       |            "vouchersAndCreditCards": 34.90,
       |            "nonCash": 23.89
+      |        }
+      |    }
+      |}
+    """.stripMargin
+  )
+
+  private val validRequestJsonWithOpw: JsValue = Json.parse(
+    """
+      |{
+      |    "employment": {
+      |        "pay": {
+      |            "taxablePayToDate": 3500.75,
+      |            "totalTaxToDate": 6782.92
+      |        },
+      |        "deductions": {
+      |            "studentLoans": {
+      |                "uglDeductionAmount": 13343.45,
+      |                "pglDeductionAmount": 24242.56
+      |            }
+      |        },
+      |        "benefitsInKind": {
+      |            "accommodation": 455.67,
+      |            "assets": 435.54,
+      |            "assetTransfer": 24.58,
+      |            "beneficialLoan": 33.89,
+      |            "car": 3434.78,
+      |            "carFuel": 34.56,
+      |            "educationalServices": 445.67,
+      |            "entertaining": 434.45,
+      |            "expenses": 3444.32,
+      |            "medicalInsurance": 4542.47,
+      |            "telephone": 243.43,
+      |            "service": 45.67,
+      |            "taxableExpenses": 24.56,
+      |            "van": 56.29,
+      |            "vanFuel": 14.56,
+      |            "mileage": 34.23,
+      |            "nonQualifyingRelocationExpenses": 54.62,
+      |            "nurseryPlaces": 84.29,
+      |            "otherItems": 67.67,
+      |            "paymentsOnEmployeesBehalf": 67.23,
+      |            "personalIncidentalExpenses": 74.29,
+      |            "qualifyingRelocationExpenses": 78.24,
+      |            "employerProvidedProfessionalSubscriptions": 84.56,
+      |            "employerProvidedServices": 56.34,
+      |            "incomeTaxPaidByDirector": 67.34,
+      |            "travelAndSubsistence": 56.89,
+      |            "vouchersAndCreditCards": 34.90,
+      |            "nonCash": 23.89
       |        },
       |        "offPayrollWorker": true
       |    }
@@ -85,11 +134,22 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
 
   private val validRawBody = AnyContentAsJson(validRequestJson)
 
+  private val validRawBodyWithOpw = AnyContentAsJson(validRequestJsonWithOpw)
+
+  private val amendFinancialDetailsRawDataWithOpw = AmendFinancialDetailsRawData(
+    nino = nino,
+    taxYear = taxYear,
+    employmentId = employmentId,
+    body = validRawBodyWithOpw,
+    opwEnabled = true
+  )
+
   private val amendFinancialDetailsRawData = AmendFinancialDetailsRawData(
     nino = nino,
     taxYear = taxYear,
     employmentId = employmentId,
-    body = validRawBody
+    body = validRawBody,
+    opwEnabled = false
   )
 
   private val payModel = AmendPay(
@@ -141,6 +201,13 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
     pay = payModel,
     deductions = Some(deductionsModel),
     benefitsInKind = Some(benefitsInKindModel),
+    offPayrollWorker = None
+  )
+
+  private val employmentModelWithOpw = AmendEmployment(
+    pay = payModel,
+    deductions = Some(deductionsModel),
+    benefitsInKind = Some(benefitsInKindModel),
     offPayrollWorker = Some(true)
   )
 
@@ -148,11 +215,22 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
     employment = employmentModel
   )
 
+  private val validRequestBodyModelWithOpw = AmendFinancialDetailsRequestBody(
+    employment = employmentModelWithOpw
+  )
+
   private val amendFinancialDetailsRequest = AmendFinancialDetailsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId,
     body = validRequestBodyModel
+  )
+
+  private val amendFinancialDetailsRequestWithOpw = AmendFinancialDetailsRequest(
+    nino = Nino(nino),
+    taxYear = TaxYear.fromMtd(taxYear),
+    employmentId = employmentId,
+    body = validRequestBodyModelWithOpw
   )
 
   trait Test extends MockAmendFinancialDetailsValidator {
@@ -164,6 +242,7 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
   }
 
   "parse" should {
+
     "return a request object" when {
       "valid request data is supplied" in new Test {
         MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawData).returns(Nil)
@@ -171,32 +250,46 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
       }
     }
 
+    "return a request object with opw" when {
+      "valid request data with opw is supplied" in new Test {
+        MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawDataWithOpw).returns(Nil)
+        parser.parseRequest(amendFinancialDetailsRawDataWithOpw) shouldBe Right(amendFinancialDetailsRequestWithOpw)
+      }
+    }
+
+    "return an error when the offPayrollWorker is not provided" when {
+      "the opw enabled is true and the taxYear is a TYS specific one " in new Test {
+        MockAmendFinancialDetailsValidator.validate(amendFinancialDetailsRawDataWithOpw).returns(Nil)
+        parser.parseRequest(amendFinancialDetailsRawDataWithOpw) shouldBe Right(amendFinancialDetailsRequestWithOpw)
+      }
+    }
+
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
         MockAmendFinancialDetailsValidator
-          .validate(amendFinancialDetailsRawData.copy(nino = "notANino"))
+          .validate(amendFinancialDetailsRawDataWithOpw.copy(nino = "notANino"))
           .returns(List(NinoFormatError))
 
-        parser.parseRequest(amendFinancialDetailsRawData.copy(nino = "notANino")) shouldBe
+        parser.parseRequest(amendFinancialDetailsRawDataWithOpw.copy(nino = "notANino")) shouldBe
           Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple path parameter validation errors occur (NinoFormatError and TaxYearFormatError errors)" in new Test {
         MockAmendFinancialDetailsValidator
-          .validate(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear"))
+          .validate(amendFinancialDetailsRawDataWithOpw.copy(nino = "notANino", taxYear = "notATaxYear"))
           .returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
+        parser.parseRequest(amendFinancialDetailsRawDataWithOpw.copy(nino = "notANino", taxYear = "notATaxYear")) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
 
       "multiple path parameter validation errors occur (NinoFormatError, TaxYearFormatError and EmploymentIdFormatError errors)" in new Test {
         MockAmendFinancialDetailsValidator
-          .validate(amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId"))
+          .validate(amendFinancialDetailsRawDataWithOpw.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId"))
           .returns(List(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError))
 
         parser.parseRequest(
-          amendFinancialDetailsRawData.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId")) shouldBe
+          amendFinancialDetailsRawDataWithOpw.copy(nino = "notANino", taxYear = "notATaxYear", employmentId = "notAnEmploymentId")) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, EmploymentIdFormatError))))
       }
 
@@ -298,10 +391,10 @@ class AmendFinancialDetailsRequestParserSpec extends UnitSpec {
         )
 
         MockAmendFinancialDetailsValidator
-          .validate(amendFinancialDetailsRawData.copy(body = allInvalidValueRawRequestBody))
+          .validate(amendFinancialDetailsRawDataWithOpw.copy(body = allInvalidValueRawRequestBody))
           .returns(allInvalidValueErrors)
 
-        parser.parseRequest(amendFinancialDetailsRawData.copy(body = allInvalidValueRawRequestBody)) shouldBe
+        parser.parseRequest(amendFinancialDetailsRawDataWithOpw.copy(body = allInvalidValueRawRequestBody)) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(allInvalidValueErrors)))
       }
     }

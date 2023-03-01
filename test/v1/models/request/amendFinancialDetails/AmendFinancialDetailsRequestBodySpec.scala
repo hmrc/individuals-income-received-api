@@ -16,77 +16,24 @@
 
 package v1.models.request.amendFinancialDetails
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
-import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 import v1.models.request.amendFinancialDetails.emploment.studentLoans.AmendStudentLoans
+import v1.models.request.amendFinancialDetails.emploment.{AmendBenefitsInKind, AmendDeductions, AmendEmployment, AmendPay}
 
 class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
-
-  private val json = Json.parse(
-    """
-      |{
-      |    "employment": {
-      |        "pay": {
-      |            "taxablePayToDate": 3500.75,
-      |            "totalTaxToDate": 6782.92
-      |        },
-      |        "deductions": {
-      |            "studentLoans": {
-      |                "uglDeductionAmount": 13343.45,
-      |                "pglDeductionAmount": 24242.56
-      |            }
-      |        },
-      |        "benefitsInKind": {
-      |            "accommodation": 455.67,
-      |            "assets": 435.54,
-      |            "assetTransfer": 24.58,
-      |            "beneficialLoan": 33.89,
-      |            "car": 3434.78,
-      |            "carFuel": 34.56,
-      |            "educationalServices": 445.67,
-      |            "entertaining": 434.45,
-      |            "expenses": 3444.32,
-      |            "medicalInsurance": 4542.47,
-      |            "telephone": 243.43,
-      |            "service": 45.67,
-      |            "taxableExpenses": 24.56,
-      |            "van": 56.29,
-      |            "vanFuel": 14.56,
-      |            "mileage": 34.23,
-      |            "nonQualifyingRelocationExpenses": 54.62,
-      |            "nurseryPlaces": 84.29,
-      |            "otherItems": 67.67,
-      |            "paymentsOnEmployeesBehalf": 67.23,
-      |            "personalIncidentalExpenses": 74.29,
-      |            "qualifyingRelocationExpenses": 78.24,
-      |            "employerProvidedProfessionalSubscriptions": 84.56,
-      |            "employerProvidedServices": 56.34,
-      |            "incomeTaxPaidByDirector": 67.34,
-      |            "travelAndSubsistence": 56.89,
-      |            "vouchersAndCreditCards": 34.90,
-      |            "nonCash": 23.89
-      |        },
-      |        "offPayrollWorker": true
-      |    }
-      |}
-    """.stripMargin
-  )
 
   private val payModel = AmendPay(
     taxablePayToDate = 3500.75,
     totalTaxToDate = 6782.92
   )
-
   private val studentLoansModel = AmendStudentLoans(
     uglDeductionAmount = Some(13343.45),
     pglDeductionAmount = Some(24242.56)
   )
-
   private val deductionsModel = AmendDeductions(
     studentLoans = Some(studentLoansModel)
   )
-
   private val benefitsInKindModel = AmendBenefitsInKind(
     accommodation = Some(455.67),
     assets = Some(435.54),
@@ -117,22 +64,121 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
     vouchersAndCreditCards = Some(34.90),
     nonCash = Some(23.89)
   )
-
   private val employmentModel = AmendEmployment(
     pay = payModel,
     deductions = Some(deductionsModel),
     benefitsInKind = Some(benefitsInKindModel),
     offPayrollWorker = Some(true)
   )
-
   private val requestBodyModel = AmendFinancialDetailsRequestBody(
     employment = employmentModel
+  )
+
+  def jsonRequest(offPayrollWorker: Boolean = true): JsValue = Json.parse(
+    s"""
+       |{
+       |    "employment": {
+       |        "pay": {
+       |            "taxablePayToDate": 3500.75,
+       |            "totalTaxToDate": 6782.92
+       |        },
+       |        "deductions": {
+       |            "studentLoans": {
+       |                "uglDeductionAmount": 13343.45,
+       |                "pglDeductionAmount": 24242.56
+       |            }
+       |        },
+       |        "benefitsInKind": {
+       |            "accommodation": 455.67,
+       |            "assets": 435.54,
+       |            "assetTransfer": 24.58,
+       |            "beneficialLoan": 33.89,
+       |            "car": 3434.78,
+       |            "carFuel": 34.56,
+       |            "educationalServices": 445.67,
+       |            "entertaining": 434.45,
+       |            "expenses": 3444.32,
+       |            "medicalInsurance": 4542.47,
+       |            "telephone": 243.43,
+       |            "service": 45.67,
+       |            "taxableExpenses": 24.56,
+       |            "van": 56.29,
+       |            "vanFuel": 14.56,
+       |            "mileage": 34.23,
+       |            "nonQualifyingRelocationExpenses": 54.62,
+       |            "nurseryPlaces": 84.29,
+       |            "otherItems": 67.67,
+       |            "paymentsOnEmployeesBehalf": 67.23,
+       |            "personalIncidentalExpenses": 74.29,
+       |            "qualifyingRelocationExpenses": 78.24,
+       |            "employerProvidedProfessionalSubscriptions": 84.56,
+       |            "employerProvidedServices": 56.34,
+       |            "incomeTaxPaidByDirector": 67.34,
+       |            "travelAndSubsistence": 56.89,
+       |            "vouchersAndCreditCards": 34.90,
+       |            "nonCash": 23.89
+       |        },
+       |        "offPayrollWorker": $offPayrollWorker
+       |    }
+       |}
+    """.stripMargin
+  )
+
+  def jsonRequestWithoutOpw: JsValue = Json.parse(
+    s"""
+       |{
+       |    "employment": {
+       |        "pay": {
+       |            "taxablePayToDate": 3500.75,
+       |            "totalTaxToDate": 6782.92
+       |        },
+       |        "deductions": {
+       |            "studentLoans": {
+       |                "uglDeductionAmount": 13343.45,
+       |                "pglDeductionAmount": 24242.56
+       |            }
+       |        },
+       |        "benefitsInKind": {
+       |            "accommodation": 455.67,
+       |            "assets": 435.54,
+       |            "assetTransfer": 24.58,
+       |            "beneficialLoan": 33.89,
+       |            "car": 3434.78,
+       |            "carFuel": 34.56,
+       |            "educationalServices": 445.67,
+       |            "entertaining": 434.45,
+       |            "expenses": 3444.32,
+       |            "medicalInsurance": 4542.47,
+       |            "telephone": 243.43,
+       |            "service": 45.67,
+       |            "taxableExpenses": 24.56,
+       |            "van": 56.29,
+       |            "vanFuel": 14.56,
+       |            "mileage": 34.23,
+       |            "nonQualifyingRelocationExpenses": 54.62,
+       |            "nurseryPlaces": 84.29,
+       |            "otherItems": 67.67,
+       |            "paymentsOnEmployeesBehalf": 67.23,
+       |            "personalIncidentalExpenses": 74.29,
+       |            "qualifyingRelocationExpenses": 78.24,
+       |            "employerProvidedProfessionalSubscriptions": 84.56,
+       |            "employerProvidedServices": 56.34,
+       |            "incomeTaxPaidByDirector": 67.34,
+       |            "travelAndSubsistence": 56.89,
+       |            "vouchersAndCreditCards": 34.90,
+       |            "nonCash": 23.89
+       |        }
+       |    }
+       |}
+    """.stripMargin
   )
 
   "AmendFinancialDetailsRequestBody" when {
     "read from valid JSON" should {
       "produce the expected AmendFinancialDetailsRequestBody object" in {
-        json.as[AmendFinancialDetailsRequestBody] shouldBe requestBodyModel
+        jsonRequest().as[AmendFinancialDetailsRequestBody] shouldBe AmendFinancialDetailsRequestBody(
+          employment = employmentModel
+        )
       }
     }
 
@@ -146,7 +192,17 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(requestBodyModel) shouldBe json
+        Json.toJson(requestBodyModel) shouldBe jsonRequest()
+      }
+    }
+
+    "written to JSON when offPayrollWorker is false" should {
+      "produce the expected JsObject without offPayrollWorker" in {
+        val employmentModelOpwIsFalse = employmentModel.copy(offPayrollWorker = Some(false))
+        Json.toJson(
+          AmendFinancialDetailsRequestBody(
+            employment = employmentModelOpwIsFalse
+          )) shouldBe jsonRequestWithoutOpw
       }
     }
   }
