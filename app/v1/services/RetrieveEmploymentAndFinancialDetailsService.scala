@@ -20,7 +20,8 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
-import cats.implicits.toBifunctorOps
+import cats.data.EitherT
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveEmploymentAndFinancialDetailsConnector
@@ -31,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: RetrieveEmploymentAndFinancialDetailsConnector)
+class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: RetrieveEmploymentAndFinancialDetailsConnector, appConfig: AppConfig)
     extends DownstreamResponseMappingSupport
     with Logging {
 
@@ -41,8 +42,18 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
 
-    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    EitherT(connector.retrieve(request))
+      .map(_.map(opwResponseMap))
+      .leftMap(mapDownstreamErrors(errorMap))
+      .value
+  }
 
+  def opwResponseMap(response: RetrieveEmploymentAndFinancialDetailsResponse): RetrieveEmploymentAndFinancialDetailsResponse = {
+    if (!FeatureSwitches(appConfig.featureSwitches).isOpwEnabled) {
+      response.copy(employment = response.employment.copy(offPayrollWorker = None))
+    } else {
+      response
+    }
   }
 
   private val errorMap: Map[String, MtdError] = Map(
