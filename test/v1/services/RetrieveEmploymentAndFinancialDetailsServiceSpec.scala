@@ -18,21 +18,11 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
-import api.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  EmploymentIdFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotSupportedError,
-  SourceFormatError,
-  StandardDownstreamError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import mocks.MockAppConfig
+import play.api.Configuration
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockRetrieveEmploymentAndFinancialDetailsConnector
 import v1.models.request.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsRequest
@@ -58,31 +48,77 @@ class RetrieveEmploymentAndFinancialDetailsServiceSpec extends ServiceSpec {
     employerName = "employer name"
   )
 
-  val employment: Employment = Employment(None, None, None, None, None, None, None, None, None, None, employer = employer, None, None, None, None)
+  val employmentWithOPW: Employment =
+    Employment(None, None, None, None, None, None, None, None, None, offPayrollWorker = Some(true), employer = employer, None, None, None, None)
 
-  val response: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
+  val employmentWithoutOPW: Employment =
+    Employment(None, None, None, None, None, None, None, None, None, offPayrollWorker = None, employer = employer, None, None, None, None)
+
+  val responseWithOPW: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
     submittedOn = "",
     source = None,
     customerAdded = None,
     dateIgnored = None,
-    employment = employment
+    employment = employmentWithOPW
   )
 
-  trait Test extends MockRetrieveEmploymentAndFinancialDetailsConnector {
+  val responseWithoutOPW: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
+    submittedOn = "",
+    source = None,
+    customerAdded = None,
+    dateIgnored = None,
+    employment = employmentWithoutOPW
+  )
+
+  trait Test extends MockRetrieveEmploymentAndFinancialDetailsConnector with MockAppConfig {
     implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveEmploymentAndFinancialDetails")
 
-    val service = new RetrieveEmploymentAndFinancialDetailsService(mockConnector)
+    val service = new RetrieveEmploymentAndFinancialDetailsService(mockConnector, mockAppConfig)
   }
 
   "RetrieveEmploymentAndFinancialDetailsService" should {
-    "return a valid response" when {
-      "a valid request is supplied" in new Test {
+    "return a valid response without offPayrollWorker" when {
+      "downstream response includes offPayrollWorker but opw.enabled = false" in new Test {
         MockRetrieveEmploymentAndFinancialDetailsConnector
           .retrieve(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseWithOPW))))
 
-        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, response))
+        MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> false))
+
+        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, responseWithoutOPW))
+      }
+
+      "downstream response does not include offPayrollWorker but opw.enabled = false" in new Test {
+        MockRetrieveEmploymentAndFinancialDetailsConnector
+          .retrieve(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseWithoutOPW))))
+
+        MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> false))
+
+        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, responseWithoutOPW))
+      }
+
+      "downstream response does not include offPayrollWorker but opw.enabled = true" in new Test {
+        MockRetrieveEmploymentAndFinancialDetailsConnector
+          .retrieve(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseWithoutOPW))))
+
+        MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> true))
+
+        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, responseWithoutOPW))
+      }
+    }
+
+    "return a valid response with offPayrollWorker" when {
+      "downstream response includes offPayrollWorker and opw.enabled = true" in new Test {
+        MockRetrieveEmploymentAndFinancialDetailsConnector
+          .retrieve(request)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseWithOPW))))
+
+        MockedAppConfig.featureSwitches.returns(Configuration("opw.enabled" -> true))
+
+        await(service.retrieve(request)) shouldBe Right(ResponseWrapper(correlationId, responseWithOPW))
       }
     }
 
