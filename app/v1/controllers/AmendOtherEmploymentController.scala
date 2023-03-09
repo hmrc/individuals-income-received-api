@@ -30,8 +30,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AmendOtherEmploymentRequestParser
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
-import v1.requestParsers.AmendOtherEmploymentRequestParser
 import v1.services.AmendOtherEmploymentService
 
 import javax.inject.{Inject, Singleton}
@@ -81,11 +81,12 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
 
           auditSubmission(
             GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              request = Some(request.body),
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(amendOtherEmploymentHateoasBody(appConfig, nino, taxYear))))
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
+              Some(request.body),
+              serviceResponse.correlationId,
+              AuditResponse(httpStatus = OK, response = Right(Some(amendOtherEmploymentHateoasBody(appConfig, nino, taxYear))))
             )
           )
 
@@ -103,11 +104,12 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
 
         auditSubmission(
           GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            request = Some(request.body),
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
+            Some(request.body),
+            resCorrelationId,
+            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
@@ -146,8 +148,8 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
             RuleLumpSumsError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

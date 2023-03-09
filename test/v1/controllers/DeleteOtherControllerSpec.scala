@@ -61,12 +61,13 @@ class DeleteOtherControllerSpec
       auditType = "DeleteOtherIncome",
       transactionName = "delete-other-income",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
+        None,
+        correlationId,
+        auditResponse
       )
     )
 
@@ -169,7 +170,7 @@ class DeleteOtherControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 

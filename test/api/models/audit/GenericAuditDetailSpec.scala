@@ -80,8 +80,9 @@ class GenericAuditDetailSpec extends UnitSpec {
   val auditDetailModelSuccess: GenericAuditDetail = GenericAuditDetail(
     userType = userType,
     agentReferenceNumber = agentReferenceNumber,
-    params = Map("nino" -> nino, "taxYear" -> taxYear),
-    request = Some(
+    Map("nino" -> nino, "taxYear" -> taxYear),
+    None,
+    Some(
       Json.parse(
         """
         |{
@@ -93,8 +94,8 @@ class GenericAuditDetailSpec extends UnitSpec {
         |}
         """.stripMargin
       )),
-    `X-CorrelationId` = correlationId,
-    response = AuditResponse(
+    correlationId,
+    AuditResponse(
       OK,
       Right(Some(Json.parse(s"""
           |{
@@ -154,10 +155,11 @@ class GenericAuditDetailSpec extends UnitSpec {
   )
 
   val invalidTaxYearAuditDetailModel: GenericAuditDetail = GenericAuditDetail(
-    userType = userType,
-    agentReferenceNumber = agentReferenceNumber,
-    params = Map("nino" -> nino, "taxYear" -> "2021-2022"),
-    request = Some(
+    userType,
+    agentReferenceNumber,
+    Map("nino" -> nino, "taxYear" -> "2021-2022"),
+    None,
+    Some(
       Json.parse(
         """
         |{
@@ -169,8 +171,8 @@ class GenericAuditDetailSpec extends UnitSpec {
         |}
       """.stripMargin
       )),
-    `X-CorrelationId` = correlationId,
-    response = AuditResponse(BAD_REQUEST, Left(Seq(AuditError(TaxYearFormatError.code))))
+    correlationId,
+    AuditResponse(BAD_REQUEST, Left(Seq(AuditError(TaxYearFormatError.code))))
   )
 
   "GenericAuditDetail" when {

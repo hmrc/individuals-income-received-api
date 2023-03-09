@@ -58,12 +58,13 @@ class CreateAmendNonPayeEmploymentControllerSpec
       auditType = "CreateAmendNonPayeEmploymentIncome",
       transactionName = "create-amend-non-paye-employment-income",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = Some(validRequestJson),
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
+        Some(validRequestJson),
+        correlationId,
+        auditResponse
       )
     )
 
@@ -129,7 +130,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes()
+    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes ()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
@@ -221,7 +222,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

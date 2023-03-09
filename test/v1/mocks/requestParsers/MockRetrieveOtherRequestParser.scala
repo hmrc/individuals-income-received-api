@@ -19,12 +19,12 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveOtherRequestParser
 import v1.models.request.retrieveOther.{RetrieveOtherRawData, RetrieveOtherRequest}
-import v1.requestParsers.RetrieveOtherRequestParser
 
 trait MockRetrieveOtherRequestParser extends MockFactory {
 
-  val mockRetrieveOtherRequestParser = mock[RetrieveOtherRequestParser]
+  val mockRetrieveOtherRequestParser: RetrieveOtherRequestParser = mock[RetrieveOtherRequestParser]
 
   object MockRetrieveOtherRequestParser {
 

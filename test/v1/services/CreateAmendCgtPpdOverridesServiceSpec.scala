@@ -30,7 +30,7 @@ import api.models.errors.{
   RuleIncorrectDisposalTypeError,
   RuleTaxYearNotEndedError,
   RuleTaxYearNotSupportedError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError
 }
 import api.models.outcomes.ResponseWrapper
@@ -98,15 +98,15 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
         val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", InternalError),
+          ("INVALID_PAYLOAD", InternalError),
           ("PPD_SUBMISSIONID_NOT_FOUND", PpdSubmissionIdNotFoundError),
           ("NO_PPD_SUBMISSIONS_FOUND", NotFoundError),
           ("DUPLICATE_SUBMISSION", RuleDuplicatedPpdSubmissionIdError),
           ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
           ("INVALID_DISPOSAL_TYPE", RuleIncorrectDisposalTypeError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         val extraTysErrors = Seq(

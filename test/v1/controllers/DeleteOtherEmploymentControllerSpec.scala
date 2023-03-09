@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
@@ -37,7 +37,6 @@ class DeleteOtherEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
     with MockOtherEmploymentIncomeRequestParser
     with MockDeleteOtherEmploymentIncomeService
     with MockAuditService
@@ -62,12 +61,13 @@ class DeleteOtherEmploymentControllerSpec
       auditType = "DeleteOtherEmployment",
       transactionName = "delete-other-employment",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
+        None,
+        correlationId,
+        auditResponse
       )
     )
 
@@ -171,7 +171,7 @@ class DeleteOtherEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

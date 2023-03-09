@@ -29,9 +29,9 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AddUkSavingsAccountRequestParser
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountHateoasData
-import v1.requestParsers.AddUkSavingsAccountRequestParser
 import v1.services.AddUkSavingsAccountService
 
 import javax.inject.{Inject, Singleton}
@@ -120,8 +120,8 @@ class AddUkSavingsAccountController @Inject() (val authService: EnrolmentsAuthSe
           CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
 
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

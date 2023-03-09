@@ -61,12 +61,13 @@ class DeleteForeignControllerSpec
       auditType = "DeleteForeignIncome",
       transactionName = "delete-foreign-income",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
+        None,
+        correlationId,
+        auditResponse
       )
     )
 
@@ -169,7 +170,7 @@ class DeleteForeignControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

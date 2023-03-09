@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.AmendOtherEmploymentRequestParser
-import v1.models.request.amendOtherEmployment.{AmendOtherEmploymentRawData, AmendOtherEmploymentRequest}
+import v1.controllers.requestParsers.AmendOtherEmploymentRequestParser
+import v1.models.request.amendOtherEmployment._
 
 trait MockAmendOtherEmploymentRequestParser extends MockFactory {
 

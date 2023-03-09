@@ -24,7 +24,7 @@ import api.models.errors.{
   ErrorWrapper,
   MtdError,
   NinoFormatError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError,
   RuleTaxYearNotSupportedError
 }
@@ -136,11 +136,11 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("INVALID_CORRELATIONID", InternalError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("INVALID_PAYLOAD", InternalError),
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

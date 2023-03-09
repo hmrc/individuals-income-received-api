@@ -107,12 +107,13 @@ class IgnoreEmploymentControllerSpec
       auditType = "IgnoreEmployment",
       transactionName = "ignore-employment",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+        None,
+        None,
+        correlationId,
+        auditResponse
       )
     )
 
@@ -203,7 +204,7 @@ class IgnoreEmploymentControllerSpec
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (RuleCustomEmploymentError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

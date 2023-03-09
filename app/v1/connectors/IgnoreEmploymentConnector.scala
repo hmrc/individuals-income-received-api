@@ -19,8 +19,8 @@ package v1.connectors
 import api.connectors.DownstreamUri.TaxYearSpecificIfsUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.models.request.EmptyBody
 import config.AppConfig
+import play.api.libs.json.JsObject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
@@ -37,7 +37,7 @@ class IgnoreEmploymentConnector @Inject() (val http: HttpClient, val appConfig: 
 
     val downstreamUri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/income/employments/$nino/$employmentId/ignore")
 
-    put(EmptyBody, downstreamUri)
+    put(JsObject.empty, downstreamUri)
   }
 
 }

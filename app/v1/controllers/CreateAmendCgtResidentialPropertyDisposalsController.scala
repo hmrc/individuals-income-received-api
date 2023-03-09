@@ -28,9 +28,9 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
-import v1.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.services._
 
 import javax.inject.{Inject, Singleton}
@@ -126,8 +126,8 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
           CustomMtdError(RuleAcquisitionDateAfterDisposalDateError.code) | CustomMtdError(RuleLossesGreaterThanGainError.code) | CustomMtdError(
             RuleCompletionDateError.code) | CustomMtdError(RuleDisposalDateError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

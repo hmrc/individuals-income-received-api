@@ -30,22 +30,22 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendOtherRequestParser
 import v1.models.request.createAmendOther.CreateAmendOtherRawData
-import v1.requestParsers.CreateAmendOtherRequestParser
 import v1.services.CreateAmendOtherService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherController @Inject()(val authService: EnrolmentsAuthService,
-                                           val lookupService: MtdIdLookupService,
-                                           appConfig: AppConfig,
-                                           requestParser: CreateAmendOtherRequestParser,
-                                           service: CreateAmendOtherService,
-                                           auditService: AuditService,
-                                           cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthService,
+                                            val lookupService: MtdIdLookupService,
+                                            appConfig: AppConfig,
+                                            requestParser: CreateAmendOtherRequestParser,
+                                            service: CreateAmendOtherService,
+                                            auditService: AuditService,
+                                            cc: ControllerComponents,
+                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging
@@ -81,6 +81,7 @@ class CreateAmendOtherController @Inject()(val authService: EnrolmentsAuthServic
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendOtherHateoasBody(appConfig, nino, taxYear))))
@@ -102,6 +103,7 @@ class CreateAmendOtherController @Inject()(val authService: EnrolmentsAuthServic
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
@@ -117,8 +119,8 @@ class CreateAmendOtherController @Inject()(val authService: EnrolmentsAuthServic
             TaxYearFormatError.code) | CustomMtdError(RuleTaxYearRangeInvalidError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
           CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) | CustomMtdError(CountryCodeRuleError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

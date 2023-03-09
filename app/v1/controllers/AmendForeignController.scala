@@ -30,8 +30,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AmendForeignRequestParser
 import v1.models.request.amendForeign.AmendForeignRawData
-import v1.requestParsers.AmendForeignRequestParser
 import v1.services.AmendForeignService
 
 import javax.inject.{Inject, Singleton}
@@ -83,6 +83,7 @@ class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendForeignHateoasBody(appConfig, nino, taxYear))))
@@ -105,6 +106,7 @@ class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
@@ -117,20 +119,22 @@ class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case _ if errorWrapper.containsAnyOf(
-        BadRequestError,
-        NinoFormatError,
-        TaxYearFormatError,
-        RuleTaxYearRangeInvalidError,
-        RuleIncorrectOrEmptyBodyError,
-        ValueFormatError,
-        CountryCodeFormatError,
-        CountryCodeRuleError,
-        CustomerRefFormatError,
-        RuleTaxYearNotSupportedError
-      ) => BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleIncorrectOrEmptyBodyError,
+            ValueFormatError,
+            CountryCodeFormatError,
+            CountryCodeRuleError,
+            CustomerRefFormatError,
+            RuleTaxYearNotSupportedError
+          ) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

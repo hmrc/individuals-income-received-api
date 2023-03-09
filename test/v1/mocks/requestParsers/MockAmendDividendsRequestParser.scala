@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.AmendDividendsRequestParser
-import v1.models.request.amendDividends.{AmendDividendsRawData, AmendDividendsRequest}
+import v1.controllers.requestParsers.AmendDividendsRequestParser
+import v1.models.request.amendDividends._
 
 trait MockAmendDividendsRequestParser extends MockFactory {
 

@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequest}
-import v1.requestParsers.AddUkSavingsAccountRequestParser
+import v1.controllers.requestParsers.AddUkSavingsAccountRequestParser
+import v1.models.request.addUkSavingsAccount._
 
 trait MockAddUkSavingsAccountRequestParser extends MockFactory {
 
@@ -29,8 +29,11 @@ trait MockAddUkSavingsAccountRequestParser extends MockFactory {
   object MockAddUkSavingsAccountRequestParser {
 
     def parse(data: AddUkSavingsAccountRawData): CallHandler[Either[ErrorWrapper, AddUkSavingsAccountRequest]] = {
-      (mockAddUkSavingsAccountRequestParser.parseRequest(_: AddUkSavingsAccountRawData)(_: String))
+      (mockAddUkSavingsAccountRequestParser
+        .parseRequest(_: AddUkSavingsAccountRawData)(_: String))
         .expects(data, *)
     }
+
   }
+
 }

@@ -28,9 +28,9 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
 import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
-import v1.requestParsers.CreateAmendOtherCgtRequestParser
 import v1.services._
 
 import javax.inject.{Inject, Singleton}
@@ -139,8 +139,8 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
             RuleDisposalDateError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

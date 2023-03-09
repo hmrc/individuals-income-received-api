@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.CreateAmendSavingsRequestParser
-import v1.models.request.amendSavings.{CreateAmendSavingsRawData, CreateAmendSavingsRequest}
+import v1.controllers.requestParsers.CreateAmendSavingsRequestParser
+import v1.models.request.amendSavings._
 
 trait MockCreateCreateAmendSavingsRequestParser extends MockFactory {
 

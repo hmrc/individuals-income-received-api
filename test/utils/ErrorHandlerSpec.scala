@@ -106,7 +106,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         private val result = handler.onClientError(requestHeader, UNAUTHORIZED, "test")
         status(result) shouldBe UNAUTHORIZED
 
-        contentAsJson(result) shouldBe Json.toJson(UnauthorisedError)
+        contentAsJson(result) shouldBe Json.toJson(ClientNotAuthorisedError)
       }
     }
 
@@ -124,7 +124,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         private val result = handler.onClientError(requestHeader, METHOD_NOT_ALLOWED, "test")
         status(result) shouldBe METHOD_NOT_ALLOWED
 
-        contentAsJson(result) shouldBe Json.toJson(MtdError("INVALID_REQUEST", "test"))
+        contentAsJson(result) shouldBe Json.toJson(MtdError("INVALID_REQUEST", "test", BAD_REQUEST))
       }
     }
   }
@@ -145,7 +145,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         private val result = handler.onServerError(requestHeader, new InsufficientEnrolments("test") with NoStackTrace)
         status(result) shouldBe UNAUTHORIZED
 
-        contentAsJson(result) shouldBe Json.toJson(UnauthorisedError)
+        contentAsJson(result) shouldBe Json.toJson(ClientNotAuthorisedError)
       }
     }
 
@@ -164,7 +164,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         private val result = handler.onServerError(requestHeader, new Exception with NoStackTrace)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        contentAsJson(result) shouldBe Json.toJson(StandardDownstreamError)
+        contentAsJson(result) shouldBe Json.toJson(InternalError)
       }
     }
   }

@@ -26,9 +26,9 @@ import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.RetrievePensionsRequestParser
 import v1.models.request.retrievePensions.RetrievePensionsRawData
 import v1.models.response.retrievePensions.RetrievePensionsHateoasData
-import v1.requestParsers.RetrievePensionsRequestParser
 import v1.services.RetrievePensionsService
 
 import javax.inject.{Inject, Singleton}
@@ -105,9 +105,9 @@ class RetrievePensionsController @Inject() (val authService: EnrolmentsAuthServi
           ) =>
         BadRequest(Json.toJson(errorWrapper))
 
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
   }
 

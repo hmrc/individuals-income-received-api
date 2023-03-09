@@ -20,8 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveUkDividendsAnnualIncomeSummaryService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{GET, PUT}
@@ -31,14 +30,10 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{
-  RetrieveUkDividendsAnnualIncomeSummaryRawData,
-  RetrieveUkDividendsAnnualIncomeSummaryRequest
-}
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{
-  RetrieveUkDividendsAnnualIncomeSummaryHateoasData,
-  RetrieveUkDividendsAnnualIncomeSummaryResponse
-}
+import v1.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
+import v1.mocks.services.MockRetrieveUkDividendsAnnualIncomeSummaryService
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary._
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -195,7 +190,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -31,15 +31,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteNonPayeEmploymentService @Inject()(connector: DeleteNonPayeEmploymentConnector)
-  extends DownstreamResponseMappingSupport
-    with Logging {
+class DeleteNonPayeEmploymentService @Inject() (connector: DeleteNonPayeEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def deleteNonPayeEmployment(request: DeleteNonPayeEmploymentRequest)(implicit
-                                                                       hc: HeaderCarrier,
-                                                                       ec: ExecutionContext,
-                                                                       logContext: EndpointLogContext,
-                                                                       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = EitherT(connector.deleteNonPayeEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
 
@@ -50,16 +48,16 @@ class DeleteNonPayeEmploymentService @Inject()(connector: DeleteNonPayeEmploymen
     val downstreamErrors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(
-      "INVALID_CORRELATION_ID"    -> StandardDownstreamError,
-      "NOT_FOUND"                 -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "NOT_FOUND"              -> NotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 
     downstreamErrors ++ extraTysErrors

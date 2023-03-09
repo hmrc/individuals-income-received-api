@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.deleteCgtNonPpd.{DeleteCgtNonPpdRawData, DeleteCgtNonPpdRequest}
-import v1.requestParsers.DeleteCgtNonPpdRequestParser
+import v1.controllers.requestParsers.DeleteCgtNonPpdRequestParser
+import v1.models.request.deleteCgtNonPpd._
 
 trait MockDeleteCgtNonPpdRequestParser extends MockFactory {
 

@@ -24,7 +24,7 @@ import api.models.errors.{
   RuleCessationDateBeforeTaxYearStartError,
   RuleStartDateAfterTaxYearEndError,
   RuleTaxYearNotEndedError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError
 }
 import api.models.outcomes.ResponseWrapper
@@ -64,10 +64,10 @@ class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnec
       "NOT_SUPPORTED_TAX_YEAR"    -> RuleTaxYearNotEndedError,
       "INVALID_DATE_RANGE"        -> RuleStartDateAfterTaxYearEndError,
       "INVALID_CESSATION_DATE"    -> RuleCessationDateBeforeTaxYearStartError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "INVALID_PAYLOAD"           -> InternalError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
 }

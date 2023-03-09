@@ -214,7 +214,7 @@ class AddUkSavingsAccountControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (RuleMaximumSavingsAccountsLimitError, BAD_REQUEST),
           (RuleDuplicateAccountNameError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

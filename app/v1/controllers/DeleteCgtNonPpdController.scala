@@ -27,9 +27,9 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.DeleteCgtNonPpdRequestParser
 import v1.models.audit.DeleteCgtNonPpdAuditDetail
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
-import v1.requestParsers.DeleteCgtNonPpdRequestParser
 import v1.services.DeleteCgtNonPpdService
 
 import javax.inject.{Inject, Singleton}
@@ -111,9 +111,9 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
             RuleTaxYearRangeInvalidError,
             RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: DeleteCgtNonPpdAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

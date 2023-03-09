@@ -50,12 +50,13 @@ class DeleteNonPayeEmploymentControllerSpec
       auditType = "DeleteNonPayeEmploymentIncome",
       transactionName = "delete-non-paye-employment-income",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
         None,
         correlationId,
-        response = auditResponse
+        auditResponse
       )
     )
 
@@ -167,7 +168,7 @@ class DeleteNonPayeEmploymentControllerSpec
             (NinoFormatError, BAD_REQUEST),
             (TaxYearFormatError, BAD_REQUEST),
             (NotFoundError, NOT_FOUND),
-            (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+            (InternalError, INTERNAL_SERVER_ERROR)
           )
 
           input.foreach(args => (serviceErrors _).tupled(args))

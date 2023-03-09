@@ -86,12 +86,13 @@ class CreateAmendOtherControllerSpec
       auditType = "CreateAmendOtherIncome",
       transactionName = "create-amend-other-income",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = Some(requestBodyJson),
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear),
+        None,
+        Some(requestBodyJson),
+        correlationId,
+        auditResponse
       )
     )
 
@@ -179,7 +180,7 @@ class CreateAmendOtherControllerSpec
         val errors = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         val extraTysErrors = List(

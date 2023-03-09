@@ -19,12 +19,12 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveInsurancePoliciesRequestParser
 import v1.models.request.retrieveInsurancePolicies.{RetrieveInsurancePoliciesRawData, RetrieveInsurancePoliciesRequest}
-import v1.requestParsers.RetrieveInsurancePoliciesRequestParser
 
 trait MockRetrieveInsurancePoliciesRequestParser extends MockFactory {
 
-  val mockRetrieveInsurancePoliciesRequestParser = mock[RetrieveInsurancePoliciesRequestParser]
+  val mockRetrieveInsurancePoliciesRequestParser: RetrieveInsurancePoliciesRequestParser = mock[RetrieveInsurancePoliciesRequestParser]
 
   object MockRetrieveInsurancePoliciesRequestParser {
 

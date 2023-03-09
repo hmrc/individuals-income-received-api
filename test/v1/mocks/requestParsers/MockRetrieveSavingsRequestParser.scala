@@ -19,12 +19,12 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveSavingsRequestParser
 import v1.models.request.retrieveSavings.{RetrieveSavingsRawData, RetrieveSavingsRequest}
-import v1.requestParsers.RetrieveSavingsRequestParser
 
 trait MockRetrieveSavingsRequestParser extends MockFactory {
 
-  val mockRetrieveSavingsRequestParser = mock[RetrieveSavingsRequestParser]
+  val mockRetrieveSavingsRequestParser: RetrieveSavingsRequestParser = mock[RetrieveSavingsRequestParser]
 
   object MockRetrieveSavingsRequestParser {
 

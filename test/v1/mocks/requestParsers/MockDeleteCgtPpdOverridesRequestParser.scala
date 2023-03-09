@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.models.request.deleteCgtPpdOverrides.{DeleteCgtPpdOverridesRawData, DeleteCgtPpdOverridesRequest}
-import v1.requestParsers.DeleteCgtPpdOverridesRequestParser
+import v1.controllers.requestParsers.DeleteCgtPpdOverridesRequestParser
+import v1.models.request.deleteCgtPpdOverrides._
 
 trait MockDeleteCgtPpdOverridesRequestParser extends MockFactory {
 

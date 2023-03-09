@@ -26,7 +26,7 @@ import api.models.errors.{
   NinoFormatError,
   NotFoundError,
   SavingsAccountIdFormatError,
-  StandardDownstreamError
+  InternalError
 }
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -84,15 +84,15 @@ class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
           }
 
         val input = Seq(
-          ("INVALID_ID_TYPE", StandardDownstreamError),
+          ("INVALID_ID_TYPE", InternalError),
           ("INVALID_IDVALUE", NinoFormatError),
-          ("INVALID_INCOMESOURCETYPE", StandardDownstreamError),
-          ("INVALID_TAXYEAR", StandardDownstreamError),
+          ("INVALID_INCOMESOURCETYPE", InternalError),
+          ("INVALID_TAXYEAR", InternalError),
           ("INVALID_INCOMESOURCEID", SavingsAccountIdFormatError),
-          ("INVALID_ENDDATE", StandardDownstreamError),
+          ("INVALID_ENDDATE", InternalError),
           ("NOT_FOUND", NotFoundError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

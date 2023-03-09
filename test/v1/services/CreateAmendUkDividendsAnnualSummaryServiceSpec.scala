@@ -66,27 +66,27 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
         val errprs = Seq(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
-          ("INVALID_TYPE", StandardDownstreamError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_TYPE", InternalError),
+          ("INVALID_PAYLOAD", InternalError),
           ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
-          ("MISSING_CHARITIES_NAME_GIFT_AID", StandardDownstreamError),
-          ("MISSING_GIFT_AID_AMOUNT", StandardDownstreamError),
-          ("MISSING_CHARITIES_NAME_INVESTMENT", StandardDownstreamError),
-          ("MISSING_INVESTMENT_AMOUNT", StandardDownstreamError),
+          ("MISSING_CHARITIES_NAME_GIFT_AID", InternalError),
+          ("MISSING_GIFT_AID_AMOUNT", InternalError),
+          ("MISSING_CHARITIES_NAME_INVESTMENT", InternalError),
+          ("MISSING_INVESTMENT_AMOUNT", InternalError),
           ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
-          ("GONE", StandardDownstreamError),
+          ("GONE", InternalError),
           ("NOT_FOUND", NotFoundError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError),
-          ("SERVER_ERROR", StandardDownstreamError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("SERVER_ERROR", InternalError)
         )
 
         val extraTysErrors = Seq(
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("INVALID_INCOMESOURCE_TYPE", InternalError),
+          ("INVALID_CORRELATIONID", InternalError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
-          ("INCOMPATIBLE_INCOME_SOURCE", StandardDownstreamError)
+          ("INCOMPATIBLE_INCOME_SOURCE", InternalError)
         )
 
         (errprs ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))

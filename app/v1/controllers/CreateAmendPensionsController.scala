@@ -30,8 +30,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendPensionsRequestParser
 import v1.models.request.createAmendPensions.CreateAmendPensionsRawData
-import v1.requestParsers.CreateAmendPensionsRequestParser
 import v1.services.CreateAmendPensionsService
 
 import javax.inject.{Inject, Singleton}
@@ -81,11 +81,12 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
 
           auditSubmission(
             GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              request = Some(request.body),
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(
+              request.userDetails,
+              Map("nino" -> nino, "taxYear" -> taxYear),
+              None,
+              Some(request.body),
+              serviceResponse.correlationId,
+              AuditResponse(
                 httpStatus = OK,
                 response = Right(Some(createAmendPensionsHateoasBody(appConfig, nino, taxYear)))
               )
@@ -106,11 +107,12 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
 
         auditSubmission(
           GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            request = Some(request.body),
-            `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(
+            request.userDetails,
+            Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
+            Some(request.body),
+            resCorrelationId,
+            AuditResponse(
               httpStatus = result.header.status,
               response = Left(errorWrapper.auditErrors)
             )
@@ -142,8 +144,8 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
             RuleTaxYearNotSupportedError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

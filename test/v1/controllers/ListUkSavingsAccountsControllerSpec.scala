@@ -48,9 +48,9 @@ class ListUkSavingsAccountsControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val nino: String                  = "AA123456A"
-  val savingsAccountId: String      = "SAVKB2UVwUTBQGJ"
-  val correlationId: String         = "X-123"
+  val nino: String             = "AA123456A"
+  val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
+  val correlationId: String    = "X-123"
 
   val rawData: ListUkSavingsAccountsRawData = ListUkSavingsAccountsRawData(
     nino = nino,
@@ -86,8 +86,7 @@ class ListUkSavingsAccountsControllerSpec
     )
   )
 
-  private val mtdResponse: JsValue = Json.parse(
-    s"""|{
+  private val mtdResponse: JsValue = Json.parse(s"""|{
       | "savingsAccounts":
       |  [
       |    {
@@ -215,7 +214,7 @@ class ListUkSavingsAccountsControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (SavingsAccountIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

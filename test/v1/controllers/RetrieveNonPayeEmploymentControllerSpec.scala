@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveNonPayeEmploymentService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -32,6 +32,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveNonPayeEmploymentRequestParser
+import v1.mocks.services.MockRetrieveNonPayeEmploymentService
 import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest}
 import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeHateoasData
 
@@ -88,12 +89,12 @@ class RetrieveNonPayeEmploymentControllerSpec
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_VIEW"              -> StandardDownstreamError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_VIEW"              -> InternalError,
+      "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
   trait Test {
@@ -117,7 +118,7 @@ class RetrieveNonPayeEmploymentControllerSpec
   "RetrieveNonPayeEmploymentIncomeController" should {
     "return OK" when {
       "endpoint is hit without a source" in new Test {
-        MockDeleteRetrieveRequestParser
+        MockRetrieveNonPayeEmploymentRequestParser
           .parse(rawData())
           .returns(Right(requestData))
 
@@ -138,7 +139,7 @@ class RetrieveNonPayeEmploymentControllerSpec
 
       def endpointIsHitWithASource(source: String, desSource: String): Unit =
         s"endpoint is hit with source $source" in new Test {
-          MockDeleteRetrieveRequestParser
+          MockRetrieveNonPayeEmploymentRequestParser
             .parse(rawData(Some(source)))
             .returns(Right(requestData))
 
@@ -171,7 +172,7 @@ class RetrieveNonPayeEmploymentControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveNonPayeEmploymentRequestParser
               .parse(rawData())
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -199,7 +200,7 @@ class RetrieveNonPayeEmploymentControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteRetrieveRequestParser
+            MockRetrieveNonPayeEmploymentRequestParser
               .parse(rawData())
               .returns(Right(requestData))
 
@@ -220,8 +221,8 @@ class RetrieveNonPayeEmploymentControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
-          (MtdError("OTHER", "other"), INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR),
+          (MtdError("OTHER", "other", BAD_REQUEST), INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

@@ -28,8 +28,8 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.DeleteInsurancePoliciesRequestParser
 import v1.models.request.deleteInsurancePolicies.DeleteInsurancePoliciesRawData
-import v1.requestParsers.DeleteInsurancePoliciesRequestParser
 import v1.services.DeleteInsurancePoliciesService
 
 import javax.inject.{Inject, Singleton}
@@ -54,7 +54,7 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
     )
 
   def delete(nino: String, taxYear: String): Action[AnyContent] = authorisedAction(nino).async { implicit request =>
-    implicit val correlationId: String = idGenerator.generateCorrelationId
+    implicit val correlationId: String          = idGenerator.generateCorrelationId
     val rawData: DeleteInsurancePoliciesRawData = DeleteInsurancePoliciesRawData(nino = nino, taxYear = taxYear)
 
     logger.info(
@@ -75,6 +75,7 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
+            None,
             None,
             serviceResponse.correlationId,
             AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
@@ -97,6 +98,7 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
           request.userDetails,
           Map("nino" -> nino, "taxYear" -> taxYear),
           None,
+          None,
           resCorrelationId,
           AuditResponse(
             httpStatus = result.header.status,
@@ -111,15 +113,17 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case _ if errorWrapper.containsAnyOf(
-        BadRequestError,
-        NinoFormatError,
-        TaxYearFormatError,
-        RuleTaxYearRangeInvalidError,
-        RuleTaxYearNotSupportedError) => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError              => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError    => InternalServerError(Json.toJson(errorWrapper))
-      case _                          => unhandledError(errorWrapper)
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            TaxYearFormatError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotSupportedError) =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

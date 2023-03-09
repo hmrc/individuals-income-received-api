@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.RetrieveDividendsRequestParser
 import v1.models.request.retrieveDividends.RetrieveDividendsRawData
 import v1.models.response.retrieveDividends.RetrieveDividendsHateoasData
-import v1.requestParsers.RetrieveDividendsRequestParser
 import v1.services.RetrieveDividendsService
 
 import javax.inject.{Inject, Singleton}
@@ -101,9 +101,9 @@ class RetrieveDividendsController @Inject() (val authService: EnrolmentsAuthServ
             RuleTaxYearRangeInvalidError,
             RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

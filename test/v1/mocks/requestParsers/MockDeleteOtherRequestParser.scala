@@ -19,12 +19,12 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.DeleteOtherRequestParser
 import v1.models.request.deleteOther.{DeleteOtherRawData, DeleteOtherRequest}
-import v1.requestParsers.DeleteOtherRequestParser
 
 trait MockDeleteOtherRequestParser extends MockFactory {
 
-  val mockDeleteOtherRequestParser = mock[DeleteOtherRequestParser]
+  val mockDeleteOtherRequestParser: DeleteOtherRequestParser = mock[DeleteOtherRequestParser]
 
   object MockDeleteOtherRequestParser {
 

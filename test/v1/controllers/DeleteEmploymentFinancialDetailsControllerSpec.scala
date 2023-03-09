@@ -64,12 +64,13 @@ class DeleteEmploymentFinancialDetailsControllerSpec
       auditType = "DeleteEmploymentFinancialDetails",
       transactionName = "delete-employment-financial-details",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+        None,
+        None,
+        correlationId,
+        auditResponse
       )
     )
 
@@ -174,7 +175,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 

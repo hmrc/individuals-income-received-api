@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveUkSavingsAccountRequestParser
 import v1.models.request.retrieveUkSavingsAnnualSummary.{RetrieveUkSavingsAnnualSummaryRawData, RetrieveUkSavingsAnnualSummaryRequest}
-import v1.requestParsers.RetrieveUkSavingsAccountRequestParser
 
 trait MockRetrieveUkSavingsAnnualRequestParser extends MockFactory {
 

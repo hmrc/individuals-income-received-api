@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, InternalError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -51,11 +51,11 @@ class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) ext
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-    "INVALID_EMPLOYMENT_ID"     -> StandardDownstreamError,
-    "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+    "INVALID_EMPLOYMENT_ID"     -> InternalError,
+    "INVALID_CORRELATIONID"     -> InternalError,
     "NO_DATA_FOUND"             -> NotFoundError,
-    "SERVER_ERROR"              -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+    "SERVER_ERROR"              -> InternalError,
+    "SERVICE_UNAVAILABLE"       -> InternalError
   )
 
 }

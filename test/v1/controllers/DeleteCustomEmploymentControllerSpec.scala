@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
@@ -27,6 +27,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteCustomEmploymentRequestParser
+import v1.mocks.services.MockDeleteCustomEmploymentService
 import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,7 +37,7 @@ class DeleteCustomEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockDeleteCustomEmploymentService
     with MockAuditService
     with MockDeleteCustomEmploymentRequestParser
     with MockIdGenerator {
@@ -63,12 +64,13 @@ class DeleteCustomEmploymentControllerSpec
       auditType = "DeleteACustomEmployment",
       transactionName = "delete-a-custom-employment",
       detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        request = None,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
+        "Individual",
+        None,
+        Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+        None,
+        None,
+        correlationId,
+        auditResponse
       )
     )
 
@@ -79,7 +81,7 @@ class DeleteCustomEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteCustomEmploymentRequestParser,
-      service = mockDeleteRetrieveService,
+      service = mockDeleteCustomEmploymentService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -94,11 +96,11 @@ class DeleteCustomEmploymentControllerSpec
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR"          -> TaxYearFormatError,
         "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-        "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+        "INVALID_CORRELATIONID"     -> InternalError,
         "NO_DATA_FOUND"             -> NotFoundError,
         "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
-        "SERVER_ERROR"              -> StandardDownstreamError,
-        "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+        "SERVER_ERROR"              -> InternalError,
+        "SERVICE_UNAVAILABLE"       -> InternalError
       )
 
   }
@@ -111,7 +113,7 @@ class DeleteCustomEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
+        MockDeleteCustomEmploymentService
           .delete(downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
@@ -166,7 +168,7 @@ class DeleteCustomEmploymentControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
+            MockDeleteCustomEmploymentService
               .delete(downstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
@@ -187,7 +189,7 @@ class DeleteCustomEmploymentControllerSpec
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleDeleteForbiddenError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
