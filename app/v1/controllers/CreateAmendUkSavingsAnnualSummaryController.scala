@@ -29,9 +29,9 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendUkSavingsAccountAnnualSummaryRequestParser
 import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRawData
 import v1.models.response.createAmendUkSavingsIncomeAnnualSummary.CreateAndAmendUkSavingsAnnualSummaryHateoasData
-import v1.requestParsers.CreateAmendUkSavingsAccountAnnualSummaryRequestParser
 import v1.services.CreateAmendUkSavingsAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}

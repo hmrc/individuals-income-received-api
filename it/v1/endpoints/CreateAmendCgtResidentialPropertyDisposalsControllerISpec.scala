@@ -17,26 +17,7 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{
-  BadRequestError,
-  CustomerRefFormatError,
-  DateFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleAcquisitionDateAfterDisposalDateError,
-  RuleCompletionDateBeforeDisposalDateError,
-  RuleCompletionDateError,
-  RuleDisposalDateError,
-  RuleGainLossError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleLossesGreaterThanGainError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT

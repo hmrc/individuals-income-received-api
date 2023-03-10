@@ -17,7 +17,7 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -60,8 +60,8 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
         def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new NonTysTest {
 
-            override val nino: String    = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String       = requestNino
+            override val taxYear: String    = requestTaxYear
             override def setupStubs(): Unit = {}
 
             val response: WSResponse = await(request().delete)
@@ -124,7 +124,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String   = "AA123456A"
     def mtdUri: String = s"/insurance-policies/$nino/$taxYear"
 
     def taxYear: String
@@ -143,17 +143,19 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
   }
 
   private trait NonTysTest extends Test {
     def taxYear: String = "2019-20"
 
-    def downstreamUri: String  = s"/income-tax/insurance-policies/income/$nino/2019-20"
+    def downstreamUri: String = s"/income-tax/insurance-policies/income/$nino/2019-20"
   }
 
   private trait TysIfsTest extends Test {
     def taxYear: String = "2023-24"
 
-    def downstreamUri: String  = s"/income-tax/insurance-policies/income/23-24/$nino"
+    def downstreamUri: String = s"/income-tax/insurance-policies/income/23-24/$nino"
   }
+
 }

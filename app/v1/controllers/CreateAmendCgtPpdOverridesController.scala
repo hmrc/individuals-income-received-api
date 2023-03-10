@@ -28,9 +28,9 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
-import v1.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.services._
 
 import javax.inject.{Inject, Singleton}

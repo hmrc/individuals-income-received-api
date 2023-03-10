@@ -26,9 +26,9 @@ import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
 import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtHateoasData
-import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 import v1.services.RetrieveAllResidentialPropertyCgtService
 
 import javax.inject.{Inject, Singleton}

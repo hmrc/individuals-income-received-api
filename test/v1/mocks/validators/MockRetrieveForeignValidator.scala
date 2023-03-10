@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.RetrieveForeignValidator
 import v1.models.request.retrieveForeign.RetrieveForeignRawData
-import v1.requestParsers.validators.RetrieveForeignValidator
 
 trait MockRetrieveForeignValidator extends MockFactory {
 

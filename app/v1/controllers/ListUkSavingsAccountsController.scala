@@ -25,22 +25,22 @@ import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.ListUkSavingsAccountsRequestParser
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
 import v1.models.response.listUkSavingsAccounts.ListUkSavingsAccountsHateoasData
-import v1.requestParsers.ListUkSavingsAccountsRequestParser
 import v1.services.ListUkSavingsAccountsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListUkSavingsAccountsController @Inject()(val authService: EnrolmentsAuthService,
-                                                val lookupService: MtdIdLookupService,
-                                                requestParser: ListUkSavingsAccountsRequestParser,
-                                                service: ListUkSavingsAccountsService,
-                                                hateoasFactory: HateoasFactory,
-                                                cc: ControllerComponents,
-                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class ListUkSavingsAccountsController @Inject() (val authService: EnrolmentsAuthService,
+                                                 val lookupService: MtdIdLookupService,
+                                                 requestParser: ListUkSavingsAccountsRequestParser,
+                                                 service: ListUkSavingsAccountsService,
+                                                 hateoasFactory: HateoasFactory,
+                                                 cc: ControllerComponents,
+                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -68,7 +68,7 @@ class ListUkSavingsAccountsController @Inject()(val authService: EnrolmentsAuthS
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.listUkSavingsAccounts(parsedRequest))
-          vendorResponse  <- EitherT.fromEither[Future](
+          vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData, ListUkSavingsAccountsHateoasData(nino))
               .asRight[ErrorWrapper])

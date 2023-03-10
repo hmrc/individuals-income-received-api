@@ -29,8 +29,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.DeleteCustomEmploymentRequestParser
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
-import v1.requestParsers.DeleteCustomEmploymentRequestParser
 import v1.services.DeleteCustomEmploymentService
 
 import javax.inject.{Inject, Singleton}

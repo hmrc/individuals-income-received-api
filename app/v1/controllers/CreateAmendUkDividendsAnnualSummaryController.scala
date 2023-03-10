@@ -28,9 +28,9 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendUkDividendsIncomeAnnualSummaryRequestParser
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRawData
 import v1.models.response.createAmendUkDividendsIncomeAnnualSummary.CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData
-import v1.requestParsers.CreateAmendUkDividendsIncomeAnnualSummaryRequestParser
 import v1.services.CreateAmendUkDividendsAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}

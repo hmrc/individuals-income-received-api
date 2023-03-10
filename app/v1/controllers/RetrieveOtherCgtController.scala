@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.RetrieveOtherCgtRequestParser
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRawData
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtHateoasData
-import v1.requestParsers.RetrieveOtherCgtRequestParser
 import v1.services.RetrieveOtherCgtService
 
 import javax.inject.{Inject, Singleton}

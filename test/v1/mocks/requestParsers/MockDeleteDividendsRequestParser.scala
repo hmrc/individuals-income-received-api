@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.DeleteDividendsRequestParser
 import v1.models.request.deleteDividends.{DeleteDividendsRawData, DeleteDividendsRequest}
-import v1.requestParsers.DeleteDividendsRequestParser
 
 trait MockDeleteDividendsRequestParser extends MockFactory {
 

@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.ListEmploymentsRequestParser
 import v1.models.request.listEmployments.ListEmploymentsRawData
 import v1.models.response.listEmployment.ListEmploymentHateoasData
-import v1.requestParsers.ListEmploymentsRequestParser
 import v1.services.ListEmploymentsService
 
 import javax.inject.{Inject, Singleton}

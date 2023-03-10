@@ -17,26 +17,7 @@
 package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.models.errors.{
-  BadRequestError,
-  ClassOfSharesAcquiredFormatError,
-  ClassOfSharesAwardedFormatError,
-  CustomerRefFormatError,
-  DateFormatError,
-  EmployerNameFormatError,
-  EmployerRefFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleLumpSumsError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  SchemePlanTypeFormatError,
-  StandardDownstreamError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._

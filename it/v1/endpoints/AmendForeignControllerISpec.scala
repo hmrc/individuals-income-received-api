@@ -18,7 +18,7 @@ package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{BadRequestError, CountryCodeFormatError, CountryCodeRuleError, CustomerRefFormatError, ErrorWrapper, MtdError, NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, StandardDownstreamError, TaxYearFormatError, ValueFormatError}
+import api.models.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -323,8 +323,8 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
                                 scenario: Option[String]): Unit = {
           s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new NonTysTest {
 
-            override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override val nino: String             = requestNino
+            override val taxYear: String          = requestTaxYear
             override val requestBodyJson: JsValue = requestBody
 
             override def setupStubs(): Unit = {}
@@ -335,7 +335,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
           }
         }
 
-        val validNino = "AA123456A"
+        val validNino    = "AA123456A"
         val validTaxYear = "2019-20"
 
         val input = Seq(
@@ -398,9 +398,9 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String          = "AA123456A"
     val correlationId: String = "X-123"
-    def uri: String = s"/foreign/$nino/$taxYear"
+    def uri: String           = s"/foreign/$nino/$taxYear"
 
     def taxYear: String
     def downstreamUri: String
@@ -465,6 +465,7 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
   }
 
   private trait NonTysTest extends Test {
@@ -474,7 +475,8 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: String = "2023-24"
+    def taxYear: String       = "2023-24"
     def downstreamUri: String = s"/income-tax/foreign-income/23-24/$nino"
   }
+
 }

@@ -30,8 +30,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AmendOtherEmploymentRequestParser
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
-import v1.requestParsers.AmendOtherEmploymentRequestParser
 import v1.services.AmendOtherEmploymentService
 
 import javax.inject.{Inject, Singleton}

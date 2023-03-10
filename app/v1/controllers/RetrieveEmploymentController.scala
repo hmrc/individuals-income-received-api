@@ -27,9 +27,9 @@ import api.connectors.DownstreamUri.Release6Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
-import v1.requestParsers.RetrieveEmploymentRequestParser
 import v1.services.RetrieveEmploymentService
 
 import javax.inject.{Inject, Singleton}

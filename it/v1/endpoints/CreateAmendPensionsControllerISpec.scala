@@ -18,25 +18,7 @@ package v1.endpoints
 
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
-import api.models.errors.{
-  BadRequestError,
-  CountryCodeFormatError,
-  CountryCodeRuleError,
-  CustomerRefFormatError,
-  DoubleTaxationArticleFormatError,
-  DoubleTaxationTreatyFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  QOPSRefFormatError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  SF74RefFormatError,
-  StandardDownstreamError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._

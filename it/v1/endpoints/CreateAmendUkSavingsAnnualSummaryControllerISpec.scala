@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.controllers.requestParsers.validators.validations.DecimalValueValidation.ZERO_MINIMUM_INCLUSIVE
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
@@ -25,7 +26,6 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
-import v1.requestParsers.validators.validations.DecimalValueValidation.ZERO_MINIMUM_INCLUSIVE
 
 class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSpec with WireMockMethods {
 

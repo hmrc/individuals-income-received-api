@@ -29,8 +29,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.CreateAmendNonPayeEmploymentRequestParser
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
-import v1.requestParsers.CreateAmendNonPayeEmploymentRequestParser
 import v1.services.CreateAmendNonPayeEmploymentService
 
 import javax.inject.{Inject, Singleton}

@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.CreateAmendUkSavingsAccountAnnualSummaryRequestParser
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest}
-import v1.requestParsers.CreateAmendUkSavingsAccountAnnualSummaryRequestParser
 
 trait MockCreateAmendUkSavingsAnnualSummaryRequestParser extends MockFactory {
 

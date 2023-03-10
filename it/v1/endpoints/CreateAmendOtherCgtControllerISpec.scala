@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.controllers.requestParsers.validators.validations.DisposalDateErrorMessages
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors._
 import com.github.tomakehurst.wiremock.client.WireMock._
@@ -25,7 +26,6 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
-import v1.requestParsers.validators.validations.DisposalDateErrorMessages
 
 class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with DisposalDateErrorMessages with WireMockMethods {
 
@@ -409,6 +409,7 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
       verify(
         postRequestedFor(urlEqualTo(s"/mtd-api-nrs-proxy/$nino/itsa-cgt-disposal-other"))
           .withRequestBody(equalToJson(payload.toString())))
+
   }
 
   private trait NonTysTest extends Test {
@@ -437,6 +438,7 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
          |}
    """.stripMargin
     )
+
   }
 
   private trait TysIfsTest extends Test {
@@ -471,6 +473,7 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
          |}
    """.stripMargin
     )
+
   }
 
   "Calling the 'create and amend other CGT' endpoint" should {
@@ -583,10 +586,11 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
 
         val tysErrorInput = Seq(
           (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
         )
         (errorInput ++ tysErrorInput).foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

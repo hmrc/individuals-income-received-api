@@ -29,8 +29,8 @@ import utils.{IdGenerator, Logging}
 import api.connectors.DownstreamUri.IfsUri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.DeleteDividendsRequestParser
 import v1.models.request.deleteDividends.DeleteDividendsRawData
-import v1.requestParsers.DeleteDividendsRequestParser
 import v1.services.DeleteDividendsService
 
 import javax.inject.{Inject, Singleton}

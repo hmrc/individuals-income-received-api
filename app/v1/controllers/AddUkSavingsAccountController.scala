@@ -29,9 +29,9 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AddUkSavingsAccountRequestParser
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountHateoasData
-import v1.requestParsers.AddUkSavingsAccountRequestParser
 import v1.services.AddUkSavingsAccountService
 
 import javax.inject.{Inject, Singleton}

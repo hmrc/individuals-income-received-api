@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.RetrieveInsurancePoliciesRequestParser
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRawData
 import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesHateoasData
-import v1.requestParsers.RetrieveInsurancePoliciesRequestParser
 import v1.services.RetrieveInsurancePoliciesService
 
 import javax.inject.{Inject, Singleton}

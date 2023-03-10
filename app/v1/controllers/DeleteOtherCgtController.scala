@@ -27,9 +27,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.DeleteOtherCgtRequestParser
 import v1.models.audit.DeleteOtherCgtAuditDetail
 import v1.models.request.deleteOtherCgt.DeleteOtherCgtRawData
-import v1.requestParsers.DeleteOtherCgtRequestParser
 import v1.services.DeleteOtherCgtService
 
 import javax.inject.{Inject, Singleton}

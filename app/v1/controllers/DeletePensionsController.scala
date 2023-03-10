@@ -27,8 +27,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.DeletePensionsRequestParser
 import v1.models.request.deletePensions.DeletePensionsRawData
-import v1.requestParsers.DeletePensionsRequestParser
 import v1.services.DeletePensionsService
 
 import javax.inject.{Inject, Singleton}

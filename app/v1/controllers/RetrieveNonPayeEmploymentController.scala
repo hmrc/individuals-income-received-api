@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.RetrieveNonPayeEmploymentRequestParser
 import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRawData
 import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeHateoasData
-import v1.requestParsers.RetrieveNonPayeEmploymentRequestParser
 import v1.services.RetrieveNonPayeEmploymentService
 
 import javax.inject.{Inject, Singleton}
