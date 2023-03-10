@@ -81,7 +81,6 @@ class GenericAuditDetailSpec extends UnitSpec {
     userType = userType,
     agentReferenceNumber = agentReferenceNumber,
     Map("nino" -> nino, "taxYear" -> taxYear),
-    None,
     Some(
       Json.parse(
         """
@@ -158,7 +157,6 @@ class GenericAuditDetailSpec extends UnitSpec {
     userType,
     agentReferenceNumber,
     Map("nino" -> nino, "taxYear" -> "2021-2022"),
-    None,
     Some(
       Json.parse(
         """

@@ -85,7 +85,6 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
               None,
-              None,
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(ignoreEmploymentHateoasBody(appConfig, nino, taxYear, employmentId))))
             )
@@ -107,7 +106,6 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-            None,
             None,
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

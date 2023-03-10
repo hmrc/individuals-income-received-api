@@ -84,7 +84,6 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendNonPayeEmploymentHateoasBody(appConfig, nino, taxYear))))
@@ -108,7 +107,6 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

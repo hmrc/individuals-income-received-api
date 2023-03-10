@@ -28,11 +28,11 @@ import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.OtherEmploymentIncomeRequestParser
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentHateoasData
-import v1.services.RetrieveOtherEmploymentIncomeService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
+import v1.services.RetrieveOtherEmploymentIncomeService
 
 @Singleton
 class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAuthService,

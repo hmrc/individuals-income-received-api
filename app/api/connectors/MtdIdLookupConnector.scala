@@ -18,6 +18,7 @@ package api.connectors
 
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -26,7 +27,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class MtdIdLookupConnector @Inject() (http: HttpClient, appConfig: AppConfig) {
 
   def getMtdId(nino: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[MtdIdLookupOutcome] = {
-    import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
     http.GET[MtdIdLookupOutcome](s"${appConfig.mtdIdBaseUrl}/mtd-identifier-lookup/nino/$nino")
   }
 

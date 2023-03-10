@@ -80,7 +80,6 @@ class DeleteEmploymentFinancialDetailsController @Inject() (val authService: Enr
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
               None,
-              None,
               serviceResponse.correlationId,
               AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
             )
@@ -102,7 +101,6 @@ class DeleteEmploymentFinancialDetailsController @Inject() (val authService: Enr
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-            None,
             None,
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

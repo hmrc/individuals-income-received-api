@@ -31,7 +31,7 @@ import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
 import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
-import v1.services._
+import v1.services.CreateAmendOtherCgtService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

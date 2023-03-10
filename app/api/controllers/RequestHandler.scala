@@ -34,7 +34,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait RequestHandler[InputRaw <: RawData] {
 
-  def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext): Future[Result]
+  def handleRequest(rawData: InputRaw, version: Option[String] = None)(implicit
+      ctx: RequestContext,
+      request: UserRequest[_],
+      ec: ExecutionContext): Future[Result]
 
 }
 
@@ -57,11 +60,15 @@ object RequestHandler {
       service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
       errorHandling: ErrorHandling = ErrorHandling.Default,
       resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output](),
-      auditHandler: Option[AuditHandler] = None
+      auditHandler: Option[AuditHandler] = None,
+      flattenedAuditHandler: Option[FlattenedAuditHandler] = None
   ) extends RequestHandler[InputRaw] {
 
-    def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext): Future[Result] =
-      Delegate.handleRequest(rawData)
+    def handleRequest(rawData: InputRaw, version: Option[String] = None)(implicit
+        ctx: RequestContext,
+        request: UserRequest[_],
+        ec: ExecutionContext): Future[Result] =
+      Delegate.handleRequest(rawData, version)
 
     def withResultCreator(resultCreator: ResultCreator[InputRaw, Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(resultCreator = resultCreator)
@@ -71,6 +78,9 @@ object RequestHandler {
 
     def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
+
+    def withFlattenedAuditing(flattenedAuditHandler: FlattenedAuditHandler): RequestHandlerBuilder[InputRaw, Input, Output] =
+      copy(flattenedAuditHandler = Some(flattenedAuditHandler))
 
     /** Shorthand for
       * {{{
@@ -126,7 +136,10 @@ object RequestHandler {
 
       }
 
-      def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext): Future[Result] = {
+      def handleRequest(rawData: InputRaw, version: Option[String])(implicit
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext): Future[Result] = {
 
         logger.info(
           message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
@@ -137,19 +150,19 @@ object RequestHandler {
             parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
             serviceResponse <- EitherT(service(parsedRequest))
           } yield doWithContext(ctx.withCorrelationId(serviceResponse.correlationId)) { implicit ctx: RequestContext =>
-            handleSuccess(rawData, parsedRequest, serviceResponse)
+            handleSuccess(rawData, parsedRequest, serviceResponse, version)
           }
 
         result.leftMap { errorWrapper =>
           doWithContext(ctx.withCorrelationId(errorWrapper.correlationId)) { implicit ctx: RequestContext =>
-            handleFailure(errorWrapper)
+            handleFailure(errorWrapper, version)
           }
         }.merge
       }
 
       private def doWithContext[A](ctx: RequestContext)(f: RequestContext => A) = f(ctx)
 
-      private def handleSuccess(rawData: InputRaw, parsedRequest: Input, serviceResponse: ResponseWrapper[Output])(implicit
+      private def handleSuccess(rawData: InputRaw, parsedRequest: Input, serviceResponse: ResponseWrapper[Output], version: Option[String])(implicit
           ctx: RequestContext,
           request: UserRequest[_],
           ec: ExecutionContext): Result = {
@@ -163,11 +176,15 @@ object RequestHandler {
         val result = resultWrapper.asResult.withApiHeaders(ctx.correlationId)
 
         auditIfRequired(result.header.status, Right(resultWrapper.body))
+        flattenedAuditIfRequired(version, result.header.status, Right(resultWrapper.body))
 
         result
       }
 
-      private def handleFailure(errorWrapper: ErrorWrapper)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext) = {
+      private def handleFailure(errorWrapper: ErrorWrapper, version: Option[String])(implicit
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext) = {
         logger.warn(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: ${ctx.correlationId}")
@@ -177,6 +194,7 @@ object RequestHandler {
         val result = errorResult.withApiHeaders(ctx.correlationId)
 
         auditIfRequired(result.header.status, Left(errorWrapper))
+        flattenedAuditIfRequired(version, result.header.status, Left(errorWrapper))
 
         result
       }
@@ -194,6 +212,14 @@ object RequestHandler {
           ec: ExecutionContext): Unit =
         auditHandler.foreach { creator =>
           creator.performAudit(request.userDetails, httpStatus, response)
+        }
+
+      def flattenedAuditIfRequired(version: Option[String], httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext): Unit =
+        flattenedAuditHandler.foreach { creator =>
+          creator.performAudit(version, request.userDetails, httpStatus, response)
         }
 
     }

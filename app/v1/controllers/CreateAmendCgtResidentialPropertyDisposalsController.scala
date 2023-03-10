@@ -31,7 +31,7 @@ import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
-import v1.services._
+import v1.services.CreateAmendCgtResidentialPropertyDisposalsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

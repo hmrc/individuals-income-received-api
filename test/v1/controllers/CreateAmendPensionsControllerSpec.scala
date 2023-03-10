@@ -206,7 +206,6 @@ class CreateAmendPensionsControllerSpec
         "Individual",
         None,
         Map("nino" -> nino, "taxYear" -> taxYear),
-        None,
         auditRequest,
         correlationId,
         auditResponse

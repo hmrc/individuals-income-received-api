@@ -81,7 +81,6 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendOtherHateoasBody(appConfig, nino, taxYear))))
@@ -103,7 +102,6 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

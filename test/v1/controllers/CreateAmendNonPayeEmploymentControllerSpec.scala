@@ -61,7 +61,6 @@ class CreateAmendNonPayeEmploymentControllerSpec
         "Individual",
         None,
         Map("nino" -> nino, "taxYear" -> taxYear),
-        None,
         Some(validRequestJson),
         correlationId,
         auditResponse

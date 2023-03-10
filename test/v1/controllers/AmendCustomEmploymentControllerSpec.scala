@@ -79,7 +79,6 @@ class AmendCustomEmploymentControllerSpec
         "Individual",
         None,
         Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        None,
         Some(requestBodyJson),
         correlationId,
         auditResponse

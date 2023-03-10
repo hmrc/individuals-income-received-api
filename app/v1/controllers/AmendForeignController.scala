@@ -83,7 +83,6 @@ class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendForeignHateoasBody(appConfig, nino, taxYear))))
@@ -106,7 +105,6 @@ class AmendForeignController @Inject() (val authService: EnrolmentsAuthService,
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

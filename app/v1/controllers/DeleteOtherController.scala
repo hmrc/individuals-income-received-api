@@ -79,7 +79,6 @@ class DeleteOtherController @Inject() (val authService: EnrolmentsAuthService,
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
               None,
-              None,
               serviceResponse.correlationId,
               AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
             )
@@ -101,7 +100,6 @@ class DeleteOtherController @Inject() (val authService: EnrolmentsAuthService,
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             None,
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

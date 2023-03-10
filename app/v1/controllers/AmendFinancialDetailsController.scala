@@ -87,7 +87,6 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendFinancialDetailsHateoasBody(appConfig, nino, taxYear, employmentId))))
@@ -110,7 +109,6 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

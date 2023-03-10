@@ -16,17 +16,17 @@
 
 package api.models.audit
 
+import api.controllers.{AuditHandler, RequestContext}
 import api.models.auth.UserDetails
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, OWrites}
 
 case class GenericAuditDetail(userType: String,
                               agentReferenceNumber: Option[String],
-                              pathParams: Map[String, String],
-                              queryParams: Option[Map[String, Option[String]]],
-                              requestBody: Option[JsValue],
+                              params: Map[String, String],
+                              request: Option[JsValue],
                               `X-CorrelationId`: String,
-                              auditResponse: AuditResponse)
+                              response: AuditResponse)
 
 object GenericAuditDetail {
 
@@ -34,77 +34,40 @@ object GenericAuditDetail {
     (JsPath \ "userType").write[String] and
       (JsPath \ "agentReferenceNumber").writeNullable[String] and
       JsPath.write[Map[String, String]] and
-      JsPath.writeNullable[Map[String, Option[String]]] and
       (JsPath \ "request").writeNullable[JsValue] and
       (JsPath \ "X-CorrelationId").write[String] and
       (JsPath \ "response").write[AuditResponse]
   )(unlift(GenericAuditDetail.unapply))
 
   def apply(userDetails: UserDetails,
-            pathParams: Map[String, String],
-            queryParams: Option[Map[String, Option[String]]],
-            requestBody: Option[JsValue],
+            params: Map[String, String],
+            request: Option[JsValue],
             `X-CorrelationId`: String,
             auditResponse: AuditResponse): GenericAuditDetail = {
 
     GenericAuditDetail(
       userType = userDetails.userType,
       agentReferenceNumber = userDetails.agentReferenceNumber,
-      pathParams = pathParams,
-      queryParams = queryParams,
-      requestBody = requestBody,
-      `X-CorrelationId` = `X-CorrelationId`,
-      auditResponse = auditResponse
-    )
-  }
-
-}
-
-case class FlattenedGenericAuditDetail(versionNumber: Option[String],
-                                       userType: String,
-                                       agentReferenceNumber: Option[String],
-                                       params: Map[String, String],
-                                       request: Option[JsValue],
-                                       `X-CorrelationId`: String,
-                                       response: String,
-                                       httpStatusCode: Int,
-                                       errorCodes: Option[Seq[String]],
-                                       responseBody: Option[JsValue])
-
-object FlattenedGenericAuditDetail {
-
-  implicit val writes: OWrites[FlattenedGenericAuditDetail] = (
-    (JsPath \ "versionNumber").writeNullable[String] and
-      (JsPath \ "userType").write[String] and
-      (JsPath \ "agentReferenceNumber").writeNullable[String] and
-      JsPath.write[Map[String, String]] and
-      JsPath.writeNullable[JsValue] and
-      (JsPath \ "X-CorrelationId").write[String] and
-      (JsPath \ "response").write[String] and
-      (JsPath \ "httpStatusCode").write[Int] and
-      (JsPath \ "errorCodes").writeNullable[Seq[String]] and
-      JsPath.writeNullable[JsValue]
-  )(unlift(FlattenedGenericAuditDetail.unapply))
-
-  def apply(versionNumber: Option[String] = None,
-            userDetails: UserDetails,
-            params: Map[String, String],
-            request: Option[JsValue],
-            `X-CorrelationId`: String,
-            auditResponse: AuditResponse): FlattenedGenericAuditDetail = {
-
-    FlattenedGenericAuditDetail(
-      versionNumber = versionNumber,
-      userType = userDetails.userType,
-      agentReferenceNumber = userDetails.agentReferenceNumber,
       params = params,
       request = request,
       `X-CorrelationId` = `X-CorrelationId`,
-      response = if (auditResponse.errors.exists(_.nonEmpty)) "error" else "success",
-      httpStatusCode = auditResponse.httpStatus,
-      errorCodes = auditResponse.errors.map(_.map(_.errorCode)),
-      responseBody = auditResponse.body
+      response = auditResponse
     )
   }
+
+  def auditDetailCreator(params: Map[String, String]): AuditHandler.AuditDetailCreator[GenericAuditDetail] =
+    new AuditHandler.AuditDetailCreator[GenericAuditDetail] {
+
+      def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit
+          ctx: RequestContext): GenericAuditDetail =
+        GenericAuditDetail(
+          userDetails = userDetails,
+          params = params,
+          request = requestBody,
+          `X-CorrelationId` = ctx.correlationId,
+          auditResponse = auditResponse
+        )
+
+    }
 
 }

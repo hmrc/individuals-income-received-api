@@ -84,7 +84,6 @@ class DeleteDividendsController @Inject() (val authService: EnrolmentsAuthServic
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
               None,
-              None,
               serviceResponse.correlationId,
               AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
             )
@@ -106,7 +105,6 @@ class DeleteDividendsController @Inject() (val authService: EnrolmentsAuthServic
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             None,
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

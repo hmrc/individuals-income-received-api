@@ -68,7 +68,6 @@ class DeleteEmploymentFinancialDetailsControllerSpec
         None,
         Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
         None,
-        None,
         correlationId,
         auditResponse
       )

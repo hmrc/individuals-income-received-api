@@ -85,7 +85,6 @@ class DeleteCustomEmploymentController @Inject() (val authService: EnrolmentsAut
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
               None,
-              None,
               serviceResponse.correlationId,
               AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
             )
@@ -107,7 +106,6 @@ class DeleteCustomEmploymentController @Inject() (val authService: EnrolmentsAut
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-            None,
             None,
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

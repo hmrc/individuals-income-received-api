@@ -85,7 +85,6 @@ class AmendCustomEmploymentController @Inject() (val authService: EnrolmentsAuth
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(amendCustomEmploymentHateoasBody(appConfig, nino, taxYear, employmentId))))
@@ -108,7 +107,6 @@ class AmendCustomEmploymentController @Inject() (val authService: EnrolmentsAuth
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

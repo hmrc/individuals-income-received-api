@@ -190,7 +190,7 @@ class RequestHandlerSpec
         mockAuditService,
         auditType = auditType,
         transactionName = txName,
-        pathParams = params,
+        params = params,
         requestBody = requestBody,
         includeResponse = includeResponse
       )
@@ -205,7 +205,7 @@ class RequestHandlerSpec
           AuditEvent(
             auditType = auditType,
             transactionName = txName,
-            GenericAuditDetail(userDetails, params, None, requestBody, correlationId, auditResponse)
+            GenericAuditDetail(userDetails, params, requestBody, correlationId, auditResponse)
           ))
 
       "a request is successful" when {
@@ -263,6 +263,106 @@ class RequestHandlerSpec
       "a request fails with service errors" must {
         "audit the failure" in {
           val requestHandler = basicRequestHandler.withAuditing(auditHandler())
+
+          parseRequest returns Right(Input)
+          service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))
+
+          val result = requestHandler.handleRequest(InputRaw)
+
+          contentAsJson(result) shouldBe NinoFormatError.asJson
+          header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+          status(result) shouldBe NinoFormatError.httpStatus
+
+          verifyAudit(serviceCorrelationId, AuditResponse(NinoFormatError.httpStatus, Left(Seq(AuditError(NinoFormatError.code)))))
+        }
+      }
+    }
+
+    "flattened auditing is configured" when {
+      val params = Map("param" -> "value")
+
+      val auditType = "type"
+      val txName    = "txName"
+
+      val requestBody = Some(JsString("REQUEST BODY"))
+
+      def flattenedAuditHandler(includeResponse: Boolean = false): FlattenedAuditHandler = FlattenedAuditHandler(
+        mockAuditService,
+        auditType = auditType,
+        transactionName = txName,
+        params = params,
+        requestBody = requestBody,
+        includeResponse = includeResponse
+      )
+
+      val basicRequestHandler = RequestHandler
+        .withParser(mockParser)
+        .withService(mockService.service)
+        .withPlainJsonResult(successCode)
+
+      def verifyAudit(correlationId: String, auditResponse: AuditResponse): CallHandler[Future[AuditResult]] =
+        MockedAuditService.verifyAuditEvent(
+          AuditEvent(
+            auditType = auditType,
+            transactionName = txName,
+            GenericAuditDetail(userDetails, params, requestBody, correlationId, auditResponse)
+          ))
+
+      "a request is successful" when {
+        "no response is to be audited" must {
+          "audit without the response" in {
+            val requestHandler = basicRequestHandler.withFlattenedAuditing(flattenedAuditHandler())
+
+            parseRequest returns Right(Input)
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+
+            val result = requestHandler.handleRequest(InputRaw)
+
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            status(result) shouldBe successCode
+
+            verifyAudit(serviceCorrelationId, AuditResponse(successCode, Right(None)))
+          }
+        }
+
+        "the response is to be audited" must {
+          "audit with the response" in {
+            val requestHandler = basicRequestHandler.withFlattenedAuditing(flattenedAuditHandler(includeResponse = true))
+
+            parseRequest returns Right(Input)
+            service returns Future.successful(Right(ResponseWrapper(serviceCorrelationId, Output)))
+
+            val result = requestHandler.handleRequest(InputRaw)
+
+            contentAsJson(result) shouldBe successResponseJson
+            header("X-CorrelationId", result) shouldBe Some(serviceCorrelationId)
+            status(result) shouldBe successCode
+
+            verifyAudit(serviceCorrelationId, AuditResponse(successCode, Right(Some(successResponseJson))))
+          }
+        }
+      }
+
+      "a request fails with validation errors" must {
+        "audit the failure" in {
+          val requestHandler = basicRequestHandler.withFlattenedAuditing(flattenedAuditHandler())
+
+          parseRequest returns Left(ErrorWrapper(generatedCorrelationId, NinoFormatError))
+
+          val result = requestHandler.handleRequest(InputRaw)
+
+          contentAsJson(result) shouldBe NinoFormatError.asJson
+          header("X-CorrelationId", result) shouldBe Some(generatedCorrelationId)
+          status(result) shouldBe NinoFormatError.httpStatus
+
+          verifyAudit(generatedCorrelationId, AuditResponse(NinoFormatError.httpStatus, Left(Seq(AuditError(NinoFormatError.code)))))
+        }
+      }
+
+      "a request fails with service errors" must {
+        "audit the failure" in {
+          val requestHandler = basicRequestHandler.withFlattenedAuditing(flattenedAuditHandler())
 
           parseRequest returns Right(Input)
           service returns Future.successful(Left(ErrorWrapper(serviceCorrelationId, NinoFormatError)))

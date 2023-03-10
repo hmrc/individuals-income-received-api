@@ -162,7 +162,6 @@ class AddCustomEmploymentControllerSpec
         "Individual",
         None,
         Map("nino" -> nino, "taxYear" -> taxYear),
-        None,
         Some(requestBodyJson),
         correlationId,
         auditResponse

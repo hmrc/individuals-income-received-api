@@ -83,7 +83,6 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(
@@ -109,7 +108,6 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(

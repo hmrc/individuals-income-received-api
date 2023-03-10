@@ -264,7 +264,6 @@ class AmendFinancialDetailsControllerSpec
         "Individual",
         None,
         Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        None,
         Some(requestBodyJson),
         correlationId,
         auditResponse
@@ -279,7 +278,6 @@ class AmendFinancialDetailsControllerSpec
         "Individual",
         None,
         Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-        None,
         Some(requestBodyJsonWithOpw),
         correlationId,
         auditResponse

@@ -28,7 +28,7 @@ trait MockDeleteDividendsConnector extends MockFactory {
 
   val mockDeleteDividendsConnector: DeleteDividendsConnector = mock[DeleteDividendsConnector]
 
-  object MockDeleteCustomEmploymentConnector {
+  object MockDeleteDividendsConnector {
 
     def delete(): CallHandler[Future[DownstreamOutcome[Unit]]] =
       (mockDeleteDividendsConnector

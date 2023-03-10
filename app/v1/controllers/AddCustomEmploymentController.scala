@@ -87,7 +87,6 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
             GenericAuditDetail(
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
               Some(request.body),
               serviceResponse.correlationId,
               AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(hateoasResponse))))
@@ -109,7 +108,6 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             Some(request.body),
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))

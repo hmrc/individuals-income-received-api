@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package api.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import api.models.errors.{MtdError, NinoFormatError, NotFoundError}
-import org.scalamock.scalatest.MockFactory
-import support.UnitSpec
-import api.models.errors.NotFoundError
 import api.models.request.RawData
+import org.scalamock.scalatest.MockFactory
 import play.api.http.Status.BAD_REQUEST
+import support.UnitSpec
 
 class ValidatorSpec extends UnitSpec with MockFactory {
 

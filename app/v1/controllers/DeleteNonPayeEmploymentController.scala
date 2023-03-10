@@ -77,7 +77,6 @@ class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAu
               request.userDetails,
               Map("nino" -> nino, "taxYear" -> taxYear),
               None,
-              None,
               serviceResponse.correlationId,
               AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
             )
@@ -99,7 +98,6 @@ class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAu
           GenericAuditDetail(
             request.userDetails,
             Map("nino" -> nino, "taxYear" -> taxYear),
-            None,
             None,
             resCorrelationId,
             AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
