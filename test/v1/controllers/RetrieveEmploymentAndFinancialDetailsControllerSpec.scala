@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveEmploymentAndFinancialDetailsService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -32,6 +32,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveFinancialDetailsControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveEmploymentAndFinancialDetailsRequestParser
+import v1.mocks.services.MockRetrieveEmploymentAndFinancialDetailsService
 import v1.models.request.retrieveFinancialDetails.{RetrieveEmploymentAndFinancialDetailsRequest, RetrieveFinancialDetailsRawData}
 import v1.models.response.retrieveFinancialDetails._
 

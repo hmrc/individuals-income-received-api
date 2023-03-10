@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package v1.mocks.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors.ErrorWrapper
@@ -28,14 +28,15 @@ import v1.services.RetrieveUkDividendsIncomeAnnualSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveUkDividendsAnnualIncomeSummaryService  extends MockFactory {
+trait MockRetrieveUkDividendsAnnualIncomeSummaryService extends MockFactory {
 
-  val mockRetrieveUkDividendsAnnualIncomeSummaryService: RetrieveUkDividendsIncomeAnnualSummaryService = mock[RetrieveUkDividendsIncomeAnnualSummaryService]
+  val mockRetrieveUkDividendsAnnualIncomeSummaryService: RetrieveUkDividendsIncomeAnnualSummaryService =
+    mock[RetrieveUkDividendsIncomeAnnualSummaryService]
 
   object MockRetrieveUkDividendsIncomeAnnualSummaryService {
 
     def retrieveUkDividends(requestData: RetrieveUkDividendsAnnualIncomeSummaryRequest)
-    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]]] = {
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]]] = {
       (
         mockRetrieveUkDividendsAnnualIncomeSummaryService
           .retrieveUKDividendsIncomeAnnualSummary(_: RetrieveUkDividendsAnnualIncomeSummaryRequest)(

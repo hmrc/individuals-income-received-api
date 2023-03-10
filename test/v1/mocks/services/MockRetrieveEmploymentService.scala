@@ -14,38 +14,39 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package v1.mocks.services
 
+import api.connectors.DownstreamUri
 import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
+import api.models.errors.{ErrorWrapper, MtdError}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import play.api.libs.json.{Format, Reads}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRequest
-import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
-import v1.services.RetrieveNonPayeEmploymentService
+import v1.services.RetrieveEmploymentService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveNonPayeEmploymentService extends MockFactory {
+trait MockRetrieveEmploymentService extends MockFactory {
 
-  val mockRetrieveNonPayeEmploymentService: RetrieveNonPayeEmploymentService = mock[RetrieveNonPayeEmploymentService]
+  val mockRetrieveEmploymentService: RetrieveEmploymentService = mock[RetrieveEmploymentService]
 
-  object MockRetrieveNonPayeEmploymentService {
+  object MockRetrieveEmploymentService {
 
-    def retrieveNonPayeEmployment(requestData: RetrieveNonPayeEmploymentIncomeRequest)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveNonPayeEmploymentIncomeResponse]]]] = {
+    def retrieve[Resp: Reads](downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
       (
-        mockRetrieveNonPayeEmploymentService
-          .retrieveNonPayeEmployment(_: RetrieveNonPayeEmploymentIncomeRequest)(
+        mockRetrieveEmploymentService
+          .retrieve[Resp](_: Map[String, MtdError])(
+            _: Format[Resp],
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,
+            _: DownstreamUri[Resp],
             _: String
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(downstreamErrorMap, *, *, *, *, *, *)
     }
 
   }

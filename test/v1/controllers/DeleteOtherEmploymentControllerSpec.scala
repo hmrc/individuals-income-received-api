@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
@@ -37,7 +37,6 @@ class DeleteOtherEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
     with MockOtherEmploymentIncomeRequestParser
     with MockDeleteOtherEmploymentIncomeService
     with MockAuditService

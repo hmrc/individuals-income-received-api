@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package api.services
+package v1.services
 
-import api.connectors.{DeleteRetrieveConnector, DownstreamUri}
+import api.connectors.DownstreamUri
 import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.implicits._
-import play.api.libs.json.Format
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
+import v1.connectors.DeleteCustomEmploymentConnector
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteCustomEmploymentService @Inject() (connector: DeleteCustomEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def delete(desErrorMap: Map[String, MtdError] = errorMap)(implicit
       hc: HeaderCarrier,
@@ -40,17 +40,6 @@ class DeleteRetrieveService @Inject() (connector: DeleteRetrieveConnector) exten
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     connector.delete().map(_.leftMap(mapDownstreamErrors(desErrorMap)))
-
-  }
-
-  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = errorMap)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      downstreamUri: DownstreamUri[Resp],
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
-
-    connector.retrieve[Resp]().map(_.leftMap(mapDownstreamErrors(desErrorMap)))
 
   }
 

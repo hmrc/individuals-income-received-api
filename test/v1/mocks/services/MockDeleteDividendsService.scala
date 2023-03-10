@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package api.mocks.connectors
+package v1.mocks.services
 
-import api.connectors.{DeleteRetrieveConnector, DownstreamOutcome, DownstreamUri}
+import api.connectors.DownstreamUri
+import api.controllers.EndpointLogContext
+import api.models.errors.{ErrorWrapper, MtdError}
+import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.services.DeleteDividendsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteRetrieveConnector extends MockFactory {
+trait MockDeleteDividendsService extends MockFactory {
 
-  val mockDeleteRetrieveConnector = mock[DeleteRetrieveConnector]
+  val mockDeleteDividendsService: DeleteDividendsService = mock[DeleteDividendsService]
 
-  object MockDeleteRetrieveConnector {
+  object MockDeleteDividendsService {
 
-    def delete(): CallHandler[Future[DownstreamOutcome[Unit]]] =
-      (mockDeleteRetrieveConnector
-        .delete()(_: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Unit], _: String))
-        .expects(*, *, *, *)
-
-    def retrieve[Resp: Reads](): CallHandler[Future[DownstreamOutcome[Resp]]] =
-      (mockDeleteRetrieveConnector
-        .retrieve[Resp]()(_: Reads[Resp], _: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Resp], _: String))
-        .expects(*, *, *, *, *)
+    def delete(downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (mockDeleteDividendsService
+        .delete(_: Map[String, MtdError])(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DownstreamUri[Unit], _: String))
+        .expects(downstreamErrorMap, *, *, *, *, *)
+    }
 
   }
 

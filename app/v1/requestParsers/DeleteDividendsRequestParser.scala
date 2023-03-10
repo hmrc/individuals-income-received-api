@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package api.models.request
+package v1.requestParsers
 
 import api.models.domain.Nino
+import api.requestParsers.RequestParser
+import v1.models.request.deleteDividends.{DeleteDividendsRawData, DeleteDividendsRequest}
+import v1.requestParsers.validators.DeleteDividendsValidator
 
-case class DeleteRetrieveRequest(nino: Nino, taxYear: String)
+import javax.inject.{Inject, Singleton}
+
+@Singleton
+class DeleteDividendsRequestParser @Inject() (val validator: DeleteDividendsValidator)
+    extends RequestParser[DeleteDividendsRawData, DeleteDividendsRequest] {
+
+  override protected def requestFor(data: DeleteDividendsRawData): DeleteDividendsRequest =
+    DeleteDividendsRequest(Nino(data.nino), data.taxYear)
+
+}

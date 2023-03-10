@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
@@ -27,6 +27,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteCustomEmploymentRequestParser
+import v1.mocks.services.MockDeleteCustomEmploymentService
 import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, DeleteCustomEmploymentRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -36,7 +37,7 @@ class DeleteCustomEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockDeleteCustomEmploymentService
     with MockAuditService
     with MockDeleteCustomEmploymentRequestParser
     with MockIdGenerator {
@@ -79,7 +80,7 @@ class DeleteCustomEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockDeleteCustomEmploymentRequestParser,
-      service = mockDeleteRetrieveService,
+      service = mockDeleteCustomEmploymentService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -111,7 +112,7 @@ class DeleteCustomEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
+        MockDeleteCustomEmploymentService
           .delete(downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
@@ -166,7 +167,7 @@ class DeleteCustomEmploymentControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
+            MockDeleteCustomEmploymentService
               .delete(downstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 

@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package api.requestParsers
+package v1.requestParsers
 
-import api.mocks.validators.MockDeleteRetrieveValidator
 import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
 import support.UnitSpec
+import v1.mocks.validators.MockDeleteDividendsValidator
+import v1.models.request.deleteDividends.{DeleteDividendsRawData, DeleteDividendsRequest}
 
-class DeleteRetrieveRequestParserSpec extends UnitSpec {
+class DeleteDividendsRequestParserSpec extends UnitSpec {
 
   val nino: String                   = "AA123456B"
   val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val deleteRetrieveSavingsRawData: DeleteRetrieveRawData = DeleteRetrieveRawData(
+  val rawData: DeleteDividendsRawData = DeleteDividendsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  trait Test extends MockDeleteRetrieveValidator {
+  trait Test extends MockDeleteDividendsValidator {
 
-    lazy val parser: DeleteRetrieveRequestParser = new DeleteRetrieveRequestParser(
-      validator = mockDeleteRetrieveValidator
+    lazy val parser: DeleteDividendsRequestParser = new DeleteDividendsRequestParser(
+      validator = mockDeleteDividendsValidator
     )
 
   }
@@ -44,29 +44,29 @@ class DeleteRetrieveRequestParserSpec extends UnitSpec {
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockDeleteRetrieveValidator.validate(deleteRetrieveSavingsRawData).returns(Nil)
+        MockDeleteDividendsValidator.validate(rawData).returns(Nil)
 
-        parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
-          Right(DeleteRetrieveRequest(Nino(nino), taxYear))
+        parser.parseRequest(rawData) shouldBe
+          Right(DeleteDividendsRequest(Nino(nino), taxYear))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockDeleteRetrieveValidator
-          .validate(deleteRetrieveSavingsRawData)
+        MockDeleteDividendsValidator
+          .validate(rawData)
           .returns(List(NinoFormatError))
 
-        parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
+        parser.parseRequest(rawData) shouldBe
           Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test {
-        MockDeleteRetrieveValidator
-          .validate(deleteRetrieveSavingsRawData)
+        MockDeleteDividendsValidator
+          .validate(rawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
-        parser.parseRequest(deleteRetrieveSavingsRawData) shouldBe
+        parser.parseRequest(rawData) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
     }

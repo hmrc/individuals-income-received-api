@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package api.mocks.validators
+package v1.mocks.validators
 
 import api.models.errors.MtdError
-import api.models.request.DeleteRetrieveRawData
-import api.requestParsers.validators.DeleteRetrieveValidator
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.models.request.deleteDividends.DeleteDividendsRawData
+import v1.requestParsers.validators.DeleteDividendsValidator
 
-trait MockDeleteRetrieveValidator extends MockFactory {
+trait MockDeleteDividendsValidator extends MockFactory {
 
-  val mockDeleteRetrieveValidator: DeleteRetrieveValidator = mock[DeleteRetrieveValidator]
+  val mockDeleteDividendsValidator: DeleteDividendsValidator = mock[DeleteDividendsValidator]
 
-  object MockDeleteRetrieveValidator {
+  object MockDeleteDividendsValidator {
 
-    def validate(data: DeleteRetrieveRawData): CallHandler1[DeleteRetrieveRawData, List[MtdError]] = {
-      (mockDeleteRetrieveValidator
-        .validate(_: DeleteRetrieveRawData))
+    def validate(data: DeleteDividendsRawData): CallHandler1[DeleteDividendsRawData, List[MtdError]] = {
+      (mockDeleteDividendsValidator
+        .validate(_: DeleteDividendsRawData))
         .expects(data)
     }
 

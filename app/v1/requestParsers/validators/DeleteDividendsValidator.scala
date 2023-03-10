@@ -14,32 +14,33 @@
  * limitations under the License.
  */
 
-package api.requestParsers.validators
+package v1.requestParsers.validators
 
 import api.models.errors.MtdError
-import api.models.request.DeleteRetrieveRawData
+import api.requestParsers.validators.Validator
 import config.AppConfig
+import v1.models.request.deleteDividends.DeleteDividendsRawData
 import v1.requestParsers.validators.validations.{NinoValidation, TaxYearNotSupportedValidation, TaxYearValidation}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteRetrieveValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteRetrieveRawData] {
+class DeleteDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteDividendsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteRetrieveRawData): List[MtdError] = {
+  override def validate(data: DeleteDividendsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
+  private def parameterFormatValidation: DeleteDividendsRawData => List[List[MtdError]] = (data: DeleteDividendsRawData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: DeleteRetrieveRawData => List[List[MtdError]] = (data: DeleteRetrieveRawData) => {
+  private def parameterRuleValidation: DeleteDividendsRawData => List[List[MtdError]] = (data: DeleteDividendsRawData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )

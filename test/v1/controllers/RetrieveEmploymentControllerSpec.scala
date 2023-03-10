@@ -20,7 +20,7 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockDeleteRetrieveService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, POST, PUT}
@@ -32,6 +32,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveEmploymentRequestParser
+import v1.mocks.services.MockRetrieveEmploymentService
 import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 
@@ -42,7 +43,7 @@ class RetrieveEmploymentControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockDeleteRetrieveService
+    with MockRetrieveEmploymentService
     with MockHateoasFactory
     with MockRetrieveEmploymentRequestParser
     with HateoasLinks
@@ -153,7 +154,7 @@ class RetrieveEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       requestParser = mockRetrieveCustomEmploymentRequestParser,
-      service = mockDeleteRetrieveService,
+      service = mockRetrieveEmploymentService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -184,7 +185,7 @@ class RetrieveEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
+        MockRetrieveEmploymentService
           .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithoutDateIgnoredResponseModel))))
 
@@ -217,7 +218,7 @@ class RetrieveEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
+        MockRetrieveEmploymentService
           .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
 
@@ -250,7 +251,7 @@ class RetrieveEmploymentControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockDeleteRetrieveService
+        MockRetrieveEmploymentService
           .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
 
@@ -313,7 +314,7 @@ class RetrieveEmploymentControllerSpec
               .parse(rawData)
               .returns(Right(requestData))
 
-            MockDeleteRetrieveService
+            MockRetrieveEmploymentService
               .retrieve[RetrieveEmploymentResponse](downstreamErrorMap)
               .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 

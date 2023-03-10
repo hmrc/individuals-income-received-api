@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.request
+package v1.models.request.deleteDividends
 
-case class DeleteRetrieveRawData(nino: String, taxYear: String) extends RawData
+import api.models.request.RawData
+
+case class DeleteDividendsRawData(nino: String, taxYear: String) extends RawData

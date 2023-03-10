@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package api.services
+package v1.services
 
 import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
-import api.mocks.connectors.MockDeleteRetrieveConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import play.api.libs.json.{Format, Json}
+import v1.mocks.connectors.MockRetrieveEmploymentConnector
 
 import scala.concurrent.Future
 
-class DeleteRetrieveServiceSpec extends ServiceSpec {
+class RetrieveEmploymentServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
-  trait Test extends MockDeleteRetrieveConnector {
+  trait Test extends MockRetrieveEmploymentConnector {
 
     case class Data(field: Option[String])
 
@@ -42,54 +43,18 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
     implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
     implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
 
-    val service: DeleteRetrieveService = new DeleteRetrieveService(
-      connector = mockDeleteRetrieveConnector
+    val service: RetrieveEmploymentService = new RetrieveEmploymentService(
+      connector = mockRetrieveEmploymentConnector
     )
 
   }
 
-  "DeleteRetrieveService" when {
-    "delete" must {
-      "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
-
-        MockDeleteRetrieveConnector
-          .delete()
-          .returns(Future.successful(outcome))
-
-        await(service.delete()) shouldBe outcome
-      }
-
-      "map errors according to spec" when {
-
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
-
-            MockDeleteRetrieveConnector
-              .delete()
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
-
-            await(service.delete()) shouldBe Left(ErrorWrapper(correlationId, error))
-          }
-
-        val input = Seq(
-          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-          ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("NO_DATA_FOUND", NotFoundError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
-        )
-
-        input.foreach(args => (serviceError _).tupled(args))
-      }
-    }
-
+  "RetrieveEmploymentService" when {
     "retrieve" must {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, Data(Some("value"))))
+        val outcome: Right[Nothing, ResponseWrapper[Data]] = Right(ResponseWrapper(correlationId, Data(Some("value"))))
 
-        MockDeleteRetrieveConnector
+        MockRetrieveEmploymentConnector
           .retrieve[Data]()
           .returns(Future.successful(outcome))
 
@@ -101,7 +66,7 @@ class DeleteRetrieveServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockDeleteRetrieveConnector
+            MockRetrieveEmploymentConnector
               .retrieve[Data]()
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 

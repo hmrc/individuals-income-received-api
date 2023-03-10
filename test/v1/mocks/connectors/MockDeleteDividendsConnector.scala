@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package api.mocks.requestParsers
+package v1.mocks.connectors
 
-import api.models.errors.ErrorWrapper
-import api.models.request.{DeleteRetrieveRawData, DeleteRetrieveRequest}
-import api.requestParsers.DeleteRetrieveRequestParser
+import api.connectors.{DownstreamOutcome, DownstreamUri}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.connectors.DeleteDividendsConnector
 
-trait MockDeleteRetrieveRequestParser extends MockFactory {
+import scala.concurrent.{ExecutionContext, Future}
 
-  val mockDeleteRetrieveRequestParser = mock[DeleteRetrieveRequestParser]
+trait MockDeleteDividendsConnector extends MockFactory {
 
-  object MockDeleteRetrieveRequestParser {
+  val mockDeleteDividendsConnector: DeleteDividendsConnector = mock[DeleteDividendsConnector]
 
-    def parse(data: DeleteRetrieveRawData): CallHandler[Either[ErrorWrapper, DeleteRetrieveRequest]] =
-      (mockDeleteRetrieveRequestParser.parseRequest(_: DeleteRetrieveRawData)(_: String)).expects(data, *)
+  object MockDeleteDividendsConnector {
+
+    def delete(): CallHandler[Future[DownstreamOutcome[Unit]]] =
+      (mockDeleteDividendsConnector
+        .delete()(_: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Unit], _: String))
+        .expects(*, *, *, *)
 
   }
 

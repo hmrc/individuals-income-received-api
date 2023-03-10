@@ -26,10 +26,11 @@ import utils.{IdGenerator, Logging}
 import api.connectors.DownstreamUri.Release6Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
-import api.services.{DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 import v1.models.response.retrieveEmployment.{RetrieveEmploymentHateoasData, RetrieveEmploymentResponse}
 import v1.requestParsers.RetrieveEmploymentRequestParser
+import v1.services.RetrieveEmploymentService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                               val lookupService: MtdIdLookupService,
                                               requestParser: RetrieveEmploymentRequestParser,
-                                              service: DeleteRetrieveService,
+                                              service: RetrieveEmploymentService,
                                               hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)

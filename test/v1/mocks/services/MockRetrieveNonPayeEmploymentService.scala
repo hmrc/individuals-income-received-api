@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package v1.mocks.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors.ErrorWrapper
@@ -22,24 +22,23 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsRequest
-import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
-import v1.services.RetrieveEmploymentAndFinancialDetailsService
+import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRequest
+import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
+import v1.services.RetrieveNonPayeEmploymentService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveEmploymentAndFinancialDetailsService extends MockFactory {
+trait MockRetrieveNonPayeEmploymentService extends MockFactory {
 
-  val mockRetrieveEmploymentAndFinancialDetailsService: RetrieveEmploymentAndFinancialDetailsService =
-    mock[RetrieveEmploymentAndFinancialDetailsService]
+  val mockRetrieveNonPayeEmploymentService: RetrieveNonPayeEmploymentService = mock[RetrieveNonPayeEmploymentService]
 
-  object MockRetrieveEmploymentAndFinancialDetailsService {
+  object MockRetrieveNonPayeEmploymentService {
 
-    def retrieve(requestData: RetrieveEmploymentAndFinancialDetailsRequest)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentAndFinancialDetailsResponse]]]] = {
+    def retrieveNonPayeEmployment(requestData: RetrieveNonPayeEmploymentIncomeRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveNonPayeEmploymentIncomeResponse]]]] = {
       (
-        mockRetrieveEmploymentAndFinancialDetailsService
-          .retrieve(_: RetrieveEmploymentAndFinancialDetailsRequest)(
+        mockRetrieveNonPayeEmploymentService
+          .retrieveNonPayeEmployment(_: RetrieveNonPayeEmploymentIncomeRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,
