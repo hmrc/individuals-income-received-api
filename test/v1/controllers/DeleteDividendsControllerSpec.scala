@@ -16,16 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteDividendsRequestParser
 import v1.mocks.services.MockDeleteDividendsService
 import v1.models.request.deleteDividends.{DeleteDividendsRawData, DeleteDividendsRequest}
@@ -35,6 +34,7 @@ import scala.concurrent.Future
 
 class DeleteDividendsControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAuditService
@@ -42,9 +42,7 @@ class DeleteDividendsControllerSpec
     with MockDeleteDividendsRequestParser
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val taxYear: String = "2019-20"
 
   val rawData: DeleteDividendsRawData = DeleteDividendsRawData(
     nino = nino,
@@ -70,8 +68,7 @@ class DeleteDividendsControllerSpec
       )
     )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+  trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new DeleteDividendsController(
       authService = mockEnrolmentsAuthService,
@@ -83,9 +80,22 @@ class DeleteDividendsControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
+    protected def callController(): Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
+
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "DeleteDividendsIncome",
+        transactionName = "delete-dividends-income",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = None,
+          `X-CorrelationId` = correlationId,
+          response = auditResponse
+        )
+      )
+
   }
 
   "DeleteDividendsController" should {
@@ -97,84 +107,35 @@ class DeleteDividendsControllerSpec
           .returns(Right(requestData))
 
         MockDeleteDividendsService
-          .delete(defaultDownstreamErrorMap)
+          .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
-
-        status(result) shouldBe NO_CONTENT
-        contentAsString(result) shouldBe ""
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, None, None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = NO_CONTENT)
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockDeleteDividendsRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockDeleteDividendsRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "service returns an error" in new Test {
+        MockDeleteDividendsRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockDeleteDividendsRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockDeleteDividendsService
+          .delete(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockDeleteDividendsService
-              .delete(defaultDownstreamErrorMap)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError)
       }
     }
+
   }
 
 }

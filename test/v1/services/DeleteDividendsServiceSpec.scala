@@ -16,13 +16,13 @@
 
 package v1.services
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
+import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import play.api.libs.json.{Format, Json}
 import v1.mocks.connectors.MockDeleteDividendsConnector
+import v1.models.request.deleteDividends.DeleteDividendsRequest
 
 import scala.concurrent.Future
 
@@ -33,15 +33,9 @@ class DeleteDividendsServiceSpec extends ServiceSpec {
 
   trait Test extends MockDeleteDividendsConnector {
 
-    case class Data(field: Option[String])
-
-    object Data {
-      implicit val reads: Format[Data] = Json.format[Data]
-    }
+    val request: DeleteDividendsRequest = DeleteDividendsRequest(Nino(nino), taxYear)
 
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-    implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
 
     val service: DeleteDividendsService = new DeleteDividendsService(
       connector = mockDeleteDividendsConnector
@@ -55,25 +49,27 @@ class DeleteDividendsServiceSpec extends ServiceSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         MockDeleteDividendsConnector
-          .delete()
+          .delete(request)
           .returns(Future.successful(outcome))
 
-        await(service.delete()) shouldBe outcome
+        val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(request))
+        result shouldBe outcome
       }
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockDeleteDividendsConnector
-              .delete()
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .delete(request)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.delete()) shouldBe Left(ErrorWrapper(correlationId, error))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(request))
+            result shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -82,7 +78,7 @@ class DeleteDividendsServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        errors.foreach(args => (serviceError _).tupled(args))
       }
     }
 

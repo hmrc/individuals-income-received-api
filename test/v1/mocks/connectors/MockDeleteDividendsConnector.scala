@@ -16,11 +16,12 @@
 
 package v1.mocks.connectors
 
-import api.connectors.{DownstreamOutcome, DownstreamUri}
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.DeleteDividendsConnector
+import v1.models.request.deleteDividends.DeleteDividendsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,10 +31,10 @@ trait MockDeleteDividendsConnector extends MockFactory {
 
   object MockDeleteDividendsConnector {
 
-    def delete(): CallHandler[Future[DownstreamOutcome[Unit]]] =
+    def delete(request: DeleteDividendsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] =
       (mockDeleteDividendsConnector
-        .delete()(_: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Unit], _: String))
-        .expects(*, *, *, *)
+        .delete(_: DeleteDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
 
   }
 

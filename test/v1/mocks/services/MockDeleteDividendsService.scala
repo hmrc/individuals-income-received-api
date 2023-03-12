@@ -16,13 +16,12 @@
 
 package v1.mocks.services
 
-import api.connectors.DownstreamUri
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError}
+import api.controllers.RequestContext
+import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.deleteDividends.DeleteDividendsRequest
 import v1.services.DeleteDividendsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,10 +32,15 @@ trait MockDeleteDividendsService extends MockFactory {
 
   object MockDeleteDividendsService {
 
-    def delete(downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockDeleteDividendsService
-        .delete(_: Map[String, MtdError])(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: DownstreamUri[Unit], _: String))
-        .expects(downstreamErrorMap, *, *, *, *, *)
+    def delete(requestData: DeleteDividendsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+      (
+        mockDeleteDividendsService
+          .delete(_: DeleteDividendsRequest)(
+            _: RequestContext,
+            _: ExecutionContext
+          )
+        )
+        .expects(requestData, *, *)
     }
 
   }
