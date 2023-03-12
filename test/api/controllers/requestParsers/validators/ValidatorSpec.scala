@@ -150,29 +150,29 @@ class ValidatorSpec extends UnitSpec with MockFactory {
     }
   }
 
-}
+  class MockFunctionObject(name: String) {
+    var called = 0
 
-class MockFunctionObject(name: String) {
-  var called = 0
+    def validate(shouldError: Boolean, errorToReturn: Option[MtdError]): List[MtdError] = {
+      called = called + 1
+      if (shouldError) List(errorToReturn.get) else List()
+    }
 
-  def validate(shouldError: Boolean, errorToReturn: Option[MtdError]): List[MtdError] = {
-    called = called + 1
-    if (shouldError) List(errorToReturn.get) else List()
   }
 
-}
-
-private case class TestRawData(fieldOne: String, fieldTwo: String) extends RawData
+  private case class TestRawData(fieldOne: String, fieldTwo: String) extends RawData
 
 // Create a Validator based off the trait to be able to test it
-private class TestValidator extends Validator[TestRawData] {
+  private class TestValidator extends Validator[TestRawData] {
 
-  override def validate(data: TestRawData): List[MtdError] = {
-    run(List(), data) match {
-      case Nil        => List()
-      case err :: Nil => List(err)
-      case errs       => errs
+    override def validate(data: TestRawData): List[MtdError] = {
+      run(List(), data) match {
+        case Nil        => List()
+        case err :: Nil => List(err)
+        case errs       => errs
+      }
     }
+
   }
 
 }
