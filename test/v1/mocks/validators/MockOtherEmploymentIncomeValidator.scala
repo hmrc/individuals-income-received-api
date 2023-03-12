@@ -28,7 +28,7 @@ trait MockOtherEmploymentIncomeValidator extends MockFactory {
 
   object MockOtherEmploymentIncomeValidator {
 
-    def validate(data: OtherEmploymentIncomeRequestRawData): CallHandler1[OtherEmploymentIncomeRequestRawData, List[MtdError]] = {
+    def validate(data: OtherEmploymentIncomeRequestRawData): CallHandler1[OtherEmploymentIncomeRequestRawData, Seq[MtdError]] = {
       (mockValidator
         .validate(_: OtherEmploymentIncomeRequestRawData))
         .expects(data)

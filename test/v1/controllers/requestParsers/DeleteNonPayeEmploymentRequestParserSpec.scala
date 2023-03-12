@@ -16,10 +16,10 @@
 
 package v1.controllers.requestParsers
 
-import api.mocks.validators.MockDeleteNonPayeEmploymentValidator
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import support.UnitSpec
+import v1.mocks.validators.MockDeleteNonPayeEmploymentValidator
 import v1.models.request.deleteNonPayeEmployment.{DeleteNonPayeEmploymentRawData, DeleteNonPayeEmploymentRequest}
 
 class DeleteNonPayeEmploymentRequestParserSpec extends UnitSpec {

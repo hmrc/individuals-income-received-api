@@ -28,7 +28,7 @@ trait MockAmendForeignValidator extends MockFactory {
 
   object MockAmendForeignValidator {
 
-    def validate(data: AmendForeignRawData): CallHandler1[AmendForeignRawData, List[MtdError]] = {
+    def validate(data: AmendForeignRawData): CallHandler1[AmendForeignRawData, Seq[MtdError]] = {
       (mockAmendForeignValidator
         .validate(_: AmendForeignRawData))
         .expects(data)

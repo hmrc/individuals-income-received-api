@@ -29,7 +29,7 @@ trait MockCreateAmendNonPayeEmploymentValidator extends MockFactory {
 
   object MockCreateAmendNonPayeEmploymentValidator {
 
-    def validate(data: CreateAmendNonPayeEmploymentRawData): CallHandler1[CreateAmendNonPayeEmploymentRawData, List[MtdError]] = {
+    def validate(data: CreateAmendNonPayeEmploymentRawData): CallHandler1[CreateAmendNonPayeEmploymentRawData, Seq[MtdError]] = {
       (mockValidator
         .validate(_: CreateAmendNonPayeEmploymentRawData))
         .expects(data)

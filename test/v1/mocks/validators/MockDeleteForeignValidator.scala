@@ -28,7 +28,7 @@ trait MockDeleteForeignValidator extends MockFactory {
 
   object MockDeleteForeignValidator {
 
-    def validate(data: DeleteForeignRawData): CallHandler1[DeleteForeignRawData, List[MtdError]] = {
+    def validate(data: DeleteForeignRawData): CallHandler1[DeleteForeignRawData, Seq[MtdError]] = {
       (mockDeleteForeignValidator
         .validate(_: DeleteForeignRawData))
         .expects(data)

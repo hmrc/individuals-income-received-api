@@ -25,7 +25,7 @@ import api.models.errors.{
   MtdError,
   NinoFormatError,
   NotFoundError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError
 }
 import api.models.outcomes.ResponseWrapper
@@ -89,11 +89,11 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_EMPLOYMENT_ID", StandardDownstreamError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
+          ("INVALID_EMPLOYMENT_ID", InternalError),
+          ("INVALID_CORRELATIONID", InternalError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

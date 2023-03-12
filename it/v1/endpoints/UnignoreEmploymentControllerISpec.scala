@@ -29,12 +29,11 @@ import support.IntegrationBaseSpec
 
 class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
 
-
   private trait Test {
 
     val nino: String         = "AA123456A"
     val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    val taxYear: String = "2023-24"
+    val taxYear: String      = "2023-24"
 
     def mtdUri: String = s"/employments/$nino/$taxYear/$employmentId/unignore"
 
@@ -146,7 +145,7 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
         s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
 
           override val nino: String         = requestNino
-          override val taxYear: String = requestTaxYear
+          override val taxYear: String      = requestTaxYear
           override val employmentId: String = requestEmploymentId
 
           override def setupStubs(): StubMapping = {
@@ -196,16 +195,16 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
         (BAD_REQUEST, "INVALID_EMPLOYMENT_ID", BAD_REQUEST, EmploymentIdFormatError),
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
         (FORBIDDEN, "CUSTOMER_ADDED", BAD_REQUEST, RuleCustomEmploymentUnignoreError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "BEFORE_TAX_YEAR_ENDED", BAD_REQUEST, RuleTaxYearNotEndedError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
 
       val extraTysErrors = List(
-        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 

@@ -29,7 +29,7 @@ class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extend
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendForeignRawData): List[MtdError] = {
+  override def validate(data: AmendForeignRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -56,7 +56,7 @@ class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extend
     val requestBodyData = data.body.json.as[AmendForeignRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.foreignEarnings.map { data => validateForeignEarnings(data) }.getOrElse(NoValidationErrors),
           requestBodyData.unremittableForeignIncome

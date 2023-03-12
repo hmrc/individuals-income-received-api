@@ -29,7 +29,7 @@ class RetrieveEmploymentValidator @Inject() (implicit appConfig: AppConfig) exte
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveEmploymentRawData): List[MtdError] = {
+  override def validate(data: RetrieveEmploymentRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

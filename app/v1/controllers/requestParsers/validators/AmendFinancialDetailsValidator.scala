@@ -34,7 +34,7 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendFinancialDetailsRawData): List[MtdError] = {
+  override def validate(data: AmendFinancialDetailsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -106,7 +106,7 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
     val requestBodyData = data.body.json.as[AmendFinancialDetailsRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           validateEmployment(requestBodyData.employment)
         )

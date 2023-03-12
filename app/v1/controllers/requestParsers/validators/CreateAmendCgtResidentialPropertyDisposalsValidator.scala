@@ -39,7 +39,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     lossOrGainsValidator
   )
 
-  override def validate(data: CreateAmendCgtResidentialPropertyDisposalsRawData): List[MtdError] = {
+  override def validate(data: CreateAmendCgtResidentialPropertyDisposalsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -77,7 +77,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     val requestBodyData = data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
             validateDisposalFormat(disposal, index)
@@ -152,7 +152,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     val requestBodyData = data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
             validateDisposalRule(disposal, index, data.taxYear, data.temporalValidationEnabled)
@@ -205,7 +205,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
 
   private def validateLossOrGains(disposal: Disposal, index: Int): List[MtdError] = {
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           if (disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors,
           ValueGreaterThanValueValidation.validateOptional(

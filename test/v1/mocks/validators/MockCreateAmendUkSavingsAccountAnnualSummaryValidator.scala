@@ -29,7 +29,7 @@ trait MockCreateAmendUkSavingsAccountAnnualSummaryValidator extends MockFactory 
 
   object MockCreateAmendUkSavingsAccountAnnualSummaryValidator {
 
-    def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): CallHandler1[CreateAmendUkSavingsAnnualSummaryRawData, List[MtdError]] = {
+    def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): CallHandler1[CreateAmendUkSavingsAnnualSummaryRawData, Seq[MtdError]] = {
       (mockValidator
         .validate(_: CreateAmendUkSavingsAnnualSummaryRawData))
         .expects(data)

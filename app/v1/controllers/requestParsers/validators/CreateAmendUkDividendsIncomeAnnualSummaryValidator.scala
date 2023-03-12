@@ -35,7 +35,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject() (appConfig: A
     bodyValueValidator
   )
 
-  override def validate(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): List[MtdError] = {
+  override def validate(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -63,7 +63,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject() (appConfig: A
     val requestBody = data.body.json.as[CreateAmendUkDividendsIncomeAnnualSummaryBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           DecimalValueValidation.validateOptional(
             amount = requestBody.ukDividends,

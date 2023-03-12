@@ -202,7 +202,7 @@ class UnignoreEmploymentControllerSpec
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (RuleCustomEmploymentUnignoreError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

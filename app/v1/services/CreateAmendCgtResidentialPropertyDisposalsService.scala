@@ -47,18 +47,18 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: Cr
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_PAYLOAD"           -> InternalError,
       "INVALID_DISPOSAL_DATE"     -> RuleDisposalDateError,
       "INVALID_COMPLETION_DATE"   -> RuleCompletionDateError,
       "INVALID_ACQUISITION_DATE"  -> RuleAcquisitionDateAfterDisposalDateError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors = Map(
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "INVALID_CORRELATION_ID"  -> StandardDownstreamError
+      "INVALID_CORRELATION_ID" -> InternalError
     )
 
     errors ++ extraTysErrors

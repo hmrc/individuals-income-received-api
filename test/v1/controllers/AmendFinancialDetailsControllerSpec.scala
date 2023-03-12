@@ -101,6 +101,7 @@ class AmendFinancialDetailsControllerSpec
       |}
     """.stripMargin
   )
+
   private val requestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -149,12 +150,14 @@ class AmendFinancialDetailsControllerSpec
       |}
     """.stripMargin
   )
+
   val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
     nino = nino,
     taxYear = taxYear,
     employmentId = employmentId,
     body = AnyContentAsJson(requestBodyJson)
   )
+
   val rawDataOwpEnabled: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
     nino = nino,
     taxYear = taxYear,
@@ -162,17 +165,21 @@ class AmendFinancialDetailsControllerSpec
     body = AnyContentAsJson(requestBodyJsonWithOpw),
     opwEnabled = true
   )
+
   val pay: AmendPay = AmendPay(
     taxablePayToDate = 3500.75,
     totalTaxToDate = 6782.92
   )
+
   val studentLoans: AmendStudentLoans = AmendStudentLoans(
     uglDeductionAmount = Some(13343.45),
     pglDeductionAmount = Some(24242.56)
   )
+
   val deductions: AmendDeductions = AmendDeductions(
     studentLoans = Some(studentLoans)
   )
+
   val benefitsInKind: AmendBenefitsInKind = AmendBenefitsInKind(
     accommodation = Some(455.67),
     assets = Some(435.54),
@@ -203,23 +210,28 @@ class AmendFinancialDetailsControllerSpec
     vouchersAndCreditCards = Some(34.90),
     nonCash = Some(23.89)
   )
+
   val employment: AmendEmployment = AmendEmployment(
     pay = pay,
     deductions = Some(deductions),
     benefitsInKind = Some(benefitsInKind),
     offPayrollWorker = None
   )
+
   val amendFinancialDetailsRequestBody: AmendFinancialDetailsRequestBody = AmendFinancialDetailsRequestBody(
     employment = employment
   )
+
   val requestData: AmendFinancialDetailsRequest = AmendFinancialDetailsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     employmentId = employmentId,
     body = amendFinancialDetailsRequestBody
   )
+
   val requestDataWithOpw: AmendFinancialDetailsRequest =
     requestData.copy(body = amendFinancialDetailsRequestBody.copy(employment = employment.copy(offPayrollWorker = Some(true))))
+
   val hateoasResponse: JsValue = Json.parse(
     s"""
        |{
@@ -243,7 +255,6 @@ class AmendFinancialDetailsControllerSpec
        |}
     """.stripMargin
   )
-
 
   def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
@@ -470,7 +481,7 @@ class AmendFinancialDetailsControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

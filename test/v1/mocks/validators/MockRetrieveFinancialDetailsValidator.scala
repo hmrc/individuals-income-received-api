@@ -28,7 +28,7 @@ trait MockRetrieveFinancialDetailsValidator extends MockFactory {
 
   object MockRetrieveFinancialDetailsValidator {
 
-    def validate(data: RetrieveFinancialDetailsRawData): CallHandler1[RetrieveFinancialDetailsRawData, List[MtdError]] = {
+    def validate(data: RetrieveFinancialDetailsRawData): CallHandler1[RetrieveFinancialDetailsRawData, Seq[MtdError]] = {
       (mockRetrieveFinancialDetailsValidator
         .validate(_: RetrieveFinancialDetailsRawData))
         .expects(data)

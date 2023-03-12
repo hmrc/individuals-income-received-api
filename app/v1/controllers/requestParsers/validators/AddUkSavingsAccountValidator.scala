@@ -27,7 +27,7 @@ class AddUkSavingsAccountValidator extends Validator[AddUkSavingsAccountRawData]
 
   private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AddUkSavingsAccountRawData): List[MtdError] = {
+  override def validate(data: AddUkSavingsAccountRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

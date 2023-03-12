@@ -50,20 +50,20 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
   val errorMap: Map[String, MtdError] = {
     val downstreamErrors = Map(
       "INVALID_NINO"            -> NinoFormatError,
-      "INVALID_TYPE"            -> StandardDownstreamError,
+      "INVALID_TYPE"            -> InternalError,
       "INVALID_TAXYEAR"         -> TaxYearFormatError,
-      "INVALID_INCOME_SOURCE"   -> StandardDownstreamError,
+      "INVALID_INCOME_SOURCE"   -> InternalError,
       "NOT_FOUND_PERIOD"        -> NotFoundError,
       "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
-      "SERVER_ERROR"            -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"     -> StandardDownstreamError
+      "SERVER_ERROR"            -> InternalError,
+      "SERVICE_UNAVAILABLE"     -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(
       "INVALID_TAX_YEAR"             -> TaxYearFormatError,
-      "INVALID_INCOMESOURCE_ID"      -> StandardDownstreamError,
-      "INVALID_INCOMESOURCE_TYPE"    -> StandardDownstreamError,
-      "INVALID_CORRELATION_ID"       -> StandardDownstreamError,
+      "INVALID_INCOMESOURCE_ID"      -> InternalError,
+      "INVALID_INCOMESOURCE_TYPE"    -> InternalError,
+      "INVALID_CORRELATION_ID"       -> InternalError,
       "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
       "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError

@@ -17,13 +17,14 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.MtdError
+import play.api.http.Status.BAD_REQUEST
 import support.UnitSpec
 
 class DateAfterDateValidationSpec extends UnitSpec {
   private val earlierDate = "2020-01-01"
   private val laterDate   = "2020-01-02"
 
-  private val error = MtdError("test code", "test message")
+  private val error = MtdError("test code", "test message", BAD_REQUEST)
 
   "validate" should {
     "return NoValidationErrors" when {

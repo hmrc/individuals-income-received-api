@@ -28,7 +28,7 @@ trait MockDeleteDividendsValidator extends MockFactory {
 
   object MockDeleteDividendsValidator {
 
-    def validate(data: DeleteDividendsRawData): CallHandler1[DeleteDividendsRawData, List[MtdError]] = {
+    def validate(data: DeleteDividendsRawData): CallHandler1[DeleteDividendsRawData, Seq[MtdError]] = {
       (mockDeleteDividendsValidator
         .validate(_: DeleteDividendsRawData))
         .expects(data)

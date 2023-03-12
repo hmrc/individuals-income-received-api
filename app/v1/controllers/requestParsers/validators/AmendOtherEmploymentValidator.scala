@@ -37,7 +37,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
     bodyRuleValidator
   )
 
-  override def validate(data: AmendOtherEmploymentRawData): List[MtdError] = {
+  override def validate(data: AmendOtherEmploymentRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -64,7 +64,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
     val requestBodyData = data.body.json.as[AmendOtherEmploymentRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.shareOption
             .map(_.zipWithIndex.flatMap { case (data, index) =>
@@ -279,7 +279,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
     val requestBodyData = data.body.json.as[AmendOtherEmploymentRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         requestBodyData.lumpSums.fold[List[List[MtdError]]](NoValidationErrors) { lumpSums =>
           lumpSums.zipWithIndex.map(indexedLumpSums => LumpSumsRuleValidation.validate(indexedLumpSums._1, indexedLumpSums._2)).toList
         }

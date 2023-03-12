@@ -17,6 +17,7 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{DateFormatError, MtdError}
+import play.api.http.Status.BAD_REQUEST
 import support.UnitSpec
 
 class DateFormatValidationSpec extends UnitSpec {
@@ -63,7 +64,7 @@ class DateFormatValidationSpec extends UnitSpec {
 
     "validate" must {
 
-      object DummyError extends MtdError("ERROR_CODE", "Error message")
+      object DummyError extends MtdError("ERROR_CODE", "Error message", BAD_REQUEST)
 
       "return an empty list for a valid date" in {
         DateFormatValidation.validate(

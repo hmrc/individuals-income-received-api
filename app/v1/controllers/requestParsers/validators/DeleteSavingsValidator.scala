@@ -29,7 +29,7 @@ class DeleteSavingsValidator @Inject() (implicit appConfig: AppConfig) extends V
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteSavingsRawData): List[MtdError] = {
+  override def validate(data: DeleteSavingsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

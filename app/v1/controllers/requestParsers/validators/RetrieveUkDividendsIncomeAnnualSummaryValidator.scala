@@ -30,7 +30,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryValidator @Inject() (implicit appCon
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveUkDividendsAnnualIncomeSummaryRawData): List[MtdError] = {
+  override def validate(data: RetrieveUkDividendsAnnualIncomeSummaryRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

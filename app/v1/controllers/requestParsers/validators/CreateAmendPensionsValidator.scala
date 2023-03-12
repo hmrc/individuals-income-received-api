@@ -31,7 +31,7 @@ class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendPensionsRawData): List[MtdError] = {
+  override def validate(data: CreateAmendPensionsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -58,7 +58,7 @@ class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
     val requestBodyData = data.body.json.as[CreateAmendPensionsRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.foreignPensions
             .map(_.zipWithIndex.flatMap { case (data, index) =>

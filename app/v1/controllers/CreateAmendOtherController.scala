@@ -117,8 +117,8 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
             TaxYearFormatError.code) | CustomMtdError(RuleTaxYearRangeInvalidError.code) | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) |
           CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) | CustomMtdError(CountryCodeRuleError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

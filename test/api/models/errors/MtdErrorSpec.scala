@@ -16,12 +16,13 @@
 
 package api.models.errors
 
+import play.api.http.Status.BAD_REQUEST
 import play.api.libs.json.Json
 import support.UnitSpec
 
 class MtdErrorSpec extends UnitSpec {
 
-  val dummyError: MtdError = MtdError("SOME_CODE", "some message")
+  val dummyError: MtdError = MtdError("SOME_CODE", "some message", BAD_REQUEST)
 
   "writes" should {
     "generate the correct JSON" in {

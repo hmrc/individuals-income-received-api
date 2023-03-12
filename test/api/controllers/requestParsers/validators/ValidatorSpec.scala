@@ -19,7 +19,10 @@ package api.controllers.requestParsers.validators
 import api.models.errors.{MtdError, NinoFormatError, NotFoundError}
 import api.models.request.RawData
 import org.scalamock.scalatest.MockFactory
+import play.api.http.Status.BAD_REQUEST
 import support.UnitSpec
+
+import scala.collection.immutable.Seq
 
 class ValidatorSpec extends UnitSpec with MockFactory {
 
@@ -35,7 +38,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
         val levelOneValidationOne = new MockFunctionObject("Level: 1    Validation 1")
         val levelOneValidationTwo = new MockFunctionObject("Level: 1    Validation 2")
 
-        def levelOneValidations: TestRawData => List[List[MtdError]] = (_: TestRawData) => {
+        def levelOneValidations: TestRawData => Seq[Seq[MtdError]] = (_: TestRawData) => {
           List(
             levelOneValidationOne.validate(shouldError = false, None),
             levelOneValidationTwo.validate(shouldError = false, None)
@@ -44,8 +47,8 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
         val validationSet = List(levelOneValidations)
 
-        val inputData              = TestRawData("ABCDEF", "12345")
-        val result: List[MtdError] = validator.run(validationSet, inputData)
+        val inputData: TestRawData = TestRawData("ABCDEF", "12345")
+        val result                 = validator.run(validationSet, inputData)
         result.isEmpty shouldBe true
         levelOneValidationOne.called shouldBe 1
         levelOneValidationTwo.called shouldBe 1
@@ -58,9 +61,9 @@ class ValidatorSpec extends UnitSpec with MockFactory {
         // Set up the mock validations
         val levelOneValidationOne = new MockFunctionObject("Level: 1    Validation 1")
         val levelOneValidationTwo = new MockFunctionObject("Level: 1    Validation 2")
-        val mockError             = MtdError("MOCK", "SOME ERROR")
+        val mockError: MtdError   = MtdError("MOCK", "SOME ERROR", BAD_REQUEST)
 
-        def levelOneValidations: TestRawData => List[List[MtdError]] = (_: TestRawData) => {
+        def levelOneValidations: TestRawData => Seq[Seq[MtdError]] = (_: TestRawData) => {
           List(
             levelOneValidationOne.validate(shouldError = false, None),
             levelOneValidationTwo.validate(shouldError = true, Some(mockError))
@@ -69,8 +72,8 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
         val validationSet = List(levelOneValidations)
 
-        val inputData              = TestRawData("ABCDEF", "12345")
-        val result: List[MtdError] = validator.run(validationSet, inputData)
+        val inputData: TestRawData = TestRawData("ABCDEF", "12345")
+        val result                 = validator.run(validationSet, inputData)
         result.isEmpty shouldBe false
         result.size shouldBe 1
         result.head shouldBe mockError
@@ -86,16 +89,16 @@ class ValidatorSpec extends UnitSpec with MockFactory {
         val levelOneValidationTwo = new MockFunctionObject("Level: 1    Validation 2")
         val levelTwoValidationOne = new MockFunctionObject("Level: 2    Validation 1")
         val levelTwoValidationTwo = new MockFunctionObject("Level: 2    Validation 2")
-        val mockError             = MtdError("MOCK", "SOME ERROR ON LEVEL 2")
+        val mockError: MtdError   = MtdError("MOCK", "SOME ERROR ON LEVEL 2", BAD_REQUEST)
 
-        def levelOneValidations: TestRawData => List[List[MtdError]] = (_: TestRawData) => {
+        def levelOneValidations: TestRawData => Seq[Seq[MtdError]] = (_: TestRawData) => {
           List(
             levelOneValidationOne.validate(shouldError = false, None),
             levelOneValidationTwo.validate(shouldError = false, None)
           )
         }
 
-        def levelTwoValidations: TestRawData => List[List[MtdError]] = (_: TestRawData) => {
+        def levelTwoValidations: TestRawData => Seq[Seq[MtdError]] = (_: TestRawData) => {
           List(
             levelTwoValidationOne.validate(shouldError = false, None),
             levelTwoValidationTwo.validate(shouldError = true, Some(mockError))
@@ -104,8 +107,8 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
         val validationSet = List(levelOneValidations, levelTwoValidations)
 
-        val inputData              = TestRawData("ABCDEF", "12345")
-        val result: List[MtdError] = validator.run(validationSet, inputData)
+        val inputData: TestRawData = TestRawData("ABCDEF", "12345")
+        val result                 = validator.run(validationSet, inputData)
         result.isEmpty shouldBe false
         result.size shouldBe 1
         result.head shouldBe mockError
@@ -118,7 +121,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
   }
 
   "flattenErrors" should {
-    "combine errors of the same type" in {
+    "combine errors of the same type" in new Test {
       val errors: List[List[MtdError]] = List(
         List(NotFoundError),
         List(NinoFormatError.copy(paths = Some(Seq("one")))),
@@ -130,23 +133,23 @@ class ValidatorSpec extends UnitSpec with MockFactory {
         NinoFormatError.copy(paths = Some(Seq("one", "two")))
       )
 
-      Validator.flattenErrors(errors) shouldBe flatErrors
+      validator.flattenErrors(errors) shouldBe flatErrors
     }
 
-    "return the input for a list of unique errors" in {
+    "return the input for a list of unique errors" in new Test {
       val errors: List[List[MtdError]] = List(
         List(NotFoundError),
         List(NinoFormatError.copy(paths = Some(Seq("one"))))
       )
 
-      Validator.flattenErrors(errors) shouldBe errors.flatten
+      validator.flattenErrors(errors) shouldBe errors.flatten
     }
 
-    "handle empty lists correctly" in {
+    "handle empty lists correctly" in new Test {
       val emptyErrorList: List[List[MtdError]]   = List.empty[List[MtdError]]
       val listOfEmptyLists: List[List[MtdError]] = List(List.empty[MtdError])
-      Validator.flattenErrors(emptyErrorList) shouldBe List.empty[MtdError]
-      Validator.flattenErrors(listOfEmptyLists) shouldBe List.empty[MtdError]
+      validator.flattenErrors(emptyErrorList) shouldBe List.empty[MtdError]
+      validator.flattenErrors(listOfEmptyLists) shouldBe List.empty[MtdError]
     }
   }
 
@@ -165,7 +168,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 // Create a Validator based off the trait to be able to test it
   private class TestValidator extends Validator[TestRawData] {
 
-    override def validate(data: TestRawData): List[MtdError] = {
+    override def validate(data: TestRawData): scala.Seq[MtdError] = {
       run(List(), data) match {
         case Nil        => List()
         case err :: Nil => List(err)

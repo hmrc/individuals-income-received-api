@@ -29,7 +29,7 @@ class RetrieveForeignValidator @Inject() (implicit appConfig: AppConfig) extends
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveForeignRawData): List[MtdError] = {
+  override def validate(data: RetrieveForeignRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

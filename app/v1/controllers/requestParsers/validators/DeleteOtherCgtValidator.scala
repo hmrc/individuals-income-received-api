@@ -29,7 +29,7 @@ class DeleteOtherCgtValidator @Inject() (implicit appConfig: AppConfig) extends 
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteOtherCgtRawData): List[MtdError] = {
+  override def validate(data: DeleteOtherCgtRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

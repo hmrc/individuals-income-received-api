@@ -31,7 +31,7 @@ class CreateAmendSavingsValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendSavingsRawData): List[MtdError] = {
+  override def validate(data: CreateAmendSavingsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -58,7 +58,7 @@ class CreateAmendSavingsValidator @Inject() (implicit appConfig: AppConfig)
     val requestBodyData = data.body.json.as[CreateAmendSavingsRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.securities.map(validateSecurity).getOrElse(NoValidationErrors),
           requestBodyData.foreignInterest

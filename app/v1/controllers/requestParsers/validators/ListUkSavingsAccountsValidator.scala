@@ -28,7 +28,7 @@ class ListUkSavingsAccountsValidator @Inject() extends Validator[ListUkSavingsAc
 
   private val validationSet = List(parameterFormatValidation)
 
-  override def validate(data: ListUkSavingsAccountsRawData): List[MtdError] =
+  override def validate(data: ListUkSavingsAccountsRawData): Seq[MtdError] =
     run(validationSet, data).distinct
 
   private def parameterFormatValidation: ListUkSavingsAccountsRawData => List[List[MtdError]] =

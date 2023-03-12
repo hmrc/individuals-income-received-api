@@ -25,7 +25,7 @@ import api.models.errors.{
   NotFoundError,
   RuleTaxYearNotSupportedError,
   RuleTaxYearRangeInvalidError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError
 }
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
@@ -38,7 +38,7 @@ import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveUkDividendsIncomeAnnualSummaryRequestParser
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRawData
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData}
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryHateoasData
 import v1.services.RetrieveUkDividendsIncomeAnnualSummaryService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -114,9 +114,9 @@ class RetrieveUkDividendsAnnualIncomeSummaryController @Inject() (val authServic
           ) =>
         BadRequest(Json.toJson(errorWrapper))
 
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

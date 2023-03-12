@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{NinoFormatError, StandardDownstreamError}
+import api.models.errors.{NinoFormatError, InternalError}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.deletePensions.DeletePensionsRequest
 
@@ -75,7 +75,7 @@ class DeletePensionsConnectorSpec extends ConnectorSpec {
 
       def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
-      val outcome = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, StandardDownstreamError)))
+      val outcome = Left(ResponseWrapper(correlationId, Seq(NinoFormatError, InternalError)))
 
       willDelete(
         s"$baseUrl/income-tax/income/pensions/$nino/${taxYear.asMtd}"

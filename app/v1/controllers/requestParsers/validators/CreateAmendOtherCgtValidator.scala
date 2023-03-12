@@ -33,7 +33,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation)
 
-  override def validate(data: CreateAmendOtherCgtRawData): List[MtdError] = {
+  override def validate(data: CreateAmendOtherCgtRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -81,7 +81,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     val requestBodyData = data.body.json.as[CreateAmendOtherCgtRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.disposals
             .map(_.toList)
@@ -110,7 +110,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     val requestBodyData = data.body.json.as[CreateAmendOtherCgtRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.disposals
             .map(_.toList)

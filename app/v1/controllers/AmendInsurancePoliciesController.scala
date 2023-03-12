@@ -117,7 +117,7 @@ class AmendInsurancePoliciesController @Inject() (val authService: EnrolmentsAut
 
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
       case _
           if errorWrapper.containsAnyOf(
             BadRequestError,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.mocks.validators
+package v1.mocks.validators
 
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
@@ -28,7 +28,7 @@ trait MockDeleteNonPayeEmploymentValidator extends MockFactory {
 
   object MockDeleteNonPayeEmploymentValidator {
 
-    def validate(data: DeleteNonPayeEmploymentRawData): CallHandler1[DeleteNonPayeEmploymentRawData, List[MtdError]] = {
+    def validate(data: DeleteNonPayeEmploymentRawData): CallHandler1[DeleteNonPayeEmploymentRawData, Seq[MtdError]] = {
       (mockDeleteNonPayeEmploymentValidator
         .validate(_: DeleteNonPayeEmploymentRawData))
         .expects(data)

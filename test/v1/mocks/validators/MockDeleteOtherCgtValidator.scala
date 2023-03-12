@@ -28,7 +28,7 @@ trait MockDeleteOtherCgtValidator extends MockFactory {
 
   object MockDeleteOtherCgtValidator {
 
-    def validate(data: DeleteOtherCgtRawData): CallHandler1[DeleteOtherCgtRawData, List[MtdError]] = {
+    def validate(data: DeleteOtherCgtRawData): CallHandler1[DeleteOtherCgtRawData, Seq[MtdError]] = {
       (mockDeleteOtherCgtValidator
         .validate(_: DeleteOtherCgtRawData))
         .expects(data)

@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class DeleteNonPayeEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
   private val requestData = DeleteNonPayeEmploymentRequest(Nino(nino), TaxYear.fromMtd(taxYear))
@@ -69,16 +69,16 @@ class DeleteNonPayeEmploymentServiceSpec extends ServiceSpec {
         val errors = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+          "INVALID_CORRELATIONID"     -> InternalError,
           "NO_DATA_FOUND"             -> NotFoundError,
-          "SERVER_ERROR"              -> StandardDownstreamError,
-          "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+          "SERVER_ERROR"              -> InternalError,
+          "SERVICE_UNAVAILABLE"       -> InternalError
         )
 
         val extraTysErrors = Seq(
-          "INVALID_CORRELATION_ID"    -> StandardDownstreamError,
-          "NOT_FOUND"                 -> NotFoundError,
-          "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError
+          "INVALID_CORRELATION_ID" -> InternalError,
+          "NOT_FOUND"              -> NotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))

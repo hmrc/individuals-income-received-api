@@ -146,8 +146,8 @@ class AmendOtherEmploymentController @Inject() (val authService: EnrolmentsAuthS
             RuleLumpSumsError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

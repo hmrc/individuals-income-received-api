@@ -95,11 +95,11 @@ class DeleteCustomEmploymentControllerSpec
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR"          -> TaxYearFormatError,
         "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-        "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+        "INVALID_CORRELATIONID"     -> InternalError,
         "NO_DATA_FOUND"             -> NotFoundError,
         "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
-        "SERVER_ERROR"              -> StandardDownstreamError,
-        "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+        "SERVER_ERROR"              -> InternalError,
+        "SERVICE_UNAVAILABLE"       -> InternalError
       )
 
   }
@@ -188,7 +188,7 @@ class DeleteCustomEmploymentControllerSpec
           (EmploymentIdFormatError, BAD_REQUEST),
           (RuleDeleteForbiddenError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

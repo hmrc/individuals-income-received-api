@@ -29,7 +29,7 @@ class RetrieveInsurancePoliciesValidator @Inject() (implicit appConfig: AppConfi
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveInsurancePoliciesRawData): List[MtdError] = {
+  override def validate(data: RetrieveInsurancePoliciesRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

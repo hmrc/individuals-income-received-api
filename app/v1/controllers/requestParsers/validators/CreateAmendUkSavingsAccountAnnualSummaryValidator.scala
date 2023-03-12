@@ -34,7 +34,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     bodyValueValidation
   )
 
-  override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): List[MtdError] = {
+  override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -63,7 +63,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     val requestBody = data.body.json.as[CreateAmendUkSavingsAnnualSummaryBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           DecimalValueValidation.validateOptional(
             amount = requestBody.taxedUkInterest,

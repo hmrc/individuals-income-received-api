@@ -29,7 +29,7 @@ class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends 
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendDividendsRawData): List[MtdError] = {
+  override def validate(data: AmendDividendsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -56,7 +56,7 @@ class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends 
     val requestBodyData = data.body.json.as[AmendDividendsRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.foreignDividend
             .map(_.zipWithIndex.flatMap { case (data, index) =>

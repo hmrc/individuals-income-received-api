@@ -28,7 +28,7 @@ class MockRetrieveEmploymentValidator extends MockFactory {
 
   object MockRetrieveCustomEmploymentValidator {
 
-    def validate(data: RetrieveEmploymentRawData): CallHandler1[RetrieveEmploymentRawData, List[MtdError]] = {
+    def validate(data: RetrieveEmploymentRawData): CallHandler1[RetrieveEmploymentRawData, Seq[MtdError]] = {
       (mockRetrieveCustomEmploymentValidator
         .validate(_: RetrieveEmploymentRawData))
         .expects(data)

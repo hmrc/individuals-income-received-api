@@ -32,7 +32,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator, rulesValidator)
 
-  override def validate(data: CreateAmendCgtPpdOverridesRawData): List[MtdError] = {
+  override def validate(data: CreateAmendCgtPpdOverridesRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -78,7 +78,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
     val multipleDisposalsIndexed = requestBody.multiplePropertyDisposals.toList.flatten.zipWithIndex
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           multipleDisposalsIndexed.flatMap { case (data, index) =>
             validateBothSuppliedMultipleDisposals(data, index)
@@ -135,7 +135,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
     val requestBodyData = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.multiplePropertyDisposals
             .map(_.zipWithIndex.flatMap { case (data, index) =>

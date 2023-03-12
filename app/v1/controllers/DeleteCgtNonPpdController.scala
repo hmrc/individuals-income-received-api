@@ -111,9 +111,9 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
             RuleTaxYearRangeInvalidError,
             RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: DeleteCgtNonPpdAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

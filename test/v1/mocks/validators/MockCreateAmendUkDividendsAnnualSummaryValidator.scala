@@ -30,7 +30,7 @@ trait MockCreateAmendUkDividendsAnnualSummaryValidator extends MockFactory {
   object MockCreateAmendUkDividendsIncomeAnnualSummaryValidator {
 
     def validate(
-        data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CallHandler1[CreateAmendUkDividendsIncomeAnnualSummaryRawData, List[MtdError]] = {
+        data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CallHandler1[CreateAmendUkDividendsIncomeAnnualSummaryRawData, Seq[MtdError]] = {
       (mockValidator
         .validate(_: CreateAmendUkDividendsIncomeAnnualSummaryRawData))
         .expects(data)

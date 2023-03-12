@@ -96,9 +96,9 @@ class RetrieveNonPayeEmploymentController @Inject() (val authService: Enrolments
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | SourceFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => InternalServerError(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => InternalServerError(Json.toJson(errorWrapper))
     }
 
 }

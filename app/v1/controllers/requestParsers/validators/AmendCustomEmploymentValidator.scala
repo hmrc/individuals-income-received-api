@@ -31,7 +31,7 @@ class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: Curren
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendCustomEmploymentRawData): List[MtdError] = {
+  override def validate(data: AmendCustomEmploymentRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

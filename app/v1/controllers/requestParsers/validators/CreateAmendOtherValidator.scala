@@ -29,7 +29,7 @@ class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extend
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendOtherRawData): List[MtdError] = {
+  override def validate(data: CreateAmendOtherRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -56,7 +56,7 @@ class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extend
     val requestBodyData = data.body.json.as[CreateAmendOtherRequestBody]
 
     List(
-      Validator.flattenErrors(
+      flattenErrors(
         List(
           requestBodyData.businessReceipts
             .map(_.zipWithIndex.flatMap { case (data, index) =>

@@ -126,8 +126,8 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
           CustomMtdError(RuleAcquisitionDateAfterDisposalDateError.code) | CustomMtdError(RuleLossesGreaterThanGainError.code) | CustomMtdError(
             RuleCompletionDateError.code) | CustomMtdError(RuleDisposalDateError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

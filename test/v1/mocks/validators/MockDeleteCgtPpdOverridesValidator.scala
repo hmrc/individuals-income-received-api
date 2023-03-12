@@ -24,11 +24,11 @@ import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
 
 trait MockDeleteCgtPpdOverridesValidator extends MockFactory {
 
-  val mockDeleteCgtPpdOverridesValidator = mock[DeleteCgtPpdOverridesValidator]
+  val mockDeleteCgtPpdOverridesValidator: DeleteCgtPpdOverridesValidator = mock[DeleteCgtPpdOverridesValidator]
 
   object MockDeleteCgtPpdOverridesValidator {
 
-    def validate(data: DeleteCgtPpdOverridesRawData): CallHandler1[DeleteCgtPpdOverridesRawData, List[MtdError]] = {
+    def validate(data: DeleteCgtPpdOverridesRawData): CallHandler1[DeleteCgtPpdOverridesRawData, Seq[MtdError]] = {
       (mockDeleteCgtPpdOverridesValidator
         .validate(_: DeleteCgtPpdOverridesRawData))
         .expects(data)

@@ -23,12 +23,12 @@ trait Validator[A <: RawData] {
 
   type ValidationLevel[T] = T => List[MtdError]
 
-  def validate(data: A): List[MtdError]
+  def validate(data: A): Seq[MtdError]
 
-  def run(validationSet: List[A => List[List[MtdError]]], data: A): List[MtdError] = {
+  def run(validationSet: Seq[A => Seq[Seq[MtdError]]], data: A): Seq[MtdError] = {
 
     validationSet match {
-      case Nil => List()
+      case Nil => Nil
       case thisLevel :: remainingLevels =>
         thisLevel(data).flatten match {
           case x if x.isEmpty  => run(remainingLevels, data)
@@ -37,23 +37,20 @@ trait Validator[A <: RawData] {
     }
   }
 
-}
-
-object Validator {
-
-  def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
+  def flattenErrors(errors: Seq[Seq[MtdError]]): List[MtdError] = {
     errors.flatten
       .groupBy(_.message)
       .map { case (_, errors) =>
-        val baseError = errors.head.copy(paths = None)
-
-        errors.fold(baseError)((error1: MtdError, error2: MtdError) =>
-          (error1, error2) match {
-            case (MtdError(_, _, Some(paths1)), MtdError(_, _, Some(paths2))) => error1.copy(paths = Some(paths1 ++ paths2))
-            case (MtdError(_, _, Some(_)), MtdError(_, _, None))              => error1
-            case (MtdError(_, _, None), MtdError(_, _, Some(_)))              => error2
-            case _                                                            => error1
-          })
+        val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
+        errors.fold(baseError)((error1, error2) => {
+          val paths: Option[Seq[String]] = for {
+            error1Paths <- error1.paths
+            error2Paths <- error2.paths
+          } yield {
+            error1Paths ++ error2Paths
+          }
+          error1.copy(paths = paths)
+        })
       }
       .toList
   }

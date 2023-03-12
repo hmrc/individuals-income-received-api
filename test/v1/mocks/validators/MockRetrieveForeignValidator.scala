@@ -28,7 +28,7 @@ trait MockRetrieveForeignValidator extends MockFactory {
 
   object MockRetrieveForeignValidator {
 
-    def validate(data: RetrieveForeignRawData): CallHandler1[RetrieveForeignRawData, List[MtdError]] = {
+    def validate(data: RetrieveForeignRawData): CallHandler1[RetrieveForeignRawData, Seq[MtdError]] = {
       (mockRetrieveForeignValidator
         .validate(_: RetrieveForeignRawData))
         .expects(data)

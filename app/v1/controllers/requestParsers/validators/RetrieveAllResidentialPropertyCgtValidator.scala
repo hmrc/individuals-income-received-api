@@ -30,7 +30,7 @@ class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: 
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveAllResidentialPropertyCgtRawData): List[MtdError] = {
+  override def validate(data: RetrieveAllResidentialPropertyCgtRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

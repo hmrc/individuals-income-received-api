@@ -29,7 +29,7 @@ class RetrieveOtherCgtValidator @Inject() (implicit appConfig: AppConfig) extend
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveOtherCgtRawData): List[MtdError] = {
+  override def validate(data: RetrieveOtherCgtRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

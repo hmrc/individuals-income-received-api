@@ -125,8 +125,8 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
           CessationDateFormatError | RuleCessationDateBeforeStartDateError | RuleStartDateAfterTaxYearEndError |
           RuleCessationDateBeforeTaxYearStartError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
