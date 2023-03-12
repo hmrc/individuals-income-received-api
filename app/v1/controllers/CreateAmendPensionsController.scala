@@ -85,7 +85,7 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               request = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(
+              response = AuditResponse(
                 httpStatus = OK,
                 response = Right(Some(createAmendPensionsHateoasBody(appConfig, nino, taxYear)))
               )
@@ -110,7 +110,7 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             request = Some(request.body),
             `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(
+            response = AuditResponse(
               httpStatus = result.header.status,
               response = Left(errorWrapper.auditErrors)
             )

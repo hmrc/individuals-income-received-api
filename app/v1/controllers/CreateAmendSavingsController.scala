@@ -82,7 +82,7 @@ class CreateAmendSavingsController @Inject() (val authService: EnrolmentsAuthSer
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               request = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(amendSavingsHateoasBody(appConfig, nino, taxYear))))
+              response = AuditResponse(httpStatus = OK, response = Right(Some(amendSavingsHateoasBody(appConfig, nino, taxYear))))
             )
           )
           Ok(amendSavingsHateoasBody(appConfig, nino, taxYear))
@@ -101,7 +101,7 @@ class CreateAmendSavingsController @Inject() (val authService: EnrolmentsAuthSer
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             request = Some(request.body),
             `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
         result

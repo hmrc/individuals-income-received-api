@@ -81,7 +81,7 @@ class DeletePensionsController @Inject() (val authService: EnrolmentsAuthService
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               request = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
+              response = AuditResponse(httpStatus = NO_CONTENT, response = Right(None))
             ))
 
           NoContent
@@ -102,7 +102,7 @@ class DeletePensionsController @Inject() (val authService: EnrolmentsAuthService
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             request = None,
             `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           ))
 
         result

@@ -85,7 +85,7 @@ class AmendInsurancePoliciesController @Inject() (val authService: EnrolmentsAut
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               request = Some(request.body),
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(amendInsurancePoliciesHateoasBody(appConfig, nino, taxYear))))
+              response = AuditResponse(httpStatus = OK, response = Right(Some(amendInsurancePoliciesHateoasBody(appConfig, nino, taxYear))))
             )
           )
 
@@ -107,7 +107,7 @@ class AmendInsurancePoliciesController @Inject() (val authService: EnrolmentsAut
             params = Map("nino" -> nino, "taxYear" -> taxYear),
             request = Some(request.body),
             `X-CorrelationId` = resCorrelationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 

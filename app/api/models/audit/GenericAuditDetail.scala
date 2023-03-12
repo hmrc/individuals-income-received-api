@@ -16,6 +16,7 @@
 
 package api.models.audit
 
+import api.controllers.{AuditHandler, RequestContext}
 import api.models.auth.UserDetails
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, OWrites}
@@ -42,7 +43,7 @@ object GenericAuditDetail {
             params: Map[String, String],
             request: Option[JsValue],
             `X-CorrelationId`: String,
-            auditResponse: AuditResponse): GenericAuditDetail = {
+            response: AuditResponse): GenericAuditDetail = {
 
     GenericAuditDetail(
       userType = userDetails.userType,
@@ -50,8 +51,23 @@ object GenericAuditDetail {
       params = params,
       request = request,
       `X-CorrelationId` = `X-CorrelationId`,
-      response = auditResponse
+      response = response
     )
   }
+
+  def auditDetailCreator(params: Map[String, String]): AuditHandler.AuditDetailCreator[GenericAuditDetail] =
+    new AuditHandler.AuditDetailCreator[GenericAuditDetail] {
+
+      def createAuditDetail(userDetails: UserDetails, request: Option[JsValue], response: AuditResponse)(implicit
+          ctx: RequestContext): GenericAuditDetail =
+        GenericAuditDetail(
+          userDetails = userDetails,
+          params = params,
+          request = request,
+          `X-CorrelationId` = ctx.correlationId,
+          response = response
+        )
+
+    }
 
 }
