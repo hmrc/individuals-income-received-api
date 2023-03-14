@@ -30,9 +30,9 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 import v1.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
-import v1.requestParsers.AddCustomEmploymentRequestParser
 import v1.services.AddCustomEmploymentService
 
 import javax.inject.{Inject, Singleton}
@@ -125,8 +125,8 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
           CessationDateFormatError | RuleCessationDateBeforeStartDateError | RuleStartDateAfterTaxYearEndError |
           RuleCessationDateBeforeTaxYearStartError | CustomMtdError(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

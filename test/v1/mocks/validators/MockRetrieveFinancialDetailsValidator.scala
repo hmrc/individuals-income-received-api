@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.RetrieveFinancialDetailsValidator
+import v1.controllers.requestParsers.validators.RetrieveFinancialDetailsValidator
 import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
 
 trait MockRetrieveFinancialDetailsValidator extends MockFactory {
@@ -28,7 +28,7 @@ trait MockRetrieveFinancialDetailsValidator extends MockFactory {
 
   object MockRetrieveFinancialDetailsValidator {
 
-    def validate(data: RetrieveFinancialDetailsRawData): CallHandler1[RetrieveFinancialDetailsRawData, List[MtdError]] = {
+    def validate(data: RetrieveFinancialDetailsRawData): CallHandler1[RetrieveFinancialDetailsRawData, Seq[MtdError]] = {
       (mockRetrieveFinancialDetailsValidator
         .validate(_: RetrieveFinancialDetailsRawData))
         .expects(data)

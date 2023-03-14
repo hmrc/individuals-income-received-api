@@ -30,8 +30,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AmendFinancialDetailsRequestParser
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
-import v1.requestParsers.AmendFinancialDetailsRequestParser
 import v1.services.AmendFinancialDetailsService
 
 import javax.inject.{Inject, Singleton}
@@ -136,9 +136,9 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
             ValueFormatError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

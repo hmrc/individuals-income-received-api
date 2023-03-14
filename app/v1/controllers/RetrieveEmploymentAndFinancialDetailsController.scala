@@ -26,9 +26,9 @@ import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
 import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
 import v1.models.response.retrieveFinancialDetails.RetrieveFinancialDetailsHateoasData
-import v1.requestParsers.RetrieveFinancialDetailsRequestParser
 import v1.services.RetrieveEmploymentAndFinancialDetailsService
 
 import javax.inject.{Inject, Singleton}
@@ -108,9 +108,9 @@ class RetrieveEmploymentAndFinancialDetailsController @Inject() (val authService
             RuleTaxYearRangeInvalidError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

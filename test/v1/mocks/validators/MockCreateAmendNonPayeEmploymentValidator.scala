@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
+import v1.controllers.requestParsers.validators.CreateAmendNonPayeEmploymentValidator
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 
 trait MockCreateAmendNonPayeEmploymentValidator extends MockFactory {
@@ -29,7 +29,7 @@ trait MockCreateAmendNonPayeEmploymentValidator extends MockFactory {
 
   object MockCreateAmendNonPayeEmploymentValidator {
 
-    def validate(data: CreateAmendNonPayeEmploymentRawData): CallHandler1[CreateAmendNonPayeEmploymentRawData, List[MtdError]] = {
+    def validate(data: CreateAmendNonPayeEmploymentRawData): CallHandler1[CreateAmendNonPayeEmploymentRawData, Seq[MtdError]] = {
       (mockValidator
         .validate(_: CreateAmendNonPayeEmploymentRawData))
         .expects(data)

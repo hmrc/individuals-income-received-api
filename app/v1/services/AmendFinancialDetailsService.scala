@@ -24,7 +24,7 @@ import api.models.errors.{
   NotFoundError,
   RuleTaxYearNotEndedError,
   RuleTaxYearNotSupportedError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError
 }
 import cats.implicits._
@@ -33,7 +33,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.AmendFinancialDetailsConnector
-import api.models.errors.StandardDownstreamError
+import api.models.errors.InternalError
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
@@ -55,16 +55,16 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID"     -> NotFoundError,
-      "INVALID_PAYLOAD"           -> StandardDownstreamError,
+      "INVALID_PAYLOAD"           -> InternalError,
       "BEFORE_TAX_YEAR_END"       -> RuleTaxYearNotEndedError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors = Map(
       "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
-      "INVALID_CORRELATION_ID"  -> StandardDownstreamError,
+      "INVALID_CORRELATION_ID"  -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
     )
     errors ++ extraTysErrors

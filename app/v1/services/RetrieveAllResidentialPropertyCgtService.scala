@@ -50,10 +50,10 @@ class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAll
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_VIEW"              -> SourceFormatError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
   }
 

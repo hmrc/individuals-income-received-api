@@ -26,9 +26,9 @@ import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
 import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtHateoasData
-import v1.requestParsers.RetrieveAllResidentialPropertyCgtRequestParser
 import v1.services.RetrieveAllResidentialPropertyCgtService
 
 import javax.inject.{Inject, Singleton}
@@ -106,9 +106,9 @@ class RetrieveAllResidentialPropertyCgtController @Inject() (val authService: En
             SourceFormatError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

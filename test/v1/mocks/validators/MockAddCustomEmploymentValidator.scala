@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.AddCustomEmploymentValidator
+import v1.controllers.requestParsers.validators.AddCustomEmploymentValidator
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 
 trait MockAddCustomEmploymentValidator extends MockFactory {
@@ -28,7 +28,7 @@ trait MockAddCustomEmploymentValidator extends MockFactory {
 
   object MockAddCustomEmploymentValidator {
 
-    def validate(data: AddCustomEmploymentRawData): CallHandler1[AddCustomEmploymentRawData, List[MtdError]] = {
+    def validate(data: AddCustomEmploymentRawData): CallHandler1[AddCustomEmploymentRawData, Seq[MtdError]] = {
       (mockAddCustomEmploymentValidator
         .validate(_: AddCustomEmploymentRawData))
         .expects(data)

@@ -19,16 +19,16 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.DeleteCgtPpdOverridesValidator
 import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
-import v1.requestParsers.validators.DeleteCgtPpdOverridesValidator
 
 trait MockDeleteCgtPpdOverridesValidator extends MockFactory {
 
-  val mockDeleteCgtPpdOverridesValidator = mock[DeleteCgtPpdOverridesValidator]
+  val mockDeleteCgtPpdOverridesValidator: DeleteCgtPpdOverridesValidator = mock[DeleteCgtPpdOverridesValidator]
 
   object MockDeleteCgtPpdOverridesValidator {
 
-    def validate(data: DeleteCgtPpdOverridesRawData): CallHandler1[DeleteCgtPpdOverridesRawData, List[MtdError]] = {
+    def validate(data: DeleteCgtPpdOverridesRawData): CallHandler1[DeleteCgtPpdOverridesRawData, Seq[MtdError]] = {
       (mockDeleteCgtPpdOverridesValidator
         .validate(_: DeleteCgtPpdOverridesRawData))
         .expects(data)

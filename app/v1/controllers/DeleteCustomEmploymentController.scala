@@ -20,7 +20,7 @@ import api.connectors.DownstreamUri.Release6Uri
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
-import api.services.{AuditService, DeleteRetrieveService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -29,8 +29,9 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.DeleteCustomEmploymentRequestParser
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
-import v1.requestParsers.DeleteCustomEmploymentRequestParser
+import v1.services.DeleteCustomEmploymentService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteCustomEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                   val lookupService: MtdIdLookupService,
                                                   requestParser: DeleteCustomEmploymentRequestParser,
-                                                  service: DeleteRetrieveService,
+                                                  service: DeleteCustomEmploymentService,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -120,9 +121,9 @@ class DeleteCustomEmploymentController @Inject() (val authService: EnrolmentsAut
       case BadRequestError | NinoFormatError | TaxYearFormatError | EmploymentIdFormatError | RuleTaxYearNotSupportedError |
           RuleTaxYearRangeInvalidError | RuleDeleteForbiddenError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def desErrorMap: Map[String, MtdError] =
@@ -130,11 +131,11 @@ class DeleteCustomEmploymentController @Inject() (val authService: EnrolmentsAut
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
       "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

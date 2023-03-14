@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.CreateAmendOtherCgtValidator
+import v1.controllers.requestParsers.validators.CreateAmendOtherCgtValidator
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
 
 trait MockCreateAmendOtherCgtValidator extends MockFactory {
@@ -28,7 +28,7 @@ trait MockCreateAmendOtherCgtValidator extends MockFactory {
 
   object MockCreateAmendOtherCgtValidator {
 
-    def validate(data: CreateAmendOtherCgtRawData): CallHandler1[CreateAmendOtherCgtRawData, List[MtdError]] = {
+    def validate(data: CreateAmendOtherCgtRawData): CallHandler1[CreateAmendOtherCgtRawData, Seq[MtdError]] = {
       (mockCreateAmendOtherCgtValidator
         .validate(_: CreateAmendOtherCgtRawData))
         .expects(data)

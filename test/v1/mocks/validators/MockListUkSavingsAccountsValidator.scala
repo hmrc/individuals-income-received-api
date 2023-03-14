@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.ListUkSavingsAccountsValidator
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
-import v1.requestParsers.validators.ListUkSavingsAccountsValidator
 
 class MockListUkSavingsAccountsValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ class MockListUkSavingsAccountsValidator extends MockFactory {
 
   object MockListUkSavingsAccountValidator {
 
-    def validate(data: ListUkSavingsAccountsRawData): CallHandler1[ListUkSavingsAccountsRawData, List[MtdError]] = {
+    def validate(data: ListUkSavingsAccountsRawData): CallHandler1[ListUkSavingsAccountsRawData, Seq[MtdError]] = {
       (mockListUkSavingsAccountValidator
         .validate(_: ListUkSavingsAccountsRawData))
         .expects(data)

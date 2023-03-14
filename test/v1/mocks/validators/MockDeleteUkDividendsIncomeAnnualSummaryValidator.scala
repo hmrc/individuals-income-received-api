@@ -19,19 +19,22 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.DeleteUkDividendsIncomeAnnualSummaryValidator
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRawData
-import v1.requestParsers.validators.DeleteUkDividendsIncomeAnnualSummaryValidator
 
 trait MockDeleteUkDividendsIncomeAnnualSummaryValidator extends MockFactory {
 
-  val mockDeleteUkDividendsIncomeAnnualSummaryValidator = mock[DeleteUkDividendsIncomeAnnualSummaryValidator]
+  val mockDeleteUkDividendsIncomeAnnualSummaryValidator: DeleteUkDividendsIncomeAnnualSummaryValidator =
+    mock[DeleteUkDividendsIncomeAnnualSummaryValidator]
 
   object MockDeleteUkDividendsIncomeAnnualSummaryValidator {
 
-    def validate(data: DeleteUkDividendsIncomeAnnualSummaryRawData): CallHandler1[DeleteUkDividendsIncomeAnnualSummaryRawData, List[MtdError]] = {
+    def validate(data: DeleteUkDividendsIncomeAnnualSummaryRawData): CallHandler1[DeleteUkDividendsIncomeAnnualSummaryRawData, Seq[MtdError]] = {
       (mockDeleteUkDividendsIncomeAnnualSummaryValidator
         .validate(_: DeleteUkDividendsIncomeAnnualSummaryRawData))
         .expects(data)
     }
+
   }
+
 }

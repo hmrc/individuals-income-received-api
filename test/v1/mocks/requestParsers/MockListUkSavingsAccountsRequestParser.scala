@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.ListUkSavingsAccountsRequestParser
 import v1.models.request.listUkSavingsAccounts.{ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest}
-import v1.requestParsers.ListUkSavingsAccountsRequestParser
 
 trait MockListUkSavingsAccountsRequestParser extends MockFactory {
 

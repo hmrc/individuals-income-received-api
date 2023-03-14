@@ -30,8 +30,8 @@ import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.AmendDividendsRequestParser
 import v1.models.request.amendDividends.AmendDividendsRawData
-import v1.requestParsers.AmendDividendsRequestParser
 import v1.services.AmendDividendsService
 
 import javax.inject.{Inject, Singleton}
@@ -121,8 +121,8 @@ class AmendDividendsController @Inject() (val authService: EnrolmentsAuthService
             RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
           CustomMtdError(CountryCodeRuleError.code) | CustomMtdError(CustomerRefFormatError.code) | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

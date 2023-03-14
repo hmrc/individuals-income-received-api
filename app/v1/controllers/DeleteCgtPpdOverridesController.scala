@@ -27,9 +27,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.controllers.requestParsers.DeleteCgtPpdOverridesRequestParser
 import v1.models.audit.DeleteCgtPpdOverridesAuditDetail
 import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
-import v1.requestParsers.DeleteCgtPpdOverridesRequestParser
 import v1.services.DeleteCgtPpdOverridesService
 
 import javax.inject.{Inject, Singleton}
@@ -112,9 +112,9 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
             RuleTaxYearRangeInvalidError,
             RuleTaxYearNotSupportedError) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: DeleteCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {

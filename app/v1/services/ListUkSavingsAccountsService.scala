@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError, StandardDownstreamError}
+import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
@@ -36,26 +36,26 @@ import scala.concurrent.{ExecutionContext, Future}
 class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
-                                                                   hc: HeaderCarrier,
-                                                                   ec: ExecutionContext,
-                                                                   logContext: EndpointLogContext,
-                                                                   correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
 
-      EitherT(connector.listUkSavingsAccounts(request))
-        .leftMap(mapDownstreamErrors(mappingDesToMtdError))
-        .value
+    EitherT(connector.listUkSavingsAccounts(request))
+      .leftMap(mapDownstreamErrors(mappingDesToMtdError))
+      .value
   }
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
-    "INVALID_ID_TYPE"          -> StandardDownstreamError,
+    "INVALID_ID_TYPE"          -> InternalError,
     "INVALID_IDVALUE"          -> NinoFormatError,
-    "INVALID_INCOMESOURCETYPE" -> StandardDownstreamError,
-    "INVALID_TAXYEAR"          -> StandardDownstreamError, // Is tech spec correct here?
+    "INVALID_INCOMESOURCETYPE" -> InternalError,
+    "INVALID_TAXYEAR"          -> InternalError, // Is tech spec correct here?
     "INVALID_INCOMESOURCEID"   -> SavingsAccountIdFormatError,
-    "INVALID_ENDDATE"          -> StandardDownstreamError,
+    "INVALID_ENDDATE"          -> InternalError,
     "NOT_FOUND"                -> NotFoundError,
-    "SERVER_ERROR"             -> StandardDownstreamError,
-    "SERVICE_UNAVAILABLE"      -> StandardDownstreamError
+    "SERVER_ERROR"             -> InternalError,
+    "SERVICE_UNAVAILABLE"      -> InternalError
   )
 
 }

@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.DeleteForeignValidator
 import v1.models.request.deleteForeign.DeleteForeignRawData
-import v1.requestParsers.validators.DeleteForeignValidator
 
 trait MockDeleteForeignValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockDeleteForeignValidator extends MockFactory {
 
   object MockDeleteForeignValidator {
 
-    def validate(data: DeleteForeignRawData): CallHandler1[DeleteForeignRawData, List[MtdError]] = {
+    def validate(data: DeleteForeignRawData): CallHandler1[DeleteForeignRawData, Seq[MtdError]] = {
       (mockDeleteForeignValidator
         .validate(_: DeleteForeignRawData))
         .expects(data)

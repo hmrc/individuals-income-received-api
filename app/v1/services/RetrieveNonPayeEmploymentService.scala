@@ -51,12 +51,12 @@ class RetrieveNonPayeEmploymentService @Inject() (connector: RetrieveNonPayeEmpl
     val downstreamErrors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_VIEW"              -> StandardDownstreamError,
-      "INVALID_CORRELATIONID"     -> StandardDownstreamError,
+      "INVALID_VIEW"              -> InternalError,
+      "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "SERVER_ERROR"              -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(

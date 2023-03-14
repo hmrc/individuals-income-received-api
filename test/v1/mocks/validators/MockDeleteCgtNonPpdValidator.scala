@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.DeleteCgtNonPpdValidator
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
-import v1.requestParsers.validators.DeleteCgtNonPpdValidator
 
 trait MockDeleteCgtNonPpdValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockDeleteCgtNonPpdValidator extends MockFactory {
 
   object MockDeleteCgtNonPpdValidator {
 
-    def validate(data: DeleteCgtNonPpdRawData): CallHandler1[DeleteCgtNonPpdRawData, List[MtdError]] = {
+    def validate(data: DeleteCgtNonPpdRawData): CallHandler1[DeleteCgtNonPpdRawData, Seq[MtdError]] = {
       (mockDeleteCgtNonPpdValidator
         .validate(_: DeleteCgtNonPpdRawData))
         .expects(data)

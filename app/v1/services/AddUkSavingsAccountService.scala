@@ -52,10 +52,10 @@ class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnec
       "INVALID_IDVALUE"      -> NinoFormatError,
       "MAX_ACCOUNTS_REACHED" -> RuleMaximumSavingsAccountsLimitError,
       "ALREADY_EXISTS"       -> RuleDuplicateAccountNameError,
-      "INVALID_IDTYPE"       -> StandardDownstreamError,
-      "INVALID_PAYLOAD"      -> StandardDownstreamError,
-      "SERVER_ERROR"         -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"  -> StandardDownstreamError
+      "INVALID_IDTYPE"       -> InternalError,
+      "INVALID_PAYLOAD"      -> InternalError,
+      "SERVER_ERROR"         -> InternalError,
+      "SERVICE_UNAVAILABLE"  -> InternalError
     )
 
 }

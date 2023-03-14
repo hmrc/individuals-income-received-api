@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, InternalError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateAmendPensionsConnector
@@ -118,11 +118,11 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
         val input = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
-          ("UNPROCESSABLE_ENTITY", StandardDownstreamError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("INVALID_CORRELATIONID", InternalError),
+          ("INVALID_PAYLOAD", InternalError),
+          ("UNPROCESSABLE_ENTITY", InternalError),
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))
