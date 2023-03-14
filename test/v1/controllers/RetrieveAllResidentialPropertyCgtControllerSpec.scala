@@ -124,9 +124,9 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
         "INVALID_VIEW"              -> SourceFormatError,
         "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
         "NO_DATA_FOUND"             -> NotFoundError,
-        "INVALID_CORRELATIONID"     -> StandardDownstreamError,
-        "SERVER_ERROR"              -> StandardDownstreamError,
-        "SERVICE_UNAVAILABLE"       -> StandardDownstreamError
+        "INVALID_CORRELATIONID"     -> InternalError,
+        "SERVER_ERROR"              -> InternalError,
+        "SERVICE_UNAVAILABLE"       -> InternalError
       )
 
   }
@@ -219,7 +219,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
           (SourceFormatError, BAD_REQUEST),
           (RuleTaxYearNotSupportedError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

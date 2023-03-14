@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.ListEmploymentsRequestParser
 import v1.models.request.listEmployments.ListEmploymentsRawData
 import v1.models.response.listEmployment.ListEmploymentHateoasData
-import v1.requestParsers.ListEmploymentsRequestParser
 import v1.services.ListEmploymentsService
 
 import javax.inject.{Inject, Singleton}
@@ -97,9 +97,9 @@ class ListEmploymentsController @Inject() (val authService: EnrolmentsAuthServic
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

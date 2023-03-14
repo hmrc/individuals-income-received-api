@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.DeleteSavingsValidator
 import v1.models.request.deleteSavings.DeleteSavingsRawData
-import v1.requestParsers.validators.DeleteSavingsValidator
 
 trait MockDeleteSavingsValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockDeleteSavingsValidator extends MockFactory {
 
   object MockDeleteSavingsValidator {
 
-    def validate(data: DeleteSavingsRawData): CallHandler1[DeleteSavingsRawData, List[MtdError]] = {
+    def validate(data: DeleteSavingsRawData): CallHandler1[DeleteSavingsRawData, Seq[MtdError]] = {
       (mockDeleteSavingsValidator
         .validate(_: DeleteSavingsRawData))
         .expects(data)

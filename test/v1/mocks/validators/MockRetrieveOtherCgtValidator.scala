@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.RetrieveOtherCgtValidator
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRawData
-import v1.requestParsers.validators.RetrieveOtherCgtValidator
 
 trait MockRetrieveOtherCgtValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockRetrieveOtherCgtValidator extends MockFactory {
 
   object MockRetrieveOtherCgtValidator {
 
-    def validate(data: RetrieveOtherCgtRawData): CallHandler1[RetrieveOtherCgtRawData, List[MtdError]] = {
+    def validate(data: RetrieveOtherCgtRawData): CallHandler1[RetrieveOtherCgtRawData, Seq[MtdError]] = {
       (mockRetrieveOtherCgtValidator
         .validate(_: RetrieveOtherCgtRawData))
         .expects(data)

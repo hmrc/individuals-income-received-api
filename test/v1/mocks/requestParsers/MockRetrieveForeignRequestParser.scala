@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveForeignRequestParser
 import v1.models.request.retrieveForeign.{RetrieveForeignRawData, RetrieveForeignRequest}
-import v1.requestParsers.RetrieveForeignRequestParser
 
 trait MockRetrieveForeignRequestParser extends MockFactory {
 

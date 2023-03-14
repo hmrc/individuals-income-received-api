@@ -52,13 +52,13 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "CANNOT_IGNORE"                   -> RuleCustomEmploymentError,
       "NO_DATA_FOUND"                   -> NotFoundError,
-      "INVALID_CORRELATIONID"           -> StandardDownstreamError,
-      "SERVER_ERROR"                    -> StandardDownstreamError,
-      "SERVICE_UNAVAILABLE"             -> StandardDownstreamError
+      "INVALID_CORRELATIONID"           -> InternalError,
+      "SERVER_ERROR"                    -> InternalError,
+      "SERVICE_UNAVAILABLE"             -> InternalError
     )
 
     val extraTysErrors = Map(
-      "INVALID_CORRELATION_ID" -> StandardDownstreamError,
+      "INVALID_CORRELATION_ID" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 

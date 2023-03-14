@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.AmendDividendsValidator
+import v1.controllers.requestParsers.validators.AmendDividendsValidator
 import v1.models.request.amendDividends.AmendDividendsRawData
 
 trait MockAmendDividendsValidator extends MockFactory {
@@ -28,7 +28,7 @@ trait MockAmendDividendsValidator extends MockFactory {
 
   object MockAmendDividendsValidator {
 
-    def validate(data: AmendDividendsRawData): CallHandler1[AmendDividendsRawData, List[MtdError]] = {
+    def validate(data: AmendDividendsRawData): CallHandler1[AmendDividendsRawData, Seq[MtdError]] = {
       (mockAmendDividendsValidator
         .validate(_: AmendDividendsRawData))
         .expects(data)

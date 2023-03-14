@@ -174,7 +174,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
           (TaxYearFormatError, BAD_REQUEST),
           (EmploymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR),
+          (InternalError, INTERNAL_SERVER_ERROR),
           (RuleTaxYearNotSupportedError, BAD_REQUEST)
         )
 

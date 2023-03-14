@@ -19,7 +19,7 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.AmendInsurancePoliciesRequestParser
+import v1.controllers.requestParsers.AmendInsurancePoliciesRequestParser
 import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest}
 
 trait MockAmendInsurancePoliciesRequestParser extends MockFactory {

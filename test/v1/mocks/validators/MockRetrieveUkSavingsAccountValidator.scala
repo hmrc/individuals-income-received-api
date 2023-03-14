@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.RetrieveUkSavingsAccountValidator
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRawData
-import v1.requestParsers.validators.RetrieveUkSavingsAccountValidator
 
 class MockRetrieveUkSavingsAccountValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ class MockRetrieveUkSavingsAccountValidator extends MockFactory {
 
   object MockRetrieveUkSavingsAccountValidator {
 
-    def validate(data: RetrieveUkSavingsAnnualSummaryRawData): CallHandler1[RetrieveUkSavingsAnnualSummaryRawData, List[MtdError]] = {
+    def validate(data: RetrieveUkSavingsAnnualSummaryRawData): CallHandler1[RetrieveUkSavingsAnnualSummaryRawData, Seq[MtdError]] = {
       (mockRetrieveUkSavingsAccountValidator
         .validate(_: RetrieveUkSavingsAnnualSummaryRawData))
         .expects(data)

@@ -30,8 +30,8 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String                  = "AA123456A"
-    val savingsAccountId: String      = "SAVKB2UVwUTBQGJ"
+    val nino: String             = "AA123456A"
+    val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
 
     val desResponse: JsValue = Json.parse(
       """
@@ -58,8 +58,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
-    val mtdResponse: JsValue = Json.parse(
-      s"""|{
+    val mtdResponse: JsValue = Json.parse(s"""|{
           | "savingsAccounts":
           |  [
           |    {
@@ -110,6 +109,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
   }
 
   "Calling the 'list UK Savings Accounts' endpoint" should {
@@ -136,7 +136,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
         def validationErrorTest(requestNino: String, requestSavingsAccountId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String    = requestNino
+            override val nino: String             = requestNino
             override val savingsAccountId: String = requestSavingsAccountId
 
             override def setupStubs(): StubMapping = {
@@ -167,7 +167,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
               AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, Map("incomeSourceId" -> savingsAccountId) ,desStatus, errorBody(desCode))
+              DownstreamStub.onError(DownstreamStub.GET, desUri, Map("incomeSourceId" -> savingsAccountId), desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request.get)
@@ -186,18 +186,19 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
             """.stripMargin
 
         val input = Seq(
-          (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
-          (BAD_REQUEST, "INVALID_INCOMESOURCETYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (BAD_REQUEST, "INVALID_TAXYEAR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_INCOMESOURCETYPE", INTERNAL_SERVER_ERROR, InternalError),
+          (BAD_REQUEST, "INVALID_TAXYEAR", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_INCOMESOURCEID", BAD_REQUEST, SavingsAccountIdFormatError),
-          (BAD_REQUEST, "INVALID_ENDDATE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+          (BAD_REQUEST, "INVALID_ENDDATE", INTERNAL_SERVER_ERROR, InternalError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
     }
   }
+
 }

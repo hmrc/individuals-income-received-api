@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.DeleteCustomEmploymentValidator
+import v1.controllers.requestParsers.validators.DeleteCustomEmploymentValidator
 import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 
 trait MockDeleteCustomEmploymentValidator extends MockFactory {
@@ -28,7 +28,7 @@ trait MockDeleteCustomEmploymentValidator extends MockFactory {
 
   object MockDeleteCustomEmploymentValidator {
 
-    def validate(data: DeleteCustomEmploymentRawData): CallHandler1[DeleteCustomEmploymentRawData, List[MtdError]] = {
+    def validate(data: DeleteCustomEmploymentRawData): CallHandler1[DeleteCustomEmploymentRawData, Seq[MtdError]] = {
       (mockDeleteCustomEmploymentValidator
         .validate(_: DeleteCustomEmploymentRawData))
         .expects(data)

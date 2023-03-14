@@ -55,26 +55,26 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
 
         val errors = Seq(
           ("INVALID_NINO", NinoFormatError),
-          ("INVALID_TYPE", StandardDownstreamError),
+          ("INVALID_TYPE", InternalError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
+          ("INVALID_PAYLOAD", InternalError),
           ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
-          ("MISSING_CHARITIES_NAME_GIFT_AID", StandardDownstreamError),
-          ("MISSING_GIFT_AID_AMOUNT", StandardDownstreamError),
-          ("MISSING_CHARITIES_NAME_INVESTMENT", StandardDownstreamError),
-          ("MISSING_INVESTMENT_AMOUNT", StandardDownstreamError),
+          ("MISSING_CHARITIES_NAME_GIFT_AID", InternalError),
+          ("MISSING_GIFT_AID_AMOUNT", InternalError),
+          ("MISSING_CHARITIES_NAME_INVESTMENT", InternalError),
+          ("MISSING_INVESTMENT_AMOUNT", InternalError),
           ("INVALID_ACCOUNTING_PERIOD", RuleTaxYearNotSupportedError),
-          ("SERVICE_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError),
+          ("SERVICE_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError),
           ("GONE", NotFoundError),
           ("NOT_FOUND", NotFoundError)
         )
 
         val extraTysErrors = Seq(
-          ("INVALID_INCOMESOURCE_TYPE", StandardDownstreamError),
+          ("INVALID_INCOMESOURCE_TYPE", InternalError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATION_ID", StandardDownstreamError),
-          ("INVALID_INCOMESOURCE_ID", StandardDownstreamError),
+          ("INVALID_CORRELATION_ID", InternalError),
+          ("INVALID_INCOMESOURCE_ID", InternalError),
           ("INCOME_SOURCE_DATA_NOT_FOUND", NotFoundError),
           ("PERIOD_NOT_FOUND", NotFoundError),
           ("PERIOD_ALREADY_DELETED", NotFoundError),

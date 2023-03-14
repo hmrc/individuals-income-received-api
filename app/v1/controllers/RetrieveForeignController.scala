@@ -26,9 +26,9 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
+import v1.controllers.requestParsers.RetrieveForeignRequestParser
 import v1.models.request.retrieveForeign.RetrieveForeignRawData
 import v1.models.response.retrieveForeign.RetrieveForeignHateoasData
-import v1.requestParsers.RetrieveForeignRequestParser
 import v1.services.RetrieveForeignService
 
 import javax.inject.{Inject, Singleton}
@@ -102,9 +102,9 @@ class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthServic
             RuleTaxYearNotSupportedError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

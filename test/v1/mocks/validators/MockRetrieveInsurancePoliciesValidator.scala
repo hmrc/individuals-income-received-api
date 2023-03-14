@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.RetrieveInsurancePoliciesValidator
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRawData
-import v1.requestParsers.validators.RetrieveInsurancePoliciesValidator
 
 trait MockRetrieveInsurancePoliciesValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockRetrieveInsurancePoliciesValidator extends MockFactory {
 
   object MockRetrieveInsurancePoliciesValidator {
 
-    def validate(data: RetrieveInsurancePoliciesRawData): CallHandler1[RetrieveInsurancePoliciesRawData, List[MtdError]] = {
+    def validate(data: RetrieveInsurancePoliciesRawData): CallHandler1[RetrieveInsurancePoliciesRawData, Seq[MtdError]] = {
       (mockRetrieveInsurancePoliciesValidator
         .validate(_: RetrieveInsurancePoliciesRawData))
         .expects(data)

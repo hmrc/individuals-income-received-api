@@ -202,7 +202,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes()
+    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes ()
     MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
@@ -320,7 +320,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           (RuleDuplicatedPpdSubmissionIdError, BAD_REQUEST),
           (RuleIncorrectDisposalTypeError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         val extraTysErrors = Seq(

@@ -19,8 +19,8 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveDividendsRequestParser
 import v1.models.request.retrieveDividends.{RetrieveDividendsRawData, RetrieveDividendsRequest}
-import v1.requestParsers.RetrieveDividendsRequestParser
 
 trait MockRetrieveDividendsRequestParser extends MockFactory {
 

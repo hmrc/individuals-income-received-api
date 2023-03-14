@@ -18,7 +18,18 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleTaxYearNotSupportedError, StandardDownstreamError, TaxYearFormatError}
+import api.models.errors.{
+  DownstreamErrorCode,
+  DownstreamErrors,
+  ErrorWrapper,
+  MtdError,
+  NinoFormatError,
+  RuleAcquisitionDateError,
+  RuleDisposalDateError,
+  RuleTaxYearNotSupportedError,
+  InternalError,
+  TaxYearFormatError
+}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.fixtures.other.CreateAmendOtherCgtConnectorServiceFixture.mtdRequestBody
@@ -74,16 +85,16 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
       val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_CORRELATIONID", StandardDownstreamError),
-        ("INVALID_PAYLOAD", StandardDownstreamError),
+        ("INVALID_CORRELATIONID", InternalError),
+        ("INVALID_PAYLOAD", InternalError),
         ("INVALID_DISPOSAL_DATE", RuleDisposalDateError),
         ("INVALID_ACQUISITION_DATE", RuleAcquisitionDateError),
-        ("SERVER_ERROR", StandardDownstreamError),
-        ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       val extraTysErrors = Seq(
-        ("INVALID_CORRELATION_ID" -> StandardDownstreamError),
+        ("INVALID_CORRELATION_ID" -> InternalError),
         ("TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError)
       )
 

@@ -30,7 +30,7 @@ import api.models.errors.{
   RuleStartDateAfterTaxYearEndError,
   RuleTaxYearNotEndedError,
   RuleUpdateForbiddenError,
-  StandardDownstreamError,
+  InternalError,
   TaxYearFormatError
 }
 import api.models.outcomes.ResponseWrapper
@@ -104,10 +104,10 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_CESSATION_DATE", RuleCessationDateBeforeTaxYearStartError),
           ("CANNOT_UPDATE", RuleUpdateForbiddenError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("INVALID_PAYLOAD", StandardDownstreamError),
-          ("INVALID_CORRELATIONID", StandardDownstreamError),
-          ("SERVER_ERROR", StandardDownstreamError),
-          ("SERVICE_UNAVAILABLE", StandardDownstreamError)
+          ("INVALID_PAYLOAD", InternalError),
+          ("INVALID_CORRELATIONID", InternalError),
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

@@ -19,7 +19,7 @@ package v1.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.RetrieveEmploymentRequestParser
+import v1.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1.models.request.retrieveEmployment.{RetrieveEmploymentRawData, RetrieveEmploymentRequest}
 
 trait MockRetrieveEmploymentRequestParser extends MockFactory {

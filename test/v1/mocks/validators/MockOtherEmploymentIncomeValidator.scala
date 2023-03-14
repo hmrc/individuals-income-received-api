@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.OtherEmploymentIncomeRequestValidator
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
-import v1.requestParsers.validators.OtherEmploymentIncomeRequestValidator
 
 trait MockOtherEmploymentIncomeValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockOtherEmploymentIncomeValidator extends MockFactory {
 
   object MockOtherEmploymentIncomeValidator {
 
-    def validate(data: OtherEmploymentIncomeRequestRawData): CallHandler1[OtherEmploymentIncomeRequestRawData, List[MtdError]] = {
+    def validate(data: OtherEmploymentIncomeRequestRawData): CallHandler1[OtherEmploymentIncomeRequestRawData, Seq[MtdError]] = {
       (mockValidator
         .validate(_: OtherEmploymentIncomeRequestRawData))
         .expects(data)

@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
+import v1.controllers.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 
 trait MockCreateAmendCgtPpdOverridesValidator extends MockFactory {
@@ -28,7 +28,7 @@ trait MockCreateAmendCgtPpdOverridesValidator extends MockFactory {
 
   object MockCreateAmendCgtPpdOverridesValidator {
 
-    def validate(data: CreateAmendCgtPpdOverridesRawData): CallHandler1[CreateAmendCgtPpdOverridesRawData, List[MtdError]] = {
+    def validate(data: CreateAmendCgtPpdOverridesRawData): CallHandler1[CreateAmendCgtPpdOverridesRawData, Seq[MtdError]] = {
       (mockCreateAmendCgtPpdValidator
         .validate(_: CreateAmendCgtPpdOverridesRawData))
         .expects(data)

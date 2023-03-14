@@ -29,7 +29,10 @@ import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteUkDividendsIncomeAnnualSummaryRequestParser
 import v1.mocks.services.MockDeleteUkDividendsIncomeAnnualSummaryService
-import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{
+  DeleteUkDividendsIncomeAnnualSummaryRawData,
+  DeleteUkDividendsIncomeAnnualSummaryRequest
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -171,7 +174,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (StandardDownstreamError, INTERNAL_SERVER_ERROR)
+          (InternalError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))

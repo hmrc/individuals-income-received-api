@@ -26,8 +26,8 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, ControllerComponents, AnyContent}
 import play.mvc.Http.MimeTypes
 import utils.{Logging, IdGenerator}
+import v1.controllers.requestParsers.OtherEmploymentIncomeRequestParser
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentHateoasData
-import v1.requestParsers.OtherEmploymentIncomeRequestParser
 import v1.services.RetrieveOtherEmploymentIncomeService
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -96,9 +96,9 @@ class RetrieveOtherEmploymentController @Inject() (val authService: EnrolmentsAu
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | RuleTaxYearNotSupportedError =>
         BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError           => NotFound(Json.toJson(errorWrapper))
-      case StandardDownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _                       => unhandledError(errorWrapper)
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case InternalError => InternalServerError(Json.toJson(errorWrapper))
+      case _             => unhandledError(errorWrapper)
     }
 
 }

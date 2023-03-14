@@ -19,7 +19,7 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
+import v1.controllers.requestParsers.validators.CreateAmendCgtResidentialPropertyDisposalsValidator
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsValidator extends MockFactory {
@@ -30,7 +30,7 @@ trait MockCreateAmendCgtResidentialPropertyDisposalsValidator extends MockFactor
   object MockCreateAmendCgtResidentialPropertyDisposalsValidator {
 
     def validate(
-        data: CreateAmendCgtResidentialPropertyDisposalsRawData): CallHandler1[CreateAmendCgtResidentialPropertyDisposalsRawData, List[MtdError]] = {
+        data: CreateAmendCgtResidentialPropertyDisposalsRawData): CallHandler1[CreateAmendCgtResidentialPropertyDisposalsRawData, Seq[MtdError]] = {
       (mockCreateAmendCgtResidentialPropertyDisposalsValidator
         .validate(_: CreateAmendCgtResidentialPropertyDisposalsRawData))
         .expects(data)

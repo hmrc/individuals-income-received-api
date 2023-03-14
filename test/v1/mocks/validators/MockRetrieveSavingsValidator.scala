@@ -19,8 +19,8 @@ package v1.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.validators.RetrieveSavingsValidator
 import v1.models.request.retrieveSavings.RetrieveSavingsRawData
-import v1.requestParsers.validators.RetrieveSavingsValidator
 
 trait MockRetrieveSavingsValidator extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockRetrieveSavingsValidator extends MockFactory {
 
   object MockRetrieveSavingsValidator {
 
-    def validate(data: RetrieveSavingsRawData): CallHandler1[RetrieveSavingsRawData, List[MtdError]] = {
+    def validate(data: RetrieveSavingsRawData): CallHandler1[RetrieveSavingsRawData, Seq[MtdError]] = {
       (mockRetrieveSavingsValidator
         .validate(_: RetrieveSavingsRawData))
         .expects(data)
