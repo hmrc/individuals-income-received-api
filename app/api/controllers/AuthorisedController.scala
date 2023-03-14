@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.models.auth.UserDetails
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, InternalError, ClientNotAuthenticatedError}
+import api.models.errors.{ClientNotAuthenticatedError, InternalError, MtdError}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -60,14 +60,12 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
       implicit val headerCarrier: HeaderCarrier = hc(request)
 
       lookupService.lookup(nino).flatMap[Result] {
-        case Right(mtdId)                      => invokeBlockWithAuthCheck(mtdId, request, block)
-        case Left(NinoFormatError)             => Future.successful(BadRequest(Json.toJson(NinoFormatError)))
-        case Left(ClientNotAuthenticatedError) => Future.successful(Forbidden(Json.toJson(ClientNotAuthenticatedError)))
-        case Left(InvalidBearerTokenError)     => Future.successful(Unauthorized(Json.toJson(InvalidBearerTokenError)))
-        case Left(_)                           => Future.successful(InternalServerError(Json.toJson(InternalError)))
+        case Right(mtdId)   => invokeBlockWithAuthCheck(mtdId, request, block)
+        case Left(mtdError) => errorResponse(mtdError)
       }
     }
 
+    private def errorResponse[A](mtdError: MtdError): Future[Result] = Future.successful(Status(mtdError.httpStatus)(mtdError.asJson))
   }
 
 }

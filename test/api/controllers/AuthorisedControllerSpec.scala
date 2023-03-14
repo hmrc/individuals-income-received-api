@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.errors.{InvalidBearerTokenError, NinoFormatError, InternalError, ClientNotAuthenticatedError}
+import api.models.errors.{ClientNotAuthenticatedError, ClientNotAuthorisedError, InternalError, InvalidBearerTokenError, NinoFormatError}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
@@ -54,7 +54,6 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
     .withDelegatedAuthRule("mtd-it-auth")
 
   "calling an action" when {
-
     "the user is authorised" should {
       "return a 200" in new Test {
 
@@ -116,7 +115,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedMtdIdLookupService
         .lookup(nino)
-        .returns(Future.successful(Left(ClientNotAuthenticatedError)))
+        .returns(Future.successful(Left(ClientNotAuthorisedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN

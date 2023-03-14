@@ -16,20 +16,19 @@
 
 package utils
 
-import javax.inject._
+import api.models.errors._
 import play.api._
 import play.api.http.Status._
-import play.api.libs.json.Json
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
 import uk.gov.hmrc.play.bootstrap.backend.http.JsonErrorHandler
-import api.models.errors._
+import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
+import javax.inject._
 import scala.concurrent._
 
 @Singleton
@@ -54,10 +53,10 @@ class ErrorHandler @Inject() (
     statusCode match {
       case BAD_REQUEST =>
         auditConnector.sendEvent(dataEvent("ServerValidationError", "Request bad format exception", request))
-        Future.successful(BadRequest(Json.toJson(BadRequestError)))
+        Future.successful(BadRequest(BadRequestError.asJson))
       case NOT_FOUND =>
         auditConnector.sendEvent(dataEvent("ResourceNotFound", "Resource Endpoint Not Found", request))
-        Future.successful(NotFound(Json.toJson(NotFoundError)))
+        Future.successful(NotFound(NotFoundError.asJson))
       case _ =>
         val errorCode = statusCode match {
           case UNAUTHORIZED           => ClientNotAuthenticatedError
@@ -74,7 +73,7 @@ class ErrorHandler @Inject() (
           )
         )
 
-        Future.successful(Status(statusCode)(Json.toJson(errorCode)))
+        Future.successful(Status(statusCode)(errorCode.asJson))
     }
   }
 
@@ -104,7 +103,7 @@ class ErrorHandler @Inject() (
       )
     )
 
-    Future.successful(Status(status)(Json.toJson(errorCode)))
+    Future.successful(Status(status)(errorCode.asJson))
   }
 
 }
