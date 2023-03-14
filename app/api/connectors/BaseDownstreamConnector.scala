@@ -86,6 +86,19 @@ trait BaseDownstreamConnector {
     doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
   }
 
+  def put[Resp](uri: DownstreamUri[Resp])(implicit
+      ec: ExecutionContext,
+      hc: HeaderCarrier,
+      httpReads: HttpReads[DownstreamOutcome[Resp]],
+      correlationId: String): Future[DownstreamOutcome[Resp]] = {
+
+    def doPut(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
+      http.PUT(getBackendUri(uri), "")
+    }
+
+    doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+  }
+
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String =
     s"${configFor(uri).baseUrl}/${uri.value}"
 

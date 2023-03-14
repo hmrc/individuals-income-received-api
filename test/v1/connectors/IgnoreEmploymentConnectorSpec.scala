@@ -19,7 +19,6 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import api.models.request.EmptyBody
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRequest
 
 import scala.concurrent.Future
@@ -50,12 +49,11 @@ class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
     "ignoreEmployment" should {
       "work" in new TysIfsTest with Test {
         willPut(
-          url = s"$baseUrl/income-tax/21-22/income/employments/$nino/$employmentId/ignore",
-          body = EmptyBody
+          url = s"$baseUrl/income-tax/21-22/income/employments/$nino/$employmentId/ignore"
         ) returns Future.successful(outcome)
 
-        await(connector.ignoreEmployment(request)) shouldBe outcome
-
+        private val result = await(connector.ignoreEmployment(request))
+        result shouldBe outcome
       }
     }
   }
