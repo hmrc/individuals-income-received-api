@@ -96,7 +96,7 @@ trait BaseDownstreamConnector {
       http.PUT(getBackendUri(uri), "")
     }
 
-    doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+    doPut(getBackendHeaders(uri, hc, correlationId))
   }
 
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String =

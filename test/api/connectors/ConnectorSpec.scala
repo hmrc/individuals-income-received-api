@@ -151,7 +151,6 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
           url = url,
           config = dummyHeaderCarrierConfig,
           body = "",
-          requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
           excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
 
