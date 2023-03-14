@@ -76,7 +76,7 @@ class IgnoreEmploymentControllerISpec extends IntegrationBaseSpec {
       "any valid request is made" in new Test {
 
         override def setupStubs(): Unit =
-          DownstreamStub.onSuccessWithNoRequestBody(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+          DownstreamStub.onSuccessWithNoRequestBody(DownstreamStub.PUT, downstreamUri, status = NO_CONTENT)
 
         val response: WSResponse = await(request.post(JsObject.empty))
         response.status shouldBe OK
