@@ -1,3 +1,0 @@
-This endpoint allows the developer to submit residential property disposals that are not reported via the [Report and pay Capital Gains Tax on UK property service](https://www.tax.service.gov.uk/capital-gains-tax-uk-property/start/report-pay-capital-gains-tax-uk-property) for a given NINO and tax year.
-
-The disposal date must be within the specified tax year. The completion date must be within the specific tax year and not in the future. If the specified tax year has not ended, the completion date must be between 7th March and 5th April.
