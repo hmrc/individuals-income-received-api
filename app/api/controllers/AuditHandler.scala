@@ -36,12 +36,7 @@ trait AuditHandler extends RequestContextImplicits {
 object AuditHandler {
 
   trait AuditDetailCreator[A] {
-
-    def createAuditDetail(userDetails: UserDetails,
-                          requestBody: Option[JsValue],
-                          // downstreamError: ResponseWrapper[DownstreamError],
-                          auditResponse: AuditResponse)(implicit ctx: RequestContext): A
-
+    def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit ctx: RequestContext): A
   }
 
   def custom[A: Writes](auditService: AuditService,
