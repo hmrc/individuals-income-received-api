@@ -16,32 +16,25 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.{DeleteInsurancePoliciesConnector}
+import v1.connectors.DeleteInsurancePoliciesConnector
 import v1.models.request.deleteInsurancePolicies.DeleteInsurancePoliciesRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteInsurancePoliciesService @Inject() (connector: DeleteInsurancePoliciesConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteInsurancePoliciesService @Inject() (connector: DeleteInsurancePoliciesConnector) extends BaseService {
 
   def delete(request: DeleteInsurancePoliciesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.deleteInsurancePolicies(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector.deleteInsurancePolicies(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private def downstreamErrorMap: Map[String, MtdError] = {

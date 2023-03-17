@@ -16,14 +16,12 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveInsurancePoliciesConnector
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRequest
 import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
@@ -32,15 +30,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveInsurancePoliciesService @Inject() (connector: RetrieveInsurancePoliciesConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveInsurancePoliciesService @Inject() (connector: RetrieveInsurancePoliciesConnector) extends BaseService {
 
   def retrieve(request: RetrieveInsurancePoliciesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveInsurancePoliciesResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveInsurancePoliciesResponse]]] = {
 
     val result = EitherT(connector.retrieveInsurancePolicies(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
