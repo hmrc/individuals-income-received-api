@@ -66,7 +66,7 @@ object AuditHandler {
             requestBody: Option[JsValue] = None,
             includeResponse: Boolean = false): AuditHandler = {
 
-    custom[GenericAuditDetail](
+    custom(
       auditService = auditService,
       auditType = auditType,
       transactionName = transactionName,
