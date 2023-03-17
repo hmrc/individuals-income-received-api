@@ -62,7 +62,7 @@ class AddUkSavingsAccountControllerSpec
     val controller = new AddUkSavingsAccountController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockAddUkSavingsAccountRequestParser,
+      parser = mockAddUkSavingsAccountRequestParser,
       service = mockAddUkSavingsAccountService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,

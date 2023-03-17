@@ -36,7 +36,12 @@ trait AuditHandler extends RequestContextImplicits {
 object AuditHandler {
 
   trait AuditDetailCreator[A] {
-    def createAuditDetail(userDetails: UserDetails, requestBody: Option[JsValue], auditResponse: AuditResponse)(implicit ctx: RequestContext): A
+
+    def createAuditDetail(userDetails: UserDetails,
+                          requestBody: Option[JsValue],
+                          // downstreamError: ResponseWrapper[DownstreamError],
+                          auditResponse: AuditResponse)(implicit ctx: RequestContext): A
+
   }
 
   def custom[A: Writes](auditService: AuditService,
@@ -59,8 +64,9 @@ object AuditHandler {
             transactionName: String,
             params: Map[String, String],
             requestBody: Option[JsValue] = None,
-            includeResponse: Boolean = false): AuditHandler =
-    custom(
+            includeResponse: Boolean = false): AuditHandler = {
+
+    custom[GenericAuditDetail](
       auditService = auditService,
       auditType = auditType,
       transactionName = transactionName,
@@ -68,6 +74,7 @@ object AuditHandler {
       requestBody = requestBody,
       includeResponse = includeResponse
     )
+  }
 
   private class AuditHandlerImpl[A: Writes](auditService: AuditService,
                                             auditType: String,
@@ -82,7 +89,7 @@ object AuditHandler {
         ec: ExecutionContext): Unit = {
 
       val auditEvent = {
-        val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(ew => ew.auditErrors))
+        val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(_.auditErrors))
 
         val detail = auditDetailCreator.createAuditDetail(
           userDetails = userDetails,

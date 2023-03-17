@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRequest
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
 import v1.services.AddUkSavingsAccountService
@@ -35,10 +34,12 @@ trait MockAddUkSavingsAccountService extends MockFactory {
   object MockAddUkSavingsAccountService {
 
     def addUkSavingsAccountService(
-                           requestData: AddUkSavingsAccountRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]]] = {
+        requestData: AddUkSavingsAccountRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]]] = {
       (mockAddUkSavingsAccountService
-        .addSavings(_: AddUkSavingsAccountRequest)(_: HeaderCarrier, _: ExecutionContext, _:EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .addSavings(_: AddUkSavingsAccountRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
+
   }
+
 }

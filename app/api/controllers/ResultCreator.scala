@@ -43,11 +43,11 @@ trait ResultCreator[InputRaw <: RawData, Input, Output] {
 object ResultCreator {
 
   def noContent[InputRaw <: RawData, Input, Output](successStatus: Int = Status.NO_CONTENT): ResultCreator[InputRaw, Input, Output] =
-    (_: InputRaw, _, _: Output) => ResultWrapper(successStatus, None)
+    (_: InputRaw, _: Input, _: Output) => ResultWrapper(successStatus, None)
 
   def plainJson[InputRaw <: RawData, Input, Output](successStatus: Int = Status.OK)(implicit
       ws: Writes[Output]): ResultCreator[InputRaw, Input, Output] =
-    (_: InputRaw, input, output: Output) => ResultWrapper(successStatus, Some(Json.toJson(output)))
+    (_: InputRaw, _: Input, output: Output) => ResultWrapper(successStatus, Some(Json.toJson(output)))
 
   def hateoasWrapping[InputRaw <: RawData, Input, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(
       data: (Input, Output) => HData)(implicit
@@ -64,7 +64,7 @@ object ResultCreator {
       data: (Input, Output[I]) => HData)(implicit
       linksFactory: HateoasListLinksFactory[Output, I, HData],
       writes: Writes[HateoasWrapper[Output[HateoasWrapper[I]]]]): ResultCreator[InputRaw, Input, Output[I]] =
-    (raw: InputRaw, input: Input, output: Output[I]) => {
+    (_: InputRaw, input: Input, output: Output[I]) => {
       val wrapped = hateoasFactory.wrapList(output, data(input, output))
 
       ResultWrapper(successStatus, Some(Json.toJson(wrapped)))

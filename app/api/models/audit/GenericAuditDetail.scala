@@ -21,12 +21,15 @@ import api.models.auth.UserDetails
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, JsValue, OWrites}
 
+trait AuditDetail
+
 case class GenericAuditDetail(userType: String,
                               agentReferenceNumber: Option[String],
                               params: Map[String, String],
                               request: Option[JsValue],
                               `X-CorrelationId`: String,
                               response: AuditResponse)
+    extends AuditDetail
 
 object GenericAuditDetail {
 
