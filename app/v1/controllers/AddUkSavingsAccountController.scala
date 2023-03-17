@@ -86,7 +86,7 @@ class AddUkSavingsAccountController @Inject() (val authService: EnrolmentsAuthSe
                 ctx.correlationId,
                 AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
               )
-            )(ctx.hc, ec)
+            )
 
           case Right(resp: Option[JsValue]) =>
             val respNoHateoas = resp.map {
@@ -103,7 +103,7 @@ class AddUkSavingsAccountController @Inject() (val authService: EnrolmentsAuthSe
                 ctx.correlationId,
                 AuditResponse(httpStatus = OK, response = Right(respNoHateoas))
               )
-            )(ctx.hc, ec)
+            )
         }
       }
     }
