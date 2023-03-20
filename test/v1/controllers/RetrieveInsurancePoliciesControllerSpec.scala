@@ -16,20 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{AMEND_INSURANCE_POLICIES_INCOME, DELETE_INSURANCE_POLICIES_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveInsurancePoliciesControllerFixture
 import v1.mocks.requestParsers.MockRetrieveInsurancePoliciesRequestParser
 import v1.mocks.services.MockRetrieveInsurancePoliciesService
@@ -41,17 +36,12 @@ import scala.concurrent.Future
 
 class RetrieveInsurancePoliciesControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveInsurancePoliciesService
     with MockHateoasFactory
-    with MockRetrieveInsurancePoliciesRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockRetrieveInsurancePoliciesRequestParser {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "X-123"
+  val taxYear: String = "2019-20"
 
   private val rawData: RetrieveInsurancePoliciesRawData = RetrieveInsurancePoliciesRawData(
     nino = nino,
@@ -63,26 +53,14 @@ class RetrieveInsurancePoliciesControllerSpec
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  private val amendInsurancePoliciesLink: Link =
-    Link(
+  override val testHateoasLinks: Seq[Link] = Seq(
+    hateoas.Link(
       href = s"/individuals/income-received/insurance-policies/$nino/$taxYear",
       method = PUT,
-      rel = AMEND_INSURANCE_POLICIES_INCOME
-    )
-
-  private val retrieveInsurancePoliciesLink: Link =
-    Link(
-      href = s"/individuals/income-received/insurance-policies/$nino/$taxYear",
-      method = GET,
-      rel = SELF
-    )
-
-  private val deleteInsurancePoliciesLink: Link =
-    Link(
-      href = s"/individuals/income-received/insurance-policies/$nino/$taxYear",
-      method = DELETE,
-      rel = DELETE_INSURANCE_POLICIES_INCOME
-    )
+      rel = "create-and-amend-insurance-policies-income"),
+    hateoas.Link(href = s"/individuals/income-received/insurance-policies/$nino/$taxYear", method = GET, rel = "self"),
+    hateoas.Link(href = s"/individuals/income-received/insurance-policies/$nino/$taxYear", method = DELETE, rel = "delete-insurance-policies-income")
+  )
 
   private val lifeInsuranceItemModel = CommonInsurancePoliciesItem(
     customerReference = Some("INPOLY123A"),
@@ -141,8 +119,49 @@ class RetrieveInsurancePoliciesControllerSpec
 
   private val mtdResponse = RetrieveInsurancePoliciesControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+  "RetrieveInsurancePoliciesController" should {
+    "return OK" when {
+      "the request is valid" in new Test {
+        MockRetrieveInsurancePoliciesRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockRetrieveInsurancePoliciesService
+          .retrieve(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveInsurancePoliciesResponseModel))))
+
+        MockHateoasFactory
+          .wrap(retrieveInsurancePoliciesResponseModel, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveInsurancePoliciesResponseModel, testHateoasLinks))
+
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponse))
+      }
+    }
+
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        MockRetrieveInsurancePoliciesRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+
+        runErrorTest(NinoFormatError)
+      }
+
+      "the service returns an error" in new Test {
+        MockRetrieveInsurancePoliciesRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockRetrieveInsurancePoliciesService
+          .retrieve(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
+
+        runErrorTest(RuleTaxYearNotSupportedError)
+      }
+    }
+  }
+
+  trait Test extends ControllerTest {
 
     val controller = new RetrieveInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
@@ -154,100 +173,7 @@ class RetrieveInsurancePoliciesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  "RetrieveInsurancePoliciesController" should {
-    "return OK" when {
-      "happy path" in new Test {
-
-        MockRetrieveInsurancePoliciesRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
-
-        MockRetrieveInsurancePoliciesService
-          .retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveInsurancePoliciesResponseModel))))
-
-        MockHateoasFactory
-          .wrap(retrieveInsurancePoliciesResponseModel, RetrieveInsurancePoliciesHateoasData(nino, taxYear))
-          .returns(
-            HateoasWrapper(
-              retrieveInsurancePoliciesResponseModel,
-              Seq(
-                amendInsurancePoliciesLink,
-                retrieveInsurancePoliciesLink,
-                deleteInsurancePoliciesLink
-              )))
-
-        val result: Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-      }
-    }
-
-    "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-
-            MockRetrieveInsurancePoliciesRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
-      }
-
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
-
-            MockRetrieveInsurancePoliciesRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
-
-            MockRetrieveInsurancePoliciesService
-              .retrieve(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
-      }
-    }
+    protected def callController(): Future[Result] = controller.retrieveInsurancePolicies(nino, taxYear)(fakeGetRequest)
   }
 
 }

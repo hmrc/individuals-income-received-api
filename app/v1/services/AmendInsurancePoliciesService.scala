@@ -16,29 +16,24 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, InternalError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.controllers.RequestContext
+import api.models.errors.{ErrorWrapper, InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AmendInsurancePoliciesConnector
 import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendInsurancePoliciesService @Inject() (connector: AmendInsurancePoliciesConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendInsurancePoliciesService @Inject() (connector: AmendInsurancePoliciesConnector) extends BaseService {
 
   def amendInsurancePolicies(request: AmendInsurancePoliciesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendInsurancePolicies(request)).leftMap(mapDownstreamErrors(errorMap))
