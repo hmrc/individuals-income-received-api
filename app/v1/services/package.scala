@@ -21,6 +21,7 @@ import api.models.outcomes.ResponseWrapper
 
 package object services {
 
-  type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+  type ServiceOutcome[A]                = Either[ErrorWrapper, ResponseWrapper[A]]
+  type CreateAmendPensionServiceOutcome = ServiceOutcome[Unit]
 
 }
