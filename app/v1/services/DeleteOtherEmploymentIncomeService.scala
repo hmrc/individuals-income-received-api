@@ -16,13 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.OtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 
@@ -30,24 +28,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector) extends BaseService {
 
   def delete(request: OtherEmploymentIncomeRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.deleteOtherEmploymentIncome(request))
-        .leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
+    connector.deleteOtherEmploymentIncome(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def errorMap: Map[String, MtdError] = {
-    val errorMap = Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -59,7 +51,7 @@ class DeleteOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIn
     val extraTysErrors = Map(
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
-    errorMap ++ extraTysErrors
+    errors ++ extraTysErrors
   }
 
 }

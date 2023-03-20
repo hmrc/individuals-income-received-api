@@ -16,14 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.DeleteNonPayeEmploymentConnector
 import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRequest
 
@@ -31,21 +28,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteNonPayeEmploymentService @Inject() (connector: DeleteNonPayeEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteNonPayeEmploymentService @Inject() (connector: DeleteNonPayeEmploymentConnector) extends BaseService {
 
   def deleteNonPayeEmployment(request: DeleteNonPayeEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.deleteNonPayeEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
+    connector.deleteNonPayeEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  val errorMap: Map[String, MtdError] = {
-    val downstreamErrors = Map(
+  val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -60,7 +54,7 @@ class DeleteNonPayeEmploymentService @Inject() (connector: DeleteNonPayeEmployme
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 
-    downstreamErrors ++ extraTysErrors
+    errors ++ extraTysErrors
 
   }
 

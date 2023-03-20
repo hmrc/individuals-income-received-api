@@ -16,13 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.syntax.either._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.CreateAmendNonPayeEmploymentConnector
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
 
@@ -30,20 +28,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPayeEmploymentConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPayeEmploymentConnector) extends BaseService {
 
   def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,
