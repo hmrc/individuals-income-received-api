@@ -20,7 +20,7 @@ import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveOtherCgtRequestParser
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRawData
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtHateoasData
@@ -37,8 +37,7 @@ class RetrieveOtherCgtController @Inject() (val authService: EnrolmentsAuthServi
                                             hateoasFactory: HateoasFactory,
                                             cc: ControllerComponents,
                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveOtherCgtController", endpointName = "retrieveOtherCgt")
@@ -58,41 +57,6 @@ class RetrieveOtherCgtController @Inject() (val authService: EnrolmentsAuthServi
         .withHateoasResult(hateoasFactory)(RetrieveOtherCgtHateoasData(nino, taxYear))
 
       requestHandler.handleRequest(rawData)
-
-//      implicit val correlationId: String = idGenerator.generateCorrelationId
-//      logger.info(
-//        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-//          s"with CorrelationId: $correlationId")
-//
-//      val rawData: RetrieveOtherCgtRawData = RetrieveOtherCgtRawData(
-//        nino = nino,
-//        taxYear = taxYear
-//      )
-//
-//      val result =
-//        for {
-//          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-//          serviceResponse <- EitherT(service.retrieve(parsedRequest))
-//        } yield {
-//          val vendorResponse = hateoasFactory.wrap(serviceResponse.responseData, RetrieveOtherCgtHateoasData(nino, taxYear))
-//          logger.info(
-//            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-//              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-//
-//          Ok(Json.toJson(vendorResponse))
-//            .withApiHeaders(serviceResponse.correlationId)
-//            .as(MimeTypes.JSON)
-//        }
-//
-//      result.leftMap { errorWrapper =>
-//        val resCorrelationId = errorWrapper.correlationId
-//        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-//        logger.warn(
-//          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-//            s"Error response received with CorrelationId: $resCorrelationId")
-//
-//        result
-//      }.merge
     }
 
 }

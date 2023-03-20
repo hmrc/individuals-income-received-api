@@ -86,7 +86,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       Seq(disposals)
     )
 
-  val model: RetrieveAllResidentialPropertyCgtResponse =
+  val responseModel: RetrieveAllResidentialPropertyCgtResponse =
     RetrieveAllResidentialPropertyCgtResponse(
       Some(ppdService),
       Some(customerAddedDisposals)

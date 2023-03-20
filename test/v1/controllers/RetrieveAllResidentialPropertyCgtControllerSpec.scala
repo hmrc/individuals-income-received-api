@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
@@ -26,9 +26,7 @@ import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link, RelType}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveAllResidentialPropertyCgtControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveAllResidentialPropertyCgtRequestParser
 import v1.mocks.services.MockRetrieveAllResidentialPropertyCgtService
@@ -40,6 +38,7 @@ import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveAllResidentialPropertyCgtService
@@ -48,10 +47,8 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val nino: String           = "AA123456A"
   val taxYear: String        = "2019-20"
   val source: Option[String] = Some("latest")
-  val correlationId: String  = "X-123"
 
   val rawData: RetrieveAllResidentialPropertyCgtRawData = RetrieveAllResidentialPropertyCgtRawData(
     nino = nino,
@@ -100,40 +97,9 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
       rel = RelType.DELETE_NON_PPD_CGT_AND_DISPOSALS
     )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveAllResidentialPropertyCgtController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveAllResidentialPropertyCgtRequestParser,
-      service = mockRetrieveAllResidentialPropertyCgtService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-    def desErrorMap: Map[String, MtdError] =
-      Map(
-        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-        "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-        "INVALID_VIEW"              -> SourceFormatError,
-        "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-        "NO_DATA_FOUND"             -> NotFoundError,
-        "INVALID_CORRELATIONID"     -> InternalError,
-        "SERVER_ERROR"              -> InternalError,
-        "SERVICE_UNAVAILABLE"       -> InternalError
-      )
-
-  }
-
   "retrieveAll" should {
-    "return OK" when {
-      "happy path" in new Test {
+    "return a successful response with status 200 (OK)" when {
+      "given a valid request" in new Test {
 
         MockRetrieveAllResidentialPropertyCgtRequestParser
           .parse(rawData)
@@ -141,13 +107,13 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
 
         MockRetrieveAllResidentialPropertyCgtService
           .retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, model))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
         MockHateoasFactory
-          .wrap(model, RetrieveAllResidentialPropertyCgtHateoasData(nino, taxYear))
+          .wrap(responseModel, RetrieveAllResidentialPropertyCgtHateoasData(nino, taxYear))
           .returns(
             HateoasWrapper(
-              model,
+              responseModel,
               Seq(
                 createAndAmendPpdCgtLink,
                 deletePpdCgtLink,
@@ -156,75 +122,53 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
                 retrieveAllCgtLink
               )))
 
-        val result: Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponseWithHateoas(nino, taxYear)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponseWithHateoas(nino, taxYear))
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
 
-            MockRetrieveAllResidentialPropertyCgtRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
+        MockRetrieveAllResidentialPropertyCgtRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            val result: Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)
+        runErrorTest(NinoFormatError)
 
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (SourceFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
 
-            MockRetrieveAllResidentialPropertyCgtRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockRetrieveAllResidentialPropertyCgtRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockRetrieveAllResidentialPropertyCgtService
-              .retrieve(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+        MockRetrieveAllResidentialPropertyCgtService
+          .retrieve(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            val result: Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (SourceFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(RuleTaxYearNotSupportedError)
       }
     }
+  }
+
+  trait Test extends ControllerTest {
+
+    val controller = new RetrieveAllResidentialPropertyCgtController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRetrieveAllResidentialPropertyCgtRequestParser,
+      service = mockRetrieveAllResidentialPropertyCgtService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveAll(nino, taxYear, source)(fakeGetRequest)
+
   }
 
 }
