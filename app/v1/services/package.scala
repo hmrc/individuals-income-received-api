@@ -18,9 +18,13 @@ package v1
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 
 package object services {
 
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
+  // Capital Tax Gains
+  type RetrieveOtherCgtServiceOutcome = ServiceOutcome[RetrieveOtherCgtResponse]
 
 }

@@ -194,7 +194,7 @@ class RetrieveOtherCgtControllerSpec
     val controller = new RetrieveOtherCgtController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveOtherCgtRequestParser,
+      parser = mockRetrieveOtherCgtRequestParser,
       service = mockRetrieveOtherCgtService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
