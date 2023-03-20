@@ -59,7 +59,8 @@ object AuditHandler {
             transactionName: String,
             params: Map[String, String],
             requestBody: Option[JsValue] = None,
-            includeResponse: Boolean = false): AuditHandler =
+            includeResponse: Boolean = false): AuditHandler = {
+
     custom(
       auditService = auditService,
       auditType = auditType,
@@ -68,6 +69,7 @@ object AuditHandler {
       requestBody = requestBody,
       includeResponse = includeResponse
     )
+  }
 
   private class AuditHandlerImpl[A: Writes](auditService: AuditService,
                                             auditType: String,
@@ -82,7 +84,7 @@ object AuditHandler {
         ec: ExecutionContext): Unit = {
 
       val auditEvent = {
-        val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(ew => ew.auditErrors))
+        val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(_.auditErrors))
 
         val detail = auditDetailCreator.createAuditDetail(
           userDetails = userDetails,

@@ -16,14 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AddUkSavingsAccountConnector
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRequest
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
@@ -32,22 +29,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnector) extends DownstreamResponseMappingSupport with Logging {
+class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnector) extends BaseService {
 
   def addSavings(request: AddUkSavingsAccountRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[AddUkSavingsAccountResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.addSavings(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector.addSavings(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private def errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDVALUE"      -> NinoFormatError,
       "MAX_ACCOUNTS_REACHED" -> RuleMaximumSavingsAccountsLimitError,
