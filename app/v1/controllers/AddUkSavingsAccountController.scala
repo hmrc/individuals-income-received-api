@@ -26,7 +26,7 @@ import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.AddUkSavingsAccountRequestParser
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountHateoasData
@@ -44,8 +44,7 @@ class AddUkSavingsAccountController @Inject() (val authService: EnrolmentsAuthSe
                                                hateoasFactory: HateoasFactory,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
