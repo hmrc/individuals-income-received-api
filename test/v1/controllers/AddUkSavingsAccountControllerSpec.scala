@@ -16,12 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import api.models.audit._
 import api.models.auth.UserDetails
 import api.models.domain.Nino
 import api.models.errors._
@@ -30,7 +28,6 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAddUkSavingsAccountRequestParser
 import v1.mocks.services.MockAddUkSavingsAccountService
 import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequest, AddUkSavingsAccountRequestBody}
@@ -41,96 +38,15 @@ import scala.concurrent.Future
 
 class AddUkSavingsAccountControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockAppConfig
     with MockAddUkSavingsAccountService
-    with MockAuditService
     with MockAddUkSavingsAccountRequestParser
     with MockHateoasFactory
-    with HateoasLinks
-    with MockIdGenerator {
+    with HateoasLinks {
 
-  val nino: String             = "AA123456A"
-  val correlationId: String    = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
   val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
   val mtdId: String            = "test-mtd-id"
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new AddUkSavingsAccountController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      parser = mockAddUkSavingsAccountRequestParser,
-      service = mockAddUkSavingsAccountService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-    val links: List[Link] = List(
-      listUkSavings(mockAppConfig, nino)
-    )
-
-    val requestBodyJson: JsValue = Json.parse("""
-        |{
-        |   "accountName": "Shares savings account"
-        |}
-        |""".stripMargin)
-
-    val rawData: AddUkSavingsAccountRawData = AddUkSavingsAccountRawData(
-      nino = nino,
-      body = AnyContentAsJson(requestBodyJson)
-    )
-
-    val addUkSavingsAccountRequestBody: AddUkSavingsAccountRequestBody = AddUkSavingsAccountRequestBody(
-      "Shares savings account"
-    )
-
-    val requestData: AddUkSavingsAccountRequest = AddUkSavingsAccountRequest(
-      nino = Nino(nino),
-      body = AddUkSavingsAccountRequestBody("Shares savings account")
-    )
-
-    val responseData: AddUkSavingsAccountResponse = AddUkSavingsAccountResponse(
-      savingsAccountId = savingsAccountId
-    )
-
-    val responseJson: JsValue = Json.parse(s"""
-         |{
-         |    "savingsAccountId": "$savingsAccountId",
-         |    "links":[
-         |      {
-         |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
-         |         "method":"GET",
-         |         "rel":"list-all-uk-savings-account"
-         |      }
-         |   ]
-         |}
-         |""".stripMargin)
-
-    def event(auditResponse: AuditResponse): AuditEvent[FlattenedGenericAuditDetail] =
-      AuditEvent(
-        auditType = "AddUkSavingsAccount",
-        transactionName = "add-uk-savings-account",
-        detail = FlattenedGenericAuditDetail(
-          versionNumber = Some("1.0"),
-          userDetails = UserDetails(mtdId, "Individual", None),
-          params = Map("nino" -> nino),
-          request = Some(requestBodyJson),
-          `X-CorrelationId` = correlationId,
-          auditResponse = auditResponse
-        )
-      )
-
-  }
 
   "AddUkSavingsAccountController" should {
     "return OK" when {
@@ -148,78 +64,101 @@ class AddUkSavingsAccountControllerSpec
           .wrap(responseData, AddUkSavingsAccountHateoasData(nino, savingsAccountId))
           .returns(HateoasWrapper(responseData, links))
 
-        val result: Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe responseJson
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(Json.toJson(responseData)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(responseJson))
       }
     }
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockAddUkSavingsAccountRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
+      "the parser validation fails" in new Test {
+        MockAddUkSavingsAccountRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            val result: Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = List(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (AccountNameFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockAddUkSavingsAccountRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockAddUkSavingsAccountRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockAddUkSavingsAccountService
+          .addUkSavingsAccountService(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleMaximumSavingsAccountsLimitError))))
 
-            MockAddUkSavingsAccountService
-              .addUkSavingsAccountService(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = List(
-          (NinoFormatError, BAD_REQUEST),
-          (RuleMaximumSavingsAccountsLimitError, BAD_REQUEST),
-          (RuleDuplicateAccountNameError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(RuleMaximumSavingsAccountsLimitError)
       }
     }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[FlattenedGenericAuditDetail] {
+
+    private val controller = new AddUkSavingsAccountController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockAddUkSavingsAccountRequestParser,
+      service = mockAddUkSavingsAccountService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.addUkSavingsAccount(nino)(fakePostRequest(requestBodyJson))
+
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] =
+      AuditEvent(
+        auditType = "AddUkSavingsAccount",
+        transactionName = "add-uk-savings-account",
+        detail = FlattenedGenericAuditDetail(
+          versionNumber = Some("1.0"),
+          userDetails = UserDetails(mtdId, "Individual", None),
+          params = Map("nino" -> nino),
+          request = maybeRequestBody,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
+
+    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+
+    val links: List[Link] = List(
+      listUkSavings(mockAppConfig, nino)
+    )
+
+    val requestBodyJson: JsValue = Json.parse("""
+      |{
+      |   "accountName": "Shares savings account"
+      |}
+      |""".stripMargin)
+
+    val rawData: AddUkSavingsAccountRawData = AddUkSavingsAccountRawData(
+      nino = nino,
+      body = AnyContentAsJson(requestBodyJson)
+    )
+
+    val requestData: AddUkSavingsAccountRequest = AddUkSavingsAccountRequest(
+      nino = Nino(nino),
+      body = AddUkSavingsAccountRequestBody("Shares savings account")
+    )
+
+    val responseData: AddUkSavingsAccountResponse = AddUkSavingsAccountResponse(
+      savingsAccountId = savingsAccountId
+    )
+
+    val responseJson: JsValue = Json.parse(s"""
+      |{
+      |    "savingsAccountId": "$savingsAccountId",
+      |    "links":[
+      |      {
+      |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
+      |         "method":"GET",
+      |         "rel":"list-all-uk-savings-account"
+      |      }
+      |   ]
+      |}
+      |""".stripMargin)
+
   }
 
 }
