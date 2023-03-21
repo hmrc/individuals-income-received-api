@@ -16,13 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.CreateAmendUkSavingsAnnualSummaryConnector
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryRequest, DownstreamCreateAmendUkSavingsAnnualSummaryBody}
 
@@ -30,15 +28,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmendUkSavingsAnnualSummaryConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmendUkSavingsAnnualSummaryConnector) extends BaseService {
 
   def createAmend(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
     val result = for {
       desResponseWrapper <- EitherT(
         connector.createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request)))

@@ -16,26 +16,21 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.AmendHateoasBody
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
+import api.controllers._
+import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
 import config.{AppConfig, FeatureSwitches}
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import play.mvc.Http.MimeTypes
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.AmendFinancialDetailsRequestParser
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
+import v1.models.response.amendFinancialDetails.AmendFinancialDetailsHateoasData
+import v1.models.response.amendFinancialDetails.AmendFinancialDetailsResponse.AmendFinancialDetailsLinksFactory
 import v1.services.AmendFinancialDetailsService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuthService,
@@ -44,12 +39,11 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
                                                  requestParser: AmendFinancialDetailsRequestParser,
                                                  service: AmendFinancialDetailsService,
                                                  auditService: AuditService,
+                                                 hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
-    with Logging
-    with AmendHateoasBody {
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,12 +53,10 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
 
   def amendFinancialDetails(nino: String, taxYear: String, employmentId: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val featureSwitches: FeatureSwitches = FeatureSwitches()(appConfig)
+
       val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
         nino = nino,
         taxYear = taxYear,
@@ -74,76 +66,20 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
         opwEnabled = featureSwitches.isOpwEnabled
       )
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendFinancialDetails(parsedRequest))
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler = RequestHandler
+        .withParser(requestParser)
+        .withService(service.amendFinancialDetails)
+        .withAuditing(AuditHandler(
+          auditService = auditService,
+          auditType = "AmendEmploymentFinancialDetails",
+          transactionName = "amend-employment-financial-details",
+          params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
+          requestBody = Some(request.body),
+          includeResponse = true
+        ))
+        .withHateoasResult(hateoasFactory)(AmendFinancialDetailsHateoasData(nino, taxYear, employmentId))
 
-          auditSubmission(
-            GenericAuditDetail(
-              request.userDetails,
-              Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-              Some(request.body),
-              serviceResponse.correlationId,
-              AuditResponse(httpStatus = OK, response = Right(Some(amendFinancialDetailsHateoasBody(appConfig, nino, taxYear, employmentId))))
-            )
-          )
-
-          Ok(amendFinancialDetailsHateoasBody(appConfig, nino, taxYear, employmentId))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-            Some(request.body),
-            resCorrelationId,
-            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            EmploymentIdFormatError,
-            RuleTaxYearNotSupportedError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotEndedError,
-            RuleIncorrectOrEmptyBodyError,
-            RuleNotAllowedOffPayrollWorker,
-            RuleMissingOffPayrollWorker,
-            ValueFormatError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
-    }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("AmendEmploymentFinancialDetails", "amend-employment-financial-details", details)
-    auditService.auditEvent(event)
-  }
 
 }

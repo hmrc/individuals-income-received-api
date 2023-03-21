@@ -16,41 +16,24 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{
-  EmploymentIdFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleCessationDateBeforeTaxYearStartError,
-  RuleStartDateAfterTaxYearEndError,
-  RuleTaxYearNotEndedError,
-  RuleUpdateForbiddenError,
-  InternalError,
-  TaxYearFormatError
-}
+import api.controllers.RequestContext
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AmendCustomEmploymentConnector
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendCustomEmploymentService @Inject() (connector: AmendCustomEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendCustomEmploymentService @Inject() (connector: AmendCustomEmploymentConnector) extends BaseService {
 
   def amendEmployment(request: AmendCustomEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))

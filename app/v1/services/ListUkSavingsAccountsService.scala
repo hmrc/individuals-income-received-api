@@ -16,30 +16,25 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError, InternalError}
+import api.controllers.RequestContext
+import api.models.errors.{ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError}
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.ListUkSavingsAccountsConnector
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
 import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends DownstreamResponseMappingSupport with Logging {
+class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends BaseService {
 
   def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
 
     EitherT(connector.listUkSavingsAccounts(request))
       .leftMap(mapDownstreamErrors(mappingDesToMtdError))

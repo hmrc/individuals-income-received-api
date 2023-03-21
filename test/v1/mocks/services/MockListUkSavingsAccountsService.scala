@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
 import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 import v1.services.ListUkSavingsAccountsService
@@ -34,11 +33,11 @@ trait MockListUkSavingsAccountsService extends MockFactory {
 
   object MockListUkSavingsAccountsService {
 
-    def listUkSavingsAccounts(
-        requestData: ListUkSavingsAccountsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]]] = {
+    def listUkSavingsAccounts(requestData: ListUkSavingsAccountsRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]]] = {
       (mockListUkSavingsAccountsService
-        .listUkSavingsAccounts(_: ListUkSavingsAccountsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .listUkSavingsAccounts(_: ListUkSavingsAccountsRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
 
   }
