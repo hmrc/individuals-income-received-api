@@ -19,6 +19,7 @@ package v1.models.response.createAmendCgtPpdOverrides
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
+import play.api.libs.json.{Json, Writes}
 
 object CreateAmendCgtPpdOverridesResponse extends HateoasLinks {
 
@@ -38,3 +39,8 @@ object CreateAmendCgtPpdOverridesResponse extends HateoasLinks {
 }
 
 case class CreateAmendCgtPpdOverridesHateoasData(nino: String, taxYear: String) extends HateoasData
+
+object CreateAmendCgtPpdOverridesHateoasData {
+  implicit val writes: Writes[CreateAmendCgtPpdOverridesHateoasData] = Json.writes[CreateAmendCgtPpdOverridesHateoasData]
+
+}

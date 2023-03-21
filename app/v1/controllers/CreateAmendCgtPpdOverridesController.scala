@@ -23,7 +23,7 @@ import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import config.{AppConfig, FeatureSwitches}
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
@@ -107,7 +107,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
                 taxYear,
                 request.body,
                 ctx.correlationId,
-                AuditResponse(OK, Right(Some(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))))
+                AuditResponse(OK, Right(Some(Json.toJson(CreateAmendCgtPpdOverridesHateoasData(nino, taxYear)))))
               ))
         }
       }
