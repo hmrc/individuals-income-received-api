@@ -17,14 +17,10 @@
 package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-//import api.models.hateoas.RelType.{AMEND_PENSIONS_INCOME, DELETE_PENSIONS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 
@@ -41,13 +37,9 @@ import scala.concurrent.Future
 class RetrievePensionsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
     with MockRetrievePensionsService
     with MockHateoasFactory
-    with MockRetrievePensionsRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockRetrievePensionsRequestParser {
 
   val taxYear: String = "2019-20"
 
@@ -66,26 +58,6 @@ class RetrievePensionsControllerSpec
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "self", method = GET),
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "delete-pensions-income", method = DELETE)
   )
-//  val amendPensionsLink: Link =
-//    Link(
-//      href = s"/individuals/income-received/pensions/$nino/$taxYear",
-//      method = PUT,
-//      rel = AMEND_PENSIONS_INCOME
-//    )
-//
-//  val retrievePensionsLink: Link =
-//    Link(
-//      href = s"/individuals/income-received/pensions/$nino/$taxYear",
-//      method = GET,
-//      rel = SELF
-//    )
-//
-//  val deletePensionsLink: Link =
-//    Link(
-//      href = s"/individuals/income-received/pensions/$nino/$taxYear",
-//      method = DELETE,
-//      rel = DELETE_PENSIONS_INCOME
-//    )
 
   private val foreignPensionsItemModel = Seq(
     ForeignPensionsItem(

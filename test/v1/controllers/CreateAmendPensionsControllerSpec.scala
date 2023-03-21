@@ -17,9 +17,7 @@
 package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
@@ -40,13 +38,9 @@ import scala.concurrent.Future
 class CreateAmendPensionsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
     with MockAppConfig
-    with MockAuditService
     with MockCreateAmendPensionsService
     with MockCreateAmendPensionsRequestParser
-    with MockIdGenerator
     with MockHateoasFactory {
 
   val taxYear: String = "2019-20"
