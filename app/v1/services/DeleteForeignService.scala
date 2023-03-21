@@ -16,13 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.DeleteForeignConnector
 import v1.models.request.deleteForeign.DeleteForeignRequest
 
@@ -30,13 +28,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteForeignService @Inject() (connector: DeleteForeignConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteForeignService @Inject() (connector: DeleteForeignConnector) extends BaseService {
 
-  def deleteForeign(request: DeleteForeignRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def deleteForeign(
+      request: DeleteForeignRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     connector.deleteForeign(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

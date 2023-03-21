@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRequest
 import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
 import v1.services.RetrieveInsurancePoliciesService
@@ -39,13 +38,11 @@ trait MockRetrieveInsurancePoliciesService extends MockFactory {
         : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveInsurancePoliciesResponse]]]] = (
       mockRetrieveInsurancePoliciesService
         .retrieve(_: RetrieveInsurancePoliciesRequest)(
-          _: HeaderCarrier,
-          _: ExecutionContext,
-          _: EndpointLogContext,
-          _: String
+          _: RequestContext,
+          _: ExecutionContext
         )
       )
-      .expects(requestData, *, *, *, *)
+      .expects(requestData, *, *)
 
   }
 

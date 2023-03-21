@@ -16,20 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{AMEND_FOREIGN_INCOME, DELETE_FOREIGN_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.foreign.RetrieveForeignFixture
 import v1.mocks.requestParsers.MockRetrieveForeignRequestParser
 import v1.mocks.services.MockRetrieveForeignService
@@ -41,17 +36,12 @@ import scala.concurrent.Future
 
 class RetrieveForeignControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveForeignService
     with MockHateoasFactory
-    with MockRetrieveForeignRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockRetrieveForeignRequestParser {
 
-  private val nino: String          = "AA123456A"
-  private val taxYear: String       = "2019-20"
-  private val correlationId: String = "X-123"
+  private val taxYear: String = "2019-20"
 
   private val rawData: RetrieveForeignRawData = RetrieveForeignRawData(
     nino = nino,
@@ -63,26 +53,11 @@ class RetrieveForeignControllerSpec
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  private val amendForeignLink: Link =
-    Link(
-      href = s"/individuals/income-received/foreign/$nino/$taxYear",
-      method = PUT,
-      rel = AMEND_FOREIGN_INCOME
-    )
-
-  private val retrieveForeignLink: Link =
-    Link(
-      href = s"/individuals/income-received/foreign/$nino/$taxYear",
-      method = GET,
-      rel = SELF
-    )
-
-  private val deleteForeignLink: Link =
-    Link(
-      href = s"/individuals/income-received/foreign/$nino/$taxYear",
-      method = DELETE,
-      rel = DELETE_FOREIGN_INCOME
-    )
+  override val testHateoasLinks: Seq[Link] = Seq(
+    hateoas.Link(href = s"/individuals/income-received/foreign/$nino/$taxYear", method = GET, rel = "self"),
+    hateoas.Link(href = s"/individuals/income-received/foreign/$nino/$taxYear", method = PUT, rel = "create-and-amend-foreign-income"),
+    hateoas.Link(href = s"/individuals/income-received/foreign/$nino/$taxYear", method = DELETE, rel = "delete-foreign-income")
+  )
 
   private val fullForeignEarningsModel: ForeignEarnings = ForeignEarnings(
     customerReference = Some("FOREIGNINCME123A"),
@@ -113,8 +88,49 @@ class RetrieveForeignControllerSpec
 
   private val mtdResponse = RetrieveForeignFixture.mtdResponseWithHateoas(nino, taxYear)
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+  "RetrieveForeignController" should {
+    "return OK" when {
+      "the request is valid" in new Test {
+        MockRetrieveForeignRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockRetrieveForeignService
+          .retrieve(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignResponse))))
+
+        MockHateoasFactory
+          .wrap(retrieveForeignResponse, RetrieveForeignHateoasData(nino, taxYear))
+          .returns(HateoasWrapper(retrieveForeignResponse, testHateoasLinks))
+
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponse))
+      }
+    }
+
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        MockRetrieveForeignRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+
+        runErrorTest(NinoFormatError)
+      }
+
+      "the service returns an error" in new Test {
+        MockRetrieveForeignRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockRetrieveForeignService
+          .retrieve(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
+
+        runErrorTest(RuleTaxYearNotSupportedError)
+      }
+    }
+  }
+
+  trait Test extends ControllerTest {
 
     val controller = new RetrieveForeignController(
       authService = mockEnrolmentsAuthService,
@@ -126,101 +142,7 @@ class RetrieveForeignControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  "RetrieveForeignController" should {
-    "return OK" when {
-      "happy path" in new Test {
-
-        MockRetrieveForeignRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
-
-        MockRetrieveForeignService
-          .retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveForeignResponse))))
-
-        MockHateoasFactory
-          .wrap(retrieveForeignResponse, RetrieveForeignHateoasData(nino, taxYear))
-          .returns(
-            HateoasWrapper(
-              retrieveForeignResponse,
-              Seq(
-                retrieveForeignLink,
-                amendForeignLink,
-                deleteForeignLink
-              )))
-
-        val result: Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-      }
-    }
-
-    "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-
-            MockRetrieveForeignRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
-      }
-
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
-
-            MockRetrieveForeignRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
-
-            MockRetrieveForeignService
-              .retrieve(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
-      }
-    }
+    protected def callController(): Future[Result] = controller.retrieveForeign(nino, taxYear)(fakeGetRequest)
   }
 
 }
