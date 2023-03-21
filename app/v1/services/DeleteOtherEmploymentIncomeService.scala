@@ -20,7 +20,7 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
+import cats.implicits._
 import v1.connectors.OtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 
