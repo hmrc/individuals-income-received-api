@@ -33,4 +33,6 @@ package object services {
   type RetrieveSavingsServiceOutcome    = ServiceOutcome[RetrieveSavingsResponse]
   type DeleteSavingsServiceOutcome      = ServiceOutcome[Unit]
 
+  type CreateAmendUkDividendsServiceOutcome = ServiceOutcome[Unit]
+
 }

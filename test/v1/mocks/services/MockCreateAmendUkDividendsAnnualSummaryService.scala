@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
 import v1.services.CreateAmendUkDividendsAnnualSummaryService
 
@@ -38,14 +37,12 @@ trait MockCreateAmendUkDividendsAnnualSummaryService extends MockFactory {
         requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] =
       (
         mockCreateAmendUkDividendsAnnualSummaryService
-          .createOrAmendAnnualSummary(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+          .createAmendUkDividends(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
 
   }
 

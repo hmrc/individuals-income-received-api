@@ -16,14 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.CreateAmendUkDividendsAnnualSummaryConnector
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
 
@@ -31,21 +27,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector) extends BaseService {
 
-  def createOrAmendAnnualSummary(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmendUkDividends(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[CreateAmendUkDividendsServiceOutcome] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.createOrAmendAnnualSummary(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector.createAmendUkDividends(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
   private val errorMap: Map[String, MtdError] = {
