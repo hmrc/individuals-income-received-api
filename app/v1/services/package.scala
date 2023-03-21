@@ -23,11 +23,14 @@ import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 
 package object services {
 
-  type ServiceOutcome[A]                = Either[ErrorWrapper, ResponseWrapper[A]]
+  type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
   type CreateAmendPensionServiceOutcome = ServiceOutcome[Unit]
   type RetrievePensionsServiceOutcome   = ServiceOutcome[RetrievePensionsResponse]
   type DeletePensionsServiceOutcome     = ServiceOutcome[Unit]
+
   type CreateAmendSavingsServiceOutcome = ServiceOutcome[Unit]
   type RetrieveSavingsServiceOutcome    = ServiceOutcome[RetrieveSavingsResponse]
+  type DeleteSavingsServiceOutcome      = ServiceOutcome[Unit]
 
 }

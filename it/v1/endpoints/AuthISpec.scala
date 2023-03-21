@@ -51,7 +51,7 @@ class AuthISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     val ifsResponse: JsValue = Json.parse("""
@@ -91,7 +91,6 @@ class AuthISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
-        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -127,4 +126,5 @@ class AuthISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

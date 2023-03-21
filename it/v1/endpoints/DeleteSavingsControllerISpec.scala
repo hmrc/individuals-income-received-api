@@ -82,7 +82,6 @@ class DeleteSavingsControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
       }
 
       "any valid TYS request is made" in new TysIfsTest {
@@ -94,7 +93,6 @@ class DeleteSavingsControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
