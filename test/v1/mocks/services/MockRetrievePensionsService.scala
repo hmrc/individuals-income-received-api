@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrievePensions.RetrievePensionsRequest
 import v1.models.response.retrievePensions.RetrievePensionsResponse
 import v1.services.RetrievePensionsService
@@ -39,13 +38,11 @@ trait MockRetrievePensionsService extends MockFactory {
       (
         mockRetrievePensionsService
           .retrievePensions(_: RetrievePensionsRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
     }
 
   }

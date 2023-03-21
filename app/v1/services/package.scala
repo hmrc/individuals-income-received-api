@@ -18,10 +18,12 @@ package v1
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import v1.models.response.retrievePensions.RetrievePensionsResponse
 
 package object services {
 
   type ServiceOutcome[A]                = Either[ErrorWrapper, ResponseWrapper[A]]
   type CreateAmendPensionServiceOutcome = ServiceOutcome[Unit]
+  type RetrievePensionsServiceOutcome   = ServiceOutcome[RetrievePensionsResponse]
 
 }

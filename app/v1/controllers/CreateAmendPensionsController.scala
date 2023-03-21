@@ -46,8 +46,8 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "AmendPensionsController",
-      endpointName = "amendPensions"
+      controllerName = "CreateAmendPensionsController",
+      endpointName = "createAmendPensions"
     )
 
   def createAmendPensions(nino: String, taxYear: String): Action[JsValue] =
@@ -77,71 +77,5 @@ class CreateAmendPensionsController @Inject() (val authService: EnrolmentsAuthSe
 
       requestHandler.handleRequest(rawData)
     }
-
-//      implicit val correlationId: String = idGenerator.generateCorrelationId
-//      logger.info(
-//        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-//          s"with CorrelationId: $correlationId")
-//
-//
-//      val result =
-//        for {
-//          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-//          serviceResponse <- EitherT(service.createAmendPensions(parsedRequest))
-//        } yield {
-//          logger.info(
-//            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-//              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-//
-//          auditSubmission(
-//            GenericAuditDetail(
-//              userDetails = request.userDetails,
-//              params = Map("nino" -> nino, "taxYear" -> taxYear),
-//              request = Some(request.body),
-//              `X-CorrelationId` = serviceResponse.correlationId,
-//              response = AuditResponse(
-//                httpStatus = OK,
-//                response = Right(Some(createAmendPensionsHateoasBody(appConfig, nino, taxYear)))
-//              )
-//            )
-//          )
-//
-//          Ok(createAmendPensionsHateoasBody(appConfig, nino, taxYear))
-//            .withApiHeaders(serviceResponse.correlationId)
-//            .as(MimeTypes.JSON)
-//        }
-//
-//      result.leftMap { errorWrapper =>
-//        val resCorrelationId = errorWrapper.correlationId
-//        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-//        logger.warn(
-//          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-//            s"Error response received with CorrelationId: $resCorrelationId")
-//
-//        auditSubmission(
-//          GenericAuditDetail(
-//            userDetails = request.userDetails,
-//            params = Map("nino" -> nino, "taxYear" -> taxYear),
-//            request = Some(request.body),
-//            `X-CorrelationId` = resCorrelationId,
-//            response = AuditResponse(
-//              httpStatus = result.header.status,
-//              response = Left(errorWrapper.auditErrors)
-//            )
-//          )
-//        )
-//
-//        result
-//      }.merge
-
-//  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-//    val event = AuditEvent(
-//      auditType = "CreateAmendPensionsIncome",
-//      transactionName = "create-amend-pensions-income",
-//      detail = details
-//    )
-//
-//    auditService.auditEvent(event)
-//  }
 
 }
