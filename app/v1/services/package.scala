@@ -36,5 +36,6 @@ package object services {
 
   type CreateAmendUkDividendsServiceOutcome = ServiceOutcome[Unit]
   type RetrieveUkDividendsServiceOutcome    = ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]
+  type DeleteUkDividendsServiceOutcome      = ServiceOutcome[Unit]
 
 }
