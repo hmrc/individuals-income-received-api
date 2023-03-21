@@ -68,7 +68,7 @@ class DeleteDividendsControllerSpec
       )
     )
 
-  trait Test extends ControllerTest with AuditEventChecking {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new DeleteDividendsController(
       authService = mockEnrolmentsAuthService,
