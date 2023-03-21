@@ -20,6 +20,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import v1.models.response.retrievePensions.RetrievePensionsResponse
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 
 package object services {
 
@@ -34,5 +35,6 @@ package object services {
   type DeleteSavingsServiceOutcome      = ServiceOutcome[Unit]
 
   type CreateAmendUkDividendsServiceOutcome = ServiceOutcome[Unit]
+  type RetrieveUkDividendsServiceOutcome    = ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]
 
 }
