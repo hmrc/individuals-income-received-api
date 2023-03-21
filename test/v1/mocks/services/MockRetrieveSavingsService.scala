@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 import v1.services.RetrieveSavingsService
@@ -37,14 +36,12 @@ trait MockRetrieveSavingsService extends MockFactory {
 
     def retrieve(requestData: RetrieveSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSavingsResponse]]]] = (
       mockRetrieveSavingsService
-        .retrieve(_: RetrieveSavingsRequest)(
-          _: HeaderCarrier,
-          _: ExecutionContext,
-          _: EndpointLogContext,
-          _: String
+        .retrieveSavings(_: RetrieveSavingsRequest)(
+          _: RequestContext,
+          _: ExecutionContext
         )
       )
-      .expects(requestData, *, *, *, *)
+      .expects(requestData, *, *)
 
   }
 
