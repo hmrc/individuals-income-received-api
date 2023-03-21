@@ -26,5 +26,6 @@ package object services {
   type CreateAmendPensionServiceOutcome = ServiceOutcome[Unit]
   type RetrievePensionsServiceOutcome   = ServiceOutcome[RetrievePensionsResponse]
   type DeletePensionsServiceOutcome     = ServiceOutcome[Unit]
+  type CreateAmendSavingsServiceOutcome = ServiceOutcome[Unit]
 
 }

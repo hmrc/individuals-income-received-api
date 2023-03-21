@@ -78,7 +78,7 @@ trait HateoasLinks {
   // API resource links
 
   // Savings Income
-  def amendSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
+  def createAmendSavings(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = savingsUri(appConfig, nino, taxYear),
       method = PUT,
@@ -173,7 +173,7 @@ trait HateoasLinks {
     )
 
   // Pensions Income
-  def amendPensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
+  def createAmendPensions(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = pensionsUri(appConfig, nino, taxYear),
       method = PUT,

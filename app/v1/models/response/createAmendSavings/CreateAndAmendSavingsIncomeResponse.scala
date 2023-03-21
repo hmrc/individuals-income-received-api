@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.response.createAmendPensions
+package v1.models.response.createAmendSavings
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 
-object CreateAndAmendPensionsIncomeResponse extends HateoasLinks {
+object CreateAndAmendSavingsIncomeResponse extends HateoasLinks {
 
-  implicit object CreateAndAmendPensionsIncomeLinksFactory extends HateoasLinksFactory[Unit, CreateAndAmendPensionsIncomeHateoasData] {
+  implicit object CreateAndAmendSavingsIncomeLinksFactory extends HateoasLinksFactory[Unit, CreateAndAmendSavingsIncomeHateoasData] {
 
-    override def links(appConfig: AppConfig, data: CreateAndAmendPensionsIncomeHateoasData): Seq[Link] = {
+    override def links(appConfig: AppConfig, data: CreateAndAmendSavingsIncomeHateoasData): Seq[Link] = {
       import data._
       Seq(
-        createAmendPensions(appConfig, nino, taxYear),
-        retrievePensions(appConfig, nino, taxYear),
-        deletePensions(appConfig, nino, taxYear)
+        createAmendSavings(appConfig, nino, taxYear),
+        retrieveSavings(appConfig, nino, taxYear),
+        deleteSavings(appConfig, nino, taxYear)
       )
     }
 
@@ -37,4 +37,4 @@ object CreateAndAmendPensionsIncomeResponse extends HateoasLinks {
 
 }
 
-case class CreateAndAmendPensionsIncomeHateoasData(nino: String, taxYear: String) extends HateoasData
+case class CreateAndAmendSavingsIncomeHateoasData(nino: String, taxYear: String) extends HateoasData
