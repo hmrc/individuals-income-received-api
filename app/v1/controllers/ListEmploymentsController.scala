@@ -16,15 +16,11 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
+import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.ListEmploymentsRequestParser
 import v1.models.request.listEmployments.ListEmploymentsRawData
@@ -32,18 +28,18 @@ import v1.models.response.listEmployment.ListEmploymentHateoasData
 import v1.services.ListEmploymentsService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ListEmploymentsController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
                                            requestParser: ListEmploymentsRequestParser,
                                            service: ListEmploymentsService,
+                                           appConfig: AppConfig,
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -54,52 +50,20 @@ class ListEmploymentsController @Inject() (val authService: EnrolmentsAuthServic
 
   def listEmployments(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData: ListEmploymentsRawData = ListEmploymentsRawData(
         nino = nino,
         taxYear = taxYear
       )
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.listEmployments(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrapList(serviceResponse.responseData, ListEmploymentHateoasData(nino, taxYear))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.listEmployments)
+          .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((_, _) => ListEmploymentHateoasData(nino, taxYear)))
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        result
-      }.merge
-    }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
+      requestHandler.handleRequest(rawData)
     }
 
 }

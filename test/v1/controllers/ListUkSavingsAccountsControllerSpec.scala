@@ -16,20 +16,18 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.Method.{GET, POST}
 import api.models.hateoas.RelType.{ADD_UK_SAVINGS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockListUkSavingsAccountsRequestParser
 import v1.mocks.services.MockListUkSavingsAccountsService
 import v1.models.request.listUkSavingsAccounts.{ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest}
@@ -40,17 +38,14 @@ import scala.concurrent.Future
 
 class ListUkSavingsAccountsControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
+    with MockAppConfig
     with MockListUkSavingsAccountsService
     with MockHateoasFactory
     with MockListUkSavingsAccountsRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with HateoasLinks {
 
-  val nino: String             = "AA123456A"
   val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
-  val correlationId: String    = "X-123"
 
   val rawData: ListUkSavingsAccountsRawData = ListUkSavingsAccountsRawData(
     nino = nino,
@@ -116,28 +111,9 @@ class ListUkSavingsAccountsControllerSpec
       | ]
       |}""".stripMargin)
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new ListUkSavingsAccountsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockListUkSavingsAccountsRequestParser,
-      service = mockListUkSavingsAccountsService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "listUkSavingsAccounts" should {
     "return OK" when {
       "happy path" in new Test {
-
         MockListUkSavingsAccountsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -156,70 +132,50 @@ class ListUkSavingsAccountsControllerSpec
                 listUkSavingsAccountsLink
               )))
 
-        val result: Future[Result] = controller.listUkSavingsAccounts(nino, Some(savingsAccountId))(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponse)
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockListUkSavingsAccountsRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockListUkSavingsAccountsRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.listUkSavingsAccounts(nino, Some(savingsAccountId))(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (SavingsAccountIdFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockListUkSavingsAccountsRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockListUkSavingsAccountsRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockListUkSavingsAccountsService
+          .listUkSavingsAccounts(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NotFoundError))))
 
-            MockListUkSavingsAccountsService
-              .listUkSavingsAccounts(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.listUkSavingsAccounts(nino, Some(savingsAccountId))(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (SavingsAccountIdFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(NotFoundError)
       }
     }
+  }
+
+  trait Test extends ControllerTest {
+
+    val controller = new ListUkSavingsAccountsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockListUkSavingsAccountsRequestParser,
+      service = mockListUkSavingsAccountsService,
+      appConfig = mockAppConfig,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.listUkSavingsAccounts(nino, Some(savingsAccountId))(fakeGetRequest)
   }
 
 }

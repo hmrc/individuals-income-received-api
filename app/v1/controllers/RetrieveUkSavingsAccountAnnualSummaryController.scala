@@ -16,15 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import api.hateoas.HateoasFactory
-import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits.catsSyntaxEitherId
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveUkSavingsAccountRequestParser
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRawData
@@ -32,7 +27,7 @@ import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnual
 import v1.services.RetrieveUkSavingsAccountAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
@@ -43,7 +38,6 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService
                                                                  cc: ControllerComponents,
                                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -54,55 +48,17 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService
 
   def retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData: RetrieveUkSavingsAnnualSummaryRawData = RetrieveUkSavingsAnnualSummaryRawData(nino, taxYear, savingsAccountId)
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieveUkSavingsAccountAnnualSummary(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.retrieveUkSavingsAccountAnnualSummary)
+          .withHateoasResult(hateoasFactory)(RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-        result
-      }.merge
-    }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError,
-            SavingsAccountIdFormatError) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
+      requestHandler.handleRequest(rawData)
     }
 
 }

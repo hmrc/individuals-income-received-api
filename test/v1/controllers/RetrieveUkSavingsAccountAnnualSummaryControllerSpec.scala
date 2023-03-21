@@ -16,20 +16,16 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{GET, PUT}
 import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_SAVINGS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveUkSavingsAccountAnnualSummaryControllerFixture
 import v1.mocks.requestParsers.MockRetrieveUkSavingsAnnualRequestParser
 import v1.mocks.services.MockRetrieveUkSavingsAnnualSummaryService
@@ -41,18 +37,14 @@ import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveUkSavingsAnnualSummaryService
     with MockHateoasFactory
     with MockRetrieveUkSavingsAnnualRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with HateoasLinks {
 
-  val nino: String                        = "AA123456A"
   val taxYear: String                     = "2019-20"
   val savingsAccountId: String            = "ABCDE0123456789"
-  val correlationId: String               = "X-123"
   val taxedUkIncome: Option[BigDecimal]   = Some(93556675358.99)
   val unTaxedUkIncome: Option[BigDecimal] = Some(34514974058.99)
 
@@ -79,24 +71,6 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
   private val mtdResponse = RetrieveUkSavingsAccountAnnualSummaryControllerFixture
     .mtdRetrieveResponseWithHateaos(nino, taxYear, savingsAccountId)
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveUkSavingsAccountAnnualSummaryController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveUkSavingsSummaryRequestParser,
-      service = mockRetrieveUkSavingsAnnualSummaryService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "RetrieveUkSavingsAccountSummaryControllerSpec" should {
     "return OK" when {
       "happy path" in new Test {
@@ -116,72 +90,50 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
               links
             )
           )
-        val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponse)
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveUkSavingsAnnualRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            MockRetrieveUkSavingsAnnualRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (SavingsAccountIdFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockRetrieveUkSavingsAnnualRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockRetrieveUkSavingsAnnualRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockRetrieveUkSavingsAnnualSummaryService
+          .retrieveUkSavings(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NotFoundError))))
 
-            MockRetrieveUkSavingsAnnualSummaryService
-              .retrieveUkSavings(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (SavingsAccountIdFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(NotFoundError)
       }
     }
+  }
+
+  trait Test extends ControllerTest {
+
+    val controller = new RetrieveUkSavingsAccountAnnualSummaryController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockRetrieveUkSavingsSummaryRequestParser,
+      service = mockRetrieveUkSavingsAnnualSummaryService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveUkSavingAccount(nino, taxYear, savingsAccountId)(fakeRequest)
   }
 
 }
