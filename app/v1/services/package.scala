@@ -19,11 +19,17 @@ package v1
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
+import v1.models.response.retrieveDividends.RetrieveDividendsResponse
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 
 package object services {
 
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
+  // Dividends income
+  type AmendDividendsServiceOutcome    = ServiceOutcome[Unit]
+  type DeleteDividendsServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveDividendsServiceOutcome = ServiceOutcome[RetrieveDividendsResponse]
 
   // Capital Tax Gains
   type CreateAmendCgtPpdOverridesServiceOutcome                 = ServiceOutcome[Unit]
