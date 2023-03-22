@@ -58,7 +58,6 @@ class DeleteCgtNonPpdControllerSpec
   "DeleteCgtNonPpdController" should {
     "return a successful response with status 204 (No Content)" when {
       "a valid request is supplied" in new Test {
-
         MockDeleteCgtNonPpdRequestParser
           .parse(rawData)
           .returns(Right(requestData))

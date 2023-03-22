@@ -84,7 +84,7 @@ class RetrieveOtherCgtControllerSpec
   val responseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
     submittedOn = "2021-05-07T16:18:44.403Z",
     disposals = Some(
-      Seq(
+      List(
         Disposal(
           assetType = "otherProperty",
           assetDescription = "string",
@@ -94,7 +94,7 @@ class RetrieveOtherCgtControllerSpec
           allowableCosts = 59999999999.99,
           gain = Some(59999999999.99),
           loss = None,
-          claimOrElectionCodes = Some(Seq("OTH")),
+          claimOrElectionCodes = Some(List("OTH")),
           gainAfterRelief = Some(59999999999.99),
           lossAfterRelief = None,
           rttTaxPaid = Some(59999999999.99)
@@ -203,7 +203,7 @@ class RetrieveOtherCgtControllerSpec
           .returns(
             HateoasWrapper(
               responseModel,
-              Seq(
+              List(
                 amendOtherCgtLink,
                 retrieveOtherCgtLink,
                 deleteOtherCgtLink

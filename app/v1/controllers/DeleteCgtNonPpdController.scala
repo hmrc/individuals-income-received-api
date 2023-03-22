@@ -25,7 +25,7 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteCgtNonPpdRequestParser
 import v1.models.audit.DeleteCgtNonPpdAuditDetail
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
@@ -42,9 +42,7 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
                                            auditService: AuditService,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(

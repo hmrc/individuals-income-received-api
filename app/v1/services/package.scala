@@ -30,6 +30,7 @@ package object services {
   type CreateAmendOtherCgtServiceOutcome                        = ServiceOutcome[Unit]
   type CreateAmendCgtResidentialPropertyDisposalsServiceOutcome = ServiceOutcome[Unit]
   type DeleteCgtNonPpdServiceOutcome                            = ServiceOutcome[Unit]
+  type DeleteOtherCgtServiceOutcome                             = ServiceOutcome[Unit]
   type DeleteCgtPpdOverridesServiceOutcome                      = ServiceOutcome[Unit]
   type RetrieveOtherCgtServiceOutcome                           = ServiceOutcome[RetrieveOtherCgtResponse]
   type RetrieveAllResidentialPropertyCgtServiceOutcome          = ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]

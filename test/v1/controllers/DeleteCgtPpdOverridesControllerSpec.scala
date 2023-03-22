@@ -58,7 +58,6 @@ class DeleteCgtPpdOverridesControllerSpec
   "DeleteCgtPpdOverridesController" should {
     "return a successful response with status 204 (No Content)" when {
       "a valid request is supplied" in new Test {
-
         MockDeleteCgtPpdOverridesRequestParser
           .parse(rawData)
           .returns(Right(requestData))

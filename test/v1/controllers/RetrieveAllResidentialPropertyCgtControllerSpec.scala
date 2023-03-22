@@ -100,7 +100,6 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
   "retrieveAll" should {
     "return a successful response with status 200 (OK)" when {
       "given a valid request" in new Test {
-
         MockRetrieveAllResidentialPropertyCgtRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -114,7 +113,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
           .returns(
             HateoasWrapper(
               responseModel,
-              Seq(
+              List(
                 createAndAmendPpdCgtLink,
                 deletePpdCgtLink,
                 createAndAmendNonPpdCgtLink,
@@ -131,17 +130,14 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockRetrieveAllResidentialPropertyCgtRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
         runErrorTest(NinoFormatError)
-
       }
 
       "the service returns an error" in new Test {
-
         MockRetrieveAllResidentialPropertyCgtRequestParser
           .parse(rawData)
           .returns(Right(requestData))
