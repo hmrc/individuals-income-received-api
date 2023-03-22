@@ -28,9 +28,9 @@ object CreateAmendCgtPpdOverridesResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: CreateAmendCgtPpdOverridesHateoasData): Seq[Link] = {
       import data._
       Seq(
-        amendSavings(appConfig, nino, taxYear),
-        retrieveSavings(appConfig, nino, taxYear),
-        deleteSavings(appConfig, nino, taxYear)
+        createAmendCgtPpdOverrides(appConfig, nino, taxYear),
+        deleteCgtPpdOverrides(appConfig, nino, taxYear),
+        retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear)
       )
     }
 

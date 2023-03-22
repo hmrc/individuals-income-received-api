@@ -17,7 +17,7 @@
 package v1.controllers
 
 import api.controllers._
-import api.hateoas.{AmendHateoasBody, HateoasFactory}
+import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.auth.UserDetails
 import api.models.errors._
@@ -26,7 +26,7 @@ import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
@@ -48,10 +48,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
                                                       hateoasFactory: HateoasFactory,
                                                       cc: ControllerComponents,
                                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging
-    with AmendHateoasBody {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(

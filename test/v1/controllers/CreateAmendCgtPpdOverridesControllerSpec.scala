@@ -206,9 +206,16 @@ class CreateAmendCgtPpdOverridesControllerSpec
     )
   )
 
+  val auditData: JsValue = Json.parse(s"""
+                                         |{
+                                         |  "nino":"$nino",
+                                         |  "taxYear": "$taxYear"
+                                         |  }""".stripMargin)
+
   "CreateAmendCgtPpdOverridesController" should {
     "return a successful response with status OK" when {
       "happy path" in new Test {
+
         MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendCgtPpdOverridesRequestParser
@@ -227,7 +234,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           .wrap((), CreateAmendCgtPpdOverridesHateoasData(nino, taxYear))
           .returns(HateoasWrapper((), hateoasLinks))
 
-        runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(mtdResponse))
+        runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(auditData))
 
       }
     }
@@ -239,7 +246,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(mtdResponse))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validRequestJson))
       }
 
       "service returns an error" in new Test {
@@ -254,7 +261,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
           .createAmend(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-        runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(mtdResponse))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(validRequestJson))
 
       }
     }
