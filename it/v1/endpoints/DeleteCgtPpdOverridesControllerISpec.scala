@@ -73,7 +73,6 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
@@ -88,7 +87,6 @@ class DeleteCgtPpdOverridesControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
     }

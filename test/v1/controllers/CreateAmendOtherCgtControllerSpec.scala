@@ -102,7 +102,7 @@ class CreateAmendOtherCgtControllerSpec
 
   val requestModel: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
     disposals = Some(
-      Seq(
+      List(
         Disposal(
           assetType = "otherProperty",
           assetDescription = "string",
@@ -112,7 +112,7 @@ class CreateAmendOtherCgtControllerSpec
           allowableCosts = 59999999999.99,
           gain = Some(59999999999.99),
           loss = None,
-          claimOrElectionCodes = Some(Seq("OTH")),
+          claimOrElectionCodes = Some(List("OTH")),
           gainAfterRelief = Some(59999999999.99),
           lossAfterRelief = None,
           rttTaxPaid = Some(59999999999.99)

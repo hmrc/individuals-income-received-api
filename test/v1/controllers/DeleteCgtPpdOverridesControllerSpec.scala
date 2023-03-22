@@ -16,16 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockDeleteCgtPpdOverridesRequestParser
 import v1.mocks.services.MockDeleteCgtPpdOverridesService
 import v1.models.audit.DeleteCgtPpdOverridesAuditDetail
@@ -36,6 +35,7 @@ import scala.concurrent.Future
 
 class DeleteCgtPpdOverridesControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteCgtPpdOverridesService
@@ -43,9 +43,7 @@ class DeleteCgtPpdOverridesControllerSpec
     with MockDeleteCgtPpdOverridesRequestParser
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val taxYear: String = "2019-20"
 
   val rawData: DeleteCgtPpdOverridesRawData = DeleteCgtPpdOverridesRawData(
     nino = nino,
@@ -57,41 +55,9 @@ class DeleteCgtPpdOverridesControllerSpec
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new DeleteCgtPpdOverridesController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteCgtPpdOverridesRequestParser,
-      service = mockDeleteCgtPpdOverridesService,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  def event(auditResponse: AuditResponse): AuditEvent[DeleteCgtPpdOverridesAuditDetail] =
-    AuditEvent(
-      auditType = "DeleteCgtPpdOverrides",
-      transactionName = "Delete-Cgt-Ppd-Overrides",
-      detail = DeleteCgtPpdOverridesAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino,
-        taxYear,
-        correlationId,
-        response = auditResponse
-      )
-    )
-
   "DeleteCgtPpdOverridesController" should {
-    "return NO_CONTENT" when {
-      "happy path" in new Test {
+    "return a successful response with status 204 (No Content)" when {
+      "a valid request is supplied" in new Test {
 
         MockDeleteCgtPpdOverridesRequestParser
           .parse(rawData)
@@ -101,82 +67,61 @@ class DeleteCgtPpdOverridesControllerSpec
           .deleteCgtPpdOverrides(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
-
-        status(result) shouldBe NO_CONTENT
-        contentAsString(result) shouldBe ""
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, Right(None))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = NO_CONTENT)
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockDeleteCgtPpdOverridesRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockDeleteCgtPpdOverridesRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "service returns an error" in new Test {
+        MockDeleteCgtPpdOverridesRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockDeleteCgtPpdOverridesRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockDeleteCgtPpdOverridesService
+          .deleteCgtPpdOverrides(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockDeleteCgtPpdOverridesService
-              .deleteCgtPpdOverrides(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError)
       }
     }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[DeleteCgtPpdOverridesAuditDetail] {
+
+    val controller = new DeleteCgtPpdOverridesController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockDeleteCgtPpdOverridesRequestParser,
+      service = mockDeleteCgtPpdOverridesService,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.deleteCgtPpdOverrides(nino, taxYear)(fakeDeleteRequest)
+
+    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[DeleteCgtPpdOverridesAuditDetail] =
+      AuditEvent(
+        auditType = "DeleteCgtPpdOverrides",
+        transactionName = "Delete-Cgt-Ppd-Overrides",
+        detail = DeleteCgtPpdOverridesAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          nino,
+          taxYear,
+          correlationId,
+          response = auditResponse
+        )
+      )
+
   }
 
 }

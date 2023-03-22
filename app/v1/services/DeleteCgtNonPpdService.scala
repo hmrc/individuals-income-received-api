@@ -16,14 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.DeleteCgtNonPpdConnector
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRequest
 
@@ -31,21 +27,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCgtNonPpdService @Inject() (connector: DeleteCgtNonPpdConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteCgtNonPpdService @Inject() (connector: DeleteCgtNonPpdConnector) extends BaseService {
 
-  def deleteCgtNonPpd(request: DeleteCgtNonPpdRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def deleteCgtNonPpd(request: DeleteCgtNonPpdRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteCgtNonPpdServiceOutcome] = {
 
-    val result = EitherT(connector.deleteCgtNonPpd(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+    connector.deleteCgtNonPpd(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  val errorMap: Map[String, MtdError] = {
-    val downstreamErrors = Map(
+  val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -60,7 +50,7 @@ class DeleteCgtNonPpdService @Inject() (connector: DeleteCgtNonPpdConnector) ext
       "NOT_FOUND"              -> NotFoundError
     )
 
-    downstreamErrors ++ extraTysErrors
+    errors ++ extraTysErrors
 
   }
 
