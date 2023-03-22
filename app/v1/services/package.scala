@@ -26,7 +26,9 @@ package object services {
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
 
   // Capital Tax Gains
-  type RetrieveOtherCgtServiceOutcome                  = ServiceOutcome[RetrieveOtherCgtResponse]
-  type RetrieveAllResidentialPropertyCgtServiceOutcome = ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]
+  type CreateAmendCgtPpdOverridesServiceOutcome                 = ServiceOutcome[Unit]
+  type CreateAmendCgtResidentialPropertyDisposalsServiceOutcome = ServiceOutcome[Unit]
+  type RetrieveOtherCgtServiceOutcome                           = ServiceOutcome[RetrieveOtherCgtResponse]
+  type RetrieveAllResidentialPropertyCgtServiceOutcome          = ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]
 
 }

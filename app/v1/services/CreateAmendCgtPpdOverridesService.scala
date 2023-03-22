@@ -18,7 +18,6 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits.toBifunctorOps
 import v1.connectors.CreateAmendCgtPpdOverridesConnector
@@ -32,7 +31,7 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
 
   def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ec: ExecutionContext): Future[CreateAmendCgtPpdOverridesServiceOutcome] = {
 
     connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

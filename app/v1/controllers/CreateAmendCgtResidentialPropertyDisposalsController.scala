@@ -16,40 +16,39 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.AmendHateoasBody
+import api.controllers._
+import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
-import cats.data.EitherT
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
+import v1.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsHateoasData
+import v1.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsResponse._
 import v1.services._
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authService: EnrolmentsAuthService,
                                                                       val lookupService: MtdIdLookupService,
                                                                       appConfig: AppConfig,
-                                                                      requestParser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
+                                                                      parser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
                                                                       service: CreateAmendCgtResidentialPropertyDisposalsService,
                                                                       auditService: AuditService,
                                                                       nrsProxyService: NrsProxyService,
+                                                                      hateoasFactory: HateoasFactory,
                                                                       cc: ControllerComponents,
                                                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging
-    with AmendHateoasBody {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,10 +58,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
 
   def createAmendCgtResidentialPropertyDisposals(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData: CreateAmendCgtResidentialPropertyDisposalsRawData = CreateAmendCgtResidentialPropertyDisposalsRawData(
         nino = nino,
@@ -71,64 +67,49 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
         body = AnyContentAsJson(request.body)
       )
 
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- {
-            nrsProxyService.submitAsync(nino, "itsa-cgt-disposal", request.body)
-            EitherT(service.createAndAmend(parsedRequest))
-          }
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
-
-          auditSubmission(
-            CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
-              request.userDetails,
-              nino,
-              taxYear,
-              request.body,
-              serviceResponse.correlationId,
-              AuditResponse(OK, Right(Some(amendCgtResidentialPropertyDisposalsHateoasBody(appConfig, nino, taxYear))))
-            ))
-
-          Ok(amendCgtResidentialPropertyDisposalsHateoasBody(appConfig, nino, taxYear))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
+      val requestHandler = RequestHandler
+        .withParser(parser)
+        .withService { req =>
+          nrsProxyService.submitAsync(nino, "itsa-cgt-disposal", request.body)
+          service.createAndAmend(req)
         }
+        .withAuditing(auditHandler(nino, taxYear, request))
+        .withHateoasResult(hateoasFactory)(CreateAmendCgtResidentialPropertyDisposalsHateoasData(nino, taxYear))
 
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
-            request.userDetails,
-            nino,
-            taxYear,
-            request.body,
-            correlationId,
-            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(RuleGainLossError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(
-            DateFormatError.code) | CustomMtdError(CustomerRefFormatError.code) | CustomMtdError(RuleCompletionDateBeforeDisposalDateError.code) |
-          CustomMtdError(RuleAcquisitionDateAfterDisposalDateError.code) | CustomMtdError(RuleLossesGreaterThanGainError.code) | CustomMtdError(
-            RuleCompletionDateError.code) | CustomMtdError(RuleDisposalDateError.code) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
+  private def auditHandler(nino: String, taxYear: String, request: UserRequest[JsValue]): AuditHandler = {
+    new AuditHandler() {
+      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+          ctx: RequestContext,
+          ec: ExecutionContext): Unit = {
+
+        response match {
+          case Left(err: ErrorWrapper) =>
+            auditSubmission(
+              CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
+                request.userDetails,
+                nino,
+                taxYear,
+                request.body,
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, Left(err.auditErrors))))
+
+          case Right(_: Option[JsValue]) =>
+            auditSubmission(
+              CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
+                request.userDetails,
+                nino,
+                taxYear,
+                request.body,
+                ctx.correlationId,
+                AuditResponse(OK, Right(Some(Json.toJson(CreateAmendCgtResidentialPropertyDisposalsHateoasData(nino, taxYear)))))
+              ))
+        }
+      }
     }
+  }
 
   private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
     val event = AuditEvent("CreateAmendCgtResidentialPropertyDisposals", "Create-Amend-Cgt-Residential-Property-Disposals", details)

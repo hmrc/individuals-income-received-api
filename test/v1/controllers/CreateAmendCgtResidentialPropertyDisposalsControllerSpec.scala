@@ -16,30 +16,33 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.mocks.services._
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v1.models.request.createAmendCgtResidentialPropertyDisposals._
+import v1.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -51,9 +54,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2020-21"
-  val correlationId: String = "X-123"
+  val taxYear: String = "2020-21"
 
   val validRequestJson: JsValue = Json.parse(
     """
@@ -87,7 +88,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
   )
 
   val requestModel: CreateAmendCgtResidentialPropertyDisposalsRequestBody = CreateAmendCgtResidentialPropertyDisposalsRequestBody(
-    disposals = Seq(
+    disposals = List(
       Disposal(
         customerReference = Some("CGTDISPOSAL01"),
         disposalDate = "2021-03-24",
@@ -137,144 +138,114 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
     """.stripMargin
   )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new CreateAmendCgtResidentialPropertyDisposalsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockCreateAmendCgtResidentialPropertyDisposalsRequestParser,
-      service = mockCreateAmendCgtResidentialPropertyDisposalsService,
-      auditService = mockAuditService,
-      nrsProxyService = mockNrsProxyService,
-      cc = cc,
-      idGenerator = mockIdGenerator
+  val hateoasLinks: List[Link] = List(
+    Link(
+      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+      method = PUT,
+      rel = "create-and-amend-cgt-residential-property-disposals"
+    ),
+    Link(
+      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+      method = GET,
+      rel = "self"
+    ),
+    Link(
+      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+      method = DELETE,
+      rel = "delete-cgt-residential-property-disposals"
     )
+  )
 
-    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes ()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  def event(auditResponse: AuditResponse): AuditEvent[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] =
-    AuditEvent(
-      auditType = "CreateAmendCgtResidentialPropertyDisposals",
-      transactionName = "Create-Amend-Cgt-Residential-Property-Disposals",
-      detail = CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino,
-        taxYear,
-        validRequestJson,
-        correlationId,
-        response = auditResponse
-      )
-    )
+  val auditData: JsValue = Json.parse(s"""
+                                         |{
+                                         |  "nino":"$nino",
+                                         |  "taxYear": "$taxYear"
+                                         |  }""".stripMargin)
 
   "CreateAmendCgtResidentialPropertyDisposalsController" should {
-    "return OK" when {
+    "return a successful response with status OK" when {
       "happy path" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
+        MockNrsProxyService
+          .submitAsync(nino, "itsa-cgt-disposal", validRequestJson)
+          .returns(Unit)
+
         MockCreateAmendCgtResidentialPropertyDisposalsService
           .createAndAmend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal", validRequestJson)
+        MockHateoasFactory
+          .wrap((), CreateAmendCgtResidentialPropertyDisposalsHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), hateoasLinks))
 
-        val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(mtdResponse)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(auditData))
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (DateFormatError, BAD_REQUEST),
-          (CustomerRefFormatError, BAD_REQUEST),
-          (RuleCompletionDateBeforeDisposalDateError, BAD_REQUEST),
-          (RuleAcquisitionDateAfterDisposalDateError, BAD_REQUEST),
-          (RuleCompletionDateError, BAD_REQUEST),
-          (RuleDisposalDateError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (RuleGainLossError, BAD_REQUEST),
-          (RuleLossesGreaterThanGainError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validRequestJson))
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "service returns an error" in new Test {
+        MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal", validRequestJson)
 
-            MockCreateAmendCgtResidentialPropertyDisposalsService
-              .createAndAmend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+        MockCreateAmendCgtResidentialPropertyDisposalsService
+          .createAndAmend(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal", validRequestJson)
-
-            val result: Future[Result] = controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(validRequestJson))
       }
     }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] {
+
+    val controller = new CreateAmendCgtResidentialPropertyDisposalsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      parser = mockCreateAmendCgtResidentialPropertyDisposalsRequestParser,
+      service = mockCreateAmendCgtResidentialPropertyDisposalsService,
+      auditService = mockAuditService,
+      nrsProxyService = mockNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] =
+      controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
+
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] =
+      AuditEvent(
+        auditType = "CreateAmendCgtResidentialPropertyDisposals",
+        transactionName = "Create-Amend-Cgt-Residential-Property-Disposals",
+        detail = CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          nino,
+          taxYear,
+          requestBody.getOrElse(Json.parse("""{}""")),
+          correlationId,
+          response = auditResponse
+        )
+      )
+
+    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes ()
   }
 
 }

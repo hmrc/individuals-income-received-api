@@ -41,7 +41,7 @@ import scala.concurrent.ExecutionContext
 class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
                                                       val lookupService: MtdIdLookupService,
                                                       appConfig: AppConfig,
-                                                      requestParser: CreateAmendCgtPpdOverridesRequestParser,
+                                                      parser: CreateAmendCgtPpdOverridesRequestParser,
                                                       service: CreateAmendCgtPpdOverridesService,
                                                       auditService: AuditService,
                                                       nrsProxyService: NrsProxyService,
@@ -68,7 +68,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService { req =>
           nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", request.body)
           service.createAmend(req)

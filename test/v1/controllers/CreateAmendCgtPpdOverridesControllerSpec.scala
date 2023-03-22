@@ -109,54 +109,23 @@ class CreateAmendCgtPpdOverridesControllerSpec
     body = AnyContentAsJson.apply(validRequestJson)
   )
 
+  //@formatter:off
   val requestModel: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(
     multiplePropertyDisposals = Some(
-      Seq(
-        MultiplePropertyDisposals(
-          "AB0000000092",
-          Some(1234.78),
-          None
-        ),
-        MultiplePropertyDisposals(
-          "AB0000000098",
-          None,
-          Some(134.99)
-        )
+      List(
+        MultiplePropertyDisposals("AB0000000092", Some(1234.78), None),
+        MultiplePropertyDisposals("AB0000000098", None, Some(134.99))
       )),
     singlePropertyDisposals = Some(
-      Seq(
-        SinglePropertyDisposals(
-          "AB0000000098",
-          "2020-02-28",
-          454.24,
-          Some("2020-03-29"),
-          3434.45,
-          233.45,
-          423.34,
-          2324.67,
-          3434.23,
-          Some(436.23),
-          Some(234.23),
-          Some(4567.89),
-          None
-        ),
-        SinglePropertyDisposals(
-          "AB0000000091",
-          "2020-02-28",
-          454.24,
-          Some("2020-03-29"),
-          3434.45,
-          233.45,
-          423.34,
-          2324.67,
-          3434.23,
-          Some(436.23),
-          Some(234.23),
-          None,
-          Some(4567.89)
+      List(
+        SinglePropertyDisposals("AB0000000098", "2020-02-28", 454.24, Some("2020-03-29"), 3434.45, 233.45,
+          423.34, 2324.67, 3434.23, Some(436.23), Some(234.23), Some(4567.89), None),
+        SinglePropertyDisposals("AB0000000091", "2020-02-28", 454.24, Some("2020-03-29"), 3434.45, 233.45,
+          423.34, 2324.67, 3434.23, Some(436.23), Some(234.23), None, Some(4567.89)
         )
       ))
   )
+  //@formatter:on
 
   val requestData: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
     nino = Nino(nino),
@@ -188,7 +157,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
     """.stripMargin
   )
 
-  val hateoasLinks: Seq[Link] = Seq(
+  val hateoasLinks: List[Link] = List(
     Link(
       href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
       method = PUT,
@@ -215,7 +184,6 @@ class CreateAmendCgtPpdOverridesControllerSpec
   "CreateAmendCgtPpdOverridesController" should {
     "return a successful response with status OK" when {
       "happy path" in new Test {
-
         MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendCgtPpdOverridesRequestParser
@@ -235,13 +203,11 @@ class CreateAmendCgtPpdOverridesControllerSpec
           .returns(HateoasWrapper((), hateoasLinks))
 
         runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(auditData))
-
       }
     }
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockCreateAmendCgtPpdOverridesRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -250,7 +216,6 @@ class CreateAmendCgtPpdOverridesControllerSpec
       }
 
       "service returns an error" in new Test {
-
         MockCreateAmendCgtPpdOverridesRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -262,7 +227,6 @@ class CreateAmendCgtPpdOverridesControllerSpec
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
         runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(validRequestJson))
-
       }
     }
   }
@@ -273,7 +237,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockCreateAmendCgtPpdOverridesRequestParser,
+      parser = mockCreateAmendCgtPpdOverridesRequestParser,
       service = mockCreateAmendCgtPpdOverridesService,
       auditService = mockAuditService,
       nrsProxyService = mockNrsProxyService,
