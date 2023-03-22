@@ -16,14 +16,13 @@
 
 package v1.mocks.services
 
-import api.connectors.DownstreamUri
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError}
+import api.controllers.RequestContext
+import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.{Format, Reads}
-import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRequest
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 import v1.services.RetrieveEmploymentService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,19 +33,13 @@ trait MockRetrieveEmploymentService extends MockFactory {
 
   object MockRetrieveEmploymentService {
 
-    def retrieve[Resp: Reads](downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Resp]]]] = {
+    def retrieve(retrieveEmploymentRequest: RetrieveEmploymentRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentResponse]]]] = {
       (
         mockRetrieveEmploymentService
-          .retrieve[Resp](_: Map[String, MtdError])(
-            _: Format[Resp],
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: DownstreamUri[Resp],
-            _: String
-          )
+          .retrieve(_: RetrieveEmploymentRequest)(_: RequestContext, _: ExecutionContext)
         )
-        .expects(downstreamErrorMap, *, *, *, *, *, *)
+        .expects(retrieveEmploymentRequest, *, *)
     }
 
   }

@@ -16,35 +16,30 @@
 
 package v1.services
 
-import api.connectors.DownstreamUri
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.implicits._
-import play.api.libs.json.Format
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveEmploymentConnector
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRequest
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveEmploymentService @Inject() (connector: RetrieveEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveEmploymentService @Inject() (connector: RetrieveEmploymentConnector) extends BaseService {
 
-  def retrieve[Resp: Format](desErrorMap: Map[String, MtdError] = errorMap)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      downstreamUri: DownstreamUri[Resp],
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Resp]]] = {
+  def retrieve(request: RetrieveEmploymentRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentResponse]]] = {
 
-    connector.retrieve[Resp]().map(_.leftMap(mapDownstreamErrors(desErrorMap)))
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   }
 
-  private val errorMap: Map[String, MtdError] =
+  private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
