@@ -16,11 +16,12 @@
 
 package v1.mocks.connectors
 
-import api.connectors.{DownstreamOutcome, DownstreamUri}
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.DeleteCustomEmploymentConnector
+import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,10 +31,10 @@ trait MockDeleteCustomEmploymentConnector extends MockFactory {
 
   object MockDeleteCustomEmploymentConnector {
 
-    def delete(): CallHandler[Future[DownstreamOutcome[Unit]]] =
+    def delete(request: DeleteCustomEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] =
       (mockDeleteCustomEmploymentConnector
-        .delete()(_: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Unit], _: String))
-        .expects(*, *, *, *)
+        .delete(_: DeleteCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
 
   }
 

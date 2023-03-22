@@ -16,53 +16,48 @@
 
 package v1.connectors
 
-import api.connectors.ConnectorSpec
-import api.connectors.DownstreamUri.DesUri
-import api.mocks.MockHttpClient
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRequest
 
 import scala.concurrent.Future
 
 class DeleteCustomEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2019-20"
+  private val nino: String    = "AA111111A"
+  private val taxYear: String = "2019-20"
+  private val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  "DeleteCustomEmploymentConnector" should {
+    "return a 200 result on delete" when {
+      "the downstream call is successful" in new IfsTest with Test {
+
+        willDelete(s"$baseUrl/income-tax/income/employments/$nino/$taxYear/custom/$employmentId") returns Future.successful(outcome)
+
+        val result: DownstreamOutcome[Unit] = await(connector.delete(request))
+        result shouldBe outcome
+
+      }
+    }
+  }
+
+  trait Test {
+    _: ConnectorTest =>
 
     val connector: DeleteCustomEmploymentConnector = new DeleteCustomEmploymentConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-  }
+    protected val request: DeleteCustomEmploymentRequest =
+      DeleteCustomEmploymentRequest(
+        nino = Nino(nino),
+        taxYear = taxYear,
+        employmentId = employmentId
+      )
 
-  "DeleteCustomEmploymentConnector" when {
-    "delete" must {
-      "return a 204 status for a success scenario" in new Test {
-
-        val outcome                       = Right(ResponseWrapper(correlationId, ()))
-        implicit val desUri: DesUri[Unit] = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
-
-        MockedHttpClient
-          .delete(
-            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.delete()) shouldBe outcome
-      }
-    }
+    val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
   }
 
 }
