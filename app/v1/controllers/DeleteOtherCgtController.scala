@@ -24,6 +24,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteOtherCgtRequestParser
 import v1.models.audit.DeleteOtherCgtAuditDetail
@@ -31,7 +32,7 @@ import v1.models.request.deleteOtherCgt.DeleteOtherCgtRawData
 import v1.services.DeleteOtherCgtService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteOtherCgtController @Inject() (val authService: EnrolmentsAuthService,
@@ -90,7 +91,7 @@ class DeleteOtherCgtController @Inject() (val authService: EnrolmentsAuthService
     }
   }
 
-  private def auditSubmission(details: DeleteOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def auditSubmission(details: DeleteOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeleteOtherCgtDisposalsAndGains", "Delete-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }

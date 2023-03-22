@@ -26,6 +26,7 @@ import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v1.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
@@ -35,7 +36,7 @@ import v1.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmend
 import v1.services._
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authService: EnrolmentsAuthService,
@@ -111,7 +112,8 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
     }
   }
 
-  private def auditSubmission(details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def auditSubmission(
+      details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendCgtResidentialPropertyDisposals", "Create-Amend-Cgt-Residential-Property-Disposals", details)
     auditService.auditEvent(event)
   }

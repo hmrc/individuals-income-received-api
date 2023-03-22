@@ -24,6 +24,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteCgtPpdOverridesRequestParser
 import v1.models.audit.DeleteCgtPpdOverridesAuditDetail
@@ -31,7 +32,7 @@ import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
 import v1.services.DeleteCgtPpdOverridesService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
@@ -86,7 +87,7 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
     }
   }
 
-  private def auditSubmission(details: DeleteCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def auditSubmission(details: DeleteCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeleteCgtPpdOverrides", "Delete-Cgt-Ppd-Overrides", details)
     auditService.auditEvent(event)
   }
