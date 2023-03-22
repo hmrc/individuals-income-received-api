@@ -34,7 +34,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
   implicit val hc: HeaderCarrier     = HeaderCarrier()
   implicit val ec: ExecutionContext  = scala.concurrent.ExecutionContext.global
 
-  val otherHeaders: Seq[(String, String)] = Seq(
+  val otherHeaders: Seq[(String, String)] = List(
     "Gov-Test-Scenario" -> "DEFAULT",
     "AnotherHeader"     -> "HeaderValue"
   )
@@ -60,7 +60,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
       Some("individuals-income-received-api")
     )
 
-  val allowedDesHeaders: Seq[String] = Seq(
+  val allowedDesHeaders: Seq[String] = List(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
@@ -69,7 +69,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
-  val allowedIfsHeaders: Seq[String] = Seq(
+  val allowedIfsHeaders: Seq[String] = List(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
@@ -78,31 +78,31 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
-  val requiredDesHeaders: Seq[(String, String)] = Seq(
+  val requiredDesHeaders: Seq[(String, String)] = List(
     "Environment"   -> "des-environment",
     "Authorization" -> s"Bearer des-token",
     "CorrelationId" -> s"$correlationId"
   )
 
-  val requiredIfsHeaders: Seq[(String, String)] = Seq(
+  val requiredIfsHeaders: Seq[(String, String)] = List(
     "Environment"   -> "ifs-environment",
     "Authorization" -> s"Bearer ifs-token",
     "CorrelationId" -> s"$correlationId"
   )
 
-  val requiredTysIfsHeaders: Seq[(String, String)] = Seq(
+  val requiredTysIfsHeaders: Seq[(String, String)] = List(
     "Environment"   -> "TYS-IFS-environment",
     "Authorization" -> s"Bearer TYS-IFS-token",
     "CorrelationId" -> s"$correlationId"
   )
 
-  val requiredRelease6Headers: Seq[(String, String)] = Seq(
+  val requiredRelease6Headers: Seq[(String, String)] = List(
     "Environment"   -> "release6-environment",
     "Authorization" -> s"Bearer release6-token",
     "CorrelationId" -> s"$correlationId"
   )
 
-  val requiredApi1661Headers: Seq[(String, String)] = Seq(
+  val requiredApi1661Headers: Seq[(String, String)] = List(
     "Environment"   -> "api1661-environment",
     "Authorization" -> s"Bearer api1661-token",
     "CorrelationId" -> s"$correlationId"
@@ -115,48 +115,53 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected val requiredHeaders: Seq[(String, String)]
 
-    protected def willGet[T](url: String, parameters: Seq[(String, String)] = Seq()): CallHandler[Future[T]] = {
+    protected def willGet[T](url: String, parameters: Seq[(String, String)] = List()): CallHandler[Future[T]] =
       MockedHttpClient
         .get(
           url = url,
           parameters = parameters,
           config = dummyHeaderCarrierConfig,
           requiredHeaders = requiredHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
-    }
 
-    protected def willPost[BODY, T](url: String, body: BODY): CallHandler[Future[T]] = {
+    protected def willPost[BODY, T](url: String, body: BODY): CallHandler[Future[T]] =
       MockedHttpClient
         .post(
           url = url,
           config = dummyHeaderCarrierConfig,
           body = body,
           requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
-    }
 
-    protected def willPut[BODY, T](url: String, body: BODY): CallHandler[Future[T]] = {
+    protected def willPut[BODY, T](url: String, body: BODY): CallHandler[Future[T]] =
       MockedHttpClient
         .put(
           url = url,
           config = dummyHeaderCarrierConfig,
           body = body,
           requiredHeaders = requiredHeaders ++ Seq("Content-Type" -> "application/json"),
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
-    }
 
-    protected def willDelete[T](url: String): CallHandler[Future[T]] = {
+    protected def willPut[T](url: String): CallHandler[Future[T]] =
+      MockedHttpClient
+        .put(
+          url = url,
+          config = dummyHeaderCarrierConfig,
+          body = "",
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
+        )
+
+    protected def willDelete[T](url: String): CallHandler[Future[T]] =
       MockedHttpClient
         .delete(
           url = url,
           config = dummyHeaderCarrierConfig,
           requiredHeaders = requiredHeaders,
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
-    }
 
   }
 
