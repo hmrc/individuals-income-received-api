@@ -27,6 +27,7 @@ package object services {
 
   // Capital Tax Gains
   type CreateAmendCgtPpdOverridesServiceOutcome                 = ServiceOutcome[Unit]
+  type CreateAmendOtherCgtServiceOutcome                        = ServiceOutcome[Unit]
   type CreateAmendCgtResidentialPropertyDisposalsServiceOutcome = ServiceOutcome[Unit]
   type RetrieveOtherCgtServiceOutcome                           = ServiceOutcome[RetrieveOtherCgtResponse]
   type RetrieveAllResidentialPropertyCgtServiceOutcome          = ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]

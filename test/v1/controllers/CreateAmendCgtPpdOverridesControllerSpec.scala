@@ -192,7 +192,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
 
         MockNrsProxyService
           .submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
-          .returns(Unit)
+          .returns(())
 
         MockCreateAmendCgtPpdOverridesService
           .createAmend(requestData)
@@ -220,7 +220,9 @@ class CreateAmendCgtPpdOverridesControllerSpec
           .parse(rawData)
           .returns(Right(requestData))
 
-        MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
+        MockNrsProxyService
+          .submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
+          .returns(())
 
         MockCreateAmendCgtPpdOverridesService
           .createAmend(requestData)

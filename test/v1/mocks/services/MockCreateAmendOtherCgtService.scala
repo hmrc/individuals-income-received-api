@@ -16,14 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
-import v1.services.CreateAmendOtherCgtService
+import v1.services.{CreateAmendOtherCgtService, CreateAmendOtherCgtServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,10 +30,10 @@ trait MockCreateAmendOtherCgtService extends MockFactory {
 
   object MockCreateAmendOtherCgtService {
 
-    def createAmend(requestData: CreateAmendOtherCgtRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def createAmend(requestData: CreateAmendOtherCgtRequest): CallHandler[Future[CreateAmendOtherCgtServiceOutcome]] = {
       (mockCreateAmendOtherCgtService
-        .createAmend(_: CreateAmendOtherCgtRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .createAmend(_: CreateAmendOtherCgtRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
 
   }
