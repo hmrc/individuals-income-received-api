@@ -54,6 +54,36 @@ class DeleteDividendsControllerSpec
     taxYear = taxYear
   )
 
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
+
+    val controller = new DeleteDividendsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockDeleteDividendsRequestParser,
+      service = mockDeleteDividendsService,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
+
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "DeleteDividendsIncome",
+        transactionName = "delete-dividends-income",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = None,
+          `X-CorrelationId` = correlationId,
+          response = auditResponse
+        )
+      )
+
+  }
+
   "DeleteDividendsController" should {
     "return NO_content" when {
       "happy path" in new Test {
@@ -91,36 +121,6 @@ class DeleteDividendsControllerSpec
         runErrorTestWithAudit(RuleTaxYearNotSupportedError)
       }
     }
-
-  }
-
-  trait Test extends ControllerTest with AuditEventChecking {
-
-    val controller = new DeleteDividendsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteDividendsRequestParser,
-      service = mockDeleteDividendsService,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    protected def callController(): Future[Result] = controller.deleteDividends(nino, taxYear)(fakeDeleteRequest)
-
-    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
-      AuditEvent(
-        auditType = "DeleteDividendsIncome",
-        transactionName = "delete-dividends-income",
-        detail = GenericAuditDetail(
-          userType = "Individual",
-          agentReferenceNumber = None,
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
-          `X-CorrelationId` = correlationId,
-          response = auditResponse
-        )
-      )
 
   }
 

@@ -88,7 +88,7 @@ class DeleteInsurancePoliciesControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new DeleteInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
