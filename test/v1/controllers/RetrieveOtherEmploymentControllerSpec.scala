@@ -96,7 +96,7 @@ class RetrieveOtherEmploymentControllerSpec
                 deleteLink
               )))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponse))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseWithHateoas(nino, taxYear)))
       }
     }
 

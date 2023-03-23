@@ -25,7 +25,6 @@ import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_NON_PAYE_EMPLOYMENT_INCOME, DELETE_NON_PAYE_EMPLOYMENT_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v1.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveNonPayeEmploymentRequestParser
@@ -44,45 +43,46 @@ class RetrieveNonPayeEmploymentControllerSpec
     with MockRetrieveNonPayeEmploymentRequestParser
     with HateoasLinks {
 
-  val taxYear: String = "2019-20"
+  val taxYear: String       = "2019-20"
+  val source: MtdSourceEnum = MtdSourceEnum.hmrcHeld
 
-  def rawData(source: Option[String] = None): RetrieveNonPayeEmploymentIncomeRawData =
+  val rawData: RetrieveNonPayeEmploymentIncomeRawData =
     RetrieveNonPayeEmploymentIncomeRawData(
       nino = nino,
       taxYear = taxYear,
-      source
+      source = Some(source.toString)
     )
 
   val requestData: RetrieveNonPayeEmploymentIncomeRequest =
     RetrieveNonPayeEmploymentIncomeRequest(
       nino = Nino(nino),
       taxYear = TaxYear.fromMtd(taxYear),
-      MtdSourceEnum.latest
+      source = source
     )
 
-  val mtdResponseWithHateoas: JsValue = Json.parse(
-    s"""
-     |{
-     |   "links":[
-     |      {
-     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-     |         "method":"PUT",
-     |         "rel":"create-and-amend-non-paye-employment-income"
-     |      },
-     |      {
-     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-     |         "method":"GET",
-     |         "rel":"self"
-     |      },
-     |      {
-     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-     |         "method":"DELETE",
-     |         "rel":"delete-non-paye-employment-income"
-     |      }
-     |   ]
-     |}
-    """.stripMargin
-  )
+//  val mtdResponseWithHateoas: JsValue = Json.parse(
+//    s"""
+//     |{
+//     |   "links":[
+//     |      {
+//     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
+//     |         "method":"PUT",
+//     |         "rel":"create-and-amend-non-paye-employment-income"
+//     |      },
+//     |      {
+//     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
+//     |         "method":"GET",
+//     |         "rel":"self"
+//     |      },
+//     |      {
+//     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
+//     |         "method":"DELETE",
+//     |         "rel":"delete-non-paye-employment-income"
+//     |      }
+//     |   ]
+//     |}
+//    """.stripMargin
+//  )
 
   private val hateoasLinks = Seq(
     Link(
@@ -106,7 +106,7 @@ class RetrieveNonPayeEmploymentControllerSpec
     "return OK" when {
       "the request is valid" in new Test {
         MockRetrieveNonPayeEmploymentRequestParser
-          .parse(rawData())
+          .parse(rawData)
           .returns(Right(requestData))
 
         MockRetrieveNonPayeEmploymentService
@@ -117,14 +117,14 @@ class RetrieveNonPayeEmploymentControllerSpec
           .wrap(responseModel, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
           .returns(HateoasWrapper(responseModel, hateoasLinks))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseWithHateoas))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseWithHateoas(nino, taxYear)))
       }
     }
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
         MockRetrieveNonPayeEmploymentRequestParser
-          .parse(rawData())
+          .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTest(NinoFormatError)
@@ -132,7 +132,7 @@ class RetrieveNonPayeEmploymentControllerSpec
 
       "the service returns an error" in new Test {
         MockRetrieveNonPayeEmploymentRequestParser
-          .parse(rawData())
+          .parse(rawData)
           .returns(Right(requestData))
 
         MockRetrieveNonPayeEmploymentService
@@ -156,7 +156,7 @@ class RetrieveNonPayeEmploymentControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, Some(MtdSourceEnum.toString))(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, Some(source.toString))(fakeGetRequest)
   }
 
 }

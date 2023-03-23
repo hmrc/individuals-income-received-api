@@ -26,6 +26,7 @@ import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateAmendNonPayeEmploymentRequestParser
@@ -107,6 +108,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
   "CreateAmendNonPayeEmploymentController" should {
     "return a successful response with status 200 (OK)" when {
       "the request received is valid" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendNonPayeEmploymentRequestParser
           .parse(rawData)
@@ -131,7 +133,6 @@ class CreateAmendNonPayeEmploymentControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockCreateAmendNonPayeEmploymentRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
@@ -183,6 +184,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
         )
       )
 
+    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes ()
   }
 
 }
