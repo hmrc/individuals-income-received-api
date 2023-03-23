@@ -31,7 +31,7 @@ package object services {
   type DeleteDividendsServiceOutcome   = ServiceOutcome[Unit]
   type RetrieveDividendsServiceOutcome = ServiceOutcome[RetrieveDividendsResponse]
 
-  // Capital Tax Gains
+  // Capital Gains Tax
   type CreateAmendCgtPpdOverridesServiceOutcome                 = ServiceOutcome[Unit]
   type CreateAmendOtherCgtServiceOutcome                        = ServiceOutcome[Unit]
   type CreateAmendCgtResidentialPropertyDisposalsServiceOutcome = ServiceOutcome[Unit]

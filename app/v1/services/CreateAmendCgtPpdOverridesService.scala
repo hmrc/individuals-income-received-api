@@ -36,7 +36,7 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
     connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,

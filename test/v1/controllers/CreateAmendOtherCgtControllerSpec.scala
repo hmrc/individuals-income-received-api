@@ -29,7 +29,7 @@ import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
 import v1.mocks.services._
@@ -271,7 +271,7 @@ class CreateAmendOtherCgtControllerSpec
           agentReferenceNumber = None,
           nino,
           taxYear,
-          requestBody.getOrElse(Json.parse("""{}""")),
+          requestBody.getOrElse(JsObject.empty),
           correlationId,
           response = auditResponse
         )

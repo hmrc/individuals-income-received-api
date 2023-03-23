@@ -36,7 +36,7 @@ class DeleteCgtPpdOverridesService @Inject() (connector: DeleteCgtPpdOverridesCo
 
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
