@@ -16,14 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendDividends.AmendDividendsRequest
-import v1.services.AmendDividendsService
+import v1.services.{AmendDividendsService, AmendDividendsServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,10 +30,10 @@ trait MockAmendDividendsService extends MockFactory {
 
   object MockAmendDividendsService {
 
-    def amendDividends(requestData: AmendDividendsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def amendDividends(requestData: AmendDividendsRequest): CallHandler[Future[AmendDividendsServiceOutcome]] = {
       (mockAmendDividendsService
-        .amendDividends(_: AmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .amendDividends(_: AmendDividendsRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
 
   }

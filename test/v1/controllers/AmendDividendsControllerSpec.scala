@@ -16,59 +16,42 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAmendDividendsRequestParser
 import v1.mocks.services.MockAmendDividendsService
 import v1.models.request.amendDividends._
+import v1.models.response.amendDividends.AmendDividendsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendDividendsControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
     with MockAuditService
     with MockAmendDividendsService
     with MockAmendDividendsRequestParser
+    with MockHateoasFactory
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val taxYear: String = "2019-20"
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new AmendDividendsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockAmendDividendsRequestParser,
-      service = mockAmendDividendsService,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  val requestBodyJson: JsValue = Json.parse(
+  val validRequestJson: JsValue = Json.parse(
     """
       |{
       |   "foreignDividend": [
@@ -130,10 +113,10 @@ class AmendDividendsControllerSpec
   val rawData: AmendDividendsRawData = AmendDividendsRawData(
     nino = nino,
     taxYear = taxYear,
-    body = AnyContentAsJson(requestBodyJson)
+    body = AnyContentAsJson(validRequestJson)
   )
 
-  val foreignDividend: Seq[AmendForeignDividendItem] = Seq(
+  val foreignDividend: List[AmendForeignDividendItem] = List(
     AmendForeignDividendItem(
       countryCode = "DEU",
       amountBeforeTax = Some(1232.22),
@@ -152,7 +135,7 @@ class AmendDividendsControllerSpec
     )
   )
 
-  val dividendIncomeReceivedWhilstAbroad: Seq[AmendDividendIncomeReceivedWhilstAbroadItem] = Seq(
+  val dividendIncomeReceivedWhilstAbroad: List[AmendDividendIncomeReceivedWhilstAbroadItem] = List(
     AmendDividendIncomeReceivedWhilstAbroadItem(
       countryCode = "DEU",
       amountBeforeTax = Some(1232.22),
@@ -206,47 +189,58 @@ class AmendDividendsControllerSpec
     body = amendDividendsRequestBody
   )
 
-  val hateoasResponse: JsValue = Json.parse(
+  val mtdResponse: JsValue = Json.parse(
     s"""
       |{
       |   "links":[
       |      {
       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-      |         "rel":"create-and-amend-dividends-income",
-      |         "method":"PUT"
+      |         "method":"PUT",
+      |         "rel":"create-and-amend-dividends-income"
       |      },
       |      {
       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-      |         "rel":"self",
-      |         "method":"GET"
+      |         "method":"GET",
+      |         "rel":"self"
       |      },
       |      {
       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-      |         "rel":"delete-dividends-income",
-      |         "method":"DELETE"
+      |         "method":"DELETE",
+      |         "rel":"delete-dividends-income"
       |      }
       |   ]
       |}
     """.stripMargin
   )
 
-  def event(auditRequest: Option[JsValue], auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "CreateAmendDividendsIncome",
-      transactionName = "create-amend-dividends-income",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = auditRequest,
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
-      )
+  val hateoasLinks: List[Link] = List(
+    Link(
+      href = s"/individuals/income-received/dividends/$nino/$taxYear",
+      method = PUT,
+      rel = "create-and-amend-dividends-income"
+    ),
+    Link(
+      href = s"/individuals/income-received/dividends/$nino/$taxYear",
+      method = GET,
+      rel = "self"
+    ),
+    Link(
+      href = s"/individuals/income-received/dividends/$nino/$taxYear",
+      method = DELETE,
+      rel = "delete-dividends-income"
     )
+  )
+
+  val auditData: JsValue = Json.parse(s"""
+                                         |{
+                                         |  "nino":"$nino",
+                                         |  "taxYear": "$taxYear"
+                                         |  }""".stripMargin)
 
   "AmendDividendsController" should {
-    "return OK" when {
+    "return a successful response with status OK" when {
       "happy path" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockAmendDividendsRequestParser
           .parse(rawData)
@@ -256,86 +250,67 @@ class AmendDividendsControllerSpec
           .amendDividends(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result: Future[Result] = controller.amendDividends(nino, taxYear)(fakePutRequest(requestBodyJson))
+        MockHateoasFactory
+          .wrap((), AmendDividendsHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), hateoasLinks))
 
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe hateoasResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
-        MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
+        runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(auditData))
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockAmendDividendsRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockAmendDividendsRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.amendDividends(nino, taxYear)(fakePutRequest(requestBodyJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (CountryCodeFormatError, BAD_REQUEST),
-          (CountryCodeRuleError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (CustomerRefFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validRequestJson))
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "service returns an error" in new Test {
+        MockAmendDividendsRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockAmendDividendsRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockAmendDividendsService
+          .amendDividends(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockAmendDividendsService
-              .amendDividends(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.amendDividends(nino, taxYear)(fakePutRequest(requestBodyJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(Some(requestBodyJson), auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(validRequestJson))
       }
     }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
+
+    val controller = new AmendDividendsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      parser = mockAmendDividendsRequestParser,
+      service = mockAmendDividendsService,
+      auditService = mockAuditService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.amendDividends(nino, taxYear)(fakePutRequest(validRequestJson))
+
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "CreateAmendDividendsIncome",
+        transactionName = "create-amend-dividends-income",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = requestBody,
+          `X-CorrelationId` = correlationId,
+          response = auditResponse
+        )
+      )
+
   }
 
 }
