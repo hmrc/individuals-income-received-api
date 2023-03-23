@@ -55,9 +55,9 @@ class AuthISpec extends IntegrationBaseSpec {
     }
 
     val ifsResponse: JsValue = Json.parse("""
-        | {
-        | "responseData" : "someResponse"
-        | }
+                                            | {
+                                            | "responseData" : "someResponse"
+                                            | }
     """.stripMargin)
 
   }
@@ -91,6 +91,7 @@ class AuthISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
+        response.header("Content-Type") shouldBe None
       }
     }
 
