@@ -42,8 +42,10 @@ class DeleteCustomEmploymentService @Inject() (connector: DeleteCustomEmployment
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> NotFoundError,
+      "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError
     )

@@ -122,10 +122,6 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
     protected def callController(): Future[Result] =
       controller.createAmendUkSavingsAnnualSummary(nino, taxYear, savingsAccountId)(fakePostRequest(requestJson))
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
     def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] = {
       AuditEvent(
         auditType = "createAmendUkSavingsAnnualSummary",
