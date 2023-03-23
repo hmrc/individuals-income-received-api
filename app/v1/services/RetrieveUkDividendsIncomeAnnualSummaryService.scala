@@ -37,7 +37,6 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
 
     connector.retrieveUKDividendsIncomeAnnualSummary(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
-
   }
 
   val errorMap: Map[String, MtdError] = {
@@ -63,7 +62,6 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
     )
 
     downstreamErrors ++ extraTysErrors
-
   }
 
 }

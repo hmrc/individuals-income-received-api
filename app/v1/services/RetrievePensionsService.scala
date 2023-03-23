@@ -44,6 +44,7 @@ class RetrievePensionsService @Inject() (connector: RetrievePensionsConnector) e
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError
     )
+
     val extraTysErrors = Map(
       "INVALID_CORRELATION_ID" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError

@@ -35,10 +35,9 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       ec: ExecutionContext): Future[DeleteUkDividendsServiceOutcome] = {
 
     connector.delete(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
-
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TYPE"                      -> InternalError,
