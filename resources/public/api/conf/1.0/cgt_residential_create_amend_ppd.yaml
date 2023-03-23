@@ -109,6 +109,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleDuplicatedPpdSubmissionId'
           RULE_INCORRECT_DISPOSAL_TYPE:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectDisposalType'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
 
   "403":
     description: Forbidden

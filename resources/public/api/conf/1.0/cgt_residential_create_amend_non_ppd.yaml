@@ -102,6 +102,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleGainLoss'
           RULE_LOSSES_GREATER_THAN_GAIN:
             $ref: './common/errors.yaml#/components/examples/ruleLossesGreaterThanGain'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
 
   "403":
     description: Forbidden
