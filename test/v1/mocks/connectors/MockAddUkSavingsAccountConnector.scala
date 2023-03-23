@@ -32,10 +32,10 @@ trait MockAddUkSavingsAccountConnector extends MockFactory {
 
   object MockAddUkSavingsAccountConnector {
 
-    def addSavings(request: AddUkSavingsAccountRequest): CallHandler[Future[DownstreamOutcome[AddUkSavingsAccountResponse]]] = {
+    def addSavings(requestData: AddUkSavingsAccountRequest): CallHandler[Future[DownstreamOutcome[AddUkSavingsAccountResponse]]] = {
       (mockAddUkSavingsAccountConnector
         .addSavings(_: AddUkSavingsAccountRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(request, *, *, *)
+        .expects(requestData, *, *, *)
     }
 
   }

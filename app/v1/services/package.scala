@@ -19,6 +19,7 @@ package v1
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
 import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
@@ -43,6 +44,7 @@ package object services {
   type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
 
   // UK Savings Account
+  type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]
   type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
   type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
   type RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]
