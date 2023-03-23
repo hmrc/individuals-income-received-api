@@ -20,7 +20,7 @@ import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
 import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
 import v1.models.response.retrieveFinancialDetails.RetrieveFinancialDetailsHateoasData
@@ -32,13 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveEmploymentAndFinancialDetailsController @Inject() (val authService: EnrolmentsAuthService,
                                                                  val lookupService: MtdIdLookupService,
-                                                                 requestParser: RetrieveFinancialDetailsRequestParser,
+                                                                 parser: RetrieveFinancialDetailsRequestParser,
                                                                  service: RetrieveEmploymentAndFinancialDetailsService,
                                                                  hateoasFactory: HateoasFactory,
                                                                  cc: ControllerComponents,
                                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,7 +58,7 @@ class RetrieveEmploymentAndFinancialDetailsController @Inject() (val authService
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.retrieve)
           .withHateoasResult(hateoasFactory)(RetrieveFinancialDetailsHateoasData(nino, taxYear, employmentId))
 

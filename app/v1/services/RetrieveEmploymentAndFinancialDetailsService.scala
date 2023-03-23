@@ -18,7 +18,6 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
 import config.{AppConfig, FeatureSwitches}
@@ -35,7 +34,7 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
 
   def retrieve(request: RetrieveEmploymentAndFinancialDetailsRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
+      ec: ExecutionContext): Future[RetrieveEmploymentAndFinancialDetailsServiceOutcome] = {
 
     EitherT(connector.retrieve(request))
       .map(_.map(opwResponseMap))

@@ -178,9 +178,8 @@ class ListEmploymentsControllerSpec
     val controller = new ListEmploymentsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockListEmploymentsRequestParser,
+      parser = mockListEmploymentsRequestParser,
       service = mockListEmploymentsService,
-      appConfig = mockAppConfig,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator

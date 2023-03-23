@@ -31,10 +31,10 @@ trait MockAmendFinancialDetailsConnector extends MockFactory {
 
   object MockAmendFinancialDetailsConnector {
 
-    def amendFinancialDetails(request: AmendFinancialDetailsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def amendFinancialDetails(requestData: AmendFinancialDetailsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendFinancialDetailsConnector
         .amendFinancialDetails(_: AmendFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(request, *, *, *)
+        .expects(requestData, *, *, *)
     }
 
   }

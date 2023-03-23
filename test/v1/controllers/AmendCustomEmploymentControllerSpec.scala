@@ -174,7 +174,7 @@ class AmendCustomEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockAmendCustomEmploymentRequestParser,
+      parser = mockAmendCustomEmploymentRequestParser,
       service = mockAmendCustomEmploymentService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
@@ -194,7 +194,7 @@ class AmendCustomEmploymentControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-          request = Some(requestBodyJson),
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

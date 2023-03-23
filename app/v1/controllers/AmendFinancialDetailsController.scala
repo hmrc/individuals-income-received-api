@@ -22,7 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.AmendFinancialDetailsRequestParser
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRawData
 import v1.models.response.amendFinancialDetails.AmendFinancialDetailsHateoasData
@@ -36,14 +36,13 @@ import scala.concurrent.ExecutionContext
 class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
                                                  appConfig: AppConfig,
-                                                 requestParser: AmendFinancialDetailsRequestParser,
+                                                 parser: AmendFinancialDetailsRequestParser,
                                                  service: AmendFinancialDetailsService,
                                                  auditService: AuditService,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -67,7 +66,7 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.amendFinancialDetails)
         .withAuditing(AuditHandler(
           auditService = auditService,

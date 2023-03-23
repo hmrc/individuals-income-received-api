@@ -31,10 +31,10 @@ trait MockDeleteCustomEmploymentConnector extends MockFactory {
 
   object MockDeleteCustomEmploymentConnector {
 
-    def delete(request: DeleteCustomEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] =
+    def delete(requestData: DeleteCustomEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] =
       (mockDeleteCustomEmploymentConnector
         .delete(_: DeleteCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(request, *, *, *)
+        .expects(requestData, *, *, *)
 
   }
 

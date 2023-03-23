@@ -39,7 +39,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                              val lookupService: MtdIdLookupService,
-                                                             requestParser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
+                                                             parser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
                                                              service: CreateAmendUkSavingsAnnualSummaryService,
                                                              auditService: AuditService,
                                                              hateoasFactory: HateoasFactory,
@@ -65,7 +65,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.createAmend)
         .withAuditing(auditHandler(nino, taxYear, savingsAccountId, request))
         .withHateoasResult(hateoasFactory)(CreateAndAmendUkSavingsAnnualSummaryHateoasData(nino, taxYear, savingsAccountId))

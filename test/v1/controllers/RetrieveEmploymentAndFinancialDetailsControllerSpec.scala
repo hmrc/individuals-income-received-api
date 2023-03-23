@@ -141,7 +141,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerSpec
     val controller = new RetrieveEmploymentAndFinancialDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveFinancialDetailsRequestParser,
+      parser = mockRetrieveFinancialDetailsRequestParser,
       service = mockRetrieveEmploymentAndFinancialDetailsService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

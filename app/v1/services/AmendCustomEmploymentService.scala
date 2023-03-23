@@ -18,9 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.AmendCustomEmploymentConnector
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
@@ -31,18 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendCustomEmploymentService @Inject() (connector: AmendCustomEmploymentConnector) extends BaseService {
 
-  def amendEmployment(request: AmendCustomEmploymentRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendEmployment(
+      request: AmendCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendCustomEmploymentServiceOutcome] =
+    connector.amendEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
-  }
-
-  private def desErrorMap: Map[String, MtdError] =
+  private def downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

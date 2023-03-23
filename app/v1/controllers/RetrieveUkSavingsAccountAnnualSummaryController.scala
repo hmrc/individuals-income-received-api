@@ -20,7 +20,7 @@ import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveUkSavingsAccountRequestParser
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRawData
 import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponseHateoasData
@@ -32,13 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                  val lookupService: MtdIdLookupService,
-                                                                 requestParser: RetrieveUkSavingsAccountRequestParser,
+                                                                 parser: RetrieveUkSavingsAccountRequestParser,
                                                                  service: RetrieveUkSavingsAccountAnnualSummaryService,
                                                                  hateoasFactory: HateoasFactory,
                                                                  cc: ControllerComponents,
                                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,7 +53,7 @@ class RetrieveUkSavingsAccountAnnualSummaryController @Inject() (val authService
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.retrieveUkSavingsAccountAnnualSummary)
           .withHateoasResult(hateoasFactory)(RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, savingsAccountId))
 

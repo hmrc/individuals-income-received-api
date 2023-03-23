@@ -18,9 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.DeleteEmploymentFinancialDetailsConnector
 import v1.models.request.deleteEmploymentFinancialDetails.DeleteEmploymentFinancialDetailsRequest
@@ -33,12 +31,8 @@ class DeleteEmploymentFinancialDetailsService @Inject() (connector: DeleteEmploy
 
   def delete(request: DeleteEmploymentFinancialDetailsRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    val result = EitherT(connector.deleteEmploymentFinancialDetails(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
-  }
+      ec: ExecutionContext): Future[DeleteEmploymentFinancialDetailsServiceOutcome] =
+    connector.deleteEmploymentFinancialDetails(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private def downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(

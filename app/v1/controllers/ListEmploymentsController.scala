@@ -19,9 +19,8 @@ package v1.controllers
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.ListEmploymentsRequestParser
 import v1.models.request.listEmployments.ListEmploymentsRawData
 import v1.models.response.listEmployment.ListEmploymentHateoasData
@@ -33,14 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ListEmploymentsController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
-                                           requestParser: ListEmploymentsRequestParser,
+                                           parser: ListEmploymentsRequestParser,
                                            service: ListEmploymentsService,
-                                           appConfig: AppConfig,
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,7 +56,7 @@ class ListEmploymentsController @Inject() (val authService: EnrolmentsAuthServic
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.listEmployments)
           .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((_, _) => ListEmploymentHateoasData(nino, taxYear)))
 

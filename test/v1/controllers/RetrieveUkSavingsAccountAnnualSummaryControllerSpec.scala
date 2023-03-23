@@ -126,7 +126,7 @@ class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
     val controller = new RetrieveUkSavingsAccountAnnualSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveUkSavingsSummaryRequestParser,
+      parser = mockRetrieveUkSavingsSummaryRequestParser,
       service = mockRetrieveUkSavingsAnnualSummaryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

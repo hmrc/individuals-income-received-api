@@ -20,7 +20,7 @@ import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveEmploymentRequestParser
 import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 import v1.models.response.retrieveEmployment.RetrieveEmploymentHateoasData
@@ -32,13 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                               val lookupService: MtdIdLookupService,
-                                              requestParser: RetrieveEmploymentRequestParser,
+                                              parser: RetrieveEmploymentRequestParser,
                                               service: RetrieveEmploymentService,
                                               hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents,
                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -58,10 +57,9 @@ class RetrieveEmploymentController @Inject() (val authService: EnrolmentsAuthSer
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.retrieve)
-          .withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory)((_, response) =>
-            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, response)))
+          .withHateoasResultFrom(hateoasFactory)((_, response) => RetrieveEmploymentHateoasData(nino, taxYear, employmentId, response))
 
       requestHandler.handleRequest(rawData)
     }

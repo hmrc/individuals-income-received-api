@@ -18,7 +18,6 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.DeleteCustomEmploymentConnector
@@ -30,9 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCustomEmploymentService @Inject() (connector: DeleteCustomEmploymentConnector) extends BaseService {
 
-  def delete(request: DeleteCustomEmploymentRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def delete(
+      request: DeleteCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteCustomEmploymentServiceOutcome] = {
 
     connector.delete(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

@@ -390,7 +390,7 @@ class AmendFinancialDetailsControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockAmendFinancialDetailsRequestParser,
+      parser = mockAmendFinancialDetailsRequestParser,
       service = mockAmendFinancialDetailsService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
@@ -414,7 +414,7 @@ class AmendFinancialDetailsControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-          request = Some(requestBodyJsonWithOpw),
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )
@@ -439,7 +439,7 @@ class AmendFinancialDetailsControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-          request = Some(requestBodyJson),
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

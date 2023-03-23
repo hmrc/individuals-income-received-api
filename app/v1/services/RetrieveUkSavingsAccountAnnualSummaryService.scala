@@ -23,7 +23,7 @@ import api.services.BaseService
 import cats.data.EitherT
 import v1.connectors.RetrieveUkSavingsAccountAnnualSummaryConnector
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
+import v1.models.response.retrieveUkSavingsAnnualSummary.DownstreamUkSavingsAnnualIncomeResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
+      ec: ExecutionContext): Future[RetrieveUkSavingsAccountAnnualSummaryServiceOutcome] = {
 
     val result = for {
       downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDownstreamErrors(desErrorMap))
@@ -44,7 +44,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
   }
 
   private def convertToMtd(downstreamResponseWrapper: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse])(implicit
-      logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
+      logContext: EndpointLogContext): RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = {
 
     downstreamResponseWrapper.responseData.savingsInterestAnnualIncome match {
       case item +: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))

@@ -167,9 +167,8 @@ class ListUkSavingsAccountsControllerSpec
     val controller = new ListUkSavingsAccountsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockListUkSavingsAccountsRequestParser,
+      parser = mockListUkSavingsAccountsRequestParser,
       service = mockListUkSavingsAccountsService,
-      appConfig = mockAppConfig,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator

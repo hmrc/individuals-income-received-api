@@ -19,9 +19,8 @@ package v1.controllers
 import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.ListUkSavingsAccountsRequestParser
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
 import v1.models.response.listUkSavingsAccounts.ListUkSavingsAccountsHateoasData
@@ -33,14 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ListUkSavingsAccountsController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
-                                                 requestParser: ListUkSavingsAccountsRequestParser,
+                                                 parser: ListUkSavingsAccountsRequestParser,
                                                  service: ListUkSavingsAccountsService,
-                                                 appConfig: AppConfig,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,7 +56,7 @@ class ListUkSavingsAccountsController @Inject() (val authService: EnrolmentsAuth
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.listUkSavingsAccounts)
           .withHateoasResult(hateoasFactory)(ListUkSavingsAccountsHateoasData(nino))
 

@@ -17,13 +17,10 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
-import v1.services.RetrieveUkSavingsAccountAnnualSummaryService
+import v1.services.{RetrieveUkSavingsAccountAnnualSummaryService, RetrieveUkSavingsAccountAnnualSummaryServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,8 +30,8 @@ trait MockRetrieveUkSavingsAnnualSummaryService extends MockFactory {
 
   object MockRetrieveUkSavingsAnnualSummaryService {
 
-    def retrieveUkSavings(requestData: RetrieveUkSavingsAnnualSummaryRequest)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkSavingsAnnualSummaryResponse]]]] = {
+    def retrieveUkSavings(
+        requestData: RetrieveUkSavingsAnnualSummaryRequest): CallHandler[Future[RetrieveUkSavingsAccountAnnualSummaryServiceOutcome]] = {
       (
         mockRetrieveUkSavingsAnnualSummaryService
           .retrieveUkSavingsAccountAnnualSummary(_: RetrieveUkSavingsAnnualSummaryRequest)(

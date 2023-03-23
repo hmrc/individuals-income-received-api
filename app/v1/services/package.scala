@@ -18,9 +18,27 @@ package v1
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
+import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
 
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
+  type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
+  type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
+  type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
+  type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
+  type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
+  type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
+  type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
+  type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
+  type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
+  type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
+  type RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]
 
 }

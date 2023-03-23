@@ -17,13 +17,10 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
-import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
-import v1.services.AddCustomEmploymentService
+import v1.services.{AddCustomEmploymentService, AddCustomEmploymentServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,8 +30,7 @@ trait MockAddCustomEmploymentService extends MockFactory {
 
   object MockAddCustomEmploymentService {
 
-    def addEmployment(
-        requestData: AddCustomEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]]] = {
+    def addEmployment(requestData: AddCustomEmploymentRequest): CallHandler[Future[AddCustomEmploymentServiceOutcome]] = {
       (mockAddCustomEmploymentService
         .addEmployment(_: AddCustomEmploymentRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

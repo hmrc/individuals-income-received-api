@@ -18,13 +18,10 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.AddCustomEmploymentConnector
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
-import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,18 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnector) extends BaseService {
 
-  def addEmployment(request: AddCustomEmploymentRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[AddCustomEmploymentResponse]]] = {
+  def addEmployment(
+      request: AddCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AddCustomEmploymentServiceOutcome] =
+    connector.addEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.addEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
-  }
-
-  private def desErrorMap: Map[String, MtdError] =
+  private def downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

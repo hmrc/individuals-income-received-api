@@ -18,9 +18,8 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
+import cats.implicits._
 import v1.connectors.CreateAmendUkSavingsAnnualSummaryConnector
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryRequest, DownstreamCreateAmendUkSavingsAnnualSummaryBody}
 
@@ -32,14 +31,10 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
 
   def createAmend(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-    val result = for {
-      desResponseWrapper <- EitherT(
-        connector.createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request)))
-        .leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper
-    result.value
-  }
+      ec: ExecutionContext): Future[CreateAmendUkSavingsAnnualSummaryServiceOutcome] =
+    connector
+      .createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request))
+      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private def downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(

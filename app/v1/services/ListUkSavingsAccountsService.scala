@@ -17,14 +17,11 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError}
-import api.models.outcomes.ResponseWrapper
+import api.models.errors.{InternalError, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError}
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.ListUkSavingsAccountsConnector
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
-import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,20 +29,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends BaseService {
 
-  def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
-
-    EitherT(connector.listUkSavingsAccounts(request))
-      .leftMap(mapDownstreamErrors(mappingDesToMtdError))
-      .value
-  }
+  def listUkSavingsAccounts(
+      request: ListUkSavingsAccountsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ListUkSavingsAccountsServiceOutcome] =
+    connector.listUkSavingsAccounts(request).map(_.leftMap(mapDownstreamErrors(mappingDesToMtdError)))
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_ID_TYPE"          -> InternalError,
     "INVALID_IDVALUE"          -> NinoFormatError,
     "INVALID_INCOMESOURCETYPE" -> InternalError,
-    "INVALID_TAXYEAR"          -> InternalError, // Is tech spec correct here?
+    "INVALID_TAXYEAR"          -> InternalError,
     "INVALID_INCOMESOURCEID"   -> SavingsAccountIdFormatError,
     "INVALID_ENDDATE"          -> InternalError,
     "NOT_FOUND"                -> NotFoundError,

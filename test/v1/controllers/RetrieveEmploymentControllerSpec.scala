@@ -168,60 +168,54 @@ class RetrieveEmploymentControllerSpec
       }
     }
 
-    "return OK" when {
-      "happy path for retrieving hmrc entered employment with date ignored present" in new Test {
-        MockRetrieveCustomEmploymentRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
+    "happy path for retrieving hmrc entered employment with date ignored present" in new Test {
+      MockRetrieveCustomEmploymentRequestParser
+        .parse(rawData)
+        .returns(Right(requestData))
 
-        MockRetrieveEmploymentService
-          .retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
+      MockRetrieveEmploymentService
+        .retrieve(requestData)
+        .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
 
-        MockHateoasFactory
-          .wrap(
+      MockHateoasFactory
+        .wrap(
+          hmrcEnteredEmploymentWithDateIgnoredResponseModel,
+          RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithDateIgnoredResponseModel)
+        )
+        .returns(
+          HateoasWrapper(
             hmrcEnteredEmploymentWithDateIgnoredResponseModel,
-            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithDateIgnoredResponseModel)
-          )
-          .returns(
-            HateoasWrapper(
-              hmrcEnteredEmploymentWithDateIgnoredResponseModel,
-              Seq(
-                listEmploymentLink,
-                retrieveEmploymentLink,
-                unignoreEmploymentLink
-              )))
+            Seq(
+              listEmploymentLink,
+              retrieveEmploymentLink,
+              unignoreEmploymentLink
+            )))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdHmrcEnteredResponseWithDateIgnored))
-      }
+      runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdHmrcEnteredResponseWithDateIgnored))
     }
 
-    "return OK" when {
-      "happy path for retrieving custom entered employment" in new Test {
-        MockRetrieveCustomEmploymentRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
+    "happy path for retrieving custom entered employment" in new Test {
+      MockRetrieveCustomEmploymentRequestParser
+        .parse(rawData)
+        .returns(Right(requestData))
 
-        MockRetrieveEmploymentService
-          .retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
+      MockRetrieveEmploymentService
+        .retrieve(requestData)
+        .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
 
-        MockHateoasFactory
-          .wrap(
+      MockHateoasFactory
+        .wrap(customEnteredEmploymentResponseModel, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
+        .returns(
+          HateoasWrapper(
             customEnteredEmploymentResponseModel,
-            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
-          .returns(
-            HateoasWrapper(
-              customEnteredEmploymentResponseModel,
-              Seq(
-                listEmploymentLink,
-                retrieveEmploymentLink,
-                amendCustomEmploymentLink,
-                deleteCustomEmploymentLink
-              )))
+            Seq(
+              listEmploymentLink,
+              retrieveEmploymentLink,
+              amendCustomEmploymentLink,
+              deleteCustomEmploymentLink
+            )))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdCustomEnteredResponse))
-      }
+      runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdCustomEnteredResponse))
     }
 
     "return the error as per spec" when {
@@ -252,7 +246,7 @@ class RetrieveEmploymentControllerSpec
     val controller = new RetrieveEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveCustomEmploymentRequestParser,
+      parser = mockRetrieveCustomEmploymentRequestParser,
       service = mockRetrieveEmploymentService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

@@ -96,7 +96,7 @@ class DeleteCustomEmploymentControllerSpec
     val controller = new DeleteCustomEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteCustomEmploymentRequestParser,
+      parser = mockDeleteCustomEmploymentRequestParser,
       service = mockDeleteCustomEmploymentService,
       auditService = mockAuditService,
       cc = cc,

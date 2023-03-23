@@ -111,7 +111,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
     val controller = new CreateAmendUkSavingsAnnualSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockCreateAmendUkSavingsAnnualSummaryRequestParser,
+      parser = mockCreateAmendUkSavingsAnnualSummaryRequestParser,
       service = mockCreateAmendUkSavingsAnnualSummaryService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
@@ -122,7 +122,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
     protected def callController(): Future[Result] =
       controller.createAmendUkSavingsAnnualSummary(nino, taxYear, savingsAccountId)(fakePostRequest(requestJson))
 
-    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] = {
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] = {
       AuditEvent(
         auditType = "createAmendUkSavingsAnnualSummary",
         transactionName = CREATE_AND_AMEND_UK_SAVINGS,
@@ -130,7 +130,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
           versionNumber = Some("1.0"),
           userDetails = UserDetails(mtdId, "Individual", None),
           params = Map("nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId),
-          request = Some(requestJson),
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse
         )

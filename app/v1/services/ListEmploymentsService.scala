@@ -18,13 +18,10 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.ListEmploymentsConnector
 import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,16 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) extends BaseService {
 
-  def listEmployments(request: ListEmploymentsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListEmploymentResponse[Employment]]]] = {
-
-    val result = for {
-      desResponseWrapper <- EitherT(connector.listEmployments(request)).leftMap(mapDownstreamErrors(mappingDesToMtdError))
-    } yield desResponseWrapper.map(des => des)
-
-    result.value
-  }
+  def listEmployments(request: ListEmploymentsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ListEmploymentsServiceOutcome] =
+    connector.listEmployments(request).map(_.leftMap(mapDownstreamErrors(mappingDesToMtdError)))
 
   private def mappingDesToMtdError: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,

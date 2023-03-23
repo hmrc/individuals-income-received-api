@@ -22,7 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.AmendCustomEmploymentRequestParser
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
 import v1.models.response.amendCustomEmployment.AmendCustomEmploymentHateoasData
@@ -36,14 +36,13 @@ import scala.concurrent.ExecutionContext
 class AmendCustomEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
                                                  appConfig: AppConfig,
-                                                 requestParser: AmendCustomEmploymentRequestParser,
+                                                 parser: AmendCustomEmploymentRequestParser,
                                                  service: AmendCustomEmploymentService,
                                                  auditService: AuditService,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -64,7 +63,7 @@ class AmendCustomEmploymentController @Inject() (val authService: EnrolmentsAuth
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.amendEmployment)
         .withAuditing(AuditHandler(
           auditService = auditService,

@@ -96,7 +96,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
     val controller = new DeleteEmploymentFinancialDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteEmploymentFinancialDetailsRequestParser,
+      parser = mockDeleteEmploymentFinancialDetailsRequestParser,
       service = mockDeleteEmploymentFinancialDetailsService,
       auditService = mockAuditService,
       cc = cc,

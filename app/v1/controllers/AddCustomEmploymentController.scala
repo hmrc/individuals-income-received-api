@@ -22,7 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.AddCustomEmploymentRequestParser
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 import v1.models.response.addCustomEmployment.AddCustomEmploymentHateoasData
@@ -35,14 +35,13 @@ import scala.concurrent.ExecutionContext
 class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                val lookupService: MtdIdLookupService,
                                                appConfig: AppConfig,
-                                               requestParser: AddCustomEmploymentRequestParser,
+                                               parser: AddCustomEmploymentRequestParser,
                                                service: AddCustomEmploymentService,
                                                auditService: AuditService,
                                                hateoasFactory: HateoasFactory,
                                                cc: ControllerComponents,
                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -61,7 +60,7 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
         temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.addEmployment)
         .withAuditing(AuditHandler(
           auditService = auditService,
@@ -71,8 +70,7 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
           requestBody = Some(request.body),
           includeResponse = true
         ))
-        .withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory)((_, response) =>
-          AddCustomEmploymentHateoasData(nino, taxYear, response.employmentId)))
+        .withHateoasResultFrom(hateoasFactory)((_, response) => AddCustomEmploymentHateoasData(nino, taxYear, response.employmentId))
 
       requestHandler.handleRequest(rawData)
 
