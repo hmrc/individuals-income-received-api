@@ -17,10 +17,45 @@
 package v1.fixtures.nonPayeEmployment
 
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequestBody
+import play.api.libs.json.{JsValue, Json}
 
 object CreateAmendNonPayeEmploymentServiceConnectorFixture {
 
+  val taxYear: String = "2019-20"
+
   val requestBodyModel: CreateAmendNonPayeEmploymentRequestBody =
     CreateAmendNonPayeEmploymentRequestBody(tips = 100.23)
+
+  val requestBodyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |   "tips": 100.23,
+       |}
+    """.stripMargin
+  )
+
+  val hateoasResponse: JsValue = Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/employments/non-paye/AA123456A/$taxYear",
+       |         "rel":"create-and-amend-non-paye-employment-income",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/employments/non-paye/AA123456A/$taxYear",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/employments/non-paye/AA123456A/$taxYear",
+       |         "rel":"delete-non-paye-employment-income",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  )
 
 }
