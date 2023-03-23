@@ -16,13 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.services.BaseService
+import cats.implicits.toBifunctorOps
 import v1.connectors.CreateAmendCgtPpdOverridesConnector
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
 
@@ -30,24 +27,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdOverridesConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdOverridesConnector) extends BaseService {
 
   def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[CreateAmendCgtPpdOverridesServiceOutcome] = {
 
-    val result = for {
-      downstreamResponseWrapper <- EitherT(connector.createAmend(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield downstreamResponseWrapper
-
-    result.value
+    connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,

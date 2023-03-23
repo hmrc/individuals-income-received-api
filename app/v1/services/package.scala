@@ -21,24 +21,45 @@ import api.models.outcomes.ResponseWrapper
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
+import v1.models.response.retrieveDividends.RetrieveDividendsResponse
 import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
+import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
 
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
 
+  // Employments
   type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
   type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
   type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
-  type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
   type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
   type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
   type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
-  type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
   type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
   type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
+
+  // UK Savings Account
+  type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
+  type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
   type RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]
+
+  // Dividends income
+  type AmendDividendsServiceOutcome    = ServiceOutcome[Unit]
+  type DeleteDividendsServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveDividendsServiceOutcome = ServiceOutcome[RetrieveDividendsResponse]
+
+  // Capital Gains Tax
+  type CreateAmendCgtPpdOverridesServiceOutcome                 = ServiceOutcome[Unit]
+  type CreateAmendOtherCgtServiceOutcome                        = ServiceOutcome[Unit]
+  type CreateAmendCgtResidentialPropertyDisposalsServiceOutcome = ServiceOutcome[Unit]
+  type DeleteCgtNonPpdServiceOutcome                            = ServiceOutcome[Unit]
+  type DeleteOtherCgtServiceOutcome                             = ServiceOutcome[Unit]
+  type DeleteCgtPpdOverridesServiceOutcome                      = ServiceOutcome[Unit]
+  type RetrieveOtherCgtServiceOutcome                           = ServiceOutcome[RetrieveOtherCgtResponse]
+  type RetrieveAllResidentialPropertyCgtServiceOutcome          = ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]
 
 }

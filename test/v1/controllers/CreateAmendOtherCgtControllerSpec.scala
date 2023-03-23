@@ -16,30 +16,33 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
 import v1.mocks.services._
 import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt._
+import v1.models.response.createAmendOtherCgt.CreateAmendOtherCgtHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendOtherCgtControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -51,9 +54,7 @@ class CreateAmendOtherCgtControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "X-123"
+  val taxYear: String = "2019-20"
 
   val validRequestJson: JsValue = Json.parse(
     """
@@ -101,7 +102,7 @@ class CreateAmendOtherCgtControllerSpec
 
   val requestModel: CreateAmendOtherCgtRequestBody = CreateAmendOtherCgtRequestBody(
     disposals = Some(
-      Seq(
+      List(
         Disposal(
           assetType = "otherProperty",
           assetDescription = "string",
@@ -111,7 +112,7 @@ class CreateAmendOtherCgtControllerSpec
           allowableCosts = 59999999999.99,
           gain = Some(59999999999.99),
           loss = None,
-          claimOrElectionCodes = Some(Seq("OTH")),
+          claimOrElectionCodes = Some(List("OTH")),
           gainAfterRelief = Some(59999999999.99),
           lossAfterRelief = None,
           rttTaxPaid = Some(59999999999.99)
@@ -168,148 +169,115 @@ class CreateAmendOtherCgtControllerSpec
     """.stripMargin
   )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new CreateAmendOtherCgtController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockCreateAmendOtherCgtRequestParser,
-      service = mockCreateAmendOtherCgtService,
-      nrsProxyService = mockNrsProxyService,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
+  val hateoasLinks: List[Link] = List(
+    Link(
+      href = s"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+      method = PUT,
+      rel = "create-and-amend-other-capital-gains-and-disposals"
+    ),
+    Link(
+      href = s"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+      method = GET,
+      rel = "self"
+    ),
+    Link(
+      href = s"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+      method = DELETE,
+      rel = "delete-other-capital-gains-and-disposals"
     )
+  )
 
-    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  def event(auditResponse: AuditResponse): AuditEvent[CreateAmendOtherCgtAuditDetail] =
-    AuditEvent(
-      auditType = "CreateAmendOtherCgtDisposalsAndGains",
-      transactionName = "Create-Amend-Other-Cgt-Disposals-And-Gains",
-      detail = CreateAmendOtherCgtAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino,
-        taxYear,
-        validRequestJson,
-        correlationId,
-        response = auditResponse
-      )
-    )
+  val auditData: JsValue = Json.parse(s"""
+                                         |{
+                                         |  "nino":"$nino",
+                                         |  "taxYear": "$taxYear"
+                                         |  }""".stripMargin)
 
   "CreateAmendOtherCgtController" should {
     "return OK" when {
       "happy path" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendOtherCgtRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
+        MockNrsProxyService
+          .submitAsync(nino, "itsa-cgt-disposal-other", validRequestJson)
+          .returns(())
+
         MockCreateAmendOtherCgtService
           .createAmend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+
+        MockHateoasFactory
+          .wrap((), CreateAmendOtherCgtHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), hateoasLinks))
+
+        runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(auditData))
+      }
+    }
+
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        MockCreateAmendOtherCgtRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
+
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validRequestJson))
+      }
+
+      "service returns an error" in new Test {
+        MockCreateAmendOtherCgtRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
         MockNrsProxyService
           .submitAsync(nino, "itsa-cgt-disposal-other", validRequestJson)
           .returns(())
 
-        val result: Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
+        MockCreateAmendOtherCgtService
+          .createAmend(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(mtdResponse)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(validRequestJson))
       }
     }
+  }
 
-    "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+  trait Test extends ControllerTest with AuditEventChecking[CreateAmendOtherCgtAuditDetail] {
 
-            MockCreateAmendOtherCgtRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
+    val controller = new CreateAmendOtherCgtController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      parser = mockCreateAmendOtherCgtRequestParser,
+      service = mockCreateAmendOtherCgtService,
+      nrsProxyService = mockNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
 
-            val result: Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
+    protected def callController(): Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
 
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (RuleGainLossError, BAD_REQUEST),
-          (ValueFormatError, BAD_REQUEST),
-          (DateFormatError, BAD_REQUEST),
-          (AssetDescriptionFormatError, BAD_REQUEST),
-          (AssetTypeFormatError, BAD_REQUEST),
-          (ClaimOrElectionCodesFormatError, BAD_REQUEST),
-          (RuleGainAfterReliefLossAfterReliefError, BAD_REQUEST)
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[CreateAmendOtherCgtAuditDetail] =
+      AuditEvent(
+        auditType = "CreateAmendOtherCgtDisposalsAndGains",
+        transactionName = "Create-Amend-Other-Cgt-Disposals-And-Gains",
+        detail = CreateAmendOtherCgtAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          nino,
+          taxYear,
+          requestBody.getOrElse(JsObject.empty),
+          correlationId,
+          response = auditResponse
         )
+      )
 
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
-      }
-
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
-
-            MockCreateAmendOtherCgtRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
-
-            MockCreateAmendOtherCgtService
-              .createAmend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            MockNrsProxyService
-              .submitAsync(nino, "itsa-cgt-disposal-other", validRequestJson)
-              .returns(())
-
-            val result: Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleDisposalDateError, BAD_REQUEST),
-          (RuleAcquisitionDateError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
-      }
-    }
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
   }
 
 }
