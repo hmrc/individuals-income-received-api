@@ -273,9 +273,9 @@ class AmendOtherEmploymentControllerSpec
   )
 
   override val testHateoasLinks: Seq[Link] = Seq(
-    Link(href = s"/individuals/income-received/employments/other/$nino/$taxYear", method = PUT, rel = "create-and-amend-other-employment-income"),
-    Link(href = s"/individuals/income-received/employments/other/$nino/$taxYear", method = GET, rel = "self"),
-    Link(href = s"/individuals/income-received/employments/other/$nino/$taxYear", method = DELETE, rel = "delete-other-employment-income")
+    Link(href = s"/individuals/income-received/employments/other/$nino/$taxYear", rel = "create-and-amend-other-employment-income", method = PUT),
+    Link(href = s"/individuals/income-received/employments/other/$nino/$taxYear", rel = "self", method = GET),
+    Link(href = s"/individuals/income-received/employments/other/$nino/$taxYear", rel = "delete-other-employment-income", method = DELETE)
   )
 
   val hateoasResponse: JsValue = Json.parse(
@@ -283,18 +283,18 @@ class AmendOtherEmploymentControllerSpec
        |{
        |   "links":[
        |      {
-       |         "href":"/baseUrl/employments/other/$nino/$taxYear",
-       |         "rel":"create-and-amend-employments-other-income",
+       |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
+       |         "rel":"create-and-amend-other-employment-income",
        |         "method":"PUT"
        |      },
        |      {
-       |         "href":"/baseUrl/employments/other/$nino/$taxYear",
+       |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
        |         "rel":"self",
        |         "method":"GET"
        |      },
        |      {
-       |         "href":"/baseUrl/employments/other/$nino/$taxYear",
-       |         "rel":"delete-employments-other-income",
+       |         "href":"/individuals/income-received/employments/other/$nino/$taxYear",
+       |         "rel":"delete-other-employment-income",
        |         "method":"DELETE"
        |      }
        |   ]
@@ -369,8 +369,8 @@ class AmendOtherEmploymentControllerSpec
 
     def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
-        auditType = "AmendOtherEmployment",
-        transactionName = "amend-other-employment",
+        auditType = "CreateAmendOtherEmployment",
+        transactionName = "create-amend-other-employment",
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,

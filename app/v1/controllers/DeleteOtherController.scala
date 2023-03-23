@@ -56,14 +56,13 @@ class DeleteOtherController @Inject() (val authService: EnrolmentsAuthService,
       val requestHandler = RequestHandler
         .withParser(requestParser)
         .withService(service.delete)
-        .withAuditing(
-          AuditHandler(
-            auditService = auditService,
-            auditType = "DeleteOther",
-            transactionName = "delete-other",
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            requestBody = None
-          ))
+        .withAuditing(AuditHandler(
+          auditService = auditService,
+          auditType = "DeleteOtherIncome",
+          transactionName = "delete-other-income",
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          requestBody = None
+        ))
 
       requestHandler.handleRequest(rawData)
     }

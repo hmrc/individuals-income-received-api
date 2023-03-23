@@ -66,8 +66,8 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
         .withService(service.createAmend)
         .withAuditing(AuditHandler(
           auditService = auditService,
-          auditType = "CreateAmendOther",
-          transactionName = "create-amend-other",
+          auditType = "CreateAmendOtherIncome",
+          transactionName = "create-amend-other-income",
           params = Map("nino" -> nino, "taxYear" -> taxYear),
           requestBody = Some(request.body),
           includeResponse = true

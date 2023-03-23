@@ -28,7 +28,6 @@ import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import v1.fixtures.nonPayeEmployment.CreateAmendNonPayeEmploymentServiceConnectorFixture.{hateoasResponse, requestBodyJson}
 import v1.mocks.requestParsers.MockCreateAmendNonPayeEmploymentRequestParser
 import v1.mocks.services.MockCreateAmendNonPayeEmploymentService
 import v1.models.request.createAmendNonPayeEmployment._
@@ -123,9 +122,9 @@ class CreateAmendNonPayeEmploymentControllerSpec
 
         runOkTestWithAudit(
           expectedStatus = OK,
-          maybeAuditRequestBody = Some(requestBodyJson),
-          maybeExpectedResponseBody = Some(hateoasResponse),
-          maybeAuditResponseBody = Some(hateoasResponse)
+          maybeAuditRequestBody = Some(validRequestJson),
+          maybeExpectedResponseBody = Some(mtdResponse),
+          maybeAuditResponseBody = Some(mtdResponse)
         )
       }
     }
@@ -137,7 +136,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-        runErrorTestWithAudit(NinoFormatError, Some(requestBodyJson))
+        runErrorTestWithAudit(NinoFormatError, Some(validRequestJson))
 
       }
       "the service returns an error" in new Test {
@@ -149,7 +148,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
           .createAndAmend(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-        runErrorTestWithAudit(RuleTaxYearNotSupportedError, Some(requestBodyJson))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError, Some(validRequestJson))
       }
     }
   }
@@ -168,7 +167,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.createAmendNonPayeEmployment(nino, taxYear)(fakePutRequest(requestBodyJson))
+    protected def callController(): Future[Result] = controller.createAmendNonPayeEmployment(nino, taxYear)(fakePutRequest(validRequestJson))
 
     def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
