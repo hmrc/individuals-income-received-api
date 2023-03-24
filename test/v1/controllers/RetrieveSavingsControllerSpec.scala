@@ -16,20 +16,14 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{AMEND_SAVINGS_INCOME, DELETE_SAVINGS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveSavingsControllerFixture
 import v1.mocks.requestParsers.MockRetrieveSavingsRequestParser
 import v1.mocks.services.MockRetrieveSavingsService
@@ -41,48 +35,28 @@ import scala.concurrent.Future
 
 class RetrieveSavingsControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveSavingsService
     with MockHateoasFactory
-    with MockRetrieveSavingsRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockRetrieveSavingsRequestParser {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "X-123"
+  private val taxYear = "2019-20"
 
-  val rawData: RetrieveSavingsRawData = RetrieveSavingsRawData(
+  private val rawData: RetrieveSavingsRawData = RetrieveSavingsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: RetrieveSavingsRequest = RetrieveSavingsRequest(
+  private val requestData: RetrieveSavingsRequest = RetrieveSavingsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  val amendSavingsLink: Link =
-    Link(
-      href = s"/individuals/income-received/savings/$nino/$taxYear",
-      method = PUT,
-      rel = AMEND_SAVINGS_INCOME
-    )
-
-  val retrieveSavingsLink: Link =
-    Link(
-      href = s"/individuals/income-received/savings/$nino/$taxYear",
-      method = GET,
-      rel = SELF
-    )
-
-  val deleteSavingsLink: Link =
-    Link(
-      href = s"/individuals/income-received/savings/$nino/$taxYear",
-      method = DELETE,
-      rel = DELETE_SAVINGS_INCOME
-    )
+  private val hateoasLinks = List(
+    Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = PUT, rel = "create-and-amend-savings-income"),
+    Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = GET, rel = "self"),
+    Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = DELETE, rel = "delete-savings-income")
+  )
 
   private val fullSecuritiesItemsModel = Securities(
     taxTakenOff = Some(100.0),
@@ -107,28 +81,9 @@ class RetrieveSavingsControllerSpec
 
   private val mtdResponse = RetrieveSavingsControllerFixture.mtdResponseWithHateoas(nino, taxYear)
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveSavingsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveSavingsRequestParser,
-      service = mockRetrieveSavingsService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "RetrieveSavingsController" should {
-    "return OK" when {
-      "happy path" in new Test {
-
+    "return a successful response with status 200 (OK)" when {
+      "given a valid request" in new Test {
         MockRetrieveSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -139,82 +94,53 @@ class RetrieveSavingsControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveSavingsResponseModel, RetrieveSavingsHateoasData(nino, taxYear))
-          .returns(
-            HateoasWrapper(
-              retrieveSavingsResponseModel,
-              Seq(
-                amendSavingsLink,
-                retrieveSavingsLink,
-                deleteSavingsLink
-              )))
+          .returns(HateoasWrapper(retrieveSavingsResponseModel, hateoasLinks))
 
-        val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponse)
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveSavingsRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockRetrieveSavingsRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
+        runErrorTest(NinoFormatError)
 
-            val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockRetrieveSavingsRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockRetrieveSavingsRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockRetrieveSavingsService
+          .retrieve(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockRetrieveSavingsService
-              .retrieve(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+        runErrorTest(RuleTaxYearNotSupportedError)
 
-            val result: Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
+  }
+
+  trait Test extends ControllerTest {
+
+    val controller = new RetrieveSavingsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRetrieveSavingsRequestParser,
+      service = mockRetrieveSavingsService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveSaving(nino, taxYear)(fakeGetRequest)
   }
 
 }

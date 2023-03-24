@@ -54,7 +54,7 @@ class DeletePensionsServiceSpec extends ServiceSpec {
           .delete(request)
           .returns(Future.successful(outcome))
 
-        await(service.delete(request)) shouldBe outcome
+        await(service.deletePensions(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -65,7 +65,7 @@ class DeletePensionsServiceSpec extends ServiceSpec {
               .delete(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.delete(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.deletePensions(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val errors = Seq(

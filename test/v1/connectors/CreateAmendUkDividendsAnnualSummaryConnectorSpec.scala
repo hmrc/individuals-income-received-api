@@ -20,7 +20,10 @@ import api.connectors.ConnectorSpec
 import api.connectors.DownstreamOutcome
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
+  CreateAmendUkDividendsIncomeAnnualSummaryBody,
+  CreateAmendUkDividendsIncomeAnnualSummaryRequest
+}
 
 import scala.concurrent.Future
 
@@ -39,7 +42,7 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
           willPost(s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}", body) returns Future.successful(outcome)
 
-          val result: DownstreamOutcome[Unit] = await(connector.createOrAmendAnnualSummary(request))
+          val result: DownstreamOutcome[Unit] = await(connector.createAmendUkDividends(request))
           result shouldBe outcome
         }
     }
@@ -53,7 +56,7 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
           willPost(s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual", body) returns Future.successful(outcome)
 
-          val result: DownstreamOutcome[Unit] = await(connector.createOrAmendAnnualSummary(request))
+          val result: DownstreamOutcome[Unit] = await(connector.createAmendUkDividends(request))
           result shouldBe outcome
         }
     }

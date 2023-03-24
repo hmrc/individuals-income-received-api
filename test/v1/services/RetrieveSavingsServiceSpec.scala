@@ -38,7 +38,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
           .retrieve(request)
           .returns(Future.successful(outcome))
 
-        await(service.retrieve(request)) shouldBe outcome
+        await(service.retrieveSavings(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -49,7 +49,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
               .retrieve(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.retrieveSavings(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val errors = Seq(

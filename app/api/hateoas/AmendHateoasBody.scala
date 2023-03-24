@@ -21,30 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 
 trait AmendHateoasBody extends HateoasLinks {
 
-  def amendSavingsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      amendSavings(appConfig, nino, taxYear),
-      retrieveSavings(appConfig, nino, taxYear),
-      deleteSavings(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def createAmendPensionsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      amendPensions(appConfig, nino, taxYear),
-      retrievePensions(appConfig, nino, taxYear),
-      deletePensions(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
   def amendOtherHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
     val links = Seq(
       amendOther(appConfig, nino, taxYear),
       retrieveOther(appConfig, nino, taxYear),
@@ -55,34 +32,10 @@ trait AmendHateoasBody extends HateoasLinks {
   }
 
   def amendOtherEmploymentHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
     val links = Seq(
       amendOtherEmployment(appConfig, nino, taxYear),
       retrieveOtherEmployment(appConfig, nino, taxYear),
       deleteOtherEmployment(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendCustomEmploymentHateoasBody(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): JsValue = {
-
-    val links = Seq(
-      listEmployment(appConfig, nino, taxYear, isSelf = false),
-      retrieveEmployment(appConfig, nino, taxYear, employmentId),
-      amendCustomEmployment(appConfig, nino, taxYear, employmentId),
-      deleteCustomEmployment(appConfig, nino, taxYear, employmentId)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendFinancialDetailsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): JsValue = {
-
-    val links = Seq(
-      retrieveFinancialDetails(appConfig, nino, taxYear, employmentId),
-      amendFinancialDetails(appConfig, nino, taxYear, employmentId),
-      deleteFinancialDetails(appConfig, nino, taxYear, employmentId)
     )
 
     Json.obj("links" -> links)

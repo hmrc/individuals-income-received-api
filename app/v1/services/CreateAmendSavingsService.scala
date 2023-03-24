@@ -16,31 +16,25 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.CreateAmendSavingsConnector
 import v1.models.request.amendSavings.CreateAmendSavingsRequest
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendSavingsService @Inject() (connector: CreateAmendSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendSavingsService @Inject() (connector: CreateAmendSavingsConnector) extends BaseService {
 
-  def createAmendSaving(request: CreateAmendSavingsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmendSaving(
+      request: CreateAmendSavingsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[CreateAmendSavingsServiceOutcome] = {
 
-    val result = EitherT(connector.createAmendSavings(request)).leftMap(mapDownstreamErrors(errorMap))
+    connector.createAmendSavings(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
 
-    result.value
   }
 
   private def errorMap: Map[String, MtdError] = {

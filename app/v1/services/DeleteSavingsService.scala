@@ -16,13 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.DeleteSavingsConnector
 import v1.models.request.deleteSavings.DeleteSavingsRequest
 
@@ -30,18 +27,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteSavingsService @Inject() (connector: DeleteSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteSavingsService @Inject() (connector: DeleteSavingsConnector) extends BaseService {
 
-  def deleteSavings(request: DeleteSavingsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def deleteSavings(request: DeleteSavingsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteSavingsServiceOutcome] = {
 
     connector.deleteSavings(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
