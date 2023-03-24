@@ -16,17 +16,16 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{IdGenerator, Logging}
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteCgtNonPpdRequestParser
 import v1.models.audit.DeleteCgtNonPpdAuditDetail
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
@@ -38,14 +37,12 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
-                                           requestParser: DeleteCgtNonPpdRequestParser,
+                                           parser: DeleteCgtNonPpdRequestParser,
                                            service: DeleteCgtNonPpdService,
                                            auditService: AuditService,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -55,68 +52,49 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
 
   def deleteCgtNonPpd(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData: DeleteCgtNonPpdRawData = DeleteCgtNonPpdRawData(
-        nino = nino,
-        taxYear = taxYear
-      )
+      val rawData: DeleteCgtNonPpdRawData = DeleteCgtNonPpdRawData(nino, taxYear)
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.deleteCgtNonPpd(parsedRequest))
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler = RequestHandler
+        .withParser(parser)
+        .withService(service.deleteCgtNonPpd)
+        .withAuditing(auditHandler(nino, taxYear, request))
 
-          auditSubmission(
-            DeleteCgtNonPpdAuditDetail(request.userDetails, nino, taxYear, serviceResponse.correlationId, AuditResponse(NO_CONTENT, Right(None))))
+      requestHandler.handleRequest(rawData)
+    }
 
-          NoContent
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
+  private def auditHandler(nino: String, taxYear: String, request: UserRequest[AnyContent]): AuditHandler = {
+    new AuditHandler() {
+      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+          ctx: RequestContext,
+          ec: ExecutionContext): Unit = {
+
+        response match {
+          case Left(err: ErrorWrapper) =>
+            auditSubmission(
+              DeleteCgtNonPpdAuditDetail(
+                request.userDetails,
+                nino,
+                taxYear,
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))))
+
+          case Right(_: Option[JsValue]) =>
+            auditSubmission(
+              DeleteCgtNonPpdAuditDetail(
+                request.userDetails,
+                nino,
+                taxYear,
+                ctx.correlationId,
+                AuditResponse(NO_CONTENT, Right(None))
+              ))
         }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          DeleteCgtNonPpdAuditDetail(
-            request.userDetails,
-            nino,
-            taxYear,
-            correlationId,
-            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
-
-        result
-      }.merge
+      }
     }
+  }
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
-    }
-
-  private def auditSubmission(details: DeleteCgtNonPpdAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def auditSubmission(details: DeleteCgtNonPpdAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeleteCgtNonPpd", "Delete-Cgt-Non-Ppd", details)
     auditService.auditEvent(event)
   }

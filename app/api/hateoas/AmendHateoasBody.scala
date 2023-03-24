@@ -21,30 +21,7 @@ import play.api.libs.json.{JsValue, Json}
 
 trait AmendHateoasBody extends HateoasLinks {
 
-  def amendInsurancePoliciesHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      amendInsurancePolicies(appConfig, nino, taxYear),
-      retrieveInsurancePolicies(appConfig, nino, taxYear),
-      deleteInsurancePolicies(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendForeignHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      amendForeign(appConfig, nino, taxYear),
-      retrieveForeign(appConfig, nino, taxYear),
-      deleteForeign(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
   def amendOtherHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
     val links = Seq(
       amendOther(appConfig, nino, taxYear),
       retrieveOther(appConfig, nino, taxYear),
@@ -55,78 +32,10 @@ trait AmendHateoasBody extends HateoasLinks {
   }
 
   def amendOtherEmploymentHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
     val links = Seq(
       amendOtherEmployment(appConfig, nino, taxYear),
       retrieveOtherEmployment(appConfig, nino, taxYear),
       deleteOtherEmployment(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendDividendsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      amendDividends(appConfig, nino, taxYear),
-      retrieveDividends(appConfig, nino, taxYear),
-      deleteDividends(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendCustomEmploymentHateoasBody(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): JsValue = {
-
-    val links = Seq(
-      listEmployment(appConfig, nino, taxYear, isSelf = false),
-      retrieveEmployment(appConfig, nino, taxYear, employmentId),
-      amendCustomEmployment(appConfig, nino, taxYear, employmentId),
-      deleteCustomEmployment(appConfig, nino, taxYear, employmentId)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendFinancialDetailsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String, employmentId: String): JsValue = {
-
-    val links = Seq(
-      retrieveFinancialDetails(appConfig, nino, taxYear, employmentId),
-      amendFinancialDetails(appConfig, nino, taxYear, employmentId),
-      deleteFinancialDetails(appConfig, nino, taxYear, employmentId)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendCgtPpdOverridesHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      createAmendCgtPpdOverrides(appConfig, nino, taxYear),
-      deleteCgtPpdOverrides(appConfig, nino, taxYear),
-      retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendOtherCgtHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      createAmendOtherCgt(appConfig, nino, taxYear),
-      retrieveOtherCgt(appConfig, nino, taxYear),
-      deleteOtherCgt(appConfig, nino, taxYear)
-    )
-
-    Json.obj("links" -> links)
-  }
-
-  def amendCgtResidentialPropertyDisposalsHateoasBody(appConfig: AppConfig, nino: String, taxYear: String): JsValue = {
-
-    val links = Seq(
-      createAmendNonPpdCgt(appConfig, nino, taxYear),
-      retrieveAllCgtPpdDisposalsOverrides(appConfig, nino, taxYear),
-      deleteNonPpdCgt(appConfig, nino, taxYear)
     )
 
     Json.obj("links" -> links)

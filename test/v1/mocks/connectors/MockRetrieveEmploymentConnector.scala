@@ -16,12 +16,13 @@
 
 package v1.mocks.connectors
 
-import api.connectors.{DownstreamOutcome, DownstreamUri}
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import play.api.libs.json.Reads
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.RetrieveEmploymentConnector
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRequest
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,10 +32,10 @@ trait MockRetrieveEmploymentConnector extends MockFactory {
 
   object MockRetrieveEmploymentConnector {
 
-    def retrieve[Resp: Reads](): CallHandler[Future[DownstreamOutcome[Resp]]] =
+    def retrieve(requestData: RetrieveEmploymentRequest): CallHandler[Future[DownstreamOutcome[RetrieveEmploymentResponse]]] =
       (mockRetrieveEmploymentConnector
-        .retrieve[Resp]()(_: Reads[Resp], _: HeaderCarrier, _: ExecutionContext, _: DownstreamUri[Resp], _: String))
-        .expects(*, *, *, *, *)
+        .retrieve(_: RetrieveEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
 
   }
 

@@ -21,21 +21,65 @@ import api.models.outcomes.ResponseWrapper
 import v1.models.response.retrievePensions.RetrievePensionsResponse
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
+import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
+import v1.models.response.retrieveDividends.RetrieveDividendsResponse
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
+import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
+import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
 
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
 
+  // Pensions
   type CreateAmendPensionServiceOutcome = ServiceOutcome[Unit]
   type RetrievePensionsServiceOutcome   = ServiceOutcome[RetrievePensionsResponse]
   type DeletePensionsServiceOutcome     = ServiceOutcome[Unit]
 
+  // Savings
   type CreateAmendSavingsServiceOutcome = ServiceOutcome[Unit]
   type RetrieveSavingsServiceOutcome    = ServiceOutcome[RetrieveSavingsResponse]
   type DeleteSavingsServiceOutcome      = ServiceOutcome[Unit]
 
+  // Employments
+  type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
+  type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
+  type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
+  type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
+  type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
+  type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
+  type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
+  type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
+
+  // UK Savings Account
+  type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]
+  type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
+  type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
+  type RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]
+
+  // Dividends income
+  type AmendDividendsServiceOutcome    = ServiceOutcome[Unit]
+  type DeleteDividendsServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveDividendsServiceOutcome = ServiceOutcome[RetrieveDividendsResponse]
+
+  // UK Dividends
   type CreateAmendUkDividendsServiceOutcome = ServiceOutcome[Unit]
   type RetrieveUkDividendsServiceOutcome    = ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]
   type DeleteUkDividendsServiceOutcome      = ServiceOutcome[Unit]
+
+  // Capital Gains Tax
+  type CreateAmendCgtPpdOverridesServiceOutcome                 = ServiceOutcome[Unit]
+  type CreateAmendOtherCgtServiceOutcome                        = ServiceOutcome[Unit]
+  type CreateAmendCgtResidentialPropertyDisposalsServiceOutcome = ServiceOutcome[Unit]
+  type DeleteCgtNonPpdServiceOutcome                            = ServiceOutcome[Unit]
+  type DeleteOtherCgtServiceOutcome                             = ServiceOutcome[Unit]
+  type DeleteCgtPpdOverridesServiceOutcome                      = ServiceOutcome[Unit]
+  type RetrieveOtherCgtServiceOutcome                           = ServiceOutcome[RetrieveOtherCgtResponse]
+  type RetrieveAllResidentialPropertyCgtServiceOutcome          = ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]
 
 }

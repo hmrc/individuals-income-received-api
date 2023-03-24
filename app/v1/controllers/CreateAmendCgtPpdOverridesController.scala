@@ -16,21 +16,23 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.AmendHateoasBody
+import api.controllers._
+import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
-import cats.data.EitherT
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.{IdGenerator, Logging}
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
 import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
+import v1.models.response.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesHateoasData
+import v1.models.response.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesResponse.CreateAmendCgtPpdOverridesLinksFactory
 import v1.services._
 
 import javax.inject.{Inject, Singleton}
@@ -40,16 +42,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
                                                       val lookupService: MtdIdLookupService,
                                                       appConfig: AppConfig,
-                                                      requestParser: CreateAmendCgtPpdOverridesRequestParser,
+                                                      parser: CreateAmendCgtPpdOverridesRequestParser,
                                                       service: CreateAmendCgtPpdOverridesService,
                                                       auditService: AuditService,
                                                       nrsProxyService: NrsProxyService,
+                                                      hateoasFactory: HateoasFactory,
                                                       cc: ControllerComponents,
                                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging
-    with AmendHateoasBody {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,10 +59,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
 
   def createAmendCgtPpdOverrides(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}]" +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData: CreateAmendCgtPpdOverridesRawData = CreateAmendCgtPpdOverridesRawData(
         nino = nino,
@@ -71,81 +68,52 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
         temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
       )
 
-      val result =
-        for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- {
-            nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", request.body)
-            EitherT(service.createAmend(parsedRequest))
-          }
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
-          )
-
-          auditSubmission(
-            CreateAmendCgtPpdOverridesAuditDetail(
-              request.userDetails,
-              nino,
-              taxYear,
-              request.body,
-              serviceResponse.correlationId,
-              AuditResponse(OK, Right(Some(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))))
-            ))
-
-          Ok(amendCgtPpdOverridesHateoasBody(appConfig, nino, taxYear))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-
+      val requestHandler = RequestHandler
+        .withParser(parser)
+        .withService { req =>
+          nrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", request.body)
+          service.createAmend(req)
         }
+        .withAuditing(auditHandler(nino, taxYear, request))
+        .withHateoasResult(hateoasFactory)(CreateAmendCgtPpdOverridesHateoasData(nino, taxYear))
 
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          CreateAmendCgtPpdOverridesAuditDetail(
-            request.userDetails,
-            nino,
-            taxYear,
-            request.body,
-            correlationId,
-            AuditResponse(result.header.status, Left(errorWrapper.auditErrors))))
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
 
-  private val badRequestErrors: Seq[MtdError] = Seq(
-    BadRequestError,
-    NinoFormatError,
-    TaxYearFormatError,
-    RuleTaxYearRangeInvalidError,
-    RuleTaxYearNotSupportedError,
-    RuleAmountGainLossError,
-    ValueFormatError,
-    DateFormatError,
-    PpdSubmissionIdFormatError,
-    RuleLossesGreaterThanGainError,
-    RuleTaxYearNotEndedError,
-    RuleIncorrectOrEmptyBodyError,
-    RuleDuplicatedPpdSubmissionIdError
-  )
+  private def auditHandler(nino: String, taxYear: String, request: UserRequest[JsValue]): AuditHandler = {
+    new AuditHandler() {
+      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+          ctx: RequestContext,
+          ec: ExecutionContext): Unit = {
 
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case NotFoundError | PpdSubmissionIdNotFoundError          => NotFound(Json.toJson(errorWrapper))
-      case RuleIncorrectDisposalTypeError                        => BadRequest(Json.toJson(errorWrapper))
-      case InternalError                                         => InternalServerError(Json.toJson(errorWrapper))
-      case _ if errorWrapper.containsAnyOf(badRequestErrors: _*) => BadRequest(Json.toJson(errorWrapper))
-      case _                                                     => unhandledError(errorWrapper)
+        response match {
+          case Left(err: ErrorWrapper) =>
+            auditSubmission(
+              CreateAmendCgtPpdOverridesAuditDetail(
+                request.userDetails,
+                nino,
+                taxYear,
+                request.body,
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))))
+
+          case Right(_: Option[JsValue]) =>
+            auditSubmission(
+              CreateAmendCgtPpdOverridesAuditDetail(
+                request.userDetails,
+                nino,
+                taxYear,
+                request.body,
+                ctx.correlationId,
+                AuditResponse(OK, Right(Some(Json.toJson(CreateAmendCgtPpdOverridesHateoasData(nino, taxYear)))))
+              ))
+        }
+      }
     }
+  }
 
-  private def auditSubmission(details: CreateAmendCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  private def auditSubmission(
+      details: CreateAmendCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendCgtPpdOverrides", "Create-Amend-Cgt-Ppd-Overrides", details)
     auditService.auditEvent(event)
   }

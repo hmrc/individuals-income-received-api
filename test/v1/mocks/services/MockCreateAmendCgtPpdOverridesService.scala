@@ -16,14 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
-import v1.services.CreateAmendCgtPpdOverridesService
+import v1.services.{CreateAmendCgtPpdOverridesService, CreateAmendCgtPpdOverridesServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,17 +30,15 @@ trait MockCreateAmendCgtPpdOverridesService extends MockFactory {
 
   object MockCreateAmendCgtPpdOverridesService {
 
-    def createAmend(requestData: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def createAmend(requestData: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[CreateAmendCgtPpdOverridesServiceOutcome]] = {
       (
         mockCreateAmendCgtPpdOverridesService
           .createAmend(_: CreateAmendCgtPpdOverridesRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
     }
 
   }
