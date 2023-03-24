@@ -46,7 +46,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     with MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
     with MockHateoasFactory {
 
-  private val taxYear: String = "2019-20"
+  private val taxYear = "2019-20"
 
   private val rawData: RetrieveUkDividendsAnnualIncomeSummaryRawData = RetrieveUkDividendsAnnualIncomeSummaryRawData(
     nino = nino,
@@ -58,24 +58,10 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  private val hateoasLinks = Seq(
+  private val hateoasLinks = List(
     Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = PUT, rel = "create-and-amend-uk-dividends-income"),
     Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = GET, rel = "self")
   )
-
-//  private val amendUkDividendsLink: Link =
-//    Link(
-//      href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
-//      method = PUT,
-//      rel = CREATE_AND_AMEND_UK_DIVIDENDS_INCOME
-//    )
-//
-//  private val retrieveUkDividendsLink: Link =
-//    Link(
-//      href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
-//      method = GET,
-//      rel = SELF
-//    )
 
   private val retrieveUkDividendsAnnualIncomeSummaryResponseModel = RetrieveUkDividendsAnnualIncomeSummaryResponse(
     Some(100.99),
@@ -94,7 +80,6 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
   "RetrieveDividendsController" should {
     "return a successful response with status 200 (OK)" when {
       "given a valid request" in new Test {
-
         MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -116,7 +101,6 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -125,7 +109,6 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
       }
 
       "the service returns an error" in new Test {
-
         MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))

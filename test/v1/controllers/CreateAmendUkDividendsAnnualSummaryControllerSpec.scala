@@ -46,32 +46,32 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
     with MockCreateAmendUkDividendsAnnualSummaryRequestParser
     with MockHateoasFactory {
 
-  val taxYear: String = "2019-20"
-  val mtdId: String   = "test-mtd-id"
+  private val taxYear = "2019-20"
+  private val mtdId   = "test-mtd-id"
 
-  val requestJson: JsObject = JsObject.empty
+  private val requestJson: JsObject = JsObject.empty
 
-  val rawData: CreateAmendUkDividendsIncomeAnnualSummaryRawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
+  private val rawData: CreateAmendUkDividendsIncomeAnnualSummaryRawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson.apply(requestJson)
   )
 
-  val requestModel: CreateAmendUkDividendsIncomeAnnualSummaryBody = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
+  private val requestModel: CreateAmendUkDividendsIncomeAnnualSummaryBody = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
 
-  val requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
+  private val requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = requestModel
   )
 
-  private val hateoasLinks = Seq(
+  private val hateoasLinks = List(
     Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = PUT, rel = "create-and-amend-uk-dividends-income"),
     Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = GET, rel = "self"),
     Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = DELETE, rel = "delete-uk-dividends-income")
   )
 
-  val responseBodyJson: JsValue = Json.parse(
+  private val responseBodyJson: JsValue = Json.parse(
     s"""
        |{
        |   "links":[
@@ -98,7 +98,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
   "CreateAmendUkDividendsAnnualSummaryController" should {
     "return a successful response with status 200 (OK)" when {
       "given a valid request" in new Test {
-
         MockCreateAmendUkDividendsAnnualSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -118,7 +117,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockCreateAmendUkDividendsAnnualSummaryRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -127,7 +125,6 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
       }
 
       "the service returns an error" in new Test {
-
         MockCreateAmendUkDividendsAnnualSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))

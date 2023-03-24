@@ -36,14 +36,14 @@ class DeletePensionsControllerSpec
     with MockDeletePensionsService
     with MockDeletePensionsRequestParser {
 
-  val taxYear: String = "2021-22"
+  private val taxYear = "2021-22"
 
-  val rawData: DeletePensionsRawData = DeletePensionsRawData(
+  private val rawData: DeletePensionsRawData = DeletePensionsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeletePensionsRequest = DeletePensionsRequest(
+  private val requestData: DeletePensionsRequest = DeletePensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
@@ -51,7 +51,6 @@ class DeletePensionsControllerSpec
   "DeletePensionsController" should {
     "return a successful response with status 204 (No Content)" when {
       "a valid request is made" in new Test {
-
         MockDeletePensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))

@@ -41,25 +41,25 @@ class RetrievePensionsControllerSpec
     with MockHateoasFactory
     with MockRetrievePensionsRequestParser {
 
-  val taxYear: String = "2019-20"
+  private val taxYear = "2019-20"
 
-  val rawData: RetrievePensionsRawData = RetrievePensionsRawData(
+  private val rawData: RetrievePensionsRawData = RetrievePensionsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: RetrievePensionsRequest = RetrievePensionsRequest(
+  private val requestData: RetrievePensionsRequest = RetrievePensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  private val hateoasLinks = Seq(
+  private val hateoasLinks = List(
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "create-and-amend-pensions-income", method = PUT),
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "self", method = GET),
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "delete-pensions-income", method = DELETE)
   )
 
-  private val foreignPensionsItemModel = Seq(
+  private val foreignPensionsItemModel = List(
     ForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
@@ -78,7 +78,7 @@ class RetrievePensionsControllerSpec
     )
   )
 
-  private val overseasPensionContributionsItemModel = Seq(
+  private val overseasPensionContributionsItemModel = List(
     OverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
@@ -112,7 +112,6 @@ class RetrievePensionsControllerSpec
   "RetrievePensionsController" should {
     "return a successful response with status 200 (OK)" when {
       "the request is valid" in new Test {
-
         MockRetrievePensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -131,7 +130,6 @@ class RetrievePensionsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockRetrievePensionsRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -140,7 +138,6 @@ class RetrievePensionsControllerSpec
       }
 
       "service errors occur" in new Test {
-
         MockRetrievePensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))

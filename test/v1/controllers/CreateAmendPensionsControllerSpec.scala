@@ -43,9 +43,9 @@ class CreateAmendPensionsControllerSpec
     with MockCreateAmendPensionsRequestParser
     with MockHateoasFactory {
 
-  val taxYear: String = "2019-20"
+  private val taxYear = "2019-20"
 
-  val requestBodyJson: JsValue = Json.parse(
+  private val requestBodyJson: JsValue = Json.parse(
     """
       |{
       |   "foreignPensions": [
@@ -92,13 +92,13 @@ class CreateAmendPensionsControllerSpec
     """.stripMargin
   )
 
-  val rawData: CreateAmendPensionsRawData = CreateAmendPensionsRawData(
+  private val rawData: CreateAmendPensionsRawData = CreateAmendPensionsRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
-  val foreignPensionsItem: Seq[CreateAmendForeignPensionsItem] = Seq(
+  private val foreignPensionsItem: List[CreateAmendForeignPensionsItem] = List(
     CreateAmendForeignPensionsItem(
       countryCode = "DEU",
       amountBeforeTax = Some(100.23),
@@ -117,7 +117,7 @@ class CreateAmendPensionsControllerSpec
     )
   )
 
-  val overseasPensionContributionsItem: Seq[CreateAmendOverseasPensionContributions] = Seq(
+  private val overseasPensionContributionsItem: List[CreateAmendOverseasPensionContributions] = List(
     CreateAmendOverseasPensionContributions(
       customerReference = Some("PENSIONINCOME245"),
       exemptEmployersPensionContribs = 200.23,
@@ -140,24 +140,24 @@ class CreateAmendPensionsControllerSpec
     )
   )
 
-  val createAmendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
+  private val createAmendPensionsRequestBody: CreateAmendPensionsRequestBody = CreateAmendPensionsRequestBody(
     foreignPensions = Some(foreignPensionsItem),
     overseasPensionContributions = Some(overseasPensionContributionsItem)
   )
 
-  val requestData: CreateAmendPensionsRequest = CreateAmendPensionsRequest(
+  private val requestData: CreateAmendPensionsRequest = CreateAmendPensionsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = createAmendPensionsRequestBody
   )
 
-  private val hateoasLinks = Seq(
+  private val hateoasLinks = List(
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "create-and-amend-pensions-income", method = PUT),
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "self", method = GET),
     Link(href = s"/individuals/income-received/pensions/$nino/$taxYear", rel = "delete-pensions-income", method = DELETE)
   )
 
-  val responseBodyJson: JsValue = Json.parse(
+  private val responseBodyJson: JsValue = Json.parse(
     s"""
       |{
       |   "links":[
@@ -184,7 +184,6 @@ class CreateAmendPensionsControllerSpec
   "CreateAmendPensionsController" should {
     "return OK" when {
       "the request received is valid" in new Test {
-
         MockCreateAmendPensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -203,13 +202,11 @@ class CreateAmendPensionsControllerSpec
           maybeExpectedResponseBody = Some(responseBodyJson),
           maybeAuditResponseBody = Some(responseBodyJson)
         )
-
       }
     }
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockCreateAmendPensionsRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -218,7 +215,6 @@ class CreateAmendPensionsControllerSpec
       }
 
       "service returns an error" in new Test {
-
         MockCreateAmendPensionsRequestParser
           .parse(rawData)
           .returns(Right(requestData))

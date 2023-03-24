@@ -40,19 +40,19 @@ class RetrieveSavingsControllerSpec
     with MockHateoasFactory
     with MockRetrieveSavingsRequestParser {
 
-  val taxYear: String = "2019-20"
+  private val taxYear = "2019-20"
 
-  val rawData: RetrieveSavingsRawData = RetrieveSavingsRawData(
+  private val rawData: RetrieveSavingsRawData = RetrieveSavingsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: RetrieveSavingsRequest = RetrieveSavingsRequest(
+  private val requestData: RetrieveSavingsRequest = RetrieveSavingsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  val hateoasLinks = Seq(
+  private val hateoasLinks = List(
     Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = PUT, rel = "create-and-amend-savings-income"),
     Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = GET, rel = "self"),
     Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = DELETE, rel = "delete-savings-income")
@@ -84,7 +84,6 @@ class RetrieveSavingsControllerSpec
   "RetrieveSavingsController" should {
     "return a successful response with status 200 (OK)" when {
       "given a valid request" in new Test {
-
         MockRetrieveSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -106,7 +105,6 @@ class RetrieveSavingsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockRetrieveSavingsRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -116,7 +114,6 @@ class RetrieveSavingsControllerSpec
       }
 
       "the service returns an error" in new Test {
-
         MockRetrieveSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))

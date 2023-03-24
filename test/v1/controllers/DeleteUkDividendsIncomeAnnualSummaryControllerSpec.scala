@@ -40,15 +40,15 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
     with MockDeleteUkDividendsIncomeAnnualSummaryService
     with MockDeleteUkDividendsIncomeAnnualSummaryRequestParser {
 
-  val taxYear: String = "2017-18"
-  val mtdId: String   = "test-mtd-id"
+  private val taxYear = "2017-18"
+  private val mtdId   = "test-mtd-id"
 
-  val rawData: DeleteUkDividendsIncomeAnnualSummaryRawData = DeleteUkDividendsIncomeAnnualSummaryRawData(
+  private val rawData: DeleteUkDividendsIncomeAnnualSummaryRawData = DeleteUkDividendsIncomeAnnualSummaryRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteUkDividendsIncomeAnnualSummaryRequest = DeleteUkDividendsIncomeAnnualSummaryRequest(
+  private val requestData: DeleteUkDividendsIncomeAnnualSummaryRequest = DeleteUkDividendsIncomeAnnualSummaryRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
@@ -56,7 +56,6 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
   "DeleteDividendsController" should {
     "return a successful response with status 204 (No Content)" when {
       "a valid request is supplied" in new Test {
-
         MockDeleteUkDividendsIncomeAnnualSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -71,7 +70,6 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockDeleteUkDividendsIncomeAnnualSummaryRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -80,7 +78,6 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
       }
 
       "service returns an error" in new Test {
-
         MockDeleteUkDividendsIncomeAnnualSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))

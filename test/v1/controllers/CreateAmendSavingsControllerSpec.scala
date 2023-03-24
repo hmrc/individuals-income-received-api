@@ -43,9 +43,9 @@ class CreateAmendSavingsControllerSpec
     with MockCreateCreateAmendSavingsRequestParser
     with MockHateoasFactory {
 
-  val taxYear: String = "2019-20"
+  private val taxYear = "2019-20"
 
-  val requestBodyJson: JsValue = Json.parse(
+  private val requestBodyJson: JsValue = Json.parse(
     """
       |{
       |  "securities":
@@ -76,19 +76,19 @@ class CreateAmendSavingsControllerSpec
     """.stripMargin
   )
 
-  val rawData: CreateAmendSavingsRawData = CreateAmendSavingsRawData(
+  private val rawData: CreateAmendSavingsRawData = CreateAmendSavingsRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson(requestBodyJson)
   )
 
-  val security: AmendSecurities = AmendSecurities(
+  private val security: AmendSecurities = AmendSecurities(
     taxTakenOff = Some(100.11),
     grossAmount = 200.22,
     netAmount = Some(300.33)
   )
 
-  val foreignInterests: Seq[AmendForeignInterestItem] = Seq(
+  private val foreignInterests: List[AmendForeignInterestItem] = List(
     AmendForeignInterestItem(
       amountBeforeTax = Some(101.11),
       countryCode = "FRA",
@@ -107,24 +107,24 @@ class CreateAmendSavingsControllerSpec
     )
   )
 
-  val amendSavingsRequestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(
+  private val amendSavingsRequestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(
     securities = Some(security),
     foreignInterest = Some(foreignInterests)
   )
 
-  val requestData: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
+  private val requestData: CreateAmendSavingsRequest = CreateAmendSavingsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = amendSavingsRequestBody
   )
 
-  private val hateoasLinks = Seq(
+  private val hateoasLinks = List(
     Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = PUT, rel = "create-and-amend-savings-income"),
     Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = GET, rel = "self"),
     Link(href = s"/individuals/income-received/savings/$nino/$taxYear", method = DELETE, rel = "delete-savings-income")
   )
 
-  val responseBodyJson: JsValue = Json.parse(
+  private val responseBodyJson: JsValue = Json.parse(
     s"""
       |{
       |   "links":[
@@ -151,7 +151,6 @@ class CreateAmendSavingsControllerSpec
   "CreateAmendSavingsController" should {
     "return OK" when {
       "the request received is valid" in new Test {
-
         MockCreateAmendSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -175,7 +174,6 @@ class CreateAmendSavingsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockCreateAmendSavingsRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
@@ -184,7 +182,6 @@ class CreateAmendSavingsControllerSpec
       }
 
       "the service returns an error" in new Test {
-
         MockCreateAmendSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))

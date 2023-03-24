@@ -36,14 +36,14 @@ class DeleteSavingsControllerSpec
     with MockDeleteSavingsService
     with MockDeleteSavingsRequestParser {
 
-  val taxYear: String = "2021-22"
+  private val taxYear = "2021-22"
 
-  val rawData: DeleteSavingsRawData = DeleteSavingsRawData(
+  private val rawData: DeleteSavingsRawData = DeleteSavingsRawData(
     nino = nino,
     taxYear = taxYear
   )
 
-  val requestData: DeleteSavingsRequest = DeleteSavingsRequest(
+  private val requestData: DeleteSavingsRequest = DeleteSavingsRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
@@ -51,7 +51,6 @@ class DeleteSavingsControllerSpec
   "DeleteSavingsController" should {
     "return a successful response with status 204 (No Content)" when {
       "a valid request is supplied" in new Test {
-
         MockDeleteSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -66,17 +65,14 @@ class DeleteSavingsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockDeleteSavingsRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
         runErrorTestWithAudit(NinoFormatError)
-
       }
 
       "service returns an error" in new Test {
-
         MockDeleteSavingsRequestParser
           .parse(rawData)
           .returns(Right(requestData))
