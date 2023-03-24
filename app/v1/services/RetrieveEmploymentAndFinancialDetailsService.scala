@@ -16,14 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.data.EitherT
 import config.{AppConfig, FeatureSwitches}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveEmploymentAndFinancialDetailsConnector
 import v1.models.request.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsRequest
 import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
@@ -33,18 +30,15 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: RetrieveEmploymentAndFinancialDetailsConnector, appConfig: AppConfig)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+    extends BaseService {
 
   def retrieve(request: RetrieveEmploymentAndFinancialDetailsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[RetrieveEmploymentAndFinancialDetailsServiceOutcome] = {
 
     EitherT(connector.retrieve(request))
       .map(_.map(opwResponseMap))
-      .leftMap(mapDownstreamErrors(errorMap))
+      .leftMap(mapDownstreamErrors(downstreamErrorMap))
       .value
   }
 
@@ -56,7 +50,7 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
     }
   }
 
-  private val errorMap: Map[String, MtdError] = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
     "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,

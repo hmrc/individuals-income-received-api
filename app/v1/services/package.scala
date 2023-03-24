@@ -18,13 +18,36 @@ package v1
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
+import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
 import v1.models.response.retrieveDividends.RetrieveDividendsResponse
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
+import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
 
   type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
+
+  // Employments
+  type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
+  type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
+  type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
+  type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
+  type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
+  type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
+  type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
+  type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
+
+  // UK Savings Account
+  type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]
+  type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
+  type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
+  type RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]
 
   // Dividends income
   type AmendDividendsServiceOutcome    = ServiceOutcome[Unit]

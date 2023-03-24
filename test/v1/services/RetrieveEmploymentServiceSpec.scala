@@ -16,61 +16,42 @@
 
 package v1.services
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
+import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockRetrieveEmploymentConnector
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRequest
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 
 import scala.concurrent.Future
 
 class RetrieveEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
-
-  trait Test extends MockRetrieveEmploymentConnector {
-
-    case class Data(field: Option[String])
-
-    object Data {
-      implicit val reads: Format[Data] = Json.format[Data]
-    }
-
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-    implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-
-    val service: RetrieveEmploymentService = new RetrieveEmploymentService(
-      connector = mockRetrieveEmploymentConnector
-    )
-
-  }
-
-  "RetrieveEmploymentService" when {
-    "retrieve" must {
-      "return correct result for a success" in new Test {
-        val outcome: Right[Nothing, ResponseWrapper[Data]] = Right(ResponseWrapper(correlationId, Data(Some("value"))))
+  "RetrieveEmploymentService" should {
+    "return correct result for a success" when {
+      "a valid request is made" in new Test {
+        val outcome: Right[Nothing, ResponseWrapper[RetrieveEmploymentResponse]] = Right(ResponseWrapper(correlationId, responseModel))
 
         MockRetrieveEmploymentConnector
-          .retrieve[Data]()
+          .retrieve(request)
           .returns(Future.successful(outcome))
 
-        await(service.retrieve[Data]()) shouldBe outcome
+        await(service.retrieve(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockRetrieveEmploymentConnector
-              .retrieve[Data]()
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .retrieve(request)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.retrieve[Data]()) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input = Seq(
@@ -85,6 +66,34 @@ class RetrieveEmploymentServiceSpec extends ServiceSpec {
         input.foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockRetrieveEmploymentConnector {
+
+    private val nino    = "AA112233A"
+    private val taxYear = "2019-20"
+    val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+
+    val request: RetrieveEmploymentRequest = RetrieveEmploymentRequest(Nino(nino), taxYear, employmentId)
+
+    val responseModel: RetrieveEmploymentResponse = RetrieveEmploymentResponse(
+      employerRef = Some("123/AB56797"),
+      employerName = "Employer Name Ltd.",
+      startDate = Some("2020-06-17"),
+      cessationDate = Some("2020-06-17"),
+      payrollId = Some("123345657"),
+      occupationalPension = Some(false),
+      dateIgnored = None,
+      submittedOn = None
+    )
+
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveEmployment")
+
+    val service: RetrieveEmploymentService = new RetrieveEmploymentService(
+      connector = mockRetrieveEmploymentConnector
+    )
+
   }
 
 }

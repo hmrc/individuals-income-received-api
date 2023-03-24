@@ -65,7 +65,6 @@ class DeleteCustomEmploymentControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request().delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 
@@ -92,7 +91,6 @@ class DeleteCustomEmploymentControllerISpec extends IntegrationBaseSpec {
             val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
           }
         }
 
@@ -120,7 +118,6 @@ class DeleteCustomEmploymentControllerISpec extends IntegrationBaseSpec {
             val response: WSResponse = await(request().delete)
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
           }
         }
 

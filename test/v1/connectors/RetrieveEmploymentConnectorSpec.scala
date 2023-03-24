@@ -17,59 +17,49 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.connectors.DownstreamUri.DesUri
-import api.mocks.MockHttpClient
+import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import play.api.libs.json.{Json, Reads}
-import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRequest
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 
 import scala.concurrent.Future
 
 class RetrieveEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2019-20"
+  private val nino: String    = "AA111111A"
+  private val taxYear: String = "2019-20"
+  private val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  class Test extends MockHttpClient with MockAppConfig {
+  "RetrieveEmploymentConnector" should {
+    "return a 200 status and expected response for a success scenario" in new Release6Test with Test {
+
+      willGet(url = s"$baseUrl/income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId").returns(Future.successful(outcome))
+
+      await(connector.retrieve(request)) shouldBe outcome
+    }
+  }
+
+  trait Test { _: ConnectorTest =>
 
     val connector: RetrieveEmploymentConnector = new RetrieveEmploymentConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-  }
+    val request: RetrieveEmploymentRequest = RetrieveEmploymentRequest(Nino(nino), taxYear, employmentId)
 
-  "RetrieveEmploymentConnector" when {
-    "retrieve" must {
-      "return a 200 status for a success scenario" in new Test {
+    val responseModel: RetrieveEmploymentResponse = RetrieveEmploymentResponse(
+      employerRef = Some("123/AB56797"),
+      employerName = "Employer Name Ltd.",
+      startDate = Some("2020-06-17"),
+      cessationDate = Some("2020-06-17"),
+      payrollId = Some("123345657"),
+      occupationalPension = Some(false),
+      dateIgnored = None,
+      submittedOn = None
+    )
 
-        case class Data(field: String)
-
-        object Data {
-          implicit val reads: Reads[Data] = Json.reads[Data]
-        }
-
-        val outcome                       = Right(ResponseWrapper(correlationId, Data("value")))
-        implicit val desUri: DesUri[Data] = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-        implicit val hc: HeaderCarrier    = HeaderCarrier(otherHeaders = otherHeaders)
-
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/income/savings/$nino/$taxYear",
-            config = dummyDesHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
-        await(connector.retrieve[Data]()) shouldBe outcome
-      }
-    }
+    val outcome: Right[Nothing, ResponseWrapper[RetrieveEmploymentResponse]] = Right(ResponseWrapper(correlationId, responseModel))
   }
 
 }
