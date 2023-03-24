@@ -60,30 +60,6 @@ class RetrieveNonPayeEmploymentControllerSpec
       source = source
     )
 
-//  val mtdResponseWithHateoas: JsValue = Json.parse(
-//    s"""
-//     |{
-//     |   "links":[
-//     |      {
-//     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-//     |         "method":"PUT",
-//     |         "rel":"create-and-amend-non-paye-employment-income"
-//     |      },
-//     |      {
-//     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-//     |         "method":"GET",
-//     |         "rel":"self"
-//     |      },
-//     |      {
-//     |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-//     |         "method":"DELETE",
-//     |         "rel":"delete-non-paye-employment-income"
-//     |      }
-//     |   ]
-//     |}
-//    """.stripMargin
-//  )
-
   private val hateoasLinks = Seq(
     Link(
       href = s"/individuals/income-received/employments/non-paye/$nino/$taxYear",

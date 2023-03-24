@@ -140,7 +140,7 @@ class CreateAmendOtherControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new CreateAmendOtherController(
       authService = mockEnrolmentsAuthService,
