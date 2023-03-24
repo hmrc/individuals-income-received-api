@@ -25,7 +25,6 @@ import api.models.hateoas.Method.{GET, POST}
 import api.models.hateoas.RelType.{ADD_UK_SAVINGS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockListUkSavingsAccountsRequestParser
@@ -39,7 +38,6 @@ import scala.concurrent.Future
 class ListUkSavingsAccountsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
     with MockListUkSavingsAccountsService
     with MockHateoasFactory
     with MockListUkSavingsAccountsRequestParser

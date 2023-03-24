@@ -23,7 +23,7 @@ import api.models.auth.UserDetails
 import api.models.errors._
 import api.models.hateoas.RelType.CREATE_AND_AMEND_UK_SAVINGS
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
@@ -92,12 +92,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
               )
             )
 
-          case Right(resp: Option[JsValue]) =>
-            val respNoHateoas = resp.map {
-              case js: JsObject => js - "links"
-              case js: JsValue  => js
-            }
-
+          case Right(_) =>
             auditSubmission(
               FlattenedGenericAuditDetail(
                 versionNumber = Some("1.0"),
@@ -105,7 +100,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: En
                 Map("nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId),
                 Some(request.body),
                 ctx.correlationId,
-                AuditResponse(httpStatus = OK, response = Right(respNoHateoas))
+                AuditResponse(httpStatus = OK, response = Right(None))
               )
             )
         }

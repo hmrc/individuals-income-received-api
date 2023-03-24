@@ -30,9 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) extends BaseService {
 
   def listEmployments(request: ListEmploymentsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ListEmploymentsServiceOutcome] =
-    connector.listEmployments(request).map(_.leftMap(mapDownstreamErrors(mappingDesToMtdError)))
+    connector.listEmployments(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
     "INVALID_EMPLOYMENT_ID"     -> InternalError,

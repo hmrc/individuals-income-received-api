@@ -33,7 +33,7 @@ class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnec
       request: AddCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AddCustomEmploymentServiceOutcome] =
     connector.addEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-  private def downstreamErrorMap: Map[String, MtdError] =
+  private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

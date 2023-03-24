@@ -166,56 +166,58 @@ class RetrieveEmploymentControllerSpec
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdHmrcEnteredResponseWithoutDateIgnored))
       }
-    }
 
-    "happy path for retrieving hmrc entered employment with date ignored present" in new Test {
-      MockRetrieveCustomEmploymentRequestParser
-        .parse(rawData)
-        .returns(Right(requestData))
+      "happy path for retrieving hmrc entered employment with date ignored present" in new Test {
+        MockRetrieveCustomEmploymentRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-      MockRetrieveEmploymentService
-        .retrieve(requestData)
-        .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
+        MockRetrieveEmploymentService
+          .retrieve(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, hmrcEnteredEmploymentWithDateIgnoredResponseModel))))
 
-      MockHateoasFactory
-        .wrap(
-          hmrcEnteredEmploymentWithDateIgnoredResponseModel,
-          RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithDateIgnoredResponseModel)
-        )
-        .returns(
-          HateoasWrapper(
+        MockHateoasFactory
+          .wrap(
             hmrcEnteredEmploymentWithDateIgnoredResponseModel,
-            Seq(
-              listEmploymentLink,
-              retrieveEmploymentLink,
-              unignoreEmploymentLink
-            )))
+            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, hmrcEnteredEmploymentWithDateIgnoredResponseModel)
+          )
+          .returns(
+            HateoasWrapper(
+              hmrcEnteredEmploymentWithDateIgnoredResponseModel,
+              Seq(
+                listEmploymentLink,
+                retrieveEmploymentLink,
+                unignoreEmploymentLink
+              )))
 
-      runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdHmrcEnteredResponseWithDateIgnored))
-    }
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdHmrcEnteredResponseWithDateIgnored))
+      }
 
-    "happy path for retrieving custom entered employment" in new Test {
-      MockRetrieveCustomEmploymentRequestParser
-        .parse(rawData)
-        .returns(Right(requestData))
+      "happy path for retrieving custom entered employment" in new Test {
+        MockRetrieveCustomEmploymentRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-      MockRetrieveEmploymentService
-        .retrieve(requestData)
-        .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
+        MockRetrieveEmploymentService
+          .retrieve(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, customEnteredEmploymentResponseModel))))
 
-      MockHateoasFactory
-        .wrap(customEnteredEmploymentResponseModel, RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
-        .returns(
-          HateoasWrapper(
+        MockHateoasFactory
+          .wrap(
             customEnteredEmploymentResponseModel,
-            Seq(
-              listEmploymentLink,
-              retrieveEmploymentLink,
-              amendCustomEmploymentLink,
-              deleteCustomEmploymentLink
-            )))
+            RetrieveEmploymentHateoasData(nino, taxYear, employmentId, customEnteredEmploymentResponseModel))
+          .returns(
+            HateoasWrapper(
+              customEnteredEmploymentResponseModel,
+              Seq(
+                listEmploymentLink,
+                retrieveEmploymentLink,
+                amendCustomEmploymentLink,
+                deleteCustomEmploymentLink
+              )))
 
-      runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdCustomEnteredResponse))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdCustomEnteredResponse))
+      }
     }
 
     "return the error as per spec" when {

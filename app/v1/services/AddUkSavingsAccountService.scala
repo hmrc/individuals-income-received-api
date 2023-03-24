@@ -32,10 +32,10 @@ class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnec
   def addSavings(
       request: AddUkSavingsAccountRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AddUkSavingsAccountServiceOutcome] = {
 
-    connector.addSavings(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.addSavings(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def errorMap: Map[String, MtdError] =
+  private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDVALUE"      -> NinoFormatError,
       "MAX_ACCOUNTS_REACHED" -> RuleMaximumSavingsAccountsLimitError,

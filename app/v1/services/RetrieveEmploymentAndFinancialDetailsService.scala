@@ -38,7 +38,7 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
 
     EitherT(connector.retrieve(request))
       .map(_.map(opwResponseMap))
-      .leftMap(mapDownstreamErrors(errorMap))
+      .leftMap(mapDownstreamErrors(downstreamErrorMap))
       .value
   }
 
@@ -50,7 +50,7 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
     }
   }
 
-  private val errorMap: Map[String, MtdError] = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
     "INVALID_TAX_YEAR"          -> TaxYearFormatError,
     "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,

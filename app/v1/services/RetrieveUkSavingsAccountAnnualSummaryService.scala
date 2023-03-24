@@ -36,7 +36,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
       ec: ExecutionContext): Future[RetrieveUkSavingsAccountAnnualSummaryServiceOutcome] = {
 
     val result = for {
-      downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDownstreamErrors(desErrorMap))
+      downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
       mtdResponseWrapper        <- EitherT.fromEither[Future](convertToMtd(downstreamResponseWrapper))
     } yield mtdResponseWrapper
 
@@ -56,7 +56,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
     }
   }
 
-  private val desErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_NINO"            -> NinoFormatError,
       "INVALID_TYPE"            -> InternalError,

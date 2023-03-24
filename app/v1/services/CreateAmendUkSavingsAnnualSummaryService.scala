@@ -36,7 +36,7 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
       .createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request))
       .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,

@@ -31,9 +31,9 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
 
   def listUkSavingsAccounts(
       request: ListUkSavingsAccountsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ListUkSavingsAccountsServiceOutcome] =
-    connector.listUkSavingsAccounts(request).map(_.leftMap(mapDownstreamErrors(mappingDesToMtdError)))
+    connector.listUkSavingsAccounts(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-  private def mappingDesToMtdError: Map[String, MtdError] = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = Map(
     "INVALID_ID_TYPE"          -> InternalError,
     "INVALID_IDVALUE"          -> NinoFormatError,
     "INVALID_INCOMESOURCETYPE" -> InternalError,

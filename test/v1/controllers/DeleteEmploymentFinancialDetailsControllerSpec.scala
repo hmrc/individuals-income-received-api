@@ -113,7 +113,7 @@ class DeleteEmploymentFinancialDetailsControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear, "employmentId" -> employmentId),
-          request = None,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )
