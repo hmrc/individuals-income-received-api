@@ -32,6 +32,12 @@ object DownstreamStub extends WireMockMethods {
       .thenReturn(status = status)
   }
 
+  def onSuccessWithNoRequestBody(method: HTTPMethod, uri: String, status: Int): StubMapping = {
+    when(method = method, uri = uri)
+      .withRequestBody("")
+      .thenReturn(status = status)
+  }
+
   def onSuccess(method: HTTPMethod, uri: String, queryParams: Map[String, String], status: Int, body: JsValue): StubMapping = {
     when(method = method, uri = uri, queryParams = queryParams)
       .thenReturn(status = status, body)

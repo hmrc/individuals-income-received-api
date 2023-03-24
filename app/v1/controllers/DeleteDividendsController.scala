@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteDividendsRequestParser
 import v1.models.request.deleteDividends.DeleteDividendsRawData
 import v1.services.DeleteDividendsService
@@ -35,9 +35,7 @@ class DeleteDividendsController @Inject() (val authService: EnrolmentsAuthServic
                                            auditService: AuditService,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -66,7 +64,6 @@ class DeleteDividendsController @Inject() (val authService: EnrolmentsAuthServic
         ))
 
       requestHandler.handleRequest(rawData)
-
     }
 
 }

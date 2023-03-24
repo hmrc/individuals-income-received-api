@@ -31,10 +31,10 @@ trait MockAmendCustomEmploymentConnector extends MockFactory {
 
   object MockAmendCustomEmploymentConnector {
 
-    def amendEmployment(request: AmendCustomEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def amendEmployment(requestData: AmendCustomEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockAmendCustomEmploymentConnector
         .amendEmployment(_: AmendCustomEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(request, *, *, *)
+        .expects(requestData, *, *, *)
     }
 
   }
