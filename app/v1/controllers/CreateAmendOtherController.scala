@@ -19,10 +19,9 @@ package v1.controllers
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendOtherRequestParser
 import v1.models.request.createAmendOther.CreateAmendOtherRawData
 import v1.models.response.createAmendOther.CreateAmendOtherHateoasData
@@ -35,15 +34,13 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthService,
                                             val lookupService: MtdIdLookupService,
-                                            appConfig: AppConfig,
-                                            requestParser: CreateAmendOtherRequestParser,
+                                            parser: CreateAmendOtherRequestParser,
                                             service: CreateAmendOtherService,
                                             auditService: AuditService,
                                             hateoasFactory: HateoasFactory,
                                             cc: ControllerComponents,
                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -62,7 +59,7 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.createAmend)
         .withAuditing(AuditHandler(
           auditService = auditService,

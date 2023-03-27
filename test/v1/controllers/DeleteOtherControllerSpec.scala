@@ -53,7 +53,6 @@ class DeleteOtherControllerSpec
   "DeleteOtherController" should {
     "return a successful response with status 204 (No Content)" when {
       "the request received is valid" in new Test {
-
         MockDeleteOtherRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -94,7 +93,7 @@ class DeleteOtherControllerSpec
     val controller = new DeleteOtherController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteOtherRequestParser,
+      parser = mockDeleteOtherRequestParser,
       service = mockDeleteOtherService,
       auditService = mockAuditService,
       cc = cc,
@@ -111,7 +110,7 @@ class DeleteOtherControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

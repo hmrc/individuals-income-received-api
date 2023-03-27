@@ -22,7 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendNonPayeEmploymentRequestParser
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
 import v1.models.response.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentHateoasData
@@ -36,14 +36,13 @@ import scala.concurrent.ExecutionContext
 class CreateAmendNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                         val lookupService: MtdIdLookupService,
                                                         appConfig: AppConfig,
-                                                        requestParser: CreateAmendNonPayeEmploymentRequestParser,
+                                                        parser: CreateAmendNonPayeEmploymentRequestParser,
                                                         service: CreateAmendNonPayeEmploymentService,
                                                         auditService: AuditService,
                                                         hateoasFactory: HateoasFactory,
                                                         cc: ControllerComponents,
                                                         val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -63,7 +62,7 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.createAndAmend)
         .withAuditing(AuditHandler(
           auditService = auditService,

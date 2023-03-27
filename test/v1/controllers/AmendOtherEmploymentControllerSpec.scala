@@ -22,10 +22,9 @@ import api.mocks.services.MockAuditService
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockAmendOtherEmploymentRequestParser
@@ -39,7 +38,6 @@ import scala.concurrent.Future
 class AmendOtherEmploymentControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
     with MockAmendOtherEmploymentRequestParser
     with MockAuditService
     with MockAmendOtherEmploymentService
@@ -305,7 +303,6 @@ class AmendOtherEmploymentControllerSpec
   "AmendOtherEmploymentController" should {
     "return a successful response with status 200 (OK)" when {
       "the request received is valid" in new Test {
-
         MockAmendOtherEmploymentRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -329,7 +326,6 @@ class AmendOtherEmploymentControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-
         MockAmendOtherEmploymentRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
@@ -356,8 +352,7 @@ class AmendOtherEmploymentControllerSpec
     val controller = new AmendOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockAmendOtherEmploymentRequestParser,
+      parser = mockAmendOtherEmploymentRequestParser,
       service = mockAmendOtherEmploymentService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
@@ -367,7 +362,7 @@ class AmendOtherEmploymentControllerSpec
 
     protected def callController(): Future[Result] = controller.amendOtherEmployment(nino, taxYear)(fakePutRequest(requestBodyJson))
 
-    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendOtherEmployment",
         transactionName = "create-amend-other-employment",
@@ -375,7 +370,7 @@ class AmendOtherEmploymentControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = maybeRequestBody,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

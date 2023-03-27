@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteNonPayeEmploymentRequestParser
 import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRawData
 import v1.services.DeleteNonPayeEmploymentService
@@ -29,13 +29,12 @@ import scala.concurrent.ExecutionContext
 
 class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
-                                                   requestParser: DeleteNonPayeEmploymentRequestParser,
+                                                   parser: DeleteNonPayeEmploymentRequestParser,
                                                    service: DeleteNonPayeEmploymentService,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -53,7 +52,7 @@ class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAu
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.deleteNonPayeEmployment)
         .withAuditing(AuditHandler(
           auditService = auditService,

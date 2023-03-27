@@ -18,12 +18,10 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
+import cats.implicits._
 import v1.connectors.OtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
-import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,14 +31,13 @@ class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmployment
 
   def retrieve(request: OtherEmploymentIncomeRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]]] = {
+      ec: ExecutionContext): Future[RetrieveOtherEmploymentIncomeServiceOutcome] = {
 
-    val result = EitherT(connector.retrieveOtherEmploymentIncome(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    connector.retrieveOtherEmploymentIncome(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

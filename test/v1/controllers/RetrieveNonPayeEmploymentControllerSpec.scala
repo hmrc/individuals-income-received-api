@@ -125,7 +125,7 @@ class RetrieveNonPayeEmploymentControllerSpec
     val controller = new RetrieveNonPayeEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveNonPayeEmploymentRequestParser,
+      parser = mockRetrieveNonPayeEmploymentRequestParser,
       service = mockRetrieveNonPayeEmploymentService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

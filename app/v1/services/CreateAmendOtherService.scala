@@ -18,7 +18,6 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.CreateAmendOtherConnector
@@ -30,13 +29,12 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector) extends BaseService {
 
-  def createAmend(
-      request: CreateAmendOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmend(request: CreateAmendOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[CreateAmendOtherServiceOutcome] = {
 
     connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

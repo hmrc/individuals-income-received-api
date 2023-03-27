@@ -26,7 +26,10 @@ import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidenti
 import v1.models.response.retrieveDividends.RetrieveDividendsResponse
 import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
+import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
+import v1.models.response.retrieveOther.RetrieveOtherResponse
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
@@ -37,11 +40,20 @@ package object services {
   type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
   type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
   type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
+  type AmendOtherEmploymentServiceOutcome                  = ServiceOutcome[Unit]
+  type CreateAmendNonPayeEmploymentServiceOutcome          = ServiceOutcome[Unit]
+  type CreateAmendOtherServiceOutcome                      = ServiceOutcome[Unit]
   type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
   type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
+  type DeleteNonPayeEmploymentServiceOutcome               = ServiceOutcome[Unit]
+  type DeleteOtherEmploymentIncomeServiceOutcome           = ServiceOutcome[Unit]
+  type DeleteOtherServiceOutcome                           = ServiceOutcome[Unit]
   type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
   type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
   type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
+  type RetrieveNonPayeEmploymentServiceOutcome             = ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]
+  type RetrieveOtherEmploymentIncomeServiceOutcome         = ServiceOutcome[RetrieveOtherEmploymentResponse]
+  type RetrieveOtherServiceOutcome                         = ServiceOutcome[RetrieveOtherResponse]
 
   // UK Savings Account
   type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]

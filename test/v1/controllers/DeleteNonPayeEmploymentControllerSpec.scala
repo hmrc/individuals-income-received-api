@@ -52,7 +52,6 @@ class DeleteNonPayeEmploymentControllerSpec
   "DeleteNonPayeEmploymentController" when {
     "return a successful response with status 204 (No Content)" when {
       "the request received is valid" in new Test {
-
         MockDeleteNonPayeEmploymentRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -93,7 +92,7 @@ class DeleteNonPayeEmploymentControllerSpec
     val controller = new DeleteNonPayeEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteNonPayeEmploymentRequestParser,
+      parser = mockDeleteNonPayeEmploymentRequestParser,
       service = mockDeleteNonPayeEmploymentService,
       auditService = mockAuditService,
       cc = cc,
@@ -102,7 +101,7 @@ class DeleteNonPayeEmploymentControllerSpec
 
     protected def callController(): Future[Result] = controller.delete(nino, taxYear)(fakeDeleteRequest)
 
-    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "DeleteNonPayeEmploymentIncome",
         transactionName = "delete-non-paye-employment-income",
@@ -110,7 +109,7 @@ class DeleteNonPayeEmploymentControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

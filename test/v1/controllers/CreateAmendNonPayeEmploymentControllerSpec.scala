@@ -108,7 +108,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
   "CreateAmendNonPayeEmploymentController" should {
     "return a successful response with status 200 (OK)" when {
       "the request received is valid" in new Test {
-        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+//        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendNonPayeEmploymentRequestParser
           .parse(rawData)
@@ -160,7 +160,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      requestParser = mockRequestParser,
+      parser = mockRequestParser,
       service = mockService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
@@ -170,7 +170,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
 
     protected def callController(): Future[Result] = controller.createAmendNonPayeEmployment(nino, taxYear)(fakePutRequest(validRequestJson))
 
-    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendNonPayeEmployment",
         transactionName = "create-amend-non-paye-employment",
@@ -178,7 +178,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = maybeRequestBody,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

@@ -128,7 +128,7 @@ class RetrieveOtherEmploymentControllerSpec
     val controller = new RetrieveOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockOtherEmploymentIncomeRequestParser,
+      parser = mockOtherEmploymentIncomeRequestParser,
       service = mockRetrieveOtherEmploymentIncomeService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

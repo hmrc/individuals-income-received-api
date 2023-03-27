@@ -53,7 +53,6 @@ class DeleteOtherEmploymentControllerSpec
   "DeleteOtherEmploymentController" should {
     "return a successful response with status 204 (No Content)" when {
       "the request received is valid" in new Test {
-
         MockOtherEmploymentIncomeRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -94,7 +93,7 @@ class DeleteOtherEmploymentControllerSpec
     val controller = new DeleteOtherEmploymentController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockOtherEmploymentIncomeRequestParser,
+      parser = mockOtherEmploymentIncomeRequestParser,
       service = mockDeleteOtherEmploymentIncomeService,
       auditService = mockAuditService,
       cc = cc,
@@ -111,7 +110,7 @@ class DeleteOtherEmploymentControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = None,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

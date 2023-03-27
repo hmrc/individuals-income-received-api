@@ -17,8 +17,7 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{ErrorWrapper, InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
+import api.models.errors.{InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.AmendOtherEmploymentConnector
@@ -30,15 +29,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConnector) extends BaseService {
 
-  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendOtherEmployment(
+      request: AmendOtherEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendOtherEmploymentServiceOutcome] = {
 
     connector.amendOtherEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     def errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

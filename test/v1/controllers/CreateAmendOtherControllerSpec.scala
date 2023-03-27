@@ -18,14 +18,13 @@ package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.MockAuditService
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
@@ -40,9 +39,6 @@ import scala.concurrent.Future
 class CreateAmendOtherControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
-    with MockAppConfig
     with MockCreateAmendOtherRequestParser
     with MockAuditService
     with MockCreateAmendOtherService
@@ -95,7 +91,6 @@ class CreateAmendOtherControllerSpec
   "CreateAmendOtherController" should {
     "return a successful response with status 200 (OK)" when {
       "the request received is valid" in new Test {
-
         MockCreateAmendOtherRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -145,8 +140,7 @@ class CreateAmendOtherControllerSpec
     val controller = new CreateAmendOtherController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockCreateAmendOtherRequestParser,
+      parser = mockCreateAmendOtherRequestParser,
       service = mockCreateAmendOtherService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
@@ -156,7 +150,7 @@ class CreateAmendOtherControllerSpec
 
     protected def callController(): Future[Result] = controller.createAmendOther(nino, taxYear)(fakePutRequest(requestBodyJson))
 
-    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendOtherIncome",
         transactionName = "create-amend-other-income",
@@ -164,7 +158,7 @@ class CreateAmendOtherControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
-          request = maybeRequestBody,
+          request = requestBody,
           `X-CorrelationId` = correlationId,
           response = auditResponse
         )

@@ -18,7 +18,6 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.syntax.either._
 import v1.connectors.CreateAmendNonPayeEmploymentConnector
@@ -32,7 +31,7 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
 
   def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ec: ExecutionContext): Future[CreateAmendNonPayeEmploymentServiceOutcome] = {
 
     connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
