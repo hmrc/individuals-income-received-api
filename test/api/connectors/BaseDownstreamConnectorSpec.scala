@@ -103,7 +103,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(outcome))
 
-        private val result: DownstreamOutcome[Result] = await(connector.put(body, DesUri[Result](url)))
+        private val result: DownstreamOutcome[Result] = await(connector.put(DesUri[Result](url), body))
         result shouldBe outcome
       }
     }
@@ -127,7 +127,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
               )
               .returns(Future.successful(outcome))
 
-            await(connector.put(body, DesUri[Result](url))) shouldBe outcome
+            await(connector.put(DesUri[Result](url), body)) shouldBe outcome
           }
       }
     }
@@ -199,7 +199,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue"))
           .returns(Future.successful(outcome))
 
-        private val result = await(connector.put(body, IfsUri[Result](url)))
+        private val result = await(connector.put(IfsUri[Result](url), body))
         result shouldBe outcome
       }
 
@@ -240,7 +240,7 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
               )
               .returns(Future.successful(outcome))
 
-            await(connector.put(body, IfsUri[Result](url))) shouldBe outcome
+            await(connector.put(IfsUri[Result](url), body)) shouldBe outcome
           }
       }
     }

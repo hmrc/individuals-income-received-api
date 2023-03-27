@@ -43,7 +43,7 @@ class CreateAmendNonPayeEmploymentConnector @Inject() (val http: HttpClient, val
       Api1661Uri[Unit](s"income-tax/income/employments/non-paye/${nino.nino}/${taxYear.asMtd}")
     }
 
-    put(body, uri)
+    put(uri, body)
   }
 
 }

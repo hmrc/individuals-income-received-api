@@ -40,7 +40,7 @@ class CreateAmendOtherConnector @Inject() (val http: HttpClient, val appConfig: 
       IfsUri[Unit](s"income-tax/income/other/$nino/${taxYear.asMtd}")
     }
 
-    put(body, url)
+    put(url, body)
   }
 
 }

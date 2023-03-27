@@ -46,10 +46,7 @@ class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appCon
         Release6Uri[Unit](s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId")
       }
 
-    put(
-      uri = downstreamUri,
-      body = body
-    )
+    put(downstreamUri, body)
   }
 
 }

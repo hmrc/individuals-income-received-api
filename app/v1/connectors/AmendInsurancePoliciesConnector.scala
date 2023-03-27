@@ -44,13 +44,11 @@ class AmendInsurancePoliciesConnector @Inject() (val http: HttpClient, val appCo
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/insurance-policies/income/${taxYear.asTysDownstream}/${nino}")
-    } else
+    } else {
       IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/${taxYear.asMtd}")
+    }
 
-    put(
-      uri = downstreamUri,
-      body = request.body
-    )
+    put(downstreamUri, request.body)
   }
 
 }
