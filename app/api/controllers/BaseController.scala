@@ -17,7 +17,6 @@
 package api.controllers
 
 import api.models.errors.{ErrorWrapper, InternalError}
-import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import utils.Logging
@@ -29,7 +28,7 @@ trait BaseController {
     logger.error(
       s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
         s"Unhandled error: $errorWrapper")
-    InternalServerError(Json.toJson(InternalError))
+    InternalServerError(InternalError.asJson)
   }
 
   implicit class Response(result: Result) {

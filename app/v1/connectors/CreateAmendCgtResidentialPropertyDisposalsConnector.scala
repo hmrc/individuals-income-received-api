@@ -46,7 +46,7 @@ class CreateAmendCgtResidentialPropertyDisposalsConnector @Inject() (val http: H
       Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/${nino.nino}/${taxYear.asMtd}")
     }
 
-    put(request.body, uri)
+    put(uri, request.body)
   }
 
 }

@@ -46,10 +46,7 @@ class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val a
         Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}")
       }
 
-    put(
-      uri = downstreamUri,
-      body = request.body
-    )
+    put(downstreamUri, request.body)
   }
 
 }

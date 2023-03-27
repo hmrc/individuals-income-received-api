@@ -41,7 +41,7 @@ class AmendDividendsConnector @Inject() (val http: HttpClient, val appConfig: Ap
       IfsUri[Unit](s"income-tax/income/dividends/$nino/${taxYear.asMtd}")
     }
 
-    put(request.body, uri)
+    put(uri, request.body)
   }
 
 }

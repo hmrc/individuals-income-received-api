@@ -45,10 +45,7 @@ class AmendOtherEmploymentConnector @Inject() (val http: HttpClient, val appConf
       DesUri[Unit](s"income-tax/income/other/employments/${nino.nino}/${taxYear.asMtd}")
     }
 
-    put(
-      uri = downstreamUri,
-      body = body
-    )
+    put(downstreamUri, body)
   }
 
 }

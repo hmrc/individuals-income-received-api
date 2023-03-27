@@ -43,10 +43,7 @@ class AmendForeignConnector @Inject() (val http: HttpClient, val appConfig: AppC
       IfsUri[Unit](s"income-tax/income/foreign/$nino/${taxYear.asMtd}")
     }
 
-    put(
-      uri = downstreamUri,
-      body = request.body
-    )
+    put(downstreamUri, request.body)
   }
 
 }

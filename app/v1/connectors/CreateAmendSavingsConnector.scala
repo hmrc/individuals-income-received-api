@@ -44,10 +44,7 @@ class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig
         IfsUri[Unit](s"income-tax/income/savings/${nino.value}/${taxYear.asMtd}")
       }
 
-    put(
-      uri = downstreamUri,
-      body = request.body
-    )
+    put(downstreamUri, request.body)
 
   }
 
