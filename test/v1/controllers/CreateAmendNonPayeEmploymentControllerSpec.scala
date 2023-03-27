@@ -108,8 +108,6 @@ class CreateAmendNonPayeEmploymentControllerSpec
   "CreateAmendNonPayeEmploymentController" should {
     "return a successful response with status 200 (OK)" when {
       "the request received is valid" in new Test {
-//        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-
         MockCreateAmendNonPayeEmploymentRequestParser
           .parse(rawData)
           .returns(Right(requestData))
