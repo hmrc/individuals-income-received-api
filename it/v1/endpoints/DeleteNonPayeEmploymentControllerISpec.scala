@@ -42,7 +42,6 @@ class DeleteNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request.delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
       }
 
       "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
@@ -57,7 +56,6 @@ class DeleteNonPayeEmploymentControllerISpec extends IntegrationBaseSpec {
         val response: WSResponse = await(request.delete)
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
       }
     }
 

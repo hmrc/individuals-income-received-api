@@ -29,7 +29,10 @@ import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidenti
 import v1.models.response.retrieveDividends.RetrieveDividendsResponse
 import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
+import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
+import v1.models.response.retrieveOther.RetrieveOtherResponse
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
@@ -55,6 +58,21 @@ package object services {
   type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
   type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
   type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
+
+  // Non-PAYE Employment Income
+  type CreateAmendNonPayeEmploymentServiceOutcome = ServiceOutcome[Unit]
+  type DeleteNonPayeEmploymentServiceOutcome      = ServiceOutcome[Unit]
+  type RetrieveNonPayeEmploymentServiceOutcome    = ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]
+
+  // Other Employment Income
+  type AmendOtherEmploymentServiceOutcome          = ServiceOutcome[Unit]
+  type DeleteOtherEmploymentIncomeServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveOtherEmploymentIncomeServiceOutcome = ServiceOutcome[RetrieveOtherEmploymentResponse]
+
+  // Other Income
+  type CreateAmendOtherServiceOutcome = ServiceOutcome[Unit]
+  type DeleteOtherServiceOutcome      = ServiceOutcome[Unit]
+  type RetrieveOtherServiceOutcome    = ServiceOutcome[RetrieveOtherResponse]
 
   // UK Savings Account
   type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]

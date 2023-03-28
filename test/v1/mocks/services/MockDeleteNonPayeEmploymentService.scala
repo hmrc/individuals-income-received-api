@@ -16,12 +16,11 @@
 
 package api.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRequest
 import v1.services.DeleteNonPayeEmploymentService
 
@@ -33,18 +32,15 @@ trait MockDeleteNonPayeEmploymentService extends MockFactory {
 
   object MockDeleteNonPayeEmploymentService {
 
-    def deleteNonPayeEmployment(requestData: DeleteNonPayeEmploymentRequest)
-    : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def deleteNonPayeEmployment(requestData: DeleteNonPayeEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (
         mockDeleteNonPayeEmploymentService
           .deleteNonPayeEmployment(_: DeleteNonPayeEmploymentRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
     }
 
   }
