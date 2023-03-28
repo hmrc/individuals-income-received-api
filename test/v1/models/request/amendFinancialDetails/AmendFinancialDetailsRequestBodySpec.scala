@@ -27,13 +27,16 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
     taxablePayToDate = 3500.75,
     totalTaxToDate = 6782.92
   )
+
   private val studentLoansModel = AmendStudentLoans(
     uglDeductionAmount = Some(13343.45),
     pglDeductionAmount = Some(24242.56)
   )
+
   private val deductionsModel = AmendDeductions(
     studentLoans = Some(studentLoansModel)
   )
+
   private val benefitsInKindModel = AmendBenefitsInKind(
     accommodation = Some(455.67),
     assets = Some(435.54),
@@ -64,12 +67,14 @@ class AmendFinancialDetailsRequestBodySpec extends UnitSpec {
     vouchersAndCreditCards = Some(34.90),
     nonCash = Some(23.89)
   )
+
   private val employmentModel = AmendEmployment(
     pay = payModel,
     deductions = Some(deductionsModel),
     benefitsInKind = Some(benefitsInKindModel),
     offPayrollWorker = Some(true)
   )
+
   private val requestBodyModel = AmendFinancialDetailsRequestBody(
     employment = employmentModel
   )

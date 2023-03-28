@@ -16,11 +16,11 @@
 
 package v1.controllers
 
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.IdGenerator
 import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrievePensionsRequestParser
 import v1.models.request.retrievePensions.RetrievePensionsRawData
 import v1.models.response.retrievePensions.RetrievePensionsHateoasData

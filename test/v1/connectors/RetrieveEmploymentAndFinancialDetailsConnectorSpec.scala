@@ -16,8 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.ConnectorSpec
-import api.connectors.DownstreamOutcome
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper

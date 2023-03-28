@@ -17,21 +17,7 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
-import api.models.errors.{
-  CountryCodeFormatError,
-  CountryCodeRuleError,
-  CustomerRefFormatError,
-  DoubleTaxationArticleFormatError,
-  DoubleTaxationTreatyFormatError,
-  NinoFormatError,
-  QOPSRefFormatError,
-  RuleIncorrectOrEmptyBodyError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  SF74RefFormatError,
-  TaxYearFormatError,
-  ValueFormatError
-}
+import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}

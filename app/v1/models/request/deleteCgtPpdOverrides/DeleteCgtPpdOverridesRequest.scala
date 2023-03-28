@@ -16,6 +16,6 @@
 
 package v1.models.request.deleteCgtPpdOverrides
 
-import api.models.domain.{TaxYear, Nino}
+import api.models.domain.{Nino, TaxYear}
 
 case class DeleteCgtPpdOverridesRequest(nino: Nino, taxYear: TaxYear)

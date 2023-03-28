@@ -19,8 +19,6 @@ package v1.controllers
 import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-
-import javax.inject.{Inject, Singleton}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveUkDividendsIncomeAnnualSummaryRequestParser
@@ -28,6 +26,7 @@ import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivide
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryHateoasData
 import v1.services.RetrieveUkDividendsIncomeAnnualSummaryService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton

@@ -17,13 +17,13 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, RuleMissingOffPayrollWorker, RuleNotAllowedOffPayrollWorker}
 import config.AppConfig
 import utils.CurrentDateTime
 import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 

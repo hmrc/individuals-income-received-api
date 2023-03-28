@@ -20,11 +20,10 @@ import api.controllers.RequestContext
 import api.models.errors.{InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
 import api.services.BaseService
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import v1.connectors.CreateAmendPensionsConnector
 import v1.models.request.createAmendPensions.CreateAmendPensionsRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

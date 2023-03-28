@@ -26,14 +26,16 @@ import scala.concurrent.Future
 
 class CreateAmendOtherCgtConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
+  private val nino: String = "AA111111A"
 
   trait Test { _: ConnectorTest =>
     def taxYear: TaxYear
+
     val connector: CreateAmendOtherCgtConnector = new CreateAmendOtherCgtConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
+
   }
 
   "createAndAmend" should {
@@ -69,7 +71,7 @@ class CreateAmendOtherCgtConnectorSpec extends ConnectorSpec {
 
         willPut(
           url = s"$baseUrl/income-tax/income/disposals/other-gains/23-24/$nino",
-          body = mtdRequestBody,
+          body = mtdRequestBody
         ).returns(Future.successful(outcome))
 
         await(connector.createAndAmend(createAmendOtherCgtRequest)) shouldBe outcome

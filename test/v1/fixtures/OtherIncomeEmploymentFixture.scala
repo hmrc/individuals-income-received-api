@@ -17,17 +17,7 @@
 package v1.fixtures
 
 import api.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
-import v1.models.response.retrieveOtherEmployment.{
-  BenefitFromEmployerFinancedRetirementSchemeItem,
-  CommonOtherEmployment,
-  LumpSums,
-  RedundancyCompensationPaymentsOverExemptionItem,
-  RedundancyCompensationPaymentsUnderExemptionItem,
-  RetrieveOtherEmploymentResponse,
-  ShareOptionItem,
-  SharesAwardedOrReceivedItem,
-  TaxableLumpSumsAndCertainIncomeItem
-}
+import v1.models.response.retrieveOtherEmployment._
 
 object OtherIncomeEmploymentFixture {
 

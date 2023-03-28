@@ -18,9 +18,6 @@ package v1
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
-import v1.models.response.retrievePensions.RetrievePensionsResponse
-import v1.models.response.retrieveSavings.RetrieveSavingsResponse
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountResponse
 import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
@@ -29,10 +26,15 @@ import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidenti
 import v1.models.response.retrieveDividends.RetrieveDividendsResponse
 import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
+import v1.models.response.retrieveForeign.RetrieveForeignResponse
+import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
 import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
 import v1.models.response.retrieveOther.RetrieveOtherResponse
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
+import v1.models.response.retrievePensions.RetrievePensionsResponse
+import v1.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 import v1.models.response.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryResponse
 
 package object services {
@@ -74,13 +76,23 @@ package object services {
   type DeleteOtherServiceOutcome      = ServiceOutcome[Unit]
   type RetrieveOtherServiceOutcome    = ServiceOutcome[RetrieveOtherResponse]
 
+  // Foreign Income
+  type AmendForeignServiceOutcome    = ServiceOutcome[Unit]
+  type DeleteForeignServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveForeignServiceOutcome = ServiceOutcome[RetrieveForeignResponse]
+
+  // Insurance Policies Income
+  type AmendInsurancePoliciesServiceOutcome    = ServiceOutcome[Unit]
+  type DeleteInsurancePoliciesServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveInsurancePoliciesServiceOutcome = ServiceOutcome[RetrieveInsurancePoliciesResponse]
+
   // UK Savings Account
   type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]
   type CreateAmendUkSavingsAnnualSummaryServiceOutcome     = ServiceOutcome[Unit]
   type ListUkSavingsAccountsServiceOutcome                 = ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]
   type RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]
 
-  // Dividends income
+  // Dividends Income
   type AmendDividendsServiceOutcome    = ServiceOutcome[Unit]
   type DeleteDividendsServiceOutcome   = ServiceOutcome[Unit]
   type RetrieveDividendsServiceOutcome = ServiceOutcome[RetrieveDividendsResponse]

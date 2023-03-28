@@ -27,14 +27,8 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
 import v1.mocks.services.MockRetrieveUkDividendsAnnualIncomeSummaryService
-import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{
-  RetrieveUkDividendsAnnualIncomeSummaryRawData,
-  RetrieveUkDividendsAnnualIncomeSummaryRequest
-}
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{
-  RetrieveUkDividendsAnnualIncomeSummaryHateoasData,
-  RetrieveUkDividendsAnnualIncomeSummaryResponse
-}
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest}
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData, RetrieveUkDividendsAnnualIncomeSummaryResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

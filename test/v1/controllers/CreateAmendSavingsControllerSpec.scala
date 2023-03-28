@@ -21,10 +21,9 @@ import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateCreateAmendSavingsRequestParser
@@ -38,7 +37,6 @@ import scala.concurrent.Future
 class CreateAmendSavingsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
     with MockCreateAmendSavingsService
     with MockCreateCreateAmendSavingsRequestParser
     with MockHateoasFactory {
@@ -200,7 +198,6 @@ class CreateAmendSavingsControllerSpec
     val controller = new CreateAmendSavingsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
       parser = mockCreateAmendSavingsRequestParser,
       service = mockCreateAmendSavingsService,
       auditService = mockAuditService,

@@ -18,13 +18,10 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.RetrieveInsurancePoliciesConnector
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRequest
-import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,14 +31,13 @@ class RetrieveInsurancePoliciesService @Inject() (connector: RetrieveInsurancePo
 
   def retrieve(request: RetrieveInsurancePoliciesRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveInsurancePoliciesResponse]]] = {
+      ec: ExecutionContext): Future[RetrieveInsurancePoliciesServiceOutcome] = {
 
-    val result = EitherT(connector.retrieveInsurancePolicies(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    connector.retrieveInsurancePolicies(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

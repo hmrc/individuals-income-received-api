@@ -33,10 +33,10 @@ class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAme
       ctx: RequestContext,
       ec: ExecutionContext): Future[CreateAmendUkDividendsServiceOutcome] = {
 
-    connector.createAmendUkDividends(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.createAmendUkDividends(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,

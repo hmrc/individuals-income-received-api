@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteInsurancePoliciesRequestParser
 import v1.models.request.deleteInsurancePolicies.DeleteInsurancePoliciesRawData
 import v1.services.DeleteInsurancePoliciesService
@@ -30,13 +30,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAuthService,
                                                    val lookupService: MtdIdLookupService,
-                                                   requestParser: DeleteInsurancePoliciesRequestParser,
+                                                   parser: DeleteInsurancePoliciesRequestParser,
                                                    service: DeleteInsurancePoliciesService,
                                                    auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -50,7 +49,7 @@ class DeleteInsurancePoliciesController @Inject() (val authService: EnrolmentsAu
     val rawData: DeleteInsurancePoliciesRawData = DeleteInsurancePoliciesRawData(nino = nino, taxYear = taxYear)
 
     val requestHandler = RequestHandler
-      .withParser(requestParser)
+      .withParser(parser)
       .withService(service.delete)
       .withAuditing(AuditHandler(
         auditService = auditService,

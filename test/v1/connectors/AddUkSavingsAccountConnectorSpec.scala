@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class AddUkSavingsAccountConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
+  val nino: String = "AA111111A"
 
   val addUkSavingsAccountRequestBody: AddUkSavingsAccountRequestBody = AddUkSavingsAccountRequestBody(accountName = "Shares savings account")
 
@@ -57,9 +57,9 @@ class AddUkSavingsAccountConnectorSpec extends ConnectorSpec {
 
   "addSavings" should {
     "return a 200 status for a success scenario" when {
-     "valid request is supplied" in new Test {
-        val outcome                                      = Right(ResponseWrapper(correlationId, addUkSavingsAccountResponse))
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+      "valid request is supplied" in new Test {
+        val outcome                                       = Right(ResponseWrapper(correlationId, addUkSavingsAccountResponse))
+        implicit val hc: HeaderCarrier                    = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredDesHeadersPost: Seq[(String, String)] = requiredDesHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockedHttpClient
@@ -76,4 +76,5 @@ class AddUkSavingsAccountConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
 }

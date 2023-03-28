@@ -34,10 +34,10 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: Cr
       ctx: RequestContext,
       ec: ExecutionContext): Future[CreateAmendCgtResidentialPropertyDisposalsServiceOutcome] = {
 
-    connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

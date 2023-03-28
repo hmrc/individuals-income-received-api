@@ -17,7 +17,7 @@
 package api.services
 
 import api.models.auth.UserDetails
-import api.models.errors.{InternalError, ClientNotAuthenticatedError}
+import api.models.errors.{ClientNotAuthenticatedError, InternalError}
 import api.models.outcomes.AuthOutcome
 import config.AppConfig
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
@@ -48,7 +48,9 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
   def buildPredicate(predicate: Predicate): Predicate =
     if (appConfig.confidenceLevelConfig.authValidationEnabled) {
       predicate and ((Individual and ConfidenceLevel.L200) or Organisation or Agent)
-    } else predicate
+    } else {
+      predicate
+    }
 
   def authorised(predicate: Predicate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuthOutcome] = {
     authFunction.authorised(buildPredicate(predicate)).retrieve(affinityGroup and authorisedEnrolments) {

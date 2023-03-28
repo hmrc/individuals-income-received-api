@@ -17,11 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
-import api.controllers.requestParsers.validators.validations._
-import javax.inject.{Inject, Singleton}
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawData
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class OtherEmploymentIncomeRequestValidator @Inject() (implicit appConfig: AppConfig) extends Validator[OtherEmploymentIncomeRequestRawData] {

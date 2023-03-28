@@ -20,11 +20,10 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import v1.connectors.DeleteUkDividendsIncomeAnnualSummaryConnector
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

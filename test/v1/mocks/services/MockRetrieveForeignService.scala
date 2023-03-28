@@ -17,13 +17,10 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.retrieveForeign.RetrieveForeignRequest
-import v1.models.response.retrieveForeign.RetrieveForeignResponse
-import v1.services.RetrieveForeignService
+import v1.services.{RetrieveForeignService, RetrieveForeignServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,7 +31,7 @@ trait MockRetrieveForeignService extends MockFactory {
 
   object MockRetrieveForeignService {
 
-    def retrieve(requestData: RetrieveForeignRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignResponse]]]] = (
+    def retrieve(requestData: RetrieveForeignRequest): CallHandler[Future[RetrieveForeignServiceOutcome]] = (
       mockRetrieveForeignService
         .retrieve(_: RetrieveForeignRequest)(
           _: RequestContext,

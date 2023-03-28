@@ -23,6 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockOtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
+
 import scala.concurrent.Future
 
 class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {

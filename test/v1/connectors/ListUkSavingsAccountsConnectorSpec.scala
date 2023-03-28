@@ -33,7 +33,7 @@ class ListUkSavingsAccountsConnectorSpec extends ConnectorSpec {
   val taxYear: String  = "2019"
   val savingsAccountId = "SAVKB2UVwUTBQGJ"
 
-  val request: ListUkSavingsAccountsRequest = ListUkSavingsAccountsRequest(Nino(nino), None)
+  val request: ListUkSavingsAccountsRequest                     = ListUkSavingsAccountsRequest(Nino(nino), None)
   val requestWithSavingsAccountId: ListUkSavingsAccountsRequest = ListUkSavingsAccountsRequest(Nino(nino), Some(savingsAccountId))
 
   private val validResponse = ListUkSavingsAccountsResponse(
@@ -63,42 +63,40 @@ class ListUkSavingsAccountsConnectorSpec extends ConnectorSpec {
     "listUkSavingsAccounts" must {
       "return a valid response, list of uk savings accounts " +
         "upon receiving SUCCESS response from the backend service" in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+          val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
+          implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/income-sources/nino/$nino",
-            parameters = Seq("incomeSourceType" -> "interest-from-uk-banks"),
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+          MockedHttpClient
+            .get(
+              url = s"$baseUrl/income-tax/income-sources/nino/$nino",
+              parameters = Seq("incomeSourceType" -> "interest-from-uk-banks"),
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredDesHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(outcome))
 
-        await(connector.listUkSavingsAccounts(request)) shouldBe outcome
-      }
+          await(connector.listUkSavingsAccounts(request)) shouldBe outcome
+        }
 
       "return a valid response, list of a single uk savings account " +
         "when incomeSourceId was sent as part of the request and " +
         "upon receiving SUCCESS response from the backend service " in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+          val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
+          implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/income-sources/nino/$nino",
-            parameters = Seq(
-              "incomeSourceType" -> "interest-from-uk-banks",
-              "incomeSourceId" -> savingsAccountId),
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredDesHeaders,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+          MockedHttpClient
+            .get(
+              url = s"$baseUrl/income-tax/income-sources/nino/$nino",
+              parameters = Seq("incomeSourceType" -> "interest-from-uk-banks", "incomeSourceId" -> savingsAccountId),
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredDesHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(outcome))
 
-        await(connector.listUkSavingsAccounts(requestWithSavingsAccountId)) shouldBe outcome
-      }
+          await(connector.listUkSavingsAccounts(requestWithSavingsAccountId)) shouldBe outcome
+        }
     }
   }
 
