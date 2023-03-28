@@ -40,14 +40,11 @@ package object services {
   type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
   type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
   type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
-  type CreateAmendOtherServiceOutcome                      = ServiceOutcome[Unit]
   type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
   type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
-  type DeleteOtherServiceOutcome                           = ServiceOutcome[Unit]
   type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
   type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
   type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
-  type RetrieveOtherServiceOutcome                         = ServiceOutcome[RetrieveOtherResponse]
 
   // Non-PAYE Employment Income
   type CreateAmendNonPayeEmploymentServiceOutcome = ServiceOutcome[Unit]
@@ -58,6 +55,11 @@ package object services {
   type AmendOtherEmploymentServiceOutcome          = ServiceOutcome[Unit]
   type DeleteOtherEmploymentIncomeServiceOutcome   = ServiceOutcome[Unit]
   type RetrieveOtherEmploymentIncomeServiceOutcome = ServiceOutcome[RetrieveOtherEmploymentResponse]
+
+  // Other Income
+  type CreateAmendOtherServiceOutcome = ServiceOutcome[Unit]
+  type DeleteOtherServiceOutcome      = ServiceOutcome[Unit]
+  type RetrieveOtherServiceOutcome    = ServiceOutcome[RetrieveOtherResponse]
 
   // UK Savings Account
   type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]
