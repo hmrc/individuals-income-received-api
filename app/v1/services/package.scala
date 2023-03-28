@@ -40,20 +40,24 @@ package object services {
   type AddCustomEmploymentServiceOutcome                   = ServiceOutcome[AddCustomEmploymentResponse]
   type AmendCustomEmploymentServiceOutcome                 = ServiceOutcome[Unit]
   type AmendFinancialDetailsServiceOutcome                 = ServiceOutcome[Unit]
-  type AmendOtherEmploymentServiceOutcome                  = ServiceOutcome[Unit]
-  type CreateAmendNonPayeEmploymentServiceOutcome          = ServiceOutcome[Unit]
   type CreateAmendOtherServiceOutcome                      = ServiceOutcome[Unit]
   type DeleteCustomEmploymentServiceOutcome                = ServiceOutcome[Unit]
   type DeleteEmploymentFinancialDetailsServiceOutcome      = ServiceOutcome[Unit]
-  type DeleteNonPayeEmploymentServiceOutcome               = ServiceOutcome[Unit]
-  type DeleteOtherEmploymentIncomeServiceOutcome           = ServiceOutcome[Unit]
   type DeleteOtherServiceOutcome                           = ServiceOutcome[Unit]
   type ListEmploymentsServiceOutcome                       = ServiceOutcome[ListEmploymentResponse[Employment]]
   type RetrieveEmploymentAndFinancialDetailsServiceOutcome = ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]
   type RetrieveEmploymentServiceOutcome                    = ServiceOutcome[RetrieveEmploymentResponse]
-  type RetrieveNonPayeEmploymentServiceOutcome             = ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]
-  type RetrieveOtherEmploymentIncomeServiceOutcome         = ServiceOutcome[RetrieveOtherEmploymentResponse]
   type RetrieveOtherServiceOutcome                         = ServiceOutcome[RetrieveOtherResponse]
+
+  // Non-PAYE Employment Income
+  type CreateAmendNonPayeEmploymentServiceOutcome = ServiceOutcome[Unit]
+  type DeleteNonPayeEmploymentServiceOutcome      = ServiceOutcome[Unit]
+  type RetrieveNonPayeEmploymentServiceOutcome    = ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]
+
+  // Other Employment Income
+  type AmendOtherEmploymentServiceOutcome          = ServiceOutcome[Unit]
+  type DeleteOtherEmploymentIncomeServiceOutcome   = ServiceOutcome[Unit]
+  type RetrieveOtherEmploymentIncomeServiceOutcome = ServiceOutcome[RetrieveOtherEmploymentResponse]
 
   // UK Savings Account
   type AddUkSavingsAccountServiceOutcome                   = ServiceOutcome[AddUkSavingsAccountResponse]
