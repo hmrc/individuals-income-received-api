@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{NinoFormatError, InternalError}
+import api.models.errors.{InternalError, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRequest
 

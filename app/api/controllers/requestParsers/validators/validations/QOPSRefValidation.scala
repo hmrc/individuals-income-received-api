@@ -17,7 +17,6 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, QOPSRefFormatError}
-import api.models.errors.QOPSRefFormatError
 
 object QOPSRefValidation {
 

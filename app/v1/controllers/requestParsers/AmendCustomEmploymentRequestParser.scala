@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v1.controllers.requestParsers.validators.AmendCustomEmploymentValidator
+import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequest, AmendCustomEmploymentRequestBody}
 
 @Singleton
 class AmendCustomEmploymentRequestParser @Inject() (val validator: AmendCustomEmploymentValidator)

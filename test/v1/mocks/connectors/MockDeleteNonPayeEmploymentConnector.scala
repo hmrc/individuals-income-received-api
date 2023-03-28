@@ -32,8 +32,7 @@ trait MockDeleteNonPayeEmploymentConnector extends MockFactory {
 
   object MockDeleteNonPayeEmploymentConnector {
 
-    def deleteNonPayeEmployment(
-                                 requestData: DeleteNonPayeEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def deleteNonPayeEmployment(requestData: DeleteNonPayeEmploymentRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (
         mockDeleteNonPayeEmploymentConnector
           .deleteNonPayeEmployment(_: DeleteNonPayeEmploymentRequest)(

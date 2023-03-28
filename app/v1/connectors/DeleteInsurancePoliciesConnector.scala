@@ -27,11 +27,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteInsurancePoliciesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class DeleteInsurancePoliciesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deleteInsurancePolicies(request: DeleteInsurancePoliciesRequest)(implicit hc: HeaderCarrier,
-                                                                       ec: ExecutionContext,
-                                                                       correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def deleteInsurancePolicies(request: DeleteInsurancePoliciesRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 

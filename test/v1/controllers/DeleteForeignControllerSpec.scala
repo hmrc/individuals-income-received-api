@@ -94,7 +94,7 @@ class DeleteForeignControllerSpec
     val controller = new DeleteForeignController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteForeignRequestParser,
+      parser = mockDeleteForeignRequestParser,
       service = mockDeleteForeignService,
       auditService = mockAuditService,
       cc = cc,

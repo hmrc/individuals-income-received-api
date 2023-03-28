@@ -24,7 +24,6 @@ import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateAmendPensionsRequestParser
@@ -38,7 +37,6 @@ import scala.concurrent.Future
 class CreateAmendPensionsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
     with MockCreateAmendPensionsService
     with MockCreateAmendPensionsRequestParser
     with MockHateoasFactory {
@@ -233,7 +231,6 @@ class CreateAmendPensionsControllerSpec
     val controller = new CreateAmendPensionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
       parser = mockCreateAmendPensionsRequestParser,
       service = mockCreateAmendPensionsService,
       auditService = mockAuditService,

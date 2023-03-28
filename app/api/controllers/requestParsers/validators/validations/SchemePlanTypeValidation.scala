@@ -17,7 +17,6 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, SchemePlanTypeFormatError}
-import api.models.errors.SchemePlanTypeFormatError
 
 object SchemePlanTypeValidation {
 

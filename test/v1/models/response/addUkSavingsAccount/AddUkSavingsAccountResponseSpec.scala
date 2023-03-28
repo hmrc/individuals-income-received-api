@@ -23,20 +23,17 @@ class AddUkSavingsAccountResponseSpec extends UnitSpec {
 
   val model: AddUkSavingsAccountResponse = AddUkSavingsAccountResponse("SAVKB2UVwUTBQGJ")
 
-  val mtdJson = Json.parse(
-    """
+  val mtdJson = Json.parse("""
       |{
       |    "savingsAccountId": "SAVKB2UVwUTBQGJ"
       |}
       |""".stripMargin)
 
-  val desJson = Json.parse(
-    """
+  val desJson = Json.parse("""
       |{
       |    "incomeSourceId": "SAVKB2UVwUTBQGJ"
       |}
       |""".stripMargin)
-
 
   "AddUkSavingsAccountResponse" when {
     "read from valid JSON" should {
@@ -51,4 +48,5 @@ class AddUkSavingsAccountResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

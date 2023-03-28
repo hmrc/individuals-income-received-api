@@ -16,10 +16,9 @@
 
 package v1.controllers
 
-import api.controllers.{AuditHandler, AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.IdGenerator
@@ -35,7 +34,6 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class CreateAmendSavingsController @Inject() (val authService: EnrolmentsAuthService,
                                               val lookupService: MtdIdLookupService,
-                                              appConfig: AppConfig,
                                               parser: CreateAmendSavingsRequestParser,
                                               service: CreateAmendSavingsService,
                                               auditService: AuditService,

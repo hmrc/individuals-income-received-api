@@ -17,12 +17,11 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
+import v1.controllers.requestParsers.validators.AmendInsurancePoliciesValidator
+import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendInsurancePolicies.{AmendInsurancePoliciesRawData, AmendInsurancePoliciesRequest, AmendInsurancePoliciesRequestBody}
-import api.models.domain.TaxYear
-import v1.controllers.requestParsers.validators.AmendInsurancePoliciesValidator
 
 @Singleton
 class AmendInsurancePoliciesRequestParser @Inject() (val validator: AmendInsurancePoliciesValidator)

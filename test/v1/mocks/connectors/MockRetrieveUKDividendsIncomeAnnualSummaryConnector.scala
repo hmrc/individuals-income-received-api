@@ -33,10 +33,16 @@ trait MockRetrieveUKDividendsIncomeAnnualSummaryConnector extends MockFactory {
 
   object MockRetrieveUKDividendsIncomeAnnualSummaryConnector {
 
-    def retrieveUKDividendsIncomeAnnualSummary(requestData: RetrieveUkDividendsAnnualIncomeSummaryRequest):
-    CallHandler[Future[DownstreamOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
-      (mockRetrieveUKDividendsIncomeAnnualSummaryConnector
-        .retrieveUKDividendsIncomeAnnualSummary(_: RetrieveUkDividendsAnnualIncomeSummaryRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def retrieveUKDividendsIncomeAnnualSummary(requestData: RetrieveUkDividendsAnnualIncomeSummaryRequest)
+        : CallHandler[Future[DownstreamOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
+      (
+        mockRetrieveUKDividendsIncomeAnnualSummaryConnector
+          .retrieveUKDividendsIncomeAnnualSummary(_: RetrieveUkDividendsAnnualIncomeSummaryRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(requestData, *, *, *)
     }
 

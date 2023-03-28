@@ -135,7 +135,7 @@ class RetrieveForeignControllerSpec
     val controller = new RetrieveForeignController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveForeignRequestParser,
+      parser = mockRetrieveForeignRequestParser,
       service = mockRetrieveForeignService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

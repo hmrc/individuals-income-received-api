@@ -23,8 +23,6 @@ import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import play.api.mvc.Result
 import v1.fixtures.RetrievePensionsControllerFixture
 import v1.mocks.requestParsers.MockRetrievePensionsRequestParser
@@ -32,6 +30,7 @@ import v1.mocks.services.MockRetrievePensionsService
 import v1.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
 import v1.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrievePensionsControllerSpec

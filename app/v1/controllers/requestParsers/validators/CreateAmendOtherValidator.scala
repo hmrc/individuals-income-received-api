@@ -17,12 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.createAmendOther._
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.createAmendOther._
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extends Validator[CreateAmendOtherRawData] with ValueFormatErrorMessages {

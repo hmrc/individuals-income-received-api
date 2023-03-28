@@ -18,7 +18,6 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.DeleteInsurancePoliciesConnector
@@ -30,14 +29,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteInsurancePoliciesService @Inject() (connector: DeleteInsurancePoliciesConnector) extends BaseService {
 
-  def delete(request: DeleteInsurancePoliciesRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def delete(
+      request: DeleteInsurancePoliciesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteInsurancePoliciesServiceOutcome] = {
 
     connector.deleteInsurancePolicies(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

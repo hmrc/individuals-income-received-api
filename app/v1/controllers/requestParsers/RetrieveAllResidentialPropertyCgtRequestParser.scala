@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import v1.controllers.requestParsers.validators.RetrieveAllResidentialPropertyCgtValidator
+import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest}
 
 @Singleton
 class RetrieveAllResidentialPropertyCgtRequestParser @Inject() (val validator: RetrieveAllResidentialPropertyCgtValidator)

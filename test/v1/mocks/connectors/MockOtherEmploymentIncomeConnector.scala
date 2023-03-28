@@ -21,8 +21,8 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.OtherEmploymentIncomeConnector
-import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

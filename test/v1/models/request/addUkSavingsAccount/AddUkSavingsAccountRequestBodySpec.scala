@@ -21,21 +21,18 @@ import support.UnitSpec
 
 class AddUkSavingsAccountRequestBodySpec extends UnitSpec {
 
-  val mtdJson = Json.parse(
-    """
+  val mtdJson = Json.parse("""
       |{
       |   "accountName": "Shares savings account"
       |}
       |""".stripMargin)
 
-  val desJson = Json.parse(
-    """
+  val desJson = Json.parse("""
       |{
       |    "incomeSourceType": "interest-from-uk-banks",
       |    "incomeSourceName": "Shares savings account"
       |}
       |""".stripMargin)
-
 
   val model: AddUkSavingsAccountRequestBody = AddUkSavingsAccountRequestBody("Shares savings account")
 
@@ -59,7 +56,5 @@ class AddUkSavingsAccountRequestBodySpec extends UnitSpec {
       Json.toJson(model) shouldBe desJson
     }
   }
-
-
 
 }

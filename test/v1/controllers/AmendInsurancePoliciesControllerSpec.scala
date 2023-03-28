@@ -26,7 +26,6 @@ import api.models.hateoas
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockAmendInsurancePoliciesRequestParser
@@ -40,7 +39,6 @@ import scala.concurrent.Future
 class AmendInsurancePoliciesControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
     with MockAmendInsurancePoliciesService
     with MockAuditService
     with MockAmendInsurancePoliciesRequestParser
@@ -346,8 +344,7 @@ class AmendInsurancePoliciesControllerSpec
     val controller = new AmendInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockAmendInsurancePoliciesRequestParser,
+      parser = mockAmendInsurancePoliciesRequestParser,
       service = mockAmendInsurancePoliciesService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,

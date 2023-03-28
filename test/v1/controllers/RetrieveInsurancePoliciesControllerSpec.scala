@@ -166,7 +166,7 @@ class RetrieveInsurancePoliciesControllerSpec
     val controller = new RetrieveInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveInsurancePoliciesRequestParser,
+      parser = mockRetrieveInsurancePoliciesRequestParser,
       service = mockRetrieveInsurancePoliciesService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

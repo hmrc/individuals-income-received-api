@@ -17,7 +17,6 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, RuleDisposalDateError}
-import api.models.errors.RuleDisposalDateError
 
 import java.time.LocalDate
 

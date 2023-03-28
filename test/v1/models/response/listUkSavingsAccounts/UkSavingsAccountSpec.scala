@@ -15,10 +15,12 @@
  */
 
 package v1.models.response.listUkSavingsAccounts
+
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
 class UkSavingsAccountSpec extends UnitSpec {
+
   val validUkSavingsAccountFromDESJson = Json.parse(
     """
       |{
@@ -57,13 +59,13 @@ class UkSavingsAccountSpec extends UnitSpec {
 
     "return a JsError" when {
       "an invalid uk savings account json from DES is supplied" in {
-          invalidUkSavingsAccountFromDESJson.validate[UkSavingsAccount] shouldBe a[JsError]
+        invalidUkSavingsAccountFromDESJson.validate[UkSavingsAccount] shouldBe a[JsError]
       }
     }
 
     "return a JsError" when {
       "an empty json from DES is supplied" in {
-          emptyJson.validate[UkSavingsAccount] shouldBe a[JsError]
+        emptyJson.validate[UkSavingsAccount] shouldBe a[JsError]
       }
     }
 
@@ -74,4 +76,5 @@ class UkSavingsAccountSpec extends UnitSpec {
       }
     }
   }
+
 }

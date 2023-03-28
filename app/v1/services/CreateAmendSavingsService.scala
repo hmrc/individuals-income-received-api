@@ -20,11 +20,10 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import v1.connectors.CreateAmendSavingsConnector
 import v1.models.request.amendSavings.CreateAmendSavingsRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -33,12 +32,11 @@ class CreateAmendSavingsService @Inject() (connector: CreateAmendSavingsConnecto
   def createAmendSaving(
       request: CreateAmendSavingsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[CreateAmendSavingsServiceOutcome] = {
 
-    connector.createAmendSavings(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.createAmendSavings(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   }
 
-  private def errorMap: Map[String, MtdError] = {
-
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

@@ -22,18 +22,14 @@ import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateAmendUkDividendsAnnualSummaryRequestParser
 import v1.mocks.services.MockCreateAmendUkDividendsAnnualSummaryService
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
-  CreateAmendUkDividendsIncomeAnnualSummaryBody,
-  CreateAmendUkDividendsIncomeAnnualSummaryRawData,
-  CreateAmendUkDividendsIncomeAnnualSummaryRequest
-}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
 import v1.models.response.createAmendUkDividendsIncomeAnnualSummary.CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

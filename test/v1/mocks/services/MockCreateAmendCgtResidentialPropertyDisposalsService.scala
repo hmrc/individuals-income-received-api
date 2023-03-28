@@ -17,12 +17,10 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
-import v1.services.CreateAmendCgtResidentialPropertyDisposalsService
+import v1.services.{CreateAmendCgtResidentialPropertyDisposalsService, CreateAmendCgtResidentialPropertyDisposalsServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,8 +31,8 @@ trait MockCreateAmendCgtResidentialPropertyDisposalsService extends MockFactory 
 
   object MockCreateAmendCgtResidentialPropertyDisposalsService {
 
-    def createAndAmend(
-        requestData: CreateAmendCgtResidentialPropertyDisposalsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def createAndAmend(requestData: CreateAmendCgtResidentialPropertyDisposalsRequest)
+        : CallHandler[Future[CreateAmendCgtResidentialPropertyDisposalsServiceOutcome]] = {
       (
         mockCreateAmendCgtResidentialPropertyDisposalsService
           .createAndAmend(_: CreateAmendCgtResidentialPropertyDisposalsRequest)(
