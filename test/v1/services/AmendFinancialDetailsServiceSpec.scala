@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendFinancialDetailsConnector
@@ -83,7 +83,8 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
           ("BEFORE_TAX_YEAR_END", RuleTaxYearNotEndedError),
           ("INVALID_CORRELATIONID", InternalError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = List(

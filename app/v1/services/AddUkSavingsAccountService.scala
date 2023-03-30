@@ -37,13 +37,14 @@ class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnec
 
   private val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDVALUE"      -> NinoFormatError,
-      "MAX_ACCOUNTS_REACHED" -> RuleMaximumSavingsAccountsLimitError,
-      "ALREADY_EXISTS"       -> RuleDuplicateAccountNameError,
-      "INVALID_IDTYPE"       -> InternalError,
-      "INVALID_PAYLOAD"      -> InternalError,
-      "SERVER_ERROR"         -> InternalError,
-      "SERVICE_UNAVAILABLE"  -> InternalError
+      "INVALID_IDVALUE"                  -> NinoFormatError,
+      "MAX_ACCOUNTS_REACHED"             -> RuleMaximumSavingsAccountsLimitError,
+      "ALREADY_EXISTS"                   -> RuleDuplicateAccountNameError,
+      "INVALID_IDTYPE"                   -> InternalError,
+      "INVALID_PAYLOAD"                  -> InternalError,
+      "SERVER_ERROR"                     -> InternalError,
+      "SERVICE_UNAVAILABLE"              -> InternalError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
     )
 
 }

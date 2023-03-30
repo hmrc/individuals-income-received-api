@@ -66,7 +66,8 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
           ("NO_DATA_FOUND", NotFoundError),
           ("BEFORE_TAX_YEAR_ENDED", RuleTaxYearNotEndedError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = List(

@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import play.api.libs.json.{Format, Json}
@@ -87,7 +87,8 @@ class RetrievePensionsServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATIONID", InternalError),
           ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = Seq(

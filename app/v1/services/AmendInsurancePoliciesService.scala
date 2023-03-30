@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.AmendInsurancePoliciesConnector
@@ -38,12 +38,13 @@ class AmendInsurancePoliciesService @Inject() (connector: AmendInsurancePolicies
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
+      "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"            -> InternalError,
+      "INVALID_PAYLOAD"                  -> InternalError,
+      "SERVER_ERROR"                     -> InternalError,
+      "SERVICE_UNAVAILABLE"              -> InternalError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
     )
 
     val extraTysErrors = Map(

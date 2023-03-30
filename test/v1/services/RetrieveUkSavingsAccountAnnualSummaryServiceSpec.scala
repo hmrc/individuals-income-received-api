@@ -23,7 +23,11 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockRetrieveUkSavingsAccountAnnualSummaryConnector
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
+import v1.models.response.retrieveUkSavingsAnnualSummary.{
+  DownstreamUkSavingsAnnualIncomeItem,
+  DownstreamUkSavingsAnnualIncomeResponse,
+  RetrieveUkSavingsAnnualSummaryResponse
+}
 
 import scala.concurrent.Future
 
@@ -116,7 +120,8 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
         ("NOT_FOUND_PERIOD", NotFoundError),
         ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
         ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError)
+        ("SERVICE_UNAVAILABLE", InternalError),
+        ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
       )
 
       val tysErrors = Seq(

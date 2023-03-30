@@ -22,7 +22,10 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateAmendUkDividendsAnnualSummaryConnector
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
+  CreateAmendUkDividendsIncomeAnnualSummaryBody,
+  CreateAmendUkDividendsIncomeAnnualSummaryRequest
+}
 
 import scala.concurrent.Future
 
@@ -74,7 +77,8 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("GONE", InternalError),
           ("NOT_FOUND", NotFoundError),
           ("SERVICE_UNAVAILABLE", InternalError),
-          ("SERVER_ERROR", InternalError)
+          ("SERVER_ERROR", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = Seq(

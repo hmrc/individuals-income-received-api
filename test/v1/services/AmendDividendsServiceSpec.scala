@@ -76,7 +76,8 @@ class AmendDividendsServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATIONID", InternalError),
           ("INVALID_PAYLOAD", InternalError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = Seq(

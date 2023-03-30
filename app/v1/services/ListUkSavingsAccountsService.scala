@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{InternalError, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError}
+import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.ListUkSavingsAccountsConnector
@@ -34,15 +34,16 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
     connector.listUkSavingsAccounts(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = Map(
-    "INVALID_ID_TYPE"          -> InternalError,
-    "INVALID_IDVALUE"          -> NinoFormatError,
-    "INVALID_INCOMESOURCETYPE" -> InternalError,
-    "INVALID_TAXYEAR"          -> InternalError,
-    "INVALID_INCOMESOURCEID"   -> SavingsAccountIdFormatError,
-    "INVALID_ENDDATE"          -> InternalError,
-    "NOT_FOUND"                -> NotFoundError,
-    "SERVER_ERROR"             -> InternalError,
-    "SERVICE_UNAVAILABLE"      -> InternalError
+    "INVALID_ID_TYPE"                  -> InternalError,
+    "INVALID_IDVALUE"                  -> NinoFormatError,
+    "INVALID_INCOMESOURCETYPE"         -> InternalError,
+    "INVALID_TAXYEAR"                  -> InternalError,
+    "INVALID_INCOMESOURCEID"           -> SavingsAccountIdFormatError,
+    "INVALID_ENDDATE"                  -> InternalError,
+    "NOT_FOUND"                        -> NotFoundError,
+    "SERVER_ERROR"                     -> InternalError,
+    "SERVICE_UNAVAILABLE"              -> InternalError,
+    "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
   )
 
 }

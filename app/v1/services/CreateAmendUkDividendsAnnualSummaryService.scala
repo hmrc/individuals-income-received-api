@@ -51,7 +51,8 @@ class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAme
       "GONE"                              -> InternalError,
       "NOT_FOUND"                         -> NotFoundError,
       "SERVICE_UNAVAILABLE"               -> InternalError,
-      "SERVER_ERROR"                      -> InternalError
+      "SERVER_ERROR"                      -> InternalError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO"  -> RuleIncorrectGovTestScenarioError
     )
 
     val extraTysErrors = Map(

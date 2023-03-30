@@ -46,15 +46,16 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
-      "INVALID_TAX_YEAR"                -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID"           -> EmploymentIdFormatError,
-      "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "CANNOT_IGNORE"                   -> RuleCustomEmploymentError,
-      "NO_DATA_FOUND"                   -> NotFoundError,
-      "INVALID_CORRELATIONID"           -> InternalError,
-      "SERVER_ERROR"                    -> InternalError,
-      "SERVICE_UNAVAILABLE"             -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
+      "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"            -> EmploymentIdFormatError,
+      "INVALID_REQUEST_BEFORE_TAX_YEAR"  -> RuleTaxYearNotEndedError,
+      "CANNOT_IGNORE"                    -> RuleCustomEmploymentError,
+      "NO_DATA_FOUND"                    -> NotFoundError,
+      "INVALID_CORRELATIONID"            -> InternalError,
+      "SERVER_ERROR"                     -> InternalError,
+      "SERVICE_UNAVAILABLE"              -> InternalError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
     )
 
     val extraTysErrors = Map(

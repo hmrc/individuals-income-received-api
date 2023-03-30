@@ -81,7 +81,8 @@ class AddUkSavingsAccountServiceSpec extends ServiceSpec {
         ("INVALID_IDTYPE", InternalError),
         ("INVALID_PAYLOAD", InternalError),
         ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError)
+        ("SERVICE_UNAVAILABLE", InternalError),
+        ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

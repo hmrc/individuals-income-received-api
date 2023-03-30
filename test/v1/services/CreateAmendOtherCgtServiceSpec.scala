@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, RuleAcquisitionDateError, RuleDisposalDateError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.fixtures.other.CreateAmendOtherCgtConnectorServiceFixture.mtdRequestBody
@@ -79,7 +79,8 @@ class CreateAmendOtherCgtServiceSpec extends ServiceSpec {
         ("INVALID_DISPOSAL_DATE", RuleDisposalDateError),
         ("INVALID_ACQUISITION_DATE", RuleAcquisitionDateError),
         ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError)
+        ("SERVICE_UNAVAILABLE", InternalError),
+        ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
       )
 
       val extraTysErrors = Seq(

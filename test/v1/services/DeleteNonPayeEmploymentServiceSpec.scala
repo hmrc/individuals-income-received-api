@@ -67,12 +67,13 @@ class DeleteNonPayeEmploymentServiceSpec extends ServiceSpec {
           }
 
         val errors = Seq(
-          "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "INVALID_CORRELATIONID"     -> InternalError,
-          "NO_DATA_FOUND"             -> NotFoundError,
-          "SERVER_ERROR"              -> InternalError,
-          "SERVICE_UNAVAILABLE"       -> InternalError
+          "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
+          "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
+          "INVALID_CORRELATIONID"            -> InternalError,
+          "NO_DATA_FOUND"                    -> NotFoundError,
+          "SERVER_ERROR"                     -> InternalError,
+          "SERVICE_UNAVAILABLE"              -> InternalError,
+          "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
         )
 
         val extraTysErrors = Seq(

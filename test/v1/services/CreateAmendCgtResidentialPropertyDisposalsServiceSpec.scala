@@ -78,7 +78,8 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           ("INVALID_COMPLETION_DATE", RuleCompletionDateError),
           ("INVALID_ACQUISITION_DATE", RuleAcquisitionDateAfterDisposalDateError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = Seq(

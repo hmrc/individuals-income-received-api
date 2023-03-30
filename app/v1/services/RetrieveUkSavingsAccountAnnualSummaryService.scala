@@ -58,14 +58,15 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_NINO"            -> NinoFormatError,
-      "INVALID_TYPE"            -> InternalError,
-      "INVALID_TAXYEAR"         -> TaxYearFormatError,
-      "INVALID_INCOME_SOURCE"   -> SavingsAccountIdFormatError,
-      "NOT_FOUND_PERIOD"        -> NotFoundError,
-      "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
-      "SERVER_ERROR"            -> InternalError,
-      "SERVICE_UNAVAILABLE"     -> InternalError
+      "INVALID_NINO"                     -> NinoFormatError,
+      "INVALID_TYPE"                     -> InternalError,
+      "INVALID_TAXYEAR"                  -> TaxYearFormatError,
+      "INVALID_INCOME_SOURCE"            -> SavingsAccountIdFormatError,
+      "NOT_FOUND_PERIOD"                 -> NotFoundError,
+      "NOT_FOUND_INCOME_SOURCE"          -> NotFoundError,
+      "SERVER_ERROR"                     -> InternalError,
+      "SERVICE_UNAVAILABLE"              -> InternalError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
     )
 
     val extraTysErrors = Map(

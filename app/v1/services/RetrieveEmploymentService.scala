@@ -34,13 +34,14 @@ class RetrieveEmploymentService @Inject() (connector: RetrieveEmploymentConnecto
 
   private val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
+      "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"            -> EmploymentIdFormatError,
+      "INVALID_CORRELATIONID"            -> InternalError,
+      "NO_DATA_FOUND"                    -> NotFoundError,
+      "SERVER_ERROR"                     -> InternalError,
+      "SERVICE_UNAVAILABLE"              -> InternalError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
     )
 
 }

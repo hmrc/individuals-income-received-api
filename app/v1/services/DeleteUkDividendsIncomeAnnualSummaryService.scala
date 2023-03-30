@@ -51,7 +51,8 @@ class DeleteUkDividendsIncomeAnnualSummaryService @Inject() (connector: DeleteUk
       "SERVER_ERROR"                      -> InternalError,
       "SERVICE_UNAVAILABLE"               -> InternalError,
       "GONE"                              -> NotFoundError,
-      "NOT_FOUND"                         -> NotFoundError
+      "NOT_FOUND"                         -> NotFoundError,
+      "RULE_INCORRECT_GOV_TEST_SCENARIO"  -> RuleIncorrectGovTestScenarioError
     )
 
     val extraTysErrors = Map(

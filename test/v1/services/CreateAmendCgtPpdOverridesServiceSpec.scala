@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, PpdSubmissionIdNotFoundError, RuleDuplicatedPpdSubmissionIdError, RuleIncorrectDisposalTypeError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.fixtures.overrides.CreateAmendCgtPpdOverridesServiceConnectorFixture.requestBodyModel
@@ -92,7 +92,8 @@ class CreateAmendCgtPpdOverridesServiceSpec extends ServiceSpec {
           ("INVALID_REQUEST_BEFORE_TAX_YEAR", RuleTaxYearNotEndedError),
           ("INVALID_DISPOSAL_TYPE", RuleIncorrectDisposalTypeError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
         val extraTysErrors = Seq(
