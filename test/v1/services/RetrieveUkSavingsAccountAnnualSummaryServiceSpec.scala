@@ -23,11 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockRetrieveUkSavingsAccountAnnualSummaryConnector
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.{
-  DownstreamUkSavingsAnnualIncomeItem,
-  DownstreamUkSavingsAnnualIncomeResponse,
-  RetrieveUkSavingsAnnualSummaryResponse
-}
+import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
 
 import scala.concurrent.Future
 

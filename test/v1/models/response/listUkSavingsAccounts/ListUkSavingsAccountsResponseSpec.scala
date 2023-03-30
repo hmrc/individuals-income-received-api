@@ -15,6 +15,7 @@
  */
 
 package v1.models.response.listUkSavingsAccounts
+
 import play.api.libs.json.Json
 import support.UnitSpec
 
@@ -67,7 +68,7 @@ class ListUkSavingsAccountsResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val emptyJson = Json.parse( """[]""" )
+  val emptyJson = Json.parse("""[]""")
 
   val validListUkSavingsAccountResponse = ListUkSavingsAccountsResponse(
     Some(
@@ -101,4 +102,5 @@ class ListUkSavingsAccountsResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -16,14 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.amendSavings.CreateAmendSavingsRequest
-import v1.services.CreateAmendSavingsService
+import v1.services.{CreateAmendSavingsService, CreateAmendSavingsServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,10 +30,10 @@ trait MockCreateAmendSavingsService extends MockFactory {
 
   object MockCreateAmendSavingsService {
 
-    def createAmendSaving(requestData: CreateAmendSavingsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def createAmendSaving(requestData: CreateAmendSavingsRequest): CallHandler[Future[CreateAmendSavingsServiceOutcome]] = {
       (mockCreateAmendSavingsService
-        .createAmendSaving(_: CreateAmendSavingsRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .createAmendSaving(_: CreateAmendSavingsRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
 
   }

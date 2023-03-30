@@ -73,7 +73,7 @@ trait BaseDownstreamConnector {
     doDelete(getBackendHeaders(uri, hc, correlationId))
   }
 
-  def put[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit
+  def put[Body: Writes, Resp](uri: DownstreamUri[Resp], body: Body = "")(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier,
       httpReads: HttpReads[DownstreamOutcome[Resp]],
@@ -84,19 +84,6 @@ trait BaseDownstreamConnector {
     }
 
     doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
-  }
-
-  def put[Resp](uri: DownstreamUri[Resp])(implicit
-      ec: ExecutionContext,
-      hc: HeaderCarrier,
-      httpReads: HttpReads[DownstreamOutcome[Resp]],
-      correlationId: String): Future[DownstreamOutcome[Resp]] = {
-
-    def doPut(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
-      http.PUT(getBackendUri(uri), "")
-    }
-
-    doPut(getBackendHeaders(uri, hc, correlationId))
   }
 
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String =

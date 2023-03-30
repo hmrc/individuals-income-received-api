@@ -16,14 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
-import v1.services.CreateAmendUkDividendsAnnualSummaryService
+import v1.services.{AmendDividendsServiceOutcome, CreateAmendUkDividendsAnnualSummaryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,18 +31,15 @@ trait MockCreateAmendUkDividendsAnnualSummaryService extends MockFactory {
 
   object MockCreateAmendAmendUkDividendsAnnualSummaryService {
 
-    def createOrAmendAnnualSummary(
-        requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] =
+    def createOrAmendAnnualSummary(requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[AmendDividendsServiceOutcome]] =
       (
         mockCreateAmendUkDividendsAnnualSummaryService
-          .createOrAmendAnnualSummary(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+          .createAmendUkDividends(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
 
   }
 

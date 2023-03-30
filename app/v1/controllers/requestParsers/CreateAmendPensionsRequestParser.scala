@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.CreateAmendPensionsValidator
+import v1.models.request.createAmendPensions.{CreateAmendPensionsRawData, CreateAmendPensionsRequest, CreateAmendPensionsRequestBody}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.createAmendPensions.{CreateAmendPensionsRawData, CreateAmendPensionsRequest, CreateAmendPensionsRequestBody}
 
 @Singleton
 class CreateAmendPensionsRequestParser @Inject() (val validator: CreateAmendPensionsValidator)

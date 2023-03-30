@@ -17,7 +17,6 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper

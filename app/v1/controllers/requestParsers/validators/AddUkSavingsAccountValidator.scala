@@ -17,10 +17,11 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.models.errors.MtdError
-import javax.inject.Singleton
-import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequestBody}
 import api.controllers.requestParsers.validators.validations._
+import api.models.errors.MtdError
+import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequestBody}
+
+import javax.inject.Singleton
 
 @Singleton
 class AddUkSavingsAccountValidator extends Validator[AddUkSavingsAccountRawData] {

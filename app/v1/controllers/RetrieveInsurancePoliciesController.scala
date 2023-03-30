@@ -20,7 +20,7 @@ import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveInsurancePoliciesRequestParser
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRawData
 import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesHateoasData
@@ -32,13 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveInsurancePoliciesController @Inject() (val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
-                                                     requestParser: RetrieveInsurancePoliciesRequestParser,
+                                                     parser: RetrieveInsurancePoliciesRequestParser,
                                                      service: RetrieveInsurancePoliciesService,
                                                      hateoasFactory: HateoasFactory,
                                                      cc: ControllerComponents,
                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -57,7 +56,7 @@ class RetrieveInsurancePoliciesController @Inject() (val authService: Enrolments
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.retrieve)
           .withHateoasResult(hateoasFactory)(RetrieveInsurancePoliciesHateoasData(nino, taxYear))
 

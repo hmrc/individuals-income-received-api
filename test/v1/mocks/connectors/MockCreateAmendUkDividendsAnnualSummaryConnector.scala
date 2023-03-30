@@ -34,7 +34,7 @@ trait MockCreateAmendUkDividendsAnnualSummaryConnector extends MockFactory {
     def createOrAmendAnnualSummary(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (
         mockAmendUkDividendsConnector
-          .createOrAmendAnnualSummary(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
+          .createAmendUkDividends(_: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

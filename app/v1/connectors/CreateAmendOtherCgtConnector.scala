@@ -16,24 +16,22 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
-import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
 class CreateAmendOtherCgtConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAndAmend(request: CreateAmendOtherCgtRequest)(implicit
-                                                          hc: HeaderCarrier,
-                                                          ec: ExecutionContext,
-                                                          correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -44,10 +42,7 @@ class CreateAmendOtherCgtConnector @Inject() (val http: HttpClient, val appConfi
       } else {
         Api1661Uri[Unit](s"income-tax/income/disposals/other-gains/${nino.nino}/${taxYear.asMtd}")
       }
-    put(
-      uri = downstreamUri,
-      body = body
-    )
+    put(downstreamUri, body)
   }
 
 }

@@ -16,33 +16,25 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveDividendsConnector
 import v1.models.request.retrieveDividends.RetrieveDividendsRequest
-import v1.models.response.retrieveDividends.RetrieveDividendsResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveDividendsService @Inject() (connector: RetrieveDividendsConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveDividendsService @Inject() (connector: RetrieveDividendsConnector) extends BaseService {
 
-  def retrieve(request: RetrieveDividendsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveDividendsResponse]]] = {
+  def retrieve(request: RetrieveDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrieveDividendsServiceOutcome] = {
 
     connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

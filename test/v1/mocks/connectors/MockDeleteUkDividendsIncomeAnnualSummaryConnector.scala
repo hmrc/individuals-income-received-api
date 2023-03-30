@@ -36,5 +36,7 @@ trait MockDeleteUkDividendsIncomeAnnualSummaryConnector extends MockFactory {
         .delete(_: DeleteUkDividendsIncomeAnnualSummaryRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

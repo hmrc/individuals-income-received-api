@@ -16,36 +16,25 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
-import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.services.BaseService
+import cats.implicits.toBifunctorOps
 import v1.connectors.RetrieveOtherCgtConnector
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRequest
-import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherCgtService @Inject() (connector: RetrieveOtherCgtConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveOtherCgtService @Inject() (connector: RetrieveOtherCgtConnector) extends BaseService {
 
-  def retrieve(request: RetrieveOtherCgtRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherCgtResponse]]] = {
+  def retrieve(request: RetrieveOtherCgtRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrieveOtherCgtServiceOutcome] = {
 
-    val result = EitherT(connector.retrieveOtherCgt(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector.retrieveOtherCgt(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

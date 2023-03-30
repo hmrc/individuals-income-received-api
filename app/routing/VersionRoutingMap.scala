@@ -42,7 +42,7 @@ case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig, defaultRouter:
     extends VersionRoutingMap {
 
   val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
-  protected val logger: Logger       = Logger(this.getClass)
+  protected val logger: Logger         = Logger(this.getClass)
 
   val map: Map[String, Router] = Map(
     VERSION_1 -> {

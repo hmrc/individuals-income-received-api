@@ -16,21 +16,20 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.mocks.services.MockAuditService
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.hateoas
+import api.models.hateoas.HateoasWrapper
+import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockAddCustomEmploymentRequestParser
 import v1.mocks.services.MockAddCustomEmploymentService
 import v1.models.request.addCustomEmployment.{AddCustomEmploymentRawData, AddCustomEmploymentRequest, AddCustomEmploymentRequestBody}
@@ -41,50 +40,15 @@ import scala.concurrent.Future
 
 class AddCustomEmploymentControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockAppConfig
     with MockAddCustomEmploymentService
     with MockAuditService
     with MockAddCustomEmploymentRequestParser
-    with MockHateoasFactory
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockHateoasFactory {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new AddCustomEmploymentController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockAddCustomEmploymentRequestParser,
-      service = mockAddCustomEmploymentService,
-      auditService = mockAuditService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-
-    val links: List[Link] = List(
-      listEmployment(mockAppConfig, nino, taxYear, isSelf = false),
-      retrieveEmployment(mockAppConfig, nino, taxYear, employmentId),
-      amendCustomEmployment(mockAppConfig, nino, taxYear, employmentId),
-      deleteCustomEmployment(mockAppConfig, nino, taxYear, employmentId)
-    )
-
-  }
+  val taxYear: String      = "2019-20"
+  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val requestBodyJson: JsValue = Json.parse(
     """
@@ -124,6 +88,13 @@ class AddCustomEmploymentControllerSpec
     employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   )
 
+  private val links = Seq(
+    hateoas.Link(href = s"/individuals/income-received/employments/$nino/$taxYear", method = GET, rel = "list-employments"),
+    hateoas.Link(href = s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", method = GET, rel = "self"),
+    hateoas.Link(href = s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", method = PUT, rel = "amend-custom-employment"),
+    hateoas.Link(href = s"/individuals/income-received/employments/$nino/$taxYear/$employmentId", method = DELETE, rel = "delete-custom-employment")
+  )
+
   val responseJson: JsValue = Json.parse(
     s"""
        |{
@@ -154,24 +125,9 @@ class AddCustomEmploymentControllerSpec
     """.stripMargin
   )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "AddACustomEmployment",
-      transactionName = "add-a-custom-employment",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = Some(requestBodyJson),
-        `X-CorrelationId` = correlationId,
-        response = auditResponse
-      )
-    )
-
   "AddCustomEmploymentController" should {
-    "return OK" when {
-      "happy path" in new Test {
-
+    "return a successful response with status 200 (OK)" when {
+      "the request received is valid" in new Test {
         MockAddCustomEmploymentRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -184,91 +140,70 @@ class AddCustomEmploymentControllerSpec
           .wrap(responseData, AddCustomEmploymentHateoasData(nino, taxYear, employmentId))
           .returns(HateoasWrapper(responseData, links))
 
-        val result: Future[Result] = controller.addEmployment(nino, taxYear)(fakePostRequest(requestBodyJson))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe responseJson
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(responseJson))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeAuditRequestBody = Some(requestBodyJson),
+          maybeExpectedResponseBody = Some(responseJson),
+          maybeAuditResponseBody = Some(responseJson)
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "parser validation fails" in new Test {
+        MockAddCustomEmploymentRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockAddCustomEmploymentRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.addEmployment(nino, taxYear)(fakePostRequest(requestBodyJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleIncorrectOrEmptyBodyError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (EmployerRefFormatError, BAD_REQUEST),
-          (EmployerNameFormatError, BAD_REQUEST),
-          (PayrollIdFormatError, BAD_REQUEST),
-          (StartDateFormatError, BAD_REQUEST),
-          (CessationDateFormatError, BAD_REQUEST),
-          (RuleStartDateAfterTaxYearEndError, BAD_REQUEST),
-          (RuleCessationDateBeforeTaxYearStartError, BAD_REQUEST),
-          (RuleCessationDateBeforeStartDateError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError, Some(requestBodyJson))
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockAddCustomEmploymentRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockAddCustomEmploymentRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockAddCustomEmploymentService
+          .addEmployment(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
 
-            MockAddCustomEmploymentService
-              .addEmployment(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.addEmployment(nino, taxYear)(fakePostRequest(requestBodyJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleTaxYearNotEndedError, Some(requestBodyJson))
       }
     }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
+
+    val controller = new AddCustomEmploymentController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      parser = mockAddCustomEmploymentRequestParser,
+      service = mockAddCustomEmploymentService,
+      auditService = mockAuditService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.addEmployment(nino, taxYear)(fakePostRequest(requestBodyJson))
+
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "AddACustomEmployment",
+        transactionName = "add-a-custom-employment",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = requestBody,
+          `X-CorrelationId` = correlationId,
+          response = auditResponse
+        )
+      )
+
   }
 
 }

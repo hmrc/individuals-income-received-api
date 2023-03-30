@@ -16,14 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
-import v1.services.DeleteOtherEmploymentIncomeService
+import v1.services.{DeleteOtherEmploymentIncomeService, DeleteOtherEmploymentIncomeServiceOutcome}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,16 +31,14 @@ trait MockDeleteOtherEmploymentIncomeService extends MockFactory {
 
   object MockDeleteOtherEmploymentIncomeService {
 
-    def delete(requestData: OtherEmploymentIncomeRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = (
+    def delete(requestData: OtherEmploymentIncomeRequest): CallHandler[Future[DeleteOtherEmploymentIncomeServiceOutcome]] = (
       mockDeleteOtherEmploymentIncomeService
         .delete(_: OtherEmploymentIncomeRequest)(
-          _: HeaderCarrier,
-          _: ExecutionContext,
-          _: EndpointLogContext,
-          _: String
+          _: RequestContext,
+          _: ExecutionContext
         )
       )
-      .expects(requestData, *, *, *, *)
+      .expects(requestData, *, *)
 
   }
 

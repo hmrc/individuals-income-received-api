@@ -34,8 +34,8 @@ object ListUkSavingsAccountsResponse extends HateoasLinks with JsonUtils {
       .mapEmptySeqToNone
       .map(ListUkSavingsAccountsResponse(_))
 
-  implicit object ListUkSavingsAccountsLinksFactory extends
-    HateoasLinksFactory[ListUkSavingsAccountsResponse[UkSavingsAccount], ListUkSavingsAccountsHateoasData] {
+  implicit object ListUkSavingsAccountsLinksFactory
+      extends HateoasLinksFactory[ListUkSavingsAccountsResponse[UkSavingsAccount], ListUkSavingsAccountsHateoasData] {
 
     override def links(appConfig: AppConfig, data: ListUkSavingsAccountsHateoasData): Seq[Link] = {
       import data._
@@ -44,7 +44,9 @@ object ListUkSavingsAccountsResponse extends HateoasLinks with JsonUtils {
         listUkSavings(appConfig, nino, isSelf = true)
       )
     }
+
   }
+
 }
 
 case class ListUkSavingsAccountsHateoasData(nino: String) extends HateoasData

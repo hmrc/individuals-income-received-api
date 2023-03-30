@@ -16,7 +16,7 @@
 
 package v1.fixtures.residentialPropertyDisposals
 
-import v1.models.request.createAmendCgtResidentialPropertyDisposals.{Disposal, CreateAmendCgtResidentialPropertyDisposalsRequestBody}
+import v1.models.request.createAmendCgtResidentialPropertyDisposals.{CreateAmendCgtResidentialPropertyDisposalsRequestBody, Disposal}
 
 object CreateAmendCgtResidentialPropertyDisposalsServiceConnectorFixture {
 

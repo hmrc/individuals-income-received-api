@@ -16,6 +16,6 @@
 
 package v1.models.request.createAmendUkDividendsIncomeAnnualSummary
 
-import api.models.domain.{TaxYear, Nino}
+import api.models.domain.{Nino, TaxYear}
 
 case class CreateAmendUkDividendsIncomeAnnualSummaryRequest(nino: Nino, taxYear: TaxYear, body: CreateAmendUkDividendsIncomeAnnualSummaryBody)

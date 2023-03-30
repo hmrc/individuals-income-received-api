@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.AmendForeignValidator
+import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest, AmendForeignRequestBody}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest, AmendForeignRequestBody}
 
 @Singleton
 class AmendForeignRequestParser @Inject() (val validator: AmendForeignValidator) extends RequestParser[AmendForeignRawData, AmendForeignRequest] {

@@ -16,50 +16,24 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{
-  EmploymentIdFormatError,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleCessationDateBeforeTaxYearStartError,
-  RuleStartDateAfterTaxYearEndError,
-  RuleTaxYearNotEndedError,
-  RuleUpdateForbiddenError,
-  InternalError,
-  TaxYearFormatError
-}
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.BaseService
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AmendCustomEmploymentConnector
 import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendCustomEmploymentService @Inject() (connector: AmendCustomEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendCustomEmploymentService @Inject() (connector: AmendCustomEmploymentConnector) extends BaseService {
 
-  def amendEmployment(request: AmendCustomEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendEmployment(
+      request: AmendCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendCustomEmploymentServiceOutcome] =
+    connector.amendEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendEmployment(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
-  }
-
-  private def desErrorMap: Map[String, MtdError] =
+  private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.CreateAmendCgtPpdOverridesValidator
+import v1.models.request.createAmendCgtPpdOverrides._
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.createAmendCgtPpdOverrides._
 
 @Singleton
 class CreateAmendCgtPpdOverridesRequestParser @Inject() (val validator: CreateAmendCgtPpdOverridesValidator)

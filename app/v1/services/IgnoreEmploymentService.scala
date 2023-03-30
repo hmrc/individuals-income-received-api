@@ -39,12 +39,12 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       logContext: EndpointLogContext,
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
+    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,

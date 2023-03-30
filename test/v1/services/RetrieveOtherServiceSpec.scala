@@ -25,6 +25,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockRetrieveOtherConnector
 import v1.models.request.retrieveOther.RetrieveOtherRequest
 import v1.models.response.retrieveOther.RetrieveOtherResponse
+
 import scala.concurrent.Future
 
 class RetrieveOtherServiceSpec extends ServiceSpec {

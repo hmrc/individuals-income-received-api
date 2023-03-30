@@ -18,7 +18,6 @@ package v1.models.request.createAmendOther
 
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-
 import v1.fixtures.other.CreateAmendOtherFixtures._
 
 class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {

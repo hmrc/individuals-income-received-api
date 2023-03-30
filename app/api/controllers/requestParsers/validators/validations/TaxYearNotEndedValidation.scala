@@ -21,7 +21,6 @@ import api.models.errors.{MtdError, RuleTaxYearNotEndedError}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import utils.CurrentDateTime
-import api.models.errors.RuleTaxYearNotEndedError
 
 object TaxYearNotEndedValidation {
 

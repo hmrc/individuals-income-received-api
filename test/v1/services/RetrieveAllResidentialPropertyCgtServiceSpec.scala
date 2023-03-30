@@ -18,11 +18,11 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
-import v1.mocks.connectors.MockRetrieveAllResidentialPropertyCgtConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.connectors.MockRetrieveAllResidentialPropertyCgtConnector
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
 import v1.models.response.retrieveAllResidentialPropertyCgt.{PpdService, RetrieveAllResidentialPropertyCgtResponse}
 

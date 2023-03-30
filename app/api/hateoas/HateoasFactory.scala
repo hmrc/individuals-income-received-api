@@ -23,7 +23,6 @@ import cats.implicits._
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
-
 import scala.language.higherKinds
 
 @Singleton

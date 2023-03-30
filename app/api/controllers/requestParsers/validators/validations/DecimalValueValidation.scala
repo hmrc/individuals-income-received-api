@@ -17,7 +17,6 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, ValueFormatError}
-import api.models.errors.ValueFormatError
 
 object DecimalValueValidation extends ValueFormatErrorMessages {
 

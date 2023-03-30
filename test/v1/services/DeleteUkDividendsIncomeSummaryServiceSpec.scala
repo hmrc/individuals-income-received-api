@@ -39,7 +39,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
           .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
-        await(service.delete(requestData)) shouldBe outcome
+        await(service.deleteUkDividends(requestData)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -50,7 +50,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
               .delete(requestData)
               .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.delete(requestData)) shouldBe Left(ErrorWrapper("resultId", error))
+            await(service.deleteUkDividends(requestData)) shouldBe Left(ErrorWrapper("resultId", error))
           }
 
         val errors = Seq(

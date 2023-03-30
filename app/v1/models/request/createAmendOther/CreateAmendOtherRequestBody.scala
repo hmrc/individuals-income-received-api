@@ -37,7 +37,7 @@ object CreateAmendOtherRequestBody extends JsonUtils {
         .readNullable[ChargeableForeignBenefitsAndGifts]
         .map(_.flatMap {
           case ChargeableForeignBenefitsAndGifts.empty => None
-          case chargeableForeignBenefitsAndGifts            => Some(chargeableForeignBenefitsAndGifts)
+          case chargeableForeignBenefitsAndGifts       => Some(chargeableForeignBenefitsAndGifts)
         }) and
       (JsPath \ "omittedForeignIncome").readNullable[OmittedForeignIncome]
   )(CreateAmendOtherRequestBody.apply _)

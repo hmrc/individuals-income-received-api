@@ -17,7 +17,6 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{EmployerRefFormatError, MtdError}
-import api.models.errors.EmployerRefFormatError
 
 object EmployerRefValidation {
 

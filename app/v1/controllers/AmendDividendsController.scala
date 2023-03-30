@@ -16,22 +16,22 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.AmendHateoasBody
+import api.controllers._
+import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
 import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.AmendDividendsRequestParser
 import v1.models.request.amendDividends.AmendDividendsRawData
+import v1.models.response.amendDividends.AmendDividendsHateoasData
+import v1.models.response.amendDividends.AmendDividendsResponse.AmendDividendsLinksFactory
 import v1.services.AmendDividendsService
 
 import javax.inject.{Inject, Singleton}
@@ -41,15 +41,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendDividendsController @Inject() (val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
                                           appConfig: AppConfig,
-                                          requestParser: AmendDividendsRequestParser,
+                                          parser: AmendDividendsRequestParser,
                                           service: AmendDividendsService,
                                           auditService: AuditService,
+                                          hateoasFactory: HateoasFactory,
                                           cc: ControllerComponents,
                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging
-    with AmendHateoasBody {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -59,10 +57,7 @@ class AmendDividendsController @Inject() (val authService: EnrolmentsAuthService
 
   def amendDividends(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData: AmendDividendsRawData = AmendDividendsRawData(
         nino = nino,
@@ -70,60 +65,47 @@ class AmendDividendsController @Inject() (val authService: EnrolmentsAuthService
         body = AnyContentAsJson(request.body)
       )
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amendDividends(parsedRequest))
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler = RequestHandler
+        .withParser(parser)
+        .withService(service.amendDividends)
+        .withAuditing(auditHandler(nino, taxYear, request))
+        .withHateoasResult(hateoasFactory)(AmendDividendsHateoasData(nino, taxYear))
 
-          auditSubmission(
-            GenericAuditDetail(
-              request.userDetails,
-              Map("nino" -> nino, "taxYear" -> taxYear),
-              Some(request.body),
-              serviceResponse.correlationId,
-              AuditResponse(httpStatus = OK, response = Right(Some(amendDividendsHateoasBody(appConfig, nino, taxYear))))
+      requestHandler.handleRequest(rawData)
+    }
+
+  private def auditHandler(nino: String, taxYear: String, request: UserRequest[JsValue]): AuditHandler = {
+    new AuditHandler() {
+      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+          ctx: RequestContext,
+          ec: ExecutionContext): Unit = {
+
+        response match {
+          case Left(err: ErrorWrapper) =>
+            auditSubmission(
+              GenericAuditDetail(
+                request.userDetails,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              )
             )
-          )
 
-          Ok(amendDividendsHateoasBody(appConfig, nino, taxYear))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
+          case Right(_: Option[JsValue]) =>
+            auditSubmission(
+              GenericAuditDetail(
+                request.userDetails,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
+                ctx.correlationId,
+                AuditResponse(OK, Right(Some(Json.toJson(AmendDividendsHateoasData(nino, taxYear)))))
+              )
+            )
         }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          GenericAuditDetail(
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body),
-            resCorrelationId,
-            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+      }
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) =
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearRangeInvalidError | CustomMtdError(
-            RuleIncorrectOrEmptyBodyError.code) | CustomMtdError(ValueFormatError.code) | CustomMtdError(CountryCodeFormatError.code) |
-          CustomMtdError(CountryCodeRuleError.code) | CustomMtdError(CustomerRefFormatError.code) | RuleTaxYearNotSupportedError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
-    }
+  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendDividendsIncome", "create-amend-dividends-income", details)

@@ -18,7 +18,6 @@ package api.controllers.requestParsers.validators.validations
 
 import api.models.domain.ClaimOrElectionCodes
 import api.models.errors.{ClaimOrElectionCodesFormatError, MtdError}
-import api.models.errors.ClaimOrElectionCodesFormatError
 
 import scala.util.{Failure, Success, Try}
 
