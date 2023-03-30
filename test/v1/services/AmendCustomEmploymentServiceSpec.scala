@@ -81,7 +81,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
             await(service.amendEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),

@@ -37,7 +37,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
-    def errors: Map[String, MtdError] = Map(
+    val errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
       "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
       "INVALID_CORRELATIONID"            -> InternalError,
@@ -48,7 +48,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
     )
 
-    def extraTysErrors: Map[String, MtdError] = Map(
+    val extraTysErrors: Map[String, MtdError] = Map(
       "INVALID_CORRELATION_ID" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )

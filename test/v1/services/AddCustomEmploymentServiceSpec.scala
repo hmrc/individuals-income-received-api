@@ -82,7 +82,7 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
             await(service.addEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("NOT_SUPPORTED_TAX_YEAR", RuleTaxYearNotEndedError),

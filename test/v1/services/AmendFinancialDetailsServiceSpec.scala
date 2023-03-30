@@ -75,7 +75,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
             await(service.amendFinancialDetails(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = List(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", NotFoundError),
@@ -87,7 +87,7 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
           ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
-        val extraTysErrors = List(
+        val extraTysErrors = Seq(
           ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
           ("INVALID_CORRELATION_ID", InternalError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)

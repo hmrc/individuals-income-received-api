@@ -74,7 +74,7 @@ class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
             await(service.listUkSavingsAccounts(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_ID_TYPE", InternalError),
           ("INVALID_IDVALUE", NinoFormatError),
           ("INVALID_INCOMESOURCETYPE", InternalError),

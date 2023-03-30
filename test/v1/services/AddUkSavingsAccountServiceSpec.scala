@@ -74,7 +74,7 @@ class AddUkSavingsAccountServiceSpec extends ServiceSpec {
           await(service.addSavings(addUkSavingsAccountRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val input = List(
         ("INVALID_IDVALUE", NinoFormatError),
         ("MAX_ACCOUNTS_REACHED", RuleMaximumSavingsAccountsLimitError),
         ("ALREADY_EXISTS", RuleDuplicateAccountNameError),

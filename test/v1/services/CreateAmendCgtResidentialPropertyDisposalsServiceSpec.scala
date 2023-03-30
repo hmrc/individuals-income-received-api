@@ -69,7 +69,7 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
             await(service.createAndAmend(createAmendCgtResidentialPropertyDisposalsRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -82,7 +82,7 @@ class CreateAmendCgtResidentialPropertyDisposalsServiceSpec extends ServiceSpec 
           ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("INVALID_CORRELATION_ID", InternalError)
         )

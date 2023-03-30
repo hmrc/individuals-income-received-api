@@ -68,7 +68,7 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
           await(service.deleteCgtPpdOverrides(requestData)) shouldBe outcome
         }
 
-      val errors = Seq(
+      val errors = List(
         "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
         "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
         "INVALID_VIEW"                     -> InternalError,
@@ -78,7 +78,7 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
         "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
       )
 

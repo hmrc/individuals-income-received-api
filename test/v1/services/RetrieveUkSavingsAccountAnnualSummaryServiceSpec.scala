@@ -112,7 +112,7 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
           await(service.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         ("INVALID_NINO", NinoFormatError),
         ("INVALID_TYPE", InternalError),
         ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -124,7 +124,7 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
         ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
       )
 
-      val tysErrors = Seq(
+      val tysErrors = List(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_CORRELATION_ID", InternalError),
         ("INVALID_INCOMESOURCE_ID", SavingsAccountIdFormatError),
