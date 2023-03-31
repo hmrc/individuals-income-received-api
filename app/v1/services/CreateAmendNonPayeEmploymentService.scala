@@ -38,14 +38,14 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
-      "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"            -> InternalError,
-      "INVALID_PAYLOAD"                  -> InternalError,
-      "NO_DATA_FOUND"                    -> NotFoundError,
-      "INVALID_REQUEST_BEFORE_TAX_YEAR"  -> RuleTaxYearNotEndedError,
-      "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
+      "INVALID_TAX_YEAR"                -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"           -> InternalError,
+      "INVALID_PAYLOAD"                 -> InternalError,
+      "NO_DATA_FOUND"                   -> NotFoundError,
+      "INVALID_REQUEST_BEFORE_TAX_YEAR" -> RuleTaxYearNotEndedError,
+      "SERVER_ERROR"                    -> InternalError,
+      "SERVICE_UNAVAILABLE"             -> InternalError
     )
 
     val extraTysErrors = Map(

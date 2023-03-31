@@ -35,14 +35,14 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
-      "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID"            -> NotFoundError,
-      "INVALID_PAYLOAD"                  -> InternalError,
-      "BEFORE_TAX_YEAR_END"              -> RuleTaxYearNotEndedError,
-      "INVALID_CORRELATIONID"            -> InternalError,
-      "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID"     -> NotFoundError,
+      "INVALID_PAYLOAD"           -> InternalError,
+      "BEFORE_TAX_YEAR_END"       -> RuleTaxYearNotEndedError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors = Map(
