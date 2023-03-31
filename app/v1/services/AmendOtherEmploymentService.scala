@@ -44,8 +44,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       "INVALID_PAYLOAD"                  -> InternalError,
       "UNPROCESSABLE_ENTITY"             -> InternalError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(

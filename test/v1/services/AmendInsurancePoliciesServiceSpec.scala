@@ -131,8 +131,7 @@ class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
           ("INVALID_PAYLOAD", InternalError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError),
-          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

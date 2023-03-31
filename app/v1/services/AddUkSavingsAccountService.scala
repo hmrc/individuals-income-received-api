@@ -43,8 +43,7 @@ class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnec
       "INVALID_IDTYPE"                   -> InternalError,
       "INVALID_PAYLOAD"                  -> InternalError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
 }

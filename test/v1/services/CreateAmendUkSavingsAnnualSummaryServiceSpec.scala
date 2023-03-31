@@ -92,8 +92,7 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
           ("GONE", InternalError),
           ("NOT_FOUND", NotFoundError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError),
-          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
         val tysErrors = List(
           ("INVALID_TAX_YEAR"           -> TaxYearFormatError),

@@ -74,8 +74,7 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
         "INVALID_VIEW"                     -> InternalError,
         "INVALID_CORRELATIONID"            -> InternalError,
         "NO_DATA_FOUND"                    -> NotFoundError,
-        "SERVER_ERROR"                     -> InternalError,
-        "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+        "SERVER_ERROR"                     -> InternalError
       )
 
       val extraTysErrors = List(

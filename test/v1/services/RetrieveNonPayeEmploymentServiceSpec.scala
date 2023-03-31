@@ -74,8 +74,7 @@ class RetrieveNonPayeEmploymentServiceSpec extends ServiceSpec {
           "INVALID_CORRELATIONID"            -> InternalError,
           "NO_DATA_FOUND"                    -> NotFoundError,
           "TAX_YEAR_NOT_SUPPORTED"           -> RuleTaxYearNotSupportedError,
-          "SERVER_ERROR"                     -> InternalError,
-          "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+          "SERVER_ERROR"                     -> InternalError
         )
 
         val extraTysErrors = List(

@@ -77,8 +77,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("GONE", InternalError),
           ("NOT_FOUND", NotFoundError),
           ("SERVICE_UNAVAILABLE", InternalError),
-          ("SERVER_ERROR", InternalError),
-          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
+          ("SERVER_ERROR", InternalError)
         )
 
         val extraTysErrors = List(

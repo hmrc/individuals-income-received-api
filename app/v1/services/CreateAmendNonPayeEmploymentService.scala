@@ -45,8 +45,7 @@ class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPa
       "NO_DATA_FOUND"                    -> NotFoundError,
       "INVALID_REQUEST_BEFORE_TAX_YEAR"  -> RuleTaxYearNotEndedError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrors = Map(

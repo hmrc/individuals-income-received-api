@@ -94,8 +94,7 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
           ("SERVER_ERROR", InternalError),
           ("SERVICE_UNAVAILABLE", InternalError),
           ("INVALID_VIEW", SourceFormatError),
-          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
-          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
 
         errors.foreach(args => (serviceError _).tupled(args))

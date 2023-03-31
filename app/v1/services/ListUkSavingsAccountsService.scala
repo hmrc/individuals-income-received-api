@@ -42,8 +42,7 @@ class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsCo
     "INVALID_ENDDATE"                  -> InternalError,
     "NOT_FOUND"                        -> NotFoundError,
     "SERVER_ERROR"                     -> InternalError,
-    "SERVICE_UNAVAILABLE"              -> InternalError,
-    "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+    "SERVICE_UNAVAILABLE"              -> InternalError
   )
 
 }

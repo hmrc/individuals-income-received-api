@@ -45,8 +45,7 @@ class CreateAmendOtherCgtService @Inject() (connector: CreateAmendOtherCgtConnec
       "INVALID_DISPOSAL_DATE"            -> RuleDisposalDateError,
       "INVALID_ACQUISITION_DATE"         -> RuleAcquisitionDateError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrors = Map(

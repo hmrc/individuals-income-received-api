@@ -46,8 +46,7 @@ class RetrieveNonPayeEmploymentService @Inject() (connector: RetrieveNonPayeEmpl
       "NO_DATA_FOUND"                    -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"           -> RuleTaxYearNotSupportedError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(

@@ -45,8 +45,7 @@ class DeleteCustomEmploymentService @Inject() (connector: DeleteCustomEmployment
       "NO_DATA_FOUND"                    -> NotFoundError,
       "CANNOT_DELETE"                    -> RuleDeleteForbiddenError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
 }

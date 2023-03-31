@@ -91,8 +91,7 @@ class AddCustomEmploymentServiceSpec extends ServiceSpec {
           ("INVALID_PAYLOAD", InternalError),
           ("INVALID_CORRELATIONID", InternalError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError),
-          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

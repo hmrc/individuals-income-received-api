@@ -48,8 +48,7 @@ class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdO
       "INVALID_REQUEST_BEFORE_TAX_YEAR"  -> RuleTaxYearNotEndedError,
       "INVALID_DISPOSAL_TYPE"            -> RuleIncorrectDisposalTypeError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrorMap = Map(

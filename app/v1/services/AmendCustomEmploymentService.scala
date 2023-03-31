@@ -46,8 +46,7 @@ class AmendCustomEmploymentService @Inject() (connector: AmendCustomEmploymentCo
       "INVALID_PAYLOAD"                  -> InternalError,
       "INVALID_CORRELATIONID"            -> InternalError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
 }

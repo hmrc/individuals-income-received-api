@@ -47,8 +47,7 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: Cr
       "INVALID_COMPLETION_DATE"          -> RuleCompletionDateError,
       "INVALID_ACQUISITION_DATE"         -> RuleAcquisitionDateAfterDisposalDateError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrors = Map(

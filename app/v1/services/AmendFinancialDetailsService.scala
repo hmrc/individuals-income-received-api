@@ -42,8 +42,7 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
       "BEFORE_TAX_YEAR_END"              -> RuleTaxYearNotEndedError,
       "INVALID_CORRELATIONID"            -> InternalError,
       "SERVER_ERROR"                     -> InternalError,
-      "SERVICE_UNAVAILABLE"              -> InternalError,
-      "RULE_INCORRECT_GOV_TEST_SCENARIO" -> RuleIncorrectGovTestScenarioError
+      "SERVICE_UNAVAILABLE"              -> InternalError
     )
 
     val extraTysErrors = Map(

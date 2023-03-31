@@ -75,8 +75,7 @@ class DeleteDividendsServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATIONID", InternalError),
           ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError),
-          ("RULE_INCORRECT_GOV_TEST_SCENARIO", RuleIncorrectGovTestScenarioError)
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         errors.foreach(args => (serviceError _).tupled(args))
