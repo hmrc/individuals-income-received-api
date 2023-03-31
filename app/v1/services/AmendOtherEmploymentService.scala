@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.AmendOtherEmploymentConnector
@@ -37,7 +37,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
-    def errors: Map[String, MtdError] = Map(
+    val errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -47,7 +47,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
-    def extraTysErrors: Map[String, MtdError] = Map(
+    val extraTysErrors: Map[String, MtdError] = Map(
       "INVALID_CORRELATION_ID" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )

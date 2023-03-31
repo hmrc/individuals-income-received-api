@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{InternalError, MtdError, NinoFormatError, NotFoundError, SavingsAccountIdFormatError}
+import api.models.errors._
 import api.services.BaseService
 import cats.implicits._
 import v1.connectors.ListUkSavingsAccountsConnector

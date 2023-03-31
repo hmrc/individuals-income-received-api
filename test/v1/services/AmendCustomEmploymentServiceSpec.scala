@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, EmploymentIdFormatError, ErrorWrapper, InternalError, MtdError, NinoFormatError, NotFoundError, RuleCessationDateBeforeTaxYearStartError, RuleStartDateAfterTaxYearEndError, RuleTaxYearNotEndedError, RuleUpdateForbiddenError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendCustomEmploymentConnector
@@ -81,7 +81,7 @@ class AmendCustomEmploymentServiceSpec extends ServiceSpec {
             await(service.amendEmployment(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_EMPLOYMENT_ID", EmploymentIdFormatError),

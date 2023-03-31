@@ -65,7 +65,7 @@ class DeleteCgtNonPpdServiceSpec extends ServiceSpec {
             await(service.deleteCgtNonPpd(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "INVALID_CORRELATIONID"     -> InternalError,
@@ -74,7 +74,7 @@ class DeleteCgtNonPpdServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"       -> InternalError
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           "INVALID_CORRELATION_ID" -> InternalError,
           "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
           "NOT_FOUND"              -> NotFoundError

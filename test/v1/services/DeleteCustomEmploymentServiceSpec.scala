@@ -61,7 +61,7 @@ class DeleteCustomEmploymentServiceSpec extends ServiceSpec {
             result shouldBe outcome
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),

@@ -22,7 +22,11 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateAmendUkSavingsAnnualSummaryConnector
-import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRequest, DownstreamCreateAmendUkSavingsAnnualSummaryBody}
+import v1.models.request.createAmendUkSavingsAnnualSummary.{
+  CreateAmendUkSavingsAnnualSummaryBody,
+  CreateAmendUkSavingsAnnualSummaryRequest,
+  DownstreamCreateAmendUkSavingsAnnualSummaryBody
+}
 
 import scala.concurrent.Future
 
@@ -74,7 +78,7 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
             await(service.createAmend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", InternalError),
@@ -90,7 +94,7 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVER_ERROR", InternalError),
           ("SERVICE_UNAVAILABLE", InternalError)
         )
-        val tysErrors = Seq(
+        val tysErrors = List(
           ("INVALID_TAX_YEAR"           -> TaxYearFormatError),
           ("INCOME_SOURCE_NOT_FOUND"    -> NotFoundError),
           ("INVALID_INCOMESOURCE_TYPE"  -> InternalError),

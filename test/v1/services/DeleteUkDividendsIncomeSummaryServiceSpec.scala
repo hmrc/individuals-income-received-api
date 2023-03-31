@@ -53,7 +53,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
             await(service.deleteUkDividends(requestData)) shouldBe Left(ErrorWrapper("resultId", error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TYPE", InternalError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -70,7 +70,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
           ("NOT_FOUND", NotFoundError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("INVALID_INCOMESOURCE_TYPE", InternalError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATION_ID", InternalError),

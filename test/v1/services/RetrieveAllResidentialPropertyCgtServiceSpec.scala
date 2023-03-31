@@ -86,7 +86,7 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
             await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),

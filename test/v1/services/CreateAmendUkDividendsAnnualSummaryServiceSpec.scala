@@ -22,7 +22,10 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateAmendUkDividendsAnnualSummaryConnector
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
+  CreateAmendUkDividendsIncomeAnnualSummaryBody,
+  CreateAmendUkDividendsIncomeAnnualSummaryRequest
+}
 
 import scala.concurrent.Future
 
@@ -60,7 +63,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           }
         }
 
-        val errprs = Seq(
+        val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", InternalError),
@@ -77,7 +80,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVER_ERROR", InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_INCOMESOURCE_TYPE", InternalError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -86,7 +89,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("INCOMPATIBLE_INCOME_SOURCE", InternalError)
         )
 
-        (errprs ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

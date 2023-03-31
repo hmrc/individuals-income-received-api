@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockAmendForeignConnector
@@ -90,7 +90,7 @@ class AmendForeignServiceSpec extends ServiceSpec {
             await(service.amendForeign(amendForeignRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -100,7 +100,7 @@ class AmendForeignServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           "INVALID_CORRELATION_ID" -> InternalError,
           "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
         )
