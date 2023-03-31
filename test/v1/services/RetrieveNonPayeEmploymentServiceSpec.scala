@@ -68,13 +68,13 @@ class RetrieveNonPayeEmploymentServiceSpec extends ServiceSpec {
           }
 
         val errors = List(
-          "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
-          "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
-          "INVALID_VIEW"                     -> InternalError,
-          "INVALID_CORRELATIONID"            -> InternalError,
-          "NO_DATA_FOUND"                    -> NotFoundError,
-          "TAX_YEAR_NOT_SUPPORTED"           -> RuleTaxYearNotSupportedError,
-          "SERVER_ERROR"                     -> InternalError
+          "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+          "INVALID_VIEW"              -> InternalError,
+          "INVALID_CORRELATIONID"     -> InternalError,
+          "NO_DATA_FOUND"             -> NotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
+          "SERVER_ERROR"              -> InternalError
         )
 
         val extraTysErrors = List(

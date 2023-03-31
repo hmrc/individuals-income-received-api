@@ -69,12 +69,12 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
         }
 
       val errors = List(
-        "INVALID_TAXABLE_ENTITY_ID"        -> NinoFormatError,
-        "INVALID_TAX_YEAR"                 -> TaxYearFormatError,
-        "INVALID_VIEW"                     -> InternalError,
-        "INVALID_CORRELATIONID"            -> InternalError,
-        "NO_DATA_FOUND"                    -> NotFoundError,
-        "SERVER_ERROR"                     -> InternalError
+        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+        "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+        "INVALID_VIEW"              -> InternalError,
+        "INVALID_CORRELATIONID"     -> InternalError,
+        "NO_DATA_FOUND"             -> NotFoundError,
+        "SERVER_ERROR"              -> InternalError
       )
 
       val extraTysErrors = List(
