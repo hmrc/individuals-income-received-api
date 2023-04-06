@@ -524,7 +524,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
                                 requestBody: JsValue,
                                 expectedStatus: Int,
                                 expectedBody: ErrorWrapper,
-                                scenario: Option[String]): Unit = {
+                                scenario: Option[String],
+                                suspendTemporalValidation: Boolean): Unit = {
           s"validation fails with ${expectedBody.error} error ${scenario.getOrElse("")}" in new NonTysTest {
 
             override val nino: String             = requestNino
@@ -532,7 +533,7 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             override val employmentId: String     = requestEmploymentId
             override val requestBodyJson: JsValue = requestBody
 
-            override def request: WSRequest = if (taxYear == "2023-24") {
+            override def request: WSRequest = if (suspendTemporalValidation) {
               super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
             } else {
               super.request()
@@ -553,7 +554,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", NinoFormatError, None),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             "20199",
@@ -561,8 +563,17 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", TaxYearFormatError, None),
-            None),
-          ("AA123456A", "2019-20", "ABCDE12345FG", standardRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
+            None,
+            false),
+          (
+            "AA123456A",
+            "2019-20",
+            "ABCDE12345FG",
+            standardRequestJson,
+            BAD_REQUEST,
+            ErrorWrapper("X-123", EmploymentIdFormatError, None),
+            None,
+            false),
           (
             "AA123456A",
             "2018-19",
@@ -570,7 +581,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             "2019-21",
@@ -578,15 +590,17 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             standardRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             getCurrentTaxYear,
             "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            standardRequestJson,
+            offPayrollRequestBodyJson(true),
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleTaxYearNotEndedError, None),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -594,7 +608,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             emptyRequestJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -602,7 +617,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             nonValidRequestBodyJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", invalidFieldTypeErrors, None),
-            Some("(invalid field type)")),
+            Some("(invalid field type)"),
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -610,7 +626,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             missingEmploymentObjectRequestBodyJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None),
-            Some("(missing mandatory employment object)")),
+            Some("(missing mandatory employment object)"),
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -618,7 +635,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             missingPayObjectRequestBodyJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", missingMandatoryPayObjectError, None),
-            Some("(missing mandatory pay object)")),
+            Some("(missing mandatory pay object)"),
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -626,7 +644,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             missingFieldsRequestBodyJson,
             BAD_REQUEST,
             ErrorWrapper("X-123", missingMandatoryFieldsErrors, None),
-            Some("(missing mandatory fields)")),
+            Some("(missing mandatory fields)"),
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -634,7 +653,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             allInvalidValueRequestBodyJson,
             BAD_REQUEST,
             errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             "2019-20",
@@ -642,7 +662,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             offPayrollRequestBodyJson(true),
             BAD_REQUEST,
             errors.ErrorWrapper("X-123", RuleNotAllowedOffPayrollWorker, None),
-            None),
+            None,
+            false),
           (
             "AA123456A",
             "2023-24",
@@ -650,8 +671,10 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             standardRequestJson,
             BAD_REQUEST,
             errors.ErrorWrapper("X-123", RuleMissingOffPayrollWorker, None),
-            None)
+            None,
+            true)
         )
+
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
