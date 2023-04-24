@@ -19,11 +19,11 @@ package v1.services
 import api.controllers.{EndpointLogContext, RequestContext}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.data.EitherT
 import v1.connectors.RetrieveUkSavingsAccountAnnualSummaryConnector
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
-import v1.models.response.retrieveUkSavingsAnnualSummary.DownstreamUkSavingsAnnualIncomeResponse
+import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeResponse, RetrieveUkSavingsAnnualSummaryResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,7 +33,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[RetrieveUkSavingsAccountAnnualSummaryServiceOutcome] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
 
     val result = for {
       downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
@@ -44,7 +44,7 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
   }
 
   private def convertToMtd(downstreamResponseWrapper: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse])(implicit
-      logContext: EndpointLogContext): RetrieveUkSavingsAccountAnnualSummaryServiceOutcome = {
+      logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
 
     downstreamResponseWrapper.responseData.savingsInterestAnnualIncome match {
       case item +: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))

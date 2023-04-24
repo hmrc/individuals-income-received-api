@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.DeleteCgtNonPpdConnector
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRequest
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCgtNonPpdService @Inject() (connector: DeleteCgtNonPpdConnector) extends BaseService {
 
-  def deleteCgtNonPpd(request: DeleteCgtNonPpdRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteCgtNonPpdServiceOutcome] = {
+  def deleteCgtNonPpd(request: DeleteCgtNonPpdRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.deleteCgtNonPpd(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

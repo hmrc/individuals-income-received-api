@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.AmendDividendsConnector
 import v1.models.request.amendDividends.AmendDividendsRequest
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendDividendsService @Inject() (connector: AmendDividendsConnector) extends BaseService {
 
-  def amendDividends(request: AmendDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AmendDividendsServiceOutcome] = {
+  def amendDividends(request: AmendDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.amendDividends(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

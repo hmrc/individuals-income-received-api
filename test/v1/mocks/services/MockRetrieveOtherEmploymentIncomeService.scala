@@ -17,10 +17,12 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
-import v1.services.{RetrieveOtherEmploymentIncomeService, RetrieveOtherEmploymentIncomeServiceOutcome}
+import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
+import v1.services.RetrieveOtherEmploymentIncomeService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +33,7 @@ trait MockRetrieveOtherEmploymentIncomeService extends MockFactory {
 
   object MockRetrieveOtherEmploymentIncomeService {
 
-    def retrieve(requestData: OtherEmploymentIncomeRequest): CallHandler[Future[RetrieveOtherEmploymentIncomeServiceOutcome]] = {
+    def retrieve(requestData: OtherEmploymentIncomeRequest): CallHandler[Future[ServiceOutcome[RetrieveOtherEmploymentResponse]]] = {
       (
         mockRetrieveOtherEmploymentIncomeService
           .retrieve(_: OtherEmploymentIncomeRequest)(

@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.RetrieveForeignConnector
 import v1.models.request.retrieveForeign.RetrieveForeignRequest
+import v1.models.response.retrieveForeign.RetrieveForeignResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +30,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveForeignService @Inject() (connector: RetrieveForeignConnector) extends BaseService {
 
-  def retrieve(request: RetrieveForeignRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrieveForeignServiceOutcome] = {
+  def retrieve(
+      request: RetrieveForeignRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveForeignResponse]] = {
 
     connector.retrieveForeign(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

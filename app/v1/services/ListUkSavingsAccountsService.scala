@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.ListUkSavingsAccountsConnector
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRequest
+import v1.models.response.listUkSavingsAccounts.{ListUkSavingsAccountsResponse, UkSavingsAccount}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,8 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends BaseService {
 
-  def listUkSavingsAccounts(
-      request: ListUkSavingsAccountsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ListUkSavingsAccountsServiceOutcome] =
+  def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]] =
     connector.listUkSavingsAccounts(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = Map(

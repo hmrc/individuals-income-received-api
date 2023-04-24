@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import v1.connectors.CreateAmendCgtPpdOverridesConnector
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
@@ -29,9 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendCgtPpdOverridesService @Inject() (connector: CreateAmendCgtPpdOverridesConnector) extends BaseService {
 
-  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[CreateAmendCgtPpdOverridesServiceOutcome] = {
+  def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.deletePensions.DeletePensionsRequest
-import v1.services.{DeletePensionsService, DeletePensionsServiceOutcome}
+import v1.services.{DeletePensionsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +32,7 @@ trait MockDeletePensionsService extends MockFactory {
 
   object MockDeletePensionsIncomeService {
 
-    def delete(requestData: DeletePensionsRequest): CallHandler[Future[DeletePensionsServiceOutcome]] = (
+    def delete(requestData: DeletePensionsRequest): CallHandler[Future[ServiceOutcome[Unit]]] = (
       mockDeletePensionsService
         .deletePensions(_: DeletePensionsRequest)(
           _: RequestContext,

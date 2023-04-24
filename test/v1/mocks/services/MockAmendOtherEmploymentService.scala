@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
-import v1.services.{AmendOtherEmploymentService, AmendOtherEmploymentServiceOutcome}
+import v1.services.{AmendOtherEmploymentService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ trait MockAmendOtherEmploymentService extends MockFactory {
 
   object MockAmendOtherEmploymentService {
 
-    def amend(requestData: AmendOtherEmploymentRequest): CallHandler[Future[AmendOtherEmploymentServiceOutcome]] = {
+    def amend(requestData: AmendOtherEmploymentRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (mockAmendOtherEmploymentService
         .amendOtherEmployment(_: AmendOtherEmploymentRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

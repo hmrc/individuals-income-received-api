@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.syntax.either._
 import v1.connectors.CreateAmendCgtResidentialPropertyDisposalsConnector
 import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRequest
@@ -32,7 +32,7 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: Cr
 
   def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[CreateAmendCgtResidentialPropertyDisposalsServiceOutcome] = {
+      ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

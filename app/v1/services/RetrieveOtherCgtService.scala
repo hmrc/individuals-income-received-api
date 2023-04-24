@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import v1.connectors.RetrieveOtherCgtConnector
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRequest
+import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +30,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveOtherCgtService @Inject() (connector: RetrieveOtherCgtConnector) extends BaseService {
 
-  def retrieve(request: RetrieveOtherCgtRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[RetrieveOtherCgtServiceOutcome] = {
+  def retrieve(
+      request: RetrieveOtherCgtRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherCgtResponse]] = {
 
     connector.retrieveOtherCgt(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

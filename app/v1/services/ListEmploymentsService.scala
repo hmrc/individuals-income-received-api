@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.ListEmploymentsConnector
 import v1.models.request.listEmployments.ListEmploymentsRequest
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,7 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) extends BaseService {
 
-  def listEmployments(request: ListEmploymentsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ListEmploymentsServiceOutcome] =
+  def listEmployments(request: ListEmploymentsRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[ListEmploymentResponse[Employment]]] =
     connector.listEmployments(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = Map(

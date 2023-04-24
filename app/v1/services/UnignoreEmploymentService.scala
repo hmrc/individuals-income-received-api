@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import api.support.DownstreamResponseMappingSupport
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -36,7 +36,7 @@ class UnignoreEmploymentService @Inject() (connector: UnignoreEmploymentConnecto
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[ServiceOutcome[Unit]] = {
 
     connector.unignoreEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsAnnualSummaryRequest
-import v1.services.{CreateAmendUkSavingsAnnualSummaryService, CreateAmendUkSavingsAnnualSummaryServiceOutcome}
+import v1.services.{CreateAmendUkSavingsAnnualSummaryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,8 +32,7 @@ trait MockCreateAmendUkSavingsAnnualSummaryService extends MockFactory {
 
   object MockCreateAmendAmendUkSavingsAnnualSummaryService {
 
-    def createOrAmendAnnualSummary(
-        requestData: CreateAmendUkSavingsAnnualSummaryRequest): CallHandler[Future[CreateAmendUkSavingsAnnualSummaryServiceOutcome]] = (
+    def createOrAmendAnnualSummary(requestData: CreateAmendUkSavingsAnnualSummaryRequest): CallHandler[Future[ServiceOutcome[Unit]]] = (
       mockCreateAmendUkSavingsAnnualSummaryService
         .createAmend(_: CreateAmendUkSavingsAnnualSummaryRequest)(
           _: RequestContext,

@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import api.support.DownstreamResponseMappingSupport
 import cats.data.EitherT
 import cats.implicits._
@@ -37,7 +37,7 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[ServiceOutcome[Unit]] = {
 
     val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 

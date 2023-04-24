@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.amendForeign.AmendForeignRequest
-import v1.services.{AmendForeignService, AmendForeignServiceOutcome}
+import v1.services.{AmendForeignService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ trait MockAmendForeignService extends MockFactory {
 
   object MockAmendForeignService {
 
-    def amendForeign(requestData: AmendForeignRequest): CallHandler[Future[AmendForeignServiceOutcome]] = {
+    def amendForeign(requestData: AmendForeignRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (mockAmendForeignService
         .amendForeign(_: AmendForeignRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.toBifunctorOps
 import v1.connectors.DeleteCgtPpdOverridesConnector
 import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRequest
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteCgtPpdOverridesService @Inject() (connector: DeleteCgtPpdOverridesConnector) extends BaseService {
 
   def deleteCgtPpdOverrides(
-      request: DeleteCgtPpdOverridesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteCgtPpdOverridesServiceOutcome] = {
+      request: DeleteCgtPpdOverridesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.deleteCgtPpdOverrides(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
