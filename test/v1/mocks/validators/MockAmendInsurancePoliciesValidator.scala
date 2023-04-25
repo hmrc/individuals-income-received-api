@@ -28,7 +28,7 @@ trait MockAmendInsurancePoliciesValidator extends MockFactory {
 
   object MockAmendInsurancePoliciesValidator {
 
-    def validate(data: AmendInsurancePoliciesRawData): CallHandler1[AmendInsurancePoliciesRawData, Seq[MtdError]] = {
+    def validate(data: AmendInsurancePoliciesRawData): CallHandler1[AmendInsurancePoliciesRawData, List[MtdError]] = {
       (mockAmendInsurancePoliciesValidator
         .validate(_: AmendInsurancePoliciesRawData))
         .expects(data)

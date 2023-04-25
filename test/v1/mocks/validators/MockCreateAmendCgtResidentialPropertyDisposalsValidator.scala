@@ -30,7 +30,7 @@ trait MockCreateAmendCgtResidentialPropertyDisposalsValidator extends MockFactor
   object MockCreateAmendCgtResidentialPropertyDisposalsValidator {
 
     def validate(
-        data: CreateAmendCgtResidentialPropertyDisposalsRawData): CallHandler1[CreateAmendCgtResidentialPropertyDisposalsRawData, Seq[MtdError]] = {
+        data: CreateAmendCgtResidentialPropertyDisposalsRawData): CallHandler1[CreateAmendCgtResidentialPropertyDisposalsRawData, List[MtdError]] = {
       (mockCreateAmendCgtResidentialPropertyDisposalsValidator
         .validate(_: CreateAmendCgtResidentialPropertyDisposalsRawData))
         .expects(data)

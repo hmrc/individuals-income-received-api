@@ -29,7 +29,7 @@ class DeleteCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConfig) e
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteCgtPpdOverridesRawData): Seq[MtdError] = {
+  override def validate(data: DeleteCgtPpdOverridesRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

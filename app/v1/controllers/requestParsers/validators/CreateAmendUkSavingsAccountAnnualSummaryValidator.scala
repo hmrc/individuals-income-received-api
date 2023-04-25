@@ -34,7 +34,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     bodyValueValidation
   )
 
-  override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

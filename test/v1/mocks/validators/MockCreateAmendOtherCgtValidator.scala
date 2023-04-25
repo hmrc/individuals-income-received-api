@@ -28,7 +28,7 @@ trait MockCreateAmendOtherCgtValidator extends MockFactory {
 
   object MockCreateAmendOtherCgtValidator {
 
-    def validate(data: CreateAmendOtherCgtRawData): CallHandler1[CreateAmendOtherCgtRawData, Seq[MtdError]] = {
+    def validate(data: CreateAmendOtherCgtRawData): CallHandler1[CreateAmendOtherCgtRawData, List[MtdError]] = {
       (mockCreateAmendOtherCgtValidator
         .validate(_: CreateAmendOtherCgtRawData))
         .expects(data)

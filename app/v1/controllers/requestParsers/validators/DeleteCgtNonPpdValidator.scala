@@ -29,7 +29,7 @@ class DeleteCgtNonPpdValidator @Inject() (implicit appConfig: AppConfig) extends
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteCgtNonPpdRawData): Seq[MtdError] = {
+  override def validate(data: DeleteCgtNonPpdRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

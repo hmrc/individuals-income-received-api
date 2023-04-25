@@ -28,7 +28,7 @@ trait MockDeleteCgtPpdOverridesValidator extends MockFactory {
 
   object MockDeleteCgtPpdOverridesValidator {
 
-    def validate(data: DeleteCgtPpdOverridesRawData): CallHandler1[DeleteCgtPpdOverridesRawData, Seq[MtdError]] = {
+    def validate(data: DeleteCgtPpdOverridesRawData): CallHandler1[DeleteCgtPpdOverridesRawData, List[MtdError]] = {
       (mockDeleteCgtPpdOverridesValidator
         .validate(_: DeleteCgtPpdOverridesRawData))
         .expects(data)

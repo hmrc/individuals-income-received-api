@@ -28,7 +28,7 @@ trait MockRetrieveSavingsValidator extends MockFactory {
 
   object MockRetrieveSavingsValidator {
 
-    def validate(data: RetrieveSavingsRawData): CallHandler1[RetrieveSavingsRawData, Seq[MtdError]] = {
+    def validate(data: RetrieveSavingsRawData): CallHandler1[RetrieveSavingsRawData, List[MtdError]] = {
       (mockRetrieveSavingsValidator
         .validate(_: RetrieveSavingsRawData))
         .expects(data)

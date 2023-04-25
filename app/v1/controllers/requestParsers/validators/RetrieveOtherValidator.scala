@@ -29,7 +29,7 @@ class RetrieveOtherValidator @Inject() (implicit appConfig: AppConfig) extends V
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveOtherRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveOtherRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

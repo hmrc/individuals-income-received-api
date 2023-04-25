@@ -32,7 +32,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator, rulesValidator)
 
-  override def validate(data: CreateAmendCgtPpdOverridesRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendCgtPpdOverridesRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

@@ -28,7 +28,7 @@ trait MockDeletePensionsValidator extends MockFactory {
 
   object MockDeletePensionsIncomeValidator {
 
-    def validate(data: DeletePensionsRawData): CallHandler1[DeletePensionsRawData, Seq[MtdError]] = {
+    def validate(data: DeletePensionsRawData): CallHandler1[DeletePensionsRawData, List[MtdError]] = {
       (mockDeletePensionsIncomeValidator
         .validate(_: DeletePensionsRawData))
         .expects(data)

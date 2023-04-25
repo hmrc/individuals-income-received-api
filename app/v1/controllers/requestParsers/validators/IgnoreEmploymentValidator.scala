@@ -31,7 +31,7 @@ class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDate
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: IgnoreEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: IgnoreEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

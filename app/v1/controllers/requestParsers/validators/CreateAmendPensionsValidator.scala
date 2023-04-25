@@ -31,7 +31,7 @@ class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendPensionsRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendPensionsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

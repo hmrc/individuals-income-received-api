@@ -28,7 +28,7 @@ class MockRetrieveNonPayeEmploymentValidator extends MockFactory {
 
   object MockRetrieveNonPayeEmploymentValidator {
 
-    def validate(data: RetrieveNonPayeEmploymentIncomeRawData): CallHandler1[RetrieveNonPayeEmploymentIncomeRawData, Seq[MtdError]] = {
+    def validate(data: RetrieveNonPayeEmploymentIncomeRawData): CallHandler1[RetrieveNonPayeEmploymentIncomeRawData, List[MtdError]] = {
       (mockRetrieveNonPayeEmploymentValidator
         .validate(_: RetrieveNonPayeEmploymentIncomeRawData))
         .expects(data)

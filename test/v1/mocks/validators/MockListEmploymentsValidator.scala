@@ -28,7 +28,7 @@ trait MockListEmploymentsValidator extends MockFactory {
 
   object MockListEmploymentsValidator {
 
-    def validate(data: ListEmploymentsRawData): CallHandler1[ListEmploymentsRawData, Seq[MtdError]] = {
+    def validate(data: ListEmploymentsRawData): CallHandler1[ListEmploymentsRawData, List[MtdError]] = {
       (mockListEmploymentsValidator
         .validate(_: ListEmploymentsRawData))
         .expects(data)

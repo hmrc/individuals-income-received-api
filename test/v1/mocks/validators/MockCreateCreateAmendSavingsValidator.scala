@@ -28,7 +28,7 @@ trait MockCreateCreateAmendSavingsValidator extends MockFactory {
 
   object MockCreateAmendSavingsValidator {
 
-    def validate(data: CreateAmendSavingsRawData): CallHandler1[CreateAmendSavingsRawData, Seq[MtdError]] = {
+    def validate(data: CreateAmendSavingsRawData): CallHandler1[CreateAmendSavingsRawData, List[MtdError]] = {
       (mockCreateAmendSavingsValidator
         .validate(_: CreateAmendSavingsRawData))
         .expects(data)

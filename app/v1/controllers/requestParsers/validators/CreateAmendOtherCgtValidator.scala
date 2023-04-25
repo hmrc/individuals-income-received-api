@@ -32,7 +32,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, jsonFormatValidation, bodyFormatValidation, bodyRuleValidation)
 
-  override def validate(data: CreateAmendOtherCgtRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendOtherCgtRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

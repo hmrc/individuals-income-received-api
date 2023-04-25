@@ -39,7 +39,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     lossOrGainsValidator
   )
 
-  override def validate(data: CreateAmendCgtResidentialPropertyDisposalsRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendCgtResidentialPropertyDisposalsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

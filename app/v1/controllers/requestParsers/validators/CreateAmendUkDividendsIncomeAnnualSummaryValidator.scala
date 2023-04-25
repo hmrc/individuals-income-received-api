@@ -35,7 +35,7 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject() (appConfig: A
     bodyValueValidator
   )
 
-  override def validate(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

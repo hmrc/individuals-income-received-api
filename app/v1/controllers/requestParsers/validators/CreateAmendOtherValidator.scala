@@ -29,7 +29,7 @@ class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extend
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendOtherRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendOtherRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

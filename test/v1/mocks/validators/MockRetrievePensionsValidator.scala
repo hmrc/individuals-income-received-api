@@ -28,7 +28,7 @@ class MockRetrievePensionsValidator extends MockFactory {
 
   object MockRetrievePensionsValidator {
 
-    def validate(data: RetrievePensionsRawData): CallHandler1[RetrievePensionsRawData, Seq[MtdError]] = {
+    def validate(data: RetrievePensionsRawData): CallHandler1[RetrievePensionsRawData, List[MtdError]] = {
       (mockRetrievePensionsValidator
         .validate(_: RetrievePensionsRawData))
         .expects(data)
