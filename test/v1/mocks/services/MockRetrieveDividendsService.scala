@@ -17,10 +17,12 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.retrieveDividends.RetrieveDividendsRequest
-import v1.services.{RetrieveDividendsService, RetrieveDividendsServiceOutcome}
+import v1.models.response.retrieveDividends.RetrieveDividendsResponse
+import v1.services.{RetrieveDividendsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +32,7 @@ trait MockRetrieveDividendsService extends MockFactory {
 
   object MockRetrieveDividendsService {
 
-    def retrieve(requestData: RetrieveDividendsRequest): CallHandler[Future[RetrieveDividendsServiceOutcome]] = {
+    def retrieve(requestData: RetrieveDividendsRequest): CallHandler[Future[ServiceOutcome[RetrieveDividendsResponse]]] = {
       (
         mockRetrieveDividendsService
           .retrieve(_: RetrieveDividendsRequest)(

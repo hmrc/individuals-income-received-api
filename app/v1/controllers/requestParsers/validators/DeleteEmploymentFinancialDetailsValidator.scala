@@ -29,7 +29,7 @@ class DeleteEmploymentFinancialDetailsValidator @Inject() (implicit appConfig: A
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteEmploymentFinancialDetailsRawData): Seq[MtdError] = {
+  override def validate(data: DeleteEmploymentFinancialDetailsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

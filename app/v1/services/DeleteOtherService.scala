@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.DeleteOtherConnector
 import v1.models.request.deleteOther.DeleteOtherRequest
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteOtherService @Inject() (connector: DeleteOtherConnector) extends BaseService {
 
-  def delete(request: DeleteOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteOtherServiceOutcome] = {
+  def delete(request: DeleteOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.deleteOther(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

@@ -37,7 +37,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
     bodyRuleValidator
   )
 
-  override def validate(data: AmendOtherEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: AmendOtherEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

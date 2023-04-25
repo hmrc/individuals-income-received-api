@@ -17,10 +17,12 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
-import v1.services.{RetrieveAllResidentialPropertyCgtService, RetrieveAllResidentialPropertyCgtServiceOutcome}
+import v1.models.response.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtResponse
+import v1.services.{RetrieveAllResidentialPropertyCgtService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +32,8 @@ trait MockRetrieveAllResidentialPropertyCgtService extends MockFactory {
 
   object MockRetrieveAllResidentialPropertyCgtService {
 
-    def retrieve(requestData: RetrieveAllResidentialPropertyCgtRequest): CallHandler[Future[RetrieveAllResidentialPropertyCgtServiceOutcome]] = {
+    def retrieve(
+        requestData: RetrieveAllResidentialPropertyCgtRequest): CallHandler[Future[ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]]] = {
       (
         mockRetrieveAllResidentialPropertyCgtService
           .retrieve(_: RetrieveAllResidentialPropertyCgtRequest)(

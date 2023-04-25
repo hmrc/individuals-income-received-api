@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.DeleteNonPayeEmploymentConnector
 import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRequest
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteNonPayeEmploymentService @Inject() (connector: DeleteNonPayeEmploymentConnector) extends BaseService {
 
   def deleteNonPayeEmployment(
-      request: DeleteNonPayeEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[DeleteNonPayeEmploymentServiceOutcome] = {
+      request: DeleteNonPayeEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.deleteNonPayeEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

@@ -28,7 +28,7 @@ trait MockDeleteSavingsValidator extends MockFactory {
 
   object MockDeleteSavingsValidator {
 
-    def validate(data: DeleteSavingsRawData): CallHandler1[DeleteSavingsRawData, Seq[MtdError]] = {
+    def validate(data: DeleteSavingsRawData): CallHandler1[DeleteSavingsRawData, List[MtdError]] = {
       (mockDeleteSavingsValidator
         .validate(_: DeleteSavingsRawData))
         .expects(data)

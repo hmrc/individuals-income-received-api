@@ -18,7 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.syntax.either._
 import v1.connectors.CreateAmendNonPayeEmploymentConnector
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
@@ -29,9 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendNonPayeEmploymentService @Inject() (connector: CreateAmendNonPayeEmploymentConnector) extends BaseService {
 
-  def createAndAmend(request: CreateAmendNonPayeEmploymentRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[CreateAmendNonPayeEmploymentServiceOutcome] = {
+  def createAndAmend(
+      request: CreateAmendNonPayeEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

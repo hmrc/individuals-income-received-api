@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
-import v1.services.{CreateAmendOtherCgtService, CreateAmendOtherCgtServiceOutcome}
+import v1.services.{CreateAmendOtherCgtService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ trait MockCreateAmendOtherCgtService extends MockFactory {
 
   object MockCreateAmendOtherCgtService {
 
-    def createAmend(requestData: CreateAmendOtherCgtRequest): CallHandler[Future[CreateAmendOtherCgtServiceOutcome]] = {
+    def createAmend(requestData: CreateAmendOtherCgtRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (mockCreateAmendOtherCgtService
         .createAmend(_: CreateAmendOtherCgtRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

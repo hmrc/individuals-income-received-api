@@ -28,7 +28,7 @@ trait MockCreateAmendCgtPpdOverridesValidator extends MockFactory {
 
   object MockCreateAmendCgtPpdOverridesValidator {
 
-    def validate(data: CreateAmendCgtPpdOverridesRawData): CallHandler1[CreateAmendCgtPpdOverridesRawData, Seq[MtdError]] = {
+    def validate(data: CreateAmendCgtPpdOverridesRawData): CallHandler1[CreateAmendCgtPpdOverridesRawData, List[MtdError]] = {
       (mockCreateAmendCgtPpdValidator
         .validate(_: CreateAmendCgtPpdOverridesRawData))
         .expects(data)

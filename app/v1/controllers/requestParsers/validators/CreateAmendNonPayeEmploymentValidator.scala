@@ -36,7 +36,7 @@ class CreateAmendNonPayeEmploymentValidator @Inject() (implicit currentDateTime:
     bodyValueValidator
   )
 
-  override def validate(data: CreateAmendNonPayeEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendNonPayeEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

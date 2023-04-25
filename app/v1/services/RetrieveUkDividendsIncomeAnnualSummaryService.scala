@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.RetrieveUKDividendsIncomeAnnualSummaryConnector
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +32,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
 
   def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[RetrieveUkDividendsServiceOutcome] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]] = {
 
     connector.retrieveUKDividendsIncomeAnnualSummary(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

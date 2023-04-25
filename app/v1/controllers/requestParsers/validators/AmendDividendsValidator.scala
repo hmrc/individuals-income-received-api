@@ -29,7 +29,7 @@ class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends 
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendDividendsRawData): Seq[MtdError] = {
+  override def validate(data: AmendDividendsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

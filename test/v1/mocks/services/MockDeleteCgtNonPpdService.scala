@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRequest
-import v1.services.{DeleteCgtNonPpdService, DeleteCgtNonPpdServiceOutcome}
+import v1.services.{DeleteCgtNonPpdService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ trait MockDeleteCgtNonPpdService extends MockFactory {
 
   object MockDeleteCgtNonPpdService {
 
-    def deleteCgtNonPpdService(requestData: DeleteCgtNonPpdRequest): CallHandler[Future[DeleteCgtNonPpdServiceOutcome]] = {
+    def deleteCgtNonPpdService(requestData: DeleteCgtNonPpdRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (
         mockDeleteCgtNonPpdService
           .deleteCgtNonPpd(_: DeleteCgtNonPpdRequest)(

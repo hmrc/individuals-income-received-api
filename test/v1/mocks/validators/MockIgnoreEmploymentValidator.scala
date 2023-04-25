@@ -28,7 +28,7 @@ trait MockIgnoreEmploymentValidator extends MockFactory {
 
   object MockIgnoreEmploymentValidator {
 
-    def validate(data: IgnoreEmploymentRawData): CallHandler1[IgnoreEmploymentRawData, Seq[MtdError]] = {
+    def validate(data: IgnoreEmploymentRawData): CallHandler1[IgnoreEmploymentRawData, List[MtdError]] = {
       (mockIgnoreEmploymentValidator
         .validate(_: IgnoreEmploymentRawData))
         .expects(data)

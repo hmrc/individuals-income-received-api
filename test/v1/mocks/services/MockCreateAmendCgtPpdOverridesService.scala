@@ -17,10 +17,11 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRequest
-import v1.services.{CreateAmendCgtPpdOverridesService, CreateAmendCgtPpdOverridesServiceOutcome}
+import v1.services.{CreateAmendCgtPpdOverridesService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ trait MockCreateAmendCgtPpdOverridesService extends MockFactory {
 
   object MockCreateAmendCgtPpdOverridesService {
 
-    def createAmend(requestData: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[CreateAmendCgtPpdOverridesServiceOutcome]] = {
+    def createAmend(requestData: CreateAmendCgtPpdOverridesRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (
         mockCreateAmendCgtPpdOverridesService
           .createAmend(_: CreateAmendCgtPpdOverridesRequest)(

@@ -28,7 +28,7 @@ trait MockAddUkSavingsAccountValidator extends MockFactory {
 
   object MockAddUkSavingsAccountValidator {
 
-    def validate(data: AddUkSavingsAccountRawData): CallHandler1[AddUkSavingsAccountRawData, Seq[MtdError]] = {
+    def validate(data: AddUkSavingsAccountRawData): CallHandler1[AddUkSavingsAccountRawData, List[MtdError]] = {
       (mockAddUkSavingsAccountValidator
         .validate(_: AddUkSavingsAccountRawData))
         .expects(data)

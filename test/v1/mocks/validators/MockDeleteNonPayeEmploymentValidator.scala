@@ -28,7 +28,7 @@ trait MockDeleteNonPayeEmploymentValidator extends MockFactory {
 
   object MockDeleteNonPayeEmploymentValidator {
 
-    def validate(data: DeleteNonPayeEmploymentRawData): CallHandler1[DeleteNonPayeEmploymentRawData, Seq[MtdError]] = {
+    def validate(data: DeleteNonPayeEmploymentRawData): CallHandler1[DeleteNonPayeEmploymentRawData, List[MtdError]] = {
       (mockDeleteNonPayeEmploymentValidator
         .validate(_: DeleteNonPayeEmploymentRawData))
         .expects(data)

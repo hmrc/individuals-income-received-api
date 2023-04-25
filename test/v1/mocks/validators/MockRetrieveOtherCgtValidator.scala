@@ -28,7 +28,7 @@ trait MockRetrieveOtherCgtValidator extends MockFactory {
 
   object MockRetrieveOtherCgtValidator {
 
-    def validate(data: RetrieveOtherCgtRawData): CallHandler1[RetrieveOtherCgtRawData, Seq[MtdError]] = {
+    def validate(data: RetrieveOtherCgtRawData): CallHandler1[RetrieveOtherCgtRawData, List[MtdError]] = {
       (mockRetrieveOtherCgtValidator
         .validate(_: RetrieveOtherCgtRawData))
         .expects(data)

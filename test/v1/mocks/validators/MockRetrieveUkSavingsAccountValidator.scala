@@ -28,7 +28,7 @@ class MockRetrieveUkSavingsAccountValidator extends MockFactory {
 
   object MockRetrieveUkSavingsAccountValidator {
 
-    def validate(data: RetrieveUkSavingsAnnualSummaryRawData): CallHandler1[RetrieveUkSavingsAnnualSummaryRawData, Seq[MtdError]] = {
+    def validate(data: RetrieveUkSavingsAnnualSummaryRawData): CallHandler1[RetrieveUkSavingsAnnualSummaryRawData, List[MtdError]] = {
       (mockRetrieveUkSavingsAccountValidator
         .validate(_: RetrieveUkSavingsAnnualSummaryRawData))
         .expects(data)

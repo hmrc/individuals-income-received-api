@@ -17,10 +17,12 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.retrieveSavings.RetrieveSavingsRequest
-import v1.services.{RetrieveSavingsService, RetrieveSavingsServiceOutcome}
+import v1.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.services.RetrieveSavingsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +33,7 @@ trait MockRetrieveSavingsService extends MockFactory {
 
   object MockRetrieveSavingsService {
 
-    def retrieve(requestData: RetrieveSavingsRequest): CallHandler[Future[RetrieveSavingsServiceOutcome]] = (
+    def retrieve(requestData: RetrieveSavingsRequest): CallHandler[Future[ServiceOutcome[RetrieveSavingsResponse]]] = (
       mockRetrieveSavingsService
         .retrieveSavings(_: RetrieveSavingsRequest)(
           _: RequestContext,

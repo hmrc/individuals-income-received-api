@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package api.mocks.services
+package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRequest
-import v1.services.{DeleteNonPayeEmploymentService, DeleteNonPayeEmploymentServiceOutcome}
+import v1.services.{DeleteNonPayeEmploymentService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,7 @@ trait MockDeleteNonPayeEmploymentService extends MockFactory {
 
   object MockDeleteNonPayeEmploymentService {
 
-    def deleteNonPayeEmployment(requestData: DeleteNonPayeEmploymentRequest): CallHandler[Future[DeleteNonPayeEmploymentServiceOutcome]] = {
+    def deleteNonPayeEmployment(requestData: DeleteNonPayeEmploymentRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (
         mockDeleteNonPayeEmploymentService
           .deleteNonPayeEmployment(_: DeleteNonPayeEmploymentRequest)(

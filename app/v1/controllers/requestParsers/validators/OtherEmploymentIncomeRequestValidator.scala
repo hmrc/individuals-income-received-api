@@ -29,7 +29,7 @@ class OtherEmploymentIncomeRequestValidator @Inject() (implicit appConfig: AppCo
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: OtherEmploymentIncomeRequestRawData): Seq[MtdError] = {
+  override def validate(data: OtherEmploymentIncomeRequestRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

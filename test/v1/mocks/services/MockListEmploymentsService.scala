@@ -17,10 +17,12 @@
 package v1.mocks.services
 
 import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.models.request.listEmployments.ListEmploymentsRequest
-import v1.services.{ListEmploymentsService, ListEmploymentsServiceOutcome}
+import v1.models.response.listEmployment.{Employment, ListEmploymentResponse}
+import v1.services.{ListEmploymentsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +32,7 @@ trait MockListEmploymentsService extends MockFactory {
 
   object MockListEmploymentsService {
 
-    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[ListEmploymentsServiceOutcome]] = {
+    def listEmployments(requestData: ListEmploymentsRequest): CallHandler[Future[ServiceOutcome[ListEmploymentResponse[Employment]]]] = {
       (mockListEmploymentsService
         .listEmployments(_: ListEmploymentsRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

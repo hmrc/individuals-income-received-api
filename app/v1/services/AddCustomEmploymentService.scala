@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.AddCustomEmploymentConnector
 import v1.models.request.addCustomEmployment.AddCustomEmploymentRequest
+import v1.models.response.addCustomEmployment.AddCustomEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,7 +31,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnector) extends BaseService {
 
   def addEmployment(
-      request: AddCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[AddCustomEmploymentServiceOutcome] =
+      request: AddCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[AddCustomEmploymentResponse]] =
     connector.addEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] =

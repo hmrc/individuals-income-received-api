@@ -29,7 +29,7 @@ class RetrievePensionsValidator @Inject() (implicit appConfig: AppConfig) extend
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrievePensionsRawData): Seq[MtdError] = {
+  override def validate(data: RetrievePensionsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

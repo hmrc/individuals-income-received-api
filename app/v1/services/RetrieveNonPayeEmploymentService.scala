@@ -18,10 +18,11 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.RetrieveNonPayeEmploymentConnector
 import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRequest
+import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +32,7 @@ class RetrieveNonPayeEmploymentService @Inject() (connector: RetrieveNonPayeEmpl
 
   def retrieveNonPayeEmployment(request: RetrieveNonPayeEmploymentIncomeRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[RetrieveNonPayeEmploymentServiceOutcome] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]] = {
 
     connector.retrieveNonPayeEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
