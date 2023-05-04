@@ -125,9 +125,6 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
-        override def request(): WSRequest =
-          super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
-
         val response: WSResponse = await(request().post(JsObject.empty))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
@@ -182,8 +179,6 @@ class UnignoreEmploymentControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamErrorCode))
           }
 
-          override def request(): WSRequest =
-            super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
           val response: WSResponse = await(request().post(JsObject.empty))
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
