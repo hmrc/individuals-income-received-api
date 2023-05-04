@@ -39,9 +39,7 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       logContext: EndpointLogContext,
       correlationId: String): Future[ServiceOutcome[Unit]] = {
 
-    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector.ignoreEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
