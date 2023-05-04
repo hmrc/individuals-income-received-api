@@ -20,7 +20,6 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.services.ServiceOutcome
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
