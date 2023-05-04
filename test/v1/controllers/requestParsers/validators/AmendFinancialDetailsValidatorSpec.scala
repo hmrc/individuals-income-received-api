@@ -402,7 +402,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
             "2023-24",
             validEmploymentId,
             AnyContentAsJson(requestJsonWithOpw(false)),
-            temporalValidationEnabled = false,
             opwEnabled = true)) shouldBe Nil
       }
 
@@ -436,22 +435,6 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       "return RuleTaxYearNotSupportedError error for an unsupported tax year" in new Test {
         validator.validate(AmendFinancialDetailsRawData(validNino, "2019-20", validEmploymentId, validRawBody)) shouldBe
           List(RuleTaxYearNotSupportedError)
-      }
-
-      "return RuleTaxYearNotEndedError error for a tax year which hasn't ended" in new Test {
-        validator.validate(AmendFinancialDetailsRawData(validNino, "2022-23", validEmploymentId, validRawBody)) shouldBe
-          List(RuleTaxYearNotEndedError)
-      }
-
-      "not return RuleTaxYearNotEndedError error for a tax year which hasn't ended but temporal validation is disabled" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2022-23",
-            validEmploymentId,
-            AnyContentAsJson(validRequestJson),
-            temporalValidationEnabled = false,
-            opwEnabled = true)) shouldBe Nil
       }
 
       // body format error scenarios
@@ -512,14 +495,7 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
       }
 
       "return RuleMissingOffPayrollWorker error when opw is enabled, and is missing for a taxYear 23-24 or later" in new Test {
-        validator.validate(
-          AmendFinancialDetailsRawData(
-            validNino,
-            "2023-24",
-            validEmploymentId,
-            validRawBody,
-            temporalValidationEnabled = false,
-            opwEnabled = true)) shouldBe
+        validator.validate(AmendFinancialDetailsRawData(validNino, "2023-24", validEmploymentId, validRawBody, opwEnabled = true)) shouldBe
           List(RuleMissingOffPayrollWorker)
       }
 

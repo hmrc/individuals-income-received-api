@@ -85,11 +85,6 @@ class IgnoreEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessag
         validator.validate(IgnoreEmploymentRawData(validNino, "2019-20", validEmploymentId)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
-
-      "return RuleTaxYearNotEndedError error for a tax year which hasn't ended" in new Test {
-        validator.validate(IgnoreEmploymentRawData(validNino, "2022-23", validEmploymentId)) shouldBe
-          List()
-      }
     }
   }
 
