@@ -20,7 +20,6 @@ import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.services.ServiceOutcome
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
@@ -39,9 +38,7 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       logContext: EndpointLogContext,
       correlationId: String): Future[ServiceOutcome[Unit]] = {
 
-    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector.ignoreEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {

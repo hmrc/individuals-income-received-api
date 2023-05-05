@@ -21,14 +21,13 @@ import api.controllers.requestParsers.validators.validations._
 import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, RuleMissingOffPayrollWorker, RuleNotAllowedOffPayrollWorker}
 import config.AppConfig
-import utils.CurrentDateTime
 import v1.models.request.amendFinancialDetails.emploment.AmendEmployment
 import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, AmendFinancialDetailsRequestBody}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class AmendFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[AmendFinancialDetailsRawData]
     with ValueFormatErrorMessages {
 
@@ -48,8 +47,7 @@ class AmendFinancialDetailsValidator @Inject() (implicit currentDateTime: Curren
 
   private def parameterRuleValidation: AmendFinancialDetailsRawData => List[List[MtdError]] = (data: AmendFinancialDetailsRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 
