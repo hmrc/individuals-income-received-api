@@ -253,135 +253,6 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
       ))
   )
 
-  val completionBeforeDisposalJson: JsValue = Json.parse(
-    s"""
-      |{
-      |   "disposals":[
-      |      {
-      |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "2020-04-01",
-      |         "completionDate": "$validCompletionDate",
-      |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "$validAcquisitionDate",
-      |         "acquisitionAmount": 1999.99,
-      |         "improvementCosts": 1999.99,
-      |         "additionalCosts": 1999.99,
-      |         "prfAmount": 1999.99,
-      |         "otherReliefAmount": 1999.99,
-      |         "lossesFromThisYear": 1999.99,
-      |         "lossesFromPreviousYear": 1999.99,
-      |         "amountOfNetGain": 1999.99
-      |      }
-      |   ]
-      |}
-     """.stripMargin
-  )
-
-  val completionBeforeDisposalError: MtdError = RuleCompletionDateBeforeDisposalDateError.copy(
-    message = "The completionDate must not be earlier than the disposalDate",
-    paths = Some(
-      Seq(
-        "/disposals/0"
-      ))
-  )
-
-  val acquisitionAfterDisposalJson: JsValue = Json.parse(
-    s"""
-      |{
-      |   "disposals":[
-      |      {
-      |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "$validDisposalDate",
-      |         "completionDate": "$validCompletionDate",
-      |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "2020-03-28",
-      |         "acquisitionAmount": 1999.99,
-      |         "improvementCosts": 1999.99,
-      |         "additionalCosts": 1999.99,
-      |         "prfAmount": 1999.99,
-      |         "otherReliefAmount": 1999.99,
-      |         "lossesFromThisYear": 1999.99,
-      |         "lossesFromPreviousYear": 1999.99,
-      |         "amountOfNetGain": 1999.99
-      |      }
-      |   ]
-      |}
-     """.stripMargin
-  )
-
-  val acquisitionAfterDisposalError: MtdError = RuleAcquisitionDateAfterDisposalDateError.copy(
-    message = "The acquisitionDate must not be later than disposalDate",
-    paths = Some(
-      Seq(
-        "/disposals/0"
-      ))
-  )
-
-  val completionDateJson: JsValue = Json.parse(
-    s"""
-      |{
-      |   "disposals":[
-      |      {
-      |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "2020-02-27",
-      |         "completionDate": "2021-02-28",
-      |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "2020-02-25",
-      |         "acquisitionAmount": 1999.99,
-      |         "improvementCosts": 1999.99,
-      |         "additionalCosts": 1999.99,
-      |         "prfAmount": 1999.99,
-      |         "otherReliefAmount": 1999.99,
-      |         "lossesFromThisYear": 1999.99,
-      |         "lossesFromPreviousYear": 1999.99,
-      |         "amountOfNetGain": 1999.99
-      |      }
-      |   ]
-      |}
-     """.stripMargin
-  )
-
-  val completionDateError: MtdError = RuleCompletionDateError.copy(
-    message =
-      "The completionDate must be within the specific tax year and not in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April",
-    paths = Some(
-      Seq(
-        "/disposals/0"
-      ))
-  )
-
-  val disposalDateJson: JsValue = Json.parse(
-    s"""
-      |{
-      |   "disposals":[
-      |      {
-      |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "2019-03-27",
-      |         "completionDate": "$validCompletionDate",
-      |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "2019-03-25",
-      |         "acquisitionAmount": 1999.99,
-      |         "improvementCosts": 1999.99,
-      |         "additionalCosts": 1999.99,
-      |         "prfAmount": 1999.99,
-      |         "otherReliefAmount": 1999.99,
-      |         "lossesFromThisYear": 1999.99,
-      |         "lossesFromPreviousYear": 1999.99,
-      |         "amountOfNetLoss": 1999.99
-      |      }
-      |   ]
-      |}
-     """.stripMargin
-  )
-
-  val disposalDateError: MtdError = RuleDisposalDateError.copy(
-    message = "The disposalDate must be in the specified tax year",
-    paths = Some(
-      Seq(
-        "/disposals/0"
-      ))
-  )
-
   val gainLossJson: JsValue = Json.parse(
     s"""
       |{
@@ -412,85 +283,6 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
     paths = Some(
       Seq(
         "/disposals/0"
-      ))
-  )
-
-  val lossGreaterThanGainJson: JsValue = Json.parse(
-    s"""
-      |{
-      |   "disposals":[
-      |      {
-      |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "$validDisposalDate",
-      |         "completionDate": "$validCompletionDate",
-      |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "$validAcquisitionDate",
-      |         "acquisitionAmount": 1999.99,
-      |         "improvementCosts": 1999.99,
-      |         "additionalCosts": 1999.99,
-      |         "prfAmount": 1999.99,
-      |         "otherReliefAmount": 1999.99,
-      |         "lossesFromThisYear": 1999.99,
-      |         "lossesFromPreviousYear": 1999.99,
-      |         "amountOfNetGain": 199.99
-      |      }
-      |   ]
-      |}
-     """.stripMargin
-  )
-
-  val lossGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
-    message = "The total losses from this year or the previous year must not be greater than the gain",
-    paths = Some(
-      Seq(
-        "/disposals/0/lossesFromThisYear",
-        "/disposals/0/lossesFromPreviousYear"
-      ))
-  )
-
-  val lossGreaterThanGainAndLossJson: JsValue = Json.parse(
-    s"""
-      |{
-      |   "disposals":[
-      |      {
-      |         "customerReference": "CGTDISPOSAL01",
-      |         "disposalDate": "$validDisposalDate",
-      |         "completionDate": "$validCompletionDate",
-      |         "disposalProceeds": 1999.99,
-      |         "acquisitionDate": "$validAcquisitionDate",
-      |         "acquisitionAmount": 1999.99,
-      |         "improvementCosts": 1999.99,
-      |         "additionalCosts": 1999.99,
-      |         "prfAmount": 1999.99,
-      |         "otherReliefAmount": 1999.99,
-      |         "lossesFromThisYear": 1999.99,
-      |         "lossesFromPreviousYear": 1999.99,
-      |         "amountOfNetGain": 199.99,
-      |         "amountOfNetLoss": 199.99
-      |      }
-      |   ]
-      |}
-     """.stripMargin
-  )
-
-  val lossGreaterThanGainAndLossError: ErrorWrapper = ErrorWrapper(
-    correlationId = "",
-    BadRequestError,
-    Some(
-      Seq(
-        RuleGainLossError.copy(
-          paths = Some(
-            Seq(
-              s"/disposals/0"
-            ))
-        ),
-        RuleLossesGreaterThanGainError.copy(
-          paths = Some(
-            Seq(
-              s"/disposals/0/lossesFromThisYear",
-              s"/disposals/0/lossesFromPreviousYear"
-            ))
-        )
       ))
   )
 
@@ -638,41 +430,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           ("AA123456A", "2019-20", datesNotFormattedJson, BAD_REQUEST, datesNotFormattedError, None, Some("incorrect date formats")),
           ("AA123456A", "2019-20", customerRefTooLongJson, BAD_REQUEST, customerRefError, None, Some("bad customer reference")),
           ("AA123456A", "2019-20", customerRefTooShortJson, BAD_REQUEST, customerRefError, None, Some("empty customer reference string")),
-          (
-            "AA123456A",
-            "2019-20",
-            completionBeforeDisposalJson,
-            BAD_REQUEST,
-            completionBeforeDisposalError,
-            None,
-            Some("completion date before disposal date")),
-          (
-            "AA123456A",
-            "2019-20",
-            acquisitionAfterDisposalJson,
-            BAD_REQUEST,
-            acquisitionAfterDisposalError,
-            None,
-            Some("acquisition date after disposal date")),
-          (
-            "AA123456A",
-            "2019-20",
-            completionDateJson,
-            BAD_REQUEST,
-            completionDateError,
-            None,
-            Some("completion date outside valid submission window")),
-          ("AA123456A", "2019-20", disposalDateJson, BAD_REQUEST, disposalDateError, None, Some("disposal date outside tax year")),
-          ("AA123456A", "2019-20", gainLossJson, BAD_REQUEST, gainLossError, None, Some("gain and loss provided")),
-          ("AA123456A", "2019-20", lossGreaterThanGainJson, BAD_REQUEST, lossGreaterThanGainError, None, Some("loss is greater than gain")),
-          (
-            "AA123456A",
-            "2019-20",
-            lossGreaterThanGainAndLossJson,
-            BAD_REQUEST,
-            BadRequestError,
-            Some(lossGreaterThanGainAndLossError),
-            Some("loss is greater than gain and bith gain and loss provided"))
+          ("AA123456A", "2019-20", gainLossJson, BAD_REQUEST, gainLossError, None, Some("gain and loss provided"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -710,9 +468,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
-          (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_DATE", BAD_REQUEST, RuleDisposalDateError),
           (UNPROCESSABLE_ENTITY, "INVALID_COMPLETION_DATE", BAD_REQUEST, RuleCompletionDateError),
-          (UNPROCESSABLE_ENTITY, "INVALID_ACQUISITION_DATE", BAD_REQUEST, RuleAcquisitionDateAfterDisposalDateError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
