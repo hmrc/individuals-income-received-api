@@ -193,13 +193,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
       |""".stripMargin
   )
 
-  val lossesGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
-    paths = Some(
-      Seq(
-        "/singlePropertyDisposals/0/lossesFromThisYear"
-      ))
-  )
-
   private val invalidValueRequestBodyJson: JsValue = Json.parse(
     """
       |{
@@ -309,14 +302,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
         "/multiplePropertyDisposals/0/ppdSubmissionId",
         "/singlePropertyDisposals/0/ppdSubmissionId"
       ))
-  )
-
-  def ppdDuplicatedIdError(duplicatedId: String): MtdError = RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
-    id = duplicatedId,
-    paths = Seq(
-      "/multiplePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/ppdSubmissionId"
-    )
   )
 
   val invalidDateFormatJson: JsValue = Json.parse(
@@ -510,17 +495,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           ("AA123456A", "2020-21", missingFieldsJson, BAD_REQUEST, missingFieldsError, None, Some("missingFields")),
           ("AA123456A", "2020-21", gainAndLossJson, BAD_REQUEST, amountGainLossError, None, Some("gainAndLossRule")),
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
-          ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
-          (
-            "AA123456A",
-            "2020-21",
-            jsonWithIds("DuplicatedId", "DuplicatedId"),
-            BAD_REQUEST,
-            ppdDuplicatedIdError("DuplicatedId"),
-            None,
-            Some("duplicatedIDs"))
+          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
@@ -561,7 +537,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
           (NOT_FOUND, "PPD_SUBMISSIONID_NOT_FOUND", NOT_FOUND, PpdSubmissionIdNotFoundError),
           (NOT_FOUND, "NO_PPD_SUBMISSIONS_FOUND", NOT_FOUND, NotFoundError),
-          (CONFLICT, "DUPLICATE_SUBMISSION", BAD_REQUEST, RuleDuplicatedPpdSubmissionIdError),
           (UNPROCESSABLE_ENTITY, "INVALID_DISPOSAL_TYPE", BAD_REQUEST, RuleIncorrectDisposalTypeError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)

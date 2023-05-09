@@ -234,23 +234,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
         loss = disposal.lossAfterRelief,
         error = RuleGainAfterReliefLossAfterReliefError,
         path = s"/disposals/$arrayIndex"
-      ),
-      if (temporalValidationEnabled)
-        DisposalDateValidation.validate(
-          date = disposal.disposalDate,
-          taxYear = taxYear,
-          path = s"/disposals/$arrayIndex",
-          validateToday = true,
-          errorMessage = IN_YEAR_NO_LATER_THAN_TODAY
-        )
-      else Nil,
-      if (temporalValidationEnabled)
-        AcquisitionDateValidation.validate(
-          disposalDate = disposal.disposalDate,
-          acquisitionDate = disposal.acquisitionDate,
-          path = s"/disposals/$arrayIndex"
-        )
-      else Nil
+      )
     ).flatten
   }
 
