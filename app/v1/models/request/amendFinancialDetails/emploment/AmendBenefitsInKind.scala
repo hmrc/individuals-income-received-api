@@ -17,7 +17,37 @@
 package v1.models.request.amendFinancialDetails.emploment
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Format, JsPath, OFormat}
+import play.api.libs.json.{Format, Json, OFormat}
+
+case class AmendBenefitsInKindSection1(accommodation: Option[BigDecimal],
+                                       assets: Option[BigDecimal],
+                                       assetTransfer: Option[BigDecimal],
+                                       beneficialLoan: Option[BigDecimal],
+                                       car: Option[BigDecimal],
+                                       carFuel: Option[BigDecimal],
+                                       educationalServices: Option[BigDecimal],
+                                       entertaining: Option[BigDecimal],
+                                       expenses: Option[BigDecimal],
+                                       medicalInsurance: Option[BigDecimal],
+                                       telephone: Option[BigDecimal],
+                                       service: Option[BigDecimal],
+                                       taxableExpenses: Option[BigDecimal],
+                                       van: Option[BigDecimal])
+
+case class AmendBenefitsInKindSection2(vanFuel: Option[BigDecimal],
+                                       mileage: Option[BigDecimal],
+                                       nonQualifyingRelocationExpenses: Option[BigDecimal],
+                                       nurseryPlaces: Option[BigDecimal],
+                                       otherItems: Option[BigDecimal],
+                                       paymentsOnEmployeesBehalf: Option[BigDecimal],
+                                       personalIncidentalExpenses: Option[BigDecimal],
+                                       qualifyingRelocationExpenses: Option[BigDecimal],
+                                       employerProvidedProfessionalSubscriptions: Option[BigDecimal],
+                                       employerProvidedServices: Option[BigDecimal],
+                                       incomeTaxPaidByDirector: Option[BigDecimal],
+                                       travelAndSubsistence: Option[BigDecimal],
+                                       vouchersAndCreditCards: Option[BigDecimal],
+                                       nonCash: Option[BigDecimal])
 
 case class AmendBenefitsInKind(accommodation: Option[BigDecimal],
                                assets: Option[BigDecimal],
@@ -68,135 +98,45 @@ case class AmendBenefitsInKind(accommodation: Option[BigDecimal],
 
 object AmendBenefitsInKind {
 
-  val firstSegment: OFormat[(
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal]
-  )] =
-    ((JsPath \ "accommodation").formatNullable[BigDecimal] and
-      (JsPath \ "assets").formatNullable[BigDecimal] and
-      (JsPath \ "assetTransfer").formatNullable[BigDecimal] and
-      (JsPath \ "beneficialLoan").formatNullable[BigDecimal] and
-      (JsPath \ "car").formatNullable[BigDecimal] and
-      (JsPath \ "carFuel").formatNullable[BigDecimal] and
-      (JsPath \ "educationalServices").formatNullable[BigDecimal] and
-      (JsPath \ "entertaining").formatNullable[BigDecimal] and
-      (JsPath \ "expenses").formatNullable[BigDecimal] and
-      (JsPath \ "medicalInsurance").formatNullable[BigDecimal] and
-      (JsPath \ "telephone").formatNullable[BigDecimal] and
-      (JsPath \ "service").formatNullable[BigDecimal] and
-      (JsPath \ "taxableExpenses").formatNullable[BigDecimal] and
-      (JsPath \ "van").formatNullable[BigDecimal]).tupled
+  val firstSegment: OFormat[AmendBenefitsInKindSection1] = Json.format[AmendBenefitsInKindSection1]
 
-  val secondSegment: OFormat[(
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal],
-      Option[BigDecimal]
-  )] =
-    ((JsPath \ "vanFuel").formatNullable[BigDecimal] and
-      (JsPath \ "mileage").formatNullable[BigDecimal] and
-      (JsPath \ "nonQualifyingRelocationExpenses").formatNullable[BigDecimal] and
-      (JsPath \ "nurseryPlaces").formatNullable[BigDecimal] and
-      (JsPath \ "otherItems").formatNullable[BigDecimal] and
-      (JsPath \ "paymentsOnEmployeesBehalf").formatNullable[BigDecimal] and
-      (JsPath \ "personalIncidentalExpenses").formatNullable[BigDecimal] and
-      (JsPath \ "qualifyingRelocationExpenses").formatNullable[BigDecimal] and
-      (JsPath \ "employerProvidedProfessionalSubscriptions").formatNullable[BigDecimal] and
-      (JsPath \ "employerProvidedServices").formatNullable[BigDecimal] and
-      (JsPath \ "incomeTaxPaidByDirector").formatNullable[BigDecimal] and
-      (JsPath \ "travelAndSubsistence").formatNullable[BigDecimal] and
-      (JsPath \ "vouchersAndCreditCards").formatNullable[BigDecimal] and
-      (JsPath \ "nonCash").formatNullable[BigDecimal]).tupled
+  val secondSegment: OFormat[AmendBenefitsInKindSection2] = Json.format[AmendBenefitsInKindSection2]
 
   implicit val format: Format[AmendBenefitsInKind] = (firstSegment and secondSegment)(
-    {
-      case (
-            (
-              accommodation,
-              assets,
-              assetTransfer,
-              beneficialLoan,
-              car,
-              carFuel,
-              educationalServices,
-              entertaining,
-              expenses,
-              medicalInsurance,
-              telephone,
-              service,
-              taxableExpenses,
-              van),
-            (
-              vanFuel,
-              mileage,
-              nonQualifyingRelocationExpenses,
-              nurseryPlaces,
-              otherItems,
-              paymentsOnEmployeesBehalf,
-              personalIncidentalExpenses,
-              qualifyingRelocationExpenses,
-              employerProvidedProfessionalSubscriptions,
-              employerProvidedServices,
-              incomeTaxPaidByDirector,
-              travelAndSubsistence,
-              vouchersAndCreditCards,
-              nonCash)) =>
-        AmendBenefitsInKind(
-          accommodation,
-          assets,
-          assetTransfer,
-          beneficialLoan,
-          car,
-          carFuel,
-          educationalServices,
-          entertaining,
-          expenses,
-          medicalInsurance,
-          telephone,
-          service,
-          taxableExpenses,
-          van,
-          vanFuel,
-          mileage,
-          nonQualifyingRelocationExpenses,
-          nurseryPlaces,
-          otherItems,
-          paymentsOnEmployeesBehalf,
-          personalIncidentalExpenses,
-          qualifyingRelocationExpenses,
-          employerProvidedProfessionalSubscriptions,
-          employerProvidedServices,
-          incomeTaxPaidByDirector,
-          travelAndSubsistence,
-          vouchersAndCreditCards,
-          nonCash
-        )
-    },
+    (segment1, segment2) =>
+      AmendBenefitsInKind(
+        accommodation = segment1.accommodation,
+        assets = segment1.assets,
+        assetTransfer = segment1.assetTransfer,
+        beneficialLoan = segment1.beneficialLoan,
+        car = segment1.car,
+        carFuel = segment1.carFuel,
+        educationalServices = segment1.educationalServices,
+        entertaining = segment1.entertaining,
+        expenses = segment1.expenses,
+        medicalInsurance = segment1.medicalInsurance,
+        telephone = segment1.telephone,
+        service = segment1.service,
+        taxableExpenses = segment1.taxableExpenses,
+        van = segment1.van,
+        vanFuel = segment2.vanFuel,
+        mileage = segment2.mileage,
+        nonQualifyingRelocationExpenses = segment2.nonQualifyingRelocationExpenses,
+        nurseryPlaces = segment2.nurseryPlaces,
+        otherItems = segment2.otherItems,
+        paymentsOnEmployeesBehalf = segment2.paymentsOnEmployeesBehalf,
+        personalIncidentalExpenses = segment2.personalIncidentalExpenses,
+        qualifyingRelocationExpenses = segment2.qualifyingRelocationExpenses,
+        employerProvidedProfessionalSubscriptions = segment2.employerProvidedProfessionalSubscriptions,
+        employerProvidedServices = segment2.employerProvidedServices,
+        incomeTaxPaidByDirector = segment2.incomeTaxPaidByDirector,
+        travelAndSubsistence = segment2.travelAndSubsistence,
+        vouchersAndCreditCards = segment2.vouchersAndCreditCards,
+        nonCash = segment2.nonCash
+      ),
     (amendBenefitsInKind: AmendBenefitsInKind) =>
       (
-        (
+        AmendBenefitsInKindSection1(
           amendBenefitsInKind.accommodation,
           amendBenefitsInKind.assets,
           amendBenefitsInKind.assetTransfer,
@@ -210,8 +150,9 @@ object AmendBenefitsInKind {
           amendBenefitsInKind.telephone,
           amendBenefitsInKind.service,
           amendBenefitsInKind.taxableExpenses,
-          amendBenefitsInKind.van),
-        (
+          amendBenefitsInKind.van
+        ),
+        AmendBenefitsInKindSection2(
           amendBenefitsInKind.vanFuel,
           amendBenefitsInKind.mileage,
           amendBenefitsInKind.nonQualifyingRelocationExpenses,
@@ -225,7 +166,8 @@ object AmendBenefitsInKind {
           amendBenefitsInKind.incomeTaxPaidByDirector,
           amendBenefitsInKind.travelAndSubsistence,
           amendBenefitsInKind.vouchersAndCreditCards,
-          amendBenefitsInKind.nonCash)
+          amendBenefitsInKind.nonCash
+        )
       )
   )
 

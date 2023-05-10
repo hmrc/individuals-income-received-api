@@ -41,8 +41,7 @@ class RetrieveUkSavingsAnnualSummaryResponseSpec extends UnitSpec with MockAppCo
       val context   = "individuals/income-received"
       val accountId = "someAccount"
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
-
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
       RetrieveUkSavingsAnnualSummaryResponse.LinksFactory.links(
         mockAppConfig,
         RetrieveUkSavingsAnnualSummaryResponseHateoasData(nino, taxYear, accountId)) shouldBe
