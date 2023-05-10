@@ -20,13 +20,12 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors._
 import config.AppConfig
-import utils.CurrentDateTime
 import v1.models.request.createAmendCgtPpdOverrides._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendCgtPpdOverridesRawData]
     with ValueFormatErrorMessages {
 
@@ -45,8 +44,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
 
   private def parameterRuleValidation: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 

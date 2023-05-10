@@ -614,13 +614,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       }
     }
 
-    "return a RuleTaxYearNotEnded error" when {
-      "the current tax year is provided" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2021-22", validRequestBody)) shouldBe
-          List(RuleTaxYearNotEndedError)
-      }
-    }
-
     "return a RuleTaxYearRangeInvalidError" when {
       "a tex year with an invalid range is provided" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2018-20", validRequestBody)) shouldBe
