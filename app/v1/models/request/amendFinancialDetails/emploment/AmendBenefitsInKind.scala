@@ -19,64 +19,77 @@ package v1.models.request.amendFinancialDetails.emploment
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Format, Json, OFormat}
 
-case class AmendBenefitsInKindSection1(accommodation: Option[BigDecimal],
-                                       assets: Option[BigDecimal],
-                                       assetTransfer: Option[BigDecimal],
-                                       beneficialLoan: Option[BigDecimal],
-                                       car: Option[BigDecimal],
-                                       carFuel: Option[BigDecimal],
-                                       educationalServices: Option[BigDecimal],
-                                       entertaining: Option[BigDecimal],
-                                       expenses: Option[BigDecimal],
-                                       medicalInsurance: Option[BigDecimal],
-                                       telephone: Option[BigDecimal],
-                                       service: Option[BigDecimal],
-                                       taxableExpenses: Option[BigDecimal],
-                                       van: Option[BigDecimal])
+/*
+Due to limitations with the Play JSON library, it is not possible to create a single formatter for a case class which contains
+more than 22 fields. To work around this, along with the main AmendBenefitsInKind case class, we create two smaller case classes,
+which each contain a subset of the fields, and have their own formatters. We can then create a formatter for AmendBenefitsInKind
+which converts to the intermediate classes (see AmendBenefitsInKind.format).
+ */
 
-case class AmendBenefitsInKindSection2(vanFuel: Option[BigDecimal],
-                                       mileage: Option[BigDecimal],
-                                       nonQualifyingRelocationExpenses: Option[BigDecimal],
-                                       nurseryPlaces: Option[BigDecimal],
-                                       otherItems: Option[BigDecimal],
-                                       paymentsOnEmployeesBehalf: Option[BigDecimal],
-                                       personalIncidentalExpenses: Option[BigDecimal],
-                                       qualifyingRelocationExpenses: Option[BigDecimal],
-                                       employerProvidedProfessionalSubscriptions: Option[BigDecimal],
-                                       employerProvidedServices: Option[BigDecimal],
-                                       incomeTaxPaidByDirector: Option[BigDecimal],
-                                       travelAndSubsistence: Option[BigDecimal],
-                                       vouchersAndCreditCards: Option[BigDecimal],
-                                       nonCash: Option[BigDecimal])
+private case class AmendBenefitsInKindSection1(
+    accommodation: Option[BigDecimal],
+    assets: Option[BigDecimal],
+    assetTransfer: Option[BigDecimal],
+    beneficialLoan: Option[BigDecimal],
+    car: Option[BigDecimal],
+    carFuel: Option[BigDecimal],
+    educationalServices: Option[BigDecimal],
+    entertaining: Option[BigDecimal],
+    expenses: Option[BigDecimal],
+    medicalInsurance: Option[BigDecimal],
+    telephone: Option[BigDecimal],
+    service: Option[BigDecimal],
+    taxableExpenses: Option[BigDecimal],
+    van: Option[BigDecimal]
+)
 
-case class AmendBenefitsInKind(accommodation: Option[BigDecimal],
-                               assets: Option[BigDecimal],
-                               assetTransfer: Option[BigDecimal],
-                               beneficialLoan: Option[BigDecimal],
-                               car: Option[BigDecimal],
-                               carFuel: Option[BigDecimal],
-                               educationalServices: Option[BigDecimal],
-                               entertaining: Option[BigDecimal],
-                               expenses: Option[BigDecimal],
-                               medicalInsurance: Option[BigDecimal],
-                               telephone: Option[BigDecimal],
-                               service: Option[BigDecimal],
-                               taxableExpenses: Option[BigDecimal],
-                               van: Option[BigDecimal],
-                               vanFuel: Option[BigDecimal],
-                               mileage: Option[BigDecimal],
-                               nonQualifyingRelocationExpenses: Option[BigDecimal],
-                               nurseryPlaces: Option[BigDecimal],
-                               otherItems: Option[BigDecimal],
-                               paymentsOnEmployeesBehalf: Option[BigDecimal],
-                               personalIncidentalExpenses: Option[BigDecimal],
-                               qualifyingRelocationExpenses: Option[BigDecimal],
-                               employerProvidedProfessionalSubscriptions: Option[BigDecimal],
-                               employerProvidedServices: Option[BigDecimal],
-                               incomeTaxPaidByDirector: Option[BigDecimal],
-                               travelAndSubsistence: Option[BigDecimal],
-                               vouchersAndCreditCards: Option[BigDecimal],
-                               nonCash: Option[BigDecimal]) {
+private case class AmendBenefitsInKindSection2(
+    vanFuel: Option[BigDecimal],
+    mileage: Option[BigDecimal],
+    nonQualifyingRelocationExpenses: Option[BigDecimal],
+    nurseryPlaces: Option[BigDecimal],
+    otherItems: Option[BigDecimal],
+    paymentsOnEmployeesBehalf: Option[BigDecimal],
+    personalIncidentalExpenses: Option[BigDecimal],
+    qualifyingRelocationExpenses: Option[BigDecimal],
+    employerProvidedProfessionalSubscriptions: Option[BigDecimal],
+    employerProvidedServices: Option[BigDecimal],
+    incomeTaxPaidByDirector: Option[BigDecimal],
+    travelAndSubsistence: Option[BigDecimal],
+    vouchersAndCreditCards: Option[BigDecimal],
+    nonCash: Option[BigDecimal]
+)
+
+case class AmendBenefitsInKind(
+    accommodation: Option[BigDecimal],
+    assets: Option[BigDecimal],
+    assetTransfer: Option[BigDecimal],
+    beneficialLoan: Option[BigDecimal],
+    car: Option[BigDecimal],
+    carFuel: Option[BigDecimal],
+    educationalServices: Option[BigDecimal],
+    entertaining: Option[BigDecimal],
+    expenses: Option[BigDecimal],
+    medicalInsurance: Option[BigDecimal],
+    telephone: Option[BigDecimal],
+    service: Option[BigDecimal],
+    taxableExpenses: Option[BigDecimal],
+    van: Option[BigDecimal],
+    vanFuel: Option[BigDecimal],
+    mileage: Option[BigDecimal],
+    nonQualifyingRelocationExpenses: Option[BigDecimal],
+    nurseryPlaces: Option[BigDecimal],
+    otherItems: Option[BigDecimal],
+    paymentsOnEmployeesBehalf: Option[BigDecimal],
+    personalIncidentalExpenses: Option[BigDecimal],
+    qualifyingRelocationExpenses: Option[BigDecimal],
+    employerProvidedProfessionalSubscriptions: Option[BigDecimal],
+    employerProvidedServices: Option[BigDecimal],
+    incomeTaxPaidByDirector: Option[BigDecimal],
+    travelAndSubsistence: Option[BigDecimal],
+    vouchersAndCreditCards: Option[BigDecimal],
+    nonCash: Option[BigDecimal]
+) {
 
   def isEmpty: Boolean =
     accommodation.isEmpty && assets.isEmpty &&
@@ -98,9 +111,9 @@ case class AmendBenefitsInKind(accommodation: Option[BigDecimal],
 
 object AmendBenefitsInKind {
 
-  val firstSegment: OFormat[AmendBenefitsInKindSection1] = Json.format[AmendBenefitsInKindSection1]
+  private val firstSegment: OFormat[AmendBenefitsInKindSection1] = Json.format[AmendBenefitsInKindSection1]
 
-  val secondSegment: OFormat[AmendBenefitsInKindSection2] = Json.format[AmendBenefitsInKindSection2]
+  private val secondSegment: OFormat[AmendBenefitsInKindSection2] = Json.format[AmendBenefitsInKindSection2]
 
   implicit val format: Format[AmendBenefitsInKind] = (firstSegment and secondSegment)(
     (segment1, segment2) =>
