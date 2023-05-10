@@ -88,8 +88,6 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
-          RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE:
-            $ref: './common/errors.yaml#/components/examples/ruleCompletionDateBeforeDisposalDate'
           RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE:
             $ref: './common/errors.yaml#/components/examples/ruleAcquisitionDateAfterDisposalDate'
           RULE_COMPLETION_DATE:
