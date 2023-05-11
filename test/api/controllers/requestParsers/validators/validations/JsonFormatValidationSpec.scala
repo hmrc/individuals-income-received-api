@@ -16,6 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
+//import api.models.errors.RuleIncorrectOrEmptyBodyError
 import api.models.errors.RuleIncorrectOrEmptyBodyError
 import api.models.utils.JsonErrorValidators
 import play.api.libs.json.{Json, OFormat}
@@ -55,25 +56,26 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         // both fields are missing
         val json = Json.parse("""{ "arrayField" : [{}]}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
-        validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/arrayField/0/fieldOne", "/arrayField/0/fieldTwo"))))
+//        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
+        val validationResult = json.validate[TestDataObject].errors.map(_.path.toString())
+        validationResult shouldBe Seq("/fieldOne", "/fieldTwo")
       }
 
-//      "required field is missing in multiple array objects" in {
-//
-//        // both fields are missing
-//        val json = Json.parse("""{ "arrayField" : [{}, {}]}""")
-//
-//        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
-//        validationResult shouldBe List(
-//          RuleIncorrectOrEmptyBodyError.copy(paths = Some(
-//            Seq(
-//              "/arrayField/0/fieldOne",
-//              "/arrayField/0/fieldTwo",
-//              "/arrayField/1/fieldOne",
-//              "/arrayField/1/fieldTwo"
-//            ))))
-//      }
+      "required field is missing in multiple array objects" in {
+
+        // both fields are missing
+        val json = Json.parse("""{ "arrayField" : [{}, {}]}""")
+
+        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
+        validationResult shouldBe List(
+          RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+            Seq(
+              "/arrayField/0/fieldOne",
+              "/arrayField/0/fieldTwo",
+              "/arrayField/1/fieldOne",
+              "/arrayField/1/fieldTwo"
+            ))))
+      }
 //
 //      "empty body is submitted" in {
 //
