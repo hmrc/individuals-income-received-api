@@ -32,7 +32,7 @@ class DeleteCgtNonPpdConnectorSpec extends ConnectorSpec {
       "return a 200 for success scenario" in new Api1661Test with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
 
-        val outcome = Right(ResponseWrapper(correlationId, Unit))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(s"$baseUrl/income-tax/income/disposals/residential-property/$nino/2018-19")
           .returns(Future.successful(outcome))
@@ -46,7 +46,7 @@ class DeleteCgtNonPpdConnectorSpec extends ConnectorSpec {
       "return a 200 for success scenario" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
 
-        val outcome = Right(ResponseWrapper(correlationId, Unit))
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(s"$baseUrl/income-tax/income/disposals/residential-property/23-24/$nino")
           .returns(Future.successful(outcome))

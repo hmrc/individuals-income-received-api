@@ -114,7 +114,7 @@ class CreateAmendNonPayeEmploymentControllerSpec
 
         MockCreateAmendNonPayeEmploymentService
           .createAndAmend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
           .wrap((), CreateAmendNonPayeEmploymentHateoasData(nino, taxYear))

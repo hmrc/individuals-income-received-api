@@ -123,7 +123,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("incomeSourceId" -> savingsAccountId), OK, desResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -145,7 +145,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -170,7 +170,7 @@ class ListUkSavingsAccountsControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.GET, desUri, Map("incomeSourceId" -> savingsAccountId), desStatus, errorBody(desCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
