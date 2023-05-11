@@ -41,8 +41,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryResponseSpec extends UnitSpec with M
       val taxYear = "mytaxyear"
       val context = "individuals/income-received"
 
-      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes
-
+      MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
       RetrieveUkDividendsAnnualIncomeSummaryResponse.LinksFactory.links(
         mockAppConfig,
         RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear)) shouldBe
