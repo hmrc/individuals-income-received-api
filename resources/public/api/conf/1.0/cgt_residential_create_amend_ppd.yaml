@@ -1,8 +1,8 @@
 summary: Create and Amend 'Report and Pay Capital Gains Tax on Residential Property' Overrides (PPD)
 description: |
-  This endpoint allows the developer to override residential property disposal submissions previously submitted via 
-  HMRC for payment for property disposal (PPD) 'Report and pay Capital Gains Tax on UK property' for a given NINO and
-  tax year. This endpoint can only be used after the tax year has ended.
+  This endpoint enables you to override residential property disposals submissions previously submitted via the HMRC 
+  'Report and pay Capital Gains Tax on UK property' service (payment for property disposal or PPD) for a given National 
+  Insurance number and tax year. This endpoint can only be used after the tax year has ended.
   
   ### Test data
   <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
@@ -30,6 +30,14 @@ description: |
               <td><p>INCORRECT_DISPOSAL_TYPE</p></td>
               <td><p>Simulate the scenario where a ppdSubmissionId in the request is being used for the incorrect disposal type.</p></td>
           </tr>
+          <tr>
+              <td><p>DUPLICATED_PPD_SUBMISSION_ID</p></td>
+              <td><p>Simulates the scenario where a ppdSubmissionId is duplicated.</p></td>
+          </tr>
+          <tr>
+              <td><p>TAX_YEAR_NOT_ENDED</p></td>
+              <td><p>Simulates the scenario where the tax year provided has not ended.</p></td>
+          </tr>  
       </tbody>
   </table>
 
