@@ -98,8 +98,6 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
           RULE_GAIN_LOSS:
             $ref: './common/errors.yaml#/components/examples/ruleGainLoss'
-          RULE_LOSSES_GREATER_THAN_GAIN:
-            $ref: './common/errors.yaml#/components/examples/ruleLossesGreaterThanGain'
 
   "403":
     description: Forbidden
