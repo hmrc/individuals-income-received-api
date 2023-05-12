@@ -135,7 +135,7 @@ class IgnoreEmploymentControllerSpec
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, Some(hateoasResponse))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
       }
     }
 
@@ -155,7 +155,7 @@ class IgnoreEmploymentControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
           }
         }
 
@@ -191,7 +191,7 @@ class IgnoreEmploymentControllerSpec
             header("X-CorrelationId", result) shouldBe Some(correlationId)
 
             val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once()
           }
         }
 

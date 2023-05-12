@@ -57,7 +57,7 @@ class AddCustomEmploymentResponseSpec extends UnitSpec {
       val nino           = "someNino"
       val taxYear        = "2017-18"
       val employmentId   = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     }
 
     "wrapping a AddCustomEmploymentResponse object" should {

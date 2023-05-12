@@ -27,7 +27,7 @@ class CreateAndAmendUkDividendsIncomeAnnualSummaryResponseSpec extends UnitSpec 
     "return the correct links" in {
       val nino    = "someNino"
       val taxYear = "2017-18"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
       CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData.LinksFactory.links(
         mockAppConfig,
         CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear)) shouldBe
