@@ -114,7 +114,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
           requestBodyData.disposals
             .map(_.toList)
             .map(_.zipWithIndex.flatMap { case (disposal, index) =>
-              validateDisposalRules(data.temporalValidationEnabled, disposal, data.taxYear, index)
+              validateDisposalRules(disposal, index)
             })
             .getOrElse(NoValidationErrors),
           requestBodyData.nonStandardGains.map(oneOfThreeGainsSuppliedValidation).getOrElse(NoValidationErrors)
@@ -226,7 +226,7 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     ).flatten
   }
 
-  private def validateDisposalRules(temporalValidationEnabled: Boolean, disposal: Disposal, taxYear: String, arrayIndex: Int): List[MtdError] = {
+  private def validateDisposalRules(disposal: Disposal, arrayIndex: Int): List[MtdError] = {
     List(
       GainLossValidation.validate(gain = disposal.gain, loss = disposal.loss, error = RuleGainLossError, path = s"/disposals/$arrayIndex"),
       GainLossValidation.validate(
