@@ -20,13 +20,12 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors._
 import config.AppConfig
-import utils.CurrentDateTime
 import v1.models.request.createAmendCgtPpdOverrides._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendCgtPpdOverridesRawData]
     with ValueFormatErrorMessages {
 
@@ -45,8 +44,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
 
   private def parameterRuleValidation: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 
@@ -85,11 +83,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
           },
           singleDisposalsIndexed.flatMap { case (data, index) =>
             validateBothSuppliedSingleDisposals(data, index)
-          },
-          singleDisposalsIndexed.flatMap { case (data, index) =>
-            validateGainGreaterThanLoss(data, index)
-          },
-          validateDuplicatedIds(multipleDisposalsIndexed, singleDisposalsIndexed)
+          }
         )
       ))
   }
@@ -114,21 +108,6 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
     } else {
       NoValidationErrors
     }
-  }
-
-  private def validateGainGreaterThanLoss(singlePropertyDisposals: SinglePropertyDisposals, arrayIndex: Int): List[MtdError] = {
-    List(
-      ValueGreaterThanValueValidation.validateOptional(
-        valueWhichShouldBeLowerOrEqualO = singlePropertyDisposals.lossesFromThisYear,
-        valueWhichShouldBeHigherOrEqualO = singlePropertyDisposals.amountOfNetGain,
-        path = s"/singlePropertyDisposals/$arrayIndex/lossesFromThisYear"
-      ),
-      ValueGreaterThanValueValidation.validateOptional(
-        valueWhichShouldBeLowerOrEqualO = singlePropertyDisposals.lossesFromPreviousYear,
-        valueWhichShouldBeHigherOrEqualO = singlePropertyDisposals.amountOfNetGain,
-        path = s"/singlePropertyDisposals/$arrayIndex/lossesFromPreviousYear"
-      )
-    ).flatten
   }
 
   private def bodyValueValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = { data =>
@@ -221,29 +200,6 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit currentDateTime: C
         path = s"/singlePropertyDisposals/$arrayIndex/amountOfNetLoss"
       )
     ).flatten
-  }
-
-  private def validateDuplicatedIds(multipleDisposalsIndexed: Seq[(MultiplePropertyDisposals, Int)],
-                                    singleDisposalsIndexed: Seq[(SinglePropertyDisposals, Int)]): List[MtdError] = {
-
-    val multipleIdsWithPaths = multipleDisposalsIndexed.map { case (disposal, idx) =>
-      (disposal.ppdSubmissionId, s"/multiplePropertyDisposals/$idx/ppdSubmissionId")
-    }
-
-    val singleIdsWithPaths = singleDisposalsIndexed.map { case (disposal, idx) =>
-      (disposal.ppdSubmissionId, s"/singlePropertyDisposals/$idx/ppdSubmissionId")
-    }
-
-    val duplicates: Map[String, Seq[String]] =
-      (multipleIdsWithPaths ++ singleIdsWithPaths)
-        .groupBy(_._1)
-        .collect {
-          case (id, idsAndPaths) if idsAndPaths.size >= 2 => (id, idsAndPaths.map(_._2))
-        }
-
-    duplicates.map { case (id, paths) =>
-      RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(id, paths = paths)
-    }.toList
   }
 
 }
