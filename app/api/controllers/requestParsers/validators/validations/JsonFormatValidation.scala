@@ -36,7 +36,7 @@ object JsonFormatValidation {
   private val logger: Logger = Logger(this.getClass)
 
   private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): List[MtdError] = {
-    val failures: Seq[JsonFormatValidationFailure] = errors.map {
+    val failures = errors.map {
       case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing"))))                              => MissingMandatoryField(path)
       case (path: JsPath, Seq(JsonValidationError(Seq(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
       case (path: JsPath, _)                                                                                => OtherFailure(path)
