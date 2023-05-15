@@ -489,6 +489,48 @@ class CreateAmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMes
       "multiple fields fail value validation" in new Test {
         validator.validate(CreateAmendPensionsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            CountryCodeFormatError.copy(
+              paths = Some(
+                List(
+                  "/foreignPensions/1/countryCode",
+                  "/overseasPensionContributions/1/dblTaxationCountryCode"
+                ))
+            ),
+            CustomerRefFormatError.copy(
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/customerReference",
+                  "/overseasPensionContributions/1/customerReference"
+                ))
+            ),
+            DoubleTaxationArticleFormatError.copy(
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/dblTaxationArticle",
+                  "/overseasPensionContributions/1/dblTaxationArticle"
+                ))
+            ),
+            DoubleTaxationTreatyFormatError.copy(
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/dblTaxationTreaty",
+                  "/overseasPensionContributions/1/dblTaxationTreaty"
+                ))
+            ),
+            QOPSRefFormatError.copy(
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
+                  "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+                ))
+            ),
+            SF74RefFormatError.copy(
+              paths = Some(
+                List(
+                  "/overseasPensionContributions/0/sf74reference",
+                  "/overseasPensionContributions/1/sf74reference"
+                ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -506,53 +548,11 @@ class CreateAmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMes
                 "/overseasPensionContributions/1/dblTaxationRelief"
               ))
             ),
-            CustomerRefFormatError.copy(
-              paths = Some(
-                List(
-                  "/overseasPensionContributions/0/customerReference",
-                  "/overseasPensionContributions/1/customerReference"
-                ))
-            ),
-            QOPSRefFormatError.copy(
-              paths = Some(
-                List(
-                  "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
-                  "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
-                ))
-            ),
-            SF74RefFormatError.copy(
-              paths = Some(
-                List(
-                  "/overseasPensionContributions/0/sf74reference",
-                  "/overseasPensionContributions/1/sf74reference"
-                ))
-            ),
-            DoubleTaxationTreatyFormatError.copy(
-              paths = Some(
-                List(
-                  "/overseasPensionContributions/0/dblTaxationTreaty",
-                  "/overseasPensionContributions/1/dblTaxationTreaty"
-                ))
-            ),
             CountryCodeRuleError.copy(
               paths = Some(
                 List(
                   "/foreignPensions/0/countryCode",
                   "/overseasPensionContributions/0/dblTaxationCountryCode"
-                ))
-            ),
-            DoubleTaxationArticleFormatError.copy(
-              paths = Some(
-                List(
-                  "/overseasPensionContributions/0/dblTaxationArticle",
-                  "/overseasPensionContributions/1/dblTaxationArticle"
-                ))
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(
-                List(
-                  "/foreignPensions/1/countryCode",
-                  "/overseasPensionContributions/1/dblTaxationCountryCode"
                 ))
             )
           )

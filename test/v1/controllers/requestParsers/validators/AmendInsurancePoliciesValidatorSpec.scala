@@ -554,6 +554,13 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/foreign/0/customerReference"
               ))
             ),
+            EventFormatError.copy(
+              paths = Some(
+                List(
+                  "/lifeInsurance/1/event",
+                  "/lifeAnnuity/1/event"
+                ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -579,13 +586,6 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
                 "/voidedIsa/0/yearsHeldSinceLastGain",
                 "/foreign/1/yearsHeld"
               ))
-            ),
-            EventFormatError.copy(
-              paths = Some(
-                List(
-                  "/lifeInsurance/1/event",
-                  "/lifeAnnuity/1/event"
-                ))
             )
           )
       }

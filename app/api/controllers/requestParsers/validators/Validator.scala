@@ -54,6 +54,7 @@ trait Validator[A <: RawData] {
         })
       }
       .toList
+      .sortBy(_.code)
   }
 
 }

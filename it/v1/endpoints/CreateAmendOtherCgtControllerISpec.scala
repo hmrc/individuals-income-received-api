@@ -17,7 +17,7 @@
 package v1.endpoints
 
 import api.controllers.requestParsers.validators.validations.DisposalDateErrorMessages
-import api.models.errors._
+import api.models.errors.{DateFormatError, _}
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.http.HeaderNames.ACCEPT
@@ -100,12 +100,12 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(
       Seq(
-        "/disposals/0/disposalDate",
         "/disposals/0/acquisitionDate",
+        "/disposals/0/allowableCosts",
         "/disposals/0/assetDescription",
-        "/disposals/0/disposalProceeds",
         "/disposals/0/assetType",
-        "/disposals/0/allowableCosts"
+        "/disposals/0/disposalDate",
+        "/disposals/0/disposalProceeds"
       ))
   )
 
@@ -139,13 +139,13 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
     BadRequestError,
     Some(
       Seq(
-        RuleGainLossError.copy(
+        RuleGainAfterReliefLossAfterReliefError.copy(
           paths = Some(
             Seq(
               "/disposals/0"
             ))
         ),
-        RuleGainAfterReliefLossAfterReliefError.copy(
+        RuleGainLossError.copy(
           paths = Some(
             Seq(
               "/disposals/0"
@@ -296,13 +296,6 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
     BadRequestError,
     Some(
       Seq(
-        DateFormatError.copy(
-          paths = Some(
-            Seq(
-              "/disposals/0/acquisitionDate",
-              "/disposals/0/disposalDate"
-            ))
-        ),
         AssetDescriptionFormatError.copy(
           paths = Some(
             Seq(
@@ -320,6 +313,13 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
             Seq(
               "/disposals/0/claimOrElectionCodes/0",
               "/disposals/0/claimOrElectionCodes/1"
+            ))
+        ),
+        DateFormatError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0/acquisitionDate",
+              "/disposals/0/disposalDate"
             ))
         )
       ))
@@ -353,18 +353,18 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
     BadRequestError,
     Some(
       Seq(
+        RuleAcquisitionDateError.copy(
+          paths = Some(
+            Seq(
+              "/disposals/0"
+            ))
+        ),
         RuleDisposalDateError.copy(
           paths = Some(
             Seq(
               "/disposals/0"
             )),
           message = IN_YEAR_NO_LATER_THAN_TODAY
-        ),
-        RuleAcquisitionDateError.copy(
-          paths = Some(
-            Seq(
-              "/disposals/0"
-            ))
         )
       ))
   )

@@ -265,12 +265,12 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
       val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(
           List(
-            "/employerRef",
-            "/employerName",
-            "/payrollId",
             "/cessationDate",
-            "/startDate",
-            "/occupationalPension"
+            "/employerName",
+            "/employerRef",
+            "/occupationalPension",
+            "/payrollId",
+            "/startDate"
           ))
       )
 
@@ -278,8 +278,8 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
         paths = Some(
           List(
             "/employerName",
-            "/startDate",
-            "/occupationalPension"
+            "/occupationalPension",
+            "/startDate"
           ))
       )
 

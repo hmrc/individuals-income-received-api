@@ -113,15 +113,15 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(
       Seq(
-        "/singlePropertyDisposals/0/otherReliefAmount",
-        "/singlePropertyDisposals/0/disposalProceeds",
-        "/singlePropertyDisposals/0/prfAmount",
         "/multiplePropertyDisposals/0/ppdSubmissionId",
-        "/singlePropertyDisposals/0/improvementCosts",
-        "/singlePropertyDisposals/0/completionDate",
-        "/singlePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/acquisitionAmount",
         "/singlePropertyDisposals/0/additionalCosts",
-        "/singlePropertyDisposals/0/acquisitionAmount"
+        "/singlePropertyDisposals/0/completionDate",
+        "/singlePropertyDisposals/0/disposalProceeds",
+        "/singlePropertyDisposals/0/improvementCosts",
+        "/singlePropertyDisposals/0/otherReliefAmount",
+        "/singlePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/prfAmount"
       ))
   )
 

@@ -22,8 +22,6 @@ import org.scalamock.scalatest.MockFactory
 import play.api.http.Status.BAD_REQUEST
 import support.UnitSpec
 
-import scala.collection.immutable.Seq
-
 class ValidatorSpec extends UnitSpec with MockFactory {
 
   private trait Test {
@@ -129,8 +127,8 @@ class ValidatorSpec extends UnitSpec with MockFactory {
       )
 
       val flatErrors: List[MtdError] = List(
-        NotFoundError,
-        NinoFormatError.copy(paths = Some(Seq("one", "two")))
+        NinoFormatError.copy(paths = Some(Seq("one", "two"))),
+        NotFoundError
       )
 
       validator.flattenErrors(errors) shouldBe flatErrors
@@ -138,11 +136,34 @@ class ValidatorSpec extends UnitSpec with MockFactory {
 
     "return the input for a list of unique errors" in new Test {
       val errors: List[List[MtdError]] = List(
-        List(NotFoundError),
-        List(NinoFormatError.copy(paths = Some(Seq("one"))))
+        List(NinoFormatError.copy(paths = Some(Seq("one")))),
+        List(NotFoundError)
       )
 
       validator.flattenErrors(errors) shouldBe errors.flatten
+    }
+
+    "order errors alphabetically by code" in new Test {
+      val errors: List[List[MtdError]] = List(
+        List(
+          MtdError("CODE_A", "a", BAD_REQUEST),
+          MtdError("CODE_C", "c", BAD_REQUEST, Some(Seq("a")))
+        ),
+        List(
+          MtdError("CODE_D", "d", BAD_REQUEST),
+          MtdError("CODE_C", "c", BAD_REQUEST, Some(Seq("b"))),
+          MtdError("CODE_B", "b", BAD_REQUEST)
+        )
+      )
+
+      val flatErrors: List[MtdError] = List(
+        MtdError("CODE_A", "a", BAD_REQUEST),
+        MtdError("CODE_B", "b", BAD_REQUEST),
+        MtdError("CODE_C", "c", BAD_REQUEST, Some(Seq("a", "b"))),
+        MtdError("CODE_D", "d", BAD_REQUEST)
+      )
+
+      validator.flattenErrors(errors) shouldBe flatErrors
     }
 
     "handle empty lists correctly" in new Test {

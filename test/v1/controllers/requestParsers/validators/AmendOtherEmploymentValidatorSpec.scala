@@ -739,20 +739,20 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
 
       "the submitted request body is not in the correct format" in new Test {
         val paths = List(
+          "/shareOption/0/amountOfConsiderationReceived",
+          "/shareOption/0/amountPaidForOption",
+          "/shareOption/0/classOfSharesAcquired",
+          "/shareOption/0/dateOfEvent",
           "/shareOption/0/dateOfOptionGrant",
-          "/shareOption/0/taxableAmount",
           "/shareOption/0/employerName",
+          "/shareOption/0/employersNicPaid",
+          "/shareOption/0/exercisePrice",
+          "/shareOption/0/marketValueOfSharesOnExcise",
           "/shareOption/0/noOfSharesAcquired",
           "/shareOption/0/optionNotExercisedButConsiderationReceived",
+          "/shareOption/0/profitOnOptionExercised",
           "/shareOption/0/schemePlanType",
-          "/shareOption/0/classOfSharesAcquired",
-          "/shareOption/0/exercisePrice",
-          "/shareOption/0/amountPaidForOption",
-          "/shareOption/0/employersNicPaid",
-          "/shareOption/0/marketValueOfSharesOnExcise",
-          "/shareOption/0/amountOfConsiderationReceived",
-          "/shareOption/0/dateOfEvent",
-          "/shareOption/0/profitOnOptionExercised"
+          "/shareOption/0/taxableAmount"
         )
 
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, nonValidRawRequestBody)) shouldBe
@@ -860,6 +860,49 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            ClassOfSharesAcquiredFormatError.copy(
+              paths = Some(
+                List(
+                  "/shareOption/0/classOfSharesAcquired",
+                  "/shareOption/1/classOfSharesAcquired"
+                ))
+            ),
+            ClassOfSharesAwardedFormatError.copy(
+              paths = Some(
+                List(
+                  "/sharesAwardedOrReceived/0/classOfShareAwarded",
+                  "/sharesAwardedOrReceived/1/classOfShareAwarded"
+                ))
+            ),
+            CustomerRefFormatError.copy(
+              paths = Some(
+                List(
+                  "/disability/customerReference",
+                  "/foreignService/customerReference"
+                ))
+            ),
+            DateFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/dateOfOptionGrant",
+                "/shareOption/0/dateOfEvent",
+                "/shareOption/1/dateOfOptionGrant",
+                "/shareOption/1/dateOfEvent",
+                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/0/dateSharesAwarded",
+                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
+                "/sharesAwardedOrReceived/1/dateSharesAwarded"
+              ))
+            ),
+            EmployerNameFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/employerName",
+                "/shareOption/1/employerName",
+                "/sharesAwardedOrReceived/0/employerName",
+                "/sharesAwardedOrReceived/1/employerName",
+                "/lumpSums/0/employerName",
+                "/lumpSums/1/employerName"
+              ))
+            ),
             EmployerRefFormatError.copy(
               paths = Some(List(
                 "/shareOption/0/employerRef",
@@ -868,6 +911,23 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
                 "/sharesAwardedOrReceived/1/employerRef",
                 "/lumpSums/0/employerRef",
                 "/lumpSums/1/employerRef"
+              ))
+            ),
+            SchemePlanTypeFormatError.copy(
+              paths = Some(List(
+                "/shareOption/0/schemePlanType",
+                "/shareOption/1/schemePlanType",
+                "/sharesAwardedOrReceived/0/schemePlanType",
+                "/sharesAwardedOrReceived/1/schemePlanType"
+              ))
+            ),
+            ValueFormatError.copy(
+              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
+              paths = Some(List(
+                "/shareOption/0/noOfSharesAcquired",
+                "/shareOption/1/noOfSharesAcquired",
+                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
               ))
             ),
             ValueFormatError.copy(
@@ -916,66 +976,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
                 "/lumpSums/1/redundancyCompensationPaymentsOverExemptionItem/taxPaid",
                 "/lumpSums/1/redundancyCompensationPaymentsUnderExemptionItem/amount"
               ))
-            ),
-            CustomerRefFormatError.copy(
-              paths = Some(
-                List(
-                  "/disability/customerReference",
-                  "/foreignService/customerReference"
-                ))
-            ),
-            ClassOfSharesAcquiredFormatError.copy(
-              paths = Some(
-                List(
-                  "/shareOption/0/classOfSharesAcquired",
-                  "/shareOption/1/classOfSharesAcquired"
-                ))
-            ),
-            ValueFormatError.copy(
-              message = ZERO_MINIMUM_BIG_INTEGER_INCLUSIVE,
-              paths = Some(List(
-                "/shareOption/0/noOfSharesAcquired",
-                "/shareOption/1/noOfSharesAcquired",
-                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-              ))
-            ),
-            SchemePlanTypeFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/schemePlanType",
-                "/shareOption/1/schemePlanType",
-                "/sharesAwardedOrReceived/0/schemePlanType",
-                "/sharesAwardedOrReceived/1/schemePlanType"
-              ))
-            ),
-            DateFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/dateOfOptionGrant",
-                "/shareOption/0/dateOfEvent",
-                "/shareOption/1/dateOfOptionGrant",
-                "/shareOption/1/dateOfEvent",
-                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
-                "/sharesAwardedOrReceived/0/dateSharesAwarded",
-                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-                "/sharesAwardedOrReceived/1/dateSharesAwarded"
-              ))
-            ),
-            EmployerNameFormatError.copy(
-              paths = Some(List(
-                "/shareOption/0/employerName",
-                "/shareOption/1/employerName",
-                "/sharesAwardedOrReceived/0/employerName",
-                "/sharesAwardedOrReceived/1/employerName",
-                "/lumpSums/0/employerName",
-                "/lumpSums/1/employerName"
-              ))
-            ),
-            ClassOfSharesAwardedFormatError.copy(
-              paths = Some(
-                List(
-                  "/sharesAwardedOrReceived/0/classOfShareAwarded",
-                  "/sharesAwardedOrReceived/1/classOfShareAwarded"
-                ))
             )
           )
       }

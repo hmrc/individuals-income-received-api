@@ -26,12 +26,9 @@ object JsonFormatValidation {
     if (data == JsObject.empty) List(RuleIncorrectOrEmptyBodyError)
     else
       data.validate[A] match {
-        case JsSuccess(body, _) =>
-          if (Json.toJson(body) == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
+        case JsSuccess(body, _) => if (Json.toJson(body) == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
         case JsError(errors) =>
-          println(errors)
-          val immutableErrors =
-            errors.map({ case (path, errors) => (path, errors.toList) }).toList // convert from nested mutable collection.Seq to immutable List
+          val immutableErrors = errors.map({ case (path, errors) => (path, errors.toList) }).toList
           println(immutableErrors)
           handleErrors(immutableErrors)
       }
@@ -40,7 +37,7 @@ object JsonFormatValidation {
   private val logger: Logger = Logger(this.getClass)
 
   private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): List[MtdError] = {
-    val failures = errors.map {
+    val failures: Seq[JsonFormatValidationFailure] = errors.map {
       case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing"))))                              => MissingMandatoryField(path)
       case (path: JsPath, Seq(JsonValidationError(Seq(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
       case (path: JsPath, _)                                                                                => OtherFailure(path)
@@ -55,7 +52,7 @@ object JsonFormatValidation {
       .drop(5)
 
     logger.warn(s"[JsonFormatValidation][validate] - Request body failed validation with errors - $logString")
-    List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath))))
+    List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath).sorted)))
   }
 
   private class JsonFormatValidationFailure(path: JsPath, failure: String) {

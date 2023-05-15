@@ -251,6 +251,12 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          CountryCodeFormatError.copy(
+            paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))
+          ),
+          TaxYearFormatError.copy(
+            paths = Some(List("/businessReceipts/0/taxYear"))
+          ),
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
             paths = Some(
@@ -278,17 +284,11 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
                 "/omittedForeignIncome/amount"
               ))
           ),
-          TaxYearFormatError.copy(
-            paths = Some(List("/businessReceipts/0/taxYear"))
-          ),
           CountryCodeRuleError.copy(
             paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/1/countryCode"))
           ),
           RuleTaxYearRangeInvalidError.copy(
             paths = Some(List("/businessReceipts/1/taxYear"))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(List("/allOtherIncomeReceivedWhilstAbroad/0/countryCode"))
           )
         )
 
@@ -363,6 +363,20 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
             |    "code": "INVALID_REQUEST",
             |    "errors": [
             |        {
+            |            "code": "FORMAT_COUNTRY_CODE",
+            |            "message": "The format of the country code is invalid",
+            |            "paths": [
+            |                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_TAX_YEAR",
+            |            "message": "The provided tax year is invalid",
+            |            "paths": [
+            |                "/businessReceipts/0/taxYear"
+            |            ]
+            |        },
+            |        {
             |            "code": "FORMAT_VALUE",
             |            "message": "The value must be between 0 and 99999999999.99",
             |            "paths": [
@@ -390,13 +404,6 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
             |            ]
             |        },
             |        {
-            |            "code": "FORMAT_TAX_YEAR",
-            |            "message": "The provided tax year is invalid",
-            |            "paths": [
-            |                "/businessReceipts/0/taxYear"
-            |            ]
-            |        },
-            |        {
             |            "code": "RULE_COUNTRY_CODE",
             |            "message": "The country code is not a valid ISO 3166-1 alpha-3 country code",
             |            "paths": [
@@ -408,13 +415,6 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
             |            "message": "Tax year range invalid. A tax year range of one year is required",
             |            "paths": [
             |                "/businessReceipts/1/taxYear"
-            |            ]
-            |        },
-            |        {
-            |            "code": "FORMAT_COUNTRY_CODE",
-            |            "message": "The format of the country code is invalid",
-            |            "paths": [
-            |                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
             |            ]
             |        }
             |    ],
