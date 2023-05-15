@@ -29,7 +29,6 @@ object JsonFormatValidation {
         case JsSuccess(body, _) => if (Json.toJson(body) == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
         case JsError(errors) =>
           val immutableErrors = errors.map({ case (path, errors) => (path, errors.toList) }).toList
-          println(immutableErrors)
           handleErrors(immutableErrors)
       }
   }
