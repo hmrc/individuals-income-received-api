@@ -485,9 +485,9 @@ class AmendFinancialDetailsValidatorSpec extends UnitSpec with ValueFormatErrorM
 
       "return RuleIncorrectOrEmptyBodyError error for an incorrect formatted request body" in new Test {
         val paths: Seq[String] = Seq(
-          "/employment/pay/taxablePayToDate",
+          "/employment/benefitsInKind/accommodation",
           "/employment/deductions/studentLoans/uglDeductionAmount",
-          "/employment/benefitsInKind/accommodation"
+          "/employment/pay/taxablePayToDate"
         )
 
         validator.validate(AmendFinancialDetailsRawData(validNino, validTaxYear, validEmploymentId, incorrectFormatRawBody)) shouldBe

@@ -401,6 +401,18 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
       "multiple fields fail value validation" in new Test {
         validator.validate(CreateAmendOtherRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            CountryCodeFormatError.copy(
+              paths = Some(
+                List(
+                  "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
+                ))
+            ),
+            TaxYearFormatError.copy(
+              paths = Some(
+                List(
+                  "/businessReceipts/0/taxYear"
+                ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -427,12 +439,6 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
                 "/omittedForeignIncome/amount"
               ))
             ),
-            TaxYearFormatError.copy(
-              paths = Some(
-                List(
-                  "/businessReceipts/0/taxYear"
-                ))
-            ),
             CountryCodeRuleError.copy(
               paths = Some(
                 List(
@@ -443,12 +449,6 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
               paths = Some(
                 List(
                   "/businessReceipts/1/taxYear"
-                ))
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(
-                List(
-                  "/allOtherIncomeReceivedWhilstAbroad/0/countryCode"
                 ))
             )
           )

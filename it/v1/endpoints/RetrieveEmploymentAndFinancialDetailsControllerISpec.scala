@@ -93,7 +93,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "HMRC-HELD"), OK, downstreamJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithHateoas(nino, taxYear, employmentId)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -108,7 +108,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "HMRC-HELD"), OK, downstreamJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithHateoas(nino, taxYear, employmentId)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -125,7 +125,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithHateoas(nino, taxYear, employmentId)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -154,7 +154,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -183,7 +183,7 @@ class RetrieveEmploymentAndFinancialDetailsControllerISpec extends IntegrationBa
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, Map("view" -> "HMRC-HELD"), downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

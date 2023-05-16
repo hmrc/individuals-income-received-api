@@ -73,7 +73,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerSpec
 
         MockCreateAmendAmendUkSavingsAnnualSummaryService
           .createOrAmendAnnualSummary(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
           .wrap((), CreateAndAmendUkSavingsAnnualSummaryHateoasData(nino, taxYear, savingsAccountId))

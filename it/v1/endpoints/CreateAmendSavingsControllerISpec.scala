@@ -104,6 +104,13 @@ class CreateAmendSavingsControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          CountryCodeFormatError.copy(
+            paths = Some(
+              List(
+                "/foreignInterest/0/countryCode",
+                "/foreignInterest/1/countryCode"
+              ))
+          ),
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
             paths = Some(
@@ -123,13 +130,6 @@ class CreateAmendSavingsControllerISpec extends IntegrationBaseSpec {
                 "/foreignInterest/2/taxTakenOff",
                 "/foreignInterest/2/specialWithholdingTax",
                 "/foreignInterest/2/taxableAmount"
-              ))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(
-              List(
-                "/foreignInterest/0/countryCode",
-                "/foreignInterest/1/countryCode"
               ))
           ),
           CountryCodeRuleError.copy(
@@ -333,7 +333,7 @@ class CreateAmendSavingsControllerISpec extends IntegrationBaseSpec {
       )
 
       val nonValidRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
-        paths = Some(Seq("/securities/taxTakenOff", "/foreignInterest/0/foreignTaxCreditRelief"))
+        paths = Some(Seq("/foreignInterest/0/foreignTaxCreditRelief", "/securities/taxTakenOff"))
       )
 
       val missingFieldRequestBodyErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(

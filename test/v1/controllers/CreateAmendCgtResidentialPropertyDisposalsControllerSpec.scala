@@ -173,7 +173,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
 
         MockNrsProxyService
           .submitAsync(nino, "itsa-cgt-disposal", validRequestJson)
-          .returns(Unit)
+          .returns(())
 
         MockCreateAmendCgtResidentialPropertyDisposalsService
           .createAndAmend(requestData)

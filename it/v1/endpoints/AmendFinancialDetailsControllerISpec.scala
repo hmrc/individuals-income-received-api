@@ -406,10 +406,10 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
       val invalidFieldTypeErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(
           List(
-            "/employment/pay/taxablePayToDate",
-            "/employment/pay/totalTaxToDate",
+            "/employment/benefitsInKind/accommodation",
             "/employment/deductions/studentLoans/uglDeductionAmount",
-            "/employment/benefitsInKind/accommodation"
+            "/employment/pay/taxablePayToDate",
+            "/employment/pay/totalTaxToDate"
           ))
       )
 

@@ -555,6 +555,50 @@ object AmendOtherEmploymentControllerISpec {
   )
 
   val allInvalidValueRequestError: List[MtdError] = List(
+    ClassOfSharesAcquiredFormatError.copy(
+      paths = Some(
+        List(
+          "/shareOption/0/classOfSharesAcquired",
+          "/shareOption/1/classOfSharesAcquired"
+        ))
+    ),
+    ClassOfSharesAwardedFormatError.copy(
+      paths = Some(
+        List(
+          "/sharesAwardedOrReceived/0/classOfShareAwarded",
+          "/sharesAwardedOrReceived/1/classOfShareAwarded"
+        ))
+    ),
+    CustomerRefFormatError.copy(
+      paths = Some(
+        List(
+          "/disability/customerReference",
+          "/foreignService/customerReference"
+        ))
+    ),
+    DateFormatError.copy(
+      message = "The field should be in the format YYYY-MM-DD",
+      paths = Some(
+        List(
+          "/shareOption/0/dateOfOptionGrant",
+          "/shareOption/0/dateOfEvent",
+          "/shareOption/1/dateOfOptionGrant",
+          "/shareOption/1/dateOfEvent",
+          "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
+          "/sharesAwardedOrReceived/0/dateSharesAwarded",
+          "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
+          "/sharesAwardedOrReceived/1/dateSharesAwarded"
+        ))
+    ),
+    EmployerNameFormatError.copy(
+      paths = Some(
+        List(
+          "/shareOption/0/employerName",
+          "/shareOption/1/employerName",
+          "/sharesAwardedOrReceived/0/employerName",
+          "/sharesAwardedOrReceived/1/employerName"
+        ))
+    ),
     EmployerRefFormatError.copy(
       paths = Some(
         List(
@@ -562,6 +606,25 @@ object AmendOtherEmploymentControllerISpec {
           "/shareOption/1/employerRef",
           "/sharesAwardedOrReceived/0/employerRef",
           "/sharesAwardedOrReceived/1/employerRef"
+        ))
+    ),
+    SchemePlanTypeFormatError.copy(
+      paths = Some(
+        List(
+          "/shareOption/0/schemePlanType",
+          "/shareOption/1/schemePlanType",
+          "/sharesAwardedOrReceived/0/schemePlanType",
+          "/sharesAwardedOrReceived/1/schemePlanType"
+        ))
+    ),
+    ValueFormatError.copy(
+      message = "The value must be 0 or more",
+      paths = Some(
+        List(
+          "/shareOption/0/noOfSharesAcquired",
+          "/shareOption/1/noOfSharesAcquired",
+          "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+          "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
         ))
     ),
     ValueFormatError.copy(
@@ -594,69 +657,6 @@ object AmendOtherEmploymentControllerISpec {
           "/sharesAwardedOrReceived/1/taxableAmount",
           "/disability/amountDeducted",
           "/foreignService/amountDeducted"
-        ))
-    ),
-    CustomerRefFormatError.copy(
-      paths = Some(
-        List(
-          "/disability/customerReference",
-          "/foreignService/customerReference"
-        ))
-    ),
-    ClassOfSharesAcquiredFormatError.copy(
-      paths = Some(
-        List(
-          "/shareOption/0/classOfSharesAcquired",
-          "/shareOption/1/classOfSharesAcquired"
-        ))
-    ),
-    ValueFormatError.copy(
-      message = "The value must be 0 or more",
-      paths = Some(
-        List(
-          "/shareOption/0/noOfSharesAcquired",
-          "/shareOption/1/noOfSharesAcquired",
-          "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-          "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-        ))
-    ),
-    SchemePlanTypeFormatError.copy(
-      paths = Some(
-        List(
-          "/shareOption/0/schemePlanType",
-          "/shareOption/1/schemePlanType",
-          "/sharesAwardedOrReceived/0/schemePlanType",
-          "/sharesAwardedOrReceived/1/schemePlanType"
-        ))
-    ),
-    DateFormatError.copy(
-      message = "The field should be in the format YYYY-MM-DD",
-      paths = Some(
-        List(
-          "/shareOption/0/dateOfOptionGrant",
-          "/shareOption/0/dateOfEvent",
-          "/shareOption/1/dateOfOptionGrant",
-          "/shareOption/1/dateOfEvent",
-          "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
-          "/sharesAwardedOrReceived/0/dateSharesAwarded",
-          "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-          "/sharesAwardedOrReceived/1/dateSharesAwarded"
-        ))
-    ),
-    EmployerNameFormatError.copy(
-      paths = Some(
-        List(
-          "/shareOption/0/employerName",
-          "/shareOption/1/employerName",
-          "/sharesAwardedOrReceived/0/employerName",
-          "/sharesAwardedOrReceived/1/employerName"
-        ))
-    ),
-    ClassOfSharesAwardedFormatError.copy(
-      paths = Some(
-        List(
-          "/sharesAwardedOrReceived/0/classOfShareAwarded",
-          "/sharesAwardedOrReceived/1/classOfShareAwarded"
         ))
     )
   )
@@ -754,6 +754,54 @@ object AmendOtherEmploymentControllerISpec {
       |    "message":"Invalid request",
       |    "errors":[
       |        {
+      |            "code":"FORMAT_CLASS_OF_SHARES_ACQUIRED",
+      |            "message":"The provided class of shares acquired is invalid",
+      |            "paths":[
+      |                "/shareOption/0/classOfSharesAcquired",
+      |                "/shareOption/1/classOfSharesAcquired"
+      |            ]
+      |        },
+      |        {
+      |            "code":"FORMAT_CLASS_OF_SHARES_AWARDED",
+      |            "message":"The provided class of shares awarded is invalid",
+      |            "paths":[
+      |                "/sharesAwardedOrReceived/0/classOfShareAwarded",
+      |                "/sharesAwardedOrReceived/1/classOfShareAwarded"
+      |            ]
+      |        },
+      |        {
+      |            "code":"FORMAT_CUSTOMER_REF",
+      |            "message":"The provided customer reference is invalid",
+      |            "paths":[
+      |                "/disability/customerReference",
+      |                "/foreignService/customerReference"
+      |            ]
+      |        },
+      |        {
+      |            "code":"FORMAT_DATE",
+      |            "message":"The field should be in the format YYYY-MM-DD",
+      |            "paths":[
+      |                "/shareOption/0/dateOfOptionGrant",
+      |                "/shareOption/0/dateOfEvent",
+      |                "/shareOption/1/dateOfOptionGrant",
+      |                "/shareOption/1/dateOfEvent",
+      |                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
+      |                "/sharesAwardedOrReceived/0/dateSharesAwarded",
+      |                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
+      |                "/sharesAwardedOrReceived/1/dateSharesAwarded"
+      |            ]
+      |        },
+      |        {
+      |            "code":"FORMAT_EMPLOYER_NAME",
+      |            "message":"The provided employer name is invalid",
+      |            "paths":[
+      |                "/shareOption/0/employerName",
+      |                "/shareOption/1/employerName",
+      |                "/sharesAwardedOrReceived/0/employerName",
+      |                "/sharesAwardedOrReceived/1/employerName"
+      |            ]
+      |        },
+      |        {
       |            "code":"FORMAT_EMPLOYER_REF",
       |            "message":"The provided employer ref is invalid",
       |            "paths":[
@@ -761,6 +809,26 @@ object AmendOtherEmploymentControllerISpec {
       |                "/shareOption/1/employerRef",
       |                "/sharesAwardedOrReceived/0/employerRef",
       |                "/sharesAwardedOrReceived/1/employerRef"
+      |            ]
+      |        },
+      |        {
+      |            "code":"FORMAT_SCHEME_PLAN_TYPE",
+      |            "message":"The provided scheme plan type is invalid",
+      |            "paths":[
+      |                "/shareOption/0/schemePlanType",
+      |                "/shareOption/1/schemePlanType",
+      |                "/sharesAwardedOrReceived/0/schemePlanType",
+      |                "/sharesAwardedOrReceived/1/schemePlanType"
+      |            ]
+      |        },
+      |        {
+      |            "code":"FORMAT_VALUE",
+      |            "message":"The value must be 0 or more",
+      |            "paths":[
+      |                "/shareOption/0/noOfSharesAcquired",
+      |                "/shareOption/1/noOfSharesAcquired",
+      |                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
+      |                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
       |            ]
       |        },
       |        {
@@ -793,74 +861,6 @@ object AmendOtherEmploymentControllerISpec {
       |                "/sharesAwardedOrReceived/1/taxableAmount",
       |                "/disability/amountDeducted",
       |                "/foreignService/amountDeducted"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_CUSTOMER_REF",
-      |            "message":"The provided customer reference is invalid",
-      |            "paths":[
-      |                "/disability/customerReference",
-      |                "/foreignService/customerReference"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_CLASS_OF_SHARES_ACQUIRED",
-      |            "message":"The provided class of shares acquired is invalid",
-      |            "paths":[
-      |                "/shareOption/0/classOfSharesAcquired",
-      |                "/shareOption/1/classOfSharesAcquired"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_VALUE",
-      |            "message":"The value must be 0 or more",
-      |            "paths":[
-      |                "/shareOption/0/noOfSharesAcquired",
-      |                "/shareOption/1/noOfSharesAcquired",
-      |                "/sharesAwardedOrReceived/0/noOfShareSecuritiesAwarded",
-      |                "/sharesAwardedOrReceived/1/noOfShareSecuritiesAwarded"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_SCHEME_PLAN_TYPE",
-      |            "message":"The provided scheme plan type is invalid",
-      |            "paths":[
-      |                "/shareOption/0/schemePlanType",
-      |                "/shareOption/1/schemePlanType",
-      |                "/sharesAwardedOrReceived/0/schemePlanType",
-      |                "/sharesAwardedOrReceived/1/schemePlanType"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_DATE",
-      |            "message":"The field should be in the format YYYY-MM-DD",
-      |            "paths":[
-      |                "/shareOption/0/dateOfOptionGrant",
-      |                "/shareOption/0/dateOfEvent",
-      |                "/shareOption/1/dateOfOptionGrant",
-      |                "/shareOption/1/dateOfEvent",
-      |                "/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan",
-      |                "/sharesAwardedOrReceived/0/dateSharesAwarded",
-      |                "/sharesAwardedOrReceived/1/dateSharesCeasedToBeSubjectToPlan",
-      |                "/sharesAwardedOrReceived/1/dateSharesAwarded"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_EMPLOYER_NAME",
-      |            "message":"The provided employer name is invalid",
-      |            "paths":[
-      |                "/shareOption/0/employerName",
-      |                "/shareOption/1/employerName",
-      |                "/sharesAwardedOrReceived/0/employerName",
-      |                "/sharesAwardedOrReceived/1/employerName"
-      |            ]
-      |        },
-      |        {
-      |            "code":"FORMAT_CLASS_OF_SHARES_AWARDED",
-      |            "message":"The provided class of shares awarded is invalid",
-      |            "paths":[
-      |                "/sharesAwardedOrReceived/0/classOfShareAwarded",
-      |                "/sharesAwardedOrReceived/1/classOfShareAwarded"
       |            ]
       |        }
       |    ]
@@ -1402,9 +1402,9 @@ object AmendOtherEmploymentControllerISpec {
   val invalidFieldType: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(
       List(
+        "/shareOption/0/employersNicPaid",
         "/shareOption/0/marketValueOfSharesOnExcise",
         "/shareOption/0/profitOnOptionExercised",
-        "/shareOption/0/employersNicPaid",
         "/shareOption/0/taxableAmount"
       ))
   )
@@ -1412,20 +1412,20 @@ object AmendOtherEmploymentControllerISpec {
   val missingMandatoryFieldErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(
       List(
+        "/shareOption/0/amountOfConsiderationReceived",
+        "/shareOption/0/amountPaidForOption",
+        "/shareOption/0/classOfSharesAcquired",
+        "/shareOption/0/dateOfEvent",
         "/shareOption/0/dateOfOptionGrant",
-        "/shareOption/0/taxableAmount",
         "/shareOption/0/employerName",
+        "/shareOption/0/employersNicPaid",
+        "/shareOption/0/exercisePrice",
+        "/shareOption/0/marketValueOfSharesOnExcise",
         "/shareOption/0/noOfSharesAcquired",
         "/shareOption/0/optionNotExercisedButConsiderationReceived",
+        "/shareOption/0/profitOnOptionExercised",
         "/shareOption/0/schemePlanType",
-        "/shareOption/0/classOfSharesAcquired",
-        "/shareOption/0/exercisePrice",
-        "/shareOption/0/amountPaidForOption",
-        "/shareOption/0/employersNicPaid",
-        "/shareOption/0/marketValueOfSharesOnExcise",
-        "/shareOption/0/amountOfConsiderationReceived",
-        "/shareOption/0/dateOfEvent",
-        "/shareOption/0/profitOnOptionExercised"
+        "/shareOption/0/taxableAmount"
       ))
   )
 

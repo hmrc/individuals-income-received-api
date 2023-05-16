@@ -24,10 +24,12 @@ import support.UnitSpec
 class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
   case class TestDataObject(fieldOne: String, fieldTwo: String)
+  case class TestDataObjectUnorderedFields(fieldB: String, fieldA: String)
   case class TestDataWrapper(arrayField: Seq[TestDataObject])
 
-  implicit val testDataObjectFormat: OFormat[TestDataObject]   = Json.format[TestDataObject]
-  implicit val testDataWrapperFormat: OFormat[TestDataWrapper] = Json.format[TestDataWrapper]
+  implicit val testDataObjectFormat: OFormat[TestDataObject]                               = Json.format[TestDataObject]
+  implicit val testDataObjectUnorderedFieldsFormat: OFormat[TestDataObjectUnorderedFields] = Json.format[TestDataObjectUnorderedFields]
+  implicit val testDataWrapperFormat: OFormat[TestDataWrapper]                             = Json.format[TestDataWrapper]
 
   "validate" should {
     "return no errors" when {
@@ -57,6 +59,13 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/arrayField/0/fieldOne", "/arrayField/0/fieldTwo"))))
+      }
+
+      "required field paths returned in alphabetical order" in {
+        val json = Json.parse("""{ "field": "value" }""")
+
+        val validationResult = JsonFormatValidation.validate[TestDataObjectUnorderedFields](json)
+        validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/fieldA", "/fieldB"))))
       }
 
       "required field is missing in multiple array objects" in {

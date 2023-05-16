@@ -89,9 +89,9 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerISpec extends Integrat
     paths = Some(
       Seq(
         "/disposals/0/acquisitionAmount",
-        "/disposals/0/disposalDate",
-        "/disposals/0/completionDate",
         "/disposals/0/acquisitionDate",
+        "/disposals/0/completionDate",
+        "/disposals/0/disposalDate",
         "/disposals/0/disposalProceeds"
       ))
   )

@@ -525,12 +525,12 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
           List(
             RuleIncorrectOrEmptyBodyError.copy(
               paths = Some(Seq(
-                "/disposals/0/disposalDate",
                 "/disposals/0/acquisitionDate",
+                "/disposals/0/allowableCosts",
                 "/disposals/0/assetDescription",
-                "/disposals/0/disposalProceeds",
                 "/disposals/0/assetType",
-                "/disposals/0/allowableCosts"
+                "/disposals/0/disposalDate",
+                "/disposals/0/disposalProceeds"
               ))
             ))
       }
@@ -551,12 +551,12 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, missingMandatoryFieldRawRequestBody)) shouldBe
           List(
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-              "/disposals/0/disposalDate",
               "/disposals/0/acquisitionDate",
+              "/disposals/0/allowableCosts",
               "/disposals/0/assetDescription",
-              "/disposals/0/disposalProceeds",
               "/disposals/0/assetType",
-              "/disposals/0/allowableCosts"
+              "/disposals/0/disposalDate",
+              "/disposals/0/disposalProceeds"
             ))))
       }
 

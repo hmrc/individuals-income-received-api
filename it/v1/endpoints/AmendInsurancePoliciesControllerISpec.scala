@@ -334,6 +334,13 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
                 "/foreign/0/customerReference"
               ))
           ),
+          EventFormatError.copy(
+            paths = Some(
+              List(
+                "/lifeInsurance/1/event",
+                "/lifeAnnuity/1/event"
+              ))
+          ),
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
             paths = Some(
@@ -360,13 +367,6 @@ class AmendInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
                 "/voidedIsa/0/yearsHeld",
                 "/voidedIsa/0/yearsHeldSinceLastGain",
                 "/foreign/1/yearsHeld"
-              ))
-          ),
-          EventFormatError.copy(
-            paths = Some(
-              List(
-                "/lifeInsurance/1/event",
-                "/lifeAnnuity/1/event"
               ))
           )
         )

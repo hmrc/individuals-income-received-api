@@ -35,7 +35,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
       }
@@ -46,7 +46,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
       }
@@ -62,7 +62,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
             override val taxYear: String    = requestTaxYear
             override def setupStubs(): Unit = {}
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -86,7 +86,7 @@ class DeleteInsurancePoliciesControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, ifsStatus, errorBody(ifsCode))
             }
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

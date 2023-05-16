@@ -401,9 +401,9 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
             RuleIncorrectOrEmptyBodyError.copy(
               paths = Some(Seq(
                 "/disposals/0/acquisitionAmount",
-                "/disposals/0/disposalDate",
-                "/disposals/0/completionDate",
                 "/disposals/0/acquisitionDate",
+                "/disposals/0/completionDate",
+                "/disposals/0/disposalDate",
                 "/disposals/0/disposalProceeds"
               ))
             ))
@@ -414,9 +414,9 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
           List(
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
               "/disposals/0/acquisitionAmount",
-              "/disposals/0/disposalDate",
-              "/disposals/0/completionDate",
               "/disposals/0/acquisitionDate",
+              "/disposals/0/completionDate",
+              "/disposals/0/disposalDate",
               "/disposals/0/disposalProceeds"
             ))))
       }
