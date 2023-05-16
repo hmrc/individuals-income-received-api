@@ -22,7 +22,7 @@ import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -64,8 +64,7 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
       val rawData: CreateAmendOtherCgtRawData = CreateAmendOtherCgtRawData(
         nino = nino,
         taxYear = taxYear,
-        body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
+        body = AnyContentAsJson(request.body)
       )
 
       val requestHandler = RequestHandler

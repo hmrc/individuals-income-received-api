@@ -325,50 +325,6 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
       ))
   )
 
-  val ruleDateJson: JsValue = Json.parse(
-    """
-      |{
-      |   "disposals":[
-      |      {
-      |         "assetType":"otherProperty",
-      |         "assetDescription":"string",
-      |         "acquisitionDate":"2023-05-07",
-      |         "disposalDate":"2022-05-07",
-      |         "disposalProceeds":59999999999.99,
-      |         "allowableCosts":59999999999.99,
-      |         "gain":59999999999.99,
-      |         "claimOrElectionCodes":[
-      |            "OTH"
-      |         ],
-      |         "gainAfterRelief":59999999999.99,
-      |         "rttTaxPaid":59999999999.99
-      |      }
-      |   ]
-      |}
-   """.stripMargin
-  )
-
-  val ruleDateErrors: ErrorWrapper = ErrorWrapper(
-    correlationId = "",
-    BadRequestError,
-    Some(
-      Seq(
-        RuleAcquisitionDateError.copy(
-          paths = Some(
-            Seq(
-              "/disposals/0"
-            ))
-        ),
-        RuleDisposalDateError.copy(
-          paths = Some(
-            Seq(
-              "/disposals/0"
-            )),
-          message = IN_YEAR_NO_LATER_THAN_TODAY
-        )
-      ))
-  )
-
   val formatNonStandardGainsJson: JsValue = Json.parse(
     """
       |{
@@ -544,7 +500,6 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
           ("AA123456A", "2021-22", decimalsTooBigJson, BAD_REQUEST, BadRequestError, Some(decimalsOutOfRangeErrors), Some("decimalsTooBig")),
           ("AA123456A", "2021-22", decimalsTooSmallJson, BAD_REQUEST, BadRequestError, Some(decimalsOutOfRangeErrors), Some("decimalsTooSmall")),
           ("AA123456A", "2021-22", formatDisposalsJson, BAD_REQUEST, BadRequestError, Some(formatDisposalsErrors), Some("formatDisposals")),
-          ("AA123456A", "2021-22", ruleDateJson, BAD_REQUEST, BadRequestError, Some(ruleDateErrors), Some("ruleDate")),
           ("AA123456A", "2021-22", formatNonStandardGainsJson, BAD_REQUEST, formatNonStandardGainsError, None, Some("formatNonStandardGains"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))

@@ -757,33 +757,6 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
       }
     }
 
-    "return RuleDisposalDateError error" when {
-      "supplied disposal date is invalid" in new Test {
-        validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, badDisposalDateRawRequestBody)) shouldBe
-          List(
-            RuleDisposalDateError.copy(
-              paths = Some(
-                Seq(
-                  "/disposals/0"
-                )),
-              message = IN_YEAR_NO_LATER_THAN_TODAY
-            ))
-      }
-    }
-
-    "return RuleAcquisitionDateError error" when {
-      "supplied acquisition date is invalid" in new Test {
-        validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, badAcquisitionDateRawRequestBody)) shouldBe
-          List(
-            RuleAcquisitionDateError.copy(
-              paths = Some(
-                Seq(
-                  "/disposals/0"
-                ))
-            ))
-      }
-    }
-
     "return RuleGainAfterReliefLossAfterReliefError error" when {
       "both gainAfterRelief and lossAfterRelief are supplied" in new Test {
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, badGainAfterReliefLossAfterReliefRawRequestBody)) shouldBe

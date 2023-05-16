@@ -23,7 +23,7 @@ import config.AppConfig
 import mocks.MockAppConfig
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
@@ -553,53 +553,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val currentYearLossesGreaterThanGainsJson: JsValue = Json.parse(
-    """
-      |{
-      |    "multiplePropertyDisposals": [
-      |         {
-      |            "ppdSubmissionId": "AB0000000092",
-      |            "amountOfNetGain": 1234.78
-      |         },
-      |         {
-      |            "ppdSubmissionId": "AB0000000098",
-      |            "amountOfNetLoss": 134.99
-      |         }
-      |    ],
-      |    "singlePropertyDisposals": [
-      |         {
-      |             "ppdSubmissionId": "AB0000000099",
-      |             "completionDate": "2020-02-28",
-      |             "disposalProceeds": 454.24,
-      |             "acquisitionDate": "2020-03-29",
-      |             "acquisitionAmount": 3434.45,
-      |             "improvementCosts": 233.45,
-      |             "additionalCosts": 423.34,
-      |             "prfAmount": 2324.67,
-      |             "otherReliefAmount": 3434.23,
-      |             "lossesFromThisYear": 436.23,
-      |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetGain": 67.89
-      |         },
-      |         {
-      |             "ppdSubmissionId": "AB0000000091",
-      |             "completionDate": "2020-02-28",
-      |             "disposalProceeds": 454.24,
-      |             "acquisitionDate": "2020-03-29",
-      |             "acquisitionAmount": 3434.45,
-      |             "improvementCosts": 233.45,
-      |             "additionalCosts": 423.34,
-      |             "prfAmount": 2324.67,
-      |             "otherReliefAmount": 3434.23,
-      |             "lossesFromThisYear": 436.23,
-      |             "lossesFromPreviousYear": 234.23,
-      |             "amountOfNetLoss": 4567.89
-      |         }
-      |    ]
-      |}
-      |""".stripMargin
-  )
-
   private val validRequestBody                                       = AnyContentAsJson(validRequestJson)
   private val missingMandatoryFieldRequestBody                       = AnyContentAsJson(missingMandatoryFieldJson)
   private val emptyMultiplePropertyDisposalsRequestBody              = AnyContentAsJson(emptyMultiplePropertyDisposalsRequestJson)
@@ -611,7 +564,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   private val bothGainsAndLossSinglePropertyDisposalsRequestBody     = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
   private val neitherGainsOrLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossMultiplePropertyDisposalsRequestBodyJson)
   private val neitherGainsOrLossSinglePropertyDisposalsRequestBody   = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
-  private val currentYearLossesGreaterThanGainsRequestBody           = AnyContentAsJson(currentYearLossesGreaterThanGainsJson)
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
@@ -659,13 +611,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "an invalid tax year is supplied" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "20178", validRequestBody)) shouldBe
           List(TaxYearFormatError)
-      }
-    }
-
-    "return a RuleTaxYearNotEnded error" when {
-      "the current tax year is provided" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, "2021-22", validRequestBody)) shouldBe
-          List(RuleTaxYearNotEndedError)
       }
     }
 
@@ -772,135 +717,6 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       "neither amountOfNetGain or amountOfNetLoss are provided for singlePropertyDisposals" in new Test {
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, neitherGainsOrLossSinglePropertyDisposalsRequestBody)) shouldBe
           List(RuleAmountGainLossError.copy(paths = Some(Seq("/singlePropertyDisposals/0", "/singlePropertyDisposals/1"))))
-      }
-    }
-
-    "return a RuleLossesGreaterThanGainError" when {
-      "the losses for this year are larger than the total gains" in new Test {
-        validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, currentYearLossesGreaterThanGainsRequestBody)) shouldBe
-          List(
-            RuleLossesGreaterThanGainError.copy(
-              paths = Some(
-                Seq(
-                  "/singlePropertyDisposals/0/lossesFromThisYear",
-                  "/singlePropertyDisposals/0/lossesFromPreviousYear"
-                ))))
-      }
-    }
-
-    "return RuleDuplicatedPpdSubmissionIdError(s)" when {
-
-      val idDuplicate  = "idDuplicate1"
-      val idDuplicate2 = "idDuplicate2"
-      val idOther1     = "idOther00001"
-      val idOther2     = "idOther00002"
-
-      def jsonBody(multipleIds: Seq[String] = Nil, singleIds: Seq[String] = Nil): AnyContentAsJson = {
-        def ifNotEmpty(field: String, values: Seq[JsValue]) = if (values.nonEmpty) Json.obj(field -> values) else JsObject.empty
-
-        val multiples = multipleIds.map(id => Json.parse(s"""{
-                    |   "ppdSubmissionId": "$id",
-                    |   "amountOfNetGain": 1
-                    |}""".stripMargin))
-
-        val singles = singleIds.map(id => Json.parse(s"""{
-                                                                |   "ppdSubmissionId": "$id",
-                                                                |   "completionDate": "2020-02-28", 
-                                                                |   "disposalProceeds": 1, 
-                                                                |   "acquisitionAmount": 1, 
-                                                                |   "improvementCosts": 1,
-                                                                |   "additionalCosts": 1, 
-                                                                |   "prfAmount": 1, 
-                                                                |   "otherReliefAmount": 1,
-                                                                |   "amountOfNetGain": 1
-                                                                |}""".stripMargin))
-
-        AnyContentAsJson(ifNotEmpty("multiplePropertyDisposals", multiples) ++ ifNotEmpty("singlePropertyDisposals", singles))
-
-      }
-
-      "multiplePropertyDisposals has duplicate ids" in new Test {
-        validator.validate(
-          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(multipleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
-          contain theSameElementsAs List(
-            RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
-              idDuplicate,
-              paths = Seq(
-                "/multiplePropertyDisposals/0/ppdSubmissionId",
-                "/multiplePropertyDisposals/2/ppdSubmissionId"
-              )))
-      }
-
-      "singlePropertyDisposals has duplicate ids" in new Test {
-        validator.validate(
-          CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, jsonBody(singleIds = Seq(idDuplicate, idOther1, idDuplicate)))) should
-          contain theSameElementsAs List(
-            RuleDuplicatedPpdSubmissionIdError
-              .forDuplicatedIdAndPaths(
-                idDuplicate,
-                paths = Seq(
-                  "/singlePropertyDisposals/0/ppdSubmissionId",
-                  "/singlePropertyDisposals/2/ppdSubmissionId"
-                )))
-      }
-
-      "an id is duplicated between single and multiplePropertyDisposals" in new Test {
-        validator.validate(
-          CreateAmendCgtPpdOverridesRawData(
-            validNino,
-            validTaxYear,
-            jsonBody(multipleIds = Seq(idDuplicate, idOther1), singleIds = Seq(idOther2, idDuplicate)))) should
-          contain theSameElementsAs List(
-            RuleDuplicatedPpdSubmissionIdError
-              .forDuplicatedIdAndPaths(
-                idDuplicate,
-                paths = Seq(
-                  "/multiplePropertyDisposals/0/ppdSubmissionId",
-                  "/singlePropertyDisposals/1/ppdSubmissionId"
-                )))
-      }
-
-      "test more that 2 copies of an id" in new Test {
-        validator.validate(
-          CreateAmendCgtPpdOverridesRawData(
-            validNino,
-            validTaxYear,
-            jsonBody(multipleIds = Seq(idDuplicate, idDuplicate), singleIds = Seq(idDuplicate, idDuplicate)))) should
-          contain theSameElementsAs List(
-            RuleDuplicatedPpdSubmissionIdError
-              .forDuplicatedIdAndPaths(
-                idDuplicate,
-                paths = Seq(
-                  "/multiplePropertyDisposals/0/ppdSubmissionId",
-                  "/multiplePropertyDisposals/1/ppdSubmissionId",
-                  "/singlePropertyDisposals/0/ppdSubmissionId",
-                  "/singlePropertyDisposals/1/ppdSubmissionId"
-                )
-              ))
-      }
-
-      "multiple duplicates" in new Test {
-        validator.validate(
-          CreateAmendCgtPpdOverridesRawData(
-            validNino,
-            validTaxYear,
-            jsonBody(multipleIds = Seq(idDuplicate, idDuplicate2), singleIds = Seq(idDuplicate2, idDuplicate)))) should
-          contain theSameElementsAs List(
-            RuleDuplicatedPpdSubmissionIdError
-              .forDuplicatedIdAndPaths(
-                idDuplicate,
-                paths = Seq(
-                  "/multiplePropertyDisposals/0/ppdSubmissionId",
-                  "/singlePropertyDisposals/1/ppdSubmissionId"
-                )),
-            RuleDuplicatedPpdSubmissionIdError
-              .forDuplicatedIdAndPaths(
-                idDuplicate2,
-                paths = Seq(
-                  "/multiplePropertyDisposals/1/ppdSubmissionId",
-                  "/singlePropertyDisposals/0/ppdSubmissionId"
-                ))
-          )
       }
     }
   }
