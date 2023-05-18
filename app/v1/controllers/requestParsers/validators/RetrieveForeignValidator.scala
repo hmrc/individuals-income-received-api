@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.retrieveForeign.RetrieveForeignRawData
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -29,7 +29,7 @@ class RetrieveForeignValidator @Inject() (implicit appConfig: AppConfig) extends
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveForeignRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveForeignRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

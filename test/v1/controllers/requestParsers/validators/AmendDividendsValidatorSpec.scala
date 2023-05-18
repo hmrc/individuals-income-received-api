@@ -408,22 +408,22 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
 
       "mandatory fields are not provided" in new Test {
         val paths = Seq(
-          "/foreignDividend/0/countryCode",
-          "/dividendIncomeReceivedWhilstAbroad/1/foreignTaxCreditRelief",
-          "/foreignDividend/0/foreignTaxCreditRelief",
-          "/dividendIncomeReceivedWhilstAbroad/1/countryCode",
-          "/foreignDividend/1/foreignTaxCreditRelief",
-          "/dividendIncomeReceivedWhilstAbroad/0/countryCode",
-          "/stockDividend/grossAmount",
-          "/closeCompanyLoansWrittenOff/grossAmount",
-          "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
           "/bonusIssuesOfSecurities/grossAmount",
-          "/redeemableShares/grossAmount",
-          "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
+          "/closeCompanyLoansWrittenOff/grossAmount",
+          "/dividendIncomeReceivedWhilstAbroad/0/countryCode",
           "/dividendIncomeReceivedWhilstAbroad/0/foreignTaxCreditRelief",
+          "/dividendIncomeReceivedWhilstAbroad/0/taxableAmount",
+          "/dividendIncomeReceivedWhilstAbroad/1/countryCode",
+          "/dividendIncomeReceivedWhilstAbroad/1/foreignTaxCreditRelief",
+          "/dividendIncomeReceivedWhilstAbroad/1/taxableAmount",
+          "/foreignDividend/0/countryCode",
+          "/foreignDividend/0/foreignTaxCreditRelief",
+          "/foreignDividend/0/taxableAmount",
           "/foreignDividend/1/countryCode",
+          "/foreignDividend/1/foreignTaxCreditRelief",
           "/foreignDividend/1/taxableAmount",
-          "/foreignDividend/0/taxableAmount"
+          "/redeemableShares/grossAmount",
+          "/stockDividend/grossAmount"
         )
 
         validator.validate(AmendDividendsRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
@@ -519,6 +519,14 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
                   "/dividendIncomeReceivedWhilstAbroad/0/countryCode"
                 ))
             ),
+            CustomerRefFormatError.copy(
+              paths = Some(List(
+                "/stockDividend/customerReference",
+                "/redeemableShares/customerReference",
+                "/bonusIssuesOfSecurities/customerReference",
+                "/closeCompanyLoansWrittenOff/customerReference"
+              ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -550,14 +558,6 @@ class AmendDividendsValidatorSpec extends UnitSpec with ValueFormatErrorMessages
                   "/foreignDividend/1/countryCode",
                   "/dividendIncomeReceivedWhilstAbroad/1/countryCode"
                 ))
-            ),
-            CustomerRefFormatError.copy(
-              paths = Some(List(
-                "/stockDividend/customerReference",
-                "/redeemableShares/customerReference",
-                "/bonusIssuesOfSecurities/customerReference",
-                "/closeCompanyLoansWrittenOff/customerReference"
-              ))
             )
           )
       }

@@ -35,7 +35,7 @@ class DeleteForeignControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
       }
@@ -46,7 +46,7 @@ class DeleteForeignControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
       }
@@ -61,7 +61,7 @@ class DeleteForeignControllerISpec extends IntegrationBaseSpec {
             override val nino: String       = requestNino
             override val mtdTaxYear: String = requestTaxYear
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -85,7 +85,7 @@ class DeleteForeignControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

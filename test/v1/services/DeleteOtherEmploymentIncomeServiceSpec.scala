@@ -23,6 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockOtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
+
 import scala.concurrent.Future
 
 class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
@@ -58,7 +59,7 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
           }
         }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -67,7 +68,7 @@ class DeleteOtherEmploymentIncomeServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )
 

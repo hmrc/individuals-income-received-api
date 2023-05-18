@@ -16,47 +16,31 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{GET, PUT}
-import api.models.hateoas.RelType.{CREATE_AND_AMEND_UK_DIVIDENDS_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
 import v1.mocks.services.MockRetrieveUkDividendsAnnualIncomeSummaryService
-import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{
-  RetrieveUkDividendsAnnualIncomeSummaryRawData,
-  RetrieveUkDividendsAnnualIncomeSummaryRequest
-}
-import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{
-  RetrieveUkDividendsAnnualIncomeSummaryHateoasData,
-  RetrieveUkDividendsAnnualIncomeSummaryResponse
-}
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest}
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryHateoasData, RetrieveUkDividendsAnnualIncomeSummaryResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveUkDividendsAnnualIncomeSummaryService
-    with MockHateoasFactory
     with MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockHateoasFactory {
 
-  private val nino: String          = "AA123456A"
-  private val taxYear: String       = "2019-20"
-  private val correlationId: String = "X-123"
+  private val taxYear = "2019-20"
 
   private val rawData: RetrieveUkDividendsAnnualIncomeSummaryRawData = RetrieveUkDividendsAnnualIncomeSummaryRawData(
     nino = nino,
@@ -68,19 +52,10 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  private val amendUkDividendsLink: Link =
-    Link(
-      href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
-      method = PUT,
-      rel = CREATE_AND_AMEND_UK_DIVIDENDS_INCOME
-    )
-
-  private val retrieveUkDividendsLink: Link =
-    Link(
-      href = s"/individuals/income-received/uk-dividends/$nino/$taxYear",
-      method = GET,
-      rel = SELF
-    )
+  private val hateoasLinks = List(
+    Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = PUT, rel = "create-and-amend-uk-dividends-income"),
+    Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = GET, rel = "self")
+  )
 
   private val retrieveUkDividendsAnnualIncomeSummaryResponseModel = RetrieveUkDividendsAnnualIncomeSummaryResponse(
     Some(100.99),
@@ -96,28 +71,9 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
       |     {"href":"/individuals/income-received/uk-dividends/AA123456A/2019-20","method":"GET","rel":"self"}]}
       |""".stripMargin)
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveUkDividendsAnnualIncomeSummaryController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveUkDividendsAnnualIncomeSummaryRequestParser,
-      service = mockRetrieveUkDividendsAnnualIncomeSummaryService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "RetrieveDividendsController" should {
-    "return OK" when {
-      "happy path" in new Test {
-
+    "return a successful response with status 200 (OK)" when {
+      "given a valid request" in new Test {
         MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -128,80 +84,52 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveUkDividendsAnnualIncomeSummaryResponseModel, RetrieveUkDividendsAnnualIncomeSummaryHateoasData(nino, taxYear))
-          .returns(
-            HateoasWrapper(
-              retrieveUkDividendsAnnualIncomeSummaryResponseModel,
-              Seq(
-                amendUkDividendsLink,
-                retrieveUkDividendsLink
-              )))
+          .returns(HateoasWrapper(retrieveUkDividendsAnnualIncomeSummaryResponseModel, hateoasLinks))
 
-        val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponse)
+        )
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockRetrieveUkDividendsIncomeAnnualSummaryService
+          .retrieveUkDividends(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockRetrieveUkDividendsIncomeAnnualSummaryService
-              .retrieveUkDividends(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(RuleTaxYearNotSupportedError)
       }
     }
+  }
+
+  trait Test extends ControllerTest {
+
+    val controller = new RetrieveUkDividendsAnnualIncomeSummaryController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRetrieveUkDividendsAnnualIncomeSummaryRequestParser,
+      service = mockRetrieveUkDividendsAnnualIncomeSummaryService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveUkDividends(nino, taxYear)(fakeGetRequest)
+
   }
 
 }

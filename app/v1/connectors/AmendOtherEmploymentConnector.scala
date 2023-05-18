@@ -16,17 +16,14 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
-import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
 class AmendOtherEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -45,10 +42,7 @@ class AmendOtherEmploymentConnector @Inject() (val http: HttpClient, val appConf
       DesUri[Unit](s"income-tax/income/other/employments/${nino.nino}/${taxYear.asMtd}")
     }
 
-    put(
-      uri = downstreamUri,
-      body = body
-    )
+    put(downstreamUri, body)
   }
 
 }

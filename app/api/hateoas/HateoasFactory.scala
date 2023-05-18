@@ -24,8 +24,6 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 
-import scala.language.higherKinds
-
 @Singleton
 class HateoasFactory @Inject() (appConfig: AppConfig) {
 

@@ -17,10 +17,8 @@
 package v1.services
 
 import api.controllers.RequestContext
-import api.models.errors.{ErrorWrapper, InternalError, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
-import cats.data.EitherT
+import api.models.errors._
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.AmendInsurancePoliciesConnector
 import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRequest
@@ -31,18 +29,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendInsurancePoliciesService @Inject() (connector: AmendInsurancePoliciesConnector) extends BaseService {
 
-  def amendInsurancePolicies(request: AmendInsurancePoliciesRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendInsurancePolicies(
+      request: AmendInsurancePoliciesRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendInsurancePolicies(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
+    connector.amendInsurancePolicies(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryBody, CreateAmendUkSavingsAnnualSummaryRawData}
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -34,7 +34,7 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: Ap
     bodyValueValidation
   )
 
-  override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendUkSavingsAnnualSummaryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

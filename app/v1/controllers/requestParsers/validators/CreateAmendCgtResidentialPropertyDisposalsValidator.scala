@@ -17,16 +17,15 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors._
 import config.AppConfig
-import utils.CurrentDateTime
 import v1.models.request.createAmendCgtResidentialPropertyDisposals._
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData]
     with DisposalDateErrorMessages {
 
@@ -35,11 +34,10 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     parameterRuleValidation,
     bodyFormatValidator,
     bodyValueValidator,
-    bodyRuleValidator,
     lossOrGainsValidator
   )
 
-  override def validate(data: CreateAmendCgtResidentialPropertyDisposalsRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendCgtResidentialPropertyDisposalsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -148,53 +146,6 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     ).flatten
   }
 
-  private def bodyRuleValidator: CreateAmendCgtResidentialPropertyDisposalsRawData => List[List[MtdError]] = { data =>
-    val requestBodyData = data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
-
-    List(
-      flattenErrors(
-        List(
-          requestBodyData.disposals.zipWithIndex.flatMap { case (disposal, index) =>
-            validateDisposalRule(disposal, index, data.taxYear, data.temporalValidationEnabled)
-          }
-        ).map(_.toList)
-      )
-    )
-  }
-
-  private def validateDisposalRule(disposal: Disposal, index: Int, taxYear: String, temporalValidationEnabled: Boolean): List[MtdError] = {
-    List(
-      DateAfterDateValidation.validate(
-        dateWhichShouldBeEarlier = disposal.disposalDate,
-        dateWhichShouldBeLater = disposal.completionDate,
-        path = s"/disposals/$index",
-        error = RuleCompletionDateBeforeDisposalDateError
-      ),
-      DateAfterDateValidation.validate(
-        dateWhichShouldBeEarlier = disposal.acquisitionDate,
-        dateWhichShouldBeLater = disposal.disposalDate,
-        path = s"/disposals/$index",
-        error = RuleAcquisitionDateAfterDisposalDateError
-      ),
-      if (temporalValidationEnabled)
-        CompletionDateValidation.validate(
-          date = disposal.completionDate,
-          path = s"/disposals/$index",
-          taxYear = taxYear
-        )
-      else Nil,
-      if (temporalValidationEnabled)
-        DisposalDateValidation.validate(
-          date = disposal.disposalDate,
-          taxYear = taxYear,
-          path = s"/disposals/$index",
-          validateToday = false,
-          errorMessage = IN_YEAR
-        )
-      else Nil
-    ).flatten
-  }
-
   private def lossOrGainsValidator: CreateAmendCgtResidentialPropertyDisposalsRawData => List[List[MtdError]] = { data =>
     val requestBodyData = data.body.json.as[CreateAmendCgtResidentialPropertyDisposalsRequestBody]
 
@@ -207,17 +158,7 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit cu
     List(
       flattenErrors(
         List(
-          if (disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors,
-          ValueGreaterThanValueValidation.validateOptional(
-            valueWhichShouldBeLowerOrEqualO = disposal.lossesFromThisYear,
-            valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
-            path = s"/disposals/$index/lossesFromThisYear"
-          ),
-          ValueGreaterThanValueValidation.validateOptional(
-            valueWhichShouldBeLowerOrEqualO = disposal.lossesFromPreviousYear,
-            valueWhichShouldBeHigherOrEqualO = disposal.amountOfNetGain,
-            path = s"/disposals/$index/lossesFromPreviousYear"
-          )
+          if (disposal.gainAndLossAreBothSupplied) List(RuleGainLossError.copy(paths = Some(Seq(s"/disposals/$index")))) else NoValidationErrors
         )
       )
     ).flatten

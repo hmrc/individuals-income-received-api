@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.OtherEmploymentIncomeRequestValidator
+import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequest, OtherEmploymentIncomeRequestRawData}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequest, OtherEmploymentIncomeRequestRawData}
 
 @Singleton
 class OtherEmploymentIncomeRequestParser @Inject() (val validator: OtherEmploymentIncomeRequestValidator)

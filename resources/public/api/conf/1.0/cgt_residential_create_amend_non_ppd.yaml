@@ -1,8 +1,8 @@
 summary: Create and Amend CGT Residential Property Disposals (non-PPD)
 description: |
-  This endpoint allows the developer to submit residential property disposals that are not reported via the Report and 
-  pay Capital Gains Tax on UK property service for a given NINO and tax year for non payment for property disposals 
-  (non-PPD).
+  This endpoint enables you to submit residential property disposals that are not payment for property disposal 
+  (not reported via the 'Report and pay Capital Gains Tax on UK property' service) 
+  for a given National Insurance number and tax year.
   
   The disposal date must be within the specified tax year. The completion date must be within the specific tax year and
   not in the future. If the specified tax year has not ended, the completion date must be between 7th March and 5th 
@@ -22,6 +22,19 @@ description: |
               <td><p>N/A - DEFAULT</p></td>
               <td><p>Simulates success response.</p></td>
           </tr>
+          <tr>
+              <td><p>ACQUISITION_DATE_AFTER_DISPOSAL_DATE</p></td>
+              <td><p>Simulates a scenario where acquisitionDate is later than disposalDate.</p></td>
+          </tr>
+          <tr>
+              <td><p>INVALID_COMPLETION_DATE</p></td>
+              <td><p>Simulates a scenario where the completionDate is not within the specific tax year or in the future. 
+               If the specified tax year has not ended, the completionDate must be between 7th March and 5th April.</p></td>
+          </tr>
+          <tr>
+              <td><p>INVALID_DISPOSAL_DATE</p></td>
+              <td><p>Simulates a scenario where the disposalDate is not within the specified tax year.</p></td>
+          </tr>  
       </tbody>
   </table>
 
@@ -88,8 +101,6 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
-          RULE_COMPLETION_DATE_BEFORE_DISPOSAL_DATE:
-            $ref: './common/errors.yaml#/components/examples/ruleCompletionDateBeforeDisposalDate'
           RULE_ACQUISITION_DATE_AFTER_DISPOSAL_DATE:
             $ref: './common/errors.yaml#/components/examples/ruleAcquisitionDateAfterDisposalDate'
           RULE_COMPLETION_DATE:
@@ -104,6 +115,7 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleLossesGreaterThanGain'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
 
   "403":
     description: Forbidden

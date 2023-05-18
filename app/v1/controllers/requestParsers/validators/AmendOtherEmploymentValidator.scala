@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.amendOtherEmployment._
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -37,7 +37,7 @@ class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
     bodyRuleValidator
   )
 
-  override def validate(data: AmendOtherEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: AmendOtherEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

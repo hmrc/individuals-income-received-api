@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRawData
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class DeleteNonPayeEmploymentValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteNonPayeEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: DeleteNonPayeEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

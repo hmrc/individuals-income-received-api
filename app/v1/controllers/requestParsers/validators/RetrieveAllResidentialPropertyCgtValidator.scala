@@ -17,12 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRawData
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: AppConfig)
@@ -30,7 +30,7 @@ class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: 
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveAllResidentialPropertyCgtRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveAllResidentialPropertyCgtRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

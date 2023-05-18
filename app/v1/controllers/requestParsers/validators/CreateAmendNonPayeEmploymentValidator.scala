@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import utils.CurrentDateTime
 import v1.models.request.createAmendNonPayeEmployment._
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -36,7 +36,7 @@ class CreateAmendNonPayeEmploymentValidator @Inject() (implicit currentDateTime:
     bodyValueValidator
   )
 
-  override def validate(data: CreateAmendNonPayeEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendNonPayeEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

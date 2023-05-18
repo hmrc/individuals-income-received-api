@@ -16,20 +16,16 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_NON_PAYE_EMPLOYMENT_INCOME, DELETE_NON_PAYE_EMPLOYMENT_INCOME, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveNonPayeEmploymentControllerFixture._
 import v1.mocks.requestParsers.MockRetrieveNonPayeEmploymentRequestParser
 import v1.mocks.services.MockRetrieveNonPayeEmploymentService
@@ -41,33 +37,30 @@ import scala.concurrent.Future
 
 class RetrieveNonPayeEmploymentControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveNonPayeEmploymentService
     with MockHateoasFactory
     with MockRetrieveNonPayeEmploymentRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with HateoasLinks {
 
-  val nino: String          = "AA123456A"
   val taxYear: String       = "2019-20"
-  val correlationId: String = "X-123"
+  val source: MtdSourceEnum = MtdSourceEnum.hmrcHeld
 
-  def rawData(source: Option[String] = None): RetrieveNonPayeEmploymentIncomeRawData =
+  val rawData: RetrieveNonPayeEmploymentIncomeRawData =
     RetrieveNonPayeEmploymentIncomeRawData(
       nino = nino,
       taxYear = taxYear,
-      source
+      source = Some(source.toString)
     )
 
   val requestData: RetrieveNonPayeEmploymentIncomeRequest =
     RetrieveNonPayeEmploymentIncomeRequest(
       nino = Nino(nino),
       taxYear = TaxYear.fromMtd(taxYear),
-      MtdSourceEnum.latest
+      source = source
     )
 
-  val hateoasLinks = Seq(
+  private val hateoasLinks = Seq(
     Link(
       href = s"/individuals/income-received/employments/non-paye/$nino/$taxYear",
       method = PUT,
@@ -85,41 +78,11 @@ class RetrieveNonPayeEmploymentControllerSpec
     )
   )
 
-  val desErrorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_VIEW"              -> InternalError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
-    )
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveNonPayeEmploymentController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveNonPayeEmploymentRequestParser,
-      service = mockRetrieveNonPayeEmploymentService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "RetrieveNonPayeEmploymentIncomeController" should {
     "return OK" when {
-      "endpoint is hit without a source" in new Test {
+      "the request is valid" in new Test {
         MockRetrieveNonPayeEmploymentRequestParser
-          .parse(rawData())
+          .parse(rawData)
           .returns(Right(requestData))
 
         MockRetrieveNonPayeEmploymentService
@@ -130,103 +93,46 @@ class RetrieveNonPayeEmploymentControllerSpec
           .wrap(responseModel, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
           .returns(HateoasWrapper(responseModel, hateoasLinks))
 
-        val result: Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, None)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponseWithHateoas(nino, taxYear)
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseWithHateoas(nino, taxYear)))
       }
-
-      def endpointIsHitWithASource(source: String, desSource: String): Unit =
-        s"endpoint is hit with source $source" in new Test {
-          MockRetrieveNonPayeEmploymentRequestParser
-            .parse(rawData(Some(source)))
-            .returns(Right(requestData))
-
-          MockRetrieveNonPayeEmploymentService
-            .retrieveNonPayeEmployment(requestData)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
-
-          MockHateoasFactory
-            .wrap(responseModel, RetrieveNonPayeEmploymentIncomeHateoasData(nino, taxYear))
-            .returns(HateoasWrapper(responseModel, hateoasLinks))
-
-          val result: Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, Some(source))(fakeGetRequest)
-
-          status(result) shouldBe OK
-          contentAsJson(result) shouldBe mtdResponseWithHateoas(nino, taxYear)
-          header("X-CorrelationId", result) shouldBe Some(correlationId)
-        }
-
-      val input = Seq(
-        ("latest", "LATEST"),
-        ("hmrcHeld", "HMRC-HELD"),
-        ("user", "CUSTOMER")
-      )
-
-      input.foreach(args => (endpointIsHitWithASource _).tupled(args))
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveNonPayeEmploymentRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            MockRetrieveNonPayeEmploymentRequestParser
-              .parse(rawData())
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, None)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (SourceFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockRetrieveNonPayeEmploymentRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockRetrieveNonPayeEmploymentRequestParser
-              .parse(rawData())
-              .returns(Right(requestData))
+        MockRetrieveNonPayeEmploymentService
+          .retrieveNonPayeEmployment(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockRetrieveNonPayeEmploymentService
-              .retrieveNonPayeEmployment(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, None)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(RuleTaxYearNotSupportedError)
       }
     }
+  }
+
+  trait Test extends ControllerTest {
+
+    val controller = new RetrieveNonPayeEmploymentController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      parser = mockRetrieveNonPayeEmploymentRequestParser,
+      service = mockRetrieveNonPayeEmploymentService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveNonPayeEmployment(nino, taxYear, Some(source.toString))(fakeGetRequest)
   }
 
 }

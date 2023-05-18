@@ -16,8 +16,8 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -123,7 +123,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseBody)
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseBody
         response.header("Content-Type") shouldBe Some("application/json")
@@ -134,7 +134,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseBody)
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseBody
         response.header("Content-Type") shouldBe Some("application/json")
@@ -150,7 +150,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -173,7 +173,7 @@ class RetrievePensionsControllerISpec extends IntegrationBaseSpec {
             override def setupStubs(): Unit =
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

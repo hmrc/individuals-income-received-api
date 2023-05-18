@@ -17,17 +17,18 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.models.errors.MtdError
-import javax.inject.Singleton
-import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequestBody}
 import api.controllers.requestParsers.validators.validations._
+import api.models.errors.MtdError
+import v1.models.request.addUkSavingsAccount.{AddUkSavingsAccountRawData, AddUkSavingsAccountRequestBody}
+
+import javax.inject.Singleton
 
 @Singleton
 class AddUkSavingsAccountValidator extends Validator[AddUkSavingsAccountRawData] {
 
   private val validationSet = List(parameterFormatValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AddUkSavingsAccountRawData): Seq[MtdError] = {
+  override def validate(data: AddUkSavingsAccountRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

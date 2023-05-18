@@ -17,19 +17,19 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawData
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class RetrieveFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveFinancialDetailsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveFinancialDetailsRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveFinancialDetailsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

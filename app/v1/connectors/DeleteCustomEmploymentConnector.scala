@@ -16,9 +16,11 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
+import api.connectors.DownstreamUri.IfsUri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -26,13 +28,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCustomEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def delete()(implicit
+  def delete(request: DeleteCustomEmploymentRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      downstreamUri: DownstreamUri[Unit],
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
+
+    val downstreamUri = IfsUri[Unit](s"income-tax/income/employments/$nino/$taxYear/custom/$employmentId")
 
     delete(uri = downstreamUri)
   }

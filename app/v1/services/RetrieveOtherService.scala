@@ -16,13 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveOtherConnector
 import v1.models.request.retrieveOther.RetrieveOtherRequest
 import v1.models.response.retrieveOther.RetrieveOtherResponse
@@ -31,13 +28,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherService @Inject() (connector: RetrieveOtherConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveOtherService @Inject() (connector: RetrieveOtherConnector) extends BaseService {
 
-  def retrieve(request: RetrieveOtherRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherResponse]]] = {
+  def retrieve(request: RetrieveOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherResponse]] = {
 
     connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

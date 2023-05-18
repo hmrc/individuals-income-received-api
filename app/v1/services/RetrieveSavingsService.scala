@@ -16,14 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveSavingsConnector
 import v1.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
@@ -32,20 +28,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSavingsService @Inject() (connector: RetrieveSavingsConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveSavingsService @Inject() (connector: RetrieveSavingsConnector) extends BaseService {
 
-  def retrieve(request: RetrieveSavingsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSavingsResponse]]] = {
+  def retrieveSavings(
+      request: RetrieveSavingsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveSavingsResponse]] = {
 
-    val result = EitherT(connector.retrieveSavings(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector.retrieveSavings(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

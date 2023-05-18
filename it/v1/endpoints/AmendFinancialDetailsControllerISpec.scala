@@ -406,10 +406,10 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
       val invalidFieldTypeErrors: MtdError = RuleIncorrectOrEmptyBodyError.copy(
         paths = Some(
           List(
-            "/employment/pay/taxablePayToDate",
-            "/employment/pay/totalTaxToDate",
+            "/employment/benefitsInKind/accommodation",
             "/employment/deductions/studentLoans/uglDeductionAmount",
-            "/employment/benefitsInKind/accommodation"
+            "/employment/pay/taxablePayToDate",
+            "/employment/pay/totalTaxToDate"
           ))
       )
 
@@ -532,126 +532,44 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
             override val employmentId: String     = requestEmploymentId
             override val requestBodyJson: JsValue = requestBody
 
-            override def request: WSRequest = if (taxYear == "2023-24") {
-              super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
-            } else {
-              super.request()
-            }
-
             val response: WSResponse = await(request().put(requestBodyJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
-
           }
         }
 
         val input = List(
-          (
-            "AA1123A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            standardRequestJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", NinoFormatError, None),
-            None),
-          (
-            "AA123456A",
-            "20199",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            standardRequestJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", TaxYearFormatError, None),
-            None),
-          ("AA123456A", "2019-20", "ABCDE12345FG", standardRequestJson, BAD_REQUEST, ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
-          (
-            "AA123456A",
-            "2018-19",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            standardRequestJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None),
-            None),
-          (
-            "AA123456A",
-            "2019-21",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            standardRequestJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None),
-            None),
-          (
-            "AA123456A",
-            getCurrentTaxYear,
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            standardRequestJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", RuleTaxYearNotEndedError, None),
-            None),
-          (
-            "AA123456A",
-            "2019-20",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            emptyRequestJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None),
-            None),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            nonValidRequestBodyJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", invalidFieldTypeErrors, None),
-            Some("(invalid field type)")),
-          (
-            "AA123456A",
-            "2019-20",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            missingEmploymentObjectRequestBodyJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None),
+          // @formatter:off
+          ("AA1123A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", standardRequestJson,
+            BAD_REQUEST, ErrorWrapper("X-123", NinoFormatError, None), None),
+          ("AA123456A", "20199", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", standardRequestJson,
+            BAD_REQUEST, ErrorWrapper("X-123", TaxYearFormatError, None), None),
+          ("AA123456A", "2019-20", "ABCDE12345FG", standardRequestJson, BAD_REQUEST,
+            ErrorWrapper("X-123", EmploymentIdFormatError, None), None),
+          ("AA123456A", "2018-19", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", standardRequestJson,
+            BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearNotSupportedError, None), None),
+          ("AA123456A", "2019-21", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", standardRequestJson,
+            BAD_REQUEST, ErrorWrapper("X-123", RuleTaxYearRangeInvalidError, None), None),
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson,
+            BAD_REQUEST, ErrorWrapper("X-123", RuleIncorrectOrEmptyBodyError, None), None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson,
+            BAD_REQUEST, ErrorWrapper("X-123", invalidFieldTypeErrors, None), Some("(invalid field type)")),
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingEmploymentObjectRequestBodyJson,
+            BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryEmploymentObjectError, None),
             Some("(missing mandatory employment object)")),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            missingPayObjectRequestBodyJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", missingMandatoryPayObjectError, None),
-            Some("(missing mandatory pay object)")),
-          (
-            "AA123456A",
-            "2019-20",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            missingFieldsRequestBodyJson,
-            BAD_REQUEST,
-            ErrorWrapper("X-123", missingMandatoryFieldsErrors, None),
-            Some("(missing mandatory fields)")),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            allInvalidValueRequestBodyJson,
-            BAD_REQUEST,
-            errors.ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)),
-            None),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            offPayrollRequestBodyJson(true),
-            BAD_REQUEST,
-            errors.ErrorWrapper("X-123", RuleNotAllowedOffPayrollWorker, None),
-            None),
-          (
-            "AA123456A",
-            "2023-24",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            standardRequestJson,
-            BAD_REQUEST,
-            errors.ErrorWrapper("X-123", RuleMissingOffPayrollWorker, None),
-            None)
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", missingPayObjectRequestBodyJson,
+            BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryPayObjectError, None), Some("(missing mandatory pay object)")),
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldsRequestBodyJson,
+            BAD_REQUEST, ErrorWrapper("X-123", missingMandatoryFieldsErrors, None), Some("(missing mandatory fields)")),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", allInvalidValueRequestBodyJson,
+            BAD_REQUEST, ErrorWrapper("X-123", BadRequestError, Some(allInvalidValueErrors)), None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", offPayrollRequestBodyJson(true),
+            BAD_REQUEST, ErrorWrapper("X-123", RuleNotAllowedOffPayrollWorker, None), None),
+          ("AA123456A", "2023-24", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", standardRequestJson,
+            BAD_REQUEST, ErrorWrapper("X-123", RuleMissingOffPayrollWorker, None), None)
+          // @formatter:on
         )
+
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -852,17 +770,12 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
     val downstreamUri: String = s"/income-tax/income/employments/$nino/$taxYear/$employmentId"
 
     def taxYear: String = "2019-20"
-
   }
 
   private trait TysIfsTest extends Test {
     val downstreamUri: String = s"/income-tax/23-24/income/employments/$nino/$employmentId"
 
     def taxYear: String = "2023-24"
-
-    override def request(): WSRequest =
-      super.request().addHttpHeaders("suspend-temporal-validations" -> "true")
-
   }
 
 }

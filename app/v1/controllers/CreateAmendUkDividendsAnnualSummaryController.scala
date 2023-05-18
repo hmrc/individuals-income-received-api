@@ -16,39 +16,30 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.{AmendHateoasBody, HateoasFactory}
-import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
-import api.models.errors._
+import api.controllers._
+import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendUkDividendsIncomeAnnualSummaryRequestParser
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRawData
 import v1.models.response.createAmendUkDividendsIncomeAnnualSummary.CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData
 import v1.services.CreateAmendUkDividendsAnnualSummaryService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
                                                                val lookupService: MtdIdLookupService,
-                                                               requestParser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser,
+                                                               parser: CreateAmendUkDividendsIncomeAnnualSummaryRequestParser,
                                                                service: CreateAmendUkDividendsAnnualSummaryService,
                                                                auditService: AuditService,
                                                                hateoasFactory: HateoasFactory,
                                                                cc: ControllerComponents,
                                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
-    with Logging
-    with AmendHateoasBody {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -58,10 +49,7 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
 
   def createAmendUkDividendsAnnualSummary(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}]" +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
         nino = nino,
@@ -69,82 +57,21 @@ class CreateAmendUkDividendsAnnualSummaryController @Inject() (val authService: 
         body = AnyContentAsJson(request.body)
       )
 
-      val result = for {
-        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.createOrAmendAnnualSummary(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory
-            .wrap(serviceResponse.responseData, CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear))
-            .asRight[ErrorWrapper])
-      } yield {
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with CorrelationId: ${serviceResponse.correlationId}"
-        )
-
-        val jsonResponse = Json.toJson(vendorResponse)
-
-        auditSubmission(
-          FlattenedGenericAuditDetail(
-            versionNumber = Some("1.0"),
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body),
-            serviceResponse.correlationId,
-            AuditResponse(httpStatus = OK, response = Right(Some(jsonResponse)))
+      val requestHandler = RequestHandler
+        .withParser(parser)
+        .withService(service.createAmendUkDividends)
+        .withAuditing(
+          AuditHandler(
+            auditService = auditService,
+            auditType = "CreateAndAmendUkDividendsIncome",
+            transactionName = "create-amend-uk-dividends-income",
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            requestBody = Some(request.body),
+            includeResponse = true
           )
         )
-
-        Ok(jsonResponse)
-          .withApiHeaders(serviceResponse.correlationId)
-      }
-
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        auditSubmission(
-          FlattenedGenericAuditDetail(
-            Some("1.0"),
-            request.userDetails,
-            Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body),
-            resCorrelationId,
-            AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+        .withHateoasResult(hateoasFactory)(CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear))
+      requestHandler.handleRequest(rawData)
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotSupportedError,
-            ValueFormatError,
-            RuleIncorrectOrEmptyBodyError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
-    }
-  }
-
-  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("CreateAndAmendUkDividendsIncome", "create-amend-uk-dividends-income", details)
-    auditService.auditEvent(event)
-  }
 
 }

@@ -375,6 +375,9 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       "multiple fields fail value validation" in new Test {
         validator.validate(AmendForeignRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            CountryCodeFormatError.copy(
+              paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+            ),
             CustomerRefFormatError.copy(
               paths = Some(List("/foreignEarnings/customerReference"))
             ),
@@ -387,9 +390,6 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
                 "/unremittableForeignIncome/1/amountTaxPaid"
               )),
               message = ZERO_MINIMUM_INCLUSIVE
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
             ),
             CountryCodeRuleError.copy(
               paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))

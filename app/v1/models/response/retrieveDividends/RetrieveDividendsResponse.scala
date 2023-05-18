@@ -19,9 +19,9 @@ package v1.models.response.retrieveDividends
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
+import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
-import play.api.libs.functional.syntax._
 
 case class RetrieveDividendsResponse(submittedOn: String,
                                      foreignDividend: Option[Seq[ForeignDividendItem]],

@@ -66,8 +66,7 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val taxYear        = "2019-20"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
-    }
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()    }
 
     "wrapping a RetrieveForeignResponse object" should {
       "expose the correct hateoas links" in new Test {

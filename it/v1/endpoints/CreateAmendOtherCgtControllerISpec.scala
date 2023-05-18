@@ -17,8 +17,8 @@
 package v1.endpoints
 
 import api.controllers.requestParsers.validators.validations.DisposalDateErrorMessages
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -100,12 +100,12 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(
       Seq(
-        "/disposals/0/disposalDate",
         "/disposals/0/acquisitionDate",
+        "/disposals/0/allowableCosts",
         "/disposals/0/assetDescription",
-        "/disposals/0/disposalProceeds",
         "/disposals/0/assetType",
-        "/disposals/0/allowableCosts"
+        "/disposals/0/disposalDate",
+        "/disposals/0/disposalProceeds"
       ))
   )
 
@@ -139,13 +139,13 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
     BadRequestError,
     Some(
       Seq(
-        RuleGainLossError.copy(
+        RuleGainAfterReliefLossAfterReliefError.copy(
           paths = Some(
             Seq(
               "/disposals/0"
             ))
         ),
-        RuleGainAfterReliefLossAfterReliefError.copy(
+        RuleGainLossError.copy(
           paths = Some(
             Seq(
               "/disposals/0"
@@ -296,13 +296,6 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
     BadRequestError,
     Some(
       Seq(
-        DateFormatError.copy(
-          paths = Some(
-            Seq(
-              "/disposals/0/acquisitionDate",
-              "/disposals/0/disposalDate"
-            ))
-        ),
         AssetDescriptionFormatError.copy(
           paths = Some(
             Seq(
@@ -321,49 +314,12 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
               "/disposals/0/claimOrElectionCodes/0",
               "/disposals/0/claimOrElectionCodes/1"
             ))
-        )
-      ))
-  )
-
-  val ruleDateJson: JsValue = Json.parse(
-    """
-      |{
-      |   "disposals":[
-      |      {
-      |         "assetType":"otherProperty",
-      |         "assetDescription":"string",
-      |         "acquisitionDate":"2023-05-07",
-      |         "disposalDate":"2022-05-07",
-      |         "disposalProceeds":59999999999.99,
-      |         "allowableCosts":59999999999.99,
-      |         "gain":59999999999.99,
-      |         "claimOrElectionCodes":[
-      |            "OTH"
-      |         ],
-      |         "gainAfterRelief":59999999999.99,
-      |         "rttTaxPaid":59999999999.99
-      |      }
-      |   ]
-      |}
-   """.stripMargin
-  )
-
-  val ruleDateErrors: ErrorWrapper = ErrorWrapper(
-    correlationId = "",
-    BadRequestError,
-    Some(
-      Seq(
-        RuleDisposalDateError.copy(
-          paths = Some(
-            Seq(
-              "/disposals/0"
-            )),
-          message = IN_YEAR_NO_LATER_THAN_TODAY
         ),
-        RuleAcquisitionDateError.copy(
+        DateFormatError.copy(
           paths = Some(
             Seq(
-              "/disposals/0"
+              "/disposals/0/acquisitionDate",
+              "/disposals/0/disposalDate"
             ))
         )
       ))
@@ -544,7 +500,6 @@ class CreateAmendOtherCgtControllerISpec extends IntegrationBaseSpec with Dispos
           ("AA123456A", "2021-22", decimalsTooBigJson, BAD_REQUEST, BadRequestError, Some(decimalsOutOfRangeErrors), Some("decimalsTooBig")),
           ("AA123456A", "2021-22", decimalsTooSmallJson, BAD_REQUEST, BadRequestError, Some(decimalsOutOfRangeErrors), Some("decimalsTooSmall")),
           ("AA123456A", "2021-22", formatDisposalsJson, BAD_REQUEST, BadRequestError, Some(formatDisposalsErrors), Some("formatDisposals")),
-          ("AA123456A", "2021-22", ruleDateJson, BAD_REQUEST, BadRequestError, Some(ruleDateErrors), Some("ruleDate")),
           ("AA123456A", "2021-22", formatNonStandardGainsJson, BAD_REQUEST, formatNonStandardGainsError, None, Some("formatNonStandardGains"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))

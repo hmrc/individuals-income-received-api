@@ -23,25 +23,26 @@ trait Validator[A <: RawData] {
 
   type ValidationLevel[T] = T => List[MtdError]
 
-  def validate(data: A): Seq[MtdError]
+  def validate(data: A): List[MtdError]
 
-  def run(validationSet: Seq[A => Seq[Seq[MtdError]]], data: A): Seq[MtdError] = {
+  def run(validationSet: List[A => List[List[MtdError]]], data: A): List[MtdError] = {
 
     validationSet match {
-      case Nil => Nil
+      case Nil => List()
       case thisLevel :: remainingLevels =>
         thisLevel(data).flatten match {
-          case x if x.isEmpty  => run(remainingLevels, data)
           case x if x.nonEmpty => x
+          case _               => run(remainingLevels, data)
         }
     }
   }
 
-  def flattenErrors(errors: Seq[Seq[MtdError]]): List[MtdError] = {
+  def flattenErrors(errors: List[List[MtdError]]): List[MtdError] = {
     errors.flatten
       .groupBy(_.message)
       .map { case (_, errors) =>
         val baseError = errors.head.copy(paths = Some(Seq.empty[String]))
+
         errors.fold(baseError)((error1, error2) => {
           val paths: Option[Seq[String]] = for {
             error1Paths <- error1.paths
@@ -53,6 +54,7 @@ trait Validator[A <: RawData] {
         })
       }
       .toList
+      .sortBy(_.code)
   }
 
 }

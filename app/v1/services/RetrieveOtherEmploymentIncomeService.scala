@@ -16,40 +16,30 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.services.{BaseService, ServiceOutcome}
+import cats.implicits._
 import v1.connectors.OtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector) extends BaseService {
 
   def retrieve(request: OtherEmploymentIncomeRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherEmploymentResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherEmploymentResponse]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveOtherEmploymentIncome(request))
-        .leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
+    connector.retrieveOtherEmploymentIncome(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def errorMap: Map[String, MtdError] = {
-    val errorMap = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -62,7 +52,7 @@ class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmployment
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
       "NOT_FOUND"              -> NotFoundError
     )
-    errorMap ++ extraTysErrors
+    errors ++ extraTysErrors
   }
 
 }

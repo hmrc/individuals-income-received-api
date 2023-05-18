@@ -16,13 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, InternalError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.{BaseService, ServiceOutcome}
+import cats.implicits._
 import v1.connectors.RetrievePensionsConnector
 import v1.models.request.retrievePensions.RetrievePensionsRequest
 import v1.models.response.retrievePensions.RetrievePensionsResponse
@@ -31,20 +28,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrievePensionsService @Inject() (connector: RetrievePensionsConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrievePensionsService @Inject() (connector: RetrievePensionsConnector) extends BaseService {
 
-  def retrievePensions(request: RetrievePensionsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrievePensionsResponse]]] = {
+  def retrievePensions(
+      request: RetrievePensionsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrievePensionsResponse]] = {
 
-    val result = EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+    connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
@@ -53,6 +45,7 @@ class RetrievePensionsService @Inject() (connector: RetrievePensionsConnector) e
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError
     )
+
     val extraTysErrors = Map(
       "INVALID_CORRELATION_ID" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError

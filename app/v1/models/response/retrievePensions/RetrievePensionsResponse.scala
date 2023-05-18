@@ -42,7 +42,7 @@ object RetrievePensionsResponse extends HateoasLinks with JsonUtils {
     override def links(appConfig: AppConfig, data: RetrievePensionsHateoasData): Seq[Link] = {
       import data._
       Seq(
-        amendPensions(appConfig, nino, taxYear),
+        createAmendPensions(appConfig, nino, taxYear),
         retrievePensions(appConfig, nino, taxYear),
         deletePensions(appConfig, nino, taxYear)
       )

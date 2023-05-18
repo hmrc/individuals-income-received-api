@@ -16,37 +16,27 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, InternalError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AmendOtherEmploymentConnector
 import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConnector) extends BaseService {
 
-  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendOtherEmployment(request: AmendOtherEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    val result = EitherT(connector.amendOtherEmployment(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    connector.amendOtherEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
-    def errors: Map[String, MtdError] = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = {
+    val errors: Map[String, MtdError] = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -56,7 +46,7 @@ class AmendOtherEmploymentService @Inject() (connector: AmendOtherEmploymentConn
       "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
-    def extraTysErrors: Map[String, MtdError] = Map(
+    val extraTysErrors: Map[String, MtdError] = Map(
       "INVALID_CORRELATION_ID" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )

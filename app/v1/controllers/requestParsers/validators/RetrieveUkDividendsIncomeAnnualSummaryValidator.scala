@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRawData
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -30,7 +30,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryValidator @Inject() (implicit appCon
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveUkDividendsAnnualIncomeSummaryRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveUkDividendsAnnualIncomeSummaryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

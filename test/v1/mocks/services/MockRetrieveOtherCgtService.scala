@@ -16,12 +16,10 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRequest
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
 import v1.services.RetrieveOtherCgtService
@@ -35,16 +33,10 @@ trait MockRetrieveOtherCgtService extends MockFactory {
 
   object MockRetrieveOtherCgtService {
 
-    def retrieve(requestData: RetrieveOtherCgtRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveOtherCgtResponse]]]] = (
-      mockRetrieveOtherCgtService
-        .retrieve(_: RetrieveOtherCgtRequest)(
-          _: HeaderCarrier,
-          _: ExecutionContext,
-          _: EndpointLogContext,
-          _: String
-        )
-      )
-      .expects(requestData, *, *, *, *)
+    def retrieve(requestData: RetrieveOtherCgtRequest): CallHandler[Future[ServiceOutcome[RetrieveOtherCgtResponse]]] =
+      (mockRetrieveOtherCgtService
+        .retrieve(_: RetrieveOtherCgtRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
 
   }
 

@@ -17,19 +17,19 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class RetrieveEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

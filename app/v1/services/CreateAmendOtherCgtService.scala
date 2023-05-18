@@ -16,46 +16,26 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleAcquisitionDateError,
-  RuleDisposalDateError,
-  RuleTaxYearNotSupportedError,
-  InternalError,
-  TaxYearFormatError
-}
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.toBifunctorOps
 import v1.connectors.CreateAmendOtherCgtConnector
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherCgtService @Inject() (connector: CreateAmendOtherCgtConnector) extends DownstreamResponseMappingSupport with Logging {
+class CreateAmendOtherCgtService @Inject() (connector: CreateAmendOtherCgtConnector) extends BaseService {
 
-  def createAmend(request: CreateAmendOtherCgtRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def createAmend(request: CreateAmendOtherCgtRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.createAndAmend(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper
+    connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

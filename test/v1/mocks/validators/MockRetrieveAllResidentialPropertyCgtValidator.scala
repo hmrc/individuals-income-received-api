@@ -28,7 +28,7 @@ trait MockRetrieveAllResidentialPropertyCgtValidator extends MockFactory {
 
   object MockRetrieveAllResidentialPropertyCgtValidator {
 
-    def validate(data: RetrieveAllResidentialPropertyCgtRawData): CallHandler1[RetrieveAllResidentialPropertyCgtRawData, Seq[MtdError]] = {
+    def validate(data: RetrieveAllResidentialPropertyCgtRawData): CallHandler1[RetrieveAllResidentialPropertyCgtRawData, List[MtdError]] = {
       (mockRetrieveAllResidentialPropertyCgtValidator
         .validate(_: RetrieveAllResidentialPropertyCgtRawData))
         .expects(data)

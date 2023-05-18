@@ -19,7 +19,7 @@ package v1.models.response.addUkSavingsAccount
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
-import play.api.libs.json.{JsPath, Json, Reads, OWrites}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class AddUkSavingsAccountResponse(savingsAccountId: String)
 
@@ -37,7 +37,9 @@ object AddUkSavingsAccountResponse extends HateoasLinks {
         listUkSavings(appConfig, nino)
       )
     }
+
   }
+
 }
 
 case class AddUkSavingsAccountHateoasData(nino: String, savingsAccountId: String) extends HateoasData

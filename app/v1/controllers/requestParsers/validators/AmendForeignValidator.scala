@@ -17,19 +17,19 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.amendForeign._
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendForeign._
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendForeignRawData): Seq[MtdError] = {
+  override def validate(data: AmendForeignRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

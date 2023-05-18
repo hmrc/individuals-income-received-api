@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.RetrieveFinancialDetailsRequestParser
-import v1.models.request.retrieveFinancialDetails.{RetrieveFinancialDetailsRawData, RetrieveEmploymentAndFinancialDetailsRequest}
+import v1.models.request.retrieveFinancialDetails.{RetrieveEmploymentAndFinancialDetailsRequest, RetrieveFinancialDetailsRawData}
 
 trait MockRetrieveEmploymentAndFinancialDetailsRequestParser extends MockFactory {
 

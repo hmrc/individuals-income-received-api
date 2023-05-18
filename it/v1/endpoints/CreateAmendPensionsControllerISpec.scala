@@ -16,9 +16,9 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -217,6 +217,48 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          CountryCodeFormatError.copy(
+            paths = Some(
+              List(
+                "/foreignPensions/1/countryCode",
+                "/overseasPensionContributions/1/dblTaxationCountryCode"
+              ))
+          ),
+          CustomerRefFormatError.copy(
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/customerReference",
+                "/overseasPensionContributions/1/customerReference"
+              ))
+          ),
+          DoubleTaxationArticleFormatError.copy(
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/dblTaxationArticle",
+                "/overseasPensionContributions/1/dblTaxationArticle"
+              ))
+          ),
+          DoubleTaxationTreatyFormatError.copy(
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/dblTaxationTreaty",
+                "/overseasPensionContributions/1/dblTaxationTreaty"
+              ))
+          ),
+          QOPSRefFormatError.copy(
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
+                "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
+              ))
+          ),
+          SF74RefFormatError.copy(
+            paths = Some(
+              List(
+                "/overseasPensionContributions/0/sf74reference",
+                "/overseasPensionContributions/1/sf74reference"
+              ))
+          ),
           ValueFormatError.copy(
             message = "The value must be between 0 and 99999999999.99",
             paths = Some(
@@ -235,53 +277,11 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
                 "/overseasPensionContributions/1/dblTaxationRelief"
               ))
           ),
-          CustomerRefFormatError.copy(
-            paths = Some(
-              List(
-                "/overseasPensionContributions/0/customerReference",
-                "/overseasPensionContributions/1/customerReference"
-              ))
-          ),
-          QOPSRefFormatError.copy(
-            paths = Some(
-              List(
-                "/overseasPensionContributions/0/migrantMemReliefQopsRefNo",
-                "/overseasPensionContributions/1/migrantMemReliefQopsRefNo"
-              ))
-          ),
-          SF74RefFormatError.copy(
-            paths = Some(
-              List(
-                "/overseasPensionContributions/0/sf74reference",
-                "/overseasPensionContributions/1/sf74reference"
-              ))
-          ),
-          DoubleTaxationTreatyFormatError.copy(
-            paths = Some(
-              List(
-                "/overseasPensionContributions/0/dblTaxationTreaty",
-                "/overseasPensionContributions/1/dblTaxationTreaty"
-              ))
-          ),
           CountryCodeRuleError.copy(
             paths = Some(
               List(
                 "/foreignPensions/0/countryCode",
                 "/overseasPensionContributions/0/dblTaxationCountryCode"
-              ))
-          ),
-          DoubleTaxationArticleFormatError.copy(
-            paths = Some(
-              List(
-                "/overseasPensionContributions/0/dblTaxationArticle",
-                "/overseasPensionContributions/1/dblTaxationArticle"
-              ))
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(
-              List(
-                "/foreignPensions/1/countryCode",
-                "/overseasPensionContributions/1/dblTaxationCountryCode"
               ))
           )
         )
@@ -356,11 +356,11 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
             |   "message":"Invalid request",
             |   "errors": [
             |        {
-            |            "code": "FORMAT_VALUE",
-            |            "message": "The value must be between 0 and 99999999999.99",
+            |            "code": "FORMAT_COUNTRY_CODE",
+            |            "message": "The format of the country code is invalid",
             |            "paths": [
-            |                "/foreignPensions/1/taxableAmount",
-            |                "/overseasPensionContributions/0/dblTaxationRelief"
+            |                "/foreignPensions/0/countryCode",
+            |                "/overseasPensionContributions/1/dblTaxationCountryCode"
             |            ]
             |        },
             |        {
@@ -368,6 +368,20 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
             |            "message": "The provided customer reference is invalid",
             |            "paths": [
             |                "/overseasPensionContributions/1/customerReference"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_DOUBLE_TAXATION_ARTICLE",
+            |            "message": "The provided double taxation article is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/dblTaxationArticle"
+            |            ]
+            |        },
+            |        {
+            |            "code": "FORMAT_DOUBLE_TAXATION_TREATY",
+            |            "message": "The provided double taxation treaty is invalid",
+            |            "paths": [
+            |                "/overseasPensionContributions/1/dblTaxationTreaty"
             |            ]
             |        },
             |        {
@@ -385,10 +399,11 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
             |            ]
             |        },
             |        {
-            |            "code": "FORMAT_DOUBLE_TAXATION_TREATY",
-            |            "message": "The provided double taxation treaty is invalid",
+            |            "code": "FORMAT_VALUE",
+            |            "message": "The value must be between 0 and 99999999999.99",
             |            "paths": [
-            |                "/overseasPensionContributions/1/dblTaxationTreaty"
+            |                "/foreignPensions/1/taxableAmount",
+            |                "/overseasPensionContributions/0/dblTaxationRelief"
             |            ]
             |        },
             |        {
@@ -397,21 +412,6 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
             |            "paths": [
             |                "/foreignPensions/1/countryCode",
             |                "/overseasPensionContributions/0/dblTaxationCountryCode"
-            |            ]
-            |        },
-            |        {
-            |            "code": "FORMAT_DOUBLE_TAXATION_ARTICLE",
-            |            "message": "The provided double taxation article is invalid",
-            |            "paths": [
-            |                "/overseasPensionContributions/1/dblTaxationArticle"
-            |            ]
-            |        },
-            |        {
-            |            "code": "FORMAT_COUNTRY_CODE",
-            |            "message": "The format of the country code is invalid",
-            |            "paths": [
-            |                "/foreignPensions/0/countryCode",
-            |                "/overseasPensionContributions/1/dblTaxationCountryCode"
             |            ]
             |        }
             |    ]

@@ -16,13 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.services.{BaseService, ServiceOutcome}
+import cats.implicits._
 import v1.connectors.CreateAmendUkSavingsAnnualSummaryConnector
 import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavingsAnnualSummaryRequest, DownstreamCreateAmendUkSavingsAnnualSummaryBody}
 
@@ -30,24 +27,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmendUkSavingsAnnualSummaryConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmendUkSavingsAnnualSummaryConnector) extends BaseService {
 
-  def createAmend(request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-    val result = for {
-      desResponseWrapper <- EitherT(
-        connector.createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request)))
-        .leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper
-    result.value
-  }
+  def createAmend(
+      request: CreateAmendUkSavingsAnnualSummaryRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] =
+    connector
+      .createOrAmendUKSavingsAccountSummary(request.nino, request.taxYear, DownstreamCreateAmendUkSavingsAnnualSummaryBody(request))
+      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_NINO"                      -> NinoFormatError,
       "INVALID_TAXYEAR"                   -> TaxYearFormatError,

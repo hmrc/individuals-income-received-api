@@ -19,9 +19,9 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v1.controllers.requestParsers.validators.AddUkSavingsAccountValidator
+import v1.models.request.addUkSavingsAccount._
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.addUkSavingsAccount._
 
 @Singleton
 class AddUkSavingsAccountRequestParser @Inject() (val validator: AddUkSavingsAccountValidator)

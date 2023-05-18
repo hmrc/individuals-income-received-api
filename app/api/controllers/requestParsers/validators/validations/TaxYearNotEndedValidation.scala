@@ -21,7 +21,6 @@ import api.models.errors.{MtdError, RuleTaxYearNotEndedError}
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import utils.CurrentDateTime
-import api.models.errors.RuleTaxYearNotEndedError
 
 object TaxYearNotEndedValidation {
 
@@ -35,12 +34,11 @@ object TaxYearNotEndedValidation {
     else NoValidationErrors
   }
 
+  private val expectedDateFormat = DateTimeFormat.forPattern("yyyy-MM-dd")
+
   private def getCurrentTaxYear(date: DateTime): Int = {
 
-    lazy val taxYearStartDate: DateTime = DateTime.parse(
-      date.getYear + "-04-06",
-      DateTimeFormat.forPattern("yyyy-MM-dd")
-    )
+    lazy val taxYearStartDate: DateTime = DateTime.parse(s"${date.getYear}-04-06", expectedDateFormat)
 
     if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
   }

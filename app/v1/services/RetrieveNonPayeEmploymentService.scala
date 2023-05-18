@@ -16,14 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.RetrieveNonPayeEmploymentConnector
 import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeRequest
 import v1.models.response.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmploymentIncomeResponse
@@ -32,23 +28,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveNonPayeEmploymentService @Inject() (connector: RetrieveNonPayeEmploymentConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveNonPayeEmploymentService @Inject() (connector: RetrieveNonPayeEmploymentConnector) extends BaseService {
 
   def retrieveNonPayeEmployment(request: RetrieveNonPayeEmploymentIncomeRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveNonPayeEmploymentIncomeResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]] = {
 
-    val result = EitherT(connector.retrieveNonPayeEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
+    connector.retrieveNonPayeEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  val errorMap: Map[String, MtdError] = {
-    val downstreamErrors = Map(
+  private val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_VIEW"              -> InternalError,
@@ -63,7 +54,7 @@ class RetrieveNonPayeEmploymentService @Inject() (connector: RetrieveNonPayeEmpl
       "NOT_FOUND" -> NotFoundError
     )
 
-    downstreamErrors ++ extraTysErrors
+    errors ++ extraTysErrors
 
   }
 

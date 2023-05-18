@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.deleteSavings.DeleteSavingsRawData
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject._
 
@@ -29,7 +29,7 @@ class DeleteSavingsValidator @Inject() (implicit appConfig: AppConfig) extends V
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: DeleteSavingsRawData): Seq[MtdError] = {
+  override def validate(data: DeleteSavingsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

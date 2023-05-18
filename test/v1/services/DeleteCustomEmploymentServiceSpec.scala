@@ -16,64 +16,52 @@
 
 package v1.services
 
-import api.connectors.DownstreamUri.DesUri
 import api.controllers.EndpointLogContext
+import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import play.api.libs.json.{Format, Json}
 import v1.mocks.connectors.MockDeleteCustomEmploymentConnector
+import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRequest
 
 import scala.concurrent.Future
 
 class DeleteCustomEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
-  private val taxYear = "2019-20"
-
-  trait Test extends MockDeleteCustomEmploymentConnector {
-
-    case class Data(field: Option[String])
-
-    object Data {
-      implicit val reads: Format[Data] = Json.format[Data]
-    }
-
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
-    implicit val deleteDesUri: DesUri[Unit]     = DesUri[Unit](s"income-tax/income/savings/$nino/$taxYear")
-    implicit val retrieveDesUri: DesUri[Data]   = DesUri[Data](s"income-tax/income/savings/$nino/$taxYear")
-
-    val service: DeleteCustomEmploymentService = new DeleteCustomEmploymentService(
-      connector = mockDeleteCustomEmploymentConnector
-    )
-
-  }
+  private val nino         = "AA112233A"
+  private val taxYear      = "2019-20"
+  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   "DeleteCustomEmploymentService" when {
     "delete" must {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockDeleteCustomEmploymentConnector
-          .delete()
+          .delete(request)
           .returns(Future.successful(outcome))
 
-        await(service.delete()) shouldBe outcome
+        val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(request))
+
+        result shouldBe outcome
       }
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
+            val outcome: Left[ErrorWrapper, Nothing] = Left(ErrorWrapper(correlationId, error))
 
             MockDeleteCustomEmploymentConnector
-              .delete()
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .delete(request)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.delete()) shouldBe Left(ErrorWrapper(correlationId, error))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.delete(request))
+
+            result shouldBe outcome
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -85,6 +73,18 @@ class DeleteCustomEmploymentServiceSpec extends ServiceSpec {
         input.foreach(args => (serviceError _).tupled(args))
       }
     }
+  }
+
+  trait Test extends MockDeleteCustomEmploymentConnector {
+
+    val request: DeleteCustomEmploymentRequest = DeleteCustomEmploymentRequest(Nino(nino), taxYear, employmentId)
+
+    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
+
+    val service: DeleteCustomEmploymentService = new DeleteCustomEmploymentService(
+      connector = mockDeleteCustomEmploymentConnector
+    )
+
   }
 
 }

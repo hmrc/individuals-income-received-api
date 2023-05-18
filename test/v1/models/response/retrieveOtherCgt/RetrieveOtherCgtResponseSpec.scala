@@ -179,8 +179,7 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
       val hateoasFactory  = new HateoasFactory(mockAppConfig)
       val nino            = "AA111111A"
       val taxYear: String = "2020-21"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes
-    }
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()    }
 
     "wrapping a response model" should {
       "expose the correct links" in new Test {

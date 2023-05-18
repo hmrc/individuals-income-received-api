@@ -16,10 +16,12 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
+import api.connectors.DownstreamUri.Release6Uri
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import play.api.libs.json.Reads
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.retrieveEmployment.RetrieveEmploymentRequest
+import v1.models.response.retrieveEmployment.RetrieveEmploymentResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -27,13 +29,17 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieve[Resp: Reads]()(implicit
+  def retrieve(request: RetrieveEmploymentRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      downstreamUri: DownstreamUri[Resp],
-      correlationId: String): Future[DownstreamOutcome[Resp]] = {
+      correlationId: String): Future[DownstreamOutcome[RetrieveEmploymentResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
+    import request._
+
+    val downstreamUri: Release6Uri[RetrieveEmploymentResponse] = Release6Uri[RetrieveEmploymentResponse](
+      s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
+    )
 
     get(uri = downstreamUri)
   }

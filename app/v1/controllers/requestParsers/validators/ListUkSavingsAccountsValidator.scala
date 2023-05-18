@@ -17,9 +17,9 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -28,7 +28,7 @@ class ListUkSavingsAccountsValidator @Inject() extends Validator[ListUkSavingsAc
 
   private val validationSet = List(parameterFormatValidation)
 
-  override def validate(data: ListUkSavingsAccountsRawData): Seq[MtdError] =
+  override def validate(data: ListUkSavingsAccountsRawData): List[MtdError] =
     run(validationSet, data).distinct
 
   private def parameterFormatValidation: ListUkSavingsAccountsRawData => List[List[MtdError]] =

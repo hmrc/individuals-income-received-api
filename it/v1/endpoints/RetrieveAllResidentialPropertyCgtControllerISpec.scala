@@ -16,8 +16,8 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -83,7 +83,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(mtdRequest.get)
+        val response: WSResponse = await(mtdRequest.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -98,7 +98,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(mtdRequest.get)
+        val response: WSResponse = await(mtdRequest.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -114,7 +114,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(mtdRequest.get)
+        val response: WSResponse = await(mtdRequest.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -141,7 +141,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(mtdRequest.get)
+            val response: WSResponse = await(mtdRequest.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -169,7 +169,7 @@ class RetrieveAllResidentialPropertyCgtControllerISpec extends IntegrationBaseSp
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, Map("view" -> "LATEST"), downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(mtdRequest.get)
+            val response: WSResponse = await(mtdRequest.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

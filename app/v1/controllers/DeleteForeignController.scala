@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteForeignRequestParser
 import v1.models.request.deleteForeign.DeleteForeignRawData
 import v1.services.DeleteForeignService
@@ -30,13 +30,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class DeleteForeignController @Inject() (val authService: EnrolmentsAuthService,
                                          val lookupService: MtdIdLookupService,
-                                         requestParser: DeleteForeignRequestParser,
+                                         parser: DeleteForeignRequestParser,
                                          service: DeleteForeignService,
                                          auditService: AuditService,
                                          cc: ControllerComponents,
                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,7 +53,7 @@ class DeleteForeignController @Inject() (val authService: EnrolmentsAuthService,
       )
 
       val requestHandler = RequestHandler
-        .withParser(requestParser)
+        .withParser(parser)
         .withService(service.deleteForeign)
         .withAuditing(AuditHandler(
           auditService = auditService,

@@ -76,25 +76,21 @@ class DeletePensionsControllerISpec extends IntegrationBaseSpec {
   "Calling the Delete Pensions Income endpoint" should {
     "return a 204 status code" when {
       "any valid request is made" in new NonTysTest {
-
         override def setupStubs(): Unit = DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
 
       "any valid request is made for a Tax Year Specific (TYS) tax year" in new TysIfsTest {
+        override def setupStubs(): Unit = DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
 
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
-        }
-
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
     }
 
@@ -106,7 +102,7 @@ class DeletePensionsControllerISpec extends IntegrationBaseSpec {
             override val nino: String    = requestNino
             override val taxYear: String = requestTaxYear
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -130,7 +126,7 @@ class DeletePensionsControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

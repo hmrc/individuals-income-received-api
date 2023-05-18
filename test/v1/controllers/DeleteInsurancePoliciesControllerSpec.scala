@@ -93,7 +93,7 @@ class DeleteInsurancePoliciesControllerSpec
     val controller = new DeleteInsurancePoliciesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockDeleteInsurancePoliciesParser,
+      parser = mockDeleteInsurancePoliciesParser,
       service = mockDeleteInsurancePoliciesService,
       auditService = mockAuditService,
       cc = cc,

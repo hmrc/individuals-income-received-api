@@ -29,7 +29,7 @@ tags:
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
-  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2017'
+  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2019'
   - $ref: './common/pathParameters.yaml#/components/parameters/savingsAccountId'
   - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
   - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'

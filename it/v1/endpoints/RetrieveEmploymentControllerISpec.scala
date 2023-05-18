@@ -16,8 +16,8 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -73,7 +73,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsHmrcEnteredResponseWithoutDateIgnored)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdHmrcEnteredResponseWithoutDateIgnored
         response.header("Content-Type") shouldBe Some("application/json")
@@ -92,7 +92,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsHmrcEnteredResponseWithDateIgnored)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdHmrcEnteredResponseWithDateIgnored
         response.header("Content-Type") shouldBe Some("application/json")
@@ -111,7 +111,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, ifsUri, ifsQueryParam, OK, ifsCustomEnteredResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdCustomEnteredResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -138,7 +138,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -166,7 +166,7 @@ class RetrieveEmploymentControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.GET, ifsUri, ifsStatus, errorBody(ifsCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

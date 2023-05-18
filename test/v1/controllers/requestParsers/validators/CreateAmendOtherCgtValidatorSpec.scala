@@ -525,12 +525,12 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
           List(
             RuleIncorrectOrEmptyBodyError.copy(
               paths = Some(Seq(
-                "/disposals/0/disposalDate",
                 "/disposals/0/acquisitionDate",
+                "/disposals/0/allowableCosts",
                 "/disposals/0/assetDescription",
-                "/disposals/0/disposalProceeds",
                 "/disposals/0/assetType",
-                "/disposals/0/allowableCosts"
+                "/disposals/0/disposalDate",
+                "/disposals/0/disposalProceeds"
               ))
             ))
       }
@@ -551,12 +551,12 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
         validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, missingMandatoryFieldRawRequestBody)) shouldBe
           List(
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-              "/disposals/0/disposalDate",
               "/disposals/0/acquisitionDate",
+              "/disposals/0/allowableCosts",
               "/disposals/0/assetDescription",
-              "/disposals/0/disposalProceeds",
               "/disposals/0/assetType",
-              "/disposals/0/allowableCosts"
+              "/disposals/0/disposalDate",
+              "/disposals/0/disposalProceeds"
             ))))
       }
 
@@ -753,33 +753,6 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
                 "/disposals/0/claimOrElectionCodes/2",
                 "/disposals/0/claimOrElectionCodes/3"
               ))
-            ))
-      }
-    }
-
-    "return RuleDisposalDateError error" when {
-      "supplied disposal date is invalid" in new Test {
-        validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, badDisposalDateRawRequestBody)) shouldBe
-          List(
-            RuleDisposalDateError.copy(
-              paths = Some(
-                Seq(
-                  "/disposals/0"
-                )),
-              message = IN_YEAR_NO_LATER_THAN_TODAY
-            ))
-      }
-    }
-
-    "return RuleAcquisitionDateError error" when {
-      "supplied acquisition date is invalid" in new Test {
-        validator.validate(CreateAmendOtherCgtRawData(validNino, validTaxYear, badAcquisitionDateRawRequestBody)) shouldBe
-          List(
-            RuleAcquisitionDateError.copy(
-              paths = Some(
-                Seq(
-                  "/disposals/0"
-                ))
             ))
       }
     }

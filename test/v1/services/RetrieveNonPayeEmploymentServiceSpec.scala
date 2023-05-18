@@ -67,7 +67,7 @@ class RetrieveNonPayeEmploymentServiceSpec extends ServiceSpec {
             await(service.retrieveNonPayeEmployment(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "INVALID_VIEW"              -> InternalError,
@@ -77,7 +77,7 @@ class RetrieveNonPayeEmploymentServiceSpec extends ServiceSpec {
           "SERVER_ERROR"              -> InternalError
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           "NOT_FOUND" -> NotFoundError
         )
 

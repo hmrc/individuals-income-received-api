@@ -307,6 +307,13 @@ class CreateAmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMess
       "multiple fields fail value validation" in new Test {
         validator.validate(CreateAmendSavingsRawData(validNino, validTaxYear, allInvalidValueRawRequestBody)) shouldBe
           List(
+            CountryCodeFormatError.copy(
+              paths = Some(
+                List(
+                  "/foreignInterest/0/countryCode",
+                  "/foreignInterest/1/countryCode"
+                ))
+            ),
             ValueFormatError.copy(
               message = ZERO_MINIMUM_INCLUSIVE,
               paths = Some(List(
@@ -322,13 +329,6 @@ class CreateAmendSavingsValidatorSpec extends UnitSpec with ValueFormatErrorMess
                 "/foreignInterest/1/specialWithholdingTax",
                 "/foreignInterest/1/taxableAmount"
               ))
-            ),
-            CountryCodeFormatError.copy(
-              paths = Some(
-                List(
-                  "/foreignInterest/0/countryCode",
-                  "/foreignInterest/1/countryCode"
-                ))
             )
           )
       }

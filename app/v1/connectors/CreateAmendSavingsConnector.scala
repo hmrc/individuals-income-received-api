@@ -16,15 +16,14 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import v1.models.request.amendSavings.CreateAmendSavingsRequest
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
 class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -44,10 +43,7 @@ class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig
         IfsUri[Unit](s"income-tax/income/savings/${nino.value}/${taxYear.asMtd}")
       }
 
-    put(
-      uri = downstreamUri,
-      body = request.body
-    )
+    put(downstreamUri, request.body)
 
   }
 

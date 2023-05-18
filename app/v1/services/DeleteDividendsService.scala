@@ -18,8 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.DeleteDividendsConnector
 import v1.models.request.deleteDividends.DeleteDividendsRequest
@@ -30,8 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteDividendsService @Inject() (connector: DeleteDividendsConnector) extends BaseService {
 
-  def delete(
-      request: DeleteDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def delete(request: DeleteDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.delete(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 

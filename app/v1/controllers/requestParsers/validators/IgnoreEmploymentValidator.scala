@@ -17,21 +17,19 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
-import utils.CurrentDateTime
 import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-    extends Validator[IgnoreEmploymentRawData] {
+class IgnoreEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[IgnoreEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: IgnoreEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: IgnoreEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
@@ -45,8 +43,7 @@ class IgnoreEmploymentValidator @Inject() (implicit currentDateTime: CurrentDate
 
   private def parameterRuleValidation: IgnoreEmploymentRawData => List[List[MtdError]] = (data: IgnoreEmploymentRawData) => {
     List(
-      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear),
-      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
+      TaxYearNotSupportedValidation.validate(data.taxYear, appConfig.minimumPermittedTaxYear)
     )
   }
 

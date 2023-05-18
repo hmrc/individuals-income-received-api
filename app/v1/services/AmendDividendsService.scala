@@ -16,38 +16,26 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, InternalError, TaxYearFormatError}
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
+import api.controllers.RequestContext
+import api.models.errors._
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AmendDividendsConnector
 import v1.models.request.amendDividends.AmendDividendsRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendDividendsService @Inject() (connector: AmendDividendsConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendDividendsService @Inject() (connector: AmendDividendsConnector) extends BaseService {
 
-  def amendDividends(request: AmendDividendsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amendDividends(request: AmendDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendDividends(request)).leftMap(mapDownstreamErrors(errorMap))
-    } yield desResponseWrapper
+    connector.amendDividends(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

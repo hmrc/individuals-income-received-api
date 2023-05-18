@@ -28,7 +28,7 @@ trait MockDeleteCgtNonPpdValidator extends MockFactory {
 
   object MockDeleteCgtNonPpdValidator {
 
-    def validate(data: DeleteCgtNonPpdRawData): CallHandler1[DeleteCgtNonPpdRawData, Seq[MtdError]] = {
+    def validate(data: DeleteCgtNonPpdRawData): CallHandler1[DeleteCgtNonPpdRawData, List[MtdError]] = {
       (mockDeleteCgtNonPpdValidator
         .validate(_: DeleteCgtNonPpdRawData))
         .expects(data)

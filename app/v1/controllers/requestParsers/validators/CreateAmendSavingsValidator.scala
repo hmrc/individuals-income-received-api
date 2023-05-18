@@ -17,12 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.amendSavings.{AmendForeignInterestItem, AmendSecurities, CreateAmendSavingsRawData, CreateAmendSavingsRequestBody}
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.amendSavings.{AmendForeignInterestItem, CreateAmendSavingsRawData, CreateAmendSavingsRequestBody, AmendSecurities}
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class CreateAmendSavingsValidator @Inject() (implicit appConfig: AppConfig)
@@ -31,7 +31,7 @@ class CreateAmendSavingsValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendSavingsRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendSavingsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

@@ -19,7 +19,4 @@ package v1.models.request.createAmendOtherCgt
 import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 
-case class CreateAmendOtherCgtRawData(nino: String,
-                                      taxYear: String,
-                                      body: AnyContentAsJson,
-                                      temporalValidationEnabled: Boolean = true) extends RawData
+case class CreateAmendOtherCgtRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData

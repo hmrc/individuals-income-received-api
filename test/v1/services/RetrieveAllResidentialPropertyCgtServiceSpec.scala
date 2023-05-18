@@ -18,11 +18,11 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
-import v1.mocks.connectors.MockRetrieveAllResidentialPropertyCgtConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.connectors.MockRetrieveAllResidentialPropertyCgtConnector
 import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentialPropertyCgtRequest
 import v1.models.response.retrieveAllResidentialPropertyCgt.{PpdService, RetrieveAllResidentialPropertyCgtResponse}
 
@@ -86,7 +86,7 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
             await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),

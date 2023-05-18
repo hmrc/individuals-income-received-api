@@ -17,12 +17,12 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
+import v1.models.request.createAmendPensions._
 
 import javax.inject.{Inject, Singleton}
-import v1.models.request.createAmendPensions._
-import api.controllers.requestParsers.validators.validations._
 
 @Singleton
 class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
@@ -31,7 +31,7 @@ class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: CreateAmendPensionsRawData): Seq[MtdError] = {
+  override def validate(data: CreateAmendPensionsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

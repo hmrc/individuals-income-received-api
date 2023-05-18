@@ -113,15 +113,15 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
   val missingFieldsError: MtdError = RuleIncorrectOrEmptyBodyError.copy(
     paths = Some(
       Seq(
-        "/singlePropertyDisposals/0/otherReliefAmount",
-        "/singlePropertyDisposals/0/disposalProceeds",
-        "/singlePropertyDisposals/0/prfAmount",
         "/multiplePropertyDisposals/0/ppdSubmissionId",
-        "/singlePropertyDisposals/0/improvementCosts",
-        "/singlePropertyDisposals/0/completionDate",
-        "/singlePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/acquisitionAmount",
         "/singlePropertyDisposals/0/additionalCosts",
-        "/singlePropertyDisposals/0/acquisitionAmount"
+        "/singlePropertyDisposals/0/completionDate",
+        "/singlePropertyDisposals/0/disposalProceeds",
+        "/singlePropertyDisposals/0/improvementCosts",
+        "/singlePropertyDisposals/0/otherReliefAmount",
+        "/singlePropertyDisposals/0/ppdSubmissionId",
+        "/singlePropertyDisposals/0/prfAmount"
       ))
   )
 
@@ -191,13 +191,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
       |    ]
       |}
       |""".stripMargin
-  )
-
-  val lossesGreaterThanGainError: MtdError = RuleLossesGreaterThanGainError.copy(
-    paths = Some(
-      Seq(
-        "/singlePropertyDisposals/0/lossesFromThisYear"
-      ))
   )
 
   private val invalidValueRequestBodyJson: JsValue = Json.parse(
@@ -309,14 +302,6 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
         "/multiplePropertyDisposals/0/ppdSubmissionId",
         "/singlePropertyDisposals/0/ppdSubmissionId"
       ))
-  )
-
-  def ppdDuplicatedIdError(duplicatedId: String): MtdError = RuleDuplicatedPpdSubmissionIdError.forDuplicatedIdAndPaths(
-    id = duplicatedId,
-    paths = Seq(
-      "/multiplePropertyDisposals/0/ppdSubmissionId",
-      "/singlePropertyDisposals/0/ppdSubmissionId"
-    )
   )
 
   val invalidDateFormatJson: JsValue = Json.parse(
@@ -510,17 +495,8 @@ class CreateAmendCgtPpdOverridesControllerISpec extends IntegrationBaseSpec with
           ("AA123456A", "2020-21", missingFieldsJson, BAD_REQUEST, missingFieldsError, None, Some("missingFields")),
           ("AA123456A", "2020-21", gainAndLossJson, BAD_REQUEST, amountGainLossError, None, Some("gainAndLossRule")),
           ("AA123456A", "2020-21", invalidDateFormatJson, BAD_REQUEST, dateFormatError, None, Some("dateFormat")),
-          ("AA123456A", "2020-21", lossGreaterThanGainJson, BAD_REQUEST, lossesGreaterThanGainError, None, Some("lossesGreaterThanGainsRule")),
           ("AA123456A", "2020-21", invalidValueRequestBodyJson, BAD_REQUEST, invalidValueErrors, None, Some("invalidNumValues")),
-          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs")),
-          (
-            "AA123456A",
-            "2020-21",
-            jsonWithIds("DuplicatedId", "DuplicatedId"),
-            BAD_REQUEST,
-            ppdDuplicatedIdError("DuplicatedId"),
-            None,
-            Some("duplicatedIDs"))
+          ("AA123456A", "2020-21", jsonWithIds("notAnID", "notAnID"), BAD_REQUEST, ppdSubmissionFormatError, None, Some("badIDs"))
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

@@ -18,16 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  RuleTaxYearNotSupportedError,
-  InternalError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.fixtures.other.CreateAmendOtherFixtures._

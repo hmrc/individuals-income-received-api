@@ -1,7 +1,7 @@
 summary: Create and Amend Other Capital Gains and Disposals
 description: |
-  This endpoint allows the developer to submit other Capital Gains disposals
-  with the exception of residential property, for a given NINO and tax year
+  This endpoint allows you to submit other Capital Gains and disposals with the exception of residential property, 
+  for a given National Insurance number and tax year.
   
   ### Test data
   <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
@@ -17,6 +17,14 @@ description: |
               <td><p>N/A - DEFAULT</p></td>
               <td><p>Simulates success response with gains.</p></td>
           </tr>
+          <tr>
+              <td><p>INVALID_DISPOSAL_DATE</p></td>
+              <td><p>Simulates a scenario where disposalDate is not within the specified tax year or later than today's date.</p></td>
+          </tr>
+          <tr>
+              <td><p>INVALID_ACQUISITION_DATE</p></td>
+              <td><p>Simulates a scenario where acquisitionDate is later than disposalDate.</p></td>
+          </tr>  
       </tbody>
   </table>
 

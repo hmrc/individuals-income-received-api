@@ -39,10 +39,10 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
           DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
 
       "any valid request with a Tax Year Specific (TYS) tax year is made" in new TysIfsTest with Test {
@@ -54,10 +54,10 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
         response.body shouldBe ""
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
     }
 
@@ -76,7 +76,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -101,7 +101,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
             DownstreamStub.onSuccess(DownstreamStub.POST, downstreamUri, OK)
           }
 
-          val response: WSResponse = await(request().delete)
+          val response: WSResponse = await(request().delete())
           response.status shouldBe INTERNAL_SERVER_ERROR
           response.json shouldBe Json.toJson(InternalError)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -117,7 +117,7 @@ class DeleteUkDividendsIncomeAnnualSummaryControllerISpec extends IntegrationBas
               DownstreamStub.onError(DownstreamStub.POST, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().delete)
+            val response: WSResponse = await(request().delete())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

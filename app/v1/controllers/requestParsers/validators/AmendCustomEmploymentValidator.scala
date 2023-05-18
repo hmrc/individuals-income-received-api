@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import utils.CurrentDateTime
 import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
-import api.controllers.requestParsers.validators.validations._
 
 import javax.inject.{Inject, Singleton}
 
@@ -31,7 +31,7 @@ class AmendCustomEmploymentValidator @Inject() (implicit currentDateTime: Curren
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 
-  override def validate(data: AmendCustomEmploymentRawData): Seq[MtdError] = {
+  override def validate(data: AmendCustomEmploymentRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

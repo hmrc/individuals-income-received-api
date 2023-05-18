@@ -21,10 +21,11 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
 import v1.mocks.connectors.MockOtherEmploymentIncomeConnector
 import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequest
-import v1.fixtures.OtherIncomeEmploymentFixture.retrieveOtherResponseModel
 import v1.models.response.retrieveOtherEmployment.RetrieveOtherEmploymentResponse
+
 import scala.concurrent.Future
 
 class RetrieveOtherEmploymentIncomeServiceSpec extends ServiceSpec {
@@ -59,7 +60,7 @@ class RetrieveOtherEmploymentIncomeServiceSpec extends ServiceSpec {
           }
         }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -68,7 +69,7 @@ class RetrieveOtherEmploymentIncomeServiceSpec extends ServiceSpec {
           ("NO_DATA_FOUND", NotFoundError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("NOT_FOUND", NotFoundError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )

@@ -16,14 +16,12 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsIncomeAnnualSummaryRequest
-import v1.services.DeleteUkDividendsIncomeAnnualSummaryService
+import v1.services.{DeleteUkDividendsIncomeAnnualSummaryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,10 +31,15 @@ trait MockDeleteUkDividendsIncomeAnnualSummaryService extends MockFactory {
 
   object MockDeleteUkDividendsIncomeAnnualSummaryService {
 
-    def delete(requestData: DeleteUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
-      (mockDeleteUkDividendsIncomeAnnualSummaryService
-        .delete(_: DeleteUkDividendsIncomeAnnualSummaryRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+    def delete(requestData: DeleteUkDividendsIncomeAnnualSummaryRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
+      (
+        mockDeleteUkDividendsIncomeAnnualSummaryService
+          .deleteUkDividends(_: DeleteUkDividendsIncomeAnnualSummaryRequest)(
+            _: RequestContext,
+            _: ExecutionContext
+          )
+        )
+        .expects(requestData, *, *)
     }
 
   }

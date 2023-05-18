@@ -18,9 +18,8 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.services.ServiceOutcome
 import api.support.DownstreamResponseMappingSupport
-import cats.data.EitherT
 import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
@@ -37,14 +36,12 @@ class IgnoreEmploymentService @Inject() (connector: IgnoreEmploymentConnector) e
       hc: HeaderCarrier,
       ec: ExecutionContext,
       logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      correlationId: String): Future[ServiceOutcome[Unit]] = {
 
-    val result = EitherT(connector.ignoreEmployment(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+    connector.ignoreEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID"       -> NinoFormatError,
       "INVALID_TAX_YEAR"                -> TaxYearFormatError,

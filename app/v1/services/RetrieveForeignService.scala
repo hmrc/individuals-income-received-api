@@ -18,9 +18,7 @@ package v1.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
-import cats.data.EitherT
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v1.connectors.RetrieveForeignConnector
 import v1.models.request.retrieveForeign.RetrieveForeignRequest
@@ -32,16 +30,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveForeignService @Inject() (connector: RetrieveForeignConnector) extends BaseService {
 
-  def retrieve(request: RetrieveForeignRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveForeignResponse]]] = {
+  def retrieve(
+      request: RetrieveForeignRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveForeignResponse]] = {
 
-    val result = EitherT(connector.retrieveForeign(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    connector.retrieveForeign(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
-    result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

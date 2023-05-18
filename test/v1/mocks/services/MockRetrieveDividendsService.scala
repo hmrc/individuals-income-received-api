@@ -16,15 +16,13 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveDividends.RetrieveDividendsRequest
 import v1.models.response.retrieveDividends.RetrieveDividendsResponse
-import v1.services.RetrieveDividendsService
+import v1.services.{RetrieveDividendsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,17 +32,15 @@ trait MockRetrieveDividendsService extends MockFactory {
 
   object MockRetrieveDividendsService {
 
-    def retrieve(requestData: RetrieveDividendsRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveDividendsResponse]]]] = {
+    def retrieve(requestData: RetrieveDividendsRequest): CallHandler[Future[ServiceOutcome[RetrieveDividendsResponse]]] = {
       (
         mockRetrieveDividendsService
           .retrieve(_: RetrieveDividendsRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
     }
 
   }

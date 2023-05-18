@@ -16,18 +16,15 @@
 
 package v1.connectors
 
-import api.connectors.BaseDownstreamConnector
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
+import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
-import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
-import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
-import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
 import scala.concurrent.{ExecutionContext, Future}
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 
 @Singleton
 class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
@@ -46,10 +43,7 @@ class AmendFinancialDetailsConnector @Inject() (val http: HttpClient, val appCon
         Release6Uri[Unit](s"income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId")
       }
 
-    put(
-      uri = downstreamUri,
-      body = body
-    )
+    put(downstreamUri, body)
   }
 
 }

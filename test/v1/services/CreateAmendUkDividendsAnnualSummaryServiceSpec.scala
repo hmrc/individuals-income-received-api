@@ -46,7 +46,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           .createOrAmendAnnualSummary(request)
           .returns(Future.successful(outcome))
 
-        await(service.createOrAmendAnnualSummary(request)) shouldBe outcome
+        await(service.createAmendUkDividends(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -58,12 +58,12 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
               .createOrAmendAnnualSummary(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createOrAmendAnnualSummary(request))
+            val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.createAmendUkDividends(request))
             result shouldBe Left(ErrorWrapper(correlationId, error))
           }
         }
 
-        val errprs = Seq(
+        val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", InternalError),
@@ -80,7 +80,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVER_ERROR", InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_INCOMESOURCE_TYPE", InternalError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -89,7 +89,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
           ("INCOMPATIBLE_INCOME_SOURCE", InternalError)
         )
 
-        (errprs ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

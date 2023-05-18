@@ -38,7 +38,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
           .retrieve(request)
           .returns(Future.successful(outcome))
 
-        await(service.retrieve(request)) shouldBe outcome
+        await(service.retrieveSavings(request)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -49,10 +49,10 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
               .retrieve(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.retrieve(request)) shouldBe Left(ErrorWrapper(correlationId, error))
+            await(service.retrieveSavings(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
@@ -61,7 +61,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("INVALID_CORRELATION_ID", InternalError),
           ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
         )

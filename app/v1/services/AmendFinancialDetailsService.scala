@@ -16,38 +16,20 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.{
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  RuleTaxYearNotEndedError,
-  RuleTaxYearNotSupportedError,
-  InternalError,
-  TaxYearFormatError
-}
+import api.controllers.RequestContext
+import api.models.errors.{InternalError, _}
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v1.connectors.AmendFinancialDetailsConnector
-import api.models.errors.InternalError
-import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
 import v1.models.request.amendFinancialDetails.AmendFinancialDetailsRequest
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsConnector) extends DownstreamResponseMappingSupport with Logging {
+class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsConnector) extends BaseService {
 
-  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] =
+  def amendFinancialDetails(request: AmendFinancialDetailsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] =
     connector.amendFinancialDetails(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = {

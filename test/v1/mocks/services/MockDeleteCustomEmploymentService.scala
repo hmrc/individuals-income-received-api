@@ -16,14 +16,12 @@
 
 package v1.mocks.services
 
-import api.connectors.DownstreamUri
-import api.controllers.EndpointLogContext
-import api.models.errors.{ErrorWrapper, MtdError}
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.services.DeleteCustomEmploymentService
+import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRequest
+import v1.services.{DeleteCustomEmploymentService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,18 +31,15 @@ trait MockDeleteCustomEmploymentService extends MockFactory {
 
   object MockDeleteCustomEmploymentService {
 
-    def delete(downstreamErrorMap: Map[String, MtdError]): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def delete(requestData: DeleteCustomEmploymentRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (
         mockDeleteCustomEmploymentService
-          .delete(_: Map[String, MtdError])(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: DownstreamUri[Unit],
-            _: String
+          .delete(_: DeleteCustomEmploymentRequest)(
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(downstreamErrorMap, *, *, *, *, *)
+        .expects(requestData, *, *)
     }
 
   }

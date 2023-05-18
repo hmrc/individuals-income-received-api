@@ -16,12 +16,10 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 import v1.services.RetrieveUkDividendsIncomeAnnualSummaryService
@@ -36,17 +34,15 @@ trait MockRetrieveUkDividendsAnnualIncomeSummaryService extends MockFactory {
   object MockRetrieveUkDividendsIncomeAnnualSummaryService {
 
     def retrieveUkDividends(requestData: RetrieveUkDividendsAnnualIncomeSummaryRequest)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveUkDividendsAnnualIncomeSummaryResponse]]]] = {
+        : CallHandler[Future[ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]]] = {
       (
         mockRetrieveUkDividendsAnnualIncomeSummaryService
           .retrieveUKDividendsIncomeAnnualSummary(_: RetrieveUkDividendsAnnualIncomeSummaryRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(requestData, *, *, *, *)
+        .expects(requestData, *, *)
     }
 
   }

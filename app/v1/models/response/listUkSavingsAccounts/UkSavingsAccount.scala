@@ -15,9 +15,10 @@
  */
 
 package v1.models.response.listUkSavingsAccounts
+
 import api.hateoas.HateoasLinks
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class UkSavingsAccount(savingsAccountId: String, accountName: String)
 
@@ -31,5 +32,3 @@ object UkSavingsAccount extends HateoasLinks {
   )(UkSavingsAccount.apply _)
 
 }
-
-

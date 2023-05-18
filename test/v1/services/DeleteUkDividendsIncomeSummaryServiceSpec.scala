@@ -39,7 +39,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
           .delete(requestData)
           .returns(Future.successful(Right(ResponseWrapper("resultId", ()))))
 
-        await(service.delete(requestData)) shouldBe outcome
+        await(service.deleteUkDividends(requestData)) shouldBe outcome
       }
 
       "map errors according to spec" when {
@@ -50,10 +50,10 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
               .delete(requestData)
               .returns(Future.successful(Left(ResponseWrapper("resultId", DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-            await(service.delete(requestData)) shouldBe Left(ErrorWrapper("resultId", error))
+            await(service.deleteUkDividends(requestData)) shouldBe Left(ErrorWrapper("resultId", error))
           }
 
-        val errors = Seq(
+        val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TYPE", InternalError),
           ("INVALID_TAXYEAR", TaxYearFormatError),
@@ -70,7 +70,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
           ("NOT_FOUND", NotFoundError)
         )
 
-        val extraTysErrors = Seq(
+        val extraTysErrors = List(
           ("INVALID_INCOMESOURCE_TYPE", InternalError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATION_ID", InternalError),

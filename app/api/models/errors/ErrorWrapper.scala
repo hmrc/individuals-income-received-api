@@ -42,7 +42,7 @@ object ErrorWrapper {
 
   implicit val writes: Writes[ErrorWrapper] = (errorResponse: ErrorWrapper) => {
 
-    val json = Json.toJson(errorResponse.error).as[JsObject]
+    val json = errorResponse.error.asJson.as[JsObject]
 
     errorResponse.errors match {
       case Some(errors) if errors.nonEmpty => json + ("errors" -> Json.toJson(errors))

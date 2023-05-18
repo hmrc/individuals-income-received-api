@@ -51,13 +51,13 @@ class AuthISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     val ifsResponse: JsValue = Json.parse("""
-        | {
-        | "responseData" : "someResponse"
-        | }
+                                            | {
+                                            | "responseData" : "someResponse"
+                                            | }
     """.stripMargin)
 
   }
@@ -74,7 +74,7 @@ class AuthISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.internalServerError(nino)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe Status.INTERNAL_SERVER_ERROR
       }
     }
@@ -89,9 +89,9 @@ class AuthISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, ifsUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe NO_CONTENT
-        response.header("Content-Type") shouldBe Some("application/json")
+        response.header("Content-Type") shouldBe None
       }
     }
 
@@ -106,7 +106,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedNotLoggedIn()
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe Status.FORBIDDEN
       }
     }
@@ -122,9 +122,10 @@ class AuthISpec extends IntegrationBaseSpec {
           AuthStub.unauthorisedOther()
         }
 
-        val response: WSResponse = await(request().delete)
+        val response: WSResponse = await(request().delete())
         response.status shouldBe Status.FORBIDDEN
       }
     }
   }
+
 }

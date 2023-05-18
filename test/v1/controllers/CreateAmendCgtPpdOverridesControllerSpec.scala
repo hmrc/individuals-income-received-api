@@ -16,30 +16,33 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
 import v1.mocks.services._
 import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides._
+import v1.models.response.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendCgtPpdOverridesControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockAppConfig
@@ -51,9 +54,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "X-123"
+  val taxYear: String = "2019-20"
 
   val validRequestJson: JsValue = Json.parse(
     """
@@ -108,54 +109,23 @@ class CreateAmendCgtPpdOverridesControllerSpec
     body = AnyContentAsJson.apply(validRequestJson)
   )
 
+  //@formatter:off
   val requestModel: CreateAmendCgtPpdOverridesRequestBody = CreateAmendCgtPpdOverridesRequestBody(
     multiplePropertyDisposals = Some(
-      Seq(
-        MultiplePropertyDisposals(
-          "AB0000000092",
-          Some(1234.78),
-          None
-        ),
-        MultiplePropertyDisposals(
-          "AB0000000098",
-          None,
-          Some(134.99)
-        )
+      List(
+        MultiplePropertyDisposals("AB0000000092", Some(1234.78), None),
+        MultiplePropertyDisposals("AB0000000098", None, Some(134.99))
       )),
     singlePropertyDisposals = Some(
-      Seq(
-        SinglePropertyDisposals(
-          "AB0000000098",
-          "2020-02-28",
-          454.24,
-          Some("2020-03-29"),
-          3434.45,
-          233.45,
-          423.34,
-          2324.67,
-          3434.23,
-          Some(436.23),
-          Some(234.23),
-          Some(4567.89),
-          None
-        ),
-        SinglePropertyDisposals(
-          "AB0000000091",
-          "2020-02-28",
-          454.24,
-          Some("2020-03-29"),
-          3434.45,
-          233.45,
-          423.34,
-          2324.67,
-          3434.23,
-          Some(436.23),
-          Some(234.23),
-          None,
-          Some(4567.89)
+      List(
+        SinglePropertyDisposals("AB0000000098", "2020-02-28", 454.24, Some("2020-03-29"), 3434.45, 233.45,
+          423.34, 2324.67, 3434.23, Some(436.23), Some(234.23), Some(4567.89), None),
+        SinglePropertyDisposals("AB0000000091", "2020-02-28", 454.24, Some("2020-03-29"), 3434.45, 233.45,
+          423.34, 2324.67, 3434.23, Some(436.23), Some(234.23), None, Some(4567.89)
         )
       ))
   )
+  //@formatter:on
 
   val requestData: CreateAmendCgtPpdOverridesRequest = CreateAmendCgtPpdOverridesRequest(
     nino = Nino(nino),
@@ -187,149 +157,115 @@ class CreateAmendCgtPpdOverridesControllerSpec
     """.stripMargin
   )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new CreateAmendCgtPpdOverridesController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
-      requestParser = mockCreateAmendCgtPpdOverridesRequestParser,
-      service = mockCreateAmendCgtPpdOverridesService,
-      auditService = mockAuditService,
-      nrsProxyService = mockNrsProxyService,
-      cc = cc,
-      idGenerator = mockIdGenerator
+  val hateoasLinks: List[Link] = List(
+    Link(
+      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
+      method = PUT,
+      rel = "create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
+    ),
+    Link(
+      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
+      method = DELETE,
+      rel = "delete-report-and-pay-capital-gains-tax-on-property-overrides"
+    ),
+    Link(
+      href = s"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+      method = GET,
+      rel = "self"
     )
+  )
 
-    MockedAppConfig.featureSwitches returns Configuration("allowTemporalValidationSuspension.enabled" -> true) anyNumberOfTimes ()
-    MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  def event(auditResponse: AuditResponse): AuditEvent[CreateAmendCgtPpdOverridesAuditDetail] =
-    AuditEvent(
-      auditType = "CreateAmendCgtPpdOverrides",
-      transactionName = "Create-Amend-Cgt-Ppd-Overrides",
-      detail = CreateAmendCgtPpdOverridesAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino,
-        taxYear,
-        validRequestJson,
-        correlationId,
-        response = auditResponse
-      )
-    )
+  val auditData: JsValue = Json.parse(s"""
+                                         |{
+                                         |  "nino":"$nino",
+                                         |  "taxYear": "$taxYear"
+                                         |  }""".stripMargin)
 
   "CreateAmendCgtPpdOverridesController" should {
-    "return OK" when {
+    "return a successful response with status OK" when {
       "happy path" in new Test {
+        MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
 
         MockCreateAmendCgtPpdOverridesRequestParser
           .parse(rawData)
           .returns(Right(requestData))
 
+        MockNrsProxyService
+          .submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
+          .returns(())
+
         MockCreateAmendCgtPpdOverridesService
           .createAmend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
+        MockHateoasFactory
+          .wrap((), CreateAmendCgtPpdOverridesHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), hateoasLinks))
 
-        val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(mtdResponse)))
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = OK, Some(mtdResponse), Some(validRequestJson), Some(auditData))
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockCreateAmendCgtPpdOverridesRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
 
-            MockCreateAmendCgtPpdOverridesRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (withPath(RuleIncorrectOrEmptyBodyError), BAD_REQUEST),
-          (withPath(ValueFormatError), BAD_REQUEST),
-          (withPath(RuleAmountGainLossError), BAD_REQUEST),
-          (withPath(DateFormatError), BAD_REQUEST),
-          (withPath(PpdSubmissionIdFormatError), BAD_REQUEST),
-          (withPath(RuleLossesGreaterThanGainError), BAD_REQUEST),
-          (withPath(RuleDuplicatedPpdSubmissionIdError), BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(validRequestJson))
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "service returns an error" in new Test {
+        MockCreateAmendCgtPpdOverridesRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockCreateAmendCgtPpdOverridesRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockNrsProxyService
+          .submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
+          .returns(())
 
-            MockCreateAmendCgtPpdOverridesService
-              .createAmend(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+        MockCreateAmendCgtPpdOverridesService
+          .createAmend(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
 
-            MockNrsProxyService.submitAsync(nino, "itsa-cgt-disposal-ppd", validRequestJson)
-
-            val result: Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val errors = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST),
-          (PpdSubmissionIdNotFoundError, NOT_FOUND),
-          (RuleDuplicatedPpdSubmissionIdError, BAD_REQUEST),
-          (RuleIncorrectDisposalTypeError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        val extraTysErrors = Seq(
-          (RuleTaxYearNotSupportedError, BAD_REQUEST)
-        )
-
-        (errors ++ extraTysErrors).foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(RuleTaxYearNotSupportedError, maybeAuditRequestBody = Some(validRequestJson))
       }
     }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[CreateAmendCgtPpdOverridesAuditDetail] {
+
+    val controller = new CreateAmendCgtPpdOverridesController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
+      parser = mockCreateAmendCgtPpdOverridesRequestParser,
+      service = mockCreateAmendCgtPpdOverridesService,
+      auditService = mockAuditService,
+      nrsProxyService = mockNrsProxyService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
+
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[CreateAmendCgtPpdOverridesAuditDetail] =
+      AuditEvent(
+        auditType = "CreateAmendCgtPpdOverrides",
+        transactionName = "Create-Amend-Cgt-Ppd-Overrides",
+        detail = CreateAmendCgtPpdOverridesAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          nino,
+          taxYear,
+          requestBody.getOrElse(JsObject.empty),
+          correlationId,
+          response = auditResponse
+        )
+      )
+
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
   }
 
 }

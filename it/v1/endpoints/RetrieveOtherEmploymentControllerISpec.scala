@@ -16,12 +16,12 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, MtdIdLookupStub, DownstreamStub, AuthStub}
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
@@ -72,7 +72,7 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -87,7 +87,7 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -109,7 +109,7 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
               MtdIdLookupStub.ninoFound(nino)
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -135,7 +135,7 @@ class RetrieveOtherEmploymentControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, desStatus, errorBody(desCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

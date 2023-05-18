@@ -16,14 +16,12 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRequest
-import v1.services.CreateAmendNonPayeEmploymentService
+import v1.services.{CreateAmendNonPayeEmploymentService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -33,10 +31,10 @@ trait MockCreateAmendNonPayeEmploymentService extends MockFactory {
 
   object MockCreateAmendNonPayeEmploymentService {
 
-    def createAndAmend(requestData: CreateAmendNonPayeEmploymentRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def createAndAmend(requestData: CreateAmendNonPayeEmploymentRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
       (mockService
-        .createAndAmend(_: CreateAmendNonPayeEmploymentRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .createAndAmend(_: CreateAmendNonPayeEmploymentRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
 
   }

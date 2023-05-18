@@ -20,7 +20,7 @@ import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
+import utils.IdGenerator
 import v1.controllers.requestParsers.RetrieveForeignRequestParser
 import v1.models.request.retrieveForeign.RetrieveForeignRawData
 import v1.models.response.retrieveForeign.RetrieveForeignHateoasData
@@ -32,13 +32,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
-                                           requestParser: RetrieveForeignRequestParser,
+                                           parser: RetrieveForeignRequestParser,
                                            service: RetrieveForeignService,
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -57,7 +56,7 @@ class RetrieveForeignController @Inject() (val authService: EnrolmentsAuthServic
 
       val requestHandler =
         RequestHandler
-          .withParser(requestParser)
+          .withParser(parser)
           .withService(service.retrieve)
           .withHateoasResult(hateoasFactory)(RetrieveForeignHateoasData(nino, taxYear))
 

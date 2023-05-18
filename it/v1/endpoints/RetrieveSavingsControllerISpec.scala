@@ -36,7 +36,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -48,7 +48,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -65,7 +65,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
 
             override def setupStubs(): Unit = {}
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")
@@ -89,7 +89,7 @@ class RetrieveSavingsControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request.get)
+            val response: WSResponse = await(request.get())
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
             response.header("Content-Type") shouldBe Some("application/json")

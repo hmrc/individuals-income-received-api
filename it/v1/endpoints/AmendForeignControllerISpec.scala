@@ -16,9 +16,9 @@
 
 package v1.endpoints
 
-import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import api.models.errors
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -82,6 +82,9 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
         )
 
         val allInvalidValueRequestError: List[MtdError] = List(
+          CountryCodeFormatError.copy(
+            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
+          ),
           CustomerRefFormatError.copy(
             paths = Some(List("/foreignEarnings/customerReference"))
           ),
@@ -95,9 +98,6 @@ class AmendForeignControllerISpec extends IntegrationBaseSpec {
                 "/unremittableForeignIncome/1/amountTaxPaid"
               )),
             message = "The value must be between 0 and 99999999999.99"
-          ),
-          CountryCodeFormatError.copy(
-            paths = Some(Seq("/unremittableForeignIncome/0/countryCode"))
           ),
           CountryCodeRuleError.copy(
             paths = Some(Seq("/unremittableForeignIncome/1/countryCode"))

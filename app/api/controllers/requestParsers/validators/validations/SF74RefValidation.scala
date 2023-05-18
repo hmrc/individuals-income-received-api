@@ -17,7 +17,6 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, SF74RefFormatError}
-import api.models.errors.SF74RefFormatError
 
 object SF74RefValidation {
 

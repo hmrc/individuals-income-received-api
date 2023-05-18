@@ -18,16 +18,7 @@ package v1.services
 
 import api.controllers.EndpointLogContext
 import api.models.domain.Nino
-import api.models.errors.{
-  DownstreamErrorCode,
-  DownstreamErrors,
-  ErrorWrapper,
-  MtdError,
-  NinoFormatError,
-  NotFoundError,
-  SavingsAccountIdFormatError,
-  InternalError
-}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockListUkSavingsAccountsConnector
@@ -83,7 +74,7 @@ class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
             await(service.listUkSavingsAccounts(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val input = List(
           ("INVALID_ID_TYPE", InternalError),
           ("INVALID_IDVALUE", NinoFormatError),
           ("INVALID_INCOMESOURCETYPE", InternalError),

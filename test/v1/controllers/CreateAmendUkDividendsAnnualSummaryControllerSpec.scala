@@ -16,26 +16,20 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.HateoasWrapper
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.requestParsers.MockCreateAmendUkDividendsAnnualSummaryRequestParser
 import v1.mocks.services.MockCreateAmendUkDividendsAnnualSummaryService
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
-  CreateAmendUkDividendsIncomeAnnualSummaryBody,
-  CreateAmendUkDividendsIncomeAnnualSummaryRawData,
-  CreateAmendUkDividendsIncomeAnnualSummaryRequest
-}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
 import v1.models.response.createAmendUkDividendsIncomeAnnualSummary.CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,42 +37,109 @@ import scala.concurrent.Future
 
 class CreateAmendUkDividendsAnnualSummaryControllerSpec
     extends ControllerBaseSpec
+    with ControllerTestRunner
     with MockCreateAmendUkDividendsAnnualSummaryService
     with MockCreateAmendUkDividendsAnnualSummaryRequestParser
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
-    with MockAuditService
-    with MockHateoasFactory
-    with MockIdGenerator {
+    with MockHateoasFactory {
 
-  val nino: String          = "AA123456A"
-  val taxYear: String       = "2019-20"
-  val correlationId: String = "X-123"
-  val mtdId: String         = "test-mtd-id"
+  private val taxYear = "2019-20"
+  private val mtdId   = "test-mtd-id"
 
-  val requestJson: JsObject = JsObject.empty
+  private val requestJson: JsObject = JsObject.empty
 
-  val rawData: CreateAmendUkDividendsIncomeAnnualSummaryRawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
+  private val rawData: CreateAmendUkDividendsIncomeAnnualSummaryRawData = CreateAmendUkDividendsIncomeAnnualSummaryRawData(
     nino = nino,
     taxYear = taxYear,
     body = AnyContentAsJson.apply(requestJson)
   )
 
-  val requestModel: CreateAmendUkDividendsIncomeAnnualSummaryBody = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
+  private val requestModel: CreateAmendUkDividendsIncomeAnnualSummaryBody = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
 
-  val requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
+  private val requestData: CreateAmendUkDividendsIncomeAnnualSummaryRequest = CreateAmendUkDividendsIncomeAnnualSummaryRequest(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
     body = requestModel
   )
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+  private val hateoasLinks = List(
+    Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = PUT, rel = "create-and-amend-uk-dividends-income"),
+    Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = GET, rel = "self"),
+    Link(href = s"/individuals/income-received/uk-dividends/$nino/$taxYear", method = DELETE, rel = "delete-uk-dividends-income")
+  )
+
+  private val responseBodyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+       |         "rel":"create-and-amend-uk-dividends-income",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/uk-dividends/$nino/$taxYear",
+       |         "rel":"delete-uk-dividends-income",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  )
+
+  "CreateAmendUkDividendsAnnualSummaryController" should {
+    "return a successful response with status 200 (OK)" when {
+      "given a valid request" in new Test {
+        MockCreateAmendUkDividendsAnnualSummaryRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockCreateAmendAmendUkDividendsAnnualSummaryService
+          .createOrAmendAnnualSummary(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+
+        MockHateoasFactory
+          .wrap((), CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), hateoasLinks))
+
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(responseBodyJson))
+
+      }
+    }
+
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        MockCreateAmendUkDividendsAnnualSummaryRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError)))
+
+        runErrorTest(NinoFormatError)
+      }
+
+      "the service returns an error" in new Test {
+        MockCreateAmendUkDividendsAnnualSummaryRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
+
+        MockCreateAmendAmendUkDividendsAnnualSummaryService
+          .createOrAmendAnnualSummary(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))))
+
+        runErrorTest(RuleTaxYearNotSupportedError)
+      }
+    }
+  }
+
+  trait Test extends ControllerTest with AuditEventChecking[FlattenedGenericAuditDetail] {
 
     val controller = new CreateAmendUkDividendsAnnualSummaryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockCreateAmendUkDividendsAnnualSummaryRequestParser,
+      parser = mockCreateAmendUkDividendsAnnualSummaryRequestParser,
       service = mockCreateAmendUkDividendsAnnualSummaryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
@@ -86,122 +147,22 @@ class CreateAmendUkDividendsAnnualSummaryControllerSpec
       auditService = mockAuditService
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right(mtdId)))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
+    protected def callController(): Future[Result] = controller.createAmendUkDividendsAnnualSummary(nino, taxYear)(fakePutRequest(requestJson))
 
-  def event(auditResponse: AuditResponse): AuditEvent[FlattenedGenericAuditDetail] =
-    AuditEvent(
-      auditType = "CreateAndAmendUkDividendsIncome",
-      transactionName = "create-amend-uk-dividends-income",
-      detail = FlattenedGenericAuditDetail(
-        versionNumber = Some("1.0"),
-        userDetails = UserDetails(mtdId, "Individual", None),
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        request = Some(requestJson),
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[FlattenedGenericAuditDetail] =
+      AuditEvent(
+        auditType = "CreateAndAmendUkDividendsIncome",
+        transactionName = "create-amend-uk-dividends-income",
+        detail = FlattenedGenericAuditDetail(
+          versionNumber = Some("1.0"),
+          userDetails = UserDetails(mtdId, "Individual", None),
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = Some(requestJson),
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
       )
-    )
 
-  "CreateAmendUkDividendsAnnualSummaryController" should {
-    "return OK" when {
-      "happy path" in new Test {
-
-        MockCreateAmendUkDividendsAnnualSummaryRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
-
-        MockCreateAmendAmendUkDividendsAnnualSummaryService
-          .createOrAmendAnnualSummary(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, Unit))))
-
-        MockHateoasFactory
-          .wrap((), CreateAndAmendUkDividendsIncomeAnnualSummaryHateoasData(nino, taxYear))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
-        val result: Future[Result] = controller.createAmendUkDividendsAnnualSummary(nino, taxYear)(fakePutRequest(requestJson))
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe testHateoasLinksJson
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, Right(Some(testHateoasLinksJson)))
-        MockedAuditService.verifyAuditEvent[FlattenedGenericAuditDetail](event(auditResponse)).once
-
-      }
-    }
-
-    "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-
-            MockCreateAmendUkDividendsAnnualSummaryRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.createAmendUkDividendsAnnualSummary(nino, taxYear)(fakePutRequest(requestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (withPath(ValueFormatError), BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (withPath(RuleIncorrectOrEmptyBodyError), BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
-      }
-
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
-
-            MockCreateAmendUkDividendsAnnualSummaryRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
-
-            MockCreateAmendAmendUkDividendsAnnualSummaryService
-              .createOrAmendAnnualSummary(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.createAmendUkDividendsAnnualSummary(nino, taxYear)(fakePutRequest(requestJson))
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (InternalError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
-      }
-    }
   }
 
 }
