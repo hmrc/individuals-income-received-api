@@ -1,3 +1,15 @@
+# v2 specific endpoints
+# Additional Income endpoints
+PUT        /savings/:nino/:taxYear                                          v2.controllers.CreateAmendSavingsController.createAmendSaving(nino: String, taxYear: String)
+GET        /savings/:nino/:taxYear                                          v2.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
+
+# Additional Income endpoints
+PUT        /pensions/:nino/:taxYear                                         v2.controllers.CreateAmendPensionsController.createAmendPensions(nino: String, taxYear: String)
+GET        /pensions/:nino/:taxYear                                         v2.controllers.RetrievePensionsController.handleRequest(nino: String, taxYear: String)
+
+PUT        /other/:nino/:taxYear                                            v2.controllers.CreateAmendOtherController.createAmendOther(nino: String, taxYear: String)
+
+# v1andv2 specific endpoints
 # Non-PAYE endpoints
 GET        /employments/non-paye/:nino/:taxYear                             v1andv2.controllers.RetrieveNonPayeEmploymentController.retrieveNonPayeEmployment(nino: String, taxYear: String, source: Option[String])
 PUT        /employments/non-paye/:nino/:taxYear                             v1andv2.controllers.CreateAmendNonPayeEmploymentController.createAmendNonPayeEmployment(nino: String, taxYear: String)
