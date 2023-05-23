@@ -16,9 +16,7 @@ PUT        /employments/non-paye/:nino/:taxYear                             v1an
 DELETE     /employments/non-paye/:nino/:taxYear                             v1andv2.controllers.DeleteNonPayeEmploymentController.delete(nino: String, taxYear: String)
 
 # Additional Income endpoints
-PUT        /savings/:nino/:taxYear                                          v1andv2.controllers.CreateAmendSavingsController.createAmendSaving(nino: String, taxYear: String)
 DELETE     /savings/:nino/:taxYear                                          v1andv2.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
-GET        /savings/:nino/:taxYear                                          v1andv2.controllers.RetrieveSavingsController.retrieveSaving(nino: String, taxYear: String)
 
 PUT        /insurance-policies/:nino/:taxYear                               v1andv2.controllers.AmendInsurancePoliciesController.amendInsurancePolicies(nino: String, taxYear: String)
 DELETE     /insurance-policies/:nino/:taxYear                               v1andv2.controllers.DeleteInsurancePoliciesController.delete(nino: String, taxYear: String)
@@ -28,11 +26,8 @@ PUT        /foreign/:nino/:taxYear                                          v1an
 DELETE     /foreign/:nino/:taxYear                                          v1andv2.controllers.DeleteForeignController.deleteForeign(nino: String, taxYear: String)
 GET        /foreign/:nino/:taxYear                                          v1andv2.controllers.RetrieveForeignController.retrieveForeign(nino: String, taxYear: String)
 
-PUT        /pensions/:nino/:taxYear                                         v1andv2.controllers.CreateAmendPensionsController.createAmendPensions(nino: String, taxYear: String)
 DELETE     /pensions/:nino/:taxYear                                         v1andv2.controllers.DeletePensionsController.deletePensions(nino: String, taxYear: String)
-GET        /pensions/:nino/:taxYear                                         v1andv2.controllers.RetrievePensionsController.handleRequest(nino: String, taxYear: String)
 
-PUT        /other/:nino/:taxYear                                            v1andv2.controllers.CreateAmendOtherController.createAmendOther(nino: String, taxYear: String)
 DELETE     /other/:nino/:taxYear                                            v1andv2.controllers.DeleteOtherController.deleteOther(nino: String, taxYear: String)
 GET        /other/:nino/:taxYear                                            v1andv2.controllers.RetrieveOtherController.retrieveOther(nino: String, taxYear: String)
 
