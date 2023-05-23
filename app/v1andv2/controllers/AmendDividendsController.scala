@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.controllers
+package v1andv2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
@@ -28,11 +28,11 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
-import v1.controllers.requestParsers.AmendDividendsRequestParser
-import v1.models.request.amendDividends.AmendDividendsRawData
-import v1.models.response.amendDividends.AmendDividendsHateoasData
-import v1.models.response.amendDividends.AmendDividendsResponse.AmendDividendsLinksFactory
-import v1.services.AmendDividendsService
+import v1andv2.controllers.requestParsers.AmendDividendsRequestParser
+import v1andv2.models.request.amendDividends.AmendDividendsRawData
+import v1andv2.models.response.amendDividends.AmendDividendsHateoasData
+import v1andv2.models.response.amendDividends.AmendDividendsResponse.AmendDividendsLinksFactory
+import v1andv2.services.AmendDividendsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
