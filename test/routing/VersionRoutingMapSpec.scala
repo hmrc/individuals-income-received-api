@@ -28,7 +28,9 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
 
   val defaultRouter: Router     = mock[Router]
   val v1Routes: v1.Routes       = app.injector.instanceOf[v1.Routes]
+  val v2Routes: v2.Routes       = app.injector.instanceOf[v2.Routes]
   val v1r7cRoutes: v1r7c.Routes = app.injector.instanceOf[v1r7c.Routes]
+  val v2r7cRoutes: v2r7c.Routes = app.injector.instanceOf[v2r7c.Routes]
 
   private def newVersionRoutingMap(v1r7cEnabled: Boolean) = {
     MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"v1r7c-endpoints.enabled = $v1r7cEnabled")))
@@ -37,7 +39,9 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       appConfig = mockAppConfig,
       defaultRouter = defaultRouter,
       v1Router = v1Routes,
-      v1r7cRouter = v1r7cRoutes
+      v1r7cRouter = v1r7cRoutes,
+      v2Router = v2Routes,
+      v2r7cRouter = v2r7cRoutes
     )
   }
 
@@ -53,6 +57,20 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       "route to v1r7c.routes" in {
         val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = true)
         versionRoutingMap.map(Versions.VERSION_1) shouldBe v1r7cRoutes
+      }
+    }
+
+    "routing to v2" should {
+      "route to v2.routes" in {
+        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = false)
+        versionRoutingMap.map(Versions.VERSION_2) shouldBe v2Routes
+      }
+    }
+
+    "routing to v2WithUkDividends" should {
+      "route to v2r7c.routes" in {
+        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = true)
+        versionRoutingMap.map(Versions.VERSION_2) shouldBe v2r7cRoutes
       }
     }
   }

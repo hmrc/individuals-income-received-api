@@ -20,8 +20,8 @@ import api.models.errors.{NinoFormatError, RuleTaxYearNotSupportedError, RuleTax
 import config.AppConfig
 import mocks.MockAppConfig
 import support.UnitSpec
-import v1.controllers.requestParsers.validators.DeleteOtherValidator
-import v1.models.request.deleteOther.DeleteOtherRawData
+import v1andv2.controllers.requestParsers.validators.DeleteOtherValidator
+import v1andv2.models.request.deleteOther.DeleteOtherRawData
 
 class DeleteOtherValidatorSpec extends UnitSpec {
 

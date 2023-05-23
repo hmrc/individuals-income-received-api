@@ -17,7 +17,7 @@
 package api.services
 
 import api.mocks.connectors.MockNrsProxyConnector
-import v1.fixtures.nrs.NrsFixture
+import v1andv2.fixtures.nrs.NrsFixture
 
 import scala.concurrent.Future
 
