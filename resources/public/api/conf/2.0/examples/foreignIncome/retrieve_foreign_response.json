@@ -1,0 +1,36 @@
+{
+  "submittedOn": "2021-04-06T09:37:797Z",
+  "foreignEarnings":{
+    "customerReference":"FOREIGNINCME123A",
+    "earningsNotTaxableUK":1999.99
+  },
+  "unremittableForeignIncome":[
+    {
+      "countryCode":"FRA",
+      "amountInForeignCurrency":1999.99,
+      "amountTaxPaid":1999.99
+    },
+    {
+      "countryCode":"IND",
+      "amountInForeignCurrency":2999.99,
+      "amountTaxPaid":2999.99
+    }
+  ],
+  "links":[
+    {
+      "href":"/individuals/income-received/foreign/TC663795B/2021-22",
+      "rel":"create-and-amend-foreign-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/foreign/TC663795B/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/foreign/TC663795B/2021-22",
+      "rel":"delete-foreign-income",
+      "method":"DELETE"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create And Amend Custom Employment Request",
+  "description": "Create And Amend Custom Employment Request",
+  "type": "object",
+  "properties": {
+    "employerRef": {"$ref": "employments_definitions.json#/definitions/employerRef"},
+    "employerName": {"$ref": "employments_definitions.json#/definitions/employerName"},
+    "startDate": {"$ref": "employments_definitions.json#/definitions/startDate"},
+    "cessationDate": {"$ref": "employments_definitions.json#/definitions/cessationDate"},
+    "payrollId": {"$ref": "employments_definitions.json#/definitions/payrollId"},
+    "occupationalPension": {"$ref": "employments_definitions.json#/definitions/occupationalPension"}
+  },
+  "required": ["employerName","startDate","occupationalPension"]
+}

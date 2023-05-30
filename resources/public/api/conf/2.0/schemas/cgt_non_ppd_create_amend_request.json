@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create and Amend CGT Residential Property Disposals",
+  "description": "This endpoint allows the developer to submit residential property disposals that are not reported via the Report and pay Capital Gains Tax on UK property service for a given NINO and tax year. This endpoint can only be used for a completion date of 7th March or later (but not a date in the future) and a disposal date within the specified tax year.",
+  "type": "object",
+  "properties": {
+    "disposals": {
+      "type": "array",
+      "description": "An array of residential property disposals.",
+      "items": {"$ref": "cgt_non_ppd_definitions.json#/definitions/disposals"}
+    }
+  },
+  "required": [
+    "disposals"
+  ]
+}
+

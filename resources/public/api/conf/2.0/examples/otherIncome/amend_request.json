@@ -1,0 +1,33 @@
+{
+  "businessReceipts":[
+    {
+      "grossAmount":1999.99,
+      "taxYear":"2021-22"
+    }
+  ],
+  "allOtherIncomeReceivedWhilstAbroad":[
+    {
+      "countryCode":"FRA",
+      "amountBeforeTax":1999.99,
+      "taxTakenOff":1999.99,
+      "specialWithholdingTax":1999.99,
+      "foreignTaxCreditRelief":true,
+      "taxableAmount":1999.99,
+      "residentialFinancialCostAmount":1999.99,
+      "broughtFwdResidentialFinancialCostAmount":1999.99
+    }
+  ],
+  "overseasIncomeAndGains":{
+    "gainAmount":1999.99
+  },
+  "chargeableForeignBenefitsAndGifts":{
+    "transactionBenefit":1999.99,
+    "protectedForeignIncomeSourceBenefit":1999.99,
+    "protectedForeignIncomeOnwardGift":1999.99,
+    "benefitReceivedAsASettler":1999.99,
+    "onwardGiftReceivedAsASettler":1999.99
+  },
+  "omittedForeignIncome":{
+    "amount":1999.99
+  }
+}

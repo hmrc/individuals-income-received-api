@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create And Amend Foreign Income Request",
+  "description": "Create And Amend Foreign Income Request",
+  "type": "object",
+  "properties": {
+    "foreignEarnings": {"$ref": "foreign_definitions.json#/definitions/foreignEarnings"},
+    "unremittableForeignIncome": {"$ref": "foreign_definitions.json#/definitions/unremittableForeignIncome"}
+  }
+}
+

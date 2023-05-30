@@ -1,0 +1,465 @@
+{
+  "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the other employment income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "shareOption": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about share options income.",
+        "properties": {
+          "employerName": {
+            "type": "string",
+            "description": "The name of the employer.",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$",
+            "example": "BPDTS Ltd."
+          },
+          "employerRef": {
+            "type": "string",
+            "description": "A reference number given to every business that registers with HMRC as an employer.",
+            "example": "123/AB456",
+            "pattern": "^[0-9]{3}\\/[^ ].{0,9}$"
+          },
+          "schemePlanType": {
+            "type": "string",
+            "description": "The type of share scheme or plan the employer has: Enterprise Management Incentive (EMI), Company Share Option Plan (CSOP) or Save As You Earn (SAYE).",
+            "enum": ["EMI", "CSOP", "SAYE", "Other"]
+          },
+          "dateOfOptionGrant": {
+            "type": "string",
+            "description": "The date the option was granted in the format YYYY-MM-DD.",
+            "example": "2019-04-20"
+          },
+          "dateOfEvent": {
+            "type": "string",
+            "description": "The date the event occurred in the format YYYY-MM-DD.",
+            "example": "2019-04-20"
+          },
+          "optionNotExercisedButConsiderationReceived": {
+            "type": "boolean",
+            "description": "Boolean option not exercised but consideration received for lapse, release or assignment of the option.",
+            "example": "true"
+          },
+          "amountOfConsiderationReceived": {
+            "type": "number",
+            "description": "The amount of consideration received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "noOfSharesAcquired": {
+            "type": "number",
+            "description": "The number of shares acquired. The value must be 0 or more.",
+            "example": "500",
+            "multipleOf": 1,
+            "minimum": 0
+          },
+          "classOfSharesAcquired": {
+            "type": "string",
+            "description": "The class type of shares acquired.",
+            "example": "Ordinary shares",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "exercisePrice": {
+            "type": "number",
+            "description": "The price per share at which the owner of a traded option is entitled to buy or sell. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "amountPaidForOption": {
+            "type": "number",
+            "description": "The amount that an investor paid for an option contract. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "marketValueOfSharesOnExcise": {
+            "type": "number",
+            "description": "The price that a stock can be readily bought or sold in the current market place. The 'going price' of a share of stock. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "profitOnOptionExercised": {
+            "type": "number",
+            "description": "The sum that an investor earns by buying a call option or selling a put option at maturity. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "employersNicPaid": {
+            "type": "number",
+            "description": "The amount of National Insurance contributions the employers paid on an option. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxableAmount": {
+            "type": "number",
+            "description": "The taxable amount not subject to PAYE. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          }
+        },
+        "required": [
+          "employerName",
+          "schemePlanType",
+          "dateOfOptionGrant",
+          "dateOfEvent",
+          "optionNotExercisedButConsiderationReceived",
+          "amountOfConsiderationReceived",
+          "noOfSharesAcquired",
+          "classOfSharesAcquired",
+          "exercisePrice",
+          "amountPaidForOption",
+          "marketValueOfSharesOnExcise",
+          "profitOnOptionExercised",
+          "employersNicPaid",
+          "taxableAmount"
+        ]
+      }
+    },
+    "sharesAwardedOrReceived": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about shares awarded or received income",
+        "properties": {
+          "employerName": {
+            "type": "string",
+            "description": "The name of the employer.",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$",
+            "example": "BPDTS Ltd."
+          },
+          "employerRef": {
+            "type": "string",
+            "description": "A reference number given to every business that registers with HMRC as an employer.",
+            "example": "123/AB456",
+            "pattern": "^[0-9]{3}\\/[^ ].{0,9}$"
+          },
+          "schemePlanType": {
+            "type": "string",
+            "description": "The type of share scheme or plan the employer has.",
+            "enum": ["SIP", "Other"]
+          },
+          "dateSharesCeasedToBeSubjectToPlan": {
+            "type": "string",
+            "description": "The date the shares ceased in the format YYYY-MM-DD.",
+            "example": "2019-04-20"
+          },
+          "noOfShareSecuritiesAwarded": {
+            "type": "number",
+            "description": "The number of shares awarded. The value must be 0 or more.",
+            "example": "500",
+            "multipleOf": 1,
+            "minimum": 0
+          },
+          "classOfShareAwarded": {
+            "type": "string",
+            "description": "The level of voting rights shareholders receive.",
+            "example": "FIRST",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "dateSharesAwarded": {
+            "type": "string",
+            "description": "The date the shares ceased in the format YYYY-MM-DD.",
+            "example": "2019-04-20"
+          },
+          "sharesSubjectToRestrictions": {
+            "type": "boolean",
+            "description": "The shares of a company are not fully transferable from the issuing company to the person receiving them until certain conditions have been met.",
+            "example": "true"
+          },
+          "electionEnteredIgnoreRestrictions": {
+            "type": "boolean",
+            "description": "A boolean indicating that the election has been made to ignore one or more restrictions, but leaving one or more restrictions to be taken into account.",
+            "example": "true"
+          },
+          "actualMarketValueOfSharesOnAward": {
+            "type": "number",
+            "description": "The market value of the shares awarded. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "unrestrictedMarketValueOfSharesOnAward": {
+            "type": "number",
+            "description": "The unrestricted market value of the shares awarded. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "amountPaidForSharesOnAward": {
+            "type": "number",
+            "description": "The amount paid for the shares awarded. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "marketValueAfterRestrictionsLifted": {
+            "type": "number",
+            "description": "The market value of the shares after restrictions lifted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxableAmount": {
+            "type": "number",
+            "description": "The taxable amount not subject to PAYE. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          }
+        },
+        "required": [
+          "employerName",
+          "schemePlanType",
+          "dateSharesCeasedToBeSubjectToPlan",
+          "noOfShareSecuritiesAwarded",
+          "classOfShareAwarded",
+          "dateSharesAwarded",
+          "sharesSubjectToRestrictions",
+          "electionEnteredIgnoreRestrictions",
+          "actualMarketValueOfSharesOnAward",
+          "unrestrictedMarketValueOfSharesOnAward",
+          "amountPaidForSharesOnAward",
+          "marketValueAfterRestrictionsLifted",
+          "taxableAmount"
+        ]
+      }
+    },
+    "disability": {
+      "type": "object",
+      "description": "An object that holds the key value for disability deductions.",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "An optional user supplied reference.",
+          "example": "OTHEREmp123A",
+          "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+        },
+        "amountDeducted": {
+          "type": "number",
+          "description": "The claim for an exemption for specific payments received for physical or mental impairment, when the employment ended or terms changed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": ["amountDeducted"]
+    },
+    "foreignService": {
+      "type": "object",
+      "description": "An object that holds the key value for foreign service deductions.",
+      "properties": {
+        "customerReference": {
+          "type": "string",
+          "description": "A reference the user supplies to identify the foreign income.",
+          "example": "OTHEREmp123A",
+          "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+        },
+        "amountDeducted": {
+          "type": "number",
+          "description": "The claim for an exemption for specific payments received for physical or mental impairment, when the employment ended or terms changed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": ["amountDeducted"]
+    },
+    "lumpSums": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "An array that holds details of lump sum income",
+        "properties": {
+          "employerName": {
+            "type": "string",
+            "description": "The name of the employer.",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,105}$",
+            "example": "BPDTS Ltd."
+          },
+          "employerRef": {
+            "type": "string",
+            "description": "A reference number given to every business that registers with HMRC as an employer.",
+            "example": "123/AB456",
+            "pattern": "^[0-9]{3}\\/[^ ].{0,9}$"
+          },
+          "taxableLumpSumsAndCertainIncome": {
+            "type": "object",
+            "description": "An object that holds the key value for taxable lump sums and certain income",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the taxable lump sum. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxPaid": {
+                "type": "number",
+                "description": "The amount of tax paid on the lump sum. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxTakenOffInEmployment": {
+                "type": "boolean",
+                "description": "A boolean indicating whether tax has been taken off in employment.",
+                "example": "false"
+              }
+            },
+            "required": [
+              "amount",
+              "taxTakenOffInEmployment"
+            ]
+          },
+          "benefitFromEmployerFinancedRetirementScheme": {
+            "type": "object",
+            "description": "An object that holds the key value for benefits from employer financed retirement scheme",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the benefit received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "exemptAmount": {
+                "type": "number",
+                "description": "The amount of benefit exempt from tax. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxPaid": {
+                "type": "number",
+                "description": "The amount of tax paid on the benefit. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxTakenOffInEmployment": {
+                "type": "boolean",
+                "description": "A boolean indicating whether tax has been taken off in employment.",
+                "example": "false"
+              }
+            },
+            "required": [
+              "amount",
+              "taxTakenOffInEmployment"
+            ]
+          },
+          "redundancyCompensationPaymentsOverExemption": {
+            "type": "object",
+            "description": "An object that holds the key value for redundancy compensation payments over exemption",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the redundancy compensation payment over exemption. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxPaid": {
+                "type": "number",
+                "description": "The amount of tax paid on the redundancy compensation payments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              },
+              "taxTakenOffInEmployment": {
+                "type": "boolean",
+                "description": "A boolean indicating whether tax has been taken off in employment.",
+                "example": "false"
+              }
+            },
+            "required": [
+              "amount",
+              "taxTakenOffInEmployment"
+            ]
+          },
+          "redundancyCompensationPaymentsUnderExemption": {
+            "type": "object",
+            "description": "An object that holds the key value for redundancy compensation payments under exemption",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "description": "The amount of the redundancy compensation payments under exemption. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "example": "5000.99",
+                "multipleOf": 0.01,
+                "minimum": 0,
+                "maximum:": 99999999999.99
+              }
+            },
+            "required": ["amount"]
+          }
+        },
+        "required": [
+          "employerName",
+          "employerRef"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/other/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "create-and-amend-other-employment-income", "delete-other-employment-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

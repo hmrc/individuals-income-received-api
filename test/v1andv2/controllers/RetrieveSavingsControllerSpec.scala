@@ -24,6 +24,7 @@ import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import v1.controllers.RetrieveSavingsController
 import v1andv2.fixtures.RetrieveSavingsControllerFixture
 import v1andv2.mocks.requestParsers.MockRetrieveSavingsRequestParser
 import v1andv2.mocks.services.MockRetrieveSavingsService

@@ -20,7 +20,7 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1andv2.connectors.RetrieveSavingsConnector
+import v1.connectors.RetrieveSavingsConnector
 import v1andv2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1andv2.models.response.retrieveSavings.RetrieveSavingsResponse
 

@@ -1,0 +1,248 @@
+{
+  "definitions":{
+    "disposals":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "description":"An array of other Capital Gains disposals.",
+        "properties":{
+          "assetType":{
+            "type":"string",
+            "description":"The type of asset being disposed of.",
+            "enum":[
+              "otherProperty",
+              "unlistedShares",
+              "listedShares",
+              "otherAsset"
+            ]
+          },
+          "assetDescription":{
+            "type":"string",
+            "description":"A description of the asset being disposed of.",
+            "example":"Shares",
+            "pattern":"^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "acquisitionDate":{
+            "type":"string",
+            "description":"The date the asset was acquired in the format YYYY-MM-DD.",
+            "example":"2022-03-04"
+          },
+          "disposalDate":{
+            "type":"string",
+            "description":"The date that the asset was disposed of in the format YYYY-MM-DD.",
+            "example":"2022-03-04"
+          },
+          "disposalProceeds":{
+            "type":"number",
+            "description":"The total proceeds from the disposal of the asset. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          },
+          "allowableCosts":{
+            "type":"number",
+            "description":"The total amount of allowable costs that can be deducted from the overall gain or loss. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          },
+          "gain":{
+            "type":"number",
+            "description":"The total gain from the disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          },
+          "loss":{
+            "type":"number",
+            "description":"The total loss from the disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          },
+          "claimOrElectionCodes":{
+            "type":"array",
+            "items":{
+              "description":"The claim, election or notice codes related to the disposal. Possible values are: PRR - Private Residence Relief where Letting Relief does not apply, LET - Private Residence Relief where Letting Relief applies, GHO - Gift Hold-Over Relief, ROR - Rollover Relief, PRO - Provisional Rollover Relief, ESH - Employee Shares, NVC - Negligible Value Claims, SIR - Social Investment Tax Relief, OTH - Other claims, BAD - Business Asset Disposal Relief, INV - Investors' Relief",
+              "type":"string",
+              "example":"[\"BAD\",\"OTH\"]"
+            }
+          },
+          "gainAfterRelief":{
+            "type":"number",
+            "description":"The total net gain after any reliefs have been applied. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          },
+          "lossAfterRelief":{
+            "type":"number",
+            "description":"The total net loss after any reliefs have been applied. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          },
+          "rttTaxPaid":{
+            "type":"number",
+            "description":"The total amount of tax paid through the Capital Gains Tax Real Time Transactions service for this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example":"5000.99",
+            "multipleOf":0.01,
+            "minimum":0,
+            "maximum:":99999999999.99
+          }
+        },
+        "required":[
+          "assetType",
+          "assetDescription",
+          "acquisitionDate",
+          "disposalDate",
+          "disposalProceeds",
+          "allowableCosts"
+        ]
+      }
+    },
+    "nonStandardGains":{
+      "type":"object",
+      "description":"One of these fields must be provided: carriedInterestGain, attributedGains or otherGains",
+      "properties":{
+        "carriedInterestGain":{
+          "type":"number",
+          "description":"The total amount of all the carried interest gains. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "carriedInterestRttTaxPaid":{
+          "type":"number",
+          "description":"The total amount of tax paid through the Capital Gains Tax Real Time Transactions service for all of the carried interest gains. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "attributedGains":{
+          "type":"number",
+          "description":"The total amount of all the attributed gains where personal losses cannot be set off. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "attributedGainsRttTaxPaid":{
+          "type":"number",
+          "description":"The total amount of tax paid through the Capital Gains Tax Real Time Transactions service for all of the attributed interest gains. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "otherGains":{
+          "type":"number",
+          "description":"The total amount of any other asset type gains not reported elsewhere for the specified tax year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "otherGainsRttTaxPaid":{
+          "type":"number",
+          "description":"The total amount of tax paid through the Capital Gains Tax Real Time Transactions service on any other asset-type gains. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        }
+      }
+    },
+    "losses":{
+      "type":"object",
+      "description":"Details Capital Gains Tax losses relating to other disposals and non-standard gains. One of these fields must be provided: broughtForwardLossesUsedInCurrentYear, setAgainstInYearGains, setAgainstInYearGeneralIncome or setAgainstEarlierYear",
+      "properties":{
+        "broughtForwardLossesUsedInCurrentYear":{
+          "type":"number",
+          "description":"The total amount of brought forward losses used for the specified tax year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "setAgainstInYearGains":{
+          "type":"number",
+          "description":"The total amount of trading losses set against chargeable gains for the specified tax year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "setAgainstInYearGeneralIncome":{
+          "type":"number",
+          "description":"The total amount of losses set against general income for the specified tax year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        },
+        "setAgainstEarlierYear":{
+          "type":"number",
+          "description":"The total amount of losses set against general income for the tax year previous to the specified tax year. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example":"5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        }
+      }
+    },
+    "adjustments":{
+      "type":"number",
+      "description":"The amount of included adjustments to reduce or increase the Capital Gains Tax payable. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+      "example":"5000.99",
+      "multipleOf":0.01,
+      "minimum":-99999999999.99,
+      "maximum:":99999999999.99
+    },
+    "links":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "description":"A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties":{
+          "href":{
+            "description":"The relative URL of the endpoint.",
+            "type":"string",
+            "example":"/income-received/disposals/other-gains/TC663795B/2021-22"
+          },
+          "rel":{
+            "description":"A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type":"string",
+            "enum":[
+              "create-and-amend-other-capital-gains-and-disposals",
+              "delete-other-capital-gains-and-disposals",
+              "self"
+            ]
+          },
+          "method":{
+            "description":"The HTTP method type for the endpoint.",
+            "type":"string",
+            "enum":[
+              "PUT",
+              "DELETE",
+              "GET"
+            ]
+          }
+        },
+        "required":[
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

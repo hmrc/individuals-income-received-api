@@ -1,0 +1,20 @@
+get:
+  $ref: "./dividends_retrieve.yaml"
+  summary: Retrieve Dividends Income
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+put:
+  $ref: "./dividends_amend.yaml"
+  summary: Create and Amend Dividends Income
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+delete:
+  $ref: "./dividends_delete.yaml"
+  summary: Delete Dividends Income
+  security:
+    - User-Restricted:
+        - write:self-assessment

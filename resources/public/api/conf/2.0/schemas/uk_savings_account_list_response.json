@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "List All UK Savings Accounts Response",
+  "type": "object",
+  "properties": {
+    "savingsAccounts": {
+      "type": "array",
+      "description": "An array containing details of savings accounts for the provided National Insurance number.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "savingsAccountId": {
+            "type": "string",
+            "description": "The unique identifier of the savings account.",
+            "pattern": "^[A-Za-z0-9]{15}$",
+            "example": "SAVKB2UVwUTBQGJ"
+          },
+          "accountName": {
+            "type": "string",
+            "description": "Friendly account name.",
+            "pattern": "^[A-Za-z0-9 &'\\(\\)\\*,\\-\\./@£]{1,32}$",
+            "example": "Shares savings account"
+          }
+        },
+        "required": [
+          "savingsAccountId",
+          "accountName"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/savings/uk-accounts/TC663795B"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "add-uk-savings-account"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  },
+  "required": ["savingsAccounts"]
+}

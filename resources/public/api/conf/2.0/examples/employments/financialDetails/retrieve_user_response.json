@@ -1,0 +1,67 @@
+{
+  "submittedOn": "2020-01-04T05:01:01Z",
+  "customerAdded": "2020-04-04T01:01:01Z",
+  "employment": {
+    "employer": {
+      "employerRef": "223/AB12399",
+      "employerName": "Employer Name Ltd."
+    },
+    "pay": {
+      "taxablePayToDate": 34234.15,
+      "totalTaxToDate": 6782.92
+    },
+    "deductions": {
+      "studentLoans": {
+        "uglDeductionAmount": 13343.45,
+        "pglDeductionAmount": 24242.56
+      }
+    },
+    "benefitsInKind": {
+      "accommodation": 455.67,
+      "assets": 435.54,
+      "assetTransfer": 24.58,
+      "beneficialLoan": 33.89,
+      "car": 3434.78,
+      "carFuel": 34.56,
+      "educationalServices": 445.67,
+      "entertaining": 434.45,
+      "expenses": 3444.32,
+      "medicalInsurance": 4542.47,
+      "telephone": 243.43,
+      "service": 45.67,
+      "taxableExpenses": 24.56,
+      "van": 56.29,
+      "vanFuel": 14.56,
+      "mileage": 34.23,
+      "nonQualifyingRelocationExpenses": 54.62,
+      "nurseryPlaces": 84.29,
+      "otherItems": 67.67,
+      "paymentsOnEmployeesBehalf": 67.23,
+      "personalIncidentalExpenses": 74.29,
+      "qualifyingRelocationExpenses": 78.24,
+      "employerProvidedProfessionalSubscriptions": 84.56,
+      "employerProvidedServices": 56.34,
+      "incomeTaxPaidByDirector": 67.34,
+      "travelAndSubsistence": 56.89,
+      "vouchersAndCreditCards": 34.90,
+      "nonCash": 23.89
+    }
+  },
+  "links": [
+    {
+      "href":"/individuals/income-received/employments/TC663795B/2021-22/4557ecb5-fd32-48cc-81f5-e6acd1099f3c/financial-details",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/TC663795B/2021-22/4557ecb5-fd32-48cc-81f5-e6acd1099f3c/financial-details",
+      "rel":"create-and-amend-employment-financial-details",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/employments/TC663795B/2021-22/4557ecb5-fd32-48cc-81f5-e6acd1099f3c/financial-details",
+      "rel":"delete-employment-financial-details",
+      "method":"DELETE"
+    }
+  ]
+}

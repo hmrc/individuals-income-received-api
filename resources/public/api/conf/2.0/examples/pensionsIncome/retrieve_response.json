@@ -1,0 +1,42 @@
+{
+  "submittedOn": "2021-04-06T09:37:17Z",
+  "foreignPensions": [
+    {
+      "countryCode": "FRA",
+      "amountBeforeTax": 1999.99,
+      "taxTakenOff": 1999.99,
+      "specialWithholdingTax": 1999.99,
+      "foreignTaxCreditRelief": false,
+      "taxableAmount": 1999.99
+    }
+  ],
+  "overseasPensionContributions": [
+    {
+      "customerReference": "PENSIONINCOME245",
+      "exemptEmployersPensionContribs": 1999.99,
+      "migrantMemReliefQopsRefNo": "QOPS000000",
+      "dblTaxationRelief": 1999.99,
+      "dblTaxationCountryCode": "FRA",
+      "dblTaxationArticle": "AB3211-1",
+      "dblTaxationTreaty": "MUNICH",
+      "sf74reference": "SF74-123456"
+    }
+  ],
+  "links":[
+    {
+      "href":"/individuals/income-received/pensions/TC663795B/2021-22",
+      "rel":"create-and-amend-pensions-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/pensions/TC663795B/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/pensions/TC663795B/2021-22",
+      "rel":"delete-pensions-income",
+      "method":"DELETE"
+    }
+  ]
+}

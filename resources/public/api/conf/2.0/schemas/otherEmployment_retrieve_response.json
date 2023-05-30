@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Other Employment Income Request",
+  "description": "Retrieve Other Employment Income Request",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "otherEmployment_definitions.json#/definitions/submittedOn"},
+    "shareOption": {"$ref": "otherEmployment_definitions.json#/definitions/shareOption"},
+    "sharesAwardedOrReceived": {"$ref": "otherEmployment_definitions.json#/definitions/sharesAwardedOrReceived"},
+    "disability": {"$ref": "otherEmployment_definitions.json#/definitions/disability"},
+    "foreignService": {"$ref": "otherEmployment_definitions.json#/definitions/foreignService"},
+    "lumpSums": {"$ref": "otherEmployment_definitions.json#/definitions/lumpSums"},
+    "links": {"$ref": "otherEmployment_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn"]
+}

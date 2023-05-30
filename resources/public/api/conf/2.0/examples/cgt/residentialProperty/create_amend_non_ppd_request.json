@@ -1,0 +1,34 @@
+{
+  "disposals" : [
+    {
+      "customerReference" : "ABC-2345",
+      "disposalDate" : "2021-01-29",
+      "completionDate" : "2021-04-01",
+      "disposalProceeds" : 2345.67,
+      "acquisitionDate" : "2021-01-22",
+      "acquisitionAmount" : 2341.45,
+      "improvementCosts" : 345.34,
+      "additionalCosts" : 234.89,
+      "prfAmount" : 67.9,
+      "otherReliefAmount" : 123.89,
+      "lossesFromThisYear" : 456.89,
+      "lossesFromPreviousYear" : 124.87,
+      "amountOfNetGain" : 567.9
+    },
+    {
+      "customerReference" : "AB3456789012",
+      "disposalDate" : "2021-01-21",
+      "completionDate" : "2021-03-20",
+      "disposalProceeds" : 234.32,
+      "acquisitionDate" : "2021-01-21",
+      "acquisitionAmount" : 345.23,
+      "improvementCosts" : 456.23,
+      "additionalCosts" : 234.34,
+      "prfAmount" : 238.34,
+      "otherReliefAmount" : 267.12,
+      "lossesFromThisYear" : 361.89,
+      "lossesFromPreviousYear" : 123.89,
+      "amountOfNetLoss" : 345.89
+    }
+  ]
+}

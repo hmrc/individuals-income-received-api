@@ -1,0 +1,256 @@
+{
+  "definitions": {
+    "employmentId": {
+      "type": "string",
+      "description": "The unique identifier for the employment.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "example": "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    },
+    "employerRef": {
+      "type": "string",
+      "description": "A unique identifier, the employer reference number.",
+      "pattern": "^[0-9]{3}\\/[^ ].{0,9}$",
+      "example": "123/AB56797"
+    },
+    "employerName": {
+      "type": "string",
+      "description": "The name of the employer the employee worked for.",
+      "pattern": "^\\S.{0,73}$",
+      "example": "Employer Name Ltd."
+    },
+    "startDate": {
+      "type": "string",
+      "description": "The date the employment began. It must be provided in the format YYYY-MM-DD",
+      "example": "2020-07-01"
+    },
+    "cessationDate": {
+      "type": "string",
+      "description": "The date the employment ended. It must be provided in the format YYYY-MM-DD",
+      "example": "2020-07-01"
+    },
+    "payrollId": {
+      "type": "string",
+      "description": "The unique identifier used by the employer to identify the employee.",
+      "pattern": "^[A-Za-z0-9.,\\-()/=!\"%&*; <>'+:\\?]{0,38}$",
+      "example": "YDIAHPcYFQbOXLCKQ"
+    },
+    "dateIgnored": {
+      "type": "string",
+      "description": "The date the HMRC provided employment instance was set to be ignored. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the custom employment was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "ignoreEmployment": {
+      "type": "boolean",
+      "description": "A boolean that will instruct HMRC not to consider an employment in the tax calculation, when set to true. The value must be true or false.",
+      "example": "true"
+    },
+    "occupationalPension": {
+      "type": "boolean",
+      "description": "A boolean indicating whether the employment is an occupational pension. The value must be true or false.",
+      "example": "true"
+    },
+    "linksForAddAmend": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "list-employments" ,"self", "amend-custom-employment", "delete-custom-employment"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET", "PUT", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    },
+    "linksForAddAmendNonPaye": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/non-paye/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "create-and-amend-non-paye-employment-income" ,"self", "delete-non-paye-employment-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET", "PUT", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    },
+    "linksForRetrieve": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "list-employments" ,"self", "amend-custom-employment", "delete-custom-employment", "ignore-employment", "unignore-employment"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET", "PUT", "POST", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    },
+    "linksForIgnoreAndUnignore": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "list-employments" ,"self"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    },
+    "linksForEmploymentOnList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/AA123456A/2021-22\n/4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    },
+    "linksForEntireList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "add-custom-employment", "self"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "POST", "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

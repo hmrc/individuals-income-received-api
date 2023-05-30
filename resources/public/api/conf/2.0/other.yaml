@@ -1,0 +1,18 @@
+get:
+  $ref: "./other_retrieve.yaml"
+  summary: Retrieve Other Income
+  security:
+    - User-Restricted:
+        - read:self-assessment
+put:
+  $ref: "./other_amend.yaml"
+  summary: Create and Amend Other Income
+  security:
+    - User-Restricted:
+        - write:self-assessment
+delete:
+  $ref: "./other_delete.yaml"
+  summary: Delete Other Income
+  security:
+    - User-Restricted:
+        - write:self-assessment

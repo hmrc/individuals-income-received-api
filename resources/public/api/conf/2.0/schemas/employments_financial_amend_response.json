@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create And Amend Employment Financial Details Response",
+  "description": "Create And Amend Employment Financial Details Response",
+  "type": "object",
+  "properties": {
+    "links": {"$ref": "employments_financial_definitions.json#/definitions/links"}
+  }
+}

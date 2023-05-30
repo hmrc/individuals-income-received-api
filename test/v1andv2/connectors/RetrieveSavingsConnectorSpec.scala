@@ -19,6 +19,7 @@ package v1andv2.connectors
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import v1.connectors.RetrieveSavingsConnector
 import v1andv2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1andv2.models.response.retrieveSavings.RetrieveSavingsResponse
 

@@ -1,0 +1,220 @@
+{
+  "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the other income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "businessReceipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about business receipts.",
+        "properties": {
+          "grossAmount": {
+            "type": "number",
+            "description": "The amount of post-cessation or other business receipts (business receipts taxed as income of an earlier year). The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxYear": {
+            "type": "string",
+            "description": "The tax year where business receipts needed taxing as income. Date in the format YYYY-YY.",
+            "example": "2021-22"
+          }
+        },
+        "required": [
+          "grossAmount",
+          "taxYear"
+        ]
+      }
+    },
+    "allOtherIncomeReceivedWhilstAbroad": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about all other income received whilst abroad income.",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
+            "example": "FRA"
+          },
+          "amountBeforeTax": {
+            "type": "number",
+            "description": "The total amount before any tax taken off other income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxTakenOff": {
+            "type": "number",
+            "description": "The amount of tax taken off other income. The value must be between 1 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "specialWithholdingTax": {
+            "type": "number",
+            "description": "Special Withholding Tax (SWT) amount taken off this payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "foreignTaxCreditRelief": {
+            "type": "boolean",
+            "description": "A boolean indicating whether Foreign Tax Credit Relief (FTCR) has been claimed. The value must be true or false.",
+            "example": "true"
+          },
+          "taxableAmount": {
+            "type": "number",
+            "description": "The amount of tax to be paid. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "residentialFinancialCostAmount": {
+            "type": "number",
+            "description": "The amount of residential property income or restricted finance costs. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "broughtFwdResidentialFinancialCostAmount": {
+            "type": "number",
+            "description": "The unused residential finance costs brought forward. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          }
+        },
+        "required": [
+          "countryCode",
+          "foreignTaxCreditRelief",
+          "taxableAmount"
+        ]
+      }
+    },
+    "overseasIncomeAndGains": {
+      "type": "object",
+      "description": "The container that holds the key value for overseas income and gains.",
+      "properties": {
+        "gainAmount": {
+          "type": "number",
+          "description": "The gains amount on disposals of holdings in offshore funds. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": [
+        "gainAmount"
+      ]
+    },
+    "chargeableForeignBenefitsAndGifts": {
+      "type": "object",
+      "description": "The container that holds the key value for chargeable foreign benefits and gifts.",
+      "properties": {
+        "transactionBenefit": {
+          "type": "number",
+          "description": "Benefit received on an overseas transaction. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "protectedForeignIncomeSourceBenefit": {
+          "type": "number",
+          "description": "Benefit received on a protected foreign income source. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "protectedForeignIncomeOnwardGift": {
+          "type": "number",
+          "description": "Protected foreign income gifted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "benefitReceivedAsASettler": {
+          "type": "number",
+          "description": "Benefit received as a settler. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "onwardGiftReceivedAsASettler": {
+          "type": "number",
+          "description": "Gift received as a settler. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      }
+    },
+    "omittedForeignIncome": {
+      "type": "object",
+      "description": "The container that holds the key value for omitted foreign income.",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "The amount of omitted foreign income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "1999.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": [
+        "amount"
+      ]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/other/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "create-and-amend-other-income", "delete-other-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

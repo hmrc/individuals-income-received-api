@@ -1,0 +1,53 @@
+{
+  "lifeInsurance": [
+    {
+      "customerReference": "INPOLY123A",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaid": true,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1,
+      "deficiencyRelief": 100.23
+    }
+  ],
+  "capitalRedemption": [
+    {
+      "customerReference": "INPOLY123B",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaid": true,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1,
+      "deficiencyRelief": 100.23
+    }
+  ],
+  "lifeAnnuity": [
+    {
+      "customerReference": "INPOLY123C",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaid": true,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1,
+      "deficiencyRelief": 100.23
+    }
+  ],
+  "voidedIsa": [
+    {
+      "customerReference": "INPOLY123D",
+      "event": "Policy matured",
+      "gainAmount": 1000.23,
+      "taxPaidAmount": 100.23,
+      "yearsHeld": 10,
+      "yearsHeldSinceLastGain": 1
+    }
+  ],
+  "foreign": [
+    {
+      "customerReference": "INPOLY123E",
+      "gainAmount": 1000.23,
+      "taxPaidAmount": 100.23,
+      "yearsHeld": 10
+    }
+  ]
+}

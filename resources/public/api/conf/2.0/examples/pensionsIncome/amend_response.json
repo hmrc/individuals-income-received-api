@@ -1,0 +1,19 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/pensions/TC663795B/2021-22",
+      "rel":"create-and-amend-pensions-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/pensions/TC663795B/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/pensions/TC663795B/2021-22",
+      "rel":"delete-pensions-income",
+      "method":"DELETE"
+    }
+  ]
+}

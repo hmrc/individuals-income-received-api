@@ -41,7 +41,7 @@ class ForeignInterestItemSpec extends UnitSpec {
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
       taxableAmount = 2321.22,
-      foreignTaxCreditRelief = true
+      foreignTaxCreditRelief = Some(true)
     )
 
   val mtdResponse: JsValue = Json.parse(
@@ -86,7 +86,7 @@ class ForeignInterestItemSpec extends UnitSpec {
     taxTakenOff = None,
     specialWithholdingTax = None,
     taxableAmount = 100,
-    foreignTaxCreditRelief = true
+    foreignTaxCreditRelief = Some(true)
   )
 
   val minimumMtdResponse: JsValue = Json.parse(

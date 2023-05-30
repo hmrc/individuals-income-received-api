@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1andv2.endpoints
+package v1.endpoints
 
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}

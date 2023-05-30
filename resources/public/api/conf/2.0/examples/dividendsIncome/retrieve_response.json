@@ -1,0 +1,56 @@
+{
+  "submittedOn": "2021-04-06T09:37:17Z",
+  "foreignDividend":[
+    {
+      "countryCode":"FRA",
+      "amountBeforeTax":1999.99,
+      "taxTakenOff":1999.99,
+      "specialWithholdingTax":5000.99,
+      "foreignTaxCreditRelief":false,
+      "taxableAmount":5000.99
+    }
+  ],
+  "dividendIncomeReceivedWhilstAbroad":[
+    {
+      "countryCode":"FRA",
+      "amountBeforeTax":1999.99,
+      "taxTakenOff":1999.99,
+      "specialWithholdingTax":5000.99,
+      "foreignTaxCreditRelief":false,
+      "taxableAmount":5000.99
+    }
+  ],
+  "stockDividend": {
+      "customerReference":"Stock dividend income",
+      "grossAmount":5000.99
+    },
+  "redeemableShares": {
+    "customerReference":"Redeemable shares income",
+    "grossAmount":5000.99
+  },
+  "bonusIssuesOfSecurities": {
+    "customerReference":"Bonus Securities",
+    "grossAmount":5000.99
+  },
+  "closeCompanyLoansWrittenOff": {
+    "customerReference":"Write off",
+    "grossAmount":5000.99
+  },
+  "links":[
+    {
+      "href":"/individuals/income-received/dividends/TC663795B/2021-22",
+      "rel":"create-and-amend-dividends-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/dividends/TC663795B/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/dividends/TC663795B/2021-22",
+      "rel":"delete-dividends-income",
+      "method":"DELETE"
+    }
+  ]
+}

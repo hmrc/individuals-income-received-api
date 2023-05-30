@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": 	"Add a UK Savings Account Response",
+  "description": "Add a UK Savings Account Response",
+  "type": "object",
+  "properties": {
+    "savingsAccountId": {
+      "type": "string",
+      "description": "The unique identifier of the savings account. Must conform to the regular expression: ^[A-Za-z0-9]{15}$",
+      "example": "SAVKB2UVwUTBQGJ"
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/savings/uk-accounts/TC663795B"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "list-all-uk-savings-account",
+              "create-and-amend-uk-savings-account-annual-summary"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT",
+              "GET"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  },
+  "required": [
+    "savingsAccountId"
+  ]
+}

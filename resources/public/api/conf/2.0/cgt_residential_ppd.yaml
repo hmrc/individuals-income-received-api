@@ -1,0 +1,13 @@
+put:
+  $ref: "./cgt_residential_create_amend_ppd.yaml"
+  summary: Create and Amend 'Report and Pay Capital Gains Tax on Residential Property' Overrides (PPD)
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+delete:
+  $ref: "./cgt_residential_delete_ppd.yaml"
+  summary: Delete 'Report and Pay Capital Gains Tax on Residential Property' Overrides (PPD)
+  security:
+    - User-Restricted:
+        - write:self-assessment

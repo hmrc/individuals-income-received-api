@@ -20,7 +20,7 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import v1andv2.connectors.RetrieveSavingsConnector
+import v1.connectors.RetrieveSavingsConnector
 import v1andv2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1andv2.models.response.retrieveSavings.RetrieveSavingsResponse
 

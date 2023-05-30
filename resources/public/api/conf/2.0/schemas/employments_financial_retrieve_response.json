@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve an Employment and its Financial Details Response",
+  "description": "Retrieve an Employment and its Financial Details Response",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "employments_financial_definitions.json#/definitions/submittedOn"},
+    "source": {"$ref": "employments_financial_definitions.json#/definitions/source"},
+    "customerAdded": {"$ref": "employments_financial_definitions.json#/definitions/customerAdded"},
+    "dateIgnored": {"$ref": "employments_financial_definitions.json#/definitions/dateIgnored"},
+    "employment": {"$ref": "employments_financial_definitions.json#/definitions/retrieveEmployment"},
+    "links": {"$ref": "employments_financial_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn", "employment"]
+}

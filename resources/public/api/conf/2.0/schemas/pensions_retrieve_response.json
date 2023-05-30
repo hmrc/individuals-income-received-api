@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Pensions Income Response",
+  "description": "Retrieve Pensions Income Response",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "pensions_definitions.json#/definitions/submittedOn"},
+    "foreignPensions": {"$ref": "pensions_definitions.json#/definitions/foreignPensions"},
+    "overseasPensionContributions": {"$ref": "pensions_definitions.json#/definitions/overseasPensionContributions"},
+    "links": {"$ref": "pensions_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn"]
+}

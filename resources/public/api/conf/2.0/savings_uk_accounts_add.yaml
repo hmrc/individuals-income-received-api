@@ -1,0 +1,111 @@
+summary: Add a UK Savings Account
+description: |
+  This endpoint allows a developer to add a UK savings account.
+  Interest income data can then be recorded against that savings account using the Amend a UK savings account annual summary endpoint.
+  A National Insurance number must be provided.
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates success response.</p></td>
+          </tr>
+          <tr>
+              <td><p>MAXIMUM_SAVINGS_ACCOUNTS_LIMIT</p></td>
+              <td><p>Simulates the scenario where the maximum number of 1000 savings accounts is exceeded.</p></td>
+          </tr>
+          <tr>
+              <td><p>DUPLICATE_ACCOUNT_NAME</p></td>
+              <td><p>Simulates the scenario where a duplicate account name was supplied for the NINO.</p></td>
+          </tr>
+      </tbody>
+  </table>
+
+tags:
+  - UK Savings Account
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
+  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+security:
+  - User-Restricted:
+      - write:self-assessment
+
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/uk_savings_account_add_request.json'
+      examples:
+        example-1:
+          description: Request Example
+          value:
+            $ref: './examples/ukSavingsAccount/uk_savings_account_add_request.json'
+
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/uk_savings_account_add_response.json'
+        examples:
+          example-response:
+            description: Example Response
+            value:
+              $ref: './examples/ukSavingsAccount/uk_savings_account_add_response.json'
+
+  "400":
+    description: Bad request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_ACCOUNT_NAME:
+            $ref: './common/errors.yaml#/components/examples/formatAccountName'
+          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
+          RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT:
+            $ref: './common/errors.yaml#/components/examples/ruleMaximumSavingsAccountLimit'
+          RULE_DUPLICATE_ACCOUNT_NAME:
+            $ref: './common/errors.yaml#/components/examples/ruleDuplicateAccountName'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "404":
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/notFound'

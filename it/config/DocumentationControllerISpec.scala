@@ -54,8 +54,13 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
     |         "INCOME_TAX_MTD"
     |      ],
     |      "versions":[
-    |         {
+    |      {
     |            "version":"1.0",
+    |            "status":"ALPHA",
+    |            "endpointsEnabled":false
+    |         },
+    |         {
+    |            "version":"2.0",
     |            "status":"ALPHA",
     |            "endpointsEnabled":false
     |         }
@@ -74,20 +79,24 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
-    "return the documentation that passes OAS V1 parser" in {
-      val response: WSResponse = await(buildRequest("/api/conf/1.0/application.yaml").get())
-      response.status shouldBe Status.OK
+    def version(version: String): Unit = {
+      s"return the documentation that passes OAS V$version parser" in {
+        val response: WSResponse = await(buildRequest(s"/api/conf/${version}.0/application.yaml").get())
+        response.status shouldBe Status.OK
 
-      val contents     = response.body[String]
-      val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
-      parserResult.isSuccess shouldBe true
+        val contents     = response.body[String]
+        val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
+        parserResult.isSuccess shouldBe true
 
-      val openAPI = Option(parserResult.get.getOpenAPI)
-      openAPI.isEmpty shouldBe false
-      openAPI.get.getOpenapi shouldBe "3.0.3"
-      openAPI.get.getInfo.getTitle shouldBe "Individuals Income Received (MTD)"
-      openAPI.get.getInfo.getVersion shouldBe "1.0"
+        val openAPI = Option(parserResult.get.getOpenAPI)
+        openAPI.isEmpty shouldBe false
+        openAPI.get.getOpenapi shouldBe "3.0.3"
+        openAPI.get.getInfo.getTitle shouldBe "Individuals Income Received (MTD)"
+        openAPI.get.getInfo.getVersion shouldBe s"${version}.0"
+      }
     }
+    val versions: Seq[String] = Seq("1", "2")
+    versions.foreach(v => version(v))
   }
 
 }

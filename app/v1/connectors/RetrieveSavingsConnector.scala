@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1andv2.connectors
+package v1.connectors
 
 import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser._

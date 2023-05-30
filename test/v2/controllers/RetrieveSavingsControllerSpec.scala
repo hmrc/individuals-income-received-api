@@ -69,7 +69,7 @@ class RetrieveSavingsControllerSpec
     taxTakenOff = Some(22.22),
     specialWithholdingTax = Some(22.22),
     taxableAmount = 2321.22,
-    foreignTaxCreditRelief = true
+    foreignTaxCreditRelief = Some(true)
   )
 
   private val retrieveSavingsResponseModel = RetrieveSavingsResponse(

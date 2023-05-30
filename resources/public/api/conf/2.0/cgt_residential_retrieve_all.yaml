@@ -1,0 +1,112 @@
+summary: Retrieve All CGT Residential Property Disposals and Overrides
+description: |
+  This API provides the capability to retrieve the residential property disposals subject to capital gains tax for 
+  payment for property disposal (PPD) and non payment for property disposal (non-PPD).  This includes:
+  
+    - User submitted residential property disposals
+    - Disposals previously reported via the HMRC 'Report and Pay Capital Gains Tax on UK Property'
+    - User submitted disposal overrides
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT<br><strong>?source=user</strong></p></td>
+              <td><p>Requesting <strong>user</strong> source simulates success response with User provided disposals and overrides.</p></td>
+          </tr>
+          <tr>
+              <td><p>N/A - DEFAULT<br><strong>?source=hmrcHeld</strong></p></td>
+              <td><p>Requesting <strong>hmrcHeld</strong> source simulates success response with HMRC held disposals.</p></td>
+          </tr>
+          <tr>
+              <td><p>N/A - DEFAULT<br><strong>?source=latest</strong></p></td>
+              <td><p>Requesting <strong>latest</strong> source simulates success response with Latest disposals and overrides submitted.</p></td>
+          </tr>
+          <tr>
+              <td><p>LOSS<br><strong>?source=latest</strong></p></td>
+              <td><p>Requesting <strong>latest</strong> source with LOSS simulates success response with User provided disposals and overrides with losses.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_FOUND</p></td>
+              <td><p>Simulates the scenario where no data is found.</p></td>
+          </tr>
+      </tbody>
+  </table>
+
+tags:
+  - Capital Gains on Residential Property Disposals
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'
+  - $ref: './common/queryParameters.yaml#/components/parameters/source'
+  - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+security:
+  - User-Restricted:
+      - read:self-assessment
+
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/cgt_retrieve_all_property_disposals_overrides.json'
+        examples:
+          example-response:
+            description: Example Response
+            value:
+              $ref: './examples/cgt/residentialProperty/retrieve_property_disposal_submission_response.json'
+
+  "400":
+    description: Bad request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_TAX_YEAR:
+            $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          FORMAT_SOURCE:
+            $ref: './common/errors.yaml#/components/examples/formatSource'
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          RULE_TAX_YEAR_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "404":
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/notFound'

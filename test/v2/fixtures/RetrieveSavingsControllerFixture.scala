@@ -32,12 +32,12 @@ object RetrieveSavingsControllerFixture {
       |      },
       |   "foreignInterest": [
       |      {
-      |         "amountBeforeTax": 1232.22,
       |         "countryCode": "DEU",
+      |         "amountBeforeTax": 1232.22,
       |         "taxTakenOff": 22.22,
       |         "specialWithholdingTax": 22.22,
-      |         "taxableAmount": 2321.22,
-      |         "foreignTaxCreditRelief": true
+      |         "foreignTaxCreditRelief": true,
+      |         "taxableAmount": 2321.22
       |      }
       |   ]
       |}

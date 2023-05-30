@@ -1,0 +1,111 @@
+summary:
+  Create and Amend Pensions Income
+description: |
+  This endpoint enables you to create and amend foreign pensions and overseas pension contributions. 
+  A National Insurance number and tax year must be provided.
+  
+  ###  Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Header Value (Gov-Test-Scenario)</th>
+        <th>Scenario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><p>N/A - DEFAULT</p></td>
+        <td><p>Simulates success response.</p></td>
+      </tr>
+    </tbody>
+  </table>
+
+tags:
+  - Pensions Income
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'
+  - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
+  - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+security:
+  - User-Restricted:
+      - write:self-assessment
+
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: './schemas/pensions_amend_request.json'
+      examples:
+        full_amendment:
+          description: Full Pensions Income Amendment
+          value:
+            $ref: './examples/pensionsIncome/amend_request.json'
+
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/pensions_amend_response.json'
+        examples:
+          example-response:
+            description: Example Response
+            value:
+              $ref: './examples/pensionsIncome/amend_response.json'
+
+  "400":
+    description: Bad request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_TAX_YEAR:
+            $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          RULE_TAX_YEAR_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
+          FORMAT_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/formatCountryCode'
+          RULE_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
+          FORMAT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatValue'
+          FORMAT_CUSTOMER_REF:
+            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
+          FORMAT_QOPS_REF:
+            $ref: './common/errors.yaml#/components/examples/formatQOPsRef'
+          FORMAT_DOUBLE_TAXATION_ARTICLE:
+            $ref: './common/errors.yaml#/components/examples/formatDoubleTaxationArticle'
+          FORMAT_DOUBLE_TAXATION_TREATY:
+            $ref: './common/errors.yaml#/components/examples/formatDoubleTaxationTreaty'
+          FORMAT_SF74_REF:
+            $ref: './common/errors.yaml#/components/examples/formatSF74Ref'
+          RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
+
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Other Capital Gains and Disposals Response",
+  "description": "Retrieve Other Capital Gains and Disposals Response",
+  "type": "object",
+  "properties": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the disposals were submitted to the Report and pay Capital Gains Tax on UK property service. It is in the format YYYY-MM-DDThh:mm:ssZ.",
+      "example": "2020-07-06T09:37:17Z"
+    },
+    "disposals": {"$ref": "capital_gains_other_definitions.json#/definitions/disposals"},
+    "nonStandardGains": {"$ref": "capital_gains_other_definitions.json#/definitions/nonStandardGains"},
+    "losses": {"$ref": "capital_gains_other_definitions.json#/definitions/losses"},
+    "adjustments": {"$ref": "capital_gains_other_definitions.json#/definitions/adjustments"},
+    "links": {"$ref":  "capital_gains_other_definitions.json#/definitions/links"}
+  },
+  "required": [
+    "submittedOn",
+    "links"
+  ]
+}

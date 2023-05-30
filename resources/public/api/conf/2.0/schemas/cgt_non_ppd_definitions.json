@@ -1,0 +1,134 @@
+{
+  "definitions": {
+    "customerReference": {
+      "type": "string",
+      "description": "The unique reference for a residential property disposal supplied by the customer.",
+      "example": "CGTDISPOSAL01",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "disposalDate": {
+      "type": "string",
+      "description": "The date that contracts were exchanged between the owner and the recipient in the format YYYY-MM-DD. The date must fall within the specified taxYear.",
+      "example": "2022-02-04"
+    },
+    "completionDate": {
+      "type": "string",
+      "description": "The completion date of the sale or disposal of the property, in the format YYYY-MM-DD. The completion date must be within the specific tax year and not in the future. If the specified tax year has not ended, the completion date must be between 7th March and 5th April.",
+      "example": "2022-03-08"
+    },
+    "disposalProceeds": {
+      "type": "number",
+      "description": "The total disposal proceeds from the sale of the residential property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "acquisitionDate": {
+      "type": "string",
+      "description": "The date the disposed property was acquired, in the format YYYY-MM-DD.",
+      "example": "2018-04-06"
+    },
+    "acquisitionAmount": {
+      "type": "number",
+      "description": "The total amount paid to acquire the property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "improvementCosts": {
+      "type": "number",
+      "description": "The total costs to improve the property. Only relates to costs that added value to the property. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "additionalCosts": {
+      "type": "number",
+      "description": "The total amount of additional costs when the property was acquired (Acquisition Fees) or disposed of (Disposal Fees). It may include fees for surveyors, estate agents and solicitors. If the costs were shared, enter only the amount of that particular owner's share. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99"
+    },
+    "prfAmount": {
+      "type": "number",
+      "description": "The total amount of Private Residence Relief claimed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "otherReliefAmount": {
+      "type": "number",
+      "description": "The total amount of other reliefs claimed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "lossesFromThisYear": {
+      "type": "number",
+      "description": "The amount of Capital Gains Tax losses from other disposals in the current tax year that reduce the overall gain of this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "lossesFromPreviousYear": {
+      "type": "number",
+      "description": "The amount of Capital Gains Tax losses from disposals in previous tax years that reduce the overall gain of this disposal. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "amountOfNetGain": {
+      "type": "number",
+      "description": "The total amount of net gain from the disposal. Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "amountOfNetLoss": {
+      "type": "number",
+      "description": "The total amount of net loss from the disposal. Either gain or loss must be populated but not both. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "disposals": {
+      "type": "object",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "disposalDate": {"$ref": "#/definitions/disposalDate"},
+        "completionDate": {"$ref": "#/definitions/completionDate"},
+        "disposalProceeds": {"$ref": "#/definitions/disposalProceeds"},
+        "acquisitionDate": {"$ref": "#/definitions/acquisitionDate"},
+        "acquisitionAmount": {"$ref": "#/definitions/acquisitionAmount"},
+        "improvementCosts": {"$ref": "#/definitions/improvementCosts"},
+        "additionalCosts": {"$ref": "#/definitions/additionalCosts"},
+        "prfAmount": {"$ref": "#/definitions/prfAmount"},
+        "otherReliefAmount": {"$ref": "#/definitions/otherReliefAmount"},
+        "lossesFromThisYear": {"$ref": "#/definitions/lossesFromThisYear"},
+        "lossesFromPreviousYear": {"$ref": "#/definitions/lossesFromPreviousYear"},
+        "amountOfNetGain": {"$ref": "#/definitions/amountOfNetGain"},
+        "amountOfNetLoss": {"$ref": "#/definitions/amountOfNetLoss"}
+      },
+      "required": [
+        "disposalDate",
+        "completionDate",
+        "disposalProceeds",
+        "acquisitionDate",
+        "acquisitionAmount"
+      ]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/disposals/residential-property/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "create-and-amend-cgt-residential-property-disposals", "delete-cgt-residential-property-disposals"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

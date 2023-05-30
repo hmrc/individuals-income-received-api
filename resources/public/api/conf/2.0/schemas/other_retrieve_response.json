@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Other Income Request",
+  "description": "Retrieve Other Income Request",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "other_definitions.json#/definitions/submittedOn"},
+    "businessReceipts": {"$ref": "other_definitions.json#/definitions/businessReceipts"},
+    "allOtherIncomeReceivedWhilstAbroad": {"$ref": "other_definitions.json#/definitions/allOtherIncomeReceivedWhilstAbroad"},
+    "overseasIncomeAndGains": {"$ref": "other_definitions.json#/definitions/overseasIncomeAndGains"},
+    "chargeableForeignBenefitsAndGifts": {"$ref": "other_definitions.json#/definitions/chargeableForeignBenefitsAndGifts"},
+    "omittedForeignIncome": {"$ref": "other_definitions.json#/definitions/omittedForeignIncome"},
+    "links": {"$ref": "other_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn"]
+}

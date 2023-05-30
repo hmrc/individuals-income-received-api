@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Employment Response",
+  "description": "Retrieve Employment Response",
+  "type": "object",
+  "properties": {
+    "employments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Array containing details of employments provided to HMRC by employers.",
+        "properties": {
+          "employmentId": {"$ref": "employments_definitions.json#/definitions/employmentId"},
+          "employerName": {"$ref": "employments_definitions.json#/definitions/employerName"},
+          "dateIgnored": {"$ref": "employments_definitions.json#/definitions/dateIgnored"},
+          "links": {"$ref": "employments_definitions.json#/definitions/linksForEmploymentOnList"}
+        },
+        "required": [
+          "employmentId",
+          "employerName"
+        ]
+      }
+    },
+    "customEmployments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Array containing details of employments provided by the user.",
+        "properties": {
+          "employmentId": {"$ref": "employments_definitions.json#/definitions/employmentId"},
+          "employerName": {"$ref": "employments_definitions.json#/definitions/employerName"},
+          "links": {"$ref": "employments_definitions.json#/definitions/linksForEmploymentOnList"}
+        },
+        "required": [
+          "employmentId",
+          "employerName"
+        ]
+      }
+    },
+    "links": {"$ref": "employments_definitions.json#/definitions/linksForEntireList"}
+  }
+}

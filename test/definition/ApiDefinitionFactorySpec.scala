@@ -19,7 +19,7 @@ package definition
 import api.mocks.MockHttpClient
 import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
-import definition.Versions.VERSION_1
+import definition.Versions.{VERSION_1, VERSION_2}
 import mocks.MockAppConfig
 import play.api.Configuration
 import support.UnitSpec
@@ -38,8 +38,10 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     "called" should {
       "return a valid Definition case class" in new Test {
         MockedAppConfig.featureSwitches returns Configuration.empty
-        MockedAppConfig.apiStatus returns "1.0"
-        MockedAppConfig.endpointsEnabled returns true
+        MockedAppConfig.apiStatus("1.0") returns "BETA"
+        MockedAppConfig.apiStatus("2.0") returns "BETA"
+        MockedAppConfig.endpointsEnabled("1.0") returns true
+        MockedAppConfig.endpointsEnabled("2.0") returns true
         MockedAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
@@ -71,7 +73,12 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               versions = Seq(
                 APIVersion(
                   version = VERSION_1,
-                  status = ALPHA,
+                  status = BETA,
+                  endpointsEnabled = true
+                ),
+                APIVersion(
+                  version = VERSION_2,
+                  status = BETA,
                   endpointsEnabled = true
                 )
               ),
@@ -103,15 +110,15 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       "return the correct status" in new Test {
-        MockedAppConfig.apiStatus returns "BETA"
+        MockedAppConfig.apiStatus("1.0") returns "BETA"
         apiDefinitionFactory.buildAPIStatus("1.0") shouldBe BETA
       }
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
       "default to alpha" in new Test {
-        MockedAppConfig.apiStatus returns "ALPHO"
-        apiDefinitionFactory.buildAPIStatus("1.0") shouldBe ALPHA
+        MockedAppConfig.apiStatus("3.0") returns "ALPHO"
+        apiDefinitionFactory.buildAPIStatus("3.0") shouldBe ALPHA
       }
     }
   }

@@ -1,0 +1,128 @@
+{
+  "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the savings income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "securities": {
+      "type": "object",
+      "description": "The container that holds the key value for securities",
+      "properties": {
+        "taxTakenOff": {
+          "type": "number",
+          "description": "The amount of tax deducted from Gilt Edge interest. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "grossAmount": {
+          "type": "number",
+          "description": "The gross amount of Gilt Edge interest, securities, and accrued income profits including tax deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        },
+        "netAmount": {
+          "type": "number",
+          "description": "The amount of Gilt Edge interest after tax has been deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf": 0.01,
+          "minimum": 0,
+          "maximum:": 99999999999.99
+        }
+      },
+      "required": ["grossAmount"]
+    },
+    "foreignInterest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about foreign interest income",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
+            "example": "FRA"
+          },
+          "amountBeforeTax": {
+            "type": "number",
+            "description": "The total amount of income, in UK pounds, before any foreign tax has been deducted. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxTakenOff": {
+            "type": "number",
+            "description": "The total amount of foreign tax taken off your income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "specialWithholdingTax": {
+            "type": "number",
+            "description": "The total amount of Special Withholding Tax (SWT) (in UK pounds) and any UK tax deducted from the foreign income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "foreignTaxCreditRelief": {
+            "type": "boolean",
+            "description": "A boolean indicating whether foreign tax credit relief has been claimed. The value must be true or false",
+            "example": "false"
+          },
+          "taxableAmount": {
+            "type": "number",
+            "description": "The total taxable amount on dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "5000.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          }
+        },
+        "required": [
+          "countryCode",
+          "taxableAmount"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/savings/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "create-and-amend-savings-income", "delete-savings-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}
