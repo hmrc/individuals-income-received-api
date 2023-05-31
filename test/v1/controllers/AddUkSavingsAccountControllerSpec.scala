@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1andv2.controllers
+package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
@@ -36,8 +36,9 @@ import v1andv2.models.response.addUkSavingsAccount.{AddUkSavingsAccountHateoasDa
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+
 class AddUkSavingsAccountControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockAppConfig
     with MockAddUkSavingsAccountService
@@ -111,7 +112,7 @@ class AddUkSavingsAccountControllerSpec
         auditType = "AddUkSavingsAccount",
         transactionName = "add-uk-savings-account",
         detail = FlattenedGenericAuditDetail(
-          versionNumber = Some("1.0"),
+          versionNumber = Some("2.0"),
           userDetails = UserDetails(mtdId, "Individual", None),
           params = Map("nino" -> nino),
           request = maybeRequestBody,
@@ -127,10 +128,10 @@ class AddUkSavingsAccountControllerSpec
     )
 
     val requestBodyJson: JsValue = Json.parse("""
-      |{
-      |   "accountName": "Shares savings account"
-      |}
-      |""".stripMargin)
+                                                |{
+                                                |   "accountName": "Shares savings account"
+                                                |}
+                                                |""".stripMargin)
 
     val rawData: AddUkSavingsAccountRawData = AddUkSavingsAccountRawData(
       nino = nino,
@@ -147,17 +148,17 @@ class AddUkSavingsAccountControllerSpec
     )
 
     val responseJson: JsValue = Json.parse(s"""
-      |{
-      |    "savingsAccountId": "$savingsAccountId",
-      |    "links":[
-      |      {
-      |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
-      |         "method":"GET",
-      |         "rel":"list-all-uk-savings-account"
-      |      }
-      |   ]
-      |}
-      |""".stripMargin)
+                                              |{
+                                              |    "savingsAccountId": "$savingsAccountId",
+                                              |    "links":[
+                                              |      {
+                                              |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
+                                              |         "method":"GET",
+                                              |         "rel":"list-all-uk-savings-account"
+                                              |      }
+                                              |   ]
+                                              |}
+                                              |""".stripMargin)
 
   }
 

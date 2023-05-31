@@ -17,7 +17,7 @@ DELETE     /employments/non-paye/:nino/:taxYear                             v1an
 
 # UK Savings Account routes go here:
 GET         /savings/uk-accounts/:nino                                       v1andv2.controllers.ListUkSavingsAccountsController.listUkSavingsAccounts(nino: String, savingsAccountId: Option[String])
-POST        /savings/uk-accounts/:nino                                       v1andv2.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)
+POST        /savings/uk-accounts/:nino                                       v2.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)
 
 # Additional Income endpoints
 DELETE     /savings/:nino/:taxYear                                          v1andv2.controllers.DeleteSavingsController.deleteSaving(nino: String, taxYear: String)
@@ -77,7 +77,7 @@ PUT        /uk-dividends/:nino/:taxYear                                     v1an
 GET        /uk-dividends/:nino/:taxYear                                     v1andv2.controllers.RetrieveUkDividendsAnnualIncomeSummaryController.retrieveUkDividends(nino: String, taxYear: String)
 
 # UK Savings Income Annual Summary routes go here:
-PUT        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId            v1andv2.controllers.CreateAmendUkSavingsAnnualSummaryController.createAmendUkSavingsAnnualSummary(nino: String, taxYear: String, savingsAccountId: String)
+PUT        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId            v2.controllers.CreateAmendUkSavingsAnnualSummaryController.createAmendUkSavingsAnnualSummary(nino: String, taxYear: String, savingsAccountId: String)
 
 # UK Savings Income Annual Summary routes:
 GET        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId             v1andv2.controllers.RetrieveUkSavingsAccountAnnualSummaryController.retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String)

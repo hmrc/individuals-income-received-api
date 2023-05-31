@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1andv2.endpoints
+package v2.endpoints
 
 import api.controllers.requestParsers.validators.validations.DecimalValueValidation.ZERO_MINIMUM_INCLUSIVE
 import api.models.errors._
@@ -216,7 +216,7 @@ class CreateAmendUkSavingsAnnualSummaryControllerISpec extends IntegrationBaseSp
       setupStubs()
       buildRequest(s"/savings/uk-accounts/$nino/$taxYear/$savingsAccountId")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
