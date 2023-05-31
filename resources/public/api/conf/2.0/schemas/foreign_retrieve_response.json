@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Foreign Income Request",
+  "description": "Retrieve Foreign Income Request",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "foreign_definitions.json#/definitions/submittedOn"},
+    "foreignEarnings": {"$ref": "foreign_definitions.json#/definitions/foreignEarnings"},
+    "unremittableForeignIncome": {"$ref": "foreign_definitions.json#/definitions/unremittableForeignIncome"},
+    "links": {"$ref": "foreign_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn"]
+}

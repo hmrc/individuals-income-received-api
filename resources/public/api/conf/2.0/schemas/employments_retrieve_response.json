@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Employment Response",
+  "description": "Retrieve Employment Response",
+  "type": "object",
+  "properties": {
+    "employerRef": {"$ref": "employments_definitions.json#/definitions/employerRef"},
+    "employerName": {"$ref": "employments_definitions.json#/definitions/employerName"},
+    "startDate": {"$ref": "employments_definitions.json#/definitions/startDate"},
+    "cessationDate": {"$ref": "employments_definitions.json#/definitions/cessationDate"},
+    "payrollId": {"$ref": "employments_definitions.json#/definitions/payrollId"},
+    "occupationalPension": {"$ref": "employments_definitions.json#/definitions/occupationalPension"},
+    "dateIgnored": {"$ref": "employments_definitions.json#/definitions/dateIgnored"},
+    "submittedOn": {"$ref": "employments_definitions.json#/definitions/submittedOn"},
+    "links": {"$ref": "employments_definitions.json#/definitions/linksForRetrieve"}
+  },
+  "required": ["employerName"],
+  "additionalProperties": false
+}

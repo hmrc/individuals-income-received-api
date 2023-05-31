@@ -1,0 +1,15 @@
+{
+  "savingsAccountId": "SAVKB2UVwUTBQGJ",
+  "links":[
+    {
+      "href":"/individuals/income-received/savings/uk-accounts/{nino}",
+      "method":"GET",
+      "rel":"list-all-uk-savings-account"
+    },
+    {
+      "href":"/individuals/income-received/savings/uk-accounts/{nino}/{taxYear}/{savingsAccountId}",
+      "method":"PUT",
+      "rel":"create-and-amend-uk-savings-account-annual-summary"
+    }
+  ]
+}

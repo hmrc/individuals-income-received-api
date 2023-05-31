@@ -1,0 +1,13 @@
+get:
+  $ref: "./savings_uk_accounts_retrieve.yaml"
+  summary: Retrieve UK Savings Account Annual Summary
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+put:
+  $ref: "./savings_uk_accounts_create_amend.yaml"
+  summary: Create and Amend a UK Savings Account Annual Summary
+  security:
+    - User-Restricted:
+        - write:self-assessment

@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create And Amend Employment Financial Details Request",
+  "description": "Create And Amend Employment Financial Details Request",
+  "type": "object",
+  "properties": {
+    "employment": {"$ref": "employments_financial_definitions.json#/definitions/amendEmployment"}
+  },
+  "required": ["employment"]
+}

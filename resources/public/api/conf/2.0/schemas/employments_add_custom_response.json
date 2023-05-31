@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Add Custom Employment Response",
+  "description":"Add Custom Employment Response",
+  "type": "object",
+  "properties": {
+    "employmentId" : {"$ref": "employments_definitions.json#/definitions/employmentId"},
+    "links": {"$ref": "employments_definitions.json#/definitions/linksForAddAmend"}
+  },
+  "required": ["employmentId"]
+}

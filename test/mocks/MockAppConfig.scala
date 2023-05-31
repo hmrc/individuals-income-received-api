@@ -62,8 +62,8 @@ trait MockAppConfig extends MockFactory {
     def featureSwitches: CallHandler[Configuration] = (() => mockAppConfig.featureSwitches).expects()
 
     def apiGatewayContext: CallHandler[String]      = (() => mockAppConfig.apiGatewayContext).expects()
-    def apiStatus: CallHandler[String]              = (mockAppConfig.apiStatus: String => String).expects("1.0")
-    def endpointsEnabled: CallHandler[Boolean]      = (mockAppConfig.endpointsEnabled: String => Boolean).expects("1.0")
+    def apiStatus(status: String): CallHandler[String]              = (mockAppConfig.apiStatus: String => String).expects(status)
+    def endpointsEnabled(version: String): CallHandler[Boolean]      = (mockAppConfig.endpointsEnabled: String => Boolean).expects(version)
     def minimumPermittedTaxYear: CallHandler[Int]   = (() => mockAppConfig.minimumPermittedTaxYear).expects()
     def ukDividendsMinimumTaxYear: CallHandler[Int] = (() => mockAppConfig.ukDividendsMinimumTaxYear).expects()
 

@@ -1,0 +1,184 @@
+{
+  "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the Insurance policy information was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "customerReference": {
+      "type": "string",
+      "description": "A user supplied reference to identify the insurance policy. Must be between 1 and 90 characters in length.",
+      "example": "INPOLY123A",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "event": {
+      "type": "string",
+      "description": "Details of each individual policy event. Must be between 1 and 90 characters in length.",
+      "example": "Policy matured",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "gainAmount": {
+      "type": "number",
+      "description": "The amount of the gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum:": 99999999999.99
+    },
+    "taxPaid": {
+      "type": "boolean",
+      "description": "A boolean indicating whether tax has been paid.",
+      "example": "true"
+    },
+    "taxPaidAmount": {
+      "type": "number",
+      "description": "The amount of tax paid on each gain. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum:": 99999999999.99
+    },
+    "yearsHeld": {
+      "type": "number",
+      "description": "The number of years the policy has been held. The value must be between 0 and 99 no decimals.",
+      "example": "10",
+      "multipleOf": 1,
+      "minimum": 0,
+      "maximum:": 99
+    },
+    "yearsHeldSinceLastGain": {
+      "type": "number",
+      "description": "The number of years the policy has been held since the last gain. The value must be between 0 and 99 no decimals.",
+      "example": "5",
+      "multipleOf": 1,
+      "minimum": 0,
+      "maximum:": 99
+    },
+    "deficiencyRelief": {
+      "type": "number",
+      "description": "The amount of available relief. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum:": 99999999999.99
+    },
+
+    "lifeInsurance": {
+      "type": "object",
+      "description": "Financial details about life insurance income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "event": {"$ref": "#/definitions/event"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaid": {"$ref": "#/definitions/taxPaid"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"},
+        "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"},
+        "deficiencyRelief": {"$ref": "#/definitions/deficiencyRelief"}
+      },
+      "required": [
+        "gainAmount",
+        "taxPaid"
+      ]
+    },
+    "capitalRedemption": {
+      "type": "object",
+      "description": "Financial details about life capital redemption income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "event": {"$ref": "#/definitions/event"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaid": {"$ref": "#/definitions/taxPaid"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"},
+        "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"},
+        "deficiencyRelief": {"$ref": "#/definitions/deficiencyRelief"}
+      },
+      "required": [
+        "gainAmount",
+        "taxPaid"
+      ]
+    },
+    "lifeAnnuity": {
+      "type": "object",
+      "description": "Financial details about life annuity income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "event": {"$ref": "#/definitions/event"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaid": {"$ref": "#/definitions/taxPaid"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"},
+        "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"},
+        "deficiencyRelief": {"$ref": "#/definitions/deficiencyRelief"}
+      },
+      "required": [
+        "gainAmount",
+        "taxPaid"
+      ]
+    },
+    "voidedIsaObject": {
+      "type": "object",
+      "description": "Financial details about voided ISA's income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "event": {"$ref": "#/definitions/event"},
+        "taxPaidAmount": {"$ref": "#/definitions/taxPaidAmount"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"},
+        "yearsHeldSinceLastGain": {"$ref": "#/definitions/yearsHeldSinceLastGain"}
+      },
+      "required": [
+        "gainAmount"
+      ]
+    },
+    "foreignObject": {
+      "type": "object",
+      "description": "Financial details about foreign policies.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReference"},
+        "gainAmount": {"$ref": "#/definitions/gainAmount"},
+        "taxPaidAmount": {"$ref": "#/definitions/taxPaidAmount"},
+        "yearsHeld": {"$ref": "#/definitions/yearsHeld"}
+      },
+      "required": [
+        "gainAmount"
+      ]
+    },
+
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/insurance-policies/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "create-and-amend-insurance-policies-income",
+              "delete-insurance-policies-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT",
+              "GET",
+              "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

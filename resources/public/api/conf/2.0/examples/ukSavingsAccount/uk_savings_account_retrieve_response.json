@@ -1,0 +1,16 @@
+{
+  "taxedUkInterest": 93556675358.99,
+  "untaxedUkInterest": 34514974058.99,
+  "links":[
+    {
+      "href":"/individuals/income-received/savings/uk-accounts/TC663795B/2020-21/122784545874145",
+      "rel":"create-and-amend-uk-savings-account-annual-summary",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/savings/uk-accounts/TC663795B/2020-21/122784545874145",
+      "rel":"self",
+      "method":"GET"
+    }
+  ]
+}

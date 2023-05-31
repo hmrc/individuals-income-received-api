@@ -1,0 +1,19 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/employments/non-paye/AA123456A/2021-22",
+      "rel":"create-and-amend-non-paye-employment-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/employments/non-paye/AA123456A/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/employments/non-paye/AA123456A/2021-22",
+      "rel":"delete-non-paye-employment-income",
+      "method":"DELETE"
+    }
+  ]
+}

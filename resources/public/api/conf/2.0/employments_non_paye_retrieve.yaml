@@ -1,0 +1,112 @@
+summary: Retrieve Non-PAYE Employment Income
+description: |
+  This endpoint allows a developer to retrieve Non-PAYE employment income.
+  A National Insurance number and tax year must be provided.
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT<br><strong>?source=user</strong></p></td>
+              <td><p>Requesting <strong>user</strong> source simulates success response with User provided Non-PAYE employment income.</p></td>
+          </tr>
+          <tr>
+              <td><p>N/A - DEFAULT<br><strong>?source=hmrcHeld</strong></p></td>
+              <td><p>Requesting <strong>hmrcHeld</strong> source simulates success response with HMRC held Non-PAYE employment income.</p></td>
+          </tr>
+          <tr>
+              <td><p>N/A - DEFAULT<br><strong>?source=latest</strong></p></td>
+              <td><p>Requesting <strong>latest</strong> source simulates success response with Latest Non-PAYE employment income submitted.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_FOUND</p></td>
+              <td><p>Simulates the scenario where no data is found.</p></td>
+          </tr>
+      </tbody>
+  </table>
+
+tags:
+  - Non-PAYE Employment Income
+
+parameters:
+  - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'
+  - $ref: './common/queryParameters.yaml#/components/parameters/source'
+  - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
+  - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
+  - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+security:
+  - User-Restricted:
+      - read:self-assessment
+
+responses:
+  "200":
+    description: Success
+    headers:
+      X-CorrelationId:
+        $ref: './common/headers.yaml#/components/parameters/correlationId'
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/non_paye_employment_income_retrieve_response.json'
+        examples:
+          user-example:
+            description: User Provided Response
+            value:
+              $ref: './examples/nonPayeEmployments/retrieve_user_response.json'
+          hmrc-example:
+            description: HMRC held Response
+            value:
+              $ref: './examples/nonPayeEmployments/retrieve_hmrc_response.json'
+          latest-example:
+            description: Latest Response
+            value:
+              $ref: './examples/nonPayeEmployments/retrieve_latest_response.json'
+
+  "400":
+    description: Bad request
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          FORMAT_NINO:
+            $ref: './common/errors.yaml#/components/examples/formatNino'
+          FORMAT_TAX_YEAR:
+            $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+          FORMAT_SOURCE:
+            $ref: './common/errors.yaml#/components/examples/formatSource'
+          RULE_TAX_YEAR_RANGE_INVALID:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
+          RULE_TAX_YEAR_NOT_SUPPORTED:
+            $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+          RULE_INCORRECT_GOV_TEST_SCENARIO:
+            $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
+  "403":
+    description: Forbidden
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          CLIENT_OR_AGENT_NOT_AUTHORISED:
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+  "404":
+    description: Not Found
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/error_response.yaml'
+        examples:
+          MATCHING_RESOURCE_NOT_FOUND:
+            $ref: './common/errors.yaml#/components/examples/notFound'

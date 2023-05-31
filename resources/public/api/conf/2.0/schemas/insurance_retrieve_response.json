@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Insurance Policies Income Request",
+  "description": "Retrieve Insurance Policies Income Request",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "insurance_definitions.json#/definitions/submittedOn"},
+    "lifeInsurance": {
+      "type": "array",
+      "description": "Financial details about life insurance income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/lifeInsurance"}
+    },
+    "capitalRedemption": {
+      "type": "array",
+      "description": "Financial details about life capital redemption income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/capitalRedemption"}
+    },
+    "lifeAnnuity": {
+      "type": "array",
+      "description": "Financial details about life annuity income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/lifeAnnuity"}
+    },
+    "voidedIsa": {
+      "type": "array",
+      "description": "Financial details about voided ISA's income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/voidedIsaObject"}
+    },
+    "foreign": {
+      "type": "array",
+      "description": "Financial details about foreign policies Items income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/foreignObject"}
+    },
+    "links": {"$ref": "insurance_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn"]
+}

@@ -1,0 +1,22 @@
+get:
+  $ref: "./employments_financial_details_retrieve.yaml"
+  summary: Retrieve an Employment and its Financial Details
+  security:
+    - User-Restricted:
+      - read:self-assessment
+  parameters:
+    - $ref: './common/queryParameters.yaml#/components/parameters/source'
+
+put:
+  $ref: "./employments_financial_details_amend.yaml"
+  summary: Create and Amend Employment Financial Details
+  security:
+    - User-Restricted:
+      - write:self-assessment
+
+delete:
+  $ref: "./employments_financial_details_delete.yaml"
+  summary: Delete Employment Financial Details
+  security:
+    - User-Restricted:
+      - write:self-assessment

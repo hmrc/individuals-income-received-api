@@ -1,0 +1,110 @@
+post:
+  summary: Ignore Employment
+  description: |
+    This endpoint enables you to ignore an HMRC-provided employment from a list of employments.
+    <strong>This endpoint can only be used after the tax year has ended.</strong>
+    A National Insurance number, tax year and Employment ID must be provided.
+    
+    ### Test data
+    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Header Value (Gov-Test-Scenario)</th>
+                <th>Scenario</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><p>N/A - DEFAULT</p></td>
+                <td><p>Simulates success response.</p></td>
+            </tr>
+            <tr>
+                <td><p>CUSTOM_EMPLOYMENT</p></td>
+                <td><p>Simulates the scenario where a custom employment is submitted.</p></td>
+            </tr>
+            <tr>
+                <td><p>NOT_FOUND</p></td>
+                <td><p>Simulates the scenario where no data is found.</p></td>
+            </tr>
+            <tr>
+              <td><p>TAX_YEAR_NOT_ENDED</p></td>
+              <td><p>Simulates the scenario where the tax year provided has not ended.</p></td>
+          </tr>
+        </tbody>
+    </table>
+
+  tags:
+    - Employments
+
+  parameters:
+    - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+    - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'
+    - $ref: './common/pathParameters.yaml#/components/parameters/employmentId'
+    - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
+    - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
+    - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: './common/headers.yaml#/components/parameters/correlationId'
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/employments_ignore_response.json'
+          examples:
+            example-response:
+              description: Example Response
+              value:
+                $ref: './examples/employments/ignore_response.json'
+
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: './common/errors.yaml#/components/examples/formatNino'
+            FORMAT_TAX_YEAR:
+              $ref: './common/errors.yaml#/components/examples/formatTaxYear'
+            FORMAT_EMPLOYMENT_ID:
+              $ref: './common/errors.yaml#/components/examples/formatEmploymentId'
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
+            RULE_TAX_YEAR_NOT_ENDED:
+              $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotEnded'
+            RULE_CUSTOM_EMPLOYMENT:
+              $ref: './common/errors.yaml#/components/examples/ruleCustomEmployment'
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error_response.yaml'
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: './common/errors.yaml#/components/examples/notFound'

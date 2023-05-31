@@ -1,0 +1,45 @@
+{
+  "employment": {
+    "pay": {
+      "taxablePayToDate": 1024.99,
+      "totalTaxToDate": 1024.99
+    },
+    "deductions": {
+      "studentLoans": {
+        "uglDeductionAmount": 1024.99,
+        "pglDeductionAmount": 1024.99
+      }
+    },
+    "benefitsInKind": {
+      "accommodation": 1024.99,
+      "assets": 1024.99,
+      "assetTransfer": 1024.99,
+      "beneficialLoan": 1024.99,
+      "car": 1024.99,
+      "carFuel": 1024.99,
+      "educationalServices": 1024.99,
+      "entertaining": 1024.99,
+      "expenses": 1024.99,
+      "medicalInsurance": 1024.99,
+      "telephone": 1024.99,
+      "service": 1024.99,
+      "taxableExpenses": 1024.99,
+      "van": 1024.99,
+      "vanFuel": 1024.99,
+      "mileage": 1024.99,
+      "nonQualifyingRelocationExpenses": 1024.99,
+      "nurseryPlaces": 1024.99,
+      "otherItems": 1024.99,
+      "paymentsOnEmployeesBehalf": 1024.99,
+      "personalIncidentalExpenses": 1024.99,
+      "qualifyingRelocationExpenses": 1024.99,
+      "employerProvidedProfessionalSubscriptions": 1024.99,
+      "employerProvidedServices": 1024.99,
+      "incomeTaxPaidByDirector": 1024.99,
+      "travelAndSubsistence": 1024.99,
+      "vouchersAndCreditCards": 1024.99,
+      "nonCash": 1024.99
+    },
+    "offPayrollWorker": true
+  }
+}

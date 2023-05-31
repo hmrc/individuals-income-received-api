@@ -1,0 +1,67 @@
+components:
+  parameters:
+    nino:
+      name: nino
+      in: path
+      description: |
+        National Insurance number, in the format `AA999999A`
+      schema:
+        type: string
+        example: TC663795B
+      required: true
+
+    employmentId:
+      name: employmentId
+      in: path
+      description: |
+        The unique identifier for the employment.
+      schema:
+        type: string
+        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+        example: 4557ecb5-fd32-48cc-81f5-e6acd1099f3c
+      required: true
+
+    savingsAccountId:
+      name: savingsAccountId
+      in: path
+      description: |
+        The unique identifier of the savings account.
+      schema:
+        type: string
+        pattern: ^[A-Za-z0-9]{15}$
+        example: SAVKB2UVwUTBQGJ
+      required: true
+
+    taxYearMinimum2017:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to. The start year and end year must not span two tax years.
+        No gaps are allowed, for example, 2020-22 is not valid. The minimum tax year is 2017-18.
+      schema:
+        type: string
+        example: 2021-22
+      required: true
+
+    taxYearMinimum2019:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to. The start year and end year must not span two tax years.
+        No gaps are allowed, for example, 2020-22 is not valid. The minimum tax year is 2019-20.
+      schema:
+        type: string
+        example: 2021-22
+      required: true
+
+    taxYearMinimum2021:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to, for example, 2021-22. 
+        The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid.
+        (The minimum tax year in Sandbox is 2019-20.)
+      schema:
+        type: string
+        example: 2021-22
+      required: true

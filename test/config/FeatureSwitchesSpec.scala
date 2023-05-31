@@ -27,6 +27,7 @@ class FeatureSwitchesSpec extends UnitSpec {
     "be true" when {
 
       "absent from the config" in {
+
         val configuration   = Configuration.empty
         val featureSwitches = FeatureSwitches(configuration)
 

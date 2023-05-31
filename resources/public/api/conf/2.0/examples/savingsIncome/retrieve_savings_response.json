@@ -1,0 +1,35 @@
+{
+  "submittedOn": "2021-04-06T09:37:17Z",
+  "securities": {
+    "taxTakenOff": 100.12,
+    "grossAmount": 1455.23,
+    "netAmount": 1355.11
+  },
+  "foreignInterest": [
+    {
+      "countryCode": "DEU",
+      "amountBeforeTax": 1232.67,
+      "taxTakenOff": 12.45,
+      "specialWithholdingTax": 14.78,
+      "foreignTaxCreditRelief": true,
+      "taxableAmount": 1032.67
+    }
+  ],
+  "links":[
+    {
+      "href":"/individuals/income-received/savings/TC663795B/2021-22",
+      "rel":"create-and-amend-savings-income",
+      "method":"PUT"
+    },
+    {
+      "href":"/individuals/income-received/savings/TC663795B/2021-22",
+      "rel":"self",
+      "method":"GET"
+    },
+    {
+      "href":"/individuals/income-received/savings/TC663795B/2021-22",
+      "rel":"delete-savings-income",
+      "method":"DELETE"
+    }
+  ]
+}

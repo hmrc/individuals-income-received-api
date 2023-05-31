@@ -18,7 +18,7 @@ package routing
 
 import com.google.inject.ImplementedBy
 import config.{AppConfig, FeatureSwitches}
-import definition.Versions.VERSION_1
+import definition.Versions.{VERSION_1, VERSION_2}
 import play.api.Logger
 import play.api.routing.Router
 
@@ -38,22 +38,30 @@ trait VersionRoutingMap {
 
 // Add routes corresponding to available versions...
 
-case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig, defaultRouter: Router, v1Router: v1.Routes, v1r7cRouter: v1r7c.Routes)
+case class VersionRoutingMapImpl @Inject() (appConfig: AppConfig,
+                                            defaultRouter: Router,
+                                            v1Router: v1.Routes,
+                                            v1r7cRouter: v1r7c.Routes,
+                                            v2Router: v2.Routes,
+                                            v2r7cRouter: v2r7c.Routes)
     extends VersionRoutingMap {
 
   val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
   protected val logger: Logger         = Logger(this.getClass)
 
   val map: Map[String, Router] = Map(
-    VERSION_1 -> {
-      if (featureSwitches.isV1R7cRoutingEnabled) {
-        logger.info("[VersionRoutingMap][map] using ukDividendsRouter to include UK Dividends routes")
-        v1r7cRouter
-      } else {
-        logger.info("[VersionRoutingMap][map] using v1Router without UK Dividends routes")
-        v1Router
-      }
-    }
+    VERSION_1 -> getRouter(VERSION_1, v1r7cRouter, v1Router),
+    VERSION_2 -> getRouter(VERSION_2, v2r7cRouter, v2Router)
   )
+
+  private def getRouter(version: String, r7cRoutes: Router, nonR7cRoutes: Router) = {
+    if (featureSwitches.isV1R7cRoutingEnabled) {
+      logger.info("[VersionRoutingMap][map] using ukDividendsRouter to include UK Dividends routes")
+      r7cRoutes
+    } else {
+      logger.info(s"[VersionRoutingMap][map] using $version router without UK Dividends routes")
+      nonR7cRoutes
+    }
+  }
 
 }

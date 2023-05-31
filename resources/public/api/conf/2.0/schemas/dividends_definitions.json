@@ -1,0 +1,180 @@
+{
+  "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the dividends income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "countryCode": {
+      "type": "string",
+      "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
+      "example": "FRA"
+    },
+    "amountBeforeTax": {
+      "type": "number",
+      "description": "The total amount of income (in UK pounds) before taking off any foreign tax. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "taxTakenOff": {
+      "type": "number",
+      "description": "The total amount of foreign tax taken off income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "1999.99"
+    },
+    "specialWithholdingTax": {
+      "type": "number",
+      "description": "The total amount of Special Withholding Tax (SWT) (in UK pounds) and any UK tax deducted from the foreign income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99"
+    },
+    "foreignTaxCreditRelief": {
+      "type": "boolean",
+      "description": "Boolean indicating whether Foreign Tax Credit Relief (FTCR) has been claimed.",
+      "example": "false"
+    },
+    "taxableAmount": {
+      "type": "number",
+      "description": "The total taxable amount on dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99"
+    },
+    "customerReferenceStockDividend": {
+      "type": "string",
+      "description": "A reference the user supplies to identify the stock dividends income.",
+      "example": "Stock dividend income",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "customerReferenceRedeemableShares": {
+      "type": "string",
+      "description": "A reference the user supplies to identify the redeemable shares income.",
+      "example": "Redeemable shares income",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "customerReferenceBonusIssuesOfSecurities": {
+      "type": "string",
+      "description": "A reference the user supplies to identify the bonus securities income.",
+      "example": "Bonus Securities",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "customerReferenceCloseCompanyLoansWrittenOff": {
+      "type": "string",
+      "description": "A reference the user supplies to identify the close company loans written off income.",
+      "example": "Write off",
+      "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+    },
+    "grossAmount": {
+      "type": "number",
+      "description": "The gross amount of the dividends. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum:": 99999999999.99
+    },
+    "foreignDividend": {
+      "type": "object",
+        "properties": {
+          "countryCode": {"$ref": "#/definitions/countryCode"},
+          "amountBeforeTax": {"$ref": "#/definitions/amountBeforeTax"},
+          "taxTakenOff": {"$ref": "#/definitions/taxTakenOff"},
+          "specialWithholdingTax": {"$ref": "#/definitions/specialWithholdingTax"},
+          "foreignTaxCreditRelief": {"$ref": "#/definitions/foreignTaxCreditRelief"},
+          "taxableAmount": {"$ref": "#/definitions/taxableAmount"}
+        },
+        "required": [
+          "countryCode",
+          "foreignTaxCreditRelief",
+          "taxableAmount"
+        ]
+    },
+    "dividendIncomeReceivedWhilstAbroad": {
+      "type": "object",
+        "properties": {
+          "countryCode": {"$ref": "#/definitions/countryCode"},
+          "amountBeforeTax": {"$ref": "#/definitions/amountBeforeTax"},
+          "taxTakenOff": {"$ref": "#/definitions/taxTakenOff"},
+          "specialWithholdingTax": {"$ref": "#/definitions/specialWithholdingTax"},
+          "foreignTaxCreditRelief": {"$ref": "#/definitions/foreignTaxCreditRelief"},
+          "taxableAmount": {"$ref": "#/definitions/taxableAmount"}
+        },
+        "required": [
+          "countryCode",
+          "foreignTaxCreditRelief",
+          "taxableAmount"
+        ]
+    },
+    "stockDividend": {
+      "type": "object",
+      "description": "Object that holds the key value for stock dividends income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReferenceStockDividend"},
+        "grossAmount": {"$ref": "#/definitions/grossAmount"}
+      },
+      "required": [
+        "grossAmount"
+      ]
+    },
+    "redeemableShares": {
+      "type": "object",
+      "description": "Object that holds the key value for redeemable shares income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReferenceRedeemableShares"},
+        "grossAmount": {"$ref": "#/definitions/grossAmount"}
+      },
+      "required": [
+        "grossAmount"
+      ]
+    },
+    "bonusIssuesOfSecurities": {
+      "type": "object",
+      "description": "Object that holds the key value for bonus issues of securities income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReferenceBonusIssuesOfSecurities"},
+        "grossAmount": {"$ref": "#/definitions/grossAmount"}
+      },
+      "required": [
+        "grossAmount"
+      ]
+    },
+    "closeCompanyLoansWrittenOff": {
+      "type": "object",
+      "description": "Container that holds the key value for close company loans written off income.",
+      "properties": {
+        "customerReference": {"$ref": "#/definitions/customerReferenceCloseCompanyLoansWrittenOff"},
+        "grossAmount": {"$ref": "#/definitions/grossAmount"}
+      },
+      "required": [
+        "grossAmount"
+      ]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/dividends/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self", "create-and-amend-dividends-income", "delete-dividends-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT", "GET", "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

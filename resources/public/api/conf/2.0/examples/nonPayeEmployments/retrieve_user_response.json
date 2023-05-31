@@ -1,0 +1,25 @@
+{
+  "submittedOn": "2020-07-06T09:37:17.542Z",
+  "source": "user",
+  "totalNonPayeIncome": 876.45,
+  "nonPayeIncome": {
+    "tips": 876.45
+  },
+  "links": [
+    {
+      "href":"/individuals/income-received/employments/non-paye/{nino}/{taxYear}",
+      "method":"PUT",
+      "rel":"create-and-amend-non-paye-employment-income"
+    },
+    {
+      "href":"/individuals/income-received/employments/non-paye/{nino}/{taxYear}",
+      "method":"GET",
+      "rel":"self"
+    },
+    {
+      "href":"/individuals/income-received/employments/non-paye/{nino}/{taxYear}",
+      "method":"DELETE",
+      "rel":"delete-non-paye-employment-income"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Non-PAYE Employment Income Response",
+  "description": "Retrieve Non-PAYE Employment Income Response",
+  "type": "object",
+  "properties": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the non-PAYE employment income was submitted. It must be provided in the format YYYY-MM-DDThh:mm:ss.SSSZ.",
+      "example": "2020-07-06T09:37:17.542Z"
+    },
+    "source": {
+      "type": "string",
+      "description": "Specifies the source of data.",
+      "enum": [
+        "hmrcHeld",
+        "user",
+        "latest"
+      ]
+    },
+    "totalNonPayeIncome": {
+      "type": "number",
+      "description": "The total amount of non PAYE income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "example": "5000.99",
+      "multipleOf":0.01,
+      "minimum":0,
+      "maximum:":99999999999.99
+    },
+    "nonPayeIncome": {
+      "type": "object",
+      "description": "Details of non PAYE income.",
+      "properties": {
+        "tips": {
+          "type": "number",
+          "description": "The total amount of tips received. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "example": "5000.99",
+          "multipleOf":0.01,
+          "minimum":0,
+          "maximum:":99999999999.99
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/employments/non-paye/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "create-and-amend-non-paye-employment-income",
+              "delete-non-paye-employment-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT",
+              "GET",
+              "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  },
+  "required": [
+    "submittedOn",
+    "source"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/savings/uk-accounts/TC663795B/2021-22/SAVKB2UVwUTBQGJ",
+      "method":"PUT",
+      "rel":"create-and-amend-uk-savings-account-annual-summary"
+    },
+    {
+      "href":"/individuals/income-received/savings/uk-accounts/TC663795B/2021-22/SAVKB2UVwUTBQGJ",
+      "method":"GET",
+      "rel":"retrieve-uk-savings-account-annual-summary"
+    }
+  ]
+}

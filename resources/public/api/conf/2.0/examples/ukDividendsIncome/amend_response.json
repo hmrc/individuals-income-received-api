@@ -1,0 +1,19 @@
+{
+  "links":[
+    {
+      "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
+      "method":"PUT",
+      "rel":"create-and-amend-uk-dividends-income"
+    },
+    {
+      "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
+      "method":"GET",
+      "rel":"self"
+    },
+    {
+      "href":"/individuals/income-received/uk-dividends/TC663795B/2020-21",
+      "method":"DELETE",
+      "rel":"delete-uk-dividends-income"
+    }
+  ]
+}

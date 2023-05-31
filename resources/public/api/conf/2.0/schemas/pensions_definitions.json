@@ -1,0 +1,165 @@
+{
+  "definitions": {
+    "submittedOn": {
+      "type": "string",
+      "description": "The date the pensions income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
+      "example": "2021-04-06T09:37:17Z"
+    },
+    "foreignPensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about foreign pensions income",
+        "properties": {
+          "countryCode": {
+            "type": "string",
+            "description": "A three-letter code that represents a country name. The value must in a ISO 3166-1 Alpha-3 format.",
+            "example": "FRA"
+          },
+          "amountBeforeTax": {
+            "type": "number",
+            "description": "The total amount before any tax taken off pension. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxTakenOff": {
+            "type": "number",
+            "description": "The amount of tax taken off pension. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "specialWithholdingTax": {
+            "type": "number",
+            "description": "Special Withholding Tax (SWT) amount taken off this payment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "foreignTaxCreditRelief": {
+            "type": "boolean",
+            "description": "A boolean indicating whether Foreign Tax Credit Relief (FTCR) has been claimed.",
+            "example": "false"
+          },
+          "taxableAmount": {
+            "type": "number",
+            "description": "This is the amount that will be liable to income tax and forms part of the total taxable income. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          }
+        },
+        "required": [
+          "countryCode",
+          "foreignTaxCreditRelief",
+          "taxableAmount"
+        ]
+      }
+    },
+    "overseasPensionContributions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Financial details about overseas pension contributions income",
+        "properties": {
+          "customerReference": {
+            "type": "string",
+            "description": "A reference the user supplies to identify the record.",
+            "example": "PENSIONINCOME245",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "exemptEmployersPensionContribs": {
+            "type": "number",
+            "description": "The amount the employer contributes to the overseas pension scheme. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "migrantMemReliefQopsRefNo": {
+            "type": "string",
+            "description": "The qualifying overseas pension scheme reference number for migrant member relief.",
+            "example": "QOPS000000",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "dblTaxationRelief": {
+            "type": "number",
+            "description": "The relief given as tax credit on the overseas earnings. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "dblTaxationCountryCode": {
+            "type": "string",
+            "description": "A three-letter code that represents the double taxation country name. The value must be ISO 3166-1 alpha-3",
+            "example": "FRA"
+          },
+          "dblTaxationArticle": {
+            "type": "string",
+            "description": "The taxation article reference number.",
+            "example": "AB3211-1",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "dblTaxationTreaty": {
+            "type": "string",
+            "description": "The name of the treaty that has the right to collect tax.",
+            "example": "MUNICH",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          },
+          "sf74reference": {
+            "type": "string",
+            "description": "The SF74 reference number for transitional corresponding relief claims.",
+            "example": "SF74-123456",
+            "pattern": "^[0-9a-zA-Z{À-˿’}\\- _&`():.'^]{1,90}$"
+          }
+        },
+        "required": [
+          "exemptEmployersPensionContribs"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource.",
+        "properties": {
+          "href": {
+            "description": "The relative URL of the endpoint.",
+            "type": "string",
+            "example": "/individuals/income-received/pensions/AA123456A/2021-22"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "type": "string",
+            "enum": [
+              "self",
+              "create-and-amend-pensions-income",
+              "delete-pensions-income"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint.",
+            "type": "string",
+            "enum": [
+              "PUT",
+              "GET",
+              "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  }
+}

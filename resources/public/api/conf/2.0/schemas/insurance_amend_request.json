@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Create And Amend Insurance Policies Income Request",
+  "description": "Create And Amend Insurance Policies Income Request",
+  "type": "object",
+  "properties": {
+    "lifeInsurance": {
+      "type": "array",
+      "description": "Financial details about life insurance income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/lifeInsurance"}
+    },
+    "capitalRedemption": {
+      "type": "array",
+      "description": "Financial details about life capital redemption income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/capitalRedemption"}
+    },
+    "lifeAnnuity": {
+      "type": "array",
+      "description": "Financial details about life annuity income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/lifeAnnuity"}
+    },
+    "voidedIsa": {
+      "type": "array",
+      "description": "Financial details about voided ISA's income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/voidedIsaObject"}
+    },
+    "foreign": {
+      "type": "array",
+      "description": "Financial details about foreign policies Items income",
+      "items": {"$ref": "insurance_definitions.json#/definitions/foreignObject"}
+    }
+  }
+}
