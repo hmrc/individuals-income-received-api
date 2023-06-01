@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1andv2.controllers
+package v1.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
