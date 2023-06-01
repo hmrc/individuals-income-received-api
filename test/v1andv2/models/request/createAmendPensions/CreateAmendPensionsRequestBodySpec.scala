@@ -121,7 +121,7 @@ class CreateAmendPensionsRequestBodySpec extends UnitSpec {
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
       specialWithholdingTax = Some(2.23),
-      foreignTaxCreditRelief = false,
+      foreignTaxCreditRelief = Some(false),
       taxableAmount = 3.23
     ),
     CreateAmendForeignPensionsItem(
@@ -129,7 +129,7 @@ class CreateAmendPensionsRequestBodySpec extends UnitSpec {
       amountBeforeTax = Some(200.25),
       taxTakenOff = Some(1.27),
       specialWithholdingTax = Some(2.50),
-      foreignTaxCreditRelief = true,
+      foreignTaxCreditRelief = Some(true),
       taxableAmount = 3.50
     )
   )

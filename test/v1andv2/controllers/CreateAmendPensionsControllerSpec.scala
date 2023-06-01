@@ -110,7 +110,7 @@ class CreateAmendPensionsControllerSpec
       amountBeforeTax = Some(200.25),
       taxTakenOff = Some(1.27),
       specialWithholdingTax = Some(2.50),
-      foreignTaxCreditRelief = true,
+      foreignTaxCreditRelief = Some(true),
       taxableAmount = 3.50
     )
   )
