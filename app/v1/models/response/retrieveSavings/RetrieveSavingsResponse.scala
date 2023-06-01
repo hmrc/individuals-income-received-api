@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1andv2.models.response.retrieveSavings
+package v1.models.response.retrieveSavings
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}

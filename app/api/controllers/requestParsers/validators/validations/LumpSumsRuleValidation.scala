@@ -17,7 +17,7 @@
 package api.controllers.requestParsers.validators.validations
 
 import api.models.errors.{MtdError, RuleLumpSumsError}
-import v1andv2.models.request.amendOtherEmployment.AmendLumpSums
+import v1.models.request.amendOtherEmployment.AmendLumpSums
 
 object LumpSumsRuleValidation {
 
