@@ -21,10 +21,10 @@ import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
-import v1andv2.controllers.requestParsers.RetrieveSavingsRequestParser
-import v1andv2.models.request.retrieveSavings.RetrieveSavingsRawData
-import v1andv2.models.response.retrieveSavings.RetrieveSavingsHateoasData
-import v1andv2.services.RetrieveSavingsService
+import v1.controllers.requestParsers.RetrieveSavingsRequestParser
+import v1.models.request.retrieveSavings.RetrieveSavingsRawData
+import v1.models.response.retrieveSavings.RetrieveSavingsHateoasData
+import v1.services.RetrieveSavingsService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
