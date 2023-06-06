@@ -24,6 +24,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
 case class RetrieveOtherResponse(submittedOn: String,
+                                 postCessationReceipts: Option[Seq[PostCessationReceiptsItem]],
                                  businessReceipts: Option[Seq[BusinessReceiptsItem]],
                                  allOtherIncomeReceivedWhilstAbroad: Option[Seq[AllOtherIncomeReceivedWhilstAbroadItem]],
                                  overseasIncomeAndGains: Option[OverseasIncomeAndGains],
@@ -34,6 +35,7 @@ object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveOtherResponse] = (
     (JsPath \ "submittedOn").read[String] and
+      (JsPath \ "postCessationReceipts").readNullable[Seq[PostCessationReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "overseasIncomeAndGains").readNullable[OverseasIncomeAndGains] and

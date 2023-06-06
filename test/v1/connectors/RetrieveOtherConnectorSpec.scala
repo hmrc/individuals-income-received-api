@@ -65,6 +65,7 @@ class RetrieveOtherConnectorSpec extends ConnectorSpec {
 
     val response: RetrieveOtherResponse = RetrieveOtherResponse(
       submittedOn = "None",
+      postCessationReceipts = None,
       businessReceipts = None,
       allOtherIncomeReceivedWhilstAbroad = None,
       overseasIncomeAndGains = None,
