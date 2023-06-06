@@ -85,6 +85,7 @@ class RetrieveOtherServiceSpec extends ServiceSpec {
 
     val response: RetrieveOtherResponse = RetrieveOtherResponse(
       submittedOn = "None",
+      postCessationReceipts = None,
       businessReceipts = None,
       allOtherIncomeReceivedWhilstAbroad = None,
       overseasIncomeAndGains = None,
