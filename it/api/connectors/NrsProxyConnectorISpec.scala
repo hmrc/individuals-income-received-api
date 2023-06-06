@@ -22,7 +22,7 @@ import play.api.http.Status._
 import play.api.test.Injecting
 import support.{IntegrationBaseSpec, WireMockMethods}
 import uk.gov.hmrc.http.{Authorization, HeaderCarrier, UpstreamErrorResponse}
-import v1andv2.fixtures.nrs.NrsFixture
+import v1.fixtures.nrs.NrsFixture
 
 class NrsProxyConnectorISpec
     extends IntegrationBaseSpec

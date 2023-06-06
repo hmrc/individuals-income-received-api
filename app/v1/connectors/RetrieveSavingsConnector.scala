@@ -21,8 +21,8 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1andv2.models.request.retrieveSavings.RetrieveSavingsRequest
-import v1andv2.models.response.retrieveSavings.RetrieveSavingsResponse
+import v1.models.request.retrieveSavings.RetrieveSavingsRequest
+import v1.models.response.retrieveSavings.RetrieveSavingsResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
