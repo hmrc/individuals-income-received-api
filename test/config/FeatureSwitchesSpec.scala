@@ -33,17 +33,20 @@ class FeatureSwitchesSpec extends UnitSpec {
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
         featureSwitches.isOpwEnabled shouldBe true
+        featureSwitches.isPostCessationReceiptEnabled shouldBe true
       }
 
       "enabled" in {
         val configuration = Configuration(
-          "tys-api.enabled" -> true,
-          "opw.enabled"     -> true
+          "tys-api.enabled"              -> true,
+          "opw.enabled"                  -> true,
+          "postCessationReceipt.enabled" -> true
         )
         val featureSwitches = FeatureSwitches(configuration)
 
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
         featureSwitches.isOpwEnabled shouldBe true
+        featureSwitches.isPostCessationReceiptEnabled shouldBe true
 
       }
     }
@@ -51,13 +54,15 @@ class FeatureSwitchesSpec extends UnitSpec {
     "be false" when {
       "disabled" in {
         val configuration = Configuration(
-          "tys-api.enabled" -> false,
-          "opw.enabled"     -> false
+          "tys-api.enabled"              -> false,
+          "opw.enabled"                  -> false,
+          "postCessationReceipt.enabled" -> false
         )
 
         val featureSwitches = FeatureSwitches(configuration)
         featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
         featureSwitches.isOpwEnabled shouldBe false
+        featureSwitches.isPostCessationReceiptEnabled shouldBe false
       }
     }
   }
