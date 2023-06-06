@@ -409,6 +409,7 @@ class CreateAmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMes
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(
               Seq(
                 "/foreignPensions/0/countryCode",
+                "/foreignPensions/0/foreignTaxCreditRelief",
                 "/foreignPensions/0/taxableAmount"
               ))))
       }

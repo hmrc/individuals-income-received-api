@@ -37,7 +37,7 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
       amountBeforeTax = Some(100.23),
       taxTakenOff = Some(1.23),
       specialWithholdingTax = Some(2.23),
-      foreignTaxCreditRelief = Some(false),
+      foreignTaxCreditRelief = false,
       taxableAmount = 3.23
     ),
     CreateAmendForeignPensionsItem(
@@ -45,7 +45,7 @@ class CreateAmendPensionsServiceSpec extends ServiceSpec {
       amountBeforeTax = Some(200.23),
       taxTakenOff = Some(3.21),
       specialWithholdingTax = Some(4.32),
-      foreignTaxCreditRelief = Some(true),
+      foreignTaxCreditRelief = true,
       taxableAmount = 5.55
     )
   )

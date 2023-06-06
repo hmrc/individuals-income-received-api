@@ -47,7 +47,6 @@ class CreateAmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMes
       |         "amountBeforeTax": 200.25,
       |         "taxTakenOff": 1.27,
       |         "specialWithholdingTax": 2.50,
-      |         "foreignTaxCreditRelief": true,
       |         "taxableAmount": 3.50
       |      }
       |   ],
@@ -409,7 +408,6 @@ class CreateAmendPensionsValidatorSpec extends UnitSpec with ValueFormatErrorMes
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(
               Seq(
                 "/foreignPensions/0/countryCode",
-                "/foreignPensions/0/foreignTaxCreditRelief",
                 "/foreignPensions/0/taxableAmount"
               ))))
       }
