@@ -24,54 +24,77 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
-      |   "submittedOn": "2019-04-04T01:01:01Z",
-      |   "businessReceipts": [
+      |   "submittedOn":"2019-04-04T01:01:01Z",
+      |   "postCessationReceipts":[
       |      {
-      |         "grossAmount": 5000.99,
-      |         "taxYear": "2018-19"
-      |      },
-      |      {
-      |         "grossAmount": 6000.99,
-      |         "taxYear": "2019-20"
+      |         "customerReference":"String",
+      |         "businessName":"LsMBEqEWnG9j,9JP9RpgkGmIcF2I30.NpxZRtgN3zA7-b8h-LvHvApdJtpY",
+      |         "dateBusinessCeased":"2023-06-01",
+      |         "businessDescription":"u2e'VarLXLa\\W&RHojlOZIqm9NDG",
+      |         "incomeSource":"string",
+      |         "amount":99999999999.99,
+      |         "taxYearIncomeToBeTaxed":"2019-20"
       |      }
       |   ],
-      |   "allOtherIncomeReceivedWhilstAbroad": [
+      |   "businessReceipts":[
       |      {
-      |         "countryCode": "FRA",
-      |         "amountBeforeTax": 1999.99,
-      |         "taxTakenOff": 2.23,
-      |         "specialWithholdingTax": 3.23,
-      |         "foreignTaxCreditRelief": false,
-      |         "taxableAmount": 4.23,
-      |         "residentialFinancialCostAmount": 2999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 1999.99
+      |         "grossAmount":5000.99,
+      |         "taxYear":"2018-19"
       |      },
       |      {
-      |         "countryCode": "IND",
-      |         "amountBeforeTax": 2999.99,
-      |         "taxTakenOff": 3.23,
-      |         "specialWithholdingTax": 4.23,
-      |         "foreignTaxCreditRelief": true,
-      |         "taxableAmount": 5.23,
-      |         "residentialFinancialCostAmount": 3999.99,
-      |         "broughtFwdResidentialFinancialCostAmount": 2999.99
+      |         "grossAmount":6000.99,
+      |         "taxYear":"2019-20"
       |      }
       |   ],
-      |   "overseasIncomeAndGains": {
-      |      "gainAmount": 3000.99
+      |   "allOtherIncomeReceivedWhilstAbroad":[
+      |      {
+      |         "countryCode":"FRA",
+      |         "amountBeforeTax":1999.99,
+      |         "taxTakenOff":2.23,
+      |         "specialWithholdingTax":3.23,
+      |         "foreignTaxCreditRelief":false,
+      |         "taxableAmount":4.23,
+      |         "residentialFinancialCostAmount":2999.99,
+      |         "broughtFwdResidentialFinancialCostAmount":1999.99
+      |      },
+      |      {
+      |         "countryCode":"IND",
+      |         "amountBeforeTax":2999.99,
+      |         "taxTakenOff":3.23,
+      |         "specialWithholdingTax":4.23,
+      |         "foreignTaxCreditRelief":true,
+      |         "taxableAmount":5.23,
+      |         "residentialFinancialCostAmount":3999.99,
+      |         "broughtFwdResidentialFinancialCostAmount":2999.99
+      |      }
+      |   ],
+      |   "overseasIncomeAndGains":{
+      |      "gainAmount":3000.99
       |   },
-      |   "chargeableForeignBenefitsAndGifts": {
-      |      "transactionBenefit": 1999.99,
-      |      "protectedForeignIncomeSourceBenefit": 2999.99,
-      |      "protectedForeignIncomeOnwardGift": 3999.99,
-      |      "benefitReceivedAsASettler": 4999.99,
-      |      "onwardGiftReceivedAsASettler": 5999.99
+      |   "chargeableForeignBenefitsAndGifts":{
+      |      "transactionBenefit":1999.99,
+      |      "protectedForeignIncomeSourceBenefit":2999.99,
+      |      "protectedForeignIncomeOnwardGift":3999.99,
+      |      "benefitReceivedAsASettler":4999.99,
+      |      "onwardGiftReceivedAsASettler":5999.99
       |   },
-      |   "omittedForeignIncome": {
-      |      "amount": 4000.99
+      |   "omittedForeignIncome":{
+      |      "amount":4000.99
       |   }
       |}
     """.stripMargin
+  )
+
+  private val postCessationReceiptsItemModel = Seq(
+    PostCessationReceiptsItem(
+      customerReference = Some("String"),
+      businessName = Some("LsMBEqEWnG9j,9JP9RpgkGmIcF2I30.NpxZRtgN3zA7-b8h-LvHvApdJtpY"),
+      dateBusinessCeased = Some("2023-06-01"),
+      businessDescription = Some("u2e'VarLXLa\\W&RHojlOZIqm9NDG"),
+      incomeSource = Some("string"),
+      amount = 99999999999.99,
+      taxYearIncomeToBeTaxed = "2019-20"
+    )
   )
 
   private val businessReceiptsItemModel = Seq(
@@ -122,6 +145,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
 
   private val responseModel = RetrieveOtherResponse(
     submittedOn = "2019-04-04T01:01:01Z",
+    Some(postCessationReceiptsItemModel),
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),
     Some(overseasIncomeAndGainsModel),
@@ -172,7 +196,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
         )
 
         json.as[RetrieveOtherResponse] shouldBe
-          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None)
+          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None, None)
       }
     }
 
@@ -196,10 +220,12 @@ class RetrieveOtherResponseSpec extends UnitSpec {
           RetrieveOtherResponse(
             submittedOn = "2019-04-04T01:01:01Z",
             None,
+            None,
             Some(Seq(AllOtherIncomeReceivedWhilstAbroadItem("FRA", None, None, None, false, 4.23, None, None))),
             None,
             None,
-            None)
+            None
+          )
 
       }
     }

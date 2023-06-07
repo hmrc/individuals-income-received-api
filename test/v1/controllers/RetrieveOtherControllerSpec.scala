@@ -76,6 +76,18 @@ class RetrieveOtherControllerSpec
       rel = DELETE_OTHER_INCOME
     )
 
+  private val postCessationReceiptsItemModel = Seq(
+    PostCessationReceiptsItem(
+      customerReference = Some("String"),
+      businessName = Some("LsMBEqEWnG9j,9JP9RpgkGmIcF2I30.NpxZRtgN3zA7-b8h-LvHvApdJtpY"),
+      dateBusinessCeased = Some("2023-06-01"),
+      businessDescription = Some("u2e'VarLXLa\\W&RHojlOZIqm9NDG"),
+      incomeSource = Some("string"),
+      amount = 99999999999.99,
+      taxYearIncomeToBeTaxed = "2019-20"
+    )
+  )
+
   private val businessReceiptsItemModel = Seq(
     BusinessReceiptsItem(
       grossAmount = 5000.99,
@@ -124,6 +136,7 @@ class RetrieveOtherControllerSpec
 
   private val retrieveOtherResponseModel = RetrieveOtherResponse(
     submittedOn = "2019-04-04T01:01:01Z",
+    Some(postCessationReceiptsItemModel),
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),
     Some(overseasIncomeAndGainsModel),
