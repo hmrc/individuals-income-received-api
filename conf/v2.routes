@@ -31,7 +31,7 @@ PUT        /employments/other/:nino/:taxYear                                v1.c
 DELETE     /employments/other/:nino/:taxYear                                v1.controllers.DeleteOtherEmploymentController.deleteOtherEmployment(nino: String, taxYear: String)
 GET        /employments/other/:nino/:taxYear                                v1.controllers.RetrieveOtherEmploymentController.retrieveOther(nino: String, taxYear: String)
 
-PUT        /dividends/:nino/:taxYear                                        v1.controllers.AmendDividendsController.amendDividends(nino: String, taxYear: String)
+PUT        /dividends/:nino/:taxYear                                        v2.controllers.CreateAmendDividendsController.createAmendDividends(nino: String, taxYear: String)
 DELETE     /dividends/:nino/:taxYear                                        v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
 GET        /dividends/:nino/:taxYear                                        v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
