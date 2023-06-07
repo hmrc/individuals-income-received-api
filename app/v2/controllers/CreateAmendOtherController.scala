@@ -18,15 +18,17 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService, AuditService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, ControllerComponents, AnyContentAsJson}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.IdGenerator
 import v2.controllers.requestParsers.CreateAmendOtherRequestParser
 import v2.models.request.createAmendOther.CreateAmendOtherRawData
 import v2.models.response.createAmendOther.CreateAmendOtherHateoasData
 import v2.models.response.createAmendOther.CreateAmendOtherResponse.CreateAmendOtherLinksFactory
 import v2.services.CreateAmendOtherService
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -37,6 +39,7 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
                                             service: CreateAmendOtherService,
                                             auditService: AuditService,
                                             hateoasFactory: HateoasFactory,
+                                            appConfig: AppConfig,
                                             cc: ControllerComponents,
                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
@@ -49,7 +52,8 @@ class CreateAmendOtherController @Inject() (val authService: EnrolmentsAuthServi
 
   def createAmendOther(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      implicit val ctx: RequestContext              = RequestContext.from(idGenerator, endpointLogContext)
+      implicit val featureSwitches: FeatureSwitches = FeatureSwitches()(appConfig)
 
       val rawData: CreateAmendOtherRawData = CreateAmendOtherRawData(
         nino = nino,

@@ -20,17 +20,19 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, OWrites, Reads}
 import utils.JsonUtils
 
-case class CreateAmendOtherRequestBody(businessReceipts: Option[Seq[BusinessReceiptsItem]],
+case class CreateAmendOtherRequestBody(postCessationReceipts: Option[Seq[PostCessationReceiptsItem]],
+                                       businessReceipts: Option[Seq[BusinessReceiptsItem]],
                                        allOtherIncomeReceivedWhilstAbroad: Option[Seq[AllOtherIncomeReceivedWhilstAbroadItem]],
                                        overseasIncomeAndGains: Option[OverseasIncomeAndGains],
                                        chargeableForeignBenefitsAndGifts: Option[ChargeableForeignBenefitsAndGifts],
                                        omittedForeignIncome: Option[OmittedForeignIncome])
 
 object CreateAmendOtherRequestBody extends JsonUtils {
-  val empty: CreateAmendOtherRequestBody = CreateAmendOtherRequestBody(None, None, None, None, None)
+  val empty: CreateAmendOtherRequestBody = CreateAmendOtherRequestBody(None, None, None, None, None, None)
 
   implicit val reads: Reads[CreateAmendOtherRequestBody] = (
-    (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
+    (JsPath \ "postCessationReceipts").readNullable[Seq[PostCessationReceiptsItem]].mapEmptySeqToNone and
+      (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "overseasIncomeAndGains").readNullable[OverseasIncomeAndGains] and
       (JsPath \ "chargeableForeignBenefitsAndGifts")
@@ -43,7 +45,8 @@ object CreateAmendOtherRequestBody extends JsonUtils {
   )(CreateAmendOtherRequestBody.apply _)
 
   implicit val writes: OWrites[CreateAmendOtherRequestBody] = (
-    (JsPath \ "businessReceipts").writeNullable[Seq[BusinessReceiptsItem]] and
+    (JsPath \ "postCessationReceipts").writeNullable[Seq[PostCessationReceiptsItem]] and
+      (JsPath \ "businessReceipts").writeNullable[Seq[BusinessReceiptsItem]] and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").writeNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]] and
       (JsPath \ "overseasIncomeAndGains").writeNullable[OverseasIncomeAndGains] and
       (JsPath \ "chargeableForeignBenefitsAndGifts").writeNullable[ChargeableForeignBenefitsAndGifts] and

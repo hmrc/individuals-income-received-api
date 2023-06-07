@@ -19,4 +19,4 @@ package v2.models.request.createAmendOther
 import api.models.request.RawData
 import play.api.mvc.AnyContentAsJson
 
-case class CreateAmendOtherRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+case class CreateAmendOtherRawData(nino: String, taxYear: String, body: AnyContentAsJson, pCREnabled: Boolean = false) extends RawData
