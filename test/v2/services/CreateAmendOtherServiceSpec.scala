@@ -21,9 +21,12 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import config.FeatureSwitches
+import play.api.Configuration
 import v2.fixtures.other.CreateAmendOtherFixtures._
 import v2.mocks.connectors.MockCreateAmendOtherConnector
 import v2.models.request.createAmendOther.CreateAmendOtherRequest
+
 import scala.concurrent.Future
 
 class CreateAmendOtherServiceSpec extends ServiceSpec {
@@ -40,6 +43,12 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
   trait Test extends MockCreateAmendOtherConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "createAmend")
 
+    val pCREnabled: Boolean = true
+
+    val configuration: Configuration = Configuration("postCessationReceipts.enabled" -> pCREnabled)
+
+    implicit val featureSwitch: FeatureSwitches = FeatureSwitches(configuration)
+
     val service: CreateAmendOtherService = new CreateAmendOtherService(
       connector = mockCreateAmendOtherConnector
     )
@@ -49,7 +58,7 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
   "CreateAmendOtherService" when {
     "createAmend" must {
       "return correct result for a success" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ()))
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockCreateAmendOtherConnector
           .createAmendOther(createAmendOtherRequest)
