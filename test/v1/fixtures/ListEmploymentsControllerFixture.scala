@@ -27,7 +27,7 @@ object ListEmploymentsControllerFixture {
        |   "employments": [{
        |         "employmentId": "$employmentId",
        |         "employerName": "Vera Lynn",
-       |         "dateIgnored": "2020-06-17T10:53:38Z",
+       |         "dateIgnored": "2020-06-17T10:53:38.000Z",
        |         "links": [{
        |               "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
        |               "method": "GET",
@@ -37,7 +37,7 @@ object ListEmploymentsControllerFixture {
        |      {
        |         "employmentId": "$employmentId",
        |         "employerName": "Vera Lynn",
-       |         "dateIgnored": "2020-06-17T10:53:38Z",
+       |         "dateIgnored": "2020-06-17T10:53:38.000Z",
        |         "links": [{
        |               "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
        |               "method": "GET",

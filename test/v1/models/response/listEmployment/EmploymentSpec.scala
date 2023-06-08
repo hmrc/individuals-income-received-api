@@ -16,6 +16,7 @@
 
 package v1.models.response.listEmployment
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
@@ -26,7 +27,7 @@ class EmploymentSpec extends UnitSpec {
       |{
       |   "employmentId": "00000000-0000-1000-8000-000000000001",
       |   "employerName": "Vera Lynn",
-      |   "dateIgnored": "2020-06-17T10:53:38Z"
+      |   "dateIgnored": "2020-06-17T10:53:38.000Z"
       |}
     """.stripMargin
   )
@@ -41,7 +42,10 @@ class EmploymentSpec extends UnitSpec {
   )
 
   private val hmrcEmploymentModel =
-    Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z"))
+    Employment(
+      employmentId = "00000000-0000-1000-8000-000000000001",
+      employerName = "Vera Lynn",
+      dateIgnored = Some(Timestamp("2020-06-17T10:53:38.000Z")))
 
   private val customEmploymentModel = Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn")
 
