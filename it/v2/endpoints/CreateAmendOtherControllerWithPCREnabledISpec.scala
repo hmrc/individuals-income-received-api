@@ -25,9 +25,15 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, responseWithHateoasLinks}
+import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyWithPCRJson, responseWithHateoasLinks}
 
-class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
+class CreateAmendOtherControllerWithPCREnabledISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] = {
+    super.servicesConfig ++ Map(
+      "feature-switch.postCessationReceipt.enabled" -> "true"
+    )
+  }
 
   "Calling the 'create and amend other income' endpoint" should {
     "return a 200 status code" when {
@@ -37,7 +43,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request().put(requestBodyWithPCRJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe responseWithHateoasLinks(mtdTaxYear)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -49,7 +55,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request().put(requestBodyWithPCRJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe responseWithHateoasLinks(mtdTaxYear)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -713,7 +719,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().put(requestBodyJson))
+            val response: WSResponse = await(request().put(requestBodyWithPCRJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }

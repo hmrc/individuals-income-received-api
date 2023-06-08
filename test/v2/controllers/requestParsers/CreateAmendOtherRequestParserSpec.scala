@@ -18,10 +18,10 @@ package v2.controllers.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
+import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyModel, requestBodyWithPCRJson}
 import v2.mocks.validators.MockCreateAmendOtherValidator
 import v2.models.request.createAmendOther._
 
@@ -31,7 +31,7 @@ class CreateAmendOtherRequestParserSpec extends UnitSpec {
   val taxYear: String                = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  private val validRawRequestBody = AnyContentAsJson(requestBodyJson)
+  private val validRawRequestBody = AnyContentAsJson(requestBodyWithPCRJson)
 
   private val createAmendOtherRawData = CreateAmendOtherRawData(
     nino = nino,

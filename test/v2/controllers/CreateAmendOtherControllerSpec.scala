@@ -25,12 +25,11 @@ import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import config.FeatureSwitches
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
-import v2.fixtures.other.CreateAmendOtherFixtures.{postCessationReceiptsItem, requestBodyJson, requestBodyModel, requestBodyWithPCRJson}
+import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
 import v2.mocks.requestParsers.MockCreateAmendOtherRequestParser
 import v2.mocks.services.MockCreateAmendOtherService
 import v2.models.request.createAmendOther._
@@ -45,33 +44,56 @@ class CreateAmendOtherControllerSpec
     with MockCreateAmendOtherRequestParser
     with MockAuditService
     with MockCreateAmendOtherService
-    with MockHateoasFactory
-    with MockAppConfig {
+    with MockAppConfig
+    with MockHateoasFactory {
+
+  val taxYear: String = "2019-20"
+
+  val rawData: CreateAmendOtherRawData = CreateAmendOtherRawData(
+    nino = nino,
+    taxYear = taxYear,
+    body = AnyContentAsJson(requestBodyJson)
+  )
+
+  val requestData: CreateAmendOtherRequest = CreateAmendOtherRequest(
+    nino = Nino(nino),
+    taxYear = TaxYear.fromMtd(taxYear),
+    body = requestBodyModel
+  )
+
+  override val testHateoasLinks: Seq[Link] = Seq(
+    Link(href = s"/individuals/income-received/other/$nino/$taxYear", method = PUT, rel = "create-and-amend-other-income"),
+    Link(href = s"/individuals/income-received/other/$nino/$taxYear", method = GET, rel = "self"),
+    Link(href = s"/individuals/income-received/other/$nino/$taxYear", method = DELETE, rel = "delete-other-income")
+  )
+
+  val hateoasResponse: JsValue = Json.parse(
+    s"""
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/other/AA123456A/$taxYear",
+       |         "rel":"create-and-amend-other-income",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/other/AA123456A/$taxYear",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/other/AA123456A/$taxYear",
+       |         "rel":"delete-other-income",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
+    """.stripMargin
+  )
 
   "CreateAmendOtherController" should {
     "return a successful response with status 200 (OK)" when {
-      "the request received is valid and postCessationReceipts disabled" in new PrePCRTest {
-        MockCreateAmendOtherRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
-
-        MockCreateAmendOtherService
-          .createAmend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-
-        MockHateoasFactory
-          .wrap((), CreateAmendOtherHateoasData(nino, taxYear))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
-        runOkTestWithAudit(
-          expectedStatus = OK,
-          maybeAuditRequestBody = Some(requestBodyJson),
-          maybeExpectedResponseBody = Some(hateoasResponse),
-          maybeAuditResponseBody = Some(hateoasResponse)
-        )
-      }
-
-      "the request received is valid and postCessationReceipts enabled" in new PCRTest {
+      "the request received is valid" in new Test {
         MockCreateAmendOtherRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -94,7 +116,7 @@ class CreateAmendOtherControllerSpec
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new PrePCRTest {
+      "the parser validation fails" in new Test {
         MockCreateAmendOtherRequestParser
           .parse(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
@@ -102,7 +124,7 @@ class CreateAmendOtherControllerSpec
         runErrorTestWithAudit(NinoFormatError, Some(requestBodyJson))
       }
 
-      "the service returns an error" in new PrePCRTest {
+      "the service returns an error" in new Test {
         MockCreateAmendOtherRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -117,49 +139,10 @@ class CreateAmendOtherControllerSpec
   }
 
   trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
-    val requestJson: JsValue
-    val requestBody: CreateAmendOtherRequestBody
-    val pCREnabled: Boolean
 
-    val configuration: Configuration = Configuration("postCessationReceipts.enabled" -> pCREnabled)
-
-    implicit val featureSwitch: FeatureSwitches = FeatureSwitches(configuration)
-
-    val taxYear: String = "2019-20"
-
-    val rawData: CreateAmendOtherRawData = CreateAmendOtherRawData(nino, taxYear, AnyContentAsJson(requestJson))
-
-    val requestData: CreateAmendOtherRequest = CreateAmendOtherRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
-
-    val testHateoasLinks: Seq[Link] = Seq(
-      Link(href = s"/individuals/income-received/other/$nino/$taxYear", method = PUT, rel = "create-and-amend-other-income"),
-      Link(href = s"/individuals/income-received/other/$nino/$taxYear", method = GET, rel = "self"),
-      Link(href = s"/individuals/income-received/other/$nino/$taxYear", method = DELETE, rel = "delete-other-income")
-    )
-
-    val hateoasResponse: JsValue = Json.parse(
-      s"""
-         |{
-         |   "links":[
-         |      {
-         |         "href":"/individuals/income-received/other/AA123456A/$taxYear",
-         |         "rel":"create-and-amend-other-income",
-         |         "method":"PUT"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/other/AA123456A/$taxYear",
-         |         "rel":"self",
-         |         "method":"GET"
-         |      },
-         |      {
-         |         "href":"/individuals/income-received/other/AA123456A/$taxYear",
-         |         "rel":"delete-other-income",
-         |         "method":"DELETE"
-         |      }
-         |   ]
-         |}
-    """.stripMargin
-    )
+    MockedAppConfig.featureSwitches
+      .returns(Configuration.empty)
+      .anyNumberOfTimes()
 
     val controller = new CreateAmendOtherController(
       authService = mockEnrolmentsAuthService,
@@ -173,9 +156,7 @@ class CreateAmendOtherControllerSpec
       idGenerator = mockIdGenerator
     )
 
-//    MockedAppConfig.featureSwitches
-//      .returns(configuration)
-//      .anyNumberOfTimes()
+    protected def callController(): Future[Result] = controller.createAmendOther(nino, taxYear)(fakePutRequest(requestBodyJson))
 
     def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -191,20 +172,6 @@ class CreateAmendOtherControllerSpec
         )
       )
 
-    protected def callController(): Future[Result] = controller.createAmendOther(nino, taxYear)(fakePutRequest(requestJson))
-
-  }
-
-  trait PrePCRTest extends Test {
-    val requestJson: JsValue                     = requestBodyJson
-    val requestBody: CreateAmendOtherRequestBody = requestBodyModel
-    val pCREnabled: Boolean                      = false
-  }
-
-  trait PCRTest extends Test {
-    val requestJson: JsValue                     = requestBodyWithPCRJson
-    val requestBody: CreateAmendOtherRequestBody = requestBodyModel.copy(postCessationReceipts = Some(Seq(postCessationReceiptsItem)))
-    val pCREnabled: Boolean                      = true
   }
 
 }

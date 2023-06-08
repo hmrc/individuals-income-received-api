@@ -20,37 +20,39 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import config.FeatureSwitches
+import config.{AppConfig, FeatureSwitches}
 import v2.connectors.CreateAmendOtherConnector
 import v2.models.request.createAmendOther.CreateAmendOtherRequest
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector) extends BaseService {
+class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector, appConfig: AppConfig) extends BaseService {
 
   def createAmend(request: CreateAmendOtherRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext,
       featureSwitches: FeatureSwitches): Future[ServiceOutcome[Unit]] = {
 
-    val (extraErrorsMap, featureSwitchedRequest) = if (featureSwitches.isPostCessationReceiptEnabled) {
-      (postCessationReceiptErrorMap, request)
+    val featureSwitchedRequest = if (featureSwitches.isPostCessationReceiptEnabled) {
+      request
     } else {
-      (Nil, request.copy(body = request.body.copy(postCessationReceipts = None)))
+      request.copy(body = request.body.copy(postCessationReceipts = None))
     }
 
-    connector.createAmend(featureSwitchedRequest).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap ++ extraErrorsMap)))
+    connector.createAmend(featureSwitchedRequest).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
+      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"        -> InternalError,
+      "INVALID_PAYLOAD"              -> InternalError,
+      "SERVER_ERROR"                 -> InternalError,
+      "SERVICE_UNAVAILABLE"          -> InternalError,
+      "UNALIGNED_CESSATION_TAX_YEAR" -> RuleUnalignedCessationTaxYear
     )
 
     val extraTysErrors = Map(
@@ -60,9 +62,5 @@ class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector) e
 
     errors ++ extraTysErrors
   }
-
-  private val postCessationReceiptErrorMap: Map[String, MtdError] = Map(
-    "UNALIGNED_CESSATION_TAX_YEAR" -> RuleUnalignedCessationTaxYear
-  )
 
 }

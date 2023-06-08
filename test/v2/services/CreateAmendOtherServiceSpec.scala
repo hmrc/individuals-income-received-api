@@ -22,6 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import config.FeatureSwitches
+import mocks.MockAppConfig
 import play.api.Configuration
 import v2.fixtures.other.CreateAmendOtherFixtures._
 import v2.mocks.connectors.MockCreateAmendOtherConnector
@@ -34,30 +35,28 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
   private val nino    = "AA112233A"
   private val taxYear = "2019-20"
 
-  val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
-    body = requestBodyModel
-  )
-
-  trait Test extends MockCreateAmendOtherConnector {
+  trait Test extends MockCreateAmendOtherConnector with MockAppConfig {
     implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "createAmend")
 
-    val pCREnabled: Boolean = true
-
-    val configuration: Configuration = Configuration("postCessationReceipts.enabled" -> pCREnabled)
-
+    val configuration: Configuration            = Configuration("postCessationReceipts.enabled" -> true)
     implicit val featureSwitch: FeatureSwitches = FeatureSwitches(configuration)
 
+    val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
+      Nino(nino),
+      TaxYear.fromMtd(taxYear),
+      requestBodyModel
+    )
+
     val service: CreateAmendOtherService = new CreateAmendOtherService(
-      connector = mockCreateAmendOtherConnector
+      connector = mockCreateAmendOtherConnector,
+      appConfig = mockAppConfig
     )
 
   }
 
   "CreateAmendOtherService" when {
     "createAmend" must {
-      "return correct result for a success" in new Test {
+      "return correct result for a success with PCR feature switch disabled" in new Test {
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockCreateAmendOtherConnector
@@ -84,9 +83,9 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", InternalError),
           ("INVALID_PAYLOAD", InternalError),
-          ("UNPROCESSABLE_ENTITY", InternalError),
           ("SERVER_ERROR", InternalError),
-          ("SERVICE_UNAVAILABLE", InternalError)
+          ("SERVICE_UNAVAILABLE", InternalError),
+          ("UNALIGNED_CESSATION_TAX_YEAR", RuleUnalignedCessationTaxYear)
         )
 
         val extraTysErrors = List(
