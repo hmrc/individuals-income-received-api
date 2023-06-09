@@ -4,7 +4,7 @@
     "multiplePropertyDisposals": [
       {
         "source": "hmrcHeld",
-        "submittedOn": "2020-07-07T10:59:47.5440Z",
+        "submittedOn": "2020-07-07T10:59:47.544Z",
         "ppdSubmissionId": "Da2467289108",
         "ppdSubmissionDate": "2020-07-07T10:59:47.5440Z",
         "numberOfDisposals": 3,
@@ -16,7 +16,7 @@
     "singlePropertyDisposals": [
       {
         "source": "hmrcHeld",
-        "submittedOn": "2020-07-07T10:59:47.5440Z",
+        "submittedOn": "2020-07-07T10:59:47.544Z",
         "ppdSubmissionId": "Da2467289109",
         "ppdSubmissionDate": "2020-07-07T10:59:47.5440Z",
         "disposalDate": "2020-05-04",
@@ -35,7 +35,7 @@
     ]
   },
   "customerAddedDisposals": {
-    "submittedOn": "2020-08-07T10:59:47.5440Z",
+    "submittedOn": "2020-08-07T10:59:47.544Z",
     "disposals": [
       {
         "customerReference": "CGTDISPOSAL01",
