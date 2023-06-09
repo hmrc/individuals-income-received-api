@@ -26,7 +26,6 @@ import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
-import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
@@ -140,10 +139,6 @@ class CreateAmendOtherControllerSpec
 
   trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    MockedAppConfig.featureSwitches
-      .returns(Configuration.empty)
-      .anyNumberOfTimes()
-
     val controller = new CreateAmendOtherController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
@@ -151,7 +146,6 @@ class CreateAmendOtherControllerSpec
       service = mockCreateAmendOtherService,
       auditService = mockAuditService,
       hateoasFactory = mockHateoasFactory,
-      appConfig = mockAppConfig,
       cc = cc,
       idGenerator = mockIdGenerator
     )

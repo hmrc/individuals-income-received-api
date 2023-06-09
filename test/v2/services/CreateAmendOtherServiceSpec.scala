@@ -21,7 +21,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import config.FeatureSwitches
 import mocks.MockAppConfig
 import play.api.Configuration
 import v2.fixtures.other.CreateAmendOtherFixtures._
@@ -38,9 +37,6 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
   trait Test extends MockCreateAmendOtherConnector with MockAppConfig {
     implicit val logContext: EndpointLogContext = EndpointLogContext("Other", "createAmend")
 
-    val configuration: Configuration            = Configuration("postCessationReceipts.enabled" -> true)
-    implicit val featureSwitch: FeatureSwitches = FeatureSwitches(configuration)
-
     val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
       Nino(nino),
       TaxYear.fromMtd(taxYear),
@@ -56,12 +52,30 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
 
   "CreateAmendOtherService" when {
     "createAmend" must {
-      "return correct result for a success with PCR feature switch disabled" in new Test {
+      "return correct result for a success with PCR feature switch enabled" in new Test {
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         MockCreateAmendOtherConnector
           .createAmendOther(createAmendOtherRequest)
           .returns(Future.successful(outcome))
+
+        MockedAppConfig.featureSwitches.returns(Configuration("postCessationReceipts.enabled" -> true))
+
+        await(service.createAmend(createAmendOtherRequest)) shouldBe outcome
+      }
+
+      "return correct result for a success with PCR feature switch disabled" in new Test {
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
+        override val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(
+          Nino(nino),
+          TaxYear.fromMtd(taxYear),
+          requestBodyModel.copy(postCessationReceipts = None)
+        )
+        MockCreateAmendOtherConnector
+          .createAmendOther(createAmendOtherRequest)
+          .returns(Future.successful(outcome))
+
+        MockedAppConfig.featureSwitches.returns(Configuration("postCessationReceipts.enabled" -> false))
 
         await(service.createAmend(createAmendOtherRequest)) shouldBe outcome
       }
@@ -74,6 +88,8 @@ class CreateAmendOtherServiceSpec extends ServiceSpec {
             MockCreateAmendOtherConnector
               .createAmendOther(createAmendOtherRequest)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+
+            MockedAppConfig.featureSwitches.returns(Configuration("postCessationReceipts.enabled" -> true))
 
             await(service.createAmend(createAmendOtherRequest)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

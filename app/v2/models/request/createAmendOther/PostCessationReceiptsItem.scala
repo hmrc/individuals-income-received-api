@@ -16,8 +16,7 @@
 
 package v2.models.request.createAmendOther
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Format, Json}
 
 case class PostCessationReceiptsItem(customerReference: Option[String],
                                      businessName: Option[String],
@@ -29,15 +28,6 @@ case class PostCessationReceiptsItem(customerReference: Option[String],
 
 object PostCessationReceiptsItem {
 
-  implicit val reads: Reads[PostCessationReceiptsItem] = (
-    (JsPath \ "customerReference").readNullable[String] and
-      (JsPath \ "businessName").readNullable[String] and
-      (JsPath \ "dateBusinessCeased").readNullable[String] and
-      (JsPath \ "businessDescription").readNullable[String] and
-      (JsPath \ "incomeSource").readNullable[String] and
-      (JsPath \ "amount").read[BigDecimal] and
-      (JsPath \ "taxYearIncomeToBeTaxed").read[String]
-  )(PostCessationReceiptsItem.apply _)
+  implicit val format: Format[PostCessationReceiptsItem] = Json.format[PostCessationReceiptsItem]
 
-  implicit val writes: OWrites[PostCessationReceiptsItem] = Json.writes[PostCessationReceiptsItem]
 }

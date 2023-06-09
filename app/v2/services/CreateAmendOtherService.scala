@@ -30,12 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector, appConfig: AppConfig) extends BaseService {
 
-  def createAmend(request: CreateAmendOtherRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext,
-      featureSwitches: FeatureSwitches): Future[ServiceOutcome[Unit]] = {
+  def createAmend(request: CreateAmendOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    val featureSwitchedRequest = if (featureSwitches.isPostCessationReceiptEnabled) {
+    val featureSwitchedRequest = if (FeatureSwitches(appConfig.featureSwitches).isPostCessationReceiptsEnabled) {
       request
     } else {
       request.copy(body = request.body.copy(postCessationReceipts = None))
