@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveOtherCgt.RetrieveOtherCgtRequest
 import v1.models.response.retrieveOtherCgt.RetrieveOtherCgtResponse
@@ -67,7 +67,7 @@ class RetrieveOtherCgtConnectorSpec extends ConnectorSpec {
       )
 
     val response: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
-      submittedOn = "",
+      submittedOn = Timestamp("2021-05-07T16:18:44.403.000Z"),
       disposals = None,
       nonStandardGains = None,
       losses = None,

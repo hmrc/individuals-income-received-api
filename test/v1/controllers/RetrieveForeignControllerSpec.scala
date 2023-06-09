@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.hateoas
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -77,7 +77,7 @@ class RetrieveForeignControllerSpec
   )
 
   private val retrieveForeignResponse = RetrieveForeignResponse(
-    submittedOn = "2019-04-04T01:01:01Z",
+    submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
     foreignEarnings = Some(fullForeignEarningsModel),
     unremittableForeignIncome = Some(
       Seq(

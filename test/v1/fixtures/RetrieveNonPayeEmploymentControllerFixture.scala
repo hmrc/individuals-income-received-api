@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveNonPayeEmploymentIncome.{NonPayeIncome, RetrieveNonPayeEmploymentIncomeResponse}
 
@@ -25,7 +25,7 @@ object RetrieveNonPayeEmploymentControllerFixture {
   val mtdResponse: JsValue = Json.parse(
     """
       |{
-      | "submittedOn": "2020-07-06T09:37:17Z",
+      | "submittedOn": "2020-07-06T09:37:17.000Z",
       | "source": "hmrcHeld",
       | "totalNonPayeIncome": 23122.22,
       | "nonPayeIncome": {
@@ -49,7 +49,7 @@ object RetrieveNonPayeEmploymentControllerFixture {
   )
 
   val responseModel: RetrieveNonPayeEmploymentIncomeResponse = RetrieveNonPayeEmploymentIncomeResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     source = MtdSourceEnum.hmrcHeld,
     totalNonPayeIncome = Some(23122.22),
     nonPayeIncome = Some(NonPayeIncome(tips = Some(2132.22)))

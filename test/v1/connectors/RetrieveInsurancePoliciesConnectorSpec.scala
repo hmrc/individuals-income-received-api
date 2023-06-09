@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRequest
 import v1.models.response.retrieveInsurancePolicies.RetrieveInsurancePoliciesResponse
@@ -67,7 +67,7 @@ class RetrieveInsurancePoliciesConnectorSpec extends ConnectorSpec {
       )
 
     val response: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(
-      submittedOn = "",
+      submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
       lifeInsurance = None,
       capitalRedemption = None,
       lifeAnnuity = None,

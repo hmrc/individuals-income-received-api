@@ -17,13 +17,14 @@
 package v1.models.response.retrieveInsurancePolicies
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.Timestamp
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
-case class RetrieveInsurancePoliciesResponse(submittedOn: String,
+case class RetrieveInsurancePoliciesResponse(submittedOn: Timestamp,
                                              lifeInsurance: Option[Seq[CommonInsurancePoliciesItem]],
                                              capitalRedemption: Option[Seq[CommonInsurancePoliciesItem]],
                                              lifeAnnuity: Option[Seq[CommonInsurancePoliciesItem]],
@@ -33,7 +34,7 @@ case class RetrieveInsurancePoliciesResponse(submittedOn: String,
 object RetrieveInsurancePoliciesResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveInsurancePoliciesResponse] = (
-    (JsPath \ "submittedOn").read[String] and
+    (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "lifeInsurance").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "capitalRedemption").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "lifeAnnuity").readNullable[Seq[CommonInsurancePoliciesItem]].mapEmptySeqToNone and

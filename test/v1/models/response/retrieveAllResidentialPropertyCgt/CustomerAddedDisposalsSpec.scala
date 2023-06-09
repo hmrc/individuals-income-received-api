@@ -16,6 +16,7 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
@@ -24,7 +25,7 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      |    "submittedOn": "2020-07-06T09:37:17Z",
+      |    "submittedOn": "2020-07-06T09:37:17.000Z",
       |    "disposals": [
       |      {
       |        "customerReference": "CGTDISPOSAL01",
@@ -90,7 +91,7 @@ class CustomerAddedDisposalsSpec extends UnitSpec {
 
   val model: CustomerAddedDisposals =
     CustomerAddedDisposals(
-      "2020-07-06T09:37:17Z",
+      Timestamp("2020-07-06T09:37:17.000Z"),
       Seq(disposals)
     )
 

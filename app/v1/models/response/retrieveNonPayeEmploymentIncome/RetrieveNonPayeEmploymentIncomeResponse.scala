@@ -17,13 +17,13 @@
 package v1.models.response.retrieveNonPayeEmploymentIncome
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: String,
+case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: Timestamp,
                                                    source: MtdSourceEnum,
                                                    totalNonPayeIncome: Option[BigDecimal],
                                                    nonPayeIncome: Option[NonPayeIncome])
@@ -31,7 +31,7 @@ case class RetrieveNonPayeEmploymentIncomeResponse(submittedOn: String,
 object RetrieveNonPayeEmploymentIncomeResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveNonPayeEmploymentIncomeResponse] = (
-    (JsPath \ "submittedOn").read[String] and
+    (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "totalNonPayeIncome").readNullable[BigDecimal] and
       (JsPath \ "nonPayeIncome").readNullable[NonPayeIncome]

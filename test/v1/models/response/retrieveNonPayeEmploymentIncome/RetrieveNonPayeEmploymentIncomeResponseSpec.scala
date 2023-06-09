@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveNonPayeEmploymentIncome
 
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
@@ -25,7 +25,7 @@ class RetrieveNonPayeEmploymentIncomeResponseSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      |  "submittedOn": "2020-07-06T09:37:17Z",
+      |  "submittedOn": "2020-07-06T09:37:17.000Z",
       |  "source": "hmrcHeld",
       |  "totalNonPayeIncome": 435.12,
       |  "nonPayeIncome": {
@@ -50,7 +50,7 @@ class RetrieveNonPayeEmploymentIncomeResponseSpec extends UnitSpec {
 
   val model: RetrieveNonPayeEmploymentIncomeResponse =
     RetrieveNonPayeEmploymentIncomeResponse(
-      "2020-07-06T09:37:17Z",
+      Timestamp("2020-07-06T09:37:17.000Z"),
       MtdSourceEnum.hmrcHeld,
       Some(435.12),
       Some(NonPayeIncome(Some(653.34)))

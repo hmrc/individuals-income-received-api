@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveSavings.RetrieveSavingsRequest
 import v1.models.response.retrieveSavings.RetrieveSavingsResponse
@@ -68,7 +68,7 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
       RetrieveSavingsRequest(Nino(nino), taxYear)
 
     val response: RetrieveSavingsResponse = RetrieveSavingsResponse(
-      submittedOn = "",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       securities = None,
       foreignInterest = None
     )

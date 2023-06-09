@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import api.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
+import api.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType, Timestamp}
 import v1.models.response.retrieveOtherEmployment._
 
 object OtherIncomeEmploymentFixture {
@@ -95,7 +95,7 @@ object OtherIncomeEmploymentFixture {
   )
 
   val retrieveResponse: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(
-    submittedOn = "2022-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     shareOption = Some(Seq(shareOption)),
     sharesAwardedOrReceived = Some(Seq(sharesAwardedOrReceived)),
     disability = Some(commonOtherEmployment),
@@ -104,7 +104,7 @@ object OtherIncomeEmploymentFixture {
   )
 
   val retrieveOtherResponseModel: RetrieveOtherEmploymentResponse = RetrieveOtherEmploymentResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     shareOption = Some(Seq(shareOption)),
     sharesAwardedOrReceived = Some(Seq(sharesAwardedOrReceived)),
     disability = Some(commonOtherEmployment),

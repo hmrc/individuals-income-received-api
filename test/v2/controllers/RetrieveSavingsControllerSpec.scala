@@ -18,7 +18,7 @@ package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
@@ -28,7 +28,8 @@ import v2.fixtures.RetrieveSavingsControllerFixture
 import v2.mocks.requestParsers.MockRetrieveSavingsRequestParser
 import v2.mocks.services.MockRetrieveSavingsService
 import v2.models.request.retrieveSavings.{RetrieveSavingsRawData, RetrieveSavingsRequest}
-import v2.models.response.retrieveSavings.{RetrieveSavingsResponse, ForeignInterestItem, RetrieveSavingsHateoasData, Securities}
+import v2.models.response.retrieveSavings.{ForeignInterestItem, RetrieveSavingsHateoasData, RetrieveSavingsResponse, Securities}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -73,7 +74,7 @@ class RetrieveSavingsControllerSpec
   )
 
   private val retrieveSavingsResponseModel = RetrieveSavingsResponse(
-    submittedOn = "2019-04-04T01:01:01Z",
+    submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
     securities = Some(fullSecuritiesItemsModel),
     foreignInterest = Some(Seq(fullForeignInterestsModel))
   )

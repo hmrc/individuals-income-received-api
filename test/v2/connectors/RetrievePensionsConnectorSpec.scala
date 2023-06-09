@@ -17,10 +17,11 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrievePensions.RetrievePensionsRequest
 import v2.models.response.retrievePensions.RetrievePensionsResponse
+
 import scala.concurrent.Future
 
 class RetrievePensionsConnectorSpec extends ConnectorSpec {
@@ -28,7 +29,7 @@ class RetrievePensionsConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
 
   val retrievePensionsResponse: RetrievePensionsResponse = RetrievePensionsResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     foreignPensions = None,
     overseasPensionContributions = None
   )

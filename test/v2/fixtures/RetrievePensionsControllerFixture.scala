@@ -16,14 +16,14 @@
 
 package v2.fixtures
 
-import play.api.libs.json.{JsObject, Json, JsValue}
+import play.api.libs.json.{JsObject, JsValue, Json}
 
 object RetrievePensionsControllerFixture {
 
   val fullRetrievePensionsResponse: JsValue = Json.parse(
     """
       |{
-      |   "submittedOn": "2020-07-06T09:37:17Z",
+      |   "submittedOn": "2020-07-06T09:37:17.000Z",
       |   "foreignPensions": [
       |      {
       |         "countryCode": "DEU",

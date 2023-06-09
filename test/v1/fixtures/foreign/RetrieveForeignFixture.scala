@@ -23,7 +23,7 @@ object RetrieveForeignFixture {
   val fullRetrieveForeignResponseJson: JsValue = Json.parse(
     """
       |{
-      |   "submittedOn": "2019-04-04T01:01:01Z",
+      |   "submittedOn": "2019-04-04T01:01:01.000Z",
       |   "foreignEarnings": {
       |     "customerReference": "FOREIGNINCME123A",
       |     "earningsNotTaxableUK": 1999.99

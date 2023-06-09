@@ -23,7 +23,7 @@ object RetrieveSavingsControllerFixture {
   val mtdRetrieveSavingsResponse: JsValue = Json.parse(
     """
       |{
-      |   "submittedOn": "2019-04-04T01:01:01Z",
+      |   "submittedOn": "2019-04-04T01:01:01.000Z",
       |   "securities":
       |      {
       |         "taxTakenOff": 100.0,

@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -55,7 +55,7 @@ class RetrieveEmploymentAndFinancialDetailsServiceSpec extends ServiceSpec {
     Employment(None, None, None, None, None, None, None, None, None, offPayrollWorker = None, employer = employer, None, None, None, None)
 
   val responseWithOPW: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
-    submittedOn = "",
+    submittedOn = Timestamp("2020-04-04T01:01:01.000Z"),
     source = None,
     customerAdded = None,
     dateIgnored = None,
@@ -63,7 +63,7 @@ class RetrieveEmploymentAndFinancialDetailsServiceSpec extends ServiceSpec {
   )
 
   val responseWithoutOPW: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
-    submittedOn = "",
+    submittedOn = Timestamp("2020-04-04T01:01:01.000Z"),
     source = None,
     customerAdded = None,
     dateIgnored = None,

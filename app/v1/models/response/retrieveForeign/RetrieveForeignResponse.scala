@@ -17,20 +17,21 @@
 package v1.models.response.retrieveForeign
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.Timestamp
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
-case class RetrieveForeignResponse(submittedOn: String,
+case class RetrieveForeignResponse(submittedOn: Timestamp,
                                    foreignEarnings: Option[ForeignEarnings],
                                    unremittableForeignIncome: Option[Seq[UnremittableForeignIncome]])
 
 object RetrieveForeignResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveForeignResponse] = (
-    (JsPath \ "submittedOn").read[String] and
+    (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].mapEmptySeqToNone
   )(RetrieveForeignResponse.apply _)

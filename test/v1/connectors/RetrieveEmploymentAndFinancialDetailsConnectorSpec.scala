@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{MtdSourceEnum, Nino, TaxYear}
+import api.models.domain.{MtdSourceEnum, Nino, TaxYear, Timestamp}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
@@ -42,7 +42,7 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
   val employment: Employment = Employment(None, None, None, None, None, None, None, None, None, None, employer = employer, None, None, None, None)
 
   val response: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
-    submittedOn = "",
+    submittedOn = Timestamp("2020-04-04T01:01:01.000Z"),
     source = None,
     customerAdded = None,
     dateIgnored = None,

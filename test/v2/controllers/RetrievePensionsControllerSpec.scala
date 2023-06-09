@@ -18,7 +18,7 @@ package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
@@ -28,7 +28,8 @@ import v2.fixtures.RetrievePensionsControllerFixture
 import v2.mocks.requestParsers.MockRetrievePensionsRequestParser
 import v2.mocks.services.MockRetrievePensionsService
 import v2.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
-import v2.models.response.retrievePensions.{RetrievePensionsHateoasData, RetrievePensionsResponse, ForeignPensionsItem, OverseasPensionContributions}
+import v2.models.response.retrievePensions.{ForeignPensionsItem, OverseasPensionContributions, RetrievePensionsHateoasData, RetrievePensionsResponse}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -100,7 +101,7 @@ class RetrievePensionsControllerSpec
   )
 
   private val retrievePensionsResponseModel = RetrievePensionsResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     foreignPensions = Some(foreignPensionsItemModel),
     overseasPensionContributions = Some(overseasPensionContributionsItemModel)
   )

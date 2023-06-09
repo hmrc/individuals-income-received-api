@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -83,7 +83,7 @@ class RetrieveInsurancePoliciesServiceSpec extends ServiceSpec {
     )
 
     val response: RetrieveInsurancePoliciesResponse = RetrieveInsurancePoliciesResponse(
-      submittedOn = "",
+      submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
       lifeInsurance = None,
       capitalRedemption = None,
       lifeAnnuity = None,
