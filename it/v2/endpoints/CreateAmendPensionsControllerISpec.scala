@@ -52,7 +52,6 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
         |         "amountBeforeTax": 200.25,
         |         "taxTakenOff": 1.27,
         |         "specialWithholdingTax": 2.50,
-        |         "foreignTaxCreditRelief": true,
         |         "taxableAmount": 3.50
         |      }
         |   ],
@@ -117,7 +116,7 @@ class CreateAmendPensionsControllerISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(s"/pensions/$nino/$mtdTaxYear")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
