@@ -82,7 +82,7 @@ class RetrieveOtherCgtControllerSpec
     )
 
   val responseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
-    submittedOn = Timestamp("2021-05-07T16:18:44.403.000Z"),
+    submittedOn = Timestamp("2021-05-07T16:18:44.403Z"),
     disposals = Some(
       List(
         Disposal(
@@ -124,7 +124,7 @@ class RetrieveOtherCgtControllerSpec
   val validResponseJson: JsValue = Json.parse(
     """
       |{
-      |   "submittedOn":"2021-05-07T16:18:44.403.000Z",
+      |   "submittedOn":"2021-05-07T16:18:44.403Z",
       |   "disposals":[
       |      {
       |         "assetType":"otherProperty",

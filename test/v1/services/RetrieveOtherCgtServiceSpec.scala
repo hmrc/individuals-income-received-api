@@ -83,7 +83,7 @@ class RetrieveOtherCgtServiceSpec extends ServiceSpec {
     )
 
     val response: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
-      submittedOn = Timestamp("2021-05-07T16:18:44.403.000Z"),
+      submittedOn = Timestamp("2021-05-07T16:18:44.403Z"),
       disposals = None,
       nonStandardGains = None,
       losses = None,
