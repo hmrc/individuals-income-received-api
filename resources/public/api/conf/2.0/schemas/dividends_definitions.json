@@ -79,7 +79,6 @@
         },
         "required": [
           "countryCode",
-          "foreignTaxCreditRelief",
           "taxableAmount"
         ]
     },
@@ -95,7 +94,6 @@
         },
         "required": [
           "countryCode",
-          "foreignTaxCreditRelief",
           "taxableAmount"
         ]
     },
