@@ -131,17 +131,23 @@ object RuleDuplicatedPpdSubmissionIdError
 
 }
 
-object RuleIncorrectDisposalTypeError extends MtdError("RULE_INCORRECT_DISPOSAL_TYPE", "A provided ppdSubmissionId is being used for the incorrect disposal type", BAD_REQUEST)
+object RuleIncorrectDisposalTypeError
+    extends MtdError("RULE_INCORRECT_DISPOSAL_TYPE", "A provided ppdSubmissionId is being used for the incorrect disposal type", BAD_REQUEST)
 
 object RuleDeleteForbiddenError extends MtdError("RULE_DELETE_FORBIDDEN", "A deletion of an HMRC held employment is not permitted", BAD_REQUEST)
 
-object RuleMaximumSavingsAccountsLimitError extends MtdError("RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT", "The 1000 savings account limit exceeded", BAD_REQUEST)
+object RuleMaximumSavingsAccountsLimitError
+    extends MtdError("RULE_MAXIMUM_SAVINGS_ACCOUNTS_LIMIT", "The 1000 savings account limit exceeded", BAD_REQUEST)
 
 object RuleDuplicateAccountNameError extends MtdError("RULE_DUPLICATE_ACCOUNT_NAME", "Duplicate account name given for supplied NINO", BAD_REQUEST)
 
-object RuleNotAllowedOffPayrollWorker extends MtdError("NOT_ALLOWED_OFF_PAYROLL_WORKER", "offPayrollWorker field is not allowed for tax years prior to 2023-24", BAD_REQUEST)
+object RuleNotAllowedOffPayrollWorker
+    extends MtdError("NOT_ALLOWED_OFF_PAYROLL_WORKER", "offPayrollWorker field is not allowed for tax years prior to 2023-24", BAD_REQUEST)
 
 object RuleMissingOffPayrollWorker extends MtdError("MISSING_OFF_PAYROLL_WORKER", "The offPayrollWorker field was not provided", BAD_REQUEST)
+
+object RuleUnalignedCessationTaxYear
+    extends MtdError("RULE_UNALIGNED_CESSATION_TAX_YEAR", "The tax year provided must be the same as the tax year of income to be taxed", BAD_REQUEST)
 
 //Stub errors
 object RuleIncorrectGovTestScenarioError extends MtdError("RULE_INCORRECT_GOV_TEST_SCENARIO", "The Gov-Test-Scenario was not found", BAD_REQUEST)

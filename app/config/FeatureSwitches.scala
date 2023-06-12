@@ -22,9 +22,9 @@ import play.api.mvc.Request
 
 case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
-  val isV1R7cRoutingEnabled: Boolean         = isEnabled("v1r7c-endpoints.enabled")
-  val isTaxYearSpecificApiEnabled: Boolean   = isEnabled("tys-api.enabled")
-  val isPostCessationReceiptEnabled: Boolean = isEnabled("postCessationReceipt.enabled")
+  val isV1R7cRoutingEnabled: Boolean          = isEnabled("v1r7c-endpoints.enabled")
+  val isTaxYearSpecificApiEnabled: Boolean    = isEnabled("tys-api.enabled")
+  val isPostCessationReceiptsEnabled: Boolean = isEnabled("postCessationReceipts.enabled")
 
   private val versionRegex = """(\d)\.\d""".r
 

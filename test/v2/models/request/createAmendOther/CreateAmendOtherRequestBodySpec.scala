@@ -16,16 +16,19 @@
 
 package v2.models.request.createAmendOther
 
-import play.api.libs.json.{JsObject, JsError, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
-import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
+import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel, requestBodyWithPCRJson}
 
 class CreateAmendOtherRequestBodySpec extends UnitSpec {
 
   "CreateAmendOtherRequestBody" when {
     "read from valid JSON" should {
-      "produce the expected CreateAmendOtherRequestBody object" in {
-        requestBodyJson.as[CreateAmendOtherRequestBody] shouldBe requestBodyModel
+      "produce the expected CreateAmendOtherRequestBody object without postCessationReceipt" in {
+        requestBodyJson.as[CreateAmendOtherRequestBody] shouldBe requestBodyModel.copy(postCessationReceipts = None)
+      }
+      "produce the expected CreateAmendOtherRequestBody object with postCessationReceipt" in {
+        requestBodyWithPCRJson.as[CreateAmendOtherRequestBody] shouldBe requestBodyModel
       }
     }
 
@@ -74,7 +77,7 @@ class CreateAmendOtherRequestBodySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JsObject" in {
-        Json.toJson(requestBodyModel) shouldBe requestBodyJson
+        Json.toJson(requestBodyModel) shouldBe requestBodyWithPCRJson
       }
     }
   }

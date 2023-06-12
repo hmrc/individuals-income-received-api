@@ -19,19 +19,21 @@ package v2.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.MockAuditService
-import api.models.audit.{GenericAuditDetail, AuditResponse, AuditEvent}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.{Json, JsValue}
+import mocks.MockAppConfig
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, requestBodyModel}
 import v2.mocks.requestParsers.MockCreateAmendOtherRequestParser
 import v2.mocks.services.MockCreateAmendOtherService
 import v2.models.request.createAmendOther._
 import v2.models.response.createAmendOther.CreateAmendOtherHateoasData
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -41,6 +43,7 @@ class CreateAmendOtherControllerSpec
     with MockCreateAmendOtherRequestParser
     with MockAuditService
     with MockCreateAmendOtherService
+    with MockAppConfig
     with MockHateoasFactory {
 
   val taxYear: String = "2019-20"
