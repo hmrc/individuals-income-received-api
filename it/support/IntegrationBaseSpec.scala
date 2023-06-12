@@ -52,7 +52,7 @@ trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServ
     "auditing.consumer.baseUri.port"               -> mockPort,
     "minimumPermittedTaxYear"                      -> 2020,
     "feature-switch.opw.enabled"                   -> "true",
-    "feature-switch.postCessationReceipt.enabled"  -> "true"
+    "feature-switch.postCessationReceipts.enabled" -> "true"
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
