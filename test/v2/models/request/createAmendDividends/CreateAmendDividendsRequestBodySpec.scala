@@ -64,6 +64,47 @@ class CreateAmendDividendsRequestBodySpec extends UnitSpec {
     """.stripMargin
   )
 
+  private val jsonWithoutForeignTaxCreditRelief = Json.parse(
+    """
+      |{
+      |    "foreignDividend": [
+      |      {
+      |        "countryCode": "DEU",
+      |        "amountBeforeTax": 1232.22,
+      |        "taxTakenOff": 22.22,
+      |        "specialWithholdingTax": 22.22,
+      |        "taxableAmount": 2321.22
+      |      }
+      |    ],
+      |    "dividendIncomeReceivedWhilstAbroad": [
+      |      {
+      |        "countryCode": "DEU",
+      |        "amountBeforeTax": 1232.22,
+      |        "taxTakenOff": 22.22,
+      |        "specialWithholdingTax": 22.22,
+      |        "taxableAmount": 2321.22
+      |      }
+      |    ],
+      |    "stockDividend": {
+      |      "customerReference": "my divs",
+      |      "grossAmount": 12321.22
+      |      },
+      |    "redeemableShares": {
+      |      "customerReference": "my shares",
+      |      "grossAmount": 12321.22
+      |    },
+      |      "bonusIssuesOfSecurities": {
+      |        "customerReference": "my secs",
+      |        "grossAmount": 12321.22
+      |    },
+      |    "closeCompanyLoansWrittenOff": {
+      |      "customerReference": "write off",
+      |      "grossAmount": 12321.22
+      |    }
+      |}
+    """.stripMargin
+  )
+
   private val foreignDividendModel = Seq(
     CreateAmendForeignDividendItem(
       countryCode = "DEU",
@@ -75,6 +116,17 @@ class CreateAmendDividendsRequestBodySpec extends UnitSpec {
     )
   )
 
+  private val foreignDividendModelWithoutForeignTaxCreditRelief = Seq(
+    CreateAmendForeignDividendItem(
+      countryCode = "DEU",
+      amountBeforeTax = Some(1232.22),
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(22.22),
+      foreignTaxCreditRelief = None,
+      taxableAmount = 2321.22
+    )
+  )
+
   private val dividendIncomeReceivedWhilstAbroadModel = Seq(
     CreateAmendDividendIncomeReceivedWhilstAbroadItem(
       countryCode = "DEU",
@@ -82,6 +134,17 @@ class CreateAmendDividendsRequestBodySpec extends UnitSpec {
       taxTakenOff = Some(22.22),
       specialWithholdingTax = Some(22.22),
       foreignTaxCreditRelief = Some(true),
+      taxableAmount = 2321.22
+    )
+  )
+
+  private val dividendIncomeReceivedWhilstAbroadModelWithoutForeignTaxCreditRelief = Seq(
+    CreateAmendDividendIncomeReceivedWhilstAbroadItem(
+      countryCode = "DEU",
+      amountBeforeTax = Some(1232.22),
+      taxTakenOff = Some(22.22),
+      specialWithholdingTax = Some(22.22),
+      foreignTaxCreditRelief = None,
       taxableAmount = 2321.22
     )
   )
@@ -107,6 +170,12 @@ class CreateAmendDividendsRequestBodySpec extends UnitSpec {
     "read from valid JSON" should {
       "produce the expected CreateAmendDividendsRequestBody object" in {
         json.as[CreateAmendDividendsRequestBody] shouldBe requestBodyModel
+      }
+
+      "produce the expected object without foreignTaxCreditRelief" in {
+        jsonWithoutForeignTaxCreditRelief.as[CreateAmendDividendsRequestBody] shouldBe
+          requestBodyModel.copy(foreignDividend = Some(foreignDividendModelWithoutForeignTaxCreditRelief),
+            dividendIncomeReceivedWhilstAbroad = Some(dividendIncomeReceivedWhilstAbroadModelWithoutForeignTaxCreditRelief))
       }
     }
 

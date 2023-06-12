@@ -34,6 +34,18 @@ class CreateAmendDividendIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
     """.stripMargin
   )
 
+  private val jsonWithoutForeignTaxCreditRelief = Json.parse(
+    """
+      |{
+      |     "countryCode": "DEU",
+      |     "amountBeforeTax": 1232.22,
+      |     "taxTakenOff": 22.22,
+      |     "specialWithholdingTax": 22.22,
+      |     "taxableAmount": 2321.22
+      |}
+    """.stripMargin
+  )
+
   private val model = CreateAmendDividendIncomeReceivedWhilstAbroadItem(
     countryCode = "DEU",
     amountBeforeTax = Some(1232.22),
@@ -47,6 +59,10 @@ class CreateAmendDividendIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
     "read from valid JSON" should {
       "produce the expected CreateAmendDividendIncomeReceivedWhilstAbroadItem object" in {
         json.as[CreateAmendDividendIncomeReceivedWhilstAbroadItem] shouldBe model
+      }
+
+      "produce the expected object without foreignTaxCreditRelief" in {
+        jsonWithoutForeignTaxCreditRelief.as[CreateAmendDividendIncomeReceivedWhilstAbroadItem] shouldBe model.copy(foreignTaxCreditRelief = None)
       }
     }
 

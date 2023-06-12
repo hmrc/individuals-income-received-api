@@ -27,7 +27,7 @@ import support.IntegrationBaseSpec
 
 class CreateAmendDividendsControllerISpec extends IntegrationBaseSpec {
 
-  val requestBodyJson: JsValue = Json.parse(
+  val  requestBodyJson: JsValue = Json.parse(
     """
         |{
         |   "foreignDividend": [
@@ -86,6 +86,60 @@ class CreateAmendDividendsControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
   )
 
+  val minimumFieldsRequestBody: JsValue = Json.parse(
+    """
+      |{
+      |   "foreignDividend": [
+      |      {
+      |        "countryCode": "DEU",
+      |        "amountBeforeTax": 1232.22,
+      |        "taxTakenOff": 22.22,
+      |        "specialWithholdingTax": 27.35,
+      |        "taxableAmount": 2321.22
+      |      },
+      |      {
+      |        "countryCode": "FRA",
+      |        "amountBeforeTax": 1350.55,
+      |        "taxTakenOff": 25.27,
+      |        "specialWithholdingTax": 30.59,
+      |        "taxableAmount": 2500.99
+      |      }
+      |   ],
+      |   "dividendIncomeReceivedWhilstAbroad": [
+      |      {
+      |        "countryCode": "DEU",
+      |        "amountBeforeTax": 1232.22,
+      |        "taxTakenOff": 22.22,
+      |        "specialWithholdingTax": 27.35,
+      |        "taxableAmount": 2321.22
+      |      },
+      |      {
+      |        "countryCode": "FRA",
+      |        "amountBeforeTax": 1350.55,
+      |        "taxTakenOff": 25.27,
+      |        "specialWithholdingTax": 30.59,
+      |        "taxableAmount": 2500.99
+      |       }
+      |   ],
+      |   "stockDividend": {
+      |      "customerReference": "my divs",
+      |      "grossAmount": 12321.22
+      |   },
+      |   "redeemableShares": {
+      |      "customerReference": "my shares",
+      |      "grossAmount": 12345.75
+      |   },
+      |   "bonusIssuesOfSecurities": {
+      |      "customerReference": "my secs",
+      |      "grossAmount": 12500.89
+      |   },
+      |   "closeCompanyLoansWrittenOff": {
+      |      "customerReference": "write off",
+      |      "grossAmount": 13700.55
+      |   }
+      |}
+    """.stripMargin)
+
   private trait Test {
 
     val nino: String = "AA123456A"
@@ -126,7 +180,7 @@ class CreateAmendDividendsControllerISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(s"/dividends/$nino/$taxYear")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
@@ -156,12 +210,34 @@ class CreateAmendDividendsControllerISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
+      "any valid request is made without foreignTaxCreditRelief fields" in new NonTysTest {
+
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+
+        val response: WSResponse = await(request().put(minimumFieldsRequestBody))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
       "any valid request is made (TYS)" in new TysTest {
 
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
 
         val response: WSResponse = await(request().put(requestBodyJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe hateoasResponse
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made (TYS) without foreignTaxCreditRelief fields" in new NonTysTest {
+
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+
+        val response: WSResponse = await(request().put(minimumFieldsRequestBody))
         response.status shouldBe OK
         response.body[JsValue] shouldBe hateoasResponse
         response.header("Content-Type") shouldBe Some("application/json")
