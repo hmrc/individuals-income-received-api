@@ -18,14 +18,14 @@ package v2.endpoints
 
 import api.models.errors
 import api.models.errors._
-import api.stubs.{AuditStub, MtdIdLookupStub, DownstreamStub, AuthStub}
+import api.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyJson, responseWithHateoasLinks}
+import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyWithPCRJson, responseWithHateoasLinks}
 
 class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
 
@@ -37,7 +37,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request().put(requestBodyWithPCRJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe responseWithHateoasLinks(mtdTaxYear)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -49,7 +49,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request().put(requestBodyJson))
+        val response: WSResponse = await(request().put(requestBodyWithPCRJson))
         response.status shouldBe OK
         response.body[JsValue] shouldBe responseWithHateoasLinks(mtdTaxYear)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -713,7 +713,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
               DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
             }
 
-            val response: WSResponse = await(request().put(requestBodyJson))
+            val response: WSResponse = await(request().put(requestBodyWithPCRJson))
             response.status shouldBe expectedStatus
             response.json shouldBe Json.toJson(expectedBody)
           }
@@ -732,9 +732,9 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
-          (UNPROCESSABLE_ENTITY, "UNPROCESSABLE_ENTITY", INTERNAL_SERVER_ERROR, InternalError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (UNPROCESSABLE_ENTITY, "UNALIGNED_CESSATION_TAX_YEAR", BAD_REQUEST, RuleUnalignedCessationTaxYear)
         )
 
         val extraTysErrors = List(
@@ -765,7 +765,7 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
 
       buildRequest(s"/other/$nino/$mtdTaxYear")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }

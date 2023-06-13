@@ -18,30 +18,38 @@ package v2.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.{ServiceOutcome, BaseService}
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
+import config.{AppConfig, FeatureSwitches}
 import v2.connectors.CreateAmendOtherConnector
 import v2.models.request.createAmendOther.CreateAmendOtherRequest
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector) extends BaseService {
+class CreateAmendOtherService @Inject() (connector: CreateAmendOtherConnector, appConfig: AppConfig) extends BaseService {
 
   def createAmend(request: CreateAmendOtherRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    connector.createAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+    val featureSwitchedRequest = if (FeatureSwitches(appConfig.featureSwitches).isPostCessationReceiptsEnabled) {
+      request
+    } else {
+      request.copy(body = request.body.copy(postCessationReceipts = None))
+    }
+
+    connector.createAmend(featureSwitchedRequest).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "UNPROCESSABLE_ENTITY"      -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAXABLE_ENTITY_ID"    -> NinoFormatError,
+      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"        -> InternalError,
+      "INVALID_PAYLOAD"              -> InternalError,
+      "SERVER_ERROR"                 -> InternalError,
+      "SERVICE_UNAVAILABLE"          -> InternalError,
+      "UNALIGNED_CESSATION_TAX_YEAR" -> RuleUnalignedCessationTaxYear
     )
 
     val extraTysErrors = Map(

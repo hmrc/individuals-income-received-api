@@ -20,20 +20,20 @@ import api.controllers.RequestContext
 import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.createAmendOther.CreateAmendOtherRequest
-import v2.services.CreateAmendOtherService
+import v2.models.request.createAmendDividends.CreateAmendDividendsRequest
+import v2.services.CreateAmendDividendsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendOtherService extends MockFactory {
+trait MockCreateAmendDividendsService extends MockFactory {
 
-  val mockCreateAmendOtherService: CreateAmendOtherService = mock[CreateAmendOtherService]
+  val mockCreateAmendDividendsService: CreateAmendDividendsService = mock[CreateAmendDividendsService]
 
-  object MockCreateAmendOtherService {
+  object MockCreateAmendDividendsService {
 
-    def createAmend(requestData: CreateAmendOtherRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
-      (mockCreateAmendOtherService
-        .createAmend(_: CreateAmendOtherRequest)(_: RequestContext, _: ExecutionContext))
+    def createAmendDividends(requestData: CreateAmendDividendsRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
+      (mockCreateAmendDividendsService
+        .createAmendDividends(_: CreateAmendDividendsRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
 

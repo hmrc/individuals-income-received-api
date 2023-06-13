@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package v2.mocks.services
+package v2.mocks.connectors
 
-import api.controllers.RequestContext
-import api.services.ServiceOutcome
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.createAmendOther.CreateAmendOtherRequest
-import v2.services.CreateAmendOtherService
+import uk.gov.hmrc.http.HeaderCarrier
+import v2.connectors.CreateAmendDividendsConnector
+import v2.models.request.createAmendDividends.CreateAmendDividendsRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateAmendOtherService extends MockFactory {
+trait MockCreateAmendDividendsConnector extends MockFactory {
 
-  val mockCreateAmendOtherService: CreateAmendOtherService = mock[CreateAmendOtherService]
+  val mockCreateAmendDividendsConnector: CreateAmendDividendsConnector = mock[CreateAmendDividendsConnector]
 
-  object MockCreateAmendOtherService {
+  object MockCreateAmendDividendsConnector {
 
-    def createAmend(requestData: CreateAmendOtherRequest): CallHandler[Future[ServiceOutcome[Unit]]] = {
-      (mockCreateAmendOtherService
-        .createAmend(_: CreateAmendOtherRequest)(_: RequestContext, _: ExecutionContext))
-        .expects(requestData, *, *)
+    def createAmendDividends(request: CreateAmendDividendsRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+      (mockCreateAmendDividendsConnector
+        .createAmendDividends(_: CreateAmendDividendsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
 
   }

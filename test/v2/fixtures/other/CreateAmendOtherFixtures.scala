@@ -21,6 +21,30 @@ import v2.models.request.createAmendOther._
 
 object CreateAmendOtherFixtures {
 
+  val postCessationReceiptsItem: PostCessationReceiptsItem = PostCessationReceiptsItem(
+    customerReference = Some("String"),
+    businessName = Some("Business Name"),
+    dateBusinessCeased = Some("2023-05-30"),
+    businessDescription = Some("Description"),
+    incomeSource = Some("string"),
+    amount = 99999999999.99,
+    taxYearIncomeToBeTaxed = "2019-20"
+  )
+
+  val postCessationReceiptsItemJson: JsValue = Json.parse(
+    s"""
+       |{
+       | "customerReference": "String",
+       | "businessName": "Business Name",
+       | "dateBusinessCeased": "2023-05-30",
+       | "businessDescription": "Description",
+       | "incomeSource": "string",
+       | "amount": 99999999999.99, 
+       | "taxYearIncomeToBeTaxed": "2019-20"
+       | }
+       |""".stripMargin
+  )
+
   val businessReceiptsModel: BusinessReceiptsItem = BusinessReceiptsItem(
     grossAmount = 1000.99,
     taxYear = "2018-19"
@@ -102,6 +126,7 @@ object CreateAmendOtherFixtures {
   )
 
   val requestBodyModel: CreateAmendOtherRequestBody = CreateAmendOtherRequestBody(
+    postCessationReceipts = Some(Seq(postCessationReceiptsItem)),
     businessReceipts = Some(Seq(businessReceiptsModel)),
     allOtherIncomeReceivedWhilstAbroad = Some(Seq(allOtherIncomeReceivedWhilstAbroadModel)),
     overseasIncomeAndGains = Some(overseasIncomeAndGainsModel),
@@ -118,6 +143,19 @@ object CreateAmendOtherFixtures {
       |   "chargeableForeignBenefitsAndGifts": $chargeableForeignBenefitsAndGiftsJson,
       |   "omittedForeignIncome": $omittedForeignIncomeJson
       |}
+    """.stripMargin
+  )
+
+  val requestBodyWithPCRJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "postCessationReceipts": [$postCessationReceiptsItemJson],
+       |  "businessReceipts": [$businessReceiptsJson],
+       |  "allOtherIncomeReceivedWhilstAbroad": [$allOtherIncomeReceivedWhilstAbroadJson],
+       |  "overseasIncomeAndGains": $overseasIncomeAndGainsJson,
+       |  "chargeableForeignBenefitsAndGifts": $chargeableForeignBenefitsAndGiftsJson,
+       |  "omittedForeignIncome": $omittedForeignIncomeJson
+       |}
     """.stripMargin
   )
 
