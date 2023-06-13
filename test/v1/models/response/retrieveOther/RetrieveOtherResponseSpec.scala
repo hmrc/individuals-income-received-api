@@ -16,6 +16,7 @@
 
 package v1.models.response.retrieveOther
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
@@ -24,7 +25,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
-      |   "submittedOn":"2019-04-04T01:01:01Z",
+      |   "submittedOn":"2019-04-04T01:01:01.000Z",
       |   "postCessationReceipts":[
       |      {
       |         "customerReference":"String",
@@ -144,7 +145,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
   private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
 
   private val responseModel = RetrieveOtherResponse(
-    submittedOn = "2019-04-04T01:01:01Z",
+    submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
     Some(postCessationReceiptsItemModel),
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),
@@ -196,7 +197,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
         )
 
         json.as[RetrieveOtherResponse] shouldBe
-          RetrieveOtherResponse(submittedOn = "2019-04-04T01:01:01Z", None, None, None, None, None, None)
+          RetrieveOtherResponse(submittedOn = Timestamp("2019-04-04T01:01:01.000Z"), None, None, None, None, None, None)
       }
     }
 
@@ -218,7 +219,7 @@ class RetrieveOtherResponseSpec extends UnitSpec {
 
         json.as[RetrieveOtherResponse] shouldBe
           RetrieveOtherResponse(
-            submittedOn = "2019-04-04T01:01:01Z",
+            submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
             None,
             None,
             Some(Seq(AllOtherIncomeReceivedWhilstAbroadItem("FRA", None, None, None, false, 4.23, None, None))),

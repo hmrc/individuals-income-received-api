@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveFinancialDetails._
 
@@ -99,10 +99,10 @@ object RetrieveFinancialDetailsControllerFixture {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      |  "submittedOn": "2020-01-04T05:01:01Z",
+      |  "submittedOn": "2020-01-04T05:01:01.000Z",
       |  "source": "latest",
-      |  "customerAdded": "2020-04-04T01:01:01Z",
-      |  "dateIgnored": "2020-03-05T05:01:01Z",
+      |  "customerAdded": "2020-04-04T01:01:01.000Z",
+      |  "dateIgnored": "2020-03-05T05:01:01.000Z",
       |  "employment": {
       |    "employmentSequenceNumber": "1002",
       |    "payrollId": "123456789999",
@@ -173,10 +173,10 @@ object RetrieveFinancialDetailsControllerFixture {
   val mtdJsonWithoutOPW: JsValue = Json.parse(
     """
       |{
-      |  "submittedOn": "2020-01-04T05:01:01Z",
+      |  "submittedOn": "2020-01-04T05:01:01.000Z",
       |  "source": "latest",
-      |  "customerAdded": "2020-04-04T01:01:01Z",
-      |  "dateIgnored": "2020-03-05T05:01:01Z",
+      |  "customerAdded": "2020-04-04T01:01:01.000Z",
+      |  "dateIgnored": "2020-03-05T05:01:01.000Z",
       |  "employment": {
       |    "employmentSequenceNumber": "1002",
       |    "payrollId": "123456789999",
@@ -313,10 +313,10 @@ object RetrieveFinancialDetailsControllerFixture {
   )
 
   val model: RetrieveEmploymentAndFinancialDetailsResponse = RetrieveEmploymentAndFinancialDetailsResponse(
-    submittedOn = "2020-01-04T05:01:01Z",
+    submittedOn = Timestamp("2020-01-04T05:01:01.000Z"),
     source = Some(MtdSourceEnum.latest),
-    customerAdded = Some("2020-04-04T01:01:01Z"),
-    dateIgnored = Some("2020-03-05T05:01:01Z"),
+    customerAdded = Some(Timestamp("2020-04-04T01:01:01.000Z")),
+    dateIgnored = Some(Timestamp("2020-03-05T05:01:01.000Z")),
     employment = employmentModel
   )
 

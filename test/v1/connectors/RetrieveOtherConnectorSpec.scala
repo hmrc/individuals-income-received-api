@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import v1.models.request.retrieveOther.RetrieveOtherRequest
@@ -64,7 +64,7 @@ class RetrieveOtherConnectorSpec extends ConnectorSpec {
       RetrieveOtherRequest(Nino(nino), taxYear)
 
     val response: RetrieveOtherResponse = RetrieveOtherResponse(
-      submittedOn = "None",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       postCessationReceipts = None,
       businessReceipts = None,
       allOtherIncomeReceivedWhilstAbroad = None,

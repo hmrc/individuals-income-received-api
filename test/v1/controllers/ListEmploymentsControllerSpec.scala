@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.Nino
+import api.models.domain.{Nino, Timestamp}
 import api.models.errors._
 import api.models.hateoas.Method.{GET, POST}
 import api.models.hateoas.RelType.{ADD_CUSTOM_EMPLOYMENT, SELF}
@@ -82,7 +82,7 @@ class ListEmploymentsControllerSpec
   private val hmrcEmploymentModel = Employment(
     employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
     employerName = "Vera Lynn",
-    dateIgnored = Some("2020-06-17T10:53:38Z")
+    dateIgnored = Some(Timestamp("2020-06-17T10:53:38.000Z"))
   )
 
   private val customEmploymentModel = Employment(

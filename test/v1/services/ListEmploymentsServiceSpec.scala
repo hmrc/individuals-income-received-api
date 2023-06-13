@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{Nino, Timestamp}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -37,8 +37,14 @@ class ListEmploymentsServiceSpec extends ServiceSpec {
   private val validResponse = ListEmploymentResponse(
     employments = Some(
       Seq(
-        Employment(employmentId = "00000000-0000-1000-8000-000000000000", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z")),
-        Employment(employmentId = "00000000-0000-1000-8000-000000000001", employerName = "Vera Lynn", dateIgnored = Some("2020-06-17T10:53:38Z"))
+        Employment(
+          employmentId = "00000000-0000-1000-8000-000000000000",
+          employerName = "Vera Lynn",
+          dateIgnored = Some(Timestamp("2020-06-17T10:53:38.000Z"))),
+        Employment(
+          employmentId = "00000000-0000-1000-8000-000000000001",
+          employerName = "Vera Lynn",
+          dateIgnored = Some(Timestamp("2020-06-17T10:53:38.000Z")))
       )),
     customEmployments = Some(
       Seq(

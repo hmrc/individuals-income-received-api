@@ -16,9 +16,10 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{Json, OFormat}
 
-case class CustomerAddedDisposals(submittedOn: String, disposals: Seq[Disposals])
+case class CustomerAddedDisposals(submittedOn: Timestamp, disposals: Seq[Disposals])
 
 object CustomerAddedDisposals {
   implicit val format: OFormat[CustomerAddedDisposals] = Json.format[CustomerAddedDisposals]

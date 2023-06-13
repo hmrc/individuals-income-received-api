@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{AMEND_OTHER_INCOME, DELETE_OTHER_INCOME, SELF}
@@ -135,7 +135,7 @@ class RetrieveOtherControllerSpec
   private val omittedForeignIncomeModel = OmittedForeignIncome(amount = 4000.99)
 
   private val retrieveOtherResponseModel = RetrieveOtherResponse(
-    submittedOn = "2019-04-04T01:01:01Z",
+    submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
     Some(postCessationReceiptsItemModel),
     Some(businessReceiptsItemModel),
     Some(allOtherIncomeReceivedWhilstAbroadItemModel),

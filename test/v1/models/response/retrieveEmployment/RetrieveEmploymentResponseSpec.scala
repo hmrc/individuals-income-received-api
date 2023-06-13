@@ -16,6 +16,7 @@
 
 package v1.models.response.retrieveEmployment
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
@@ -64,7 +65,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
       |   "cessationDate": "2020-06-17",
       |   "payrollId": "123345657",
       |   "occupationalPension": false,
-      |   "dateIgnored": "2020-06-17T10:53:38Z"
+      |   "dateIgnored": "2020-06-17T10:53:38.000Z"
       |}
     """.stripMargin
   )
@@ -78,7 +79,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
       |   "cessationDate": "2020-06-17",
       |   "payrollId": "123345657",
       |   "occupationalPension": false,
-      |   "submittedOn": "2020-06-17T10:53:38Z"
+      |   "submittedOn": "2020-06-17T10:53:38.000Z"
       |}
     """.stripMargin
   )
@@ -90,7 +91,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     occupationalPension = Some(false),
-    dateIgnored = Some("2020-06-17T10:53:38Z"),
+    dateIgnored = Some(Timestamp("2020-06-17T10:53:38.000Z")),
     None
   )
 
@@ -102,7 +103,7 @@ class RetrieveEmploymentResponseSpec extends UnitSpec {
     payrollId = Some("123345657"),
     occupationalPension = Some(false),
     None,
-    submittedOn = Some("2020-06-17T10:53:38Z")
+    submittedOn = Some(Timestamp("2020-06-17T10:53:38.000Z"))
   )
 
   "Reads" should {

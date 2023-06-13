@@ -17,6 +17,7 @@
 package v1.models.response.retrieveOtherCgt
 
 import api.hateoas.HateoasFactory
+import api.models.domain.Timestamp
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
@@ -85,7 +86,7 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
   val invalidJson: JsValue = JsObject.empty
 
   val responseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
-    submittedOn = "2021-05-07T16:18:44.403Z",
+    submittedOn = Timestamp("2021-05-07T16:18:44.403Z"),
     disposals = Some(
       Seq(
         Disposal(
@@ -125,7 +126,7 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
   )
 
   val minimumResponseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
-    submittedOn = "2021-05-07T16:18:44.403Z",
+    submittedOn = Timestamp("2021-05-07T16:18:44.403Z"),
     disposals = Some(
       Seq(
         Disposal(
@@ -179,7 +180,8 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
       val hateoasFactory  = new HateoasFactory(mockAppConfig)
       val nino            = "AA111111A"
       val taxYear: String = "2020-21"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()    }
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    }
 
     "wrapping a response model" should {
       "expose the correct links" in new Test {

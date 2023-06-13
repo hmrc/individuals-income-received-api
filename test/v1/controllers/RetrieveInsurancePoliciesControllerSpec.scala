@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.hateoas
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -109,7 +109,7 @@ class RetrieveInsurancePoliciesControllerSpec
   )
 
   private val retrieveInsurancePoliciesResponseModel = RetrieveInsurancePoliciesResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
     capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
     lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),

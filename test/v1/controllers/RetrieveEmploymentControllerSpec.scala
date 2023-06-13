@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
 import api.mocks.hateoas.MockHateoasFactory
-import api.models.domain.Nino
+import api.models.domain.{Nino, Timestamp}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, POST, PUT}
 import api.models.hateoas.RelType._
@@ -118,7 +118,7 @@ class RetrieveEmploymentControllerSpec
     cessationDate = Some("2020-06-17"),
     payrollId = Some("123345657"),
     occupationalPension = Some(false),
-    dateIgnored = Some("2020-06-17T10:53:38Z"),
+    dateIgnored = Some(Timestamp("2020-06-17T10:53:38.000Z")),
     submittedOn = None
   )
 
@@ -130,7 +130,7 @@ class RetrieveEmploymentControllerSpec
     payrollId = Some("123345657"),
     occupationalPension = Some(false),
     dateIgnored = None,
-    submittedOn = Some("2020-06-17T10:53:38Z")
+    submittedOn = Some(Timestamp("2020-06-17T10:53:38.000Z"))
   )
 
   private val mtdHmrcEnteredResponseWithoutDateIgnored = mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino, taxYear, employmentId)

@@ -1,6 +1,6 @@
 {
-  "submittedOn": "2020-01-04T05:01:01Z",
-  "dateIgnored": "2020-03-05T05:01:01Z",
+  "submittedOn": "2020-01-04T05:01:01.000Z",
+  "dateIgnored": "2020-03-05T05:01:01.000Z",
   "employment": {
     "employmentSequenceNumber": "1002",
     "payrollId": "123456789999",

@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveAllResidentialPropertyCgt
 
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
@@ -26,9 +26,9 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
     """
       |{
       |        "source": "hmrcHeld",
-      |        "submittedOn": "2020-07-06",
+      |        "submittedOn": "2020-07-06T09:37:17.000Z",
       |        "ppdSubmissionId": "Da2467289108",
-      |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
+      |        "ppdSubmissionDate": "2020-07-06T09:37:17.000Z",
       |        "disposalDate": "2022-02-04",
       |        "completionDate": "2022-03-08",
       |        "disposalProceeds": 1999.99,
@@ -49,7 +49,7 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
     """
       |{
       |        "source": "HMRC HELD",
-      |        "submittedOn": "2020-07-06",
+      |        "submittedOn": "2020-07-06T09:37:17Z",
       |        "ppdSubmissionId": "Da2467289108",
       |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
       |        "disposalDate": "2022-02-04",
@@ -71,9 +71,9 @@ class SinglePropertyDisposalsSpec extends UnitSpec {
   val model: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
-      Some("2020-07-06"),
+      Some(Timestamp("2020-07-06T09:37:17.000Z")),
       "Da2467289108",
-      Some("2020-07-06T09:37:17Z"),
+      Some(Timestamp("2020-07-06T09:37:17.000Z")),
       Some("2022-02-04"),
       "2022-03-08",
       1999.99,

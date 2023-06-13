@@ -17,6 +17,7 @@
 package v1.models.response.retrieveForeign
 
 import api.hateoas.HateoasFactory
+import api.models.domain.Timestamp
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import mocks.MockAppConfig
@@ -28,7 +29,7 @@ class RetrieveForeignResponseSpec extends UnitSpec {
   private val fullRetrieveForeignResponseJson = Json.parse(
     """
       |{
-      |   "submittedOn": "2019-04-04T01:01:01Z",
+      |   "submittedOn": "2019-04-04T01:01:01.000Z",
       |   "foreignEarnings": {
       |     "customerReference": "FOREIGNINCME123A",
       |     "earningsNotTaxableUK": 1999.99
@@ -67,7 +68,7 @@ class RetrieveForeignResponseSpec extends UnitSpec {
   )
 
   private val fullRetrieveResponseBodyModel = RetrieveForeignResponse(
-    submittedOn = "2019-04-04T01:01:01Z",
+    submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
     foreignEarnings = Some(fullForeignEarningsModel),
     unremittableForeignIncome = Some(
       Seq(
@@ -76,7 +77,7 @@ class RetrieveForeignResponseSpec extends UnitSpec {
       ))
   )
 
-  private val minRetrieveResponseBodyModel = RetrieveForeignResponse("2019-04-04T01:01:01Z", None, None)
+  private val minRetrieveResponseBodyModel = RetrieveForeignResponse(Timestamp("2019-04-04T01:01:01.000Z"), None, None)
 
   "RetrieveForeignResponse" when {
     "read from valid JSON" should {
@@ -87,7 +88,7 @@ class RetrieveForeignResponseSpec extends UnitSpec {
 
     "read from empty JSON" should {
       "produce a model with 'foreignEarnings' and 'unremittableForeignIncome' as None" in {
-        val emptyJson = Json.parse("""{"submittedOn": "2019-04-04T01:01:01Z"}""")
+        val emptyJson = Json.parse("""{"submittedOn": "2019-04-04T01:01:01.000Z"}""")
 
         emptyJson.as[RetrieveForeignResponse] shouldBe minRetrieveResponseBodyModel
       }
@@ -122,7 +123,8 @@ class RetrieveForeignResponseSpec extends UnitSpec {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
       val nino           = "someNino"
       val taxYear        = "2019-20"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()    }
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    }
 
     "wrapping a RetrieveForeignResponse object" should {
       "expose the correct hateoas links" in new Test {

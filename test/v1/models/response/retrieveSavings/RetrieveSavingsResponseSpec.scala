@@ -16,6 +16,7 @@
 
 package v1.models.response.retrieveSavings
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
@@ -64,7 +65,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
   private val model: RetrieveSavingsResponse =
     RetrieveSavingsResponse(
-      submittedOn = "2019-04-04T01:01:01Z",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       securities = Some(securitiesModel),
       foreignInterest = Some(Seq(foreignInterestsItemModel))
     )
@@ -88,7 +89,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
 
   private val minimumModel: RetrieveSavingsResponse =
     RetrieveSavingsResponse(
-      submittedOn = "2019-04-04T01:01:01Z",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       securities = Some(minimumSecuritiesModel),
       foreignInterest = Some(Seq(minimumForeignInterestsItemModel))
     )
@@ -96,7 +97,7 @@ class RetrieveSavingsResponseSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      |   "submittedOn": "2019-04-04T01:01:01Z",
+      |   "submittedOn": "2019-04-04T01:01:01.000Z",
       |   "securities":
       |      {
       |         "taxTakenOff": 100.0,

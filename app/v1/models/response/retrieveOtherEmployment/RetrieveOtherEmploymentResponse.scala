@@ -17,13 +17,14 @@
 package v1.models.response.retrieveOtherEmployment
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.Timestamp
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
-case class RetrieveOtherEmploymentResponse(submittedOn: String,
+case class RetrieveOtherEmploymentResponse(submittedOn: Timestamp,
                                            shareOption: Option[Seq[ShareOptionItem]],
                                            sharesAwardedOrReceived: Option[Seq[SharesAwardedOrReceivedItem]],
                                            disability: Option[CommonOtherEmployment],
@@ -33,7 +34,7 @@ case class RetrieveOtherEmploymentResponse(submittedOn: String,
 object RetrieveOtherEmploymentResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveOtherEmploymentResponse] = (
-    (JsPath \ "submittedOn").read[String] and
+    (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "shareOption").readNullable[Seq[ShareOptionItem]].mapEmptySeqToNone and
       (JsPath \ "sharesAwardedOrReceived").readNullable[Seq[SharesAwardedOrReceivedItem]].mapEmptySeqToNone and
       (JsPath \ "disability").readNullable[CommonOtherEmployment] and

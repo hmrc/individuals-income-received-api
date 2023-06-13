@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -84,7 +84,7 @@ class RetrieveOtherServiceSpec extends ServiceSpec {
     )
 
     val response: RetrieveOtherResponse = RetrieveOtherResponse(
-      submittedOn = "None",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       postCessationReceipts = None,
       businessReceipts = None,
       allOtherIncomeReceivedWhilstAbroad = None,

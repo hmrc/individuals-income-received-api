@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveOtherEmployment
 
-import api.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType}
+import api.models.domain.{ShareOptionSchemeType, SharesAwardedOrReceivedSchemeType, Timestamp}
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
@@ -25,7 +25,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
-      |   "submittedOn": "2020-07-06T09:37:17Z",
+      |   "submittedOn": "2020-07-06T09:37:17.000Z",
       |   "shareOption": [
       |      {
       |         "employerName": "Company Ltd",
@@ -253,7 +253,7 @@ class RetrieveOtherEmploymentResponseSpec extends UnitSpec {
     ))
 
   private val responseModel = RetrieveOtherEmploymentResponse(
-    "2020-07-06T09:37:17Z",
+    Timestamp("2020-07-06T09:37:17.000Z"),
     Some(shareOptionItemModel),
     Some(sharesAwardedOrReceivedItemModel),
     Some(disabilityModel),

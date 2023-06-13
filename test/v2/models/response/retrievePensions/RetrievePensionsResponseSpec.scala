@@ -16,6 +16,7 @@
 
 package v2.models.response.retrievePensions
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
@@ -24,7 +25,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
   private val mtdJson = Json.parse(
     """
       |{
-      |   "submittedOn": "2020-07-06T09:37:17Z",
+      |   "submittedOn": "2020-07-06T09:37:17.000Z",
       |   "foreignPensions": [
       |      {
       |         "countryCode": "DEU",
@@ -160,7 +161,7 @@ class RetrievePensionsResponseSpec extends UnitSpec {
   )
 
   private val responseModel = RetrievePensionsResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     foreignPensions = Some(foreignPensionsItemModel),
     overseasPensionContributions = Some(overseasPensionContributionsItemModel)
   )

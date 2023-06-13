@@ -17,13 +17,14 @@
 package v1.models.response.retrieveOther
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.Timestamp
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
-case class RetrieveOtherResponse(submittedOn: String,
+case class RetrieveOtherResponse(submittedOn: Timestamp,
                                  postCessationReceipts: Option[Seq[PostCessationReceiptsItem]],
                                  businessReceipts: Option[Seq[BusinessReceiptsItem]],
                                  allOtherIncomeReceivedWhilstAbroad: Option[Seq[AllOtherIncomeReceivedWhilstAbroadItem]],
@@ -34,7 +35,7 @@ case class RetrieveOtherResponse(submittedOn: String,
 object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveOtherResponse] = (
-    (JsPath \ "submittedOn").read[String] and
+    (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "postCessationReceipts").readNullable[Seq[PostCessationReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and

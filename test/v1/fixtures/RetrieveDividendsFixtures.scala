@@ -16,6 +16,7 @@
 
 package v1.fixtures
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveDividends._
 
@@ -113,7 +114,7 @@ object RetrieveDividendsFixtures {
   )
 
   val responseModel: RetrieveDividendsResponse = RetrieveDividendsResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     foreignDividend = Some(Seq(foreignDividendModel)),
     dividendIncomeReceivedWhilstAbroad = Some(Seq(dividendIncomeReceivedWhilstAbroadModel)),
     stockDividend = Some(stockDividendModel),
@@ -125,7 +126,7 @@ object RetrieveDividendsFixtures {
   val responseJson: JsValue = Json.parse(
     s"""
       |{
-      |   "submittedOn": "2020-07-06T09:37:17Z",
+      |   "submittedOn": "2020-07-06T09:37:17.000Z",
       |   "foreignDividend": [$foreignDividendJson],
       |   "dividendIncomeReceivedWhilstAbroad": [$dividendIncomeReceivedWhilstAbroadJson],
       |   "stockDividend": $stockDividendJson,

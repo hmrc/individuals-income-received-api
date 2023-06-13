@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -83,7 +83,7 @@ class RetrieveForeignServiceSpec extends ServiceSpec {
     )
 
     val response: RetrieveForeignResponse = RetrieveForeignResponse(
-      submittedOn = "",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       foreignEarnings = None,
       unremittableForeignIncome = None
     )

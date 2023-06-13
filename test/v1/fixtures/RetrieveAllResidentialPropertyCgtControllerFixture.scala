@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import api.models.domain.MtdSourceEnum
+import api.models.domain.{MtdSourceEnum, Timestamp}
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.response.retrieveAllResidentialPropertyCgt._
 
@@ -25,9 +25,9 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
   val multiplePropertyDisposals: MultiplePropertyDisposals =
     MultiplePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
-      Some("2020-07-06"),
+      Some(Timestamp("2020-07-06T09:37:17.000Z")),
       "Da2467289108",
-      Some("2020-07-06T09:37:17Z"),
+      Some(Timestamp("2020-07-06T09:37:17.000Z")),
       Some(3),
       Some(2022),
       Some("2022-03-08"),
@@ -38,9 +38,9 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
   val singlePropertyDisposals: SinglePropertyDisposals =
     SinglePropertyDisposals(
       MtdSourceEnum.hmrcHeld,
-      Some("2020-07-06"),
+      Some(Timestamp("2020-07-06T09:37:17.000Z")),
       "Da2467289108",
-      Some("2020-07-06T09:37:17Z"),
+      Some(Timestamp("2020-07-06T09:37:17.000Z")),
       Some("2022-02-04"),
       "2022-03-08",
       1999.99,
@@ -82,7 +82,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
 
   val customerAddedDisposals: CustomerAddedDisposals =
     CustomerAddedDisposals(
-      "2020-07-06T09:37:17Z",
+      Timestamp("2020-07-06T09:37:17.000Z"),
       Seq(disposals)
     )
 
@@ -100,9 +100,9 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "hmrcHeld",
-      |        "submittedOn": "2020-07-06",
+      |        "submittedOn": "2020-07-06T09:37:17.000Z",
       |        "ppdSubmissionId": "Da2467289108",
-      |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
+      |        "ppdSubmissionDate": "2020-07-06T09:37:17.000Z",
       |        "numberOfDisposals": 3,
       |        "disposalTaxYear": 2022,
       |        "completionDate": "2022-03-08",
@@ -112,9 +112,9 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |    "singlePropertyDisposals": [
       |      {
       |        "source": "hmrcHeld",
-      |        "submittedOn": "2020-07-06",
+      |        "submittedOn": "2020-07-06T09:37:17.000Z",
       |        "ppdSubmissionId": "Da2467289108",
-      |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
+      |        "ppdSubmissionDate": "2020-07-06T09:37:17.000Z",
       |        "disposalDate": "2022-02-04",
       |        "completionDate": "2022-03-08",
       |        "disposalProceeds": 1999.99,
@@ -131,7 +131,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |    ]
       |  },
       |  "customerAddedDisposals": {
-      |    "submittedOn": "2020-07-06T09:37:17Z",
+      |    "submittedOn": "2020-07-06T09:37:17.000Z",
       |    "disposals": [
       |      {
       |        "customerReference": "CGTDISPOSAL01",
@@ -162,7 +162,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |    "multiplePropertyDisposals": [
       |      {
       |        "source": "HMRC HELD",
-      |        "submittedOn": "2020-07-06",
+      |        "submittedOn": "2020-07-06T09:37:17Z",
       |        "ppdSubmissionId": "Da2467289108",
       |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
       |        "numberOfDisposals": 3,
@@ -174,7 +174,7 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
       |    "singlePropertyDisposals": [
       |      {
       |        "source": "HMRC HELD",
-      |        "submittedOn": "2020-07-06",
+      |        "submittedOn": "2020-07-06T09:37:17Z",
       |        "ppdSubmissionId": "Da2467289108",
       |        "ppdSubmissionDate": "2020-07-06T09:37:17Z",
       |        "disposalDate": "2022-02-04",

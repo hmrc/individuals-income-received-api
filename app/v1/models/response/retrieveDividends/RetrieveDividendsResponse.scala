@@ -17,13 +17,14 @@
 package v1.models.response.retrieveDividends
 
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.domain.Timestamp
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import utils.JsonUtils
 
-case class RetrieveDividendsResponse(submittedOn: String,
+case class RetrieveDividendsResponse(submittedOn: Timestamp,
                                      foreignDividend: Option[Seq[ForeignDividendItem]],
                                      dividendIncomeReceivedWhilstAbroad: Option[Seq[DividendIncomeReceivedWhilstAbroadItem]],
                                      stockDividend: Option[StockDividend],
@@ -34,7 +35,7 @@ case class RetrieveDividendsResponse(submittedOn: String,
 object RetrieveDividendsResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveDividendsResponse] = (
-    (JsPath \ "submittedOn").read[String] and
+    (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "foreignDividend").readNullable[Seq[ForeignDividendItem]].mapEmptySeqToNone and
       (JsPath \ "dividendIncomeReceivedWhilstAbroad").readNullable[Seq[DividendIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
       (JsPath \ "stockDividend").readNullable[StockDividend] and

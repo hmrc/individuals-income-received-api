@@ -112,7 +112,7 @@ object RetrieveEmploymentControllerFixture {
        |   "cessationDate": "2020-06-17",
        |   "payrollId": "123345657",
        |   "occupationalPension": false,
-       |   "dateIgnored": "2020-06-17T10:53:38Z",
+       |   "dateIgnored": "2020-06-17T10:53:38.000Z",
        |   "links":[
        |      {
        |         "href": "/individuals/income-received/employments/$nino/$taxYear",
@@ -145,7 +145,7 @@ object RetrieveEmploymentControllerFixture {
        |   "cessationDate": "2020-06-17",
        |   "payrollId": "123345657",
        |   "occupationalPension": false,
-       |   "submittedOn": "2020-06-17T10:53:38Z",
+       |   "submittedOn": "2020-06-17T10:53:38.000Z",
        |   "links":[
        |      {
        |         "href": "/individuals/income-received/employments/$nino/$taxYear",

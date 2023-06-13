@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{CREATE_AND_AMEND_OTHER_CGT_AND_DISPOSALS, DELETE_OTHER_CGT_AND_DISPOSALS, SELF}
@@ -82,7 +82,7 @@ class RetrieveOtherCgtControllerSpec
     )
 
   val responseModel: RetrieveOtherCgtResponse = RetrieveOtherCgtResponse(
-    submittedOn = "2021-05-07T16:18:44.403Z",
+    submittedOn = Timestamp("2021-05-07T16:18:44.403Z"),
     disposals = Some(
       List(
         Disposal(

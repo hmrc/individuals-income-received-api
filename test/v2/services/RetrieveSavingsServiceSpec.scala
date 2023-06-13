@@ -17,13 +17,14 @@
 package v2.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear, Timestamp}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v2.mocks.connectors.MockRetrieveSavingsConnector
 import v2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v2.models.response.retrieveSavings.RetrieveSavingsResponse
+
 import scala.concurrent.Future
 
 class RetrieveSavingsServiceSpec extends ServiceSpec {
@@ -82,7 +83,7 @@ class RetrieveSavingsServiceSpec extends ServiceSpec {
     )
 
     val response: RetrieveSavingsResponse = RetrieveSavingsResponse(
-      submittedOn = "",
+      submittedOn = Timestamp("2019-04-04T01:01:01.000Z"),
       securities = None,
       foreignInterest = None
     )

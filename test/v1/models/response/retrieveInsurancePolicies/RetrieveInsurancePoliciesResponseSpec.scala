@@ -16,6 +16,7 @@
 
 package v1.models.response.retrieveInsurancePolicies
 
+import api.models.domain.Timestamp
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 
@@ -24,7 +25,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
   private val json = Json.parse(
     """
       |{
-      |   "submittedOn": "2020-07-06T09:37:17Z",
+      |   "submittedOn": "2020-07-06T09:37:17.000Z",
       |   "lifeInsurance":[
       |      {
       |         "customerReference": "INPOLY123A",
@@ -124,7 +125,7 @@ class RetrieveInsurancePoliciesResponseSpec extends UnitSpec {
   )
 
   private val responseModel = RetrieveInsurancePoliciesResponse(
-    submittedOn = "2020-07-06T09:37:17Z",
+    submittedOn = Timestamp("2020-07-06T09:37:17.000Z"),
     lifeInsurance = Some(Seq(lifeInsuranceItemModel)),
     capitalRedemption = Some(Seq(capitalRedemptionItemModel)),
     lifeAnnuity = Some(Seq(lifeAnnuityItemModel)),
