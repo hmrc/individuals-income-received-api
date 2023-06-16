@@ -64,7 +64,7 @@ object CreateAmendOtherFixtures {
     amountBeforeTax = Some(1000.99),
     taxTakenOff = Some(2000.99),
     specialWithholdingTax = Some(3000.99),
-    foreignTaxCreditRelief = false,
+    foreignTaxCreditRelief = Some(false),
     taxableAmount = 4000.99,
     residentialFinancialCostAmount = Some(5000.99),
     broughtFwdResidentialFinancialCostAmount = Some(6000.99)
@@ -78,6 +78,20 @@ object CreateAmendOtherFixtures {
        |   "taxTakenOff": 2000.99,
        |   "specialWithholdingTax": 3000.99,
        |   "foreignTaxCreditRelief": false,
+       |   "taxableAmount": 4000.99,
+       |   "residentialFinancialCostAmount": 5000.99,
+       |   "broughtFwdResidentialFinancialCostAmount": 6000.99
+       |}
+       |""".stripMargin
+  )
+
+  val allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief: JsValue = Json.parse(
+    s"""
+       |{
+       |   "countryCode": "FRA",
+       |   "amountBeforeTax": 1000.99,
+       |   "taxTakenOff": 2000.99,
+       |   "specialWithholdingTax": 3000.99,
        |   "taxableAmount": 4000.99,
        |   "residentialFinancialCostAmount": 5000.99,
        |   "broughtFwdResidentialFinancialCostAmount": 6000.99
@@ -156,6 +170,18 @@ object CreateAmendOtherFixtures {
        |  "chargeableForeignBenefitsAndGifts": $chargeableForeignBenefitsAndGiftsJson,
        |  "omittedForeignIncome": $omittedForeignIncomeJson
        |}
+    """.stripMargin
+  )
+
+  val requestBodyJsonWithoutForeignTaxCreditRelief: JsValue = Json.parse(
+    s"""
+      |{
+      |   "businessReceipts": [$businessReceiptsJson],
+      |   "allOtherIncomeReceivedWhilstAbroad": [$allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief],
+      |   "overseasIncomeAndGains": $overseasIncomeAndGainsJson,
+      |   "chargeableForeignBenefitsAndGifts": $chargeableForeignBenefitsAndGiftsJson,
+      |   "omittedForeignIncome": $omittedForeignIncomeJson
+      |}
     """.stripMargin
   )
 

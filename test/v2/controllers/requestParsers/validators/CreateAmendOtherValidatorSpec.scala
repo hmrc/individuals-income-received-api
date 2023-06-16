@@ -316,7 +316,6 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
           List(
             RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
               "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
-              "/allOtherIncomeReceivedWhilstAbroad/0/foreignTaxCreditRelief",
               "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount"
             ))))
       }

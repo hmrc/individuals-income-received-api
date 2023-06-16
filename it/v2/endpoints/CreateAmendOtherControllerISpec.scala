@@ -25,7 +25,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyWithPCRJson, responseWithHateoasLinks}
+import v2.fixtures.other.CreateAmendOtherFixtures.{requestBodyWithPCRJson, responseWithHateoasLinks, requestBodyJsonWithoutForeignTaxCreditRelief}
 
 class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
 
@@ -50,6 +50,18 @@ class CreateAmendOtherControllerISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(request().put(requestBodyWithPCRJson))
+        response.status shouldBe OK
+        response.body[JsValue] shouldBe responseWithHateoasLinks(mtdTaxYear)
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made (TYS) without foreignTaxCreditRelief" in new TysIfsTest {
+
+        override def setupStubs(): Unit = {
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT)
+        }
+
+        val response: WSResponse = await(request().put(requestBodyJsonWithoutForeignTaxCreditRelief))
         response.status shouldBe OK
         response.body[JsValue] shouldBe responseWithHateoasLinks(mtdTaxYear)
         response.header("Content-Type") shouldBe Some("application/json")
