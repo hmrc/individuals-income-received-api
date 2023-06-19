@@ -1,5 +1,16 @@
 {
   "submittedOn": "2021-04-06T09:37:17.000Z",
+  "postCessationReceipts": [
+    {
+      "customerReference": "String",
+      "businessName": "Business Name",
+      "dateBusinessCeased": "2023-05-30",
+      "businessDescription": "Description",
+      "incomeSource": "string",
+      "amount": 1999.99,
+      "taxYearIncomeToBeTaxed": "2021-22"
+    }
+  ],
   "businessReceipts":[
     {
       "grossAmount":1999.99,
