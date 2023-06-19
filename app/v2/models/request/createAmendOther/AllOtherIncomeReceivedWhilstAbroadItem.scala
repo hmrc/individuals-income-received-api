@@ -23,7 +23,7 @@ case class AllOtherIncomeReceivedWhilstAbroadItem(countryCode: String,
                                                   amountBeforeTax: Option[BigDecimal],
                                                   taxTakenOff: Option[BigDecimal],
                                                   specialWithholdingTax: Option[BigDecimal],
-                                                  foreignTaxCreditRelief: Boolean,
+                                                  foreignTaxCreditRelief: Option[Boolean],
                                                   taxableAmount: BigDecimal,
                                                   residentialFinancialCostAmount: Option[BigDecimal],
                                                   broughtFwdResidentialFinancialCostAmount: Option[BigDecimal])
@@ -36,7 +36,7 @@ object AllOtherIncomeReceivedWhilstAbroadItem {
       (JsPath \ "amountBeforeTax").writeNullable[BigDecimal] and
       (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").writeNullable[BigDecimal] and
-      (JsPath \ "foreignTaxCreditRelief").write[Boolean] and
+      (JsPath \ "foreignTaxCreditRelief").writeNullable[Boolean] and
       (JsPath \ "taxableAmount").write[BigDecimal] and
       (JsPath \ "residentialFinancialCostAmount").writeNullable[BigDecimal] and
       (JsPath \ "broughtFwdResidentialFinancialCostAmount").writeNullable[BigDecimal]

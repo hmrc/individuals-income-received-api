@@ -27,6 +27,10 @@ class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
       "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object" in {
         allOtherIncomeReceivedWhilstAbroadJson.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel
       }
+
+      "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object without foreignTaxCreditRelief" in {
+        allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel.copy(foreignTaxCreditRelief = None)
+      }
     }
 
     "read from empty JSON" should {
