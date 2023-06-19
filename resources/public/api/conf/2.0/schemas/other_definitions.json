@@ -9,7 +9,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "description": "Details of sum received related to the carrying on of the trade after a business ceases to carry on.",
+        "description": "Details of sum received related to the carrying on of the trade after a business ceases to carry on. [test only]",
         "properties": {
           "customerReference": {
             "type": "String",
