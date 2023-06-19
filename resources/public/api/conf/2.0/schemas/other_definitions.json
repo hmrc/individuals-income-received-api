@@ -149,7 +149,6 @@
         },
         "required": [
           "countryCode",
-          "foreignTaxCreditRelief",
           "taxableAmount"
         ]
       }
