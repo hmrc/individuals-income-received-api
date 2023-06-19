@@ -9,7 +9,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "description": "TO BE ADDED /// /",
+        "description": "Details of sum which is received after a business ceases to carry on a trade but related to the carrying on of the trade before the cessation.",
         "properties": {
           "customerReference": {
             "type": "String",
