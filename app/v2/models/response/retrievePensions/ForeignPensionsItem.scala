@@ -23,7 +23,7 @@ case class ForeignPensionsItem(countryCode: String,
                                amountBeforeTax: Option[BigDecimal],
                                taxTakenOff: Option[BigDecimal],
                                specialWithholdingTax: Option[BigDecimal],
-                               foreignTaxCreditRelief: Boolean,
+                               foreignTaxCreditRelief: Option[Boolean],
                                taxableAmount: BigDecimal)
 
 object ForeignPensionsItem {
@@ -33,7 +33,7 @@ object ForeignPensionsItem {
       (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
-      (JsPath \ "foreignTaxCreditRelief").read[Boolean] and
+      (JsPath \ "foreignTaxCreditRelief").readNullable[Boolean] and
       (JsPath \ "taxableAmount").read[BigDecimal]
   )(ForeignPensionsItem.apply _)
 
