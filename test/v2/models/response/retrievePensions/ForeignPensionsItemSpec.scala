@@ -21,7 +21,7 @@ import support.UnitSpec
 
 class ForeignPensionsItemSpec extends UnitSpec {
 
-  private val json = Json.parse(
+  private val jsonWithOptionalFields = Json.parse(
     """
       |{
       |   "countryCode": "DEU",
@@ -34,7 +34,16 @@ class ForeignPensionsItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val model = ForeignPensionsItem(
+  private val jsonWithoutOptionalFields = Json.parse(
+    """
+      |{
+      |   "countryCode": "DEU",
+      |   "taxableAmount": 3.23
+      |}
+    """.stripMargin
+  )
+
+  private val modelWithOptionalFields = ForeignPensionsItem(
     countryCode = "DEU",
     amountBeforeTax = Some(100.23),
     taxTakenOff = Some(1.23),
@@ -43,10 +52,25 @@ class ForeignPensionsItemSpec extends UnitSpec {
     taxableAmount = 3.23
   )
 
+  private val modelWithoutOptionalFields = ForeignPensionsItem(
+    countryCode = "DEU",
+    amountBeforeTax = None,
+    taxTakenOff = None,
+    specialWithholdingTax = None,
+    foreignTaxCreditRelief = None,
+    taxableAmount = 3.23
+  )
+
   "ForeignPensionsItem" when {
-    "read from valid JSON" should {
+    "read from valid JSON with optional fields" should {
       "produce the expected ForeignPensionsItem object" in {
-        json.as[ForeignPensionsItem] shouldBe model
+        jsonWithOptionalFields.as[ForeignPensionsItem] shouldBe modelWithOptionalFields
+      }
+    }
+
+    "read from valid JSON without optional fields" should {
+      "produce the expected ForeignPensionsItem object" in {
+        jsonWithoutOptionalFields.as[ForeignPensionsItem] shouldBe modelWithoutOptionalFields
       }
     }
 
@@ -58,9 +82,15 @@ class ForeignPensionsItemSpec extends UnitSpec {
       }
     }
 
-    "written to JSON" should {
+    "written to JSON with optional fields" should {
       "produce the expected JsObject" in {
-        Json.toJson(model) shouldBe json
+        Json.toJson(modelWithOptionalFields) shouldBe jsonWithOptionalFields
+      }
+    }
+
+    "written to JSON without optional fields" should {
+      "produce the expected JsObject" in {
+        Json.toJson(modelWithoutOptionalFields) shouldBe jsonWithoutOptionalFields
       }
     }
   }
