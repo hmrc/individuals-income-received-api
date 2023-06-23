@@ -1,7 +1,6 @@
-# v2 specific endpoints
 # UK Savings Account routes go here:
 GET         /savings/uk-accounts/:nino                                       v1.controllers.ListUkSavingsAccountsController.listUkSavingsAccounts(nino: String, savingsAccountId: Option[String])
-POST        /savings/uk-accounts/:nino                                       v1.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)
+POST        /savings/uk-accounts/:nino                                       v2.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)
 
 # UK Savings Income Annual Summary routes:
 GET        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId             v1.controllers.RetrieveUkSavingsAccountAnnualSummaryController.retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String)
