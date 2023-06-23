@@ -95,7 +95,7 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
 
             auditSubmission(
               FlattenedGenericAuditDetail(
-                versionNumber = Some("1.0"),
+                versionNumber = Some("2.0"),
                 request.userDetails,
                 Map("nino" -> nino),
                 Some(request.body),
