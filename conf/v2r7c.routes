@@ -38,7 +38,7 @@ GET        /employments/other/:nino/:taxYear                                v1.c
 
 PUT        /dividends/:nino/:taxYear                                        v2.controllers.CreateAmendDividendsController.createAmendDividends(nino: String, taxYear: String)
 DELETE     /dividends/:nino/:taxYear                                        v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
-GET        /dividends/:nino/:taxYear                                        v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
+GET        /dividends/:nino/:taxYear                                        v2.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
 # Employment endpoints
 PUT        /employments/:nino/:taxYear/:employmentId                        v1.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
