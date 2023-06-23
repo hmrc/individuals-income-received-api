@@ -37,14 +37,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkSavingsAnnualSummaryController @Inject()(val authService: EnrolmentsAuthService,
-                                                            val lookupService: MtdIdLookupService,
-                                                            parser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
-                                                            service: CreateAmendUkSavingsAnnualSummaryService,
-                                                            auditService: AuditService,
-                                                            hateoasFactory: HateoasFactory,
-                                                            cc: ControllerComponents,
-                                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
+                                                             val lookupService: MtdIdLookupService,
+                                                             parser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
+                                                             service: CreateAmendUkSavingsAnnualSummaryService,
+                                                             auditService: AuditService,
+                                                             hateoasFactory: HateoasFactory,
+                                                             cc: ControllerComponents,
+                                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -83,7 +83,7 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject()(val authService: Enr
           case Left(err: ErrorWrapper) =>
             auditSubmission(
               FlattenedGenericAuditDetail(
-                Some("1.0"),
+                Some("2.0"),
                 request.userDetails,
                 Map("nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId),
                 Some(request.body),
