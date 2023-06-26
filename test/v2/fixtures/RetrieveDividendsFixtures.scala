@@ -27,7 +27,7 @@ object RetrieveDividendsFixtures {
     amountBeforeTax = Some(1000.99),
     taxTakenOff = Some(2000.99),
     specialWithholdingTax = Some(3000.99),
-    foreignTaxCreditRelief = true,
+    foreignTaxCreditRelief = Some(true),
     taxableAmount = 4000.99
   )
 
@@ -49,7 +49,7 @@ object RetrieveDividendsFixtures {
     amountBeforeTax = Some(1000.99),
     taxTakenOff = Some(2000.99),
     specialWithholdingTax = Some(3000.99),
-    foreignTaxCreditRelief = true,
+    foreignTaxCreditRelief = Some(true),
     taxableAmount = 4000.99
   )
 

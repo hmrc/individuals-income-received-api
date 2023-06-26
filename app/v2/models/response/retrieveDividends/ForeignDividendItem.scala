@@ -16,27 +16,17 @@
 
 package v2.models.response.retrieveDividends
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class ForeignDividendItem(countryCode: String,
                                amountBeforeTax: Option[BigDecimal],
                                taxTakenOff: Option[BigDecimal],
                                specialWithholdingTax: Option[BigDecimal],
-                               foreignTaxCreditRelief: Boolean,
+                               foreignTaxCreditRelief: Option[Boolean],
                                taxableAmount: BigDecimal)
 
 object ForeignDividendItem {
 
-  implicit val reads: Reads[ForeignDividendItem] = (
-    (JsPath \ "countryCode").read[String] and
-      (JsPath \ "amountBeforeTax").readNullable[BigDecimal] and
-      (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
-      (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
-      (JsPath \ "foreignTaxCreditRelief").read[Boolean] and
-      (JsPath \ "taxableAmount").read[BigDecimal]
-  )(ForeignDividendItem.apply _)
-
-  implicit val writes: OWrites[ForeignDividendItem] = Json.writes[ForeignDividendItem]
+  implicit val formats: OFormat[ForeignDividendItem] = Json.format[ForeignDividendItem]
 
 }

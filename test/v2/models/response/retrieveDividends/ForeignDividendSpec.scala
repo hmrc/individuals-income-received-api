@@ -16,16 +16,40 @@
 
 package v2.models.response.retrieveDividends
 
-import play.api.libs.json.{JsError, JsObject, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 import v2.fixtures.RetrieveDividendsFixtures._
 
 class ForeignDividendSpec extends UnitSpec {
 
+  val mandatoryFieldsOnlyModel: ForeignDividendItem = ForeignDividendItem(
+    countryCode = "DEU",
+    amountBeforeTax = None,
+    taxTakenOff = None,
+    specialWithholdingTax = None,
+    foreignTaxCreditRelief = None,
+    taxableAmount = 4000.99
+  )
+
+  val mandatoryFieldsOnlyJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "countryCode": "DEU",
+       |  "taxableAmount": 4000.99
+       |}
+       |""".stripMargin
+  )
+
   "ForeignDividendItem" when {
     "read from valid JSON" should {
       "produce the expected ForeignDividendItem object" in {
         foreignDividendJson.as[ForeignDividendItem] shouldBe foreignDividendModel
+      }
+    }
+
+    "read from valid JSON with mandatory fields only" should {
+      "produce the expected ForeignDividendItem object" in {
+        mandatoryFieldsOnlyJson.as[ForeignDividendItem] shouldBe mandatoryFieldsOnlyModel
       }
     }
 
@@ -40,6 +64,12 @@ class ForeignDividendSpec extends UnitSpec {
     "written to JSON" should {
       "produce the expected JsObject" in {
         Json.toJson(foreignDividendModel) shouldBe foreignDividendJson
+      }
+    }
+
+    "written to JSON with mandatory fields only" should {
+      "produce the expected JsObject" in {
+        Json.toJson(mandatoryFieldsOnlyModel) shouldBe mandatoryFieldsOnlyJson
       }
     }
   }
