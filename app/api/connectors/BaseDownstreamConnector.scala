@@ -120,5 +120,4 @@ trait BaseDownstreamConnector {
       case Release6Uri(_)           => appConfig.release6DownstreamConfig
       case Api1661Uri(_)            => appConfig.api1661DownstreamConfig
     }
-
 }

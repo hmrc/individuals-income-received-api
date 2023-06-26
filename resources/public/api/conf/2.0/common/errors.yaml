@@ -260,10 +260,22 @@ components:
         code: RULE_DISPOSAL_DATE
         message: The disposalDate must be in the specified tax year and no later than today's date
 
+    cgtOtherRuleDisposalDateNotFuture:
+      description: The disposalDate must be in the specified tax year and no later than today's date.
+      value:
+        code: RULE_DISPOSAL_DATE_NOT_FUTURE
+        message: The disposalDate must be in the specified tax year and no later than today's date
+
     nonPpdRuleDisposalDate:
       description: The disposalDate must be within the specified tax year.
       value:
         code: RULE_DISPOSAL_DATE
+        message: The disposalDate must be in the specified tax year and no later than today's date
+
+    nonPpdRuleDisposalDateNotFuture:
+      description: The disposalDate must be within the specified tax year.
+      value:
+        code: RULE_DISPOSAL_DATE_NOT_FUTURE
         message: The disposalDate must be in the specified tax year and no later than today's date
 
     cgtOtherRuleAcquisitionDate:

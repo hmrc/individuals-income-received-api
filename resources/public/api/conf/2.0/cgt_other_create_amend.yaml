@@ -99,6 +99,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
           RULE_DISPOSAL_DATE:
             $ref: './common/errors.yaml#/components/examples/cgtOtherRuleDisposalDate'
+          RULE_DISPOSAL_DATE_NOT_FUTURE:
+            $ref: './common/errors.yaml#/components/examples/cgtOtherRuleDisposalDateNotFuture'
           RULE_ACQUISITION_DATE:
             $ref: './common/errors.yaml#/components/examples/cgtOtherRuleAcquisitionDate'
           RULE_GAIN_LOSS:
