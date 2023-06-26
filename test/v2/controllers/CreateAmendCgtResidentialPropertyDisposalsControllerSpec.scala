@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -29,11 +29,10 @@ import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v2.mocks.requestParsers.MockCreateAmendCgtResidentialPropertyDisposalsRequestParser
 import v2.mocks.services._
-import v2.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v2.models.request.createAmendCgtResidentialPropertyDisposals._
 import v2.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsHateoasData
 
@@ -212,7 +211,7 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new CreateAmendCgtResidentialPropertyDisposalsController(
       authService = mockEnrolmentsAuthService,
@@ -230,17 +229,16 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
     protected def callController(): Future[Result] =
       controller.createAmendCgtResidentialPropertyDisposals(nino, taxYear)(fakePutRequest(validRequestJson))
 
-    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[CreateAmendCgtResidentialPropertyDisposalsAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendCgtResidentialPropertyDisposals",
         transactionName = "Create-Amend-Cgt-Residential-Property-Disposals",
-        detail = CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
+        detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          nino,
-          taxYear,
-          requestBody.getOrElse(JsObject.empty),
-          correlationId,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = requestBody,
+          `X-CorrelationId` = correlationId,
           response = auditResponse
         )
       )

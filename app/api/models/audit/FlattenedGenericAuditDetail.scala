@@ -16,9 +16,10 @@
 
 package api.models.audit
 
+import api.controllers.{AuditHandler, RequestContext}
 import api.models.auth.UserDetails
 import play.api.libs.functional.syntax.{toFunctionalBuilderOps, unlift}
-import play.api.libs.json.{JsPath, JsValue, OWrites}
+import play.api.libs.json.{JsObject, JsPath, JsValue, OWrites}
 
 case class FlattenedGenericAuditDetail(versionNumber: Option[String],
                                        userType: String,
@@ -53,6 +54,10 @@ object FlattenedGenericAuditDetail {
             `X-CorrelationId`: String,
             auditResponse: AuditResponse): FlattenedGenericAuditDetail = {
 
+    val respNoHateoas = auditResponse.body.map {
+      case js: JsObject => js - "links"
+      case js: JsValue => js
+    }
     FlattenedGenericAuditDetail(
       versionNumber = versionNumber,
       userType = userDetails.userType,
@@ -63,8 +68,24 @@ object FlattenedGenericAuditDetail {
       response = if (auditResponse.errors.exists(_.nonEmpty)) "error" else "success",
       httpStatusCode = auditResponse.httpStatus,
       errorCodes = auditResponse.errors.map(_.map(_.errorCode)),
-      responseBody = auditResponse.body
+      responseBody = respNoHateoas
     )
   }
 
+
+  def auditDetailCreator(params: Map[String, String]): AuditHandler.AuditDetailCreator[FlattenedGenericAuditDetail] =
+    new AuditHandler.AuditDetailCreator[FlattenedGenericAuditDetail] {
+
+      def createAuditDetail(userDetails: UserDetails, request: Option[JsValue], auditResponse: AuditResponse)
+                           (implicit ctx: RequestContext): FlattenedGenericAuditDetail =
+        FlattenedGenericAuditDetail(
+          versionNumber = params.get("versionNumber"),
+          userDetails,
+          params,
+          request,
+          ctx.correlationId,
+          auditResponse
+        )
+
+    }
 }

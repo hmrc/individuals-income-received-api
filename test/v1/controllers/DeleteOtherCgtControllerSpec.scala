@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -27,7 +27,6 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockDeleteOtherCgtRequestParser
 import v1.mocks.services.MockDeleteOtherCgtService
-import v1.models.audit.DeleteOtherCgtAuditDetail
 import v1.models.request.deleteOtherCgt.{DeleteOtherCgtRawData, DeleteOtherCgtRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -93,7 +92,7 @@ class DeleteOtherCgtControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking[DeleteOtherCgtAuditDetail] {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new DeleteOtherCgtController(
       authService = mockEnrolmentsAuthService,
@@ -107,16 +106,16 @@ class DeleteOtherCgtControllerSpec
 
     protected def callController(): Future[Result] = controller.deleteOtherCgt(nino, taxYear)(fakeDeleteRequest)
 
-    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[DeleteOtherCgtAuditDetail] =
+    def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "DeleteOtherCgtDisposalsAndGains",
         transactionName = "Delete-Other-Cgt-Disposals-And-Gains",
-        detail = DeleteOtherCgtAuditDetail(
+        detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          nino,
-          taxYear,
-          correlationId,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = maybeRequestBody,
+          `X-CorrelationId` = correlationId,
           response = auditResponse
         )
       )

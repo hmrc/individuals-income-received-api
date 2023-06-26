@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -29,11 +29,10 @@ import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateAmendCgtPpdOverridesRequestParser
 import v1.mocks.services._
-import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides._
 import v1.models.response.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesHateoasData
 
@@ -233,7 +232,7 @@ class CreateAmendCgtPpdOverridesControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking[CreateAmendCgtPpdOverridesAuditDetail] {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new CreateAmendCgtPpdOverridesController(
       authService = mockEnrolmentsAuthService,
@@ -250,17 +249,16 @@ class CreateAmendCgtPpdOverridesControllerSpec
 
     protected def callController(): Future[Result] = controller.createAmendCgtPpdOverrides(nino, taxYear)(fakePutRequest(validRequestJson))
 
-    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[CreateAmendCgtPpdOverridesAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendCgtPpdOverrides",
         transactionName = "Create-Amend-Cgt-Ppd-Overrides",
-        detail = CreateAmendCgtPpdOverridesAuditDetail(
+        detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          nino,
-          taxYear,
-          requestBody.getOrElse(JsObject.empty),
-          correlationId,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = requestBody,
+          `X-CorrelationId` = correlationId,
           response = auditResponse
         )
       )

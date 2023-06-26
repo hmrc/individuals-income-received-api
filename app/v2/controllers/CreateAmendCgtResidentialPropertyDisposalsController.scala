@@ -18,7 +18,7 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
@@ -29,7 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v2.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
-import v2.models.audit.CreateAmendCgtResidentialPropertyDisposalsAuditDetail
 import v2.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsRawData
 import v2.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsHateoasData
 import v2.models.response.createAmendCgtResidentialPropertyDisposals.CreateAmendCgtResidentialPropertyDisposalsResponse._
@@ -89,21 +88,20 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
-              CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, Left(err.auditErrors))))
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              ))
 
           case Right(_: Option[JsValue]) =>
             auditSubmission(
-              CreateAmendCgtResidentialPropertyDisposalsAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
                 AuditResponse(OK, Right(Some(Json.toJson(CreateAmendCgtResidentialPropertyDisposalsHateoasData(nino, taxYear)))))
               ))
@@ -112,8 +110,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authSer
     }
   }
 
-  private def auditSubmission(
-      details: CreateAmendCgtResidentialPropertyDisposalsAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendCgtResidentialPropertyDisposals", "Create-Amend-Cgt-Residential-Property-Disposals", details)
     auditService.auditEvent(event)
   }
