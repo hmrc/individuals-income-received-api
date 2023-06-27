@@ -18,7 +18,7 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
@@ -28,7 +28,6 @@ import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
-import v2.models.audit.CreateAmendOtherCgtAuditDetail
 import v2.controllers.requestParsers.CreateAmendOtherCgtRequestParser
 import v2.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
 import v2.models.response.createAmendOtherCgt.CreateAmendOtherCgtHateoasData
@@ -88,21 +87,20 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
-              CreateAmendOtherCgtAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, Left(err.auditErrors))))
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              ))
 
           case Right(_: Option[JsValue]) =>
             auditSubmission(
-              CreateAmendOtherCgtAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
                 AuditResponse(OK, Right(Some(Json.toJson(CreateAmendOtherCgtHateoasData(nino, taxYear)))))
               ))
@@ -111,7 +109,7 @@ class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthSer
     }
   }
 
-  private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendOtherCgtDisposalsAndGains", "Create-Amend-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }

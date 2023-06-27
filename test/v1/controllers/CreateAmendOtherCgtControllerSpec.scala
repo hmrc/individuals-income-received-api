@@ -21,7 +21,7 @@ import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockNrsProxyService}
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
@@ -29,11 +29,10 @@ import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
 import v1.mocks.requestParsers.MockCreateAmendOtherCgtRequestParser
 import v1.mocks.services._
-import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt._
 import v1.models.response.createAmendOtherCgt.CreateAmendOtherCgtHateoasData
 
@@ -245,7 +244,7 @@ class CreateAmendOtherCgtControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking[CreateAmendOtherCgtAuditDetail] {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new CreateAmendOtherCgtController(
       authService = mockEnrolmentsAuthService,
@@ -262,17 +261,16 @@ class CreateAmendOtherCgtControllerSpec
 
     protected def callController(): Future[Result] = controller.createAmendOtherCgt(nino, taxYear)(fakePutRequest(validRequestJson))
 
-    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[CreateAmendOtherCgtAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendOtherCgtDisposalsAndGains",
         transactionName = "Create-Amend-Other-Cgt-Disposals-And-Gains",
-        detail = CreateAmendOtherCgtAuditDetail(
+        detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          nino,
-          taxYear,
-          requestBody.getOrElse(JsObject.empty),
-          correlationId,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = requestBody,
+          `X-CorrelationId` = correlationId,
           response = auditResponse
         )
       )

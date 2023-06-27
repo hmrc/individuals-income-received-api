@@ -17,7 +17,7 @@
 package v1.controllers
 
 import api.controllers._
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
@@ -27,7 +27,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.DeleteCgtNonPpdRequestParser
-import v1.models.audit.DeleteCgtNonPpdAuditDetail
 import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
 import v1.services.DeleteCgtNonPpdService
 
@@ -73,28 +72,29 @@ class DeleteCgtNonPpdController @Inject() (val authService: EnrolmentsAuthServic
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
-              DeleteCgtNonPpdAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                None,
                 ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))))
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              ))
 
           case Right(_: Option[JsValue]) =>
             auditSubmission(
-              DeleteCgtNonPpdAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                None,
                 ctx.correlationId,
-                AuditResponse(NO_CONTENT, Right(None))
+                AuditResponse(httpStatus = httpStatus, response = Right(None))
               ))
         }
       }
     }
   }
 
-  private def auditSubmission(details: DeleteCgtNonPpdAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("DeleteCgtNonPpd", "Delete-Cgt-Non-Ppd", details)
     auditService.auditEvent(event)
   }

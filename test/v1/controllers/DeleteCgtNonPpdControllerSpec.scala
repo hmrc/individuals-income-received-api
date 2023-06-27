@@ -19,7 +19,7 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.MockIdGenerator
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -27,7 +27,6 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockDeleteCgtNonPpdRequestParser
 import v1.mocks.services.MockDeleteCgtNonPpdService
-import v1.models.audit.DeleteCgtNonPpdAuditDetail
 import v1.models.request.deleteCgtNonPpd.{DeleteCgtNonPpdRawData, DeleteCgtNonPpdRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -93,7 +92,7 @@ class DeleteCgtNonPpdControllerSpec
     }
   }
 
-  trait Test extends ControllerTest with AuditEventChecking[DeleteCgtNonPpdAuditDetail] {
+  trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new DeleteCgtNonPpdController(
       authService = mockEnrolmentsAuthService,
@@ -107,16 +106,16 @@ class DeleteCgtNonPpdControllerSpec
 
     protected def callController(): Future[Result] = controller.deleteCgtNonPpd(nino, taxYear)(fakeDeleteRequest)
 
-    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[DeleteCgtNonPpdAuditDetail] =
+    def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "DeleteCgtNonPpd",
         transactionName = "Delete-Cgt-Non-Ppd",
-        detail = DeleteCgtNonPpdAuditDetail(
+        detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          nino,
-          taxYear,
-          correlationId,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          request = requestBody,
+          `X-CorrelationId` = correlationId,
           response = auditResponse
         )
       )

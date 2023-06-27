@@ -16,7 +16,7 @@
 
 package api.controllers
 
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors.ErrorWrapper
 import api.services.AuditService
@@ -60,7 +60,6 @@ object AuditHandler {
             params: Map[String, String],
             requestBody: Option[JsValue] = None,
             includeResponse: Boolean = false): AuditHandler = {
-
     custom(
       auditService = auditService,
       auditType = auditType,
@@ -71,13 +70,29 @@ object AuditHandler {
     )
   }
 
-  private class AuditHandlerImpl[A: Writes](auditService: AuditService,
-                                            auditType: String,
-                                            transactionName: String,
-                                            auditDetailCreator: AuditDetailCreator[A],
-                                            requestBody: Option[JsValue],
-                                            responseBodyMap: Option[JsValue] => Option[JsValue])
-      extends AuditHandler {
+  def flattenedAuditing(auditService: AuditService,
+                        auditType: String,
+                        transactionName: String,
+                        params: Map[String, String],
+                        requestBody: Option[JsValue] = None,
+                        includeResponse: Boolean = false): AuditHandler = {
+    custom(
+      auditService = auditService,
+      auditType = auditType,
+      transactionName = transactionName,
+      auditDetailCreator = FlattenedGenericAuditDetail.auditDetailCreator(params),
+      requestBody = requestBody,
+      includeResponse = includeResponse
+    )
+  }
+
+  private class AuditHandlerImpl[A](auditService: AuditService,
+                                    auditType: String,
+                                    transactionName: String,
+                                    auditDetailCreator: AuditDetailCreator[A],
+                                    requestBody: Option[JsValue],
+                                    responseBodyMap: Option[JsValue] => Option[JsValue])(implicit writer: Writes[A])
+    extends AuditHandler {
 
     def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
         ctx: RequestContext,
