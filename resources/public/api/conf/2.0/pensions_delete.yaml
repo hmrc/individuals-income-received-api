@@ -1,5 +1,5 @@
 summary:
-  Delete Dividends Income
+  Delete Pensions Income
 description: |
   This endpoint allows the developer to delete foreign pensions and overseas pension contributions. 
   A National Insurance number and tax year must be provided.
