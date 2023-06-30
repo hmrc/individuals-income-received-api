@@ -100,6 +100,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/notAllowedOffPayrollWorker'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+          RULE_INVALID_SUBMISSION_PENSION_SCHEME:
+            $ref: './common/errors.yaml#/components/examples/ruleInvalidSubmissionPensionScheme'  
 
   "403":
     description: Forbidden

@@ -29,6 +29,13 @@ components:
         code: RULE_TAX_YEAR_NOT_SUPPORTED
         message: The tax year specified does not lie within the supported range
 
+    ruleInvalidSubmissionPensionScheme:
+      description: |
+        Customer with single Employment Source that has Occupational pension indicator cannot submit Benefit in Kind if it contains anything other than Medical Insurance
+      value:
+        code: RULE_INVALID_SUBMISSION_PENSION_SCHEME
+        message: The remote endpoint has indicated that Invalid Data item submitted for Occupational Pension Scheme    
+
     ruleTaxYearNotSupportedMinus4Years:
       description: |
         The specified tax year is not supported.
