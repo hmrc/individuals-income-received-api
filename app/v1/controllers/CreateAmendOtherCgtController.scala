@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
@@ -29,7 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendOtherCgtRequestParser
-import v1.models.audit.CreateAmendOtherCgtAuditDetail
 import v1.models.request.createAmendOtherCgt.CreateAmendOtherCgtRawData
 import v1.models.response.createAmendOtherCgt.CreateAmendOtherCgtHateoasData
 import v1.models.response.createAmendOtherCgt.CreateAmendOtherCgtResponse.CreateAmendOtherCgtLinksFactory
@@ -88,30 +87,29 @@ class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthSe
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
-              CreateAmendOtherCgtAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, Left(err.auditErrors))))
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              ))
 
           case Right(_: Option[JsValue]) =>
             auditSubmission(
-              CreateAmendOtherCgtAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
-                AuditResponse(OK, Right(Some(Json.toJson(CreateAmendOtherCgtHateoasData(nino, taxYear)))))
+                AuditResponse(httpStatus = httpStatus, response = Right(Some(Json.toJson(CreateAmendOtherCgtHateoasData(nino, taxYear)))))
               ))
         }
       }
     }
   }
 
-  private def auditSubmission(details: CreateAmendOtherCgtAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendOtherCgtDisposalsAndGains", "Create-Amend-Other-Cgt-Disposals-And-Gains", details)
     auditService.auditEvent(event)
   }

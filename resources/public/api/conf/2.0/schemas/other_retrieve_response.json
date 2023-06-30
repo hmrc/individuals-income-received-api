@@ -5,6 +5,7 @@
   "type": "object",
   "properties": {
     "submittedOn": {"$ref": "other_definitions.json#/definitions/submittedOn"},
+    "postCessationReceipts": {"$ref": "other_definitions.json#/definitions/postCessationReceipts"},
     "businessReceipts": {"$ref": "other_definitions.json#/definitions/businessReceipts"},
     "allOtherIncomeReceivedWhilstAbroad": {"$ref": "other_definitions.json#/definitions/allOtherIncomeReceivedWhilstAbroad"},
     "overseasIncomeAndGains": {"$ref": "other_definitions.json#/definitions/overseasIncomeAndGains"},

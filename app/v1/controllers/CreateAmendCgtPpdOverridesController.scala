@@ -18,9 +18,9 @@ package v1.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
-import api.models.errors._
+import api.models.errors.ErrorWrapper
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, NrsProxyService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.{JsValue, Json}
@@ -29,7 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.CreateAmendCgtPpdOverridesRequestParser
-import v1.models.audit.CreateAmendCgtPpdOverridesAuditDetail
 import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
 import v1.models.response.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesHateoasData
 import v1.models.response.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesResponse.CreateAmendCgtPpdOverridesLinksFactory
@@ -89,31 +88,29 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
         response match {
           case Left(err: ErrorWrapper) =>
             auditSubmission(
-              CreateAmendCgtPpdOverridesAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))))
+                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
+              ))
 
           case Right(_: Option[JsValue]) =>
             auditSubmission(
-              CreateAmendCgtPpdOverridesAuditDetail(
+              GenericAuditDetail(
                 request.userDetails,
-                nino,
-                taxYear,
-                request.body,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                Some(request.body),
                 ctx.correlationId,
-                AuditResponse(OK, Right(Some(Json.toJson(CreateAmendCgtPpdOverridesHateoasData(nino, taxYear)))))
+                AuditResponse(httpStatus = httpStatus, response = Right(Some(Json.toJson(CreateAmendCgtPpdOverridesHateoasData(nino, taxYear)))))
               ))
         }
       }
     }
   }
 
-  private def auditSubmission(
-      details: CreateAmendCgtPpdOverridesAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent("CreateAmendCgtPpdOverrides", "Create-Amend-Cgt-Ppd-Overrides", details)
     auditService.auditEvent(event)
   }

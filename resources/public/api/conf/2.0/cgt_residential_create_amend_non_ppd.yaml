@@ -107,6 +107,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleCompletionDate'
           RULE_DISPOSAL_DATE:
             $ref: './common/errors.yaml#/components/examples/nonPpdRuleDisposalDate'
+          RULE_DISPOSAL_DATE_NOT_FUTURE:
+            $ref: './common/errors.yaml#/components/examples/nonPpdRuleDisposalDateNotFuture'
           RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
           RULE_GAIN_LOSS:

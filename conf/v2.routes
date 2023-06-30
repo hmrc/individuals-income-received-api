@@ -1,7 +1,6 @@
-# v2 specific endpoints
 # UK Savings Account routes go here:
 GET         /savings/uk-accounts/:nino                                       v1.controllers.ListUkSavingsAccountsController.listUkSavingsAccounts(nino: String, savingsAccountId: Option[String])
-POST        /savings/uk-accounts/:nino                                       v1.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)
+POST        /savings/uk-accounts/:nino                                       v2.controllers.AddUkSavingsAccountController.addUkSavingsAccount(nino: String)
 
 # UK Savings Income Annual Summary routes:
 GET        /savings/uk-accounts/:nino/:taxYear/:savingsAccountId             v1.controllers.RetrieveUkSavingsAccountAnnualSummaryController.retrieveUkSavingAccount(nino: String, taxYear: String, savingsAccountId: String)
@@ -25,7 +24,7 @@ GET        /foreign/:nino/:taxYear                                          v1.c
 DELETE     /pensions/:nino/:taxYear                                         v1.controllers.DeletePensionsController.deletePensions(nino: String, taxYear: String)
 
 DELETE     /other/:nino/:taxYear                                            v1.controllers.DeleteOtherController.deleteOther(nino: String, taxYear: String)
-GET        /other/:nino/:taxYear                                            v1.controllers.RetrieveOtherController.retrieveOther(nino: String, taxYear: String)
+GET        /other/:nino/:taxYear                                            v2.controllers.RetrieveOtherController.retrieveOther(nino: String, taxYear: String)
 
 PUT        /employments/other/:nino/:taxYear                                v1.controllers.AmendOtherEmploymentController.amendOtherEmployment(nino: String, taxYear: String)
 DELETE     /employments/other/:nino/:taxYear                                v1.controllers.DeleteOtherEmploymentController.deleteOtherEmployment(nino: String, taxYear: String)
@@ -33,7 +32,7 @@ GET        /employments/other/:nino/:taxYear                                v1.c
 
 PUT        /dividends/:nino/:taxYear                                        v2.controllers.CreateAmendDividendsController.createAmendDividends(nino: String, taxYear: String)
 DELETE     /dividends/:nino/:taxYear                                        v1.controllers.DeleteDividendsController.deleteDividends(nino: String, taxYear: String)
-GET        /dividends/:nino/:taxYear                                        v1.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
+GET        /dividends/:nino/:taxYear                                        v2.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
 # Employment endpoints
 PUT        /employments/:nino/:taxYear/:employmentId                        v1.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
@@ -54,9 +53,9 @@ PUT        /disposals/residential-property/:nino/:taxYear/ppd               v1.c
 DELETE     /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.DeleteCgtPpdOverridesController.deleteCgtPpdOverrides(nino: String, taxYear: String)
 GET        /disposals/residential-property/:nino/:taxYear                   v1.controllers.RetrieveAllResidentialPropertyCgtController.retrieveAll(nino: String, taxYear: String, source: Option[String])
 
-PUT        /disposals/residential-property/:nino/:taxYear                   v1.controllers.CreateAmendCgtResidentialPropertyDisposalsController.createAmendCgtResidentialPropertyDisposals(nino: String, taxYear: String)
+PUT        /disposals/residential-property/:nino/:taxYear                   v2.controllers.CreateAmendCgtResidentialPropertyDisposalsController.createAmendCgtResidentialPropertyDisposals(nino: String, taxYear: String)
 
-PUT        /disposals/other-gains/:nino/:taxYear                            v1.controllers.CreateAmendOtherCgtController.createAmendOtherCgt(nino: String, taxYear: String)
+PUT        /disposals/other-gains/:nino/:taxYear                            v2.controllers.CreateAmendOtherCgtController.createAmendOtherCgt(nino: String, taxYear: String)
 GET        /disposals/other-gains/:nino/:taxYear                            v1.controllers.RetrieveOtherCgtController.retrieveOtherCgt(nino: String, taxYear: String)
 DELETE     /disposals/other-gains/:nino/:taxYear                            v1.controllers.DeleteOtherCgtController.deleteOtherCgt(nino: String, taxYear: String)
 

@@ -278,7 +278,7 @@
         },
         "amountDeducted": {
           "type": "number",
-          "description": "The claim for an exemption for specific payments received for physical or mental impairment, when the employment ended or terms changed. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+          "description": "Amount of post-employment notice pay that is not taxable in the UK because it is taxable overseas. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "example": "5000.99",
           "multipleOf": 0.01,
           "minimum": 0,

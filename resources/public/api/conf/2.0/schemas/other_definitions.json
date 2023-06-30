@@ -5,6 +5,57 @@
       "description": "The date the other income was added. It must be provided in the format YYYY-MM-DDThh:mm:ssZ",
       "example": "2021-04-06T09:37:17Z"
     },
+    "postCessationReceipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "Details of sum received related to the carrying on of the trade after a business ceases to carry on. [test only]",
+        "properties": {
+          "customerReference": {
+            "type": "String",
+            "description": "A reference the user supplies to identify the other income. Must be between 1 and 90 characters in length.",
+            "example": "String"
+          },
+          "businessName": {
+            "type": "string",
+            "description": "The name of the business.",
+            "example": "Business Name"
+          },
+          "dateBusinessCeased": {
+            "type": "string",
+            "description": "The business cessation date. Date in the format YYYY-MM-DD",
+            "example": "2023-06-16"
+          },
+          "businessDescription": {
+            "type": "string",
+            "description": "A description of the business.",
+            "example": "Description"
+          },
+          "incomeSource": {
+            "type": "string",
+            "description": "The income source",
+            "example": "string"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount of income. Monetary value (to 2 decimal places), between 0 and 99999999999.99",
+            "example": "1999.99",
+            "multipleOf": 0.01,
+            "minimum": 0,
+            "maximum:": 99999999999.99
+          },
+          "taxYearForIncomeToBeTaxed": {
+            "type": "string",
+            "description": "The tax year for income to be taxed. Date in the format YYYY-YY, for example 2019-20 for the 19/20 tax year.",
+            "example": "2021-22"
+          }
+        },
+        "required": [
+          "amount",
+          "taxYearForIncomeToBeTaxed"
+        ]
+      }
+    },
     "businessReceipts": {
       "type": "array",
       "items": {
@@ -98,7 +149,6 @@
         },
         "required": [
           "countryCode",
-          "foreignTaxCreditRelief",
           "taxableAmount"
         ]
       }

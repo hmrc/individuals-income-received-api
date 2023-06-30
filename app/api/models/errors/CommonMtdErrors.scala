@@ -106,6 +106,12 @@ object RuleGainLossError extends MtdError("RULE_GAIN_LOSS", "Only one of gain or
 object RuleDisposalDateError
     extends MtdError("RULE_DISPOSAL_DATE", "The disposalDate must be in the specified tax year and no later than today's date", BAD_REQUEST)
 
+object RuleDisposalDateErrorV2
+  extends MtdError("RULE_DISPOSAL_DATE", "The disposalDate must be within the specified tax year", BAD_REQUEST)
+
+object RuleDisposalDateNotFutureError
+    extends MtdError("RULE_DISPOSAL_DATE_NOT_FUTURE", "The disposalDate must be in the specified tax year and no later than today's date", BAD_REQUEST)
+
 object RuleAcquisitionDateError extends MtdError("RULE_ACQUISITION_DATE", "The acquisitionDate must not be later than disposalDate", BAD_REQUEST)
 
 object RuleGainAfterReliefLossAfterReliefError

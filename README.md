@@ -49,14 +49,15 @@ To view documentation locally, ensure the Individuals Income Received API is run
 api-documentation-frontend:
 
 ```
-./run_local_with_dependencies.sh
+sm2 --start PREVIEW_RAML
+
 ```
 
-Then go to http://localhost:9680/api-documentation/docs/preview and enter the full URL path to the YAML file with the
+Then go to http://localhost:9680/api-documentation/docs/openapi/preview and enter the full URL path to the YAML file with the
 appropriate port and version:
 
 ```
-http://localhost:7794/api/conf/1.0/application.yaml
+http://localhost:7794/api/conf/2.0/application.yaml
 ```
 
 ## Changelog

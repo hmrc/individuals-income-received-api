@@ -18,14 +18,9 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, FlattenedGenericAuditDetail}
-import api.models.auth.UserDetails
-import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.IdGenerator
 import v1.controllers.requestParsers.AddUkSavingsAccountRequestParser
 import v1.models.request.addUkSavingsAccount.AddUkSavingsAccountRawData
@@ -33,7 +28,7 @@ import v1.models.response.addUkSavingsAccount.AddUkSavingsAccountHateoasData
 import v1.services.AddUkSavingsAccountService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthService,
@@ -62,55 +57,17 @@ class AddUkSavingsAccountController @Inject()(val authService: EnrolmentsAuthSer
         RequestHandler
           .withParser(parser)
           .withService(service.addSavings)
-          .withAuditing(auditHandler(nino, request))
+          .withAuditing(AuditHandler.flattenedAuditing(
+            auditService = auditService,
+            auditType = "AddUkSavingsAccount",
+            transactionName = "add-uk-savings-account",
+            params = Map("versionNumber" -> "2.0", "nino" -> nino),
+            requestBody = Some(request.body),
+            includeResponse = true
+          ))
           .withHateoasResultFrom(hateoasFactory)((_, resp) => AddUkSavingsAccountHateoasData(nino, resp.savingsAccountId))
 
       requestHandler.handleRequest(rawData)
     }
-
-  private def auditHandler(nino: String, request: UserRequest[JsValue]): AuditHandler = {
-    new AuditHandler() {
-      override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-          ctx: RequestContext,
-          ec: ExecutionContext): Unit = {
-
-        response match {
-          case Left(err: ErrorWrapper) =>
-            auditSubmission(
-              FlattenedGenericAuditDetail(
-                Some("2.0"),
-                request.userDetails,
-                Map("nino" -> nino),
-                Some(request.body),
-                ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, response = Left(err.auditErrors))
-              )
-            )
-
-          case Right(resp: Option[JsValue]) =>
-            val respNoHateoas = resp.map {
-              case js: JsObject => js - "links"
-              case js: JsValue  => js
-            }
-
-            auditSubmission(
-              FlattenedGenericAuditDetail(
-                versionNumber = Some("1.0"),
-                request.userDetails,
-                Map("nino" -> nino),
-                Some(request.body),
-                ctx.correlationId,
-                AuditResponse(httpStatus = OK, response = Right(respNoHateoas))
-              )
-            )
-        }
-      }
-    }
-  }
-
-  private def auditSubmission(details: FlattenedGenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent("AddUkSavingsAccount", "add-uk-savings-account", details)
-    auditService.auditEvent(event)
-  }
 
 }
