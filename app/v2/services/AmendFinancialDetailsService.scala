@@ -47,7 +47,8 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
     val extraTysErrors = Map(
       "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
       "INVALID_CORRELATION_ID"  -> InternalError,
-      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
+      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError,
+      "INVALID_SUBMISSION_PENSION_SCHEME"  -> RuleInvalidSubmissionPensionSchemeError
     )
     errors ++ extraTysErrors
   }
