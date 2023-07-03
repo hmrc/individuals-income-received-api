@@ -48,7 +48,7 @@ GET        /employments/:nino/:taxYear/:employmentId                        v1.c
 POST       /employments/:nino/:taxYear/:employmentId/ignore                 v1.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
 POST       /employments/:nino/:taxYear/:employmentId/unignore               v1.controllers.UnignoreEmploymentController.unignoreEmployment(nino: String, taxYear: String, employmentId: String)
 
-PUT        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.AmendFinancialDetailsController.amendFinancialDetails(nino: String, taxYear: String, employmentId: String)
+PUT        /employments/:nino/:taxYear/:employmentId/financial-details      v2.controllers.AmendFinancialDetailsController.amendFinancialDetails(nino: String, taxYear: String, employmentId: String)
 DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.DeleteEmploymentFinancialDetailsController.deleteEmploymentFinancialDetails(nino: String, taxYear: String, employmentId: String)
 GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveEmploymentAndFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
 
