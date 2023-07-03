@@ -89,7 +89,8 @@ class AmendFinancialDetailsServiceSpec extends ServiceSpec {
         val extraTysErrors = List(
           ("INCOME_SOURCE_NOT_FOUND", NotFoundError),
           ("INVALID_CORRELATION_ID", InternalError),
-          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError),
+          ("INVALID_SUBMISSION_PENSION_SCHEME", RuleInvalidSubmissionPensionSchemeError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))

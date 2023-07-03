@@ -609,7 +609,8 @@ class AmendFinancialDetailsControllerISpec extends IntegrationBaseSpec {
         val extraTysErrors = List(
           (BAD_REQUEST, "INCOME_SOURCE_NOT_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
-          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+          (BAD_REQUEST, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
+          (BAD_REQUEST, "INVALID_SUBMISSION_PENSION_SCHEME", BAD_REQUEST, RuleInvalidSubmissionPensionSchemeError)
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
