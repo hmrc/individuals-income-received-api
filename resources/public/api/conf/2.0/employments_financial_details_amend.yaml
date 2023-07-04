@@ -27,7 +27,7 @@ description: |
           </tr>
           <tr>
               <td><p>INVALID_SUBMISSION_PENSION_SCHEME</p></td>
-              <td><p>Simulates the scenario where customer with single employment source that has '"occupational pension"' indicator cannot submit benefit in kind if it contains anything other than medical insurance.</p></td>
+              <td><p>Simulates the scenario where customer with single employment source that has \"occupational pension\" indicator cannot submit benefit in kind if it contains anything other than medical insurance.</p></td>
           </tr>
       </tbody>
   </table>
