@@ -68,7 +68,7 @@ object RuleTaxYearNotSupportedError
     extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range", BAD_REQUEST)
 
 object RuleInvalidSubmissionPensionSchemeError
-    extends MtdError("RULE_INVALID_SUBMISSION_PENSION_SCHEME", "The remote endpoint has indicated that Invalid Data item submitted for Occupational Pension Scheme", BAD_REQUEST)
+    extends MtdError("RULE_INVALID_SUBMISSION_PENSION_SCHEME", "Data item submitted is invalid for a customer with an occupational pension and no other employment source - for example, employment expenses or benefit in kind (apart from medical insurance) are not valid.", BAD_REQUEST)
 
 object RuleIncorrectOrEmptyBodyError
     extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted", BAD_REQUEST)
