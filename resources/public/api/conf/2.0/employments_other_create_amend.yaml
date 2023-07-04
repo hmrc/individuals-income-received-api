@@ -19,8 +19,8 @@ description: |
               <td><p>Simulates success response.</p></td>
           </tr>
           <tr>
-               <td><p>STATEFUL</p></td>
-               <td><p>Performs a stateful create or update.</p></td>
+              <td><p>STATEFUL</p></td>
+              <td><p>Performs a stateful create or update.</p></td>
           </tr>
       </tbody>
   </table>
