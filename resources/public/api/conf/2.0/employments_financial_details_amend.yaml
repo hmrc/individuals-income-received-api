@@ -25,6 +25,10 @@ description: |
               <td><p>TAX_YEAR_NOT_ENDED</p></td>
               <td><p>Simulates the scenario where the tax year provided has not ended.</p></td>
           </tr>
+          <tr>
+              <td><p>INVALID_SUBMISSION_PENSION_SCHEME</p></td>
+              <td><p>Simulates the scenario where customer with single employment source that has "occupational pension" indicator cannot submit benefit in kind if it contains anything other than medical insurance.</p></td>
+          </tr>
       </tbody>
   </table>
 
@@ -100,6 +104,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/notAllowedOffPayrollWorker'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+          RULE_INVALID_SUBMISSION_PENSION_SCHEME:
+            $ref: './common/errors.yaml#/components/examples/ruleInvalidSubmissionPensionScheme'  
 
   "403":
     description: Forbidden
