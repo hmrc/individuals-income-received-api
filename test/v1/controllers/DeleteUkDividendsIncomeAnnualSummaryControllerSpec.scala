@@ -26,7 +26,10 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockDeleteUkDividendsIncomeAnnualSummaryRequestParser
 import v1.mocks.services.MockDeleteUkDividendsIncomeAnnualSummaryService
-import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{
+  DeleteUkDividendsIncomeAnnualSummaryRawData,
+  DeleteUkDividendsIncomeAnnualSummaryRequest
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

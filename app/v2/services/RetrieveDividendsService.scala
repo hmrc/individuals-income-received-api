@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveDividendsService @Inject()(connector: RetrieveDividendsConnector) extends BaseService {
+class RetrieveDividendsService @Inject() (connector: RetrieveDividendsConnector) extends BaseService {
 
   def retrieve(
       request: RetrieveDividendsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveDividendsResponse]] = {

@@ -70,5 +70,4 @@ class AddUkSavingsAccountController @Inject() (val authService: EnrolmentsAuthSe
       requestHandler.handleRequest(rawData)
     }
 
-
 }

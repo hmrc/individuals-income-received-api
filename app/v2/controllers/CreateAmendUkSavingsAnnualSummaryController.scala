@@ -32,14 +32,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateAmendUkSavingsAnnualSummaryController @Inject()(val authService: EnrolmentsAuthService,
-                                                            val lookupService: MtdIdLookupService,
-                                                            parser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
-                                                            service: CreateAmendUkSavingsAnnualSummaryService,
-                                                            auditService: AuditService,
-                                                            hateoasFactory: HateoasFactory,
-                                                            cc: ControllerComponents,
-                                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendUkSavingsAnnualSummaryController @Inject() (val authService: EnrolmentsAuthService,
+                                                             val lookupService: MtdIdLookupService,
+                                                             parser: CreateAmendUkSavingsAccountAnnualSummaryRequestParser,
+                                                             service: CreateAmendUkSavingsAnnualSummaryService,
+                                                             auditService: AuditService,
+                                                             hateoasFactory: HateoasFactory,
+                                                             cc: ControllerComponents,
+                                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -69,7 +69,8 @@ class CreateAmendUkSavingsAnnualSummaryController @Inject()(val authService: Enr
           params = Map("versionNumber" -> "2.0", "nino" -> nino, "taxYear" -> taxYear, "savingsAccountId" -> savingsAccountId),
           requestBody = Some(request.body),
           includeResponse = true
-        ))        .withHateoasResult(hateoasFactory)(CreateAndAmendUkSavingsAnnualSummaryHateoasData(nino, taxYear, savingsAccountId))
+        ))
+        .withHateoasResult(hateoasFactory)(CreateAndAmendUkSavingsAnnualSummaryHateoasData(nino, taxYear, savingsAccountId))
 
       requestHandler.handleRequest(rawData)
     }

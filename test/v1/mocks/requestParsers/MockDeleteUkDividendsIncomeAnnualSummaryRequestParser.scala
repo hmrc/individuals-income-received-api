@@ -20,7 +20,10 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.DeleteUkDividendsIncomeAnnualSummaryRequestParser
-import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest}
+import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{
+  DeleteUkDividendsIncomeAnnualSummaryRawData,
+  DeleteUkDividendsIncomeAnnualSummaryRequest
+}
 
 trait MockDeleteUkDividendsIncomeAnnualSummaryRequestParser extends MockFactory {
 

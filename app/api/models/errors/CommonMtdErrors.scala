@@ -68,7 +68,10 @@ object RuleTaxYearNotSupportedError
     extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "The tax year specified does not lie within the supported range", BAD_REQUEST)
 
 object RuleInvalidSubmissionPensionSchemeError
-    extends MtdError("RULE_INVALID_SUBMISSION_PENSION_SCHEME", "Data item submitted is invalid for a customer with an occupational pension and no other employment source - for example, employment expenses or benefit in kind (apart from medical insurance) are not valid.", BAD_REQUEST)
+    extends MtdError(
+      "RULE_INVALID_SUBMISSION_PENSION_SCHEME",
+      "Data item submitted is invalid for a customer with an occupational pension and no other employment source - for example, employment expenses or benefit in kind (apart from medical insurance) are not valid.",
+      BAD_REQUEST)
 
 object RuleIncorrectOrEmptyBodyError
     extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted", BAD_REQUEST)
@@ -109,11 +112,13 @@ object RuleGainLossError extends MtdError("RULE_GAIN_LOSS", "Only one of gain or
 object RuleDisposalDateError
     extends MtdError("RULE_DISPOSAL_DATE", "The disposalDate must be in the specified tax year and no later than today's date", BAD_REQUEST)
 
-object RuleDisposalDateErrorV2
-  extends MtdError("RULE_DISPOSAL_DATE", "The disposalDate must be within the specified tax year", BAD_REQUEST)
+object RuleDisposalDateErrorV2 extends MtdError("RULE_DISPOSAL_DATE", "The disposalDate must be within the specified tax year", BAD_REQUEST)
 
 object RuleDisposalDateNotFutureError
-    extends MtdError("RULE_DISPOSAL_DATE_NOT_FUTURE", "The disposalDate must be in the specified tax year and no later than today's date", BAD_REQUEST)
+    extends MtdError(
+      "RULE_DISPOSAL_DATE_NOT_FUTURE",
+      "The disposalDate must be in the specified tax year and no later than today's date",
+      BAD_REQUEST)
 
 object RuleAcquisitionDateError extends MtdError("RULE_ACQUISITION_DATE", "The acquisitionDate must not be later than disposalDate", BAD_REQUEST)
 

@@ -38,16 +38,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsController @Inject()(val authService: EnrolmentsAuthService,
-                                                                     val lookupService: MtdIdLookupService,
-                                                                     appConfig: AppConfig,
-                                                                     parser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
-                                                                     service: CreateAmendCgtResidentialPropertyDisposalsService,
-                                                                     auditService: AuditService,
-                                                                     nrsProxyService: NrsProxyService,
-                                                                     hateoasFactory: HateoasFactory,
-                                                                     cc: ControllerComponents,
-                                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authService: EnrolmentsAuthService,
+                                                                      val lookupService: MtdIdLookupService,
+                                                                      appConfig: AppConfig,
+                                                                      parser: CreateAmendCgtResidentialPropertyDisposalsRequestParser,
+                                                                      service: CreateAmendCgtResidentialPropertyDisposalsService,
+                                                                      auditService: AuditService,
+                                                                      nrsProxyService: NrsProxyService,
+                                                                      hateoasFactory: HateoasFactory,
+                                                                      cc: ControllerComponents,
+                                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =

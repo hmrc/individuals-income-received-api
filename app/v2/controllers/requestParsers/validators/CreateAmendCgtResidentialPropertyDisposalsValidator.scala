@@ -25,7 +25,7 @@ import v2.models.request.createAmendCgtResidentialPropertyDisposals._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit appConfig: AppConfig)
+class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData]
     with DisposalDateErrorMessages {
 

@@ -20,7 +20,10 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.CreateAmendCgtResidentialPropertyDisposalsRequestParser
-import v2.models.request.createAmendCgtResidentialPropertyDisposals.{CreateAmendCgtResidentialPropertyDisposalsRawData, CreateAmendCgtResidentialPropertyDisposalsRequest}
+import v2.models.request.createAmendCgtResidentialPropertyDisposals.{
+  CreateAmendCgtResidentialPropertyDisposalsRawData,
+  CreateAmendCgtResidentialPropertyDisposalsRequest
+}
 
 trait MockCreateAmendCgtResidentialPropertyDisposalsRequestParser extends MockFactory {
 

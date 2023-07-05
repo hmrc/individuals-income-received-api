@@ -25,7 +25,7 @@ import v2.models.request.retrieveDividends.RetrieveDividendsRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveDividendsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveDividendsRawData] {
+class RetrieveDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveDividendsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

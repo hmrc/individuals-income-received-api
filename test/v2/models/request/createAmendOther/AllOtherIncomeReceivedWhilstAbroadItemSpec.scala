@@ -29,7 +29,8 @@ class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
       }
 
       "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object without foreignTaxCreditRelief" in {
-        allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel.copy(foreignTaxCreditRelief = None)
+        allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief
+          .as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel.copy(foreignTaxCreditRelief = None)
       }
     }
 

@@ -25,7 +25,7 @@ import v2.models.request.createAmendOtherCgt._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
+class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     extends Validator[CreateAmendOtherCgtRawData]
     with ValueFormatErrorMessages
     with DisposalDateErrorMessages {

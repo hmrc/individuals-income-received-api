@@ -19,7 +19,10 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.RetrieveUkDividendsIncomeAnnualSummaryValidator
-import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest}
+import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{
+  RetrieveUkDividendsAnnualIncomeSummaryRawData,
+  RetrieveUkDividendsAnnualIncomeSummaryRequest
+}
 
 import javax.inject.{Inject, Singleton}
 
