@@ -26,7 +26,7 @@ import api.models.hateoas
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import mocks.{MockAppConfig, MockFeatureSwitches}
+import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsJson, Result}
@@ -47,8 +47,7 @@ class AmendFinancialDetailsControllerSpec
     with MockAmendFinancialDetailsRequestParser
     with MockAmendFinancialDetailsService
     with MockHateoasFactory
-    with MockAuditService
-    with MockFeatureSwitches {
+    with MockAuditService {
 
   val taxYear: String      = "2019-20"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
