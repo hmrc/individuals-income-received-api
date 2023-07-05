@@ -28,7 +28,9 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
 
   "DeleteUkDividendsIncomeAnnualSummaryConnector" should {
     "return the expected response for a non-TYS request" when {
-      "a valid request is made" in new DesTest with Test {
+      "isPassDeleteIntentEnabled feature switch is on" in new DesTest with Test {
+        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "DELETE")
+
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 
@@ -37,17 +39,51 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
           body = Json.parse("""{}""")
         ).returns(Future.successful(outcome))
 
+        MockFeatureSwitches.isPassDeleteIntentEnabled.returns(true)
+
+        await(connector.delete(request)) shouldBe outcome
+      }
+      "isPassDeleteIntentEnabled feature switch is off" in new DesTest with Test {
+        override lazy val excludedHeaders: scala.Seq[(String, String)] = super.excludedHeaders :+ ("intent" -> "DELETE")
+
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+        val outcome          = Right(ResponseWrapper(correlationId, ()))
+
+        willPost(
+          url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}",
+          body = Json.parse("""{}""")
+        ).returns(Future.successful(outcome))
+
+        MockFeatureSwitches.isPassDeleteIntentEnabled.returns(false)
+
         await(connector.delete(request)) shouldBe outcome
       }
     }
     "return the expected response for a TYS request" when {
-      "a valid request is made" in new TysIfsTest with Test {
+      "isPassDeleteIntentEnabled feature switch is on" in new TysIfsTest with Test {
+        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredTysIfsHeaders :+ ("intent" -> "DELETE")
+
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
         val outcome          = Right(ResponseWrapper(correlationId, ()))
 
-        willDelete(
-          url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual"
-        ).returns(Future.successful(outcome))
+        willDelete(url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
+          .returns(Future.successful(outcome))
+
+        MockFeatureSwitches.isPassDeleteIntentEnabled.returns(true)
+
+        await(connector.delete(request)) shouldBe outcome
+      }
+      "isPassDeleteIntentEnabled feature switch is off" in new TysIfsTest with Test {
+        override lazy val excludedHeaders: scala.Seq[(String, String)] = super.excludedHeaders :+ ("intent" -> "DELETE")
+
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willDelete(url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
+          .returns(Future.successful(outcome))
+
+        MockFeatureSwitches.isPassDeleteIntentEnabled.returns(false)
 
         await(connector.delete(request)) shouldBe outcome
       }

@@ -54,14 +54,12 @@ class AmendFinancialDetailsController @Inject() (val authService: EnrolmentsAuth
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val featureSwitches: FeatureSwitches = FeatureSwitches()(appConfig)
-
       val rawData: AmendFinancialDetailsRawData = AmendFinancialDetailsRawData(
         nino = nino,
         taxYear = taxYear,
         employmentId = employmentId,
         body = AnyContentAsJson(request.body),
-        opwEnabled = featureSwitches.isOpwEnabled
+        opwEnabled = FeatureSwitches(appConfig.featureSwitches).isOpwEnabled
       )
 
       val requestHandler = RequestHandler

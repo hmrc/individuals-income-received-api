@@ -58,7 +58,7 @@ class CreateAmendNonPayeEmploymentController @Inject() (val authService: Enrolme
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
+        temporalValidationEnabled = FeatureSwitches(appConfig.featureSwitches).isTemporalValidationEnabled
       )
 
       val requestHandler = RequestHandler

@@ -57,7 +57,7 @@ class AddCustomEmploymentController @Inject() (val authService: EnrolmentsAuthSe
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
+        temporalValidationEnabled = FeatureSwitches(appConfig.featureSwitches).isTemporalValidationEnabled(request))
 
       val requestHandler = RequestHandler
         .withParser(parser)

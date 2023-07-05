@@ -16,9 +16,9 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
-import config.AppConfig
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.amendSavings.CreateAmendSavingsRequest
 
@@ -26,7 +26,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)(implicit featureSwitches: FeatureSwitches)
+    extends BaseDownstreamConnector {
 
   def createAmendSavings(request: CreateAmendSavingsRequest)(implicit
       hc: HeaderCarrier,

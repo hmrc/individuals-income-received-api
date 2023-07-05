@@ -59,7 +59,7 @@ class AmendCustomEmploymentController @Inject() (val authService: EnrolmentsAuth
         taxYear = taxYear,
         employmentId = employmentId,
         body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
+        temporalValidationEnabled = FeatureSwitches(appConfig.featureSwitches).isTemporalValidationEnabled
       )
 
       val requestHandler = RequestHandler

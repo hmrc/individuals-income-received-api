@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveDividends.RetrieveDividendsRequest
 import v1.models.response.retrieveDividends.RetrieveDividendsResponse
@@ -27,7 +27,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveDividendsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveDividendsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)(implicit featureSwitches: FeatureSwitches)
+    extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveDividendsRequest)(implicit
       hc: HeaderCarrier,
