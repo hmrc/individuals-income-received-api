@@ -174,7 +174,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockedAppConfig.desEnvironment returns "des-environment"
     MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
-    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(true).anyNumberOfTimes()
+    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(false).anyNumberOfTimes()
   }
 
   protected trait IfsTest extends ConnectorTest {
@@ -186,7 +186,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockedAppConfig.ifsEnvironment returns "ifs-environment"
     MockedAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
 
-    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(true).anyNumberOfTimes()
+    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(false).anyNumberOfTimes()
   }
 
   protected trait Release6Test extends ConnectorTest {
@@ -198,7 +198,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockedAppConfig.release6Environment returns "release6-environment"
     MockedAppConfig.release6EnvironmentHeaders returns Some(allowedIfsHeaders)
 
-    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(true).anyNumberOfTimes()
+    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(false).anyNumberOfTimes()
   }
 
   protected trait Api1661Test extends ConnectorTest {
@@ -210,7 +210,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockedAppConfig.api1661Environment returns "api1661-environment"
     MockedAppConfig.api1661EnvironmentHeaders returns Some(allowedIfsHeaders)
 
-    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(true).anyNumberOfTimes()
+    MockFeatureSwitches.isTaxYearSpecificApiEnabled.returns(false).anyNumberOfTimes()
   }
 
   protected trait TysIfsTest extends ConnectorTest {
