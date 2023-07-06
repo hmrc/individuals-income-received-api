@@ -18,15 +18,16 @@ package v2.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService, AuditService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
-import play.api.mvc.{Action, ControllerComponents, AnyContentAsJson}
+import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import utils.IdGenerator
 import v2.controllers.requestParsers.CreateAmendPensionsRequestParser
 import v2.models.request.createAmendPensions.CreateAmendPensionsRawData
 import v2.models.response.createAmendPensions.CreateAndAmendPensionsIncomeHateoasData
 import v2.models.response.createAmendPensions.CreateAndAmendPensionsIncomeResponse.CreateAndAmendPensionsIncomeLinksFactory
 import v2.services.CreateAmendPensionsService
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 

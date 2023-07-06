@@ -16,8 +16,8 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.{Api1661Uri, TaxYearSpecificIfsUri}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import com.google.inject.Singleton
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}

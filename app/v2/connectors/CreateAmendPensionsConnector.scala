@@ -16,11 +16,12 @@
 
 package v2.connectors
 
-import api.connectors.{DownstreamOutcome, BaseDownstreamConnector}
 import api.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
-import uk.gov.hmrc.http.{HttpClient, HeaderCarrier}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.createAmendPensions.CreateAmendPensionsRequest
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 

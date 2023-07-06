@@ -16,15 +16,16 @@
 
 package v2.controllers
 
-import api.controllers.{RequestHandler, AuthorisedController, EndpointLogContext, RequestContext}
+import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import play.api.mvc.{Action, ControllerComponents, AnyContent}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v2.controllers.requestParsers.RetrieveSavingsRequestParser
 import v2.models.request.retrieveSavings.RetrieveSavingsRawData
 import v2.models.response.retrieveSavings.RetrieveSavingsHateoasData
 import v2.services.RetrieveSavingsService
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 

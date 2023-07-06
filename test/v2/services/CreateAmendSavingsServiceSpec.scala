@@ -22,7 +22,8 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v2.mocks.connectors.MockCreateAmendSavingsConnector
-import v2.models.request.amendSavings.{CreateAmendSavingsRequestBody, CreateAmendSavingsRequest}
+import v2.models.request.amendSavings.{CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
+
 import scala.concurrent.Future
 
 class CreateAmendSavingsServiceSpec extends ServiceSpec {

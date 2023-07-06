@@ -16,7 +16,7 @@
 
 package v2.models.request.createAmendOther
 
-import play.api.libs.json.{JsObject, JsError, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v2.fixtures.other.CreateAmendOtherFixtures.{omittedForeignIncomeJson, omittedForeignIncomeModel}
 

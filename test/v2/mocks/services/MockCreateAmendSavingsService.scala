@@ -22,6 +22,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.models.request.amendSavings.CreateAmendSavingsRequest
 import v2.services.CreateAmendSavingsService
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendSavingsService extends MockFactory {

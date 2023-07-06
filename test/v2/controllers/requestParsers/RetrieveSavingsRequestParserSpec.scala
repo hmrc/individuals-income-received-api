@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{NinoFormatError, TaxYearFormatError, ErrorWrapper, BadRequestError}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import support.UnitSpec
 import v2.mocks.validators.MockRetrieveSavingsValidator
 import v2.models.request.retrieveSavings.{RetrieveSavingsRawData, RetrieveSavingsRequest}
