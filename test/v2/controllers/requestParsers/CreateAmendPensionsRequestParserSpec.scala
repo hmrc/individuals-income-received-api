@@ -18,7 +18,7 @@ package v2.controllers.requestParsers
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v2.mocks.validators.MockCreateAmendPensionsValidator

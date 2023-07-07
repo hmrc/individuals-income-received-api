@@ -20,7 +20,8 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
-import v2.models.request.amendSavings.{AmendForeignInterestItem, AmendSecurities, CreateAmendSavingsRequestBody, CreateAmendSavingsRawData}
+import v2.models.request.amendSavings.{AmendForeignInterestItem, AmendSecurities, CreateAmendSavingsRawData, CreateAmendSavingsRequestBody}
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton

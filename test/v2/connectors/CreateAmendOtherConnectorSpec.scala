@@ -21,6 +21,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v2.fixtures.other.CreateAmendOtherFixtures.requestBodyModel
 import v2.models.request.createAmendOther.CreateAmendOtherRequest
+
 import scala.concurrent.Future
 
 class CreateAmendOtherConnectorSpec extends ConnectorSpec {

@@ -85,13 +85,14 @@ class DeleteOtherCgtController @Inject() (val authService: EnrolmentsAuthService
               ))
 
           case Right(_: Option[JsValue]) =>
-            auditSubmission(GenericAuditDetail(
-              request.userDetails,
-              Map("nino" -> nino, "taxYear" -> taxYear),
-              None,
-              ctx.correlationId,
-              AuditResponse(httpStatus = httpStatus, response = Right(None))
-            ))
+            auditSubmission(
+              GenericAuditDetail(
+                request.userDetails,
+                Map("nino" -> nino, "taxYear" -> taxYear),
+                None,
+                ctx.correlationId,
+                AuditResponse(httpStatus = httpStatus, response = Right(None))
+              ))
         }
       }
     }

@@ -23,6 +23,7 @@ import org.scalamock.scalatest.MockFactory
 import v2.models.request.retrievePensions.RetrievePensionsRequest
 import v2.models.response.retrievePensions.RetrievePensionsResponse
 import v2.services.RetrievePensionsService
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrievePensionsService extends MockFactory {

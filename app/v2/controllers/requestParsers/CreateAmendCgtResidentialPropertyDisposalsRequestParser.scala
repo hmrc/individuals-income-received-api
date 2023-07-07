@@ -24,7 +24,7 @@ import v2.models.request.createAmendCgtResidentialPropertyDisposals._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsRequestParser @Inject()(val validator: CreateAmendCgtResidentialPropertyDisposalsValidator)
+class CreateAmendCgtResidentialPropertyDisposalsRequestParser @Inject() (val validator: CreateAmendCgtResidentialPropertyDisposalsValidator)
     extends RequestParser[CreateAmendCgtResidentialPropertyDisposalsRawData, CreateAmendCgtResidentialPropertyDisposalsRequest] {
 
   override protected def requestFor(data: CreateAmendCgtResidentialPropertyDisposalsRawData): CreateAmendCgtResidentialPropertyDisposalsRequest =

@@ -38,16 +38,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherCgtController @Inject()(val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              appConfig: AppConfig,
-                                              parser: CreateAmendOtherCgtRequestParser,
-                                              service: CreateAmendOtherCgtService,
-                                              nrsProxyService: NrsProxyService,
-                                              hateoasFactory: HateoasFactory,
-                                              auditService: AuditService,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateAmendOtherCgtController @Inject() (val authService: EnrolmentsAuthService,
+                                               val lookupService: MtdIdLookupService,
+                                               appConfig: AppConfig,
+                                               parser: CreateAmendOtherCgtRequestParser,
+                                               service: CreateAmendOtherCgtService,
+                                               nrsProxyService: NrsProxyService,
+                                               hateoasFactory: HateoasFactory,
+                                               auditService: AuditService,
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =

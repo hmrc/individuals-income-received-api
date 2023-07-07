@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.RetrieveSavingsConnector
 import v2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v2.models.response.retrieveSavings.RetrieveSavingsResponse
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSavingsConnector extends MockFactory {

@@ -56,7 +56,7 @@ object FlattenedGenericAuditDetail {
 
     val respNoHateoas = auditResponse.body.map {
       case js: JsObject => js - "links"
-      case js: JsValue => js
+      case js: JsValue  => js
     }
     FlattenedGenericAuditDetail(
       versionNumber = versionNumber,
@@ -72,12 +72,11 @@ object FlattenedGenericAuditDetail {
     )
   }
 
-
   def auditDetailCreator(params: Map[String, String]): AuditHandler.AuditDetailCreator[FlattenedGenericAuditDetail] =
     new AuditHandler.AuditDetailCreator[FlattenedGenericAuditDetail] {
 
-      def createAuditDetail(userDetails: UserDetails, request: Option[JsValue], auditResponse: AuditResponse)
-                           (implicit ctx: RequestContext): FlattenedGenericAuditDetail =
+      def createAuditDetail(userDetails: UserDetails, request: Option[JsValue], auditResponse: AuditResponse)(implicit
+          ctx: RequestContext): FlattenedGenericAuditDetail =
         FlattenedGenericAuditDetail(
           versionNumber = params.get("versionNumber"),
           userDetails,
@@ -88,4 +87,5 @@ object FlattenedGenericAuditDetail {
         )
 
     }
+
 }

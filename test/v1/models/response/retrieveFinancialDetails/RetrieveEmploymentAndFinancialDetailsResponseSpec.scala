@@ -52,7 +52,8 @@ class RetrieveEmploymentAndFinancialDetailsResponseSpec extends UnitSpec {
       val nino           = "someNino"
       val taxYear        = "2017-18"
       val employmentId   = "anId"
-      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()    }
+      MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
+    }
 
     "wrapping a RetrieveFinancialDetailsResponse object" should {
       "expose the correct hateoas links" in new Test {

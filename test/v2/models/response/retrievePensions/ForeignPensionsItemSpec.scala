@@ -16,7 +16,7 @@
 
 package v2.models.response.retrievePensions
 
-import play.api.libs.json.{JsObject, JsError, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
 class ForeignPensionsItemSpec extends UnitSpec {

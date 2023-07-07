@@ -18,11 +18,12 @@ package v2.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.services.{ServiceOutcome, BaseService}
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.RetrieveSavingsConnector
 import v2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v2.models.response.retrieveSavings.RetrieveSavingsResponse
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 

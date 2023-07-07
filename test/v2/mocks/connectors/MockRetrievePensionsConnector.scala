@@ -23,6 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.RetrievePensionsConnector
 import v2.models.request.retrievePensions.RetrievePensionsRequest
 import v2.models.response.retrievePensions.RetrievePensionsResponse
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrievePensionsConnector extends MockFactory {

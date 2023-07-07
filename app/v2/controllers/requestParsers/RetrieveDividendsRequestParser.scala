@@ -24,7 +24,7 @@ import v2.models.request.retrieveDividends.{RetrieveDividendsRawData, RetrieveDi
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveDividendsRequestParser @Inject()(val validator: RetrieveDividendsValidator)
+class RetrieveDividendsRequestParser @Inject() (val validator: RetrieveDividendsValidator)
     extends RequestParser[RetrieveDividendsRawData, RetrieveDividendsRequest] {
 
   override protected def requestFor(data: RetrieveDividendsRawData): RetrieveDividendsRequest =

@@ -22,10 +22,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateAmendUkDividendsAnnualSummaryConnector
-import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{
-  CreateAmendUkDividendsIncomeAnnualSummaryBody,
-  CreateAmendUkDividendsIncomeAnnualSummaryRequest
-}
+import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
 
 import scala.concurrent.Future
 

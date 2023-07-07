@@ -18,11 +18,12 @@ package config
 
 import io.swagger.v3.parser.OpenAPIV3Parser
 import play.api.http.Status
-import play.api.libs.json.{Json, JsValue}
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 import support.IntegrationBaseSpec
-import scala.util.Try
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+
+import scala.util.Try
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
 
