@@ -16,7 +16,7 @@
 
 package v2.models.request.amendSavings
 
-import play.api.libs.json.{JsObject, JsError, Json, JsValue}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 
 class CreateCreateAmendSavingsRequestBodySpec extends UnitSpec {

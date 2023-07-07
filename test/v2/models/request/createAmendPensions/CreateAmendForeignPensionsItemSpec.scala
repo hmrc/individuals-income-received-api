@@ -16,7 +16,7 @@
 
 package v2.models.request.createAmendPensions
 
-import play.api.libs.json.{JsObject, JsError, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 
 class CreateAmendForeignPensionsItemSpec extends UnitSpec {

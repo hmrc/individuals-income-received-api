@@ -20,6 +20,7 @@ import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v2.controllers.requestParsers.validators.RetrieveSavingsValidator
 import v2.models.request.retrieveSavings.{RetrieveSavingsRawData, RetrieveSavingsRequest}
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton

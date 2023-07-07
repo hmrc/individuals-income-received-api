@@ -314,10 +314,11 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
       "the submitted request body has missing mandatory fields" in new Test {
         validator.validate(CreateAmendOtherRawData(validNino, validTaxYear, missingMandatoryFieldRequestBody)) shouldBe
           List(
-            RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq(
-              "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
-              "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount"
-            ))))
+            RuleIncorrectOrEmptyBodyError.copy(paths = Some(
+              Seq(
+                "/allOtherIncomeReceivedWhilstAbroad/0/countryCode",
+                "/allOtherIncomeReceivedWhilstAbroad/0/taxableAmount"
+              ))))
       }
     }
 

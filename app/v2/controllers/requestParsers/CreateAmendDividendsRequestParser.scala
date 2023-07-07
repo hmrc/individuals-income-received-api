@@ -24,7 +24,7 @@ import v2.models.request.createAmendDividends.{CreateAmendDividendsRawData, Crea
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendDividendsRequestParser @Inject()(val validator: CreateAmendDividendsValidator)
+class CreateAmendDividendsRequestParser @Inject() (val validator: CreateAmendDividendsValidator)
     extends RequestParser[CreateAmendDividendsRawData, CreateAmendDividendsRequest] {
 
   override protected def requestFor(data: CreateAmendDividendsRawData): CreateAmendDividendsRequest =

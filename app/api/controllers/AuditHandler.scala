@@ -92,7 +92,7 @@ object AuditHandler {
                                     auditDetailCreator: AuditDetailCreator[A],
                                     requestBody: Option[JsValue],
                                     responseBodyMap: Option[JsValue] => Option[JsValue])(implicit writer: Writes[A])
-    extends AuditHandler {
+      extends AuditHandler {
 
     def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
         ctx: RequestContext,

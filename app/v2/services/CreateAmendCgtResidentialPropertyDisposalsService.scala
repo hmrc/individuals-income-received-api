@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
+class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
     extends BaseService {
 
   def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit

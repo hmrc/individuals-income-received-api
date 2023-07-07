@@ -16,7 +16,7 @@
 
 package v2.models.request.createAmendOther
 
-import play.api.libs.json.{JsObject, JsError, Json}
+import play.api.libs.json.{JsError, JsObject, Json}
 import support.UnitSpec
 import v2.fixtures.other.CreateAmendOtherFixtures._
 
@@ -29,7 +29,8 @@ class AllOtherIncomeReceivedWhilstAbroadItemSpec extends UnitSpec {
       }
 
       "produce the expected AllOtherIncomeReceivedWhilstAbroadItem object without foreignTaxCreditRelief" in {
-        allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief.as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel.copy(foreignTaxCreditRelief = None)
+        allOtherIncomeReceivedWhilstAbroadJsonWithoutForeignTaxCreditRelief
+          .as[AllOtherIncomeReceivedWhilstAbroadItem] shouldBe allOtherIncomeReceivedWhilstAbroadModel.copy(foreignTaxCreditRelief = None)
       }
     }
 

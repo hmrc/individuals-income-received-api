@@ -22,6 +22,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.CreateAmendOtherConnector
 import v2.models.request.createAmendOther.CreateAmendOtherRequest
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendOtherConnector extends MockFactory {
