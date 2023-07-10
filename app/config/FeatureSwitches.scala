@@ -16,15 +16,36 @@
 
 package config
 
+import com.google.inject.ImplementedBy
 import org.apache.commons.lang3.BooleanUtils
 import play.api.Configuration
 import play.api.mvc.Request
 
-case class FeatureSwitches(featureSwitchConfig: Configuration) {
+import javax.inject.{Inject, Singleton}
+
+@ImplementedBy(classOf[FeatureSwitchesImpl])
+trait FeatureSwitches {
+
+  def isVersionEnabled(version: String): Boolean
+
+  def isV1R7cRoutingEnabled: Boolean
+  def isTaxYearSpecificApiEnabled: Boolean
+  def isPostCessationReceiptsEnabled: Boolean
+  def isPassDeleteIntentEnabled: Boolean
+  def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
+  def isOpwEnabled: Boolean
+}
+
+@Singleton
+class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwitches {
+
+  @Inject
+  def this(appConfig: AppConfig) = this(appConfig.featureSwitches)
 
   val isV1R7cRoutingEnabled: Boolean          = isEnabled("v1r7c-endpoints.enabled")
   val isTaxYearSpecificApiEnabled: Boolean    = isEnabled("tys-api.enabled")
   val isPostCessationReceiptsEnabled: Boolean = isEnabled("postCessationReceipts.enabled")
+  val isPassDeleteIntentEnabled: Boolean      = isEnabled("passDeleteIntentHeader.enabled")
 
   private val versionRegex = """(\d)\.\d""".r
 
@@ -43,9 +64,9 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
     enabled.getOrElse(false)
   }
 
-  def isOpwEnabled: Boolean = isTaxYearSpecificApiEnabled & isEnabled("opw.enabled")
+   def isOpwEnabled: Boolean = isTaxYearSpecificApiEnabled & isEnabled("opw.enabled")
 
-  def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
+   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension.enabled")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
     } else {
@@ -57,5 +78,5 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
 }
 
 object FeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
+  def apply(configuration: Configuration): FeatureSwitches = new FeatureSwitchesImpl(configuration)
 }

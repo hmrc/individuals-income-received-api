@@ -63,7 +63,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
       val rawData: CreateAmendCgtResidentialPropertyDisposalsRawData = CreateAmendCgtResidentialPropertyDisposalsRawData(
         nino = nino,
         taxYear = taxYear,
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled,
+        temporalValidationEnabled = FeatureSwitches(appConfig.featureSwitches).isTemporalValidationEnabled,
         body = AnyContentAsJson(request.body)
       )
 

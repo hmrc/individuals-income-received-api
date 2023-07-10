@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.{Release6Uri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsRequest
 import v1.models.response.retrieveFinancialDetails.RetrieveEmploymentAndFinancialDetailsResponse
@@ -27,7 +27,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveEmploymentAndFinancialDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveEmploymentAndFinancialDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)(implicit
+    featureSwitches: FeatureSwitches)
+    extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveEmploymentAndFinancialDetailsRequest)(implicit
       hc: HeaderCarrier,

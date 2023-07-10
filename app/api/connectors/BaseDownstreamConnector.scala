@@ -17,7 +17,7 @@
 package api.connectors
 
 import api.connectors.DownstreamUri._
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import play.api.Logger
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.Writes
@@ -31,11 +31,9 @@ trait BaseDownstreamConnector {
 
   protected val logger: Logger = Logger(this.getClass)
 
-  implicit protected lazy val featureSwitches: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
-
   private val jsonContentTypeHeader = HeaderNames.CONTENT_TYPE -> MimeTypes.JSON
 
-  def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit
+  def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp], intent: Option[String] = None)(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier,
       httpReads: HttpReads[DownstreamOutcome[Resp]],
@@ -45,7 +43,10 @@ trait BaseDownstreamConnector {
       http.POST(getBackendUri(uri), body)
     }
 
-    doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+    intent match {
+      case Some(intent) => doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader(intent)))
+      case None         => doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+    }
   }
 
   def get[Resp](uri: DownstreamUri[Resp], queryParams: Seq[(String, String)] = Seq.empty)(implicit
@@ -60,7 +61,7 @@ trait BaseDownstreamConnector {
     doGet(getBackendHeaders(uri, hc, correlationId))
   }
 
-  def delete[Resp](uri: DownstreamUri[Resp])(implicit
+  def delete[Resp](uri: DownstreamUri[Resp], intent: Option[String] = None)(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier,
       httpReads: HttpReads[DownstreamOutcome[Resp]],
@@ -70,7 +71,11 @@ trait BaseDownstreamConnector {
       http.DELETE(getBackendUri(uri))
     }
 
-    doDelete(getBackendHeaders(uri, hc, correlationId))
+    intent match {
+      case Some(intent) => doDelete(getBackendHeaders(uri, hc, correlationId, intentHeader(intent)))
+      case None         => doDelete(getBackendHeaders(uri, hc, correlationId))
+    }
+
   }
 
   def put[Body: Writes, Resp](uri: DownstreamUri[Resp], body: Body = "")(implicit
@@ -120,5 +125,7 @@ trait BaseDownstreamConnector {
       case Release6Uri(_)           => appConfig.release6DownstreamConfig
       case Api1661Uri(_)            => appConfig.api1661DownstreamConfig
     }
+
+  private def intentHeader(intent: String): (String, String) = "intent" -> intent
 
 }

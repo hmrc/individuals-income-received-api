@@ -64,7 +64,7 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
         nino = nino,
         taxYear = taxYear,
         body = AnyContentAsJson(request.body),
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled
+        temporalValidationEnabled = FeatureSwitches(appConfig.featureSwitches).isTemporalValidationEnabled
       )
 
       val requestHandler = RequestHandler
