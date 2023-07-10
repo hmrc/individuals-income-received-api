@@ -174,8 +174,10 @@ class CreateAmendDividendsRequestBodySpec extends UnitSpec {
 
       "produce the expected object without foreignTaxCreditRelief" in {
         jsonWithoutForeignTaxCreditRelief.as[CreateAmendDividendsRequestBody] shouldBe
-          requestBodyModel.copy(foreignDividend = Some(foreignDividendModelWithoutForeignTaxCreditRelief),
-            dividendIncomeReceivedWhilstAbroad = Some(dividendIncomeReceivedWhilstAbroadModelWithoutForeignTaxCreditRelief))
+          requestBodyModel.copy(
+            foreignDividend = Some(foreignDividendModelWithoutForeignTaxCreditRelief),
+            dividendIncomeReceivedWhilstAbroad = Some(dividendIncomeReceivedWhilstAbroadModelWithoutForeignTaxCreditRelief)
+          )
       }
     }
 

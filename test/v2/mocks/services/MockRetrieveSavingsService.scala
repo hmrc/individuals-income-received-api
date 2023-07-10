@@ -23,6 +23,7 @@ import org.scalamock.scalatest.MockFactory
 import v2.models.request.retrieveSavings.RetrieveSavingsRequest
 import v2.models.response.retrieveSavings.RetrieveSavingsResponse
 import v2.services.RetrieveSavingsService
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockRetrieveSavingsService extends MockFactory {

@@ -22,6 +22,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.models.request.createAmendPensions.CreateAmendPensionsRequest
 import v2.services.CreateAmendPensionsService
+
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateAmendPensionsService extends MockFactory {

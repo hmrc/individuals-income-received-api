@@ -286,7 +286,6 @@ class AmendDividendsControllerSpec
     val controller = new AmendDividendsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
       parser = mockAmendDividendsRequestParser,
       service = mockAmendDividendsService,
       auditService = mockAuditService,

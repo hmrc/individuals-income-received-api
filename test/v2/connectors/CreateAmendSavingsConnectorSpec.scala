@@ -19,7 +19,8 @@ package v2.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v2.models.request.amendSavings.{CreateAmendSavingsRequestBody, CreateAmendSavingsRequest}
+import v2.models.request.amendSavings.{CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
+
 import scala.concurrent.Future
 
 class CreateAmendSavingsConnectorSpec extends ConnectorSpec {

@@ -67,16 +67,16 @@ class OtherEmploymentIncomeConnectorSpec extends ConnectorSpec {
 
     "return a 200 result on retrieve" when {
       "the downstream call is successful and is not tax year specific" in new DesTest with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+        def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
         val retrieveRequest: OtherEmploymentIncomeRequest = OtherEmploymentIncomeRequest(
           nino = Nino(nino),
-          taxYear = TaxYear.fromMtd("2023-24")
+          taxYear = TaxYear.fromMtd("2021-22")
         )
 
         val outcome: Right[Nothing, ResponseWrapper[RetrieveOtherEmploymentResponse]] = Right(ResponseWrapper(correlationId, retrieveResponse))
 
-        willGet(s"$baseUrl/income-tax/income/other/employments/$nino/2023-24") returns Future.successful(outcome)
+        willGet(s"$baseUrl/income-tax/income/other/employments/$nino/2021-22") returns Future.successful(outcome)
 
         await(connector.retrieveOtherEmploymentIncome(retrieveRequest)) shouldBe outcome
       }

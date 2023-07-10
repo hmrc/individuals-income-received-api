@@ -22,7 +22,6 @@ import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContentAsJson, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -40,7 +39,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class AmendDividendsController @Inject() (val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
-                                          appConfig: AppConfig,
                                           parser: AmendDividendsRequestParser,
                                           service: AmendDividendsService,
                                           auditService: AuditService,

@@ -63,7 +63,7 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
       val rawData: CreateAmendCgtResidentialPropertyDisposalsRawData = CreateAmendCgtResidentialPropertyDisposalsRawData(
         nino = nino,
         taxYear = taxYear,
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled,
+        temporalValidationEnabled = FeatureSwitches(appConfig.featureSwitches).isTemporalValidationEnabled,
         body = AnyContentAsJson(request.body)
       )
 
@@ -103,7 +103,9 @@ class CreateAmendCgtResidentialPropertyDisposalsController @Inject() (val authSe
                 Map("nino" -> nino, "taxYear" -> taxYear),
                 Some(request.body),
                 ctx.correlationId,
-                AuditResponse(httpStatus = httpStatus, response = Right(Some(Json.toJson(CreateAmendCgtResidentialPropertyDisposalsHateoasData(nino, taxYear)))))
+                AuditResponse(
+                  httpStatus = httpStatus,
+                  response = Right(Some(Json.toJson(CreateAmendCgtResidentialPropertyDisposalsHateoasData(nino, taxYear)))))
               ))
         }
       }

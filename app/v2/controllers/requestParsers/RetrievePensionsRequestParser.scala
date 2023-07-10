@@ -20,6 +20,7 @@ import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v2.controllers.requestParsers.validators.RetrievePensionsValidator
 import v2.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePensionsRequest}
+
 import javax.inject.Inject
 
 class RetrievePensionsRequestParser @Inject() (val validator: RetrievePensionsValidator)

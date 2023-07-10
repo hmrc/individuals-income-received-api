@@ -27,7 +27,7 @@ import support.IntegrationBaseSpec
 
 class CreateAmendDividendsControllerISpec extends IntegrationBaseSpec {
 
-  val  requestBodyJson: JsValue = Json.parse(
+  val requestBodyJson: JsValue = Json.parse(
     """
         |{
         |   "foreignDividend": [
@@ -86,8 +86,7 @@ class CreateAmendDividendsControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
   )
 
-  val minimumFieldsRequestBody: JsValue = Json.parse(
-    """
+  val minimumFieldsRequestBody: JsValue = Json.parse("""
       |{
       |   "foreignDividend": [
       |      {

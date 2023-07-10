@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendCgtPpdOverridesControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -174,11 +174,12 @@ class CreateAmendCgtPpdOverridesControllerSpec
     )
   )
 
-  val auditData: JsValue = Json.parse(s"""
-                                         |{
-                                         |  "nino":"$nino",
-                                         |  "taxYear": "$taxYear"
-                                         |  }""".stripMargin)
+  val auditData: JsValue = Json.parse(
+    s"""
+       |{
+       |  "nino":"$nino",
+       |  "taxYear": "$taxYear"
+       |  }""".stripMargin)
 
   "CreateAmendCgtPpdOverridesController" should {
     "return a successful response with status OK" when {

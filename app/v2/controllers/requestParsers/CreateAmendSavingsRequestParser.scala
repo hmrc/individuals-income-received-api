@@ -19,7 +19,8 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
 import v2.controllers.requestParsers.validators.CreateAmendSavingsValidator
-import v2.models.request.amendSavings.{CreateAmendSavingsRequestBody, CreateAmendSavingsRawData, CreateAmendSavingsRequest}
+import v2.models.request.amendSavings.{CreateAmendSavingsRawData, CreateAmendSavingsRequest, CreateAmendSavingsRequestBody}
+
 import javax.inject.{Inject, Singleton}
 
 @Singleton
