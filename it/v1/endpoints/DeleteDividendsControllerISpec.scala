@@ -156,8 +156,8 @@ class DeleteDividendsControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait TysIfsTest extends Test {
-    def taxYear: String       = "23-24"
-    def downstreamUri: String = s"/income-tax/income/dividends/$taxYear/$nino"
+    def taxYear: String       = "2023-24"
+    def downstreamUri: String = s"/income-tax/income/dividends/23-24/$nino"
   }
 
 }

@@ -37,7 +37,7 @@ class DeleteDividendsConnector @Inject() (val http: HttpClient, val appConfig: A
     val url = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/income/dividends/${taxYear.asTysDownstream}/$nino")
     } else {
-      IfsUri[Unit](s"income-tax/income/dividends/$nino/$taxYear")
+      IfsUri[Unit](s"income-tax/income/dividends/$nino/${taxYear.asMtd}")
     }
 
     delete(uri = url)

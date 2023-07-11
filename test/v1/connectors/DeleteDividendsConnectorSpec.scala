@@ -33,7 +33,7 @@ class DeleteDividendsConnectorSpec extends ConnectorSpec {
         def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
-        willDelete(s"$baseUrl/income-tax/income/dividends/$nino/$taxYear") returns Future.successful(outcome)
+        willDelete(s"$baseUrl/income-tax/income/dividends/$nino/${taxYear.asMtd}") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.delete(request))
         result shouldBe outcome
