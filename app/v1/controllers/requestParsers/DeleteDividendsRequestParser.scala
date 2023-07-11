@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.DeleteDividendsValidator
 import v1.models.request.deleteDividends.{DeleteDividendsRawData, DeleteDividendsRequest}
 
@@ -28,6 +28,6 @@ class DeleteDividendsRequestParser @Inject() (val validator: DeleteDividendsVali
     extends RequestParser[DeleteDividendsRawData, DeleteDividendsRequest] {
 
   override protected def requestFor(data: DeleteDividendsRawData): DeleteDividendsRequest =
-    DeleteDividendsRequest(Nino(data.nino), data.taxYear)
+    DeleteDividendsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))
 
 }

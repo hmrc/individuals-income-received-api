@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.deleteDividends.DeleteDividendsRequest
 
@@ -26,14 +26,26 @@ import scala.concurrent.Future
 class DeleteDividendsConnectorSpec extends ConnectorSpec {
 
   private val nino: String    = "AA123456A"
-  private val taxYear: String = "2021-22"
 
   "DeleteDividendsConnector" should {
-    "return a 200 result on delete" when {
+    "return a 200 result on delete for a non-TYS request" when {
       "the downstream call is successful and not tax year specific" in new IfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
         val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(s"$baseUrl/income-tax/income/dividends/$nino/$taxYear") returns Future.successful(outcome)
+
+        val result: DownstreamOutcome[Unit] = await(connector.delete(request))
+        result shouldBe outcome
+      }
+    }
+
+    "return a 200 result on delete for a TYS request" when {
+      "the downstream call is successful and tax year specific" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+        val outcome: Right[Nothing, ResponseWrapper[Unit]] = Right(ResponseWrapper(correlationId, ()))
+
+        willDelete(s"$baseUrl/income-tax/income/dividends/23-24/$nino") returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.delete(request))
         result shouldBe outcome
@@ -43,6 +55,8 @@ class DeleteDividendsConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
+
+    def taxYear: TaxYear
 
     protected val connector: DeleteDividendsConnector =
       new DeleteDividendsConnector(

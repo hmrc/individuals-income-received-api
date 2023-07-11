@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import support.UnitSpec
 import v1.mocks.validators.MockDeleteDividendsValidator
@@ -47,7 +47,7 @@ class DeleteDividendsRequestParserSpec extends UnitSpec {
         MockDeleteDividendsValidator.validate(rawData).returns(Nil)
 
         parser.parseRequest(rawData) shouldBe
-          Right(DeleteDividendsRequest(Nino(nino), taxYear))
+          Right(DeleteDividendsRequest(Nino(nino), TaxYear.fromMtd(taxYear)))
       }
     }
 
