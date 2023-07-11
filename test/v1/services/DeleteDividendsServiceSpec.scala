@@ -17,7 +17,7 @@
 package v1.services
 
 import api.controllers.EndpointLogContext
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -33,7 +33,7 @@ class DeleteDividendsServiceSpec extends ServiceSpec {
 
   trait Test extends MockDeleteDividendsConnector {
 
-    val request: DeleteDividendsRequest = DeleteDividendsRequest(Nino(nino), taxYear)
+    val request: DeleteDividendsRequest = DeleteDividendsRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
