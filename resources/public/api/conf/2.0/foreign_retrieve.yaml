@@ -12,13 +12,21 @@ description: |
         <th>Header Value (Gov-Test-Scenario)</th>
         <th>Scenario</th>
       </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><p>N/A - DEFAULT</p></td>
-          <td><p>Simulates success response.</p></td>
-        </tr>
-  </tbody>
+    </thead>
+    <tbody>
+      <tr>
+        <td><p>N/A - DEFAULT</p></td>
+        <td><p>Simulates success response.</p></td>
+      </tr>
+      <tr>
+        <td><p>NOT_FOUND</p></td>
+        <td><p>Simulates the scenario where no data is found.</p></td>
+      </tr>
+      <tr>
+        <td><p>STATEFUL</p></td>
+        <td><p>Performs a stateful retrieve.</p></td>
+      </tr>
+    </tbody>
   </table>
 
 tags:
@@ -86,4 +94,4 @@ responses:
           $ref: './schemas/error_response.yaml'
         examples:
           MATCHING_RESOURCE_NOT_FOUND:
-             $ref: './common/errors.yaml#/components/examples/notFound'
+            $ref: './common/errors.yaml#/components/examples/notFound'
