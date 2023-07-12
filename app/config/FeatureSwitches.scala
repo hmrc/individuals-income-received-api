@@ -26,10 +26,6 @@ import javax.inject.{Inject, Singleton}
 @ImplementedBy(classOf[FeatureSwitchesImpl])
 trait FeatureSwitches {
 
-  def isVersionEnabled(version: String): Boolean
-
-  def isV1R7cRoutingEnabled: Boolean
-  def isTaxYearSpecificApiEnabled: Boolean
   def isPostCessationReceiptsEnabled: Boolean
   def isPassDeleteIntentEnabled: Boolean
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
@@ -42,31 +38,11 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
   @Inject
   def this(appConfig: AppConfig) = this(appConfig.featureSwitches)
 
-  val isV1R7cRoutingEnabled: Boolean          = isEnabled("v1r7c-endpoints.enabled")
-  val isTaxYearSpecificApiEnabled: Boolean    = isEnabled("tys-api.enabled")
   val isPostCessationReceiptsEnabled: Boolean = isEnabled("postCessationReceipts.enabled")
   val isPassDeleteIntentEnabled: Boolean      = isEnabled("passDeleteIntentHeader.enabled")
+  val isOpwEnabled: Boolean                   = isEnabled("opw.enabled")
 
-  private val versionRegex = """(\d)\.\d""".r
-
-  def isVersionEnabled(version: String): Boolean = {
-    val maybeVersion: Option[String] =
-      version match {
-        case versionRegex(v) => Some(v)
-        case _               => None
-      }
-
-    val enabled = for {
-      validVersion <- maybeVersion
-      enabled      <- featureSwitchConfig.getOptional[Boolean](s"version-$validVersion.enabled")
-    } yield enabled
-
-    enabled.getOrElse(false)
-  }
-
-   def isOpwEnabled: Boolean = isTaxYearSpecificApiEnabled & isEnabled("opw.enabled")
-
-   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
+  def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension.enabled")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
     } else {

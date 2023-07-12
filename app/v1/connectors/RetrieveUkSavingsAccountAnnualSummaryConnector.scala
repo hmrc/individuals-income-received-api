@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
 import v1.models.response.retrieveUkSavingsAnnualSummary.DownstreamUkSavingsAnnualIncomeResponse
@@ -27,9 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)(implicit
-    featureSwitches: FeatureSwitches)
-    extends BaseDownstreamConnector {
+class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,

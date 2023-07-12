@@ -16,61 +16,30 @@
 
 package routing
 
-import com.typesafe.config.ConfigFactory
-import definition.Versions
-import mocks.MockAppConfig
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Configuration
 import play.api.routing.Router
 import support.UnitSpec
 
-class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneAppPerSuite {
+class VersionRoutingMapSpec extends UnitSpec with GuiceOneAppPerSuite {
 
-  val defaultRouter: Router     = mock[Router]
-  val v1Routes: v1.Routes       = app.injector.instanceOf[v1.Routes]
-  val v2Routes: v2.Routes       = app.injector.instanceOf[v2.Routes]
-  val v1r7cRoutes: v1r7c.Routes = app.injector.instanceOf[v1r7c.Routes]
-  val v2r7cRoutes: v2r7c.Routes = app.injector.instanceOf[v2r7c.Routes]
-
-  private def newVersionRoutingMap(v1r7cEnabled: Boolean) = {
-    MockedAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"v1r7c-endpoints.enabled = $v1r7cEnabled")))
-
-    VersionRoutingMapImpl(
-      appConfig = mockAppConfig,
-      defaultRouter = defaultRouter,
-      v1Router = v1Routes,
-      v1r7cRouter = v1r7cRoutes,
-      v2Router = v2Routes,
-      v2r7cRouter = v2r7cRoutes
-    )
-  }
+  val defaultRouter: Router = mock[Router]
+  val v1Routes: v1.Routes   = app.injector.instanceOf[v1.Routes]
+  val v2Routes: v2.Routes   = app.injector.instanceOf[v2.Routes]
 
   "map" when {
-    "routing to v1" should {
-      "route to v1.routes" in {
-        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = false)
-        versionRoutingMap.map(Versions.VERSION_1) shouldBe v1Routes
-      }
-    }
+    "routing to v1 and v2" should {
+      val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(
+        defaultRouter = defaultRouter,
+        v1Router = v1Routes,
+        v2Router = v2Routes
+      )
 
-    "routing to v1WithUkDividends" should {
-      "route to v1r7c.routes" in {
-        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = true)
-        versionRoutingMap.map(Versions.VERSION_1) shouldBe v1r7cRoutes
+      s"route to ${v1Routes.toString}" in {
+        versionRoutingMap.map(Version1) shouldBe v1Routes
       }
-    }
 
-    "routing to v2" should {
-      "route to v2.routes" in {
-        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = false)
-        versionRoutingMap.map(Versions.VERSION_2) shouldBe v2Routes
-      }
-    }
-
-    "routing to v2WithUkDividends" should {
-      "route to v2r7c.routes" in {
-        val versionRoutingMap = newVersionRoutingMap(v1r7cEnabled = true)
-        versionRoutingMap.map(Versions.VERSION_2) shouldBe v2r7cRoutes
+      s"route to ${v2Routes.toString}" in {
+        versionRoutingMap.map(Version2) shouldBe v2Routes
       }
     }
   }
