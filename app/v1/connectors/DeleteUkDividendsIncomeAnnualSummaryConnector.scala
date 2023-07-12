@@ -31,7 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)(implicit
     featureSwitches: FeatureSwitches)
     extends BaseDownstreamConnector {
-  Boolean
 
   def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
