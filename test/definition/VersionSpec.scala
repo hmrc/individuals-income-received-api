@@ -18,6 +18,7 @@ package definition
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.test.FakeRequest
+import routing.Versions
 import support.UnitSpec
 
 class VersionSpec extends UnitSpec {
