@@ -33,7 +33,7 @@ trait FeatureSwitches {
 }
 
 @Singleton
-class FeatureSwitchesImpl(featureSwitchConfig: Configuration) {
+class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwitches {
 
   @Inject
   def this(appConfig: AppConfig) = this(appConfig.featureSwitches)
@@ -54,5 +54,5 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) {
 }
 
 object FeatureSwitches {
-  def apply(configuration: Configuration): FeatureSwitchesImpl = new FeatureSwitchesImpl(configuration)
+  def apply(configuration: Configuration): FeatureSwitches = new FeatureSwitchesImpl(configuration)
 }
