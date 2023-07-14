@@ -28,8 +28,8 @@ post:
                 <td><p>Simulates the scenario where no data is found.</p></td>
             </tr>
             <tr>
-              <td><p>TAX_YEAR_NOT_ENDED</p></td>
-              <td><p>Simulates the scenario where the tax year provided has not ended.</p></td>
+                <td><p>TAX_YEAR_NOT_ENDED</p></td>
+                <td><p>Simulates the scenario where the tax year provided has not ended.</p></td>
           </tr>
         </tbody>
     </table>
