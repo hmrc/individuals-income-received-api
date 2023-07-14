@@ -25,10 +25,6 @@ description: |
               <td><p>DELETE_FORBIDDEN</p></td>
               <td><p>Simulates the scenario where the deletion is not permitted.</p></td>
           </tr>
-          <tr>
-              <td><p>STATEFUL</p></td>
-              <td><p>Performs a stateful delete.</p></td>
-          </tr>
       </tbody>
   </table>
 
