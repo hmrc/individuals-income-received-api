@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package definition
+package routing
 
 import play.api.http.HeaderNames.ACCEPT
-import play.api.mvc.RequestHeader
+import play.api.test.FakeRequest
+import support.UnitSpec
 
-object Versions {
-  val VERSION_1 = "1.0"
-  val VERSION_2 = "2.0"
+class VersionSpec extends UnitSpec {
 
-  private val versionRegex = """application\/vnd.hmrc.(\d.\d)\+json""".r
+  "Versions" when {
 
-  def getFromRequest(request: RequestHeader): Option[String] =
-    getFrom(request.headers.headers)
-
-  private def getFrom(headers: Seq[(String, String)]) =
-    headers.collectFirst { case (ACCEPT, versionRegex(ver)) => ver }
+    "retrieved from a request header" must {
+      "work" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))) shouldBe Right(Version1)
+      }
+    }
+  }
 
 }

@@ -31,7 +31,6 @@ class FeatureSwitchesSpec extends UnitSpec {
         val configuration   = Configuration.empty
         val featureSwitches = FeatureSwitches(configuration)
 
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
         featureSwitches.isOpwEnabled shouldBe true
         featureSwitches.isPostCessationReceiptsEnabled shouldBe true
       }
@@ -44,7 +43,6 @@ class FeatureSwitchesSpec extends UnitSpec {
         )
         val featureSwitches = FeatureSwitches(configuration)
 
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe true
         featureSwitches.isOpwEnabled shouldBe true
         featureSwitches.isPostCessationReceiptsEnabled shouldBe true
 
@@ -60,43 +58,9 @@ class FeatureSwitchesSpec extends UnitSpec {
         )
 
         val featureSwitches = FeatureSwitches(configuration)
-        featureSwitches.isTaxYearSpecificApiEnabled shouldBe false
+
         featureSwitches.isOpwEnabled shouldBe false
         featureSwitches.isPostCessationReceiptsEnabled shouldBe false
-      }
-    }
-  }
-
-  "isVersionEnabled()" should {
-    val configuration = Configuration(
-      "version-1.enabled" -> true,
-      "version-2.enabled" -> false
-    )
-    val featureSwitches = FeatureSwitches(configuration)
-
-    "return false" when {
-      "the version is blank" in {
-        featureSwitches.isVersionEnabled("") shouldBe false
-      }
-
-      "the version is an invalid format" in {
-        featureSwitches.isVersionEnabled("ABCDE-1") shouldBe false
-        featureSwitches.isVersionEnabled("1.") shouldBe false
-        featureSwitches.isVersionEnabled("1.ABC") shouldBe false
-      }
-
-      "the version isn't in the config" in {
-        featureSwitches.isVersionEnabled("3.0") shouldBe false
-      }
-
-      "the version is disabled in the config" in {
-        featureSwitches.isVersionEnabled("2.0") shouldBe false
-      }
-    }
-
-    "return true" when {
-      "the version is enabled in the config" in {
-        featureSwitches.isVersionEnabled("1.0") shouldBe true
       }
     }
   }
