@@ -6,10 +6,10 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                                                         |
-  |----------------------------------|------------------------------------------------------------------|
-  | N/A - DEFAULT                    | Simulates success response with gains.                           |
-  | NOT_FOUND                        | Simulates the scenario where no disposals were found.            |
+  | Header Value (Gov-Test-Scenario) | Scenario                                              |
+  |----------------------------------|-------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response with gains.                |
+  | NOT_FOUND                        | Simulates the scenario where no disposals were found. |
 
 tags:
   - Other Capital Gains and Disposals
