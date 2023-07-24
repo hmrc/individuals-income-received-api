@@ -9,34 +9,14 @@ description: |
   April.
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates success response.</p></td>
-          </tr>
-          <tr>
-              <td><p>ACQUISITION_DATE_AFTER_DISPOSAL_DATE</p></td>
-              <td><p>Simulates a scenario where acquisitionDate is later than disposalDate.</p></td>
-          </tr>
-          <tr>
-              <td><p>INVALID_COMPLETION_DATE</p></td>
-              <td><p>Simulates a scenario where the completionDate is not within the specific tax year or in the future. 
-               If the specified tax year has not ended, the completionDate must be between 7th March and 5th April.</p></td>
-          </tr>
-          <tr>
-              <td><p>INVALID_DISPOSAL_DATE</p></td>
-              <td><p>Simulates a scenario where the disposalDate is not within the specified tax year.</p></td>
-          </tr>  
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario)     | Scenario                                                                          |
+  |--------------------------------------|-----------------------------------------------------------------------------------|
+  | N/A - DEFAULT                        | Simulates success response.                                                       |
+  | ACQUISITION_DATE_AFTER_DISPOSAL_DATE | Simulates a scenario where acquisitionDate is later than disposalDate.            |
+  | INVALID_COMPLETION_DATE              | Simulates a scenario where the completionDate is not within the specific tax year or in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April. |
+  | INVALID_DISPOSAL_DATE                | Simulates a scenario where the disposalDate is not within the specified tax year. |  
 
 tags:
   - Capital Gains on Residential Property Disposals

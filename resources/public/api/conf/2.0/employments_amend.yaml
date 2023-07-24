@@ -5,33 +5,14 @@ description: |
   A National Insurance number, Tax year and Employment ID are required.
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates success response.</p></td>
-          </tr>
-          <tr>
-               <td><p>HMRC_HELD</p></td>
-               <td><p>Simulates the scenario in which an update of an HMRC held employment is not permitted.</p></td>
-          </tr>
-          <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where no data is found.</p></td>
-          </tr>
-          <tr>
-              <td><p>STATEFUL</p></td>
-              <td><p>Performs a stateful update.</p></td>
-          </tr>
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                               |
+  |----------------------------------|----------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.                                                            |
+  | HMRC_HELD                        | Simulates the scenario in which an update of an HMRC held employment is not permitted. |
+  | NOT_FOUND                        | Simulates the scenario where no data is found.                                         |
+  | STATEFUL                         | Performs a stateful update.                                                            |  
 
 tags:
   - Employments
