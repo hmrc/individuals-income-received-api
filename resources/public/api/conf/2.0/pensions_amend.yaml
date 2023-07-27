@@ -7,9 +7,10 @@ description: |
   ###  Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                    |
-  |----------------------------------|-----------------------------|
-  | N/A - DEFAULT                    | Simulates success response. |  
+  | Header Value (Gov-Test-Scenario) | Scenario                               |
+  | -------------------------------- | -------------------------------------- |
+  | N/A - DEFAULT                    | Simulates success response.            |
+  | STATEFUL                         | Performs a stateful create or update. |
 
 tags:
   - Pensions Income
