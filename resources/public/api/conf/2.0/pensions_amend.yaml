@@ -10,7 +10,7 @@ description: |
   | Header Value (Gov-Test-Scenario) | Scenario                               |
   | -------------------------------- | -------------------------------------- |
   | N/A - DEFAULT                    | Simulates success response.            |
-  | STATEFUL                         | Performs a stateful create or update. |
+  | STATEFUL                         | Performs a stateful create or update.  |
 
 tags:
   - Pensions Income
