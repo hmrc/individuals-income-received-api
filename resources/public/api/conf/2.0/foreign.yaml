@@ -5,7 +5,7 @@ get:
     - User-Restricted:
         - read:self-assessment
 put:
-  $ref: "./foreign_amend.yaml"
+  $ref: "./foreign_create_amend.yaml"
   summary: Create and Amend Foreign Income
   security:
     - User-Restricted:

@@ -6,33 +6,14 @@ post:
     A National Insurance number, tax year and Employment ID must be provided.
     
     ### Test data
-    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulates success response.</p></td>
-            </tr>
-            <tr>
-                <td><p>CUSTOM_EMPLOYMENT</p></td>
-                <td><p>Simulates the scenario where a custom employment is submitted.</p></td>
-            </tr>
-            <tr>
-                <td><p>NOT_FOUND</p></td>
-                <td><p>Simulates the scenario where no data is found.</p></td>
-            </tr>
-            <tr>
-                <td><p>TAX_YEAR_NOT_ENDED</p></td>
-                <td><p>Simulates the scenario where the tax year provided has not ended.</p></td>
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                          |
+    |----------------------------------|-------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates success response.                                       |
+    | CUSTOM_EMPLOYMENT                | Simulates the scenario where a custom employment is submitted.    |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                    |
+    | TAX_YEAR_NOT_ENDED               | Simulates the scenario where the tax year provided has not ended. | 
 
   tags:
     - Employments

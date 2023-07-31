@@ -5,7 +5,7 @@ get:
     - User-Restricted:
         - read:self-assessment
 put:
-  $ref: "./uk_dividends_amend.yaml"
+  $ref: "./uk_dividends_create_amend.yaml"
   summary: Create and Amend a UK Dividends Income Annual Summary
   security:
     - User-Restricted:

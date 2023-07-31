@@ -4,29 +4,13 @@ description: |
   with the exception of residential property, for a given NINO and tax year
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates success response with gains.</p></td>
-          </tr>
-          <tr>
-              <td><p>LOSS</p></td>
-              <td><p>Simulates success response with loss.</p></td>
-          </tr>
-          <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where no disposals were found.</p></td>
-          </tr>
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                                              |
+  |----------------------------------|-------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response with gains.                |
+  | LOSS                             | Simulates success response with loss.                 |
+  | NOT_FOUND                        | Simulates the scenario where no disposals were found. |  
 
 tags:
   - Other Capital Gains and Disposals

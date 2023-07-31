@@ -5,21 +5,13 @@ description: |
   foreign earnings and unremittable foreign income.
   
   ###  Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Header Value (Gov-Test-Scenario)</th>
-        <th>Scenario</th>
-      </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><p>N/A - DEFAULT</p></td>
-          <td><p>Simulates success response.</p></td>
-        </tr>
-  </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                                       |
+  |----------------------------------|------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.                    |
+  | NOT_FOUND                        | Simulates the scenario where no data is found. |
+  | STATEFUL                         | Performs a stateful retrieve.                  |  
 
 tags:
   - Foreign Income
@@ -86,4 +78,4 @@ responses:
           $ref: './schemas/error_response.yaml'
         examples:
           MATCHING_RESOURCE_NOT_FOUND:
-             $ref: './common/errors.yaml#/components/examples/notFound'
+            $ref: './common/errors.yaml#/components/examples/notFound'
