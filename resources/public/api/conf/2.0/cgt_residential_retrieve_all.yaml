@@ -16,7 +16,8 @@ description: |
   | N/A - DEFAULT<br> **?source=hmrcHeld** | Requesting **hmrcHeld** source simulates success response with HMRC held disposals.                                       |
   | N/A - DEFAULT<br> **?source=latest**   | Requesting **latest** source simulates success response with Latest disposals and overrides submitted.                    |
   | LOSS<br> **source=latest**             | Requesting **latest** source with LOSS simulates success response with User provided disposals and overrides with losses. |
-  | NOT_FOUND                              | Simulates the scenario where no data is found.                                                                            |  
+  | NOT_FOUND                              | Simulates the scenario where no data is found.                                                                            | 
+  | STATEFUL                               | Performs a stateful retrieve.                                                                                             |  
 
 tags:
   - Capital Gains on Residential Property Disposals
