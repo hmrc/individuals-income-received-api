@@ -6,21 +6,12 @@ description: |
   tax year must be provided.
   
   ###  Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Header Value (Gov-Test-Scenario)</th>
-          <th>Scenario</th>
-        </tr>
-      </thead>
-    <tbody>
-      <tr>
-        <td><p>N/A - DEFAULT</p></td>
-        <td><p>Simulates success response.</p></td>
-      </tr>
-    </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                    |
+  |----------------------------------|-----------------------------|
+  | N/A - DEFAULT                    | Simulates success response. |
+
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
   - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'

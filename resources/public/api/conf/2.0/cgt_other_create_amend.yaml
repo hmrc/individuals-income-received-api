@@ -4,29 +4,13 @@ description: |
   for a given National Insurance number and tax year.
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates success response with gains.</p></td>
-          </tr>
-          <tr>
-              <td><p>INVALID_DISPOSAL_DATE</p></td>
-              <td><p>Simulates a scenario where disposalDate is not within the specified tax year or later than today's date.</p></td>
-          </tr>
-          <tr>
-              <td><p>INVALID_ACQUISITION_DATE</p></td>
-              <td><p>Simulates a scenario where acquisitionDate is later than disposalDate.</p></td>
-          </tr>  
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                                                 |
+  |----------------------------------|----------------------------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response with gains.                                                                   |
+  | INVALID_DISPOSAL_DATE            | Simulates a scenario where disposalDate is not within the specified tax year or later than today's date. |
+  | INVALID_ACQUISITION_DATE         | Simulates a scenario where acquisitionDate is later than disposalDate.                                   |   
 
 tags:
   - Other Capital Gains and Disposals

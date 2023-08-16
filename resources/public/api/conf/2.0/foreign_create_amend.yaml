@@ -1,29 +1,20 @@
 summary:
-  Create and Amend Dividends Income
+  Create and Amend Foreign Income
 description: |
-  This endpoint enables you to create and amend UK dividends income: 
-  foreign dividend, dividend income received whilst abroad, stock dividend, redeemable shares, bonus issues of 
-  securities and close company loans written off. A National Insurance number and tax year must be provided. 
+  This endpoint enables you to create and amend foreign income:
+  foreign earnings and unremittable foreign income.
+  A National Insurance number and tax year must be provided.
   
   ###  Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Header Value (Gov-Test-Scenario)</th>
-        <th>Scenario</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><p>N/A - DEFAULT</p></td>
-        <td><p>Simulates success response.</p></td>
-      </tr>
-    </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                              |
+  |----------------------------------|---------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.           |
+  | STATEFUL                         | Performs a stateful create or update. |  
 
 tags:
-  - Dividends Income
+  - Foreign Income
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
@@ -41,12 +32,12 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/dividends_amend_request.json'
+        $ref: './schemas/foreign_amend_request.json'
       examples:
         full_amendment:
-          description: Full Dividends Income Amendment
+          description: Full Foreign Income Amendment
           value:
-            $ref: './examples/dividendsIncome/amend_request.json'
+            $ref: './examples/foreignIncome/amend_foreign_request.json'
 
 responses:
   "200":
@@ -57,12 +48,13 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/dividends_amend_response.json'
+          $ref: './schemas/foreign_amend_response.json'
         examples:
           example-response:
             description: Example Response
             value:
-              $ref: './examples/dividendsIncome/amend_response.json'
+              $ref: './examples/foreignIncome/amend_foreign_response.json'
+
 
   "400":
     description: Bad request
@@ -79,18 +71,19 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearNotSupported'
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
-          FORMAT_VALUE:
-            $ref: './common/errors.yaml#/components/examples/formatValue'
+          FORMAT_CUSTOMER_REF:
+            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
           FORMAT_COUNTRY_CODE:
             $ref: './common/errors.yaml#/components/examples/formatCountryCode'
           RULE_COUNTRY_CODE:
             $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
-          FORMAT_CUSTOMER_REF:
-            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
+          FORMAT_VALUE:
+            $ref: './common/errors.yaml#/components/examples/formatValue'
           RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+
 
   "403":
     description: Forbidden

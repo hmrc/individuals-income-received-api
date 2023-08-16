@@ -1,36 +1,24 @@
 summary:
-  Create and Amend a UK Dividends Income Annual Summary
+  Create and Amend Dividends Income
 description: |
-  This endpoint enables you to create and amend UK dividends income.
-  A National Insurance number and tax year must be provided.
+  This endpoint enables you to create and amend UK dividends income: 
+  foreign dividend, dividend income received whilst abroad, stock dividend, redeemable shares, bonus issues of 
+  securities and close company loans written off. A National Insurance number and tax year must be provided. 
   
   ###  Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Header Value (Gov-Test-Scenario)</th>
-          <th>Scenario</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><p>N/A - DEFAULT</p></td>
-          <td><p>Simulates success response.</p></td>
-        </tr>
-        <tr>
-          <td><p>NOT_FOUND</p></td>
-          <td><p>Simulates the scenario where no data is found.</p></td>
-        </tr>
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                              |
+  |----------------------------------|---------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.           |
+  | STATEFUL                         | Performs a stateful create or update. |
 
 tags:
-  - UK Dividends Income
+  - Dividends Income
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
-  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2017'
+  - $ref: './common/pathParameters.yaml#/components/parameters/taxYearMinimum2021'
   - $ref: './common/headers.yaml#/components/parameters/acceptHeader'
   - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
   - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
@@ -44,12 +32,13 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/uk_dividends_amend_request.json'
+        $ref: './schemas/dividends_amend_request.json'
       examples:
         full_amendment:
-          description: Full Dividend Income Amendment
+          description: Full Dividends Income Amendment
           value:
-            $ref: './examples/ukDividendsIncome/amend_request.json'
+            $ref: './examples/dividendsIncome/amend_request.json'
+
 responses:
   "200":
     description: Success
@@ -59,12 +48,12 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/uk_dividends_amend_response.json'
+          $ref: './schemas/dividends_amend_response.json'
         examples:
           example-response:
-            description: Example Uk Dividends Response
+            description: Example Response
             value:
-              $ref: './examples/ukDividendsIncome/amend_response.json'
+              $ref: './examples/dividendsIncome/amend_response.json'
 
   "400":
     description: Bad request
@@ -83,11 +72,16 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid'
           FORMAT_VALUE:
             $ref: './common/errors.yaml#/components/examples/formatValue'
+          FORMAT_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/formatCountryCode'
+          RULE_COUNTRY_CODE:
+            $ref: './common/errors.yaml#/components/examples/ruleCountryCode'
+          FORMAT_CUSTOMER_REF:
+            $ref: './common/errors.yaml#/components/examples/formatCustomerRef'
           RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectOrEmptyBody'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
-
 
   "403":
     description: Forbidden
@@ -98,13 +92,3 @@ responses:
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
-
-  "404":
-    description: Not Found
-    content:
-      application/json:
-        schema:
-          $ref: './schemas/error_response.yaml'
-        examples:
-          MATCHING_RESOURCE_NOT_FOUND:
-            $ref: './common/errors.yaml#/components/examples/notFound'
