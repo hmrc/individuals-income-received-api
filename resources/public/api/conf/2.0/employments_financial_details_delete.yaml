@@ -5,31 +5,6 @@ description: |
   A National Insurance number, tax year and Employment ID must be provided.
   
   ### Test data
-<<<<<<< HEAD
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates success response.</p></td>
-          </tr>
-          <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where no data is found.</p></td>
-          </tr>
-          <tr>
-              <td><p>STATEFUL</p></td>
-              <td><p>Performs a stateful delete.</p></td>
-          </tr>
-      </tbody>
-  </table>
-=======
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
   | Header Value (Gov-Test-Scenario) | Scenario                                       |
@@ -37,7 +12,6 @@ description: |
   | N/A - DEFAULT                    | Simulates success response.                    |
   | NOT_FOUND                        | Simulates the scenario where no data is found. |
   | STATEFUL                         | Performs a stateful delete.                    |
-  >>>>>>> origin/main
 
 tags:
   - Employments
