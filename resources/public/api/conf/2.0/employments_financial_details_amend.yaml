@@ -7,12 +7,12 @@ description: |
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
   | Header Value (Gov-Test-Scenario)  | Scenario                                                                                                                                                                                          |
-  |-----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |                                                                                                                                |
+  |---------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |                                                                                                                                            
   | N/A - DEFAULT                     | Simulates success response.                                                                                                                                                                       |
   | NOT_FOUND                         | Simulates the scenario where no data is found.                                                                                                                                                    |
   | TAX_YEAR_NOT_ENDED                | Simulates the scenario where the tax year provided has not ended.                                                                                                                                 |
-  | INVALID_SUBMISSION_PENSION_SCHEME | Simulates the scenario where customer with single employment source that has "occupational pension" indicator cannot submit benefit in kind if it contains anything other than medical insurance. |  
-  | STATEFUL                          | Performs a stateful create or update.                                                                                                                                                             |      
+  | INVALID_SUBMISSION_PENSION_SCHEME | Simulates the scenario where customer with single employment source that has "occupational pension" indicator cannot submit benefit in kind if it contains anything other than medical insurance. |
+  | STATEFUL                          | Performs a stateful create or update.                                                                                                                                                             |
 
 tags:
   - Employments
