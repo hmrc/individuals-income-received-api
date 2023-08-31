@@ -12,6 +12,7 @@ description: |
   |----------------------------------|------------------------------------------------|
   | N/A - DEFAULT                    | Simulates success response.                    |
   | NOT_FOUND                        | Simulates the scenario where no data is found. |
+  | STATEFUL                         | Performs a stateful delete.                    |
 
 tags:
   - Insurance Policies Income

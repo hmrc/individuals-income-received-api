@@ -8,9 +8,11 @@ description: |
   ###  Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                    |
-  |----------------------------------|-----------------------------|
-  | N/A - DEFAULT                    | Simulates success response. |
+  | Header Value (Gov-Test-Scenario) | Scenario                                       |
+  |----------------------------------|------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.                    |
+  | NOT_FOUND                        | Simulates the scenario where no data is found. |
+  | STATEFUL                         | Performs a stateful retrieve.                  |
 
 parameters:
   - $ref: './common/pathParameters.yaml#/components/parameters/nino'
