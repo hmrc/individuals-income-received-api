@@ -6,7 +6,7 @@ get:
         - read:self-assessment
 
 put:
-  $ref: "./pensions_amend.yaml"
+  $ref: "./pensions_create_amend.yaml"
   summary: Create and Amend Pensions Income
   security:
     - User-Restricted:
