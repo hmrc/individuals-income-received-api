@@ -6,13 +6,13 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario)       | Scenario                                                                                                  |
-  |----------------------------------------|-----------------------------------------------------------------------------------------------------------|
-  | N/A - DEFAULT<br> **?source=user**     | Requesting **user** source simulates success response with User provided Non-PAYE employment income.      |
-  | N/A - DEFAULT<br> **?source=hmrcHeld** | Requesting **hmrcHeld** source simulates success response with HMRC held Non-PAYE employment income.      |
-  | N/A - DEFAULT<br> **?source=latest**   | Requesting **latest** source simulates success response with Latest Non-PAYE employment income submitted. |
-  | NOT_FOUND                              | Simulates the scenario where no data is found.                                                            |
-  | STATEFUL                               | Performs a stateful retrieve.                                                                             |   
+  | Header Value (Gov-Test-Scenario)       | Scenario                                                                                                                                                                                                                                   |
+  |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|                                                                                                                                 
+  | N/A - DEFAULT<br> **?source=user**     | Requesting **user** source simulates success response with User provided Non-PAYE employment income.                                                                                                                                       |
+  | N/A - DEFAULT<br> **?source=hmrcHeld** | Requesting **hmrcHeld** source simulates success response with HMRC held Non-PAYE employment income.                                                                                                                                       |
+  | N/A - DEFAULT<br> **?source=latest**   | Requesting **latest** source simulates success response with Latest Non-PAYE employment income submitted.                                                                                                                                  |
+  | NOT_FOUND                              | Simulates the scenario where no data is found.                                                                                                                                                                                             |
+  | STATEFUL                               | Performs a stateful retrieve. <p> Information and data held by HMRC is not available in the sandbox environment. Providing ‘source=hmrcHeld’ will result in the expected HTTP 404 (matching resource not found) error being returned. </p> |   
 
 tags:
   - Non-PAYE Employment Income
