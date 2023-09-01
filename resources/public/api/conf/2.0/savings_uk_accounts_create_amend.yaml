@@ -9,9 +9,10 @@ description: |
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
   | Header Value (Gov-Test-Scenario) | Scenario                                       |
-  |----------------------------------|------------------------------------------------|
+  | -------------------------------- | ---------------------------------------------- |
   | N/A - DEFAULT                    | Simulates success response.                    |
-  | NOT_FOUND                        | Simulates the scenario where no data is found. | 
+  | NOT_FOUND                        | Simulates the scenario where no data is found. |
+  | STATEFUL                         | Performs a stateful create or update.          |
 
 tags:
   - UK Savings Account
