@@ -10,13 +10,14 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario)       | Scenario                                                                                                                  |
-  |----------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-  | N/A - DEFAULT<br> **?source=user**     | Requesting **user** source simulates success response with User provided disposals and overrides.                         |
-  | N/A - DEFAULT<br> **?source=hmrcHeld** | Requesting **hmrcHeld** source simulates success response with HMRC held disposals.                                       |
-  | N/A - DEFAULT<br> **?source=latest**   | Requesting **latest** source simulates success response with Latest disposals and overrides submitted.                    |
-  | LOSS<br> **source=latest**             | Requesting **latest** source with LOSS simulates success response with User provided disposals and overrides with losses. |
-  | NOT_FOUND                              | Simulates the scenario where no data is found.                                                                            |  
+  | Header Value (Gov-Test-Scenario)       | Scenario                                                                                                                                                                                                                                   |
+  |----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|                                                                                                                 
+  | N/A - DEFAULT<br> **?source=user**     | Requesting **user** source simulates success response with User provided disposals and overrides.                                                                                                                                          |
+  | N/A - DEFAULT<br> **?source=hmrcHeld** | Requesting **hmrcHeld** source simulates success response with HMRC held disposals.                                                                                                                                                        |
+  | N/A - DEFAULT<br> **?source=latest**   | Requesting **latest** source simulates success response with Latest disposals and overrides submitted.                                                                                                                                     |
+  | LOSS<br> **source=latest**             | Requesting **latest** source with LOSS simulates success response with User provided disposals and overrides with losses.                                                                                                                  |
+  | NOT_FOUND                              | Simulates the scenario where no data is found.                                                                                                                                                                                             | 
+  | STATEFUL                               | Performs a stateful retrieve. <p> Information and data held by HMRC is not available in the sandbox environment. Providing ‘source=hmrcHeld’ will result in the expected HTTP 404 (matching resource not found) error being returned. </p> |  
 
 tags:
   - Capital Gains on Residential Property Disposals
