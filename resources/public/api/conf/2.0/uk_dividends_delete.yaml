@@ -5,7 +5,7 @@ description: |
   A National Insurance Number and tax year must be provided.
 
   ### Test data
-  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment. In sandbox, this endpoint requires a DELETE request with a Gov-Test-Scenario header to simulate a success response.
   
   | Header Value (Gov-Test-Scenario) | Scenario                                       |
   |----------------------------------|------------------------------------------------|
