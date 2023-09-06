@@ -15,6 +15,7 @@ description: |
   | INCORRECT_DISPOSAL_TYPE          | Simulate the scenario where a ppdSubmissionId in the request is being used for the incorrect disposal type. |
   | DUPLICATED_PPD_SUBMISSION_ID     | Simulates the scenario where a ppdSubmissionId is duplicated.                                               |
   | TAX_YEAR_NOT_ENDED               | Simulates the scenario where the tax year provided has not ended.                                           |  
+  | STATEFUL                         | Performs a stateful create or update.                                                                       |
 
 tags:
   - Capital Gains on Residential Property Disposals

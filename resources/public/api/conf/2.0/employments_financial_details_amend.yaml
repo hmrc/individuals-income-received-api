@@ -6,12 +6,13 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario)  | Scenario                                                          |
-  |-----------------------------------|-------------------------------------------------------------------|
-  | N/A - DEFAULT                     | Simulates success response.                                       |
-  | NOT_FOUND                         | Simulates the scenario where no data is found.                    |
-  | TAX_YEAR_NOT_ENDED                | Simulates the scenario where the tax year provided has not ended. |
-  | INVALID_SUBMISSION_PENSION_SCHEME | Simulates the scenario where customer with single employment source that has "occupational pension" indicator cannot submit benefit in kind if it contains anything other than medical insurance. |   
+  | Header Value (Gov-Test-Scenario)  | Scenario                                                                                                                                                                                                                                                                                                                                                                                                                       |
+  | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | N/A - DEFAULT                     | Simulates success response.                                                                                                                                                                                                                                                                                                                                                                                                    |
+  | NOT_FOUND                         | Simulates the scenario where no data is found.                                                                                                                                                                                                                                                                                                                                                                                 |
+  | TAX_YEAR_NOT_ENDED                | Simulates the scenario where the tax year provided has not ended.                                                                                                                                                                                                                                                                                                                                                              |
+  | INVALID_SUBMISSION_PENSION_SCHEME | Simulates the scenario where customer with single employment source that has "occupational pension" indicator cannot submit benefit in kind if it contains anything other than medical insurance.                                                                                                                                                                                                                              |
+  | STATEFUL                          | Performs a stateful create or update. <br><br> Note: this endpoint relies on the prior creation of a STATEFUL custom employment. If a relevant STATEFUL custom employment has not been created, a 404 MATCHING_RESOURCE_NOT_FOUND error is returned. <br><br> A custom employment with ‘occupationalPension = false’ must be created before you can submit deductions or benefitsInKind for the given National insurance number (nino), taxYear and employmentId. |
 
 tags:
   - Employments
@@ -86,7 +87,7 @@ responses:
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
           RULE_INVALID_SUBMISSION_PENSION_SCHEME:
-            $ref: './common/errors.yaml#/components/examples/ruleInvalidSubmissionPensionScheme'  
+            $ref: './common/errors.yaml#/components/examples/ruleInvalidSubmissionPensionScheme'
 
   "403":
     description: Forbidden

@@ -17,6 +17,7 @@ description: |
   | ACQUISITION_DATE_AFTER_DISPOSAL_DATE | Simulates a scenario where acquisitionDate is later than disposalDate.            |
   | INVALID_COMPLETION_DATE              | Simulates a scenario where the completionDate is not within the specific tax year or in the future. If the specified tax year has not ended, the completionDate must be between 7th March and 5th April. |
   | INVALID_DISPOSAL_DATE                | Simulates a scenario where the disposalDate is not within the specified tax year. |  
+  | STATEFUL                             | Performs a stateful create or update.                                             |
 
 tags:
   - Capital Gains on Residential Property Disposals

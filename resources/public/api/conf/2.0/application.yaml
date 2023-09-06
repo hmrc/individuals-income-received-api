@@ -47,7 +47,8 @@ components:
 
 tags:
   - name: Employments
-    description: Resources relating to an individual's employments (please note, an occupational pension is classed as employment income and is identified by the occupationalPension property)
+    description: Resources relating to an individual's employments (please note, an occupational pension is classed as employment income and is identified by the occupationalPension property) <br><br> When using the <strong>STATEFUL</strong> Gov-Test-Scenario in the sandbox environment, <strong>a Custom Employment must be added before submitting Employment Financial Details.</strong>
+     Providing financial details without adding Custom Employment will result in a HTTP 404 (matching resource not found) error being returned.<br><br>
 
   - name: Non-PAYE Employment Income
     description: These endpoints allow a user to create, amend, retrieve and delete Non-PAYE employment income and tips

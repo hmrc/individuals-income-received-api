@@ -2,8 +2,8 @@ summary:
   Delete Dividends Income
 description: |
   This endpoint enables you to delete dividends income: 
-  foreign dividend, dividend income received whilst abroad, stock dividend, redeemable shares, bonus issues of securities and close company loans written off.
-  A National Insurance number and tax year must be provided.
+  foreign dividend, dividend income received whilst abroad, stock dividend, redeemable shares, bonus issues of 
+  securities and close company loans written off. A National Insurance number and tax year must be provided.
   
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
