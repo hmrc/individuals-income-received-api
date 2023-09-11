@@ -8,10 +8,11 @@ description: |
   ###  Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                              |
-  | -------------------------------- | ------------------------------------- |
-  | N/A - DEFAULT                    | Simulates success response.           |
-  | STATEFUL                         | Performs a stateful create or update. |
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                                                  |
+  | -------------------------------- | --------------------------------------------------------------------------------------------------------- |
+  | N/A - DEFAULT                    | Simulates success response.                                                                               |
+  | UNALIGNED_CESSATION_TAX_YEAR     | Simulates the scenario where the tax year provided is not the same as the tax year of income to be taxed. |
+  | STATEFUL                         | Performs a stateful create or update.                                                                     |
 
 tags:
   - Other Income
