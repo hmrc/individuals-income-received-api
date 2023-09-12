@@ -10,6 +10,8 @@ description: |
   |----------------------------------|-------------------------------------------------------|
   | N/A - DEFAULT                    | Simulates success response with gains.                |
   | NOT_FOUND                        | Simulates the scenario where no disposals were found. |
+  | STATEFUL                         | Performs a stateful delete.                           |
+
 
 tags:
   - Other Capital Gains and Disposals
