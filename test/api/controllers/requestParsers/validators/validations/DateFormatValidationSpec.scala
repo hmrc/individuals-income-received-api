@@ -37,6 +37,27 @@ class DateFormatValidationSpec extends UnitSpec {
           path = "/path"
         ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
       }
+
+      "return a DateFormatError for an date which is out of allowable minimum year" in {
+        DateFormatValidation.validateWithPath(
+          date = "0010-01-01",
+          path = "/path"
+        ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
+      }
+
+      "return a DateFormatError for an date which is out of allowable maximum year" in {
+        DateFormatValidation.validateWithPath(
+          date = "2101-01-01",
+          path = "/path"
+        ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
+      }
+
+      "return an empty list for a valid date within allowable years" in {
+        DateFormatValidation.validateWithPath(
+          date = "2099-04-20",
+          path = "/path"
+        ) shouldBe NoValidationErrors
+      }
     }
 
     "validateOptionalWithPath" must {
@@ -60,6 +81,20 @@ class DateFormatValidationSpec extends UnitSpec {
           path = "/path"
         ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
       }
+
+      "return a DateFormatError for an date which is out of allowable minimum year" in {
+        DateFormatValidation.validateOptionalWithPath(
+          date = Some("0010-01-01"),
+          path = "/path"
+        ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
+      }
+
+      "return a DateFormatError for an date which is out of allowable maximum year" in {
+        DateFormatValidation.validateOptionalWithPath(
+          date = Some("2101-01-01"),
+          path = "/path"
+        ) shouldBe List(DateFormatError.copy(paths = Some(Seq("/path"))))
+      }
     }
 
     "validate" must {
@@ -79,6 +114,21 @@ class DateFormatValidationSpec extends UnitSpec {
           error = DummyError
         ) shouldBe List(DummyError)
       }
+
+      "return a DateFormatError for an date which is out of allowable minimum year" in {
+        DateFormatValidation.validate(
+          date = "0010-01-01",
+          error = DummyError
+        ) shouldBe List(DummyError)
+      }
+
+      "return a DateFormatError for an date which is out of allowable maximum year" in {
+        DateFormatValidation.validate(
+          date = "2101-01-01",
+          error = DummyError
+        ) shouldBe List(DummyError)
+      }
+
     }
   }
 

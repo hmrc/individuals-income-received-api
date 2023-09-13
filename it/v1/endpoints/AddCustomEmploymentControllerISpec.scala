@@ -210,6 +210,19 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
       )
 
+      val invalidStartAndCessationDateRequestJson: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": "123/AZ12334",
+          |  "employerName": "AMD infotech Ltd",
+          |  "startDate": "0010-01-01",
+          |  "cessationDate": "2109-01-01",
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
+          |}
+      """.stripMargin
+      )
+
       val invalidPayrollIdRequestJson: JsValue = Json.parse(
         s"""
            |{
@@ -319,6 +332,7 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2019-20", invalidPayrollIdRequestJson, BAD_REQUEST, PayrollIdFormatError, None),
           ("AA123456A", "2019-20", invalidStartDateRequestJson, BAD_REQUEST, StartDateFormatError, None),
           ("AA123456A", "2019-20", invalidCessationDateRequestJson, BAD_REQUEST, CessationDateFormatError, None),
+          ("AA123456A", "2019-20", invalidStartAndCessationDateRequestJson, BAD_REQUEST, CessationDateFormatError, None),
           ("AA123456A", "2019-20", invalidDateOrderRequestJson, BAD_REQUEST, RuleCessationDateBeforeStartDateError, None),
           ("AA123456A", "2019-20", startDateLateRequestJson, BAD_REQUEST, RuleStartDateAfterTaxYearEndError, None),
           ("AA123456A", "2019-20", cessationDateEarlyRequestJson, BAD_REQUEST, RuleCessationDateBeforeTaxYearStartError, None),
