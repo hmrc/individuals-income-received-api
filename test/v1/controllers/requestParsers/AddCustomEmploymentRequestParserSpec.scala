@@ -133,6 +133,36 @@ class AddCustomEmploymentRequestParserSpec extends UnitSpec {
         parser.parseRequest(addCustomEmploymentRawData.copy(body = invalidValueRawBody)) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(errors)))
       }
+
+      "multiple field value validation errors occur when startDate and cessatonDate are outside of allowed range" in new Test {
+
+        private val invalidValueRequestJson: JsValue = Json.parse(
+          s"""
+             |{
+             |  "employerRef": "123/AZ12334",
+             |  "employerName": "AMD infotech Ltd",
+             |  "startDate": "0010-01-01",
+             |  "cessationDate": "2120-06-01",
+             |  "payrollId": "124214112412",
+             |  "occupationalPension": false
+             |}
+            """.stripMargin
+        )
+
+        private val invalidValueRawBody = AnyContentAsJson(invalidValueRequestJson)
+
+        private val errors = List(
+          StartDateFormatError,
+          CessationDateFormatError
+        )
+
+        MockAddCustomEmploymentValidator
+          .validate(addCustomEmploymentRawData.copy(body = invalidValueRawBody))
+          .returns(errors)
+
+        parser.parseRequest(addCustomEmploymentRawData.copy(body = invalidValueRawBody)) shouldBe
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(errors)))
+      }
     }
   }
 
