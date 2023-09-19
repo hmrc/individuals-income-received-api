@@ -188,6 +188,17 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
   private val allInvalidValueRequestBodyJson: JsValue = Json.parse(
     """
       |{
+      |   "postCessationReceipts": [
+      |      {
+      |         "customerReference": "String",
+      |         "businessName": "Business Name",
+      |         "dateBusinessCeased": "0010-05-30",
+      |         "businessDescription": "Description",
+      |         "incomeSource": "string",
+      |         "amount": 99999999999.99,
+      |         "taxYearIncomeToBeTaxed": "2019-20"
+      |      }
+      |   ],
       |   "businessReceipts": [
       |      {
       |         "grossAmount": 5000.999,
@@ -443,6 +454,12 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
               paths = Some(
                 List(
                   "/allOtherIncomeReceivedWhilstAbroad/1/countryCode"
+                ))
+            ),
+            RuleDateRangeInvalidError.copy(
+              paths = Some(
+                List(
+                  "/postCessationReceipts/0/dateBusinessCeased"
                 ))
             ),
             RuleTaxYearRangeInvalidError.copy(

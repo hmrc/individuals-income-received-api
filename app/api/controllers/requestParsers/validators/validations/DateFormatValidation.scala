@@ -33,6 +33,16 @@ object DateFormatValidation {
       case Left(_) => List(error)
     }
 
+  def validateOptionalWithError(date: Option[String], error: MtdError): List[MtdError] =
+    date match {
+      case None => NoValidationErrors
+      case Some(date) => {
+        println(s"Date received is $date")
+        validate(date, error)
+      }
+
+    }
+
   def validateWithPath(date: String, path: String): List[MtdError] = validate(date,convertPathToError(path))
 
   def validateOptionalWithPath(date: Option[String], path: String): List[MtdError] = date match {

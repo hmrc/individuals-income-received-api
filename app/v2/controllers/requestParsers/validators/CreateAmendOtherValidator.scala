@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
-import api.models.errors.MtdError
+import api.models.errors.{MtdError, RuleDateRangeInvalidError}
 import config.AppConfig
 import v2.models.request.createAmendOther._
 
@@ -58,6 +58,10 @@ class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extend
     List(
       flattenErrors(
         List(
+          requestBodyData.postCessationReceipts.map(_.zipWithIndex.flatMap{ case (data, index) =>
+              validatePostCessationReceiptsItem(data, index)
+          }).getOrElse(NoValidationErrors)
+            .toList,
           requestBodyData.businessReceipts
             .map(_.zipWithIndex.flatMap { case (data, index) =>
               validateBusinessReceipts(data, index)
@@ -89,6 +93,14 @@ class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extend
           _.copy(paths = Some(Seq(s"/businessReceipts/$arrayIndex/taxYear")))
         )
     ).flatten
+  }
+    private def validatePostCessationReceiptsItem(postCessationReceiptsItem: PostCessationReceiptsItem, arrayIndex: Int): List[MtdError] = {
+      List(
+        DateFormatValidation.validateOptionalWithError(
+          postCessationReceiptsItem.dateBusinessCeased,
+          RuleDateRangeInvalidError.copy(paths = Some(Seq(s"/postCessationReceipts/$arrayIndex/dateBusinessCeased")))
+        )
+      ).flatten
   }
 
   private def validateAllOtherIncomeReceivedWhilstAbroad(allOtherIncomeReceivedWhilstAbroad: AllOtherIncomeReceivedWhilstAbroadItem,
