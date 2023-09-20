@@ -18,8 +18,9 @@ package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
-import api.models.errors.{MtdError, RuleDateRangeInvalidError}
+import api.models.errors.MtdError
 import config.AppConfig
+import v2.controllers.requestParsers.validators.validations.DateFormatValidation
 import v2.models.request.createAmendOther._
 
 import javax.inject.{Inject, Singleton}
@@ -96,9 +97,9 @@ class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extend
   }
     private def validatePostCessationReceiptsItem(postCessationReceiptsItem: PostCessationReceiptsItem, arrayIndex: Int): List[MtdError] = {
       List(
-        DateFormatValidation.validateOptionalWithError(
-          postCessationReceiptsItem.dateBusinessCeased,
-          RuleDateRangeInvalidError.copy(paths = Some(Seq(s"/postCessationReceipts/$arrayIndex/dateBusinessCeased")))
+        DateFormatValidation.validateOptional(
+          date = postCessationReceiptsItem.dateBusinessCeased,
+          path = Some(s"/postCessationReceipts/$arrayIndex/dateBusinessCeased")
         )
       ).flatten
   }

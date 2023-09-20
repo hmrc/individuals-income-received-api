@@ -21,6 +21,7 @@ import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import utils.CurrentDateTime
+import v2.controllers.requestParsers.validators.validations.CustomEmploymentDateValidation
 import v2.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, AmendCustomEmploymentRequestBody}
 
 import javax.inject.{Inject, Singleton}

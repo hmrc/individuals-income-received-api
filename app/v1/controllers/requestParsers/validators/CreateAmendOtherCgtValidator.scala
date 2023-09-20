@@ -20,6 +20,7 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.{MtdError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError}
 import config.AppConfig
+import v1.controllers.requestParsers.validators.validations.DateFormatValidation
 import v1.models.request.createAmendOtherCgt._
 
 import javax.inject.{Inject, Singleton}

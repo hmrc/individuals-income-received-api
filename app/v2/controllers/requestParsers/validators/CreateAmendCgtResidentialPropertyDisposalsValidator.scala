@@ -17,7 +17,9 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations._
+import api.controllers.requestParsers.validators.validations.{CustomerRefValidation, DecimalValueValidation, DisposalDateErrorMessages, JsonFormatValidation, NinoValidation, NoValidationErrors, TaxYearNotSupportedValidation, TaxYearValidation}
+import v2.controllers.requestParsers.validators.validations.DateFormatValidation
+//import api.controllers.requestParsers.validators.validations
 import api.models.errors._
 import config.AppConfig
 import v2.models.request.createAmendCgtResidentialPropertyDisposals._
@@ -127,17 +129,17 @@ class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit ap
         amount = disposal.amountOfNetLoss,
         path = s"/disposals/$index/amountOfNetLoss"
       ),
-      DateFormatValidation.validateWithPath(
-        date = disposal.disposalDate,
-        path = s"/disposals/$index/disposalDate"
+      DateFormatValidation.validateOptional(
+        date = Some(disposal.disposalDate),
+        path = Some(s"/disposals/$index/disposalDate")
       ),
-      DateFormatValidation.validateWithPath(
-        date = disposal.completionDate,
-        path = s"/disposals/$index/completionDate"
+      DateFormatValidation.validateOptional(
+        date = Some(disposal.completionDate),
+        path = Some(s"/disposals/$index/completionDate")
       ),
-      DateFormatValidation.validateWithPath(
-        date = disposal.acquisitionDate,
-        path = s"/disposals/$index/acquisitionDate"
+      DateFormatValidation.validateOptional(
+        date = Some(disposal.acquisitionDate),
+        path = Some(s"/disposals/$index/acquisitionDate")
       ),
       CustomerRefValidation.validateOptional(
         customerRef = disposal.customerReference,

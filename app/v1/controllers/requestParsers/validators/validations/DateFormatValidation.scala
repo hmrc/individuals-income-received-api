@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package api.controllers.requestParsers.validators.validations
+package v1.controllers.requestParsers.validators.validations
 
+import api.controllers.requestParsers.validators.validations.{NoValidationErrors, dateFormat}
 import api.models.errors.{DateFormatError, MtdError}
 
 import java.time.LocalDate
@@ -36,11 +37,7 @@ object DateFormatValidation {
   def validateOptionalWithError(date: Option[String], error: MtdError): List[MtdError] =
     date match {
       case None => NoValidationErrors
-      case Some(date) => {
-        println(s"Date received is $date")
-        validate(date, error)
-      }
-
+      case Some(date) => validate(date, error)
     }
 
   def validateWithPath(date: String, path: String): List[MtdError] = validate(date,convertPathToError(path))

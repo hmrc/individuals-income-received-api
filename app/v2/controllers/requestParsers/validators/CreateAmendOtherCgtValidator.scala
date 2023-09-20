@@ -17,9 +17,10 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations._
+import api.controllers.requestParsers.validators.validations.{AssetDescriptionValidation, AssetTypeValidation, ClaimOrElectionCodesValidation, DecimalValueValidation, DisposalDateErrorMessages, GainLossValidation, JsonFormatValidation, NinoValidation, NoValidationErrors, TaxYearNotSupportedValidation, TaxYearValidation, ValueFormatErrorMessages}
 import api.models.errors.{MtdError, RuleGainAfterReliefLossAfterReliefError, RuleGainLossError, RuleIncorrectOrEmptyBodyError}
 import config.AppConfig
+import v2.controllers.requestParsers.validators.validations.DateFormatValidation
 import v2.models.request.createAmendOtherCgt._
 
 import javax.inject.{Inject, Singleton}
@@ -153,13 +154,13 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
         amount = disposal.rttTaxPaid,
         path = s"/disposals/$arrayIndex/rttTaxPaid"
       ),
-      DateFormatValidation.validateWithPath(
-        date = disposal.acquisitionDate,
-        path = s"/disposals/$arrayIndex/acquisitionDate"
+      DateFormatValidation.validateOptional(
+        date = Some(disposal.acquisitionDate),
+        path = Some(s"/disposals/$arrayIndex/acquisitionDate")
       ),
-      DateFormatValidation.validateWithPath(
-        date = disposal.disposalDate,
-        path = s"/disposals/$arrayIndex/disposalDate"
+      DateFormatValidation.validateOptional(
+        date = Some(disposal.disposalDate),
+        path = Some(s"/disposals/$arrayIndex/disposalDate")
       ),
       AssetDescriptionValidation.validate(
         description = disposal.assetDescription,
