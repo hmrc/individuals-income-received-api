@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.validations.ValueFormatErrorMessages
 import api.models.errors._
@@ -23,7 +23,7 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
-import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
+import v2.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 
 class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
@@ -380,29 +380,29 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       |""".stripMargin
   )
 
-  private def invalidDatesInSharesAwardedOrReceivedJson(dateSharesCeasedToBeSubjectToPlan: String, dateSharesAwarded: String): JsValue = Json.parse(
+  private def invalidDatesInSharesAwardedOrReceivedJson(dateSharesCeasedToBeSubjectToPlan:String,dateSharesAwarded:String): JsValue = Json.parse(
     s"""
-       |{
-       |  "sharesAwardedOrReceived": [
-       |     {
-       |        "employerName": "Company Ltd",
-       |        "employerRef" : "123/AB456",
-       |        "schemePlanType": "SIP",
-       |        "dateSharesCeasedToBeSubjectToPlan": "$dateSharesCeasedToBeSubjectToPlan",
-       |        "noOfShareSecuritiesAwarded": 11,
-       |        "classOfShareAwarded": "FIRST",
-       |        "dateSharesAwarded" : "$dateSharesAwarded",
-       |        "sharesSubjectToRestrictions": true,
-       |        "electionEnteredIgnoreRestrictions": false,
-       |        "actualMarketValueOfSharesOnAward": 2123.22,
-       |        "unrestrictedMarketValueOfSharesOnAward": 123.22,
-       |        "amountPaidForSharesOnAward": 123.22,
-       |        "marketValueAfterRestrictionsLifted": 1232.22,
-       |        "taxableAmount": 12321.22
-       |      }
-       |   ]
-       |}
-       |""".stripMargin
+      |{
+      |  "sharesAwardedOrReceived": [
+      |     {
+      |        "employerName": "Company Ltd",
+      |        "employerRef" : "123/AB456",
+      |        "schemePlanType": "SIP",
+      |        "dateSharesCeasedToBeSubjectToPlan": "$dateSharesCeasedToBeSubjectToPlan",
+      |        "noOfShareSecuritiesAwarded": 11,
+      |        "classOfShareAwarded": "FIRST",
+      |        "dateSharesAwarded" : "$dateSharesAwarded",
+      |        "sharesSubjectToRestrictions": true,
+      |        "electionEnteredIgnoreRestrictions": false,
+      |        "actualMarketValueOfSharesOnAward": 2123.22,
+      |        "unrestrictedMarketValueOfSharesOnAward": 123.22,
+      |        "amountPaidForSharesOnAward": 123.22,
+      |        "marketValueAfterRestrictionsLifted": 1232.22,
+      |        "taxableAmount": 12321.22
+      |      }
+      |   ]
+      |}
+      |""".stripMargin
   )
 
   private val invalidSharesAwardedOrReceivedJson: JsValue = Json.parse(
@@ -799,40 +799,6 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       }
     }
 
-    "return Date validation errors" when {
-      "an out of range date (dateSharesCeasedToBeSubjectToPlan) is submitted" in new Test {
-        val invalidDateSharesCeasedToBeSubjectToPlan = invalidDatesInSharesAwardedOrReceivedJson(
-          dateSharesCeasedToBeSubjectToPlan = "0010-01-01", dateSharesAwarded = "2019-01-01")
-
-        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesCeasedToBeSubjectToPlan))) shouldBe
-          List(DateFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan"))))
-      }
-
-      "an incorrectly formatted date (dateSharesCeasedToBeSubjectToPlan) is submitted" in new Test {
-        val invalidDateSharesCeasedToBeSubjectToPlan = invalidDatesInSharesAwardedOrReceivedJson(
-          dateSharesCeasedToBeSubjectToPlan = "19-01-01", dateSharesAwarded = "2019-01-01")
-
-        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesCeasedToBeSubjectToPlan))) shouldBe
-          List(DateFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan"))))
-      }
-
-      "an out of range date (dateSharesAwarded) is submitted" in new Test {
-        val invalidDateSharesAwarded = invalidDatesInSharesAwardedOrReceivedJson(
-          dateSharesCeasedToBeSubjectToPlan = "2019-01-01", dateSharesAwarded = "2101-01-01")
-
-        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesAwarded))) shouldBe
-          List(DateFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesAwarded"))))
-      }
-
-      "an incorrectly formatted date (dateSharesAwarded) is submitted" in new Test {
-        val invalidDateSharesAwarded = invalidDatesInSharesAwardedOrReceivedJson(
-          dateSharesCeasedToBeSubjectToPlan = "2019-01-01", dateSharesAwarded = "21-01-01")
-
-        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesAwarded))) shouldBe
-          List(DateFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesAwarded"))))
-      }
-    }
-
     "return SchemePlanTypeFormatError error" when {
       "an incorrectly formatted scheme plan type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidSchemePlanRawRequestBody)) shouldBe
@@ -865,6 +831,40 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
       "an incorrectly formatted class of shares type is submitted" in new Test {
         validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, invalidCustomerRefRawRequestBody)) shouldBe
           List(CustomerRefFormatError.copy(paths = Some(List("/disability/customerReference"))))
+      }
+    }
+
+    "return Date validation errors" when {
+      "an out of range date (dateSharesCeasedToBeSubjectToPlan) is submitted" in new Test {
+        val invalidDateSharesCeasedToBeSubjectToPlan = invalidDatesInSharesAwardedOrReceivedJson(
+          dateSharesCeasedToBeSubjectToPlan = "0010-01-01",dateSharesAwarded = "2019-01-01")
+
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesCeasedToBeSubjectToPlan))) shouldBe
+          List(RuleDateRangeInvalidError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan"))))
+      }
+
+      "an incorrectly formatted date (dateSharesCeasedToBeSubjectToPlan) is submitted" in new Test {
+        val invalidDateSharesCeasedToBeSubjectToPlan = invalidDatesInSharesAwardedOrReceivedJson(
+          dateSharesCeasedToBeSubjectToPlan = "19-01-01", dateSharesAwarded = "2019-01-01")
+
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesCeasedToBeSubjectToPlan))) shouldBe
+          List(DateFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesCeasedToBeSubjectToPlan"))))
+      }
+
+      "an out of range date (dateSharesAwarded) is submitted" in new Test {
+        val invalidDateSharesAwarded = invalidDatesInSharesAwardedOrReceivedJson(
+          dateSharesCeasedToBeSubjectToPlan = "2019-01-01", dateSharesAwarded = "2101-01-01")
+
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesAwarded))) shouldBe
+          List(RuleDateRangeInvalidError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesAwarded"))))
+      }
+
+      "an incorrectly formatted date (dateSharesAwarded) is submitted" in new Test {
+        val invalidDateSharesAwarded = invalidDatesInSharesAwardedOrReceivedJson(
+          dateSharesCeasedToBeSubjectToPlan = "2019-01-01", dateSharesAwarded = "21-01-01")
+
+        validator.validate(AmendOtherEmploymentRawData(validNino, validTaxYear, AnyContentAsJson(invalidDateSharesAwarded))) shouldBe
+          List(DateFormatError.copy(paths = Some(List("/sharesAwardedOrReceived/0/dateSharesAwarded"))))
       }
     }
 
