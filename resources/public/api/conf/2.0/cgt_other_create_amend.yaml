@@ -11,6 +11,7 @@ description: |
   | N/A - DEFAULT                    | Simulates success response with gains.                                                                   |
   | INVALID_DISPOSAL_DATE            | Simulates a scenario where disposalDate is not within the specified tax year or later than today's date. |
   | INVALID_ACQUISITION_DATE         | Simulates a scenario where acquisitionDate is later than disposalDate.                                   |   
+  | STATEFUL                         | Performs a stateful create or update.                                                                    |
 
 tags:
   - Other Capital Gains and Disposals

@@ -11,6 +11,8 @@ description: |
   | N/A - DEFAULT                    | Simulates success response with gains.                |
   | LOSS                             | Simulates success response with loss.                 |
   | NOT_FOUND                        | Simulates the scenario where no disposals were found. |  
+  | STATEFUL                         | Performs a stateful retrieve.                         |
+
 
 tags:
   - Other Capital Gains and Disposals
