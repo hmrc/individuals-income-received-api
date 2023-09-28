@@ -44,7 +44,7 @@
             "minimum": 0,
             "maximum:": 99999999999.99
           },
-          "taxYearForIncomeToBeTaxed": {
+          "taxYearIncomeToBeTaxed": {
             "type": "string",
             "description": "The tax year for income to be taxed. Date in the format YYYY-YY, for example 2019-20 for the 19/20 tax year.",
             "example": "2021-22"
@@ -52,7 +52,7 @@
         },
         "required": [
           "amount",
-          "taxYearForIncomeToBeTaxed"
+          "taxYearIncomeToBeTaxed"
         ]
       }
     },

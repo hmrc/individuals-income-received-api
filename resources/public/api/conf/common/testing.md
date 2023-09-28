@@ -32,3 +32,6 @@ The following groups are stateful in the sandbox:
 - Pensions Income V2.0
 - UK Savings Account V2.0
 - Capital Gains on Residential Property Disposals V2.0
+- Other Income V2.0
+- Savings Income V2.0
+- Other Capital Gains and Disposals V2.0

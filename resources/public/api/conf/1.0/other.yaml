@@ -5,7 +5,7 @@ get:
     - User-Restricted:
         - read:self-assessment
 put:
-  $ref: "./other_amend.yaml"
+  $ref: "./other_create_amend.yaml"
   summary: Create and Amend Other Income
   security:
     - User-Restricted:
