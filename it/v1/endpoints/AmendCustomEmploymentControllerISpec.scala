@@ -250,6 +250,32 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
       )
 
+      val startDateOutsideAllowedRangeJson: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": "123/AZ12334",
+          |  "employerName": "AMD infotech Ltd",
+          |  "startDate": "0010-01-01",
+          |  "cessationDate": "2020-06-01",
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
+          |}
+      """.stripMargin
+      )
+
+      val cessationDateOutsideAllowedRangeJson: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": "123/AZ12334",
+          |  "employerName": "AMD infotech Ltd",
+          |  "startDate": "2019-01-01",
+          |  "cessationDate": "2220-06-01",
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
+          |}
+      """.stripMargin
+      )
+
       val invalidPayrollIdRequestJson: JsValue = Json.parse(
         s"""
            |{
@@ -368,55 +394,63 @@ class AmendCustomEmploymentControllerISpec extends IntegrationBaseSpec {
             None),
           ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", invalidPayrollIdRequestJson, BAD_REQUEST, PayrollIdFormatError, None),
           ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", invalidStartDateRequestJson, BAD_REQUEST, StartDateFormatError, None),
-          (
-            "AA123456A",
-            "2019-20",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            invalidCessationDateRequestJson,
-            BAD_REQUEST,
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", invalidCessationDateRequestJson, BAD_REQUEST,
             CessationDateFormatError,
             None),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            invalidDateOrderRequestJson,
-            BAD_REQUEST,
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", invalidDateOrderRequestJson, BAD_REQUEST,
             RuleCessationDateBeforeStartDateError,
             None),
-          (
-            "AA123456A",
-            "2019-20",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            startDateLateRequestJson,
-            BAD_REQUEST,
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", startDateLateRequestJson, BAD_REQUEST,
             RuleStartDateAfterTaxYearEndError,
             None),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            cessationDateEarlyRequestJson,
-            BAD_REQUEST,
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", cessationDateEarlyRequestJson, BAD_REQUEST,
             RuleCessationDateBeforeTaxYearStartError,
             None),
-          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST, RuleIncorrectOrEmptyBodyError, None),
-          (
-            "AA123456A",
-            "2019-20",
-            "4557ecb5-fd32-48cc-81f5-e6acd1099f3c",
-            nonValidRequestBodyJson,
-            BAD_REQUEST,
-            invalidFieldType,
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", emptyRequestJson, BAD_REQUEST,
+            RuleIncorrectOrEmptyBodyError, None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", nonValidRequestBodyJson, BAD_REQUEST, invalidFieldType,
             Some("(invalid field type)")),
-          (
-            "AA123456A",
-            "2019-20",
-            "78d9f015-a8b4-47a8-8bbc-c253a1e8057e",
-            missingFieldRequestBodyJson,
-            BAD_REQUEST,
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", missingFieldRequestBodyJson, BAD_REQUEST,
             missingMandatoryFieldErrors,
             Some("(missing mandatory fields)"))
+        )
+        input.foreach(args => (validationErrorTest _).tupled(args))
+      }
+
+      "validation format error" when {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestEmploymentId: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
+
+            override val nino: String = requestNino
+            override val taxYear: String = requestTaxYear
+            override val employmentId: String = requestEmploymentId
+            override val requestBodyJson: JsValue = requestBody
+
+            override def setupStubs(): StubMapping = {
+              AuditStub.audit()
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+            }
+
+            val response: WSResponse = await(request().put(requestBodyJson))
+            response.status shouldBe expectedStatus
+            response.json shouldBe Json.toJson(expectedBody)
+          }
+        }
+
+        val input = Seq(
+          ("AA123456A", "2019-20", "78d9f015-a8b4-47a8-8bbc-c253a1e8057e", startDateOutsideAllowedRangeJson, BAD_REQUEST,
+            StartDateFormatError,
+            None),
+          ("AA123456A", "2019-20", "4557ecb5-fd32-48cc-81f5-e6acd1099f3c", cessationDateOutsideAllowedRangeJson, BAD_REQUEST,
+            CessationDateFormatError,
+            None)
         )
         input.foreach(args => (validationErrorTest _).tupled(args))
       }

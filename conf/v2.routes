@@ -29,7 +29,7 @@ DELETE     /pensions/:nino/:taxYear                                         v1.c
 DELETE     /other/:nino/:taxYear                                            v1.controllers.DeleteOtherController.deleteOther(nino: String, taxYear: String)
 GET        /other/:nino/:taxYear                                            v2.controllers.RetrieveOtherController.retrieveOther(nino: String, taxYear: String)
 
-PUT        /employments/other/:nino/:taxYear                                v1.controllers.AmendOtherEmploymentController.amendOtherEmployment(nino: String, taxYear: String)
+PUT        /employments/other/:nino/:taxYear                                v2.controllers.AmendOtherEmploymentController.amendOtherEmployment(nino: String, taxYear: String)
 DELETE     /employments/other/:nino/:taxYear                                v1.controllers.DeleteOtherEmploymentController.deleteOtherEmployment(nino: String, taxYear: String)
 GET        /employments/other/:nino/:taxYear                                v1.controllers.RetrieveOtherEmploymentController.retrieveOther(nino: String, taxYear: String)
 
@@ -38,10 +38,10 @@ DELETE     /dividends/:nino/:taxYear                                        v1.c
 GET        /dividends/:nino/:taxYear                                        v2.controllers.RetrieveDividendsController.retrieveDividends(nino: String, taxYear: String)
 
 # Employment endpoints
-PUT        /employments/:nino/:taxYear/:employmentId                        v1.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
+PUT        /employments/:nino/:taxYear/:employmentId                        v2.controllers.AmendCustomEmploymentController.amendEmployment(nino: String, taxYear: String, employmentId: String)
 DELETE     /employments/:nino/:taxYear/:employmentId                        v1.controllers.DeleteCustomEmploymentController.deleteCustomEmployment(nino: String, taxYear: String, employmentId: String)
-
-POST       /employments/:nino/:taxYear                                      v1.controllers.AddCustomEmploymentController.addEmployment(nino: String, taxYear: String)
+# move to v2
+POST       /employments/:nino/:taxYear                                      v2.controllers.AddCustomEmploymentController.addEmployment(nino: String, taxYear: String)
 GET        /employments/:nino/:taxYear                                      v1.controllers.ListEmploymentsController.listEmployments(nino: String, taxYear: String)
 GET        /employments/:nino/:taxYear/:employmentId                        v1.controllers.RetrieveEmploymentController.retrieveEmployment(nino: String, taxYear: String, employmentId: String)
 POST       /employments/:nino/:taxYear/:employmentId/ignore                 v1.controllers.IgnoreEmploymentController.ignoreEmployment(nino: String, taxYear: String, employmentId: String)
@@ -52,7 +52,7 @@ DELETE     /employments/:nino/:taxYear/:employmentId/financial-details      v1.c
 GET        /employments/:nino/:taxYear/:employmentId/financial-details      v1.controllers.RetrieveEmploymentAndFinancialDetailsController.retrieve(nino: String, taxYear: String, employmentId: String, source: Option[String])
 
 # Capital Gains Tax endpoints
-PUT        /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.CreateAmendCgtPpdOverridesController.createAmendCgtPpdOverrides(nino: String, taxYear: String)
+PUT        /disposals/residential-property/:nino/:taxYear/ppd               v2.controllers.CreateAmendCgtPpdOverridesController.createAmendCgtPpdOverrides(nino: String, taxYear: String)
 DELETE     /disposals/residential-property/:nino/:taxYear/ppd               v1.controllers.DeleteCgtPpdOverridesController.deleteCgtPpdOverrides(nino: String, taxYear: String)
 GET        /disposals/residential-property/:nino/:taxYear                   v1.controllers.RetrieveAllResidentialPropertyCgtController.retrieveAll(nino: String, taxYear: String, source: Option[String])
 

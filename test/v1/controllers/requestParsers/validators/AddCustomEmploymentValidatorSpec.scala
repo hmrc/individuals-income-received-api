@@ -174,6 +174,13 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
           AddCustomEmploymentRawData(validNino, validTaxYear, requestJsonWithDates(startDate = "2023-01-01", cessationDate = "2022-06-01"))
         ) shouldBe List(RuleStartDateAfterTaxYearEndError, RuleCessationDateBeforeStartDateError)
       }
+
+      "return multiple errors for dates which are outside of allowed range" in new Test {
+        validator.validate(
+          AddCustomEmploymentRawData(validNino, validTaxYear, requestJsonWithDates(startDate = "0010-01-01", cessationDate = "2122-06-01"))
+        ) shouldBe List(StartDateFormatError, CessationDateFormatError)
+      }
+
     }
   }
 

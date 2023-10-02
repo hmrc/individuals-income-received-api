@@ -210,6 +210,19 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
       """.stripMargin
       )
 
+      val invalidStartDateRangeRequestJson: JsValue = Json.parse(
+        """
+          |{
+          |  "employerRef": "123/AZ12334",
+          |  "employerName": "AMD infotech Ltd",
+          |  "startDate": "0010-01-01",
+          |  "cessationDate": "2020-06-01",
+          |  "payrollId": "124214112412",
+          |  "occupationalPension": false
+          |}
+      """.stripMargin
+      )
+
       val invalidPayrollIdRequestJson: JsValue = Json.parse(
         s"""
            |{
@@ -366,6 +379,37 @@ class AddCustomEmploymentControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
         )
         input.foreach(args => (serviceErrorTest _).tupled(args))
+      }
+
+      "validation error for dates outside allowed range" when {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestBody: JsValue,
+                                expectedStatus: Int,
+                                expectedBody: MtdError,
+                                scenario: Option[String]): Unit = {
+          s"validation fails with ${expectedBody.code} error ${scenario.getOrElse("")}" in new Test {
+
+            override val nino: String = requestNino
+            override val taxYear: String = requestTaxYear
+            override val requestBodyJson: JsValue = requestBody
+
+            override def setupStubs(): StubMapping = {
+              AuditStub.audit()
+              AuthStub.authorised()
+              MtdIdLookupStub.ninoFound(nino)
+            }
+
+            val response: WSResponse = await(request().post(requestBodyJson))
+            response.status shouldBe expectedStatus
+            response.json shouldBe Json.toJson(expectedBody)
+          }
+        }
+
+        val input = Seq(
+          ("AA123456A", "2019-20", invalidStartDateRangeRequestJson, BAD_REQUEST, StartDateFormatError, None),
+        )
+        input.foreach(args => (validationErrorTest _).tupled(args))
       }
     }
   }

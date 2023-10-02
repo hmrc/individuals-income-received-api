@@ -21,6 +21,7 @@ import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
 import v1.models.request.amendOtherEmployment._
+import v1.controllers.requestParsers.validators.validations.DateFormatValidation
 
 import javax.inject.{Inject, Singleton}
 
