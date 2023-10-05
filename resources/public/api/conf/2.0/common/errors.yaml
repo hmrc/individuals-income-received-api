@@ -379,6 +379,12 @@ components:
         code: RULE_INCORRECT_GOV_TEST_SCENARIO
         message: The Gov-Test-Scenario was not found
 
+    ruleDateRangeInvalid:
+      description: The date provide is outside of the range 1900-01-01 to 2100-01-01
+      value:
+        code: RULE_DATE_RANGE_INVALID
+        message: The date specified does not lie within the supported range
+
     # 403
 
     clientOrAgentNotAuthorised:
