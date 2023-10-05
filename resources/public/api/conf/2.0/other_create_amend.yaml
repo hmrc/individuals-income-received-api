@@ -83,6 +83,8 @@ responses:
             $ref: './common/errors.yaml#/components/examples/ruleUnalignedCessationTaxYear'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+          RULE_DATE_RANGE_INVALID:
+              $ref: './common/errors.yaml#/components/examples/ruleDateRangeInvalid'
 
   "403":
     description: Forbidden
