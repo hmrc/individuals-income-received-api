@@ -18,19 +18,20 @@ package config
 
 import io.swagger.v3.parser.OpenAPIV3Parser
 import play.api.http.Status
-import play.api.libs.json.{JsValue, Json}
+import play.api.http.Status.OK
+import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
+import routing.{Version1, Version2}
 import support.IntegrationBaseSpec
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 import scala.util.Try
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
 
-  val config: AppConfig                = app.injector.instanceOf[AppConfig]
-  val confidenceLevel: ConfidenceLevel = config.confidenceLevelConfig.confidenceLevel
+  private val config          = app.injector.instanceOf[AppConfig]
+  private val confidenceLevel = config.confidenceLevelConfig.confidenceLevel
 
-  val apiDefinitionJson: JsValue = Json.parse(
+  private val apiDefinitionJson = Json.parse(
     s"""
     |{
     |   "scopes":[
@@ -80,24 +81,42 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
-    def version(version: String): Unit = {
-      s"return the documentation that passes OAS V$version parser" in {
-        val response: WSResponse = await(buildRequest(s"/api/conf/${version}.0/application.yaml").get())
-        response.status shouldBe Status.OK
+    List(Version1, Version2).foreach { version =>
+      s"return the documentation for $version" in {
+        val response = get(s"/api/conf/${version.name}/application.yaml")
 
-        val contents     = response.body[String]
-        val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
-        parserResult.isSuccess shouldBe true
+        val body         = response.body
+        val parserResult = Try(new OpenAPIV3Parser().readContents(body)).getOrElse(fail("openAPI couldn't read contents"))
 
-        val openAPI = Option(parserResult.get.getOpenAPI)
-        openAPI.isEmpty shouldBe false
-        openAPI.get.getOpenapi shouldBe "3.0.3"
-        openAPI.get.getInfo.getTitle shouldBe "Individuals Income Received (MTD)"
-        openAPI.get.getInfo.getVersion shouldBe s"${version}.0"
+        val openAPI = Option(parserResult.getOpenAPI).getOrElse(fail("openAPI wasn't defined"))
+
+        openAPI.getOpenapi shouldBe "3.0.3"
+        withClue(s"If v${version.name} endpoints are enabled in application.conf, remove the [test only] from this test: ") {
+          openAPI.getInfo.getTitle shouldBe "Individuals Income Received (MTD)"
+        }
+
+        openAPI.getInfo.getVersion shouldBe version.toString
+      }
+
+      s"return the documentation with the correct accept header for version $version" in {
+        val response = get(s"/api/conf/${version.name}/common/headers.yaml")
+        val body     = response.body
+
+        val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
+        val header      = headerRegex.findFirstMatchIn(body)
+        header.isDefined shouldBe true
+
+        val versionFromHeader = header.get.group(1)
+        versionFromHeader shouldBe version.name
+
       }
     }
-    val versions: Seq[String] = Seq("1", "2")
-    versions.foreach(v => version(v))
+  }
+
+  private def get(path: String): WSResponse = {
+    val response: WSResponse = await(buildRequest(path).get())
+    response.status shouldBe OK
+    response
   }
 
 }
