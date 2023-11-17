@@ -27,10 +27,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeletePensionsIncomeConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class DeletePensionsIncomeConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def deletePensionsIncome(
-      request: DeletePensionsRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                            request: DeletePensionsRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 
@@ -42,7 +42,12 @@ class DeletePensionsIncomeConnector @Inject() (val http: HttpClient, val appConf
       IfsUri[Unit](s"income-tax/income/pensions/$nino/${taxYear.asMtd}")
     }
 
-    delete(downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    delete(downstreamUri, intent = intent)
 
   }
 

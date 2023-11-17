@@ -82,25 +82,25 @@ object RetrieveInsurancePoliciesControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveInsurancePoliciesResponse.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-insurance-policies-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-insurance-policies-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-insurance-policies-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/insurance-policies/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-insurance-policies-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

@@ -25,7 +25,7 @@ import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualS
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveUkSavingsAccountValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveUkSavingsAnnualSummaryRawData] {
+class RetrieveUkSavingsAccountValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveUkSavingsAnnualSummaryRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

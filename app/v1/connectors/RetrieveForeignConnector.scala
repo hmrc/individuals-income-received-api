@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveForeignConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveForeignConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveForeign(request: RetrieveForeignRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveForeignResponse]] = {
+                                                       hc: HeaderCarrier,
+                                                       ec: ExecutionContext,
+                                                       correlationId: String): Future[DownstreamOutcome[RetrieveForeignResponse]] = {
 
     import request._
 
@@ -43,7 +43,12 @@ class RetrieveForeignConnector @Inject() (val http: HttpClient, val appConfig: A
       IfsUri[RetrieveForeignResponse](s"income-tax/income/foreign/$nino/${taxYear.asMtd}")
     }
 
-    get(downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    get(downstreamUri, intent = intent)
   }
 
 }

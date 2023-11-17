@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendDividendsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -191,25 +191,25 @@ class AmendDividendsControllerSpec
 
   val mtdResponse: JsValue = Json.parse(
     s"""
-      |{
-      |   "links":[
-      |      {
-      |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-      |         "method":"PUT",
-      |         "rel":"create-and-amend-dividends-income"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-      |         "method":"GET",
-      |         "rel":"self"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-      |         "method":"DELETE",
-      |         "rel":"delete-dividends-income"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
+       |         "method":"PUT",
+       |         "rel":"create-and-amend-dividends-income"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
+       |         "method":"GET",
+       |         "rel":"self"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
+       |         "method":"DELETE",
+       |         "rel":"delete-dividends-income"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 
@@ -231,11 +231,12 @@ class AmendDividendsControllerSpec
     )
   )
 
-  val auditData: JsValue = Json.parse(s"""
-                                         |{
-                                         |  "nino":"$nino",
-                                         |  "taxYear": "$taxYear"
-                                         |  }""".stripMargin)
+  val auditData: JsValue = Json.parse(
+    s"""
+       |{
+       |  "nino":"$nino",
+       |  "taxYear": "$taxYear"
+       |  }""".stripMargin)
 
   "AmendDividendsController" should {
     "return a successful response with status OK" when {

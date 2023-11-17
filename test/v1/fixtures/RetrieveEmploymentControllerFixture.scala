@@ -73,103 +73,103 @@ object RetrieveEmploymentControllerFixture {
   def mtdHmrcEnteredResponseWithHateoasAndNoDateIgnored(nino: String, taxYear: String, employmentId: String): JsObject = Json
     .parse(
       s"""
-      |{
-      |   "employerRef": "123/AB56797",
-      |   "employerName": "Employer Name Ltd.",
-      |   "startDate": "2020-06-17",
-      |   "cessationDate": "2020-06-17",
-      |   "payrollId": "123345657",
-      |   "occupationalPension": false,
-      |   "links":[
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-      |         "method": "GET",
-      |         "rel": "list-employments"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-      |         "method": "GET",
-      |         "rel": "self"
-      |      },
-      |      {
-      |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId/ignore",
-      |         "method": "POST",
-      |         "rel": "ignore-employment"
-      |      }
-      |   ]
-      |}
-      |""".stripMargin
+         |{
+         |   "employerRef": "123/AB56797",
+         |   "employerName": "Employer Name Ltd.",
+         |   "startDate": "2020-06-17",
+         |   "cessationDate": "2020-06-17",
+         |   "payrollId": "123345657",
+         |   "occupationalPension": false,
+         |   "links":[
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+         |         "method": "GET",
+         |         "rel": "list-employments"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "method": "GET",
+         |         "rel": "self"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId/ignore",
+         |         "method": "POST",
+         |         "rel": "ignore-employment"
+         |      }
+         |   ]
+         |}
+         |""".stripMargin
     )
     .as[JsObject]
 
   def mtdHmrcEnteredResponseWithHateoasAndDateIgnored(nino: String, taxYear: String, employmentId: String): JsObject = Json
     .parse(
       s"""
-       |{
-       |   "employerRef": "123/AB56797",
-       |   "employerName": "Employer Name Ltd.",
-       |   "startDate": "2020-06-17",
-       |   "cessationDate": "2020-06-17",
-       |   "payrollId": "123345657",
-       |   "occupationalPension": false,
-       |   "dateIgnored": "2020-06-17T10:53:38.000Z",
-       |   "links":[
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-       |         "method": "GET",
-       |         "rel": "list-employments"
-       |      },
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-       |         "method": "GET",
-       |         "rel": "self"
-       |      },
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId/unignore",
-       |         "method": "POST",
-       |         "rel": "unignore-employment"
-       |      }
-       |   ]
-       |}
-       |""".stripMargin
+         |{
+         |   "employerRef": "123/AB56797",
+         |   "employerName": "Employer Name Ltd.",
+         |   "startDate": "2020-06-17",
+         |   "cessationDate": "2020-06-17",
+         |   "payrollId": "123345657",
+         |   "occupationalPension": false,
+         |   "dateIgnored": "2020-06-17T10:53:38.000Z",
+         |   "links":[
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+         |         "method": "GET",
+         |         "rel": "list-employments"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "method": "GET",
+         |         "rel": "self"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId/unignore",
+         |         "method": "POST",
+         |         "rel": "unignore-employment"
+         |      }
+         |   ]
+         |}
+         |""".stripMargin
     )
     .as[JsObject]
 
   def mtdCustomEnteredResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = Json
     .parse(
       s"""
-       |{
-       |   "employerRef": "123/AB56797",
-       |   "employerName": "Employer Name Ltd.",
-       |   "startDate": "2020-06-17",
-       |   "cessationDate": "2020-06-17",
-       |   "payrollId": "123345657",
-       |   "occupationalPension": false,
-       |   "submittedOn": "2020-06-17T10:53:38.000Z",
-       |   "links":[
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear",
-       |         "method": "GET",
-       |         "rel": "list-employments"
-       |      },
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-       |         "method": "GET",
-       |         "rel": "self"
-       |      },
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-       |         "method": "PUT",
-       |         "rel": "amend-custom-employment"
-       |      },
-       |      {
-       |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
-       |         "method": "DELETE",
-       |         "rel": "delete-custom-employment"
-       |      }
-       |   ]
-       |}
-       |""".stripMargin
+         |{
+         |   "employerRef": "123/AB56797",
+         |   "employerName": "Employer Name Ltd.",
+         |   "startDate": "2020-06-17",
+         |   "cessationDate": "2020-06-17",
+         |   "payrollId": "123345657",
+         |   "occupationalPension": false,
+         |   "submittedOn": "2020-06-17T10:53:38.000Z",
+         |   "links":[
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear",
+         |         "method": "GET",
+         |         "rel": "list-employments"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "method": "GET",
+         |         "rel": "self"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "method": "PUT",
+         |         "rel": "amend-custom-employment"
+         |      },
+         |      {
+         |         "href": "/individuals/income-received/employments/$nino/$taxYear/$employmentId",
+         |         "method": "DELETE",
+         |         "rel": "delete-custom-employment"
+         |      }
+         |   ]
+         |}
+         |""".stripMargin
     )
     .as[JsObject]
 

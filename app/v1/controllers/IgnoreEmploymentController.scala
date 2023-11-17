@@ -38,15 +38,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthService,
-                                            val lookupService: MtdIdLookupService,
-                                            appConfig: AppConfig,
-                                            requestParser: IgnoreEmploymentRequestParser,
-                                            service: IgnoreEmploymentService,
-                                            auditService: AuditService,
-                                            cc: ControllerComponents,
-                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
+class IgnoreEmploymentController @Inject()(val authService: EnrolmentsAuthService,
+                                           val lookupService: MtdIdLookupService,
+                                           appConfig: AppConfig,
+                                           requestParser: IgnoreEmploymentRequestParser,
+                                           service: IgnoreEmploymentService,
+                                           auditService: AuditService,
+                                           cc: ControllerComponents,
+                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc)
     with BaseController
     with Logging
     with IgnoreHateoasBody {
@@ -72,7 +72,7 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
 
       val result =
         for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.ignoreEmployment(parsedRequest))
         } yield {
           logger.info(
@@ -96,7 +96,7 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -118,21 +118,21 @@ class IgnoreEmploymentController @Inject() (val authService: EnrolmentsAuthServi
   private def errorResult(errorWrapper: ErrorWrapper) =
     errorWrapper.error match {
       case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            TaxYearFormatError,
-            EmploymentIdFormatError,
-            RuleTaxYearNotSupportedError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotEndedError,
-            RuleCustomEmploymentError
-          ) =>
+        if errorWrapper.containsAnyOf(
+          BadRequestError,
+          NinoFormatError,
+          TaxYearFormatError,
+          EmploymentIdFormatError,
+          RuleTaxYearNotSupportedError,
+          RuleTaxYearRangeInvalidError,
+          RuleTaxYearNotEndedError,
+          RuleCustomEmploymentError
+        ) =>
         BadRequest(Json.toJson(errorWrapper))
 
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case InternalError => InternalServerError(Json.toJson(errorWrapper))
-      case _             => unhandledError(errorWrapper)
+      case _ => unhandledError(errorWrapper)
     }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {

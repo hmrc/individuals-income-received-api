@@ -25,7 +25,7 @@ import v1.models.request.listEmployments.ListEmploymentsRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ListEmploymentsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[ListEmploymentsRawData] {
+class ListEmploymentsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[ListEmploymentsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

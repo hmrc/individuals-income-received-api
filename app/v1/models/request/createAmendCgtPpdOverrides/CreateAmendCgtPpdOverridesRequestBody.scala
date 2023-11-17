@@ -31,6 +31,6 @@ object CreateAmendCgtPpdOverridesRequestBody extends JsonUtils {
   implicit val writes: OWrites[CreateAmendCgtPpdOverridesRequestBody] = (
     (JsPath \ "multiplePropertyDisposals").writeNullable[Seq[MultiplePropertyDisposals]] and
       (JsPath \ "singlePropertyDisposals").writeNullable[Seq[SinglePropertyDisposals]]
-  )(unlift(CreateAmendCgtPpdOverridesRequestBody.unapply))
+    )(unlift(CreateAmendCgtPpdOverridesRequestBody.unapply))
 
 }

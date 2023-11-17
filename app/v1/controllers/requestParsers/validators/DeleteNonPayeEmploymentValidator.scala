@@ -24,7 +24,7 @@ import v1.models.request.deleteNonPayeEmployment.DeleteNonPayeEmploymentRawData
 
 import javax.inject.Inject
 
-class DeleteNonPayeEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteNonPayeEmploymentRawData] {
+class DeleteNonPayeEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteNonPayeEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

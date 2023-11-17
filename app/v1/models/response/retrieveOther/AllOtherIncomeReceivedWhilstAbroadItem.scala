@@ -39,7 +39,7 @@ object AllOtherIncomeReceivedWhilstAbroadItem {
       (JsPath \ "taxableAmount").read[BigDecimal] and
       (JsPath \ "residentialFinancialCostAmount").readNullable[BigDecimal] and
       (JsPath \ "broughtFwdResidentialFinancialCostAmount").readNullable[BigDecimal]
-  )(AllOtherIncomeReceivedWhilstAbroadItem.apply _)
+    )(AllOtherIncomeReceivedWhilstAbroadItem.apply _)
 
   implicit val writes: OWrites[AllOtherIncomeReceivedWhilstAbroadItem] = Json.writes[AllOtherIncomeReceivedWhilstAbroadItem]
 }

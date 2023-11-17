@@ -26,8 +26,8 @@ import v1.models.request.addCustomEmployment._
 
 class AddCustomEmploymentRequestParserSpec extends UnitSpec {
 
-  private val nino: String           = "AA123456B"
-  private val taxYear: String        = "2017-18"
+  private val nino: String = "AA123456B"
+  private val taxYear: String = "2017-18"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestJson: JsValue = Json.parse(

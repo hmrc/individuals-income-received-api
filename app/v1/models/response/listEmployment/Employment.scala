@@ -31,6 +31,6 @@ object Employment extends HateoasLinks {
     (JsPath \ "employmentId").read[String] and
       (JsPath \ "employerName").read[String] and
       (JsPath \ "dateIgnored").readNullable[Timestamp]
-  )(Employment.apply _)
+    )(Employment.apply _)
 
 }

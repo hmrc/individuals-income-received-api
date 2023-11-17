@@ -75,7 +75,7 @@ class RetrieveDividendsServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveDividendsConnector {
 
-    private val nino    = "AA112233A"
+    private val nino = "AA112233A"
     private val taxYear = "2019-20"
 
     val request: RetrieveDividendsRequest = RetrieveDividendsRequest(
@@ -83,7 +83,7 @@ class RetrieveDividendsServiceSpec extends ServiceSpec {
       taxYear = TaxYear.fromMtd(taxYear)
     )
 
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveDividends")
 
     val service: RetrieveDividendsService = new RetrieveDividendsService(

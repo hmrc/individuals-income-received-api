@@ -37,7 +37,7 @@ object PostCessationReceiptsItem {
       (JsPath \ "incomeSource").readNullable[String] and
       (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "taxYearIncomeToBeTaxed").read[String]
-  )(PostCessationReceiptsItem.apply _)
+    )(PostCessationReceiptsItem.apply _)
 
   implicit val writes: OWrites[PostCessationReceiptsItem] = Json.writes[PostCessationReceiptsItem]
 }

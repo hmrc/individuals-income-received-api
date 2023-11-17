@@ -29,6 +29,6 @@ object UkSavingsAccount extends HateoasLinks {
   implicit val reads: Reads[UkSavingsAccount] = (
     (JsPath \ "incomeSourceId").read[String] and
       (JsPath \ "incomeSourceName").read[String]
-  )(UkSavingsAccount.apply _)
+    )(UkSavingsAccount.apply _)
 
 }

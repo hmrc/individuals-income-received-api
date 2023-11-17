@@ -28,11 +28,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmploymentIncomeConnector) extends BaseService {
+class RetrieveOtherEmploymentIncomeService @Inject()(connector: OtherEmploymentIncomeConnector) extends BaseService {
 
   def retrieve(request: OtherEmploymentIncomeRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherEmploymentResponse]] = {
+                                                      ctx: RequestContext,
+                                                      ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherEmploymentResponse]] = {
 
     connector.retrieveOtherEmploymentIncome(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
@@ -41,16 +41,16 @@ class RetrieveOtherEmploymentIncomeService @Inject() (connector: OtherEmployment
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "NOT_FOUND"              -> NotFoundError
+      "NOT_FOUND" -> NotFoundError
     )
     errors ++ extraTysErrors
   }

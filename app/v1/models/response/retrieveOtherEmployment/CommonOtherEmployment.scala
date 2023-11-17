@@ -26,7 +26,7 @@ object CommonOtherEmployment {
   implicit val reads: Reads[CommonOtherEmployment] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "amountDeducted").read[BigDecimal]
-  )(CommonOtherEmployment.apply _)
+    )(CommonOtherEmployment.apply _)
 
   implicit val writes: OWrites[CommonOtherEmployment] = Json.writes[CommonOtherEmployment]
 }

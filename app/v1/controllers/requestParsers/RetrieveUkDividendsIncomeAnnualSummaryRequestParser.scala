@@ -24,8 +24,8 @@ import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.{RetrieveUkDivid
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveUkDividendsIncomeAnnualSummaryRequestParser @Inject() (val validator: RetrieveUkDividendsIncomeAnnualSummaryValidator)
-    extends RequestParser[RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest] {
+class RetrieveUkDividendsIncomeAnnualSummaryRequestParser @Inject()(val validator: RetrieveUkDividendsIncomeAnnualSummaryValidator)
+  extends RequestParser[RetrieveUkDividendsAnnualIncomeSummaryRawData, RetrieveUkDividendsAnnualIncomeSummaryRequest] {
 
   override protected def requestFor(data: RetrieveUkDividendsAnnualIncomeSummaryRawData): RetrieveUkDividendsAnnualIncomeSummaryRequest =
     RetrieveUkDividendsAnnualIncomeSummaryRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

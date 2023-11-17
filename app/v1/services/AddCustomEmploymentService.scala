@@ -28,23 +28,23 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddCustomEmploymentService @Inject() (connector: AddCustomEmploymentConnector) extends BaseService {
+class AddCustomEmploymentService @Inject()(connector: AddCustomEmploymentConnector) extends BaseService {
 
   def addEmployment(
-      request: AddCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[AddCustomEmploymentResponse]] =
+                     request: AddCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[AddCustomEmploymentResponse]] =
     connector.addEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "NOT_SUPPORTED_TAX_YEAR"    -> RuleTaxYearNotEndedError,
-      "INVALID_DATE_RANGE"        -> RuleStartDateAfterTaxYearEndError,
-      "INVALID_CESSATION_DATE"    -> RuleCessationDateBeforeTaxYearStartError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "NOT_SUPPORTED_TAX_YEAR" -> RuleTaxYearNotEndedError,
+      "INVALID_DATE_RANGE" -> RuleStartDateAfterTaxYearEndError,
+      "INVALID_CESSATION_DATE" -> RuleCessationDateBeforeTaxYearStartError,
+      "INVALID_PAYLOAD" -> InternalError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
 }

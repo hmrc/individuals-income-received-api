@@ -58,25 +58,25 @@ object RetrieveNonPayeEmploymentControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdResponse.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-non-paye-employment-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-non-paye-employment-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-non-paye-employment-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/non-paye/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-non-paye-employment-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

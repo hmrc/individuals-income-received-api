@@ -23,8 +23,8 @@ import v1.models.request.retrievePensions.{RetrievePensionsRawData, RetrievePens
 
 import javax.inject.Inject
 
-class RetrievePensionsRequestParser @Inject() (val validator: RetrievePensionsValidator)
-    extends RequestParser[RetrievePensionsRawData, RetrievePensionsRequest] {
+class RetrievePensionsRequestParser @Inject()(val validator: RetrievePensionsValidator)
+  extends RequestParser[RetrievePensionsRawData, RetrievePensionsRequest] {
 
   override protected def requestFor(data: RetrievePensionsRawData): RetrievePensionsRequest =
     RetrievePensionsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

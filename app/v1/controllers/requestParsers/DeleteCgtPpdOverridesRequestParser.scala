@@ -24,8 +24,8 @@ import v1.models.request.deleteCgtPpdOverrides.{DeleteCgtPpdOverridesRawData, De
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCgtPpdOverridesRequestParser @Inject() (val validator: DeleteCgtPpdOverridesValidator)
-    extends RequestParser[DeleteCgtPpdOverridesRawData, DeleteCgtPpdOverridesRequest] {
+class DeleteCgtPpdOverridesRequestParser @Inject()(val validator: DeleteCgtPpdOverridesValidator)
+  extends RequestParser[DeleteCgtPpdOverridesRawData, DeleteCgtPpdOverridesRequest] {
 
   override protected def requestFor(data: DeleteCgtPpdOverridesRawData): DeleteCgtPpdOverridesRequest =
     DeleteCgtPpdOverridesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

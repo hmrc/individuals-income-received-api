@@ -38,17 +38,17 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
-                                                      val lookupService: MtdIdLookupService,
-                                                      appConfig: AppConfig,
-                                                      parser: CreateAmendCgtPpdOverridesRequestParser,
-                                                      service: CreateAmendCgtPpdOverridesService,
-                                                      auditService: AuditService,
-                                                      nrsProxyService: NrsProxyService,
-                                                      hateoasFactory: HateoasFactory,
-                                                      cc: ControllerComponents,
-                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) {
+class CreateAmendCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
+                                                     val lookupService: MtdIdLookupService,
+                                                     appConfig: AppConfig,
+                                                     parser: CreateAmendCgtPpdOverridesRequestParser,
+                                                     service: CreateAmendCgtPpdOverridesService,
+                                                     auditService: AuditService,
+                                                     nrsProxyService: NrsProxyService,
+                                                     hateoasFactory: HateoasFactory,
+                                                     cc: ControllerComponents,
+                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -82,8 +82,8 @@ class CreateAmendCgtPpdOverridesController @Inject() (val authService: Enrolment
   private def auditHandler(nino: String, taxYear: String, request: UserRequest[JsValue]): AuditHandler = {
     new AuditHandler() {
       override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-          ctx: RequestContext,
-          ec: ExecutionContext): Unit = {
+                                                                                                                            ctx: RequestContext,
+                                                                                                                            ec: ExecutionContext): Unit = {
 
         response match {
           case Left(err: ErrorWrapper) =>

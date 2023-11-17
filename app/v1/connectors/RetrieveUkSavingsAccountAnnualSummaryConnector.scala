@@ -27,16 +27,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[DownstreamUkSavingsAnnualIncomeResponse]] = {
+                                                                                            hc: HeaderCarrier,
+                                                                                            ec: ExecutionContext,
+                                                                                            correlationId: String): Future[DownstreamOutcome[DownstreamUkSavingsAnnualIncomeResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino           = request.nino.nino
+    val nino = request.nino.nino
     val incomeSourceId = request.savingsAccountId
 
     val downstreamUri: DownstreamUri[DownstreamUkSavingsAnnualIncomeResponse] =
@@ -46,7 +46,13 @@ class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpCl
         DesUri(s"income-tax/nino/$nino/income-source/savings/annual/${request.taxYear.asDownstream}?incomeSourceId=$incomeSourceId")
       }
 
-    get(downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    get(downstreamUri, intent = intent)
+
   }
 
 }

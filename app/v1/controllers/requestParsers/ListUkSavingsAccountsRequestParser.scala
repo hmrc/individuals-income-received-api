@@ -24,8 +24,8 @@ import v1.models.request.listUkSavingsAccounts.{ListUkSavingsAccountsRawData, Li
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ListUkSavingsAccountsRequestParser @Inject() (val validator: ListUkSavingsAccountsValidator)
-    extends RequestParser[ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest] {
+class ListUkSavingsAccountsRequestParser @Inject()(val validator: ListUkSavingsAccountsValidator)
+  extends RequestParser[ListUkSavingsAccountsRawData, ListUkSavingsAccountsRequest] {
 
   override protected def requestFor(data: ListUkSavingsAccountsRawData): ListUkSavingsAccountsRequest =
     ListUkSavingsAccountsRequest(Nino(data.nino), data.savingsAccountId)

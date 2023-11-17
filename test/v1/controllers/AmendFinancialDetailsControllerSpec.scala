@@ -41,7 +41,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendFinancialDetailsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockAppConfig
     with MockAmendFinancialDetailsRequestParser
@@ -49,7 +49,7 @@ class AmendFinancialDetailsControllerSpec
     with MockHateoasFactory
     with MockAuditService {
 
-  val taxYear: String      = "2019-20"
+  val taxYear: String = "2019-20"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   private val requestBodyJsonWithOpw: JsValue = Json.parse(

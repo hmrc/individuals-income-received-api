@@ -47,25 +47,25 @@ object RetrieveSavingsControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdRetrieveSavingsResponse.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-savings-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-savings-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-savings-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-savings-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

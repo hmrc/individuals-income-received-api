@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListEmploymentsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockAppConfig
     with MockListEmploymentsService
@@ -45,7 +45,7 @@ class ListEmploymentsControllerSpec
     with MockListEmploymentsRequestParser
     with HateoasLinks {
 
-  val taxYear: String      = "2019-20"
+  val taxYear: String = "2019-20"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val rawData: ListEmploymentsRawData = ListEmploymentsRawData(

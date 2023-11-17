@@ -46,7 +46,7 @@ trait MockOtherEmploymentIncomeConnector extends MockFactory {
     }
 
     def retrieveOtherEmploymentIncome(
-        request: OtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]]] = {
+                                       request: OtherEmploymentIncomeRequest): CallHandler[Future[DownstreamOutcome[RetrieveOtherEmploymentResponse]]] = {
       (
         otherEmploymentIncomeConnector
           .retrieveOtherEmploymentIncome(_: OtherEmploymentIncomeRequest)(

@@ -24,7 +24,7 @@ import v1.models.request.retrieveNonPayeEmploymentIncome.RetrieveNonPayeEmployme
 
 import javax.inject.Inject
 
-class RetrieveNonPayeEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveNonPayeEmploymentIncomeRawData] {
+class RetrieveNonPayeEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveNonPayeEmploymentIncomeRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

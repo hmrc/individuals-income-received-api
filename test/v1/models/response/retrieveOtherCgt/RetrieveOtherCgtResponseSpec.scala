@@ -177,8 +177,8 @@ class RetrieveOtherCgtResponseSpec extends UnitSpec {
 
   "RetrieveOtherCgtLinksFactory" when {
     class Test extends MockAppConfig {
-      val hateoasFactory  = new HateoasFactory(mockAppConfig)
-      val nino            = "AA111111A"
+      val hateoasFactory = new HateoasFactory(mockAppConfig)
+      val nino = "AA111111A"
       val taxYear: String = "2020-21"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     }

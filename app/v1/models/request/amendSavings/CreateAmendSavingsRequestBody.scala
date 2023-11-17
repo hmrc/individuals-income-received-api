@@ -28,11 +28,11 @@ object CreateAmendSavingsRequestBody extends JsonUtils {
   implicit val reads: Reads[CreateAmendSavingsRequestBody] = (
     (JsPath \ "securities").readNullable[AmendSecurities] and
       (JsPath \ "foreignInterest").readNullable[Seq[AmendForeignInterestItem]].mapEmptySeqToNone
-  )(CreateAmendSavingsRequestBody.apply _)
+    )(CreateAmendSavingsRequestBody.apply _)
 
   implicit val writes: OWrites[CreateAmendSavingsRequestBody] = (
     (JsPath \ "securities").writeNullable[AmendSecurities] and
       (JsPath \ "foreignInterest").writeNullable[Seq[AmendForeignInterestItem]]
-  )(unlift(CreateAmendSavingsRequestBody.unapply))
+    )(unlift(CreateAmendSavingsRequestBody.unapply))
 
 }

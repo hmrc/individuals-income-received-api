@@ -27,10 +27,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCgtNonPpdConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class DeleteCgtNonPpdConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def deleteCgtNonPpd(
-      request: DeleteCgtNonPpdRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                       request: DeleteCgtNonPpdRequest)(implicit hc: HeaderCarrier, ec: ExecutionContext, correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 
@@ -41,7 +41,12 @@ class DeleteCgtNonPpdConnector @Inject() (val http: HttpClient, val appConfig: A
       Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/${nino.value}/${taxYear.asMtd}")
     }
 
-    delete(downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    delete(downstreamUri, intent = intent)
 
   }
 

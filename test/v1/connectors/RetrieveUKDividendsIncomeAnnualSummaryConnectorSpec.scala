@@ -27,10 +27,10 @@ import scala.concurrent.Future
 
 class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
 
-  val nino: String              = "AA111111A"
-  val taxYearMtd: String        = "2018-19"
+  val nino: String = "AA111111A"
+  val taxYearMtd: String = "2018-19"
   val taxYearDownstream: String = "2019"
-  val tysTaxYear: String        = "2023"
+  val tysTaxYear: String = "2023"
 
   private val validResponse = RetrieveUkDividendsAnnualIncomeSummaryResponse(
     ukDividends = Some(10.12),
@@ -43,7 +43,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
         new DesTest with Test {
           def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
 
-          val outcome                             = Right(ResponseWrapper(correlationId, validResponse))
+          val outcome = Right(ResponseWrapper(correlationId, validResponse))
           override implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
           MockedHttpClient
@@ -77,7 +77,8 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
     def taxYear: TaxYear
 
     protected val connector: RetrieveUKDividendsIncomeAnnualSummaryConnector =

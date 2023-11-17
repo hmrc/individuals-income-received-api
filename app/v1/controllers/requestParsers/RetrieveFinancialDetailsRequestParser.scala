@@ -24,8 +24,8 @@ import v1.models.request.retrieveFinancialDetails.{RetrieveEmploymentAndFinancia
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveFinancialDetailsRequestParser @Inject() (val validator: RetrieveFinancialDetailsValidator)
-    extends RequestParser[RetrieveFinancialDetailsRawData, RetrieveEmploymentAndFinancialDetailsRequest] {
+class RetrieveFinancialDetailsRequestParser @Inject()(val validator: RetrieveFinancialDetailsValidator)
+  extends RequestParser[RetrieveFinancialDetailsRawData, RetrieveEmploymentAndFinancialDetailsRequest] {
 
   override protected def requestFor(data: RetrieveFinancialDetailsRawData): RetrieveEmploymentAndFinancialDetailsRequest =
     RetrieveEmploymentAndFinancialDetailsRequest(

@@ -50,7 +50,8 @@ class DeletePensionsConnectorSpec extends ConnectorSpec {
     "return the expected response for a non-TYS request" when {
       "a valid request is made" in new IfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
-        val outcome          = Right(ResponseWrapper(correlationId, ()))
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
           url = s"$baseUrl/income-tax/income/pensions/$nino/${taxYear.asMtd}"
@@ -89,7 +90,8 @@ class DeletePensionsConnectorSpec extends ConnectorSpec {
   "return the expected response for a TYS request" when {
     "a valid request is made" in new TysIfsTest with Test {
       def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-      val outcome          = Right(ResponseWrapper(correlationId, ()))
+
+      val outcome = Right(ResponseWrapper(correlationId, ()))
 
       willDelete(
         url = s"$baseUrl/income-tax/income/pensions/${taxYear.asTysDownstream}/$nino"

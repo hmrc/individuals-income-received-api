@@ -34,9 +34,12 @@ case class SinglePropertyDisposals(ppdSubmissionId: String,
                                    amountOfNetLoss: Option[BigDecimal]) {
 
   def isNetGainEmpty: Boolean = amountOfNetGain.isEmpty
+
   def isNetLossEmpty: Boolean = amountOfNetLoss.isEmpty
+
   def isBothSupplied: Boolean = !isNetGainEmpty && !isNetLossEmpty
-  def isBothEmpty: Boolean    = isNetGainEmpty && isNetLossEmpty
+
+  def isBothEmpty: Boolean = isNetGainEmpty && isNetLossEmpty
 }
 
 object SinglePropertyDisposals {
@@ -56,6 +59,6 @@ object SinglePropertyDisposals {
       (JsPath \ "lossesFromPreviousYear").writeNullable[BigDecimal] and
       (JsPath \ "amountOfNetGain").writeNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").writeNullable[BigDecimal]
-  )(unlift(SinglePropertyDisposals.unapply))
+    )(unlift(SinglePropertyDisposals.unapply))
 
 }

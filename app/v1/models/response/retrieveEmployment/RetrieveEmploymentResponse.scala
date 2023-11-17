@@ -45,7 +45,7 @@ object RetrieveEmploymentResponse extends HateoasLinks {
       (JsPath \\ "occupationalPension").readNullable[Boolean] and
       (JsPath \\ "dateIgnored").readNullable[Timestamp] and
       (JsPath \\ "submittedOn").readNullable[Timestamp]
-  )(RetrieveEmploymentResponse.apply _)
+    )(RetrieveEmploymentResponse.apply _)
 
   implicit object RetrieveCustomEmploymentLinksFactory extends HateoasLinksFactory[RetrieveEmploymentResponse, RetrieveEmploymentHateoasData] {
 
@@ -64,12 +64,12 @@ object RetrieveEmploymentResponse extends HateoasLinks {
 
       val hmrcLinks = data.response.dateIgnored match {
         case Some(_) => baseLinks ++ Seq(unignoreEmployment(appConfig, nino, taxYear, employmentId))
-        case None    => baseLinks ++ Seq(ignoreEmployment(appConfig, nino, taxYear, employmentId))
+        case None => baseLinks ++ Seq(ignoreEmployment(appConfig, nino, taxYear, employmentId))
       }
 
       data.response.submittedOn match {
         case Some(_) => baseLinks ++ customLinks
-        case None    => hmrcLinks
+        case None => hmrcLinks
       }
     }
 
@@ -78,4 +78,4 @@ object RetrieveEmploymentResponse extends HateoasLinks {
 }
 
 case class RetrieveEmploymentHateoasData(nino: String, taxYear: String, employmentId: String, response: RetrieveEmploymentResponse)
-    extends HateoasData
+  extends HateoasData

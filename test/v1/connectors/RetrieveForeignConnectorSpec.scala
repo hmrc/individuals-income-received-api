@@ -59,6 +59,7 @@ class RetrieveForeignConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
 
     protected val nino: String = "AA111111A"
+
     def taxYear: TaxYear
 
     val request: RetrieveForeignRequest =
@@ -74,14 +75,14 @@ class RetrieveForeignConnectorSpec extends ConnectorSpec {
       new RetrieveForeignConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
-        outcome: DownstreamOutcome[RetrieveForeignResponse]): CallHandler[Future[DownstreamOutcome[RetrieveForeignResponse]]]#Derived = {
+                                    outcome: DownstreamOutcome[RetrieveForeignResponse]): CallHandler[Future[DownstreamOutcome[RetrieveForeignResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/foreign/$nino/${taxYear.asMtd}"
       ).returns(Future.successful(outcome))
     }
 
     protected def stubTysHttpResponse(
-        outcome: DownstreamOutcome[RetrieveForeignResponse]): CallHandler[Future[DownstreamOutcome[RetrieveForeignResponse]]]#Derived = {
+                                       outcome: DownstreamOutcome[RetrieveForeignResponse]): CallHandler[Future[DownstreamOutcome[RetrieveForeignResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/foreign-income/${taxYear.asTysDownstream}/$nino"
       ).returns(Future.successful(outcome))

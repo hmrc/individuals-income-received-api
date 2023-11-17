@@ -28,7 +28,7 @@ object RetrieveUkSavingsAnnualSummaryResponse {
   implicit val writes: OWrites[RetrieveUkSavingsAnnualSummaryResponse] = Json.writes[RetrieveUkSavingsAnnualSummaryResponse]
 
   implicit object LinksFactory
-      extends HateoasLinksFactory[RetrieveUkSavingsAnnualSummaryResponse, RetrieveUkSavingsAnnualSummaryResponseHateoasData] {
+    extends HateoasLinksFactory[RetrieveUkSavingsAnnualSummaryResponse, RetrieveUkSavingsAnnualSummaryResponseHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveUkSavingsAnnualSummaryResponseHateoasData): Seq[Link] = {
       import data._

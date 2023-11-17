@@ -51,7 +51,7 @@ object Disposals {
       (JsPath \ "lossesFromPreviousYear").readNullable[BigDecimal] and
       (JsPath \ "amountOfNetGain").readNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").readNullable[BigDecimal]
-  )(Disposals.apply _)
+    )(Disposals.apply _)
 
   implicit val writes: OWrites[Disposals] = Json.writes[Disposals]
 }

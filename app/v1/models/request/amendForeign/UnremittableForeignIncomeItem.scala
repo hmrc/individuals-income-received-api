@@ -28,6 +28,6 @@ object UnremittableForeignIncomeItem {
     (JsPath \ "countryCode").write[String] and
       (JsPath \ "amountInForeignCurrency").write[BigDecimal] and
       (JsPath \ "amountTaxPaid").writeNullable[BigDecimal]
-  )(unlift(UnremittableForeignIncomeItem.unapply))
+    )(unlift(UnremittableForeignIncomeItem.unapply))
 
 }

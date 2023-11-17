@@ -26,7 +26,7 @@ object BusinessReceiptsItem {
   implicit val reads: Reads[BusinessReceiptsItem] = (
     (JsPath \ "grossAmount").read[BigDecimal] and
       (JsPath \ "taxYear").read[String]
-  )(BusinessReceiptsItem.apply _)
+    )(BusinessReceiptsItem.apply _)
 
   implicit val writes: OWrites[BusinessReceiptsItem] = Json.writes[BusinessReceiptsItem]
 }

@@ -25,10 +25,11 @@ import scala.concurrent.Future
 
 class IgnoreEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String         = "AA111111A"
+  val nino: String = "AA111111A"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
     def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
     val connector: IgnoreEmploymentConnector = new IgnoreEmploymentConnector(

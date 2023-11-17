@@ -27,7 +27,7 @@ import v1.models.request.amendInsurancePolicies.AmendInsurancePoliciesRawData
 
 class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -392,19 +392,19 @@ class AmendInsurancePoliciesValidatorSpec extends UnitSpec with ValueFormatError
     """.stripMargin
   )
 
-  private val validRawRequestBody                    = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody                    = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody                 = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody                 = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody       = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidCustomerRefRawRequestBody       = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
-  private val invalidEventRawRequestBody             = AnyContentAsJson(invalidEventRequestBodyJson)
-  private val invalidLifeInsuranceRawRequestBody     = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
+  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefRequestBodyJson)
+  private val invalidEventRawRequestBody = AnyContentAsJson(invalidEventRequestBodyJson)
+  private val invalidLifeInsuranceRawRequestBody = AnyContentAsJson(invalidLifeInsuranceRequestBodyJson)
   private val invalidCapitalRedemptionRawRequestBody = AnyContentAsJson(invalidCapitalRedemptionRequestBodyJson)
-  private val invalidLifeAnnuityRawRequestBody       = AnyContentAsJson(invalidLifeAnnuityRequestBodyJson)
-  private val invalidVoidedIsaRawRequestBody         = AnyContentAsJson(invalidVoidedIsaRequestBodyJson)
-  private val invalidForeignRawRequestBody           = AnyContentAsJson(invalidForeignRequestBodyJson)
-  private val allInvalidValueRawRequestBody          = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val invalidLifeAnnuityRawRequestBody = AnyContentAsJson(invalidLifeAnnuityRequestBodyJson)
+  private val invalidVoidedIsaRawRequestBody = AnyContentAsJson(invalidVoidedIsaRequestBodyJson)
+  private val invalidForeignRawRequestBody = AnyContentAsJson(invalidForeignRequestBodyJson)
+  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
 

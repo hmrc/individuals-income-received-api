@@ -27,8 +27,8 @@ import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, Am
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[AmendFinancialDetailsRawData]
+class AmendFinancialDetailsValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[AmendFinancialDetailsRawData]
     with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
@@ -79,12 +79,12 @@ class AmendFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig)
     def offPayrollWorkerAllowedValidation(data: AmendFinancialDetailsRawData): List[List[MtdError]] = {
 
       if (TaxYearValidation.validate(data.taxYear) == NoValidationErrors) {
-        val isTysTaxYear                           = ((TaxYear.fromMtd(data.taxYear).year) >= 2024) & data.opwEnabled
+        val isTysTaxYear = ((TaxYear.fromMtd(data.taxYear).year) >= 2024) & data.opwEnabled
         val maybeOffPayrollWorker: Option[Boolean] = requestBodyObj.flatMap(entity => entity.employment.offPayrollWorker)
         maybeOffPayrollWorker match {
-          case None if isTysTaxYear     => List(List(RuleMissingOffPayrollWorker))
+          case None if isTysTaxYear => List(List(RuleMissingOffPayrollWorker))
           case Some(_) if !isTysTaxYear => List(List(RuleNotAllowedOffPayrollWorker))
-          case _                        => NoValidationErrors
+          case _ => NoValidationErrors
         }
       } else {
         NoValidationErrors

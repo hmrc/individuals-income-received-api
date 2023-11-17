@@ -30,7 +30,7 @@ import scala.concurrent.Future
 
 class RetrievePensionsServiceSpec extends ServiceSpec {
 
-  private val nino    = Nino("AA112233A")
+  private val nino = Nino("AA112233A")
   private val taxYear = "2019-20"
 
   val responseBody: RetrievePensionsResponse = RetrievePensionsResponse(

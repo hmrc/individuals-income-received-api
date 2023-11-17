@@ -28,35 +28,35 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: RetrieveUKDividendsIncomeAnnualSummaryConnector) extends BaseService {
+class RetrieveUkDividendsIncomeAnnualSummaryService @Inject()(connector: RetrieveUKDividendsIncomeAnnualSummaryConnector) extends BaseService {
 
   def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]] = {
+                                                                                                     ctx: RequestContext,
+                                                                                                     ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkDividendsAnnualIncomeSummaryResponse]] = {
 
     connector.retrieveUKDividendsIncomeAnnualSummary(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   val downstreamErrorMap: Map[String, MtdError] = {
     val downstreamErrors = Map(
-      "INVALID_NINO"            -> NinoFormatError,
-      "INVALID_TYPE"            -> InternalError,
-      "INVALID_TAXYEAR"         -> TaxYearFormatError,
-      "INVALID_INCOME_SOURCE"   -> InternalError,
-      "NOT_FOUND_PERIOD"        -> NotFoundError,
+      "INVALID_NINO" -> NinoFormatError,
+      "INVALID_TYPE" -> InternalError,
+      "INVALID_TAXYEAR" -> TaxYearFormatError,
+      "INVALID_INCOME_SOURCE" -> InternalError,
+      "NOT_FOUND_PERIOD" -> NotFoundError,
       "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
-      "SERVER_ERROR"            -> InternalError,
-      "SERVICE_UNAVAILABLE"     -> InternalError
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors: Map[String, MtdError] = Map(
-      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
-      "INVALID_INCOMESOURCE_ID"      -> InternalError,
-      "INVALID_INCOMESOURCE_TYPE"    -> InternalError,
-      "INVALID_CORRELATION_ID"       -> InternalError,
-      "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_ID" -> InternalError,
+      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "SUBMISSION_PERIOD_NOT_FOUND" -> NotFoundError,
       "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 
     downstreamErrors ++ extraTysErrors

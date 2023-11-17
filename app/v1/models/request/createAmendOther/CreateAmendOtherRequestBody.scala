@@ -37,10 +37,10 @@ object CreateAmendOtherRequestBody extends JsonUtils {
         .readNullable[ChargeableForeignBenefitsAndGifts]
         .map(_.flatMap {
           case ChargeableForeignBenefitsAndGifts.empty => None
-          case chargeableForeignBenefitsAndGifts       => Some(chargeableForeignBenefitsAndGifts)
+          case chargeableForeignBenefitsAndGifts => Some(chargeableForeignBenefitsAndGifts)
         }) and
       (JsPath \ "omittedForeignIncome").readNullable[OmittedForeignIncome]
-  )(CreateAmendOtherRequestBody.apply _)
+    )(CreateAmendOtherRequestBody.apply _)
 
   implicit val writes: OWrites[CreateAmendOtherRequestBody] = (
     (JsPath \ "businessReceipts").writeNullable[Seq[BusinessReceiptsItem]] and
@@ -48,6 +48,6 @@ object CreateAmendOtherRequestBody extends JsonUtils {
       (JsPath \ "overseasIncomeAndGains").writeNullable[OverseasIncomeAndGains] and
       (JsPath \ "chargeableForeignBenefitsAndGifts").writeNullable[ChargeableForeignBenefitsAndGifts] and
       (JsPath \ "omittedForeignIncome").writeNullable[OmittedForeignIncome]
-  )(unlift(CreateAmendOtherRequestBody.unapply))
+    )(unlift(CreateAmendOtherRequestBody.unapply))
 
 }

@@ -36,16 +36,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveUkSavingsAnnualSummaryService
     with MockHateoasFactory
     with MockRetrieveUkSavingsAnnualRequestParser
     with HateoasLinks {
 
-  val taxYear: String                     = "2019-20"
-  val savingsAccountId: String            = "ABCDE0123456789"
-  val taxedUkIncome: Option[BigDecimal]   = Some(93556675358.99)
+  val taxYear: String = "2019-20"
+  val savingsAccountId: String = "ABCDE0123456789"
+  val taxedUkIncome: Option[BigDecimal] = Some(93556675358.99)
   val unTaxedUkIncome: Option[BigDecimal] = Some(34514974058.99)
 
   private val rawData: RetrieveUkSavingsAnnualSummaryRawData = RetrieveUkSavingsAnnualSummaryRawData(nino, taxYear, savingsAccountId)

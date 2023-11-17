@@ -29,26 +29,26 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: RetrieveUkSavingsAccountAnnualSummaryConnector) extends BaseService {
+class RetrieveUkSavingsAccountAnnualSummaryService @Inject()(connector: RetrieveUkSavingsAccountAnnualSummaryConnector) extends BaseService {
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
+                                                                                            ctx: RequestContext,
+                                                                                            ec: ExecutionContext): Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]] = {
 
     val result = for {
       downstreamResponseWrapper <- EitherT(connector.retrieveUkSavingsAccountAnnualSummary(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-      mtdResponseWrapper        <- EitherT.fromEither[Future](convertToMtd(downstreamResponseWrapper))
+      mtdResponseWrapper <- EitherT.fromEither[Future](convertToMtd(downstreamResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
   }
 
   private def convertToMtd(downstreamResponseWrapper: ResponseWrapper[DownstreamUkSavingsAnnualIncomeResponse])(implicit
-      logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
+                                                                                                                logContext: EndpointLogContext): ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse] = {
 
     downstreamResponseWrapper.responseData.savingsInterestAnnualIncome match {
       case item +: Nil => Right(ResponseWrapper(downstreamResponseWrapper.correlationId, item.toMtd))
-      case Nil         => Left(ErrorWrapper(downstreamResponseWrapper.correlationId, NotFoundError, None))
+      case Nil => Left(ErrorWrapper(downstreamResponseWrapper.correlationId, NotFoundError, None))
 
       case _ =>
         logger.info(s"[${logContext.controllerName}] [${logContext.endpointName}] - More than one matching account found")
@@ -58,24 +58,24 @@ class RetrieveUkSavingsAccountAnnualSummaryService @Inject() (connector: Retriev
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_NINO"            -> NinoFormatError,
-      "INVALID_TYPE"            -> InternalError,
-      "INVALID_TAXYEAR"         -> TaxYearFormatError,
-      "INVALID_INCOME_SOURCE"   -> SavingsAccountIdFormatError,
-      "NOT_FOUND_PERIOD"        -> NotFoundError,
+      "INVALID_NINO" -> NinoFormatError,
+      "INVALID_TYPE" -> InternalError,
+      "INVALID_TAXYEAR" -> TaxYearFormatError,
+      "INVALID_INCOME_SOURCE" -> SavingsAccountIdFormatError,
+      "NOT_FOUND_PERIOD" -> NotFoundError,
       "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
-      "SERVER_ERROR"            -> InternalError,
-      "SERVICE_UNAVAILABLE"     -> InternalError
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR"             -> TaxYearFormatError,
-      "INVALID_CORRELATION_ID"       -> InternalError,
-      "INVALID_INCOMESOURCE_ID"      -> SavingsAccountIdFormatError,
-      "INVALID_INCOMESOURCE_TYPE"    -> InternalError,
-      "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "INVALID_INCOMESOURCE_ID" -> SavingsAccountIdFormatError,
+      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
+      "SUBMISSION_PERIOD_NOT_FOUND" -> NotFoundError,
       "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
 
     errors ++ extraTysErrors

@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class ListEmploymentsServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
   private val requestData = ListEmploymentsRequest(Nino(nino), taxYear)

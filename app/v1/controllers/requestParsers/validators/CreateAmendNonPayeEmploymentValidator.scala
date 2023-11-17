@@ -26,8 +26,8 @@ import v1.models.request.createAmendNonPayeEmployment._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendNonPayeEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-    extends Validator[CreateAmendNonPayeEmploymentRawData] {
+class CreateAmendNonPayeEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+  extends Validator[CreateAmendNonPayeEmploymentRawData] {
 
   private val validationSet = List(
     parameterFormatValidation,

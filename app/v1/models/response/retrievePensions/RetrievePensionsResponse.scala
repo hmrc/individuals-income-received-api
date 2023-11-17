@@ -34,7 +34,7 @@ object RetrievePensionsResponse extends HateoasLinks with JsonUtils {
     (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "foreignPension").readNullable[Seq[ForeignPensionsItem]].mapEmptySeqToNone and
       (JsPath \ "overseasPensionContribution").readNullable[Seq[OverseasPensionContributions]].mapEmptySeqToNone
-  )(RetrievePensionsResponse.apply _)
+    )(RetrievePensionsResponse.apply _)
 
   implicit val writes: OWrites[RetrievePensionsResponse] = Json.writes[RetrievePensionsResponse]
 

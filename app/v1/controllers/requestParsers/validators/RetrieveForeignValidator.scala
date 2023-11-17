@@ -25,7 +25,7 @@ import v1.models.request.retrieveForeign.RetrieveForeignRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveForeignValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveForeignRawData] {
+class RetrieveForeignValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveForeignRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

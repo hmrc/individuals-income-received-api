@@ -25,7 +25,7 @@ import v1.models.request.retrieveSavings.RetrieveSavingsRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveSavingsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveSavingsRawData] {
+class RetrieveSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveSavingsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

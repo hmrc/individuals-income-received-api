@@ -39,7 +39,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendCustomEmploymentControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockAppConfig
     with MockAuditService
@@ -48,7 +48,7 @@ class AmendCustomEmploymentControllerSpec
     with MockHateoasFactory {
 
   val taxYear: String = "2019-20"
-  val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   private val requestBodyJson: JsValue = Json.parse(
     """

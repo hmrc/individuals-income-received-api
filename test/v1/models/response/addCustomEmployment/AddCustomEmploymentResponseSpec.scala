@@ -54,9 +54,9 @@ class AddCustomEmploymentResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val taxYear        = "2017-18"
-      val employmentId   = "anId"
+      val nino = "someNino"
+      val taxYear = "2017-18"
+      val employmentId = "anId"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     }
 

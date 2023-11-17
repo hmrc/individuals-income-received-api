@@ -26,12 +26,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendOtherCgtConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendOtherCgtConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAndAmend(request: CreateAmendOtherCgtRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                          hc: HeaderCarrier,
+                                                          ec: ExecutionContext,
+                                                          correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -42,7 +42,7 @@ class CreateAmendOtherCgtConnector @Inject() (val http: HttpClient, val appConfi
       } else {
         Api1661Uri[Unit](s"income-tax/income/disposals/other-gains/${nino.nino}/${taxYear.asMtd}")
       }
-    put(downstreamUri, body)
+    put(downstreamUri, body, intent = Some("IIR"))
   }
 
 }

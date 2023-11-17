@@ -37,16 +37,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendUkSavingsAnnualSummaryControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockCreateAmendUkSavingsAnnualSummaryService
     with MockCreateAmendUkSavingsAnnualSummaryRequestParser
     with MockAuditService
     with MockHateoasFactory {
 
-  val taxYear: String          = "2019-20"
+  val taxYear: String = "2019-20"
   val savingsAccountId: String = "acctId"
-  val mtdId: String            = "test-mtd-id"
+  val mtdId: String = "test-mtd-id"
 
   val requestJson: JsObject = JsObject.empty
 

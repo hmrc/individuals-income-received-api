@@ -74,7 +74,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "Content-Type",
     "Location",
     "X-Request-Timestamp",
-    "X-Session-Id"
+    "X-Session-Id",
   )
 
   val requiredDesHeaders: Seq[(String, String)] = List(
@@ -115,15 +115,21 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     protected val requiredHeaders: Seq[(String, String)]
     protected def excludedHeaders: Seq[(String, String)] = Seq("AnotherHeader" -> "HeaderValue")
 
-    protected def willGet[T](url: String, parameters: Seq[(String, String)] = List()): CallHandler[Future[T]] =
+    protected def willGet[T](url: String, parameters: Seq[(String, String)] = List(), intent:Option[String]=None): CallHandler[Future[T]] = {
+      val myHeaders = intent match {
+        case Some(intention) => requiredHeaders ++ Seq("intent"-> intention)
+        case None => requiredHeaders
+      }
       MockedHttpClient
         .get(
           url = url,
           parameters = parameters,
           config = dummyHeaderCarrierConfig,
-          requiredHeaders = requiredHeaders,
+          requiredHeaders = myHeaders,
           excludedHeaders = excludedHeaders
+
         )
+    }
 
     protected def willPost[BODY, T](url: String, body: BODY): CallHandler[Future[T]] =
       MockedHttpClient

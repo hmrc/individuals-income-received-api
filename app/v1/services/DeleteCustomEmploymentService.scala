@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCustomEmploymentService @Inject() (connector: DeleteCustomEmploymentConnector) extends BaseService {
+class DeleteCustomEmploymentService @Inject()(connector: DeleteCustomEmploymentConnector) extends BaseService {
 
   def delete(request: DeleteCustomEmploymentRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
@@ -38,13 +38,13 @@ class DeleteCustomEmploymentService @Inject() (connector: DeleteCustomEmployment
   private val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "CANNOT_DELETE"             -> RuleDeleteForbiddenError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "CANNOT_DELETE" -> RuleDeleteForbiddenError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
 }

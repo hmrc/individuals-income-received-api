@@ -24,7 +24,7 @@ import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivide
 
 class RetrieveUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2017-18"
 
   class Test extends MockAppConfig {

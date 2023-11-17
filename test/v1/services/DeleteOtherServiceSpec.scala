@@ -73,7 +73,7 @@ class DeleteOtherServiceSpec extends ServiceSpec {
   trait Test extends MockDeleteOtherConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    private val nino    = Nino("AA112233A")
+    private val nino = Nino("AA112233A")
     private val taxYear = TaxYear.fromMtd("2019-20")
 
     val request: DeleteOtherRequest = DeleteOtherRequest(

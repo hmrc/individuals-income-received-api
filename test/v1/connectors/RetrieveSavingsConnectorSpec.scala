@@ -62,6 +62,7 @@ class RetrieveSavingsConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
 
     protected val nino: String = "AA111111A"
+
     def taxYear: TaxYear
 
     val request: RetrieveSavingsRequest =

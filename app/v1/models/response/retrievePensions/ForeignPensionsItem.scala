@@ -35,7 +35,7 @@ object ForeignPensionsItem {
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").read[Boolean] and
       (JsPath \ "taxableAmount").read[BigDecimal]
-  )(ForeignPensionsItem.apply _)
+    )(ForeignPensionsItem.apply _)
 
   implicit val writes: OWrites[ForeignPensionsItem] = Json.writes[ForeignPensionsItem]
 }

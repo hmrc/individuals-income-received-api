@@ -27,7 +27,7 @@ object UnremittableForeignIncome {
     (JsPath \ "countryCode").read[String] and
       (JsPath \ "amountInForeignCurrency").read[BigDecimal] and
       (JsPath \ "amountTaxPaid").readNullable[BigDecimal]
-  )(UnremittableForeignIncome.apply _)
+    )(UnremittableForeignIncome.apply _)
 
   implicit val writes: OWrites[UnremittableForeignIncome] = Json.writes[UnremittableForeignIncome]
 }

@@ -28,16 +28,16 @@ import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawDat
 
 class RetrieveFinancialDetailsValidatorSpec extends UnitSpec {
 
-  private val validNino               = "AA123456A"
-  private val validTaxYear            = "2021-22"
-  private val validEmploymentId       = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  private val validSource             = "latest"
+  private val validNino = "AA123456A"
+  private val validTaxYear = "2021-22"
+  private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  private val validSource = "latest"
   private val minimumPermittedTaxYear = 2021
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 

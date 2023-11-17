@@ -32,7 +32,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteNonPayeEmploymentControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockDeleteNonPayeEmploymentRequestParser
     with MockDeleteNonPayeEmploymentService

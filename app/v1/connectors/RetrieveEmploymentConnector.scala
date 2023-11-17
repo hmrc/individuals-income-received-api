@@ -27,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveEmploymentResponse]] = {
+                                                   hc: HeaderCarrier,
+                                                   ec: ExecutionContext,
+                                                   correlationId: String): Future[DownstreamOutcome[RetrieveEmploymentResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -41,7 +41,12 @@ class RetrieveEmploymentConnector @Inject() (val http: HttpClient, val appConfig
       s"income-tax/income/employments/$nino/$taxYear?employmentId=$employmentId"
     )
 
-    get(uri = downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    get(uri = downstreamUri, intent = intent)
   }
 
 }

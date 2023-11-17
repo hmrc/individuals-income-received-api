@@ -24,7 +24,7 @@ import play.api.libs.json.{Json, Writes}
 object CreateAmendCgtResidentialPropertyDisposalsResponse extends HateoasLinks {
 
   implicit object CreateAmendCgtResidentialPropertyDisposalsLinksFactory
-      extends HateoasLinksFactory[Unit, CreateAmendCgtResidentialPropertyDisposalsHateoasData] {
+    extends HateoasLinksFactory[Unit, CreateAmendCgtResidentialPropertyDisposalsHateoasData] {
 
     override def links(appConfig: AppConfig, data: CreateAmendCgtResidentialPropertyDisposalsHateoasData): Seq[Link] = {
       import data._

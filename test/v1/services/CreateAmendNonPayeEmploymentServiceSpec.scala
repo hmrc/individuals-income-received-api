@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class CreateAmendNonPayeEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = TaxYear.fromMtd("2019-20")
 
   val request: CreateAmendNonPayeEmploymentRequest = CreateAmendNonPayeEmploymentRequest(

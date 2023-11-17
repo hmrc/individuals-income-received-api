@@ -42,7 +42,7 @@ object RetrieveDividendsResponse extends HateoasLinks with JsonUtils {
       (JsPath \ "redeemableShares").readNullable[RedeemableShares] and
       (JsPath \ "bonusIssuesOfSecurities").readNullable[BonusIssuesOfSecurities] and
       (JsPath \ "closeCompanyLoansWrittenOff").readNullable[CloseCompanyLoansWrittenOff]
-  )(RetrieveDividendsResponse.apply _)
+    )(RetrieveDividendsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveDividendsResponse] = Json.writes[RetrieveDividendsResponse]
 

@@ -24,7 +24,7 @@ import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
 
 class DeleteCgtPpdOverridesValidatorSpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2019-20"
 
   class Test extends MockAppConfig {

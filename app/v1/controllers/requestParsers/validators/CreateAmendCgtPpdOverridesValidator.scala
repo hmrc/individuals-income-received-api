@@ -26,8 +26,8 @@ import v1.controllers.requestParsers.validators.validations.DateFormatValidation
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[CreateAmendCgtPpdOverridesRawData]
+class CreateAmendCgtPpdOverridesValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[CreateAmendCgtPpdOverridesRawData]
     with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator, rulesValidator)
@@ -73,7 +73,7 @@ class CreateAmendCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConf
   private def rulesValidator: CreateAmendCgtPpdOverridesRawData => List[List[MtdError]] = (data: CreateAmendCgtPpdOverridesRawData) => {
     val requestBody: CreateAmendCgtPpdOverridesRequestBody = data.body.json.as[CreateAmendCgtPpdOverridesRequestBody]
 
-    val singleDisposalsIndexed   = requestBody.singlePropertyDisposals.toList.flatten.zipWithIndex
+    val singleDisposalsIndexed = requestBody.singlePropertyDisposals.toList.flatten.zipWithIndex
     val multipleDisposalsIndexed = requestBody.multiplePropertyDisposals.toList.flatten.zipWithIndex
 
     List(

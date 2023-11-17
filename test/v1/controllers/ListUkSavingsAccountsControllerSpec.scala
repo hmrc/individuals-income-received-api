@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListUkSavingsAccountsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockListUkSavingsAccountsService
     with MockHateoasFactory
@@ -79,35 +79,36 @@ class ListUkSavingsAccountsControllerSpec
     )
   )
 
-  private val mtdResponse: JsValue = Json.parse(s"""|{
-      | "savingsAccounts":
-      |  [
-      |    {
-      |        "savingsAccountId": "000000000000001",
-      |        "accountName": "Bank Account 1"
-      |    },
-      |    {
-      |        "savingsAccountId": "000000000000002",
-      |        "accountName": "Bank Account 2"
-      |    },
-      |    {
-      |        "savingsAccountId": "000000000000003",
-      |        "accountName": "Bank Account 3"
-      |    }
-      | ],
-      | "links": [
-      |      {
-      |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
-      |         "rel":"add-uk-savings-account",
-      |         "method":"POST"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
-      |         "rel":"self",
-      |         "method":"GET"
-      |      }
-      | ]
-      |}""".stripMargin)
+  private val mtdResponse: JsValue = Json.parse(
+    s"""|{
+        | "savingsAccounts":
+        |  [
+        |    {
+        |        "savingsAccountId": "000000000000001",
+        |        "accountName": "Bank Account 1"
+        |    },
+        |    {
+        |        "savingsAccountId": "000000000000002",
+        |        "accountName": "Bank Account 2"
+        |    },
+        |    {
+        |        "savingsAccountId": "000000000000003",
+        |        "accountName": "Bank Account 3"
+        |    }
+        | ],
+        | "links": [
+        |      {
+        |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
+        |         "rel":"add-uk-savings-account",
+        |         "method":"POST"
+        |      },
+        |      {
+        |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
+        |         "rel":"self",
+        |         "method":"GET"
+        |      }
+        | ]
+        |}""".stripMargin)
 
   "listUkSavingsAccounts" should {
     "return OK" when {

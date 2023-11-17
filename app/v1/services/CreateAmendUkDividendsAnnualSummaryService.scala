@@ -27,38 +27,38 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAmendUkDividendsAnnualSummaryConnector) extends BaseService {
+class CreateAmendUkDividendsAnnualSummaryService @Inject()(connector: CreateAmendUkDividendsAnnualSummaryConnector) extends BaseService {
 
   def createAmendUkDividends(
-      request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+                              request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.createAmendUkDividends(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
-      "INVALID_NINO"                      -> NinoFormatError,
-      "INVALID_TAXYEAR"                   -> TaxYearFormatError,
-      "INVALID_TYPE"                      -> InternalError,
-      "INVALID_PAYLOAD"                   -> InternalError,
-      "NOT_FOUND_INCOME_SOURCE"           -> NotFoundError,
-      "MISSING_CHARITIES_NAME_GIFT_AID"   -> InternalError,
-      "MISSING_GIFT_AID_AMOUNT"           -> InternalError,
+      "INVALID_NINO" -> NinoFormatError,
+      "INVALID_TAXYEAR" -> TaxYearFormatError,
+      "INVALID_TYPE" -> InternalError,
+      "INVALID_PAYLOAD" -> InternalError,
+      "NOT_FOUND_INCOME_SOURCE" -> NotFoundError,
+      "MISSING_CHARITIES_NAME_GIFT_AID" -> InternalError,
+      "MISSING_GIFT_AID_AMOUNT" -> InternalError,
       "MISSING_CHARITIES_NAME_INVESTMENT" -> InternalError,
-      "MISSING_INVESTMENT_AMOUNT"         -> InternalError,
-      "INVALID_ACCOUNTING_PERIOD"         -> RuleTaxYearNotSupportedError,
-      "GONE"                              -> InternalError,
-      "NOT_FOUND"                         -> NotFoundError,
-      "SERVICE_UNAVAILABLE"               -> InternalError,
-      "SERVER_ERROR"                      -> InternalError
+      "MISSING_INVESTMENT_AMOUNT" -> InternalError,
+      "INVALID_ACCOUNTING_PERIOD" -> RuleTaxYearNotSupportedError,
+      "GONE" -> InternalError,
+      "NOT_FOUND" -> NotFoundError,
+      "SERVICE_UNAVAILABLE" -> InternalError,
+      "SERVER_ERROR" -> InternalError
     )
 
     val extraTysErrors = Map(
-      "INVALID_TAX_YEAR"           -> TaxYearFormatError,
-      "INVALID_INCOMESOURCE_TYPE"  -> InternalError,
-      "INVALID_CORRELATIONID"      -> InternalError,
-      "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError,
-      "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_INCOMESOURCE_TYPE" -> InternalError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+      "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
       "INCOMPATIBLE_INCOME_SOURCE" -> InternalError
     )
 

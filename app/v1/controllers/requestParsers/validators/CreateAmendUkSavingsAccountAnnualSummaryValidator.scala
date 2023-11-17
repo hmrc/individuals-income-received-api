@@ -25,7 +25,7 @@ import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavings
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject() (appConfig: AppConfig) extends Validator[CreateAmendUkSavingsAnnualSummaryRawData] {
+class CreateAmendUkSavingsAccountAnnualSummaryValidator @Inject()(appConfig: AppConfig) extends Validator[CreateAmendUkSavingsAnnualSummaryRawData] {
 
   private val validationSet = List(
     parameterFormatValidation,

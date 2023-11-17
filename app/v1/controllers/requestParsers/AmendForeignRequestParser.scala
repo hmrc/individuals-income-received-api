@@ -24,7 +24,7 @@ import v1.models.request.amendForeign.{AmendForeignRawData, AmendForeignRequest,
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendForeignRequestParser @Inject() (val validator: AmendForeignValidator) extends RequestParser[AmendForeignRawData, AmendForeignRequest] {
+class AmendForeignRequestParser @Inject()(val validator: AmendForeignValidator) extends RequestParser[AmendForeignRawData, AmendForeignRequest] {
 
   override protected def requestFor(data: AmendForeignRawData): AmendForeignRequest =
     AmendForeignRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[AmendForeignRequestBody])

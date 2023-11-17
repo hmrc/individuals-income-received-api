@@ -23,4 +23,4 @@ case class CreateAmendCgtResidentialPropertyDisposalsRawData(nino: String,
                                                              taxYear: String,
                                                              body: AnyContentAsJson,
                                                              temporalValidationEnabled: Boolean = true)
-    extends RawData
+  extends RawData

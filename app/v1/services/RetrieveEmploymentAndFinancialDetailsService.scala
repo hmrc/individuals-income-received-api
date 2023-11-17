@@ -29,12 +29,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: RetrieveEmploymentAndFinancialDetailsConnector, appConfig: AppConfig)
-    extends BaseService {
+class RetrieveEmploymentAndFinancialDetailsService @Inject()(connector: RetrieveEmploymentAndFinancialDetailsConnector, appConfig: AppConfig)
+  extends BaseService {
 
   def retrieve(request: RetrieveEmploymentAndFinancialDetailsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]] = {
+                                                                      ctx: RequestContext,
+                                                                      ec: ExecutionContext): Future[ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]] = {
 
     EitherT(connector.retrieve(request))
       .map(_.map(opwResponseMap))
@@ -52,14 +52,14 @@ class RetrieveEmploymentAndFinancialDetailsService @Inject() (connector: Retriev
 
   private val downstreamErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-    "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-    "INVALID_VIEW"              -> SourceFormatError,
-    "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-    "INVALID_CORRELATIONID"     -> InternalError,
-    "NO_DATA_FOUND"             -> NotFoundError,
-    "SERVER_ERROR"              -> InternalError,
-    "SERVICE_UNAVAILABLE"       -> InternalError
+    "INVALID_TAX_YEAR" -> TaxYearFormatError,
+    "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+    "INVALID_VIEW" -> SourceFormatError,
+    "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+    "INVALID_CORRELATIONID" -> InternalError,
+    "NO_DATA_FOUND" -> NotFoundError,
+    "SERVER_ERROR" -> InternalError,
+    "SERVICE_UNAVAILABLE" -> InternalError
   )
 
 }

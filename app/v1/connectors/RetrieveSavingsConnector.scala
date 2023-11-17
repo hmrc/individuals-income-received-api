@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSavingsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveSavingsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveSavings(request: RetrieveSavingsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveSavingsResponse]] = {
+                                                       hc: HeaderCarrier,
+                                                       ec: ExecutionContext,
+                                                       correlationId: String): Future[DownstreamOutcome[RetrieveSavingsResponse]] = {
 
     import request._
 
@@ -43,7 +43,7 @@ class RetrieveSavingsConnector @Inject() (val http: HttpClient, val appConfig: A
       IfsUri[RetrieveSavingsResponse](s"income-tax/income/savings/$nino/${taxYear.asMtd}")
     }
 
-    get(downstreamUri)
+    get(downstreamUri, intent = Some("IIR"))
   }
 
 }

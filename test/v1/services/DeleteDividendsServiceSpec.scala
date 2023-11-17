@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class DeleteDividendsServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
   trait Test extends MockDeleteDividendsConnector {

@@ -36,14 +36,14 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveNonPayeEmploymentControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveNonPayeEmploymentService
     with MockHateoasFactory
     with MockRetrieveNonPayeEmploymentRequestParser
     with HateoasLinks {
 
-  val taxYear: String       = "2019-20"
+  val taxYear: String = "2019-20"
   val source: MtdSourceEnum = MtdSourceEnum.hmrcHeld
 
   val rawData: RetrieveNonPayeEmploymentIncomeRawData =

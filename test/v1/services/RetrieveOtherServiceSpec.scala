@@ -75,7 +75,7 @@ class RetrieveOtherServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveOtherConnector {
 
-    private val nino    = "AA112233A"
+    private val nino = "AA112233A"
     private val taxYear = "2019-20"
 
     val request: RetrieveOtherRequest = RetrieveOtherRequest(
@@ -93,7 +93,7 @@ class RetrieveOtherServiceSpec extends ServiceSpec {
       omittedForeignIncome = None
     )
 
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveOther")
 
     val service: RetrieveOtherService = new RetrieveOtherService(

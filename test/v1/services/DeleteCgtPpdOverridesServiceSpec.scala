@@ -30,14 +30,14 @@ import scala.concurrent.Future
 
 class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
 
-  private val nino: String           = "AA123456A"
-  private val taxYear: String        = "2019-20"
+  private val nino: String = "AA123456A"
+  private val taxYear: String = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val requestData: DeleteCgtPpdOverridesRequest = DeleteCgtPpdOverridesRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
   trait Test extends MockDeleteCgtPpdOverridesConnector {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new DeleteCgtPpdOverridesService(
@@ -70,11 +70,11 @@ class DeleteCgtPpdOverridesServiceSpec extends UnitSpec {
 
       val errors = List(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-        "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-        "INVALID_VIEW"              -> InternalError,
-        "INVALID_CORRELATIONID"     -> InternalError,
-        "NO_DATA_FOUND"             -> NotFoundError,
-        "SERVER_ERROR"              -> InternalError
+        "INVALID_TAX_YEAR" -> TaxYearFormatError,
+        "INVALID_VIEW" -> InternalError,
+        "INVALID_CORRELATIONID" -> InternalError,
+        "NO_DATA_FOUND" -> NotFoundError,
+        "SERVER_ERROR" -> InternalError
       )
 
       val extraTysErrors = List(

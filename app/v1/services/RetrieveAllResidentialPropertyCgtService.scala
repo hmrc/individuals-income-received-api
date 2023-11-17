@@ -28,11 +28,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAllResidentialPropertyCgtConnector) extends BaseService {
+class RetrieveAllResidentialPropertyCgtService @Inject()(connector: RetrieveAllResidentialPropertyCgtConnector) extends BaseService {
 
   def retrieve(request: RetrieveAllResidentialPropertyCgtRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]] = {
+                                                                  ctx: RequestContext,
+                                                                  ec: ExecutionContext): Future[ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]] = {
 
     connector.retrieve(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
@@ -41,13 +41,13 @@ class RetrieveAllResidentialPropertyCgtService @Inject() (connector: RetrieveAll
   private val downstreamErrorMap: Map[String, MtdError] = {
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_VIEW"              -> SourceFormatError,
-      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_VIEW" -> SourceFormatError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
   }
 

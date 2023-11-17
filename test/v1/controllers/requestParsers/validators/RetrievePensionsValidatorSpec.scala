@@ -24,7 +24,7 @@ import v1.models.request.retrievePensions.RetrievePensionsRawData
 
 class RetrievePensionsValidatorSpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2021-22"
 
   class Test extends MockAppConfig {

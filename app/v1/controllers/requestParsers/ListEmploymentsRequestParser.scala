@@ -24,8 +24,8 @@ import v1.models.request.listEmployments.{ListEmploymentsRawData, ListEmployment
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class ListEmploymentsRequestParser @Inject() (val validator: ListEmploymentsValidator)
-    extends RequestParser[ListEmploymentsRawData, ListEmploymentsRequest] {
+class ListEmploymentsRequestParser @Inject()(val validator: ListEmploymentsValidator)
+  extends RequestParser[ListEmploymentsRawData, ListEmploymentsRequest] {
 
   override protected def requestFor(data: ListEmploymentsRawData): ListEmploymentsRequest =
     ListEmploymentsRequest(Nino(data.nino), data.taxYear)

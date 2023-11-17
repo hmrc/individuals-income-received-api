@@ -24,8 +24,8 @@ import v1.models.request.amendCustomEmployment.{AmendCustomEmploymentRawData, Am
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendCustomEmploymentRequestParser @Inject() (val validator: AmendCustomEmploymentValidator)
-    extends RequestParser[AmendCustomEmploymentRawData, AmendCustomEmploymentRequest] {
+class AmendCustomEmploymentRequestParser @Inject()(val validator: AmendCustomEmploymentValidator)
+  extends RequestParser[AmendCustomEmploymentRawData, AmendCustomEmploymentRequest] {
 
   override protected def requestFor(data: AmendCustomEmploymentRawData): AmendCustomEmploymentRequest =
     AmendCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.employmentId, data.body.json.as[AmendCustomEmploymentRequestBody])

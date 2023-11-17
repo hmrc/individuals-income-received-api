@@ -30,7 +30,7 @@ import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
   val request: RetrieveAllResidentialPropertyCgtRequest = RetrieveAllResidentialPropertyCgtRequest(
@@ -52,7 +52,7 @@ class RetrieveAllResidentialPropertyCgtServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveAllResidentialPropertyCgtConnector {
 
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveAllResidentialPropertyCgt")
 
     val service: RetrieveAllResidentialPropertyCgtService = new RetrieveAllResidentialPropertyCgtService(

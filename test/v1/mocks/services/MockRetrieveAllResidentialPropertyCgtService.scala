@@ -33,7 +33,7 @@ trait MockRetrieveAllResidentialPropertyCgtService extends MockFactory {
   object MockRetrieveAllResidentialPropertyCgtService {
 
     def retrieve(
-        requestData: RetrieveAllResidentialPropertyCgtRequest): CallHandler[Future[ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]]] = {
+                  requestData: RetrieveAllResidentialPropertyCgtRequest): CallHandler[Future[ServiceOutcome[RetrieveAllResidentialPropertyCgtResponse]]] = {
       (
         mockRetrieveAllResidentialPropertyCgtService
           .retrieve(_: RetrieveAllResidentialPropertyCgtRequest)(

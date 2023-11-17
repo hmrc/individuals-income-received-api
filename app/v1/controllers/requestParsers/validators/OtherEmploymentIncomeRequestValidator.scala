@@ -25,7 +25,7 @@ import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawDa
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class OtherEmploymentIncomeRequestValidator @Inject() (implicit appConfig: AppConfig) extends Validator[OtherEmploymentIncomeRequestRawData] {
+class OtherEmploymentIncomeRequestValidator @Inject()(implicit appConfig: AppConfig) extends Validator[OtherEmploymentIncomeRequestRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

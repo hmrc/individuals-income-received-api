@@ -24,8 +24,8 @@ import v1.models.request.retrieveInsurancePolicies.{RetrieveInsurancePoliciesRaw
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveInsurancePoliciesRequestParser @Inject() (val validator: RetrieveInsurancePoliciesValidator)
-    extends RequestParser[RetrieveInsurancePoliciesRawData, RetrieveInsurancePoliciesRequest] {
+class RetrieveInsurancePoliciesRequestParser @Inject()(val validator: RetrieveInsurancePoliciesValidator)
+  extends RequestParser[RetrieveInsurancePoliciesRawData, RetrieveInsurancePoliciesRequest] {
 
   override protected def requestFor(data: RetrieveInsurancePoliciesRawData): RetrieveInsurancePoliciesRequest =
     RetrieveInsurancePoliciesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

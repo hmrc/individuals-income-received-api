@@ -28,24 +28,24 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsAccountService @Inject() (connector: AddUkSavingsAccountConnector) extends BaseService {
+class AddUkSavingsAccountService @Inject()(connector: AddUkSavingsAccountConnector) extends BaseService {
 
   def addSavings(request: AddUkSavingsAccountRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[AddUkSavingsAccountResponse]] = {
+                                                      ctx: RequestContext,
+                                                      ec: ExecutionContext): Future[ServiceOutcome[AddUkSavingsAccountResponse]] = {
 
     connector.addSavings(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
   private val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDVALUE"      -> NinoFormatError,
+      "INVALID_IDVALUE" -> NinoFormatError,
       "MAX_ACCOUNTS_REACHED" -> RuleMaximumSavingsAccountsLimitError,
-      "ALREADY_EXISTS"       -> RuleDuplicateAccountNameError,
-      "INVALID_IDTYPE"       -> InternalError,
-      "INVALID_PAYLOAD"      -> InternalError,
-      "SERVER_ERROR"         -> InternalError,
-      "SERVICE_UNAVAILABLE"  -> InternalError
+      "ALREADY_EXISTS" -> RuleDuplicateAccountNameError,
+      "INVALID_IDTYPE" -> InternalError,
+      "INVALID_PAYLOAD" -> InternalError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
 }

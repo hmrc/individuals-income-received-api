@@ -23,8 +23,8 @@ import v1.models.request.retrieveNonPayeEmploymentIncome.{RetrieveNonPayeEmploym
 
 import javax.inject.Inject
 
-class RetrieveNonPayeEmploymentRequestParser @Inject() (val validator: RetrieveNonPayeEmploymentValidator)
-    extends RequestParser[RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest] {
+class RetrieveNonPayeEmploymentRequestParser @Inject()(val validator: RetrieveNonPayeEmploymentValidator)
+  extends RequestParser[RetrieveNonPayeEmploymentIncomeRawData, RetrieveNonPayeEmploymentIncomeRequest] {
 
   override protected def requestFor(data: RetrieveNonPayeEmploymentIncomeRawData): RetrieveNonPayeEmploymentIncomeRequest =
     RetrieveNonPayeEmploymentIncomeRequest(

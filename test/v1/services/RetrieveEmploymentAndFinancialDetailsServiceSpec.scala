@@ -32,8 +32,8 @@ import scala.concurrent.Future
 
 class RetrieveEmploymentAndFinancialDetailsServiceSpec extends ServiceSpec {
 
-  private val nino                 = "AA123456A"
-  private val taxYear              = "2019-20"
+  private val nino = "AA123456A"
+  private val taxYear = "2019-20"
   private val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val request: RetrieveEmploymentAndFinancialDetailsRequest = RetrieveEmploymentAndFinancialDetailsRequest(
@@ -71,7 +71,7 @@ class RetrieveEmploymentAndFinancialDetailsServiceSpec extends ServiceSpec {
   )
 
   trait Test extends MockRetrieveEmploymentAndFinancialDetailsConnector with MockAppConfig {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveEmploymentAndFinancialDetails")
 
     val service = new RetrieveEmploymentAndFinancialDetailsService(mockConnector, mockAppConfig)

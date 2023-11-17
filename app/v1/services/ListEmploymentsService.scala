@@ -28,21 +28,21 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListEmploymentsService @Inject() (connector: ListEmploymentsConnector) extends BaseService {
+class ListEmploymentsService @Inject()(connector: ListEmploymentsConnector) extends BaseService {
 
   def listEmployments(request: ListEmploymentsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[ListEmploymentResponse[Employment]]] =
+                                                       ctx: RequestContext,
+                                                       ec: ExecutionContext): Future[ServiceOutcome[ListEmploymentResponse[Employment]]] =
     connector.listEmployments(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = Map(
     "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-    "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-    "INVALID_EMPLOYMENT_ID"     -> InternalError,
-    "INVALID_CORRELATIONID"     -> InternalError,
-    "NO_DATA_FOUND"             -> NotFoundError,
-    "SERVER_ERROR"              -> InternalError,
-    "SERVICE_UNAVAILABLE"       -> InternalError
+    "INVALID_TAX_YEAR" -> TaxYearFormatError,
+    "INVALID_EMPLOYMENT_ID" -> InternalError,
+    "INVALID_CORRELATIONID" -> InternalError,
+    "NO_DATA_FOUND" -> NotFoundError,
+    "SERVER_ERROR" -> InternalError,
+    "SERVICE_UNAVAILABLE" -> InternalError
   )
 
 }

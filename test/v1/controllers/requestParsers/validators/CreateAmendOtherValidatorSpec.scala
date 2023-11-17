@@ -28,7 +28,7 @@ import v1.models.request.createAmendOther.CreateAmendOtherRawData
 
 class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessages with MockAppConfig {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2019-20"
 
   private val validRequestBodyJson: JsValue = requestBodyJson
@@ -237,24 +237,24 @@ class CreateAmendOtherValidatorSpec extends UnitSpec with ValueFormatErrorMessag
     """.stripMargin
   )
 
-  private val validRawRequestBody                                     = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody                                     = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody                                  = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody                                  = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody                        = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidCountryCodeRawRequestBody                        = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidCountryCodeRuleRawRequestBody                    = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
-  private val invalidTaxYearRawRequestBody                            = AnyContentAsJson(invalidTaxYearRequestBodyJson)
-  private val invalidTaxYearRangeRuleRawRequestBody                   = AnyContentAsJson(invalidTaxYearRangeRuleRequestBodyJson)
-  private val invalidBusinessReceiptsRawRequestBody                   = AnyContentAsJson(invalidBusinessReceiptsRequestBodyJson)
+  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidCountryCodeRawRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidCountryCodeRuleRawRequestBody = AnyContentAsJson(invalidCountryCodeRuleRequestBodyJson)
+  private val invalidTaxYearRawRequestBody = AnyContentAsJson(invalidTaxYearRequestBodyJson)
+  private val invalidTaxYearRangeRuleRawRequestBody = AnyContentAsJson(invalidTaxYearRangeRuleRequestBodyJson)
+  private val invalidBusinessReceiptsRawRequestBody = AnyContentAsJson(invalidBusinessReceiptsRequestBodyJson)
   private val invalidAllOtherIncomeReceivedWhilstAbroadRawRequestBody = AnyContentAsJson(invalidAllOtherIncomeReceivedWhilstAbroadRequestBodyJson)
-  private val invalidOverseasIncomeAndGainsRawRequestBody             = AnyContentAsJson(invalidOverseasIncomeAndGainsRequestBodyJson)
-  private val invalidChargeableForeignBenefitsAndGiftsRawRequestBody  = AnyContentAsJson(invalidChargeableForeignBenefitsAndGiftsRequestBodyJson)
-  private val invalidOmittedForeignIncomeRawRequestBody               = AnyContentAsJson(invalidOmittedForeignIncomeRequestBodyJson)
-  private val allInvalidValueRawRequestBody                           = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val invalidOverseasIncomeAndGainsRawRequestBody = AnyContentAsJson(invalidOverseasIncomeAndGainsRequestBodyJson)
+  private val invalidChargeableForeignBenefitsAndGiftsRawRequestBody = AnyContentAsJson(invalidChargeableForeignBenefitsAndGiftsRequestBodyJson)
+  private val invalidOmittedForeignIncomeRawRequestBody = AnyContentAsJson(invalidOmittedForeignIncomeRequestBodyJson)
+  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   implicit val appConfig: AppConfig = mockAppConfig
-  val validator                     = new CreateAmendOtherValidator()
+  val validator = new CreateAmendOtherValidator()
 
   class Test extends MockAppConfig {
 

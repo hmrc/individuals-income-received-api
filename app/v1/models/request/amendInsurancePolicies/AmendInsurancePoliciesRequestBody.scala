@@ -35,7 +35,7 @@ object AmendInsurancePoliciesRequestBody extends JsonUtils {
       (JsPath \ "lifeAnnuity").readNullable[Seq[AmendCommonInsurancePoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "voidedIsa").readNullable[Seq[AmendVoidedIsaPoliciesItem]].mapEmptySeqToNone and
       (JsPath \ "foreign").readNullable[Seq[AmendForeignPoliciesItem]].mapEmptySeqToNone
-  )(AmendInsurancePoliciesRequestBody.apply _)
+    )(AmendInsurancePoliciesRequestBody.apply _)
 
   implicit val writes: OWrites[AmendInsurancePoliciesRequestBody] = (
     (JsPath \ "lifeInsurance").writeNullable[Seq[AmendCommonInsurancePoliciesItem]] and
@@ -43,6 +43,6 @@ object AmendInsurancePoliciesRequestBody extends JsonUtils {
       (JsPath \ "lifeAnnuity").writeNullable[Seq[AmendCommonInsurancePoliciesItem]] and
       (JsPath \ "voidedIsa").writeNullable[Seq[AmendVoidedIsaPoliciesItem]] and
       (JsPath \ "foreign").writeNullable[Seq[AmendForeignPoliciesItem]]
-  )(unlift(AmendInsurancePoliciesRequestBody.unapply))
+    )(unlift(AmendInsurancePoliciesRequestBody.unapply))
 
 }

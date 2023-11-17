@@ -30,43 +30,43 @@ import v1.models.request.createAmendCgtResidentialPropertyDisposals.CreateAmendC
 import java.time.LocalDate
 
 class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
-    extends UnitSpec
+  extends UnitSpec
     with ValueFormatErrorMessages
     with DisposalDateErrorMessages
     with MockAppConfig {
 
   object Data {
 
-    val validNino    = "AA123456A"
+    val validNino = "AA123456A"
     val validTaxYear = "2019-20"
 
     private val validCustomerReference = "CGTDISPOSAL01"
-    private val validDisposalDate      = "2020-03-01"
-    private val validCompletionDate    = "2020-03-29"
-    private val validAcquisitionDate   = "2020-02-01"
-    private val validValue             = 1000.12
+    private val validDisposalDate = "2020-03-01"
+    private val validCompletionDate = "2020-03-29"
+    private val validAcquisitionDate = "2020-02-01"
+    private val validValue = 1000.12
 
     private val validRequestBodyJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue
-        |    }
-        |  ]
-        |}
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":$validValue,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue
+         |    }
+         |  ]
+         |}
     """.stripMargin
     )
 
@@ -104,238 +104,238 @@ class CreateAmendCgtResidentialPropertyDisposalsValidatorSpec
 
     private val gainAndLossJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals": [
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue,
-        |      "amountOfNetGain":$validValue
-        |    }
-        |  ]
-        |}
+         |{
+         |  "disposals": [
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":$validValue,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue,
+         |      "amountOfNetGain":$validValue
+         |    }
+         |  ]
+         |}
     """.stripMargin
     )
 
     private val oneBadValueFieldJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals": [
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":1000.123,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue
-        |    }
-        |  ]
-        |}
+         |{
+         |  "disposals": [
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":1000.123,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue
+         |    }
+         |  ]
+         |}
     """.stripMargin
     )
 
     private val allBadValueFieldsWithGainsJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":1000.123,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":1000.123,
-        |      "improvementCosts":1000.123,
-        |      "additionalCosts":100045678987654345678987654567898765456789.12,
-        |      "prfAmount":-1000.12,
-        |      "otherReliefAmount":1000.123,
-        |      "lossesFromThisYear":1000.123,
-        |      "lossesFromPreviousYear":1000.123,
-        |      "amountOfNetGain":2000.243
-        |    }
-        |  ]
-        |}
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":1000.123,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":1000.123,
+         |      "improvementCosts":1000.123,
+         |      "additionalCosts":100045678987654345678987654567898765456789.12,
+         |      "prfAmount":-1000.12,
+         |      "otherReliefAmount":1000.123,
+         |      "lossesFromThisYear":1000.123,
+         |      "lossesFromPreviousYear":1000.123,
+         |      "amountOfNetGain":2000.243
+         |    }
+         |  ]
+         |}
     """.stripMargin
     )
 
     private val allBadValueFieldsWithLossesJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":1000.123,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":1000.123,
-        |      "improvementCosts":1000.123,
-        |      "additionalCosts":100000000000.00,
-        |      "prfAmount":-0.01,
-        |      "otherReliefAmount":1000.123,
-        |      "lossesFromThisYear":1000.123,
-        |      "lossesFromPreviousYear":1000.123,
-        |      "amountOfNetLoss":2000.243
-        |    }
-        |  ]
-        |}
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":1000.123,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":1000.123,
+         |      "improvementCosts":1000.123,
+         |      "additionalCosts":100000000000.00,
+         |      "prfAmount":-0.01,
+         |      "otherReliefAmount":1000.123,
+         |      "lossesFromThisYear":1000.123,
+         |      "lossesFromPreviousYear":1000.123,
+         |      "amountOfNetLoss":2000.243
+         |    }
+         |  ]
+         |}
     """.stripMargin
     )
 
     private val allBadValueFieldsMultipleDisposalsJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":100000000000.00,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":100000000000.00,
-        |      "improvementCosts":100000000000.00,
-        |      "additionalCosts":100000000000.00,
-        |      "prfAmount":100000000000.00,
-        |      "otherReliefAmount":100000000000.00,
-        |      "lossesFromThisYear":100000000000.00,
-        |      "lossesFromPreviousYear":100000000000.00,
-        |      "amountOfNetLoss":100000000000.00
-        |    },
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":-0.01,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":-0.01,
-        |      "improvementCosts":-0.01,
-        |      "additionalCosts":-0.01,
-        |      "prfAmount":-0.01,
-        |      "otherReliefAmount":-0.01,
-        |      "lossesFromThisYear":-0.01,
-        |      "lossesFromPreviousYear":-0.01,
-        |      "amountOfNetLoss":-0.01
-        |    },
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":100000000000.00,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":100000000000.00,
-        |      "improvementCosts":100000000000.00,
-        |      "additionalCosts":100000000000.00,
-        |      "prfAmount":100000000000.00,
-        |      "otherReliefAmount":100000000000.00,
-        |      "lossesFromThisYear":100000000000.00,
-        |      "lossesFromPreviousYear":100000000000.00,
-        |      "amountOfNetGain":100000000000.00
-        |    },
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":-0.01,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":-0.01,
-        |      "improvementCosts":-0.01,
-        |      "additionalCosts":-0.01,
-        |      "prfAmount":-0.01,
-        |      "otherReliefAmount":-0.01,
-        |      "lossesFromThisYear":-0.01,
-        |      "lossesFromPreviousYear":-0.01,
-        |      "amountOfNetGain":-0.01
-        |    }
-        |  ]
-        |}
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":100000000000.00,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":100000000000.00,
+         |      "improvementCosts":100000000000.00,
+         |      "additionalCosts":100000000000.00,
+         |      "prfAmount":100000000000.00,
+         |      "otherReliefAmount":100000000000.00,
+         |      "lossesFromThisYear":100000000000.00,
+         |      "lossesFromPreviousYear":100000000000.00,
+         |      "amountOfNetLoss":100000000000.00
+         |    },
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":-0.01,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":-0.01,
+         |      "improvementCosts":-0.01,
+         |      "additionalCosts":-0.01,
+         |      "prfAmount":-0.01,
+         |      "otherReliefAmount":-0.01,
+         |      "lossesFromThisYear":-0.01,
+         |      "lossesFromPreviousYear":-0.01,
+         |      "amountOfNetLoss":-0.01
+         |    },
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":100000000000.00,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":100000000000.00,
+         |      "improvementCosts":100000000000.00,
+         |      "additionalCosts":100000000000.00,
+         |      "prfAmount":100000000000.00,
+         |      "otherReliefAmount":100000000000.00,
+         |      "lossesFromThisYear":100000000000.00,
+         |      "lossesFromPreviousYear":100000000000.00,
+         |      "amountOfNetGain":100000000000.00
+         |    },
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":-0.01,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":-0.01,
+         |      "improvementCosts":-0.01,
+         |      "additionalCosts":-0.01,
+         |      "prfAmount":-0.01,
+         |      "otherReliefAmount":-0.01,
+         |      "lossesFromThisYear":-0.01,
+         |      "lossesFromPreviousYear":-0.01,
+         |      "amountOfNetGain":-0.01
+         |    }
+         |  ]
+         |}
     """.stripMargin
     )
 
     private val badDateJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"$validCustomerReference",
-        |      "disposalDate":"20190601",
-        |      "completionDate":"20190801",
-        |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"20190701",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue
-        |    }
-        |  ]
-        |}
-        |""".stripMargin
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"$validCustomerReference",
+         |      "disposalDate":"20190601",
+         |      "completionDate":"20190801",
+         |      "disposalProceeds":$validValue,
+         |      "acquisitionDate":"20190701",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue
+         |    }
+         |  ]
+         |}
+         |""".stripMargin
     )
 
     private val badCustomerReferenceJson: JsValue = Json.parse(
       s"""
-        |{
-        |  "disposals":[
-        |    {
-        |      "customerReference":"",
-        |      "disposalDate":"$validDisposalDate",
-        |      "completionDate":"$validCompletionDate",
-        |      "disposalProceeds":$validValue,
-        |      "acquisitionDate":"$validAcquisitionDate",
-        |      "acquisitionAmount":$validValue,
-        |      "improvementCosts":$validValue,
-        |      "additionalCosts":$validValue,
-        |      "prfAmount":$validValue,
-        |      "otherReliefAmount":$validValue,
-        |      "lossesFromThisYear":$validValue,
-        |      "lossesFromPreviousYear":$validValue,
-        |      "amountOfNetLoss":$validValue
-        |    }
-        |  ]
-        |}
-        |""".stripMargin
+         |{
+         |  "disposals":[
+         |    {
+         |      "customerReference":"",
+         |      "disposalDate":"$validDisposalDate",
+         |      "completionDate":"$validCompletionDate",
+         |      "disposalProceeds":$validValue,
+         |      "acquisitionDate":"$validAcquisitionDate",
+         |      "acquisitionAmount":$validValue,
+         |      "improvementCosts":$validValue,
+         |      "additionalCosts":$validValue,
+         |      "prfAmount":$validValue,
+         |      "otherReliefAmount":$validValue,
+         |      "lossesFromThisYear":$validValue,
+         |      "lossesFromPreviousYear":$validValue,
+         |      "amountOfNetLoss":$validValue
+         |    }
+         |  ]
+         |}
+         |""".stripMargin
     )
 
-    val validRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(validRequestBodyJson)
-    val emptyRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(emptyRequestBodyJson)
-    val nonsenseRawRequestBody: AnyContentAsJson                           = AnyContentAsJson(nonsenseRequestBodyJson)
-    val nonValidRawRequestBody: AnyContentAsJson                           = AnyContentAsJson(nonValidRequestBodyJson)
-    val missingMandatoryFieldsRawRequestBody: AnyContentAsJson             = AnyContentAsJson(missingMandatoryFieldsJson)
-    val emptyArrayRawRequestBody: AnyContentAsJson                         = AnyContentAsJson(emptyArrayJson)
-    val oneBadValueFieldRawRequestBody: AnyContentAsJson                   = AnyContentAsJson(oneBadValueFieldJson)
-    val allBadValueFieldsWithGainsRawRequestBody: AnyContentAsJson         = AnyContentAsJson(allBadValueFieldsWithGainsJson)
-    val allBadValueFieldsWithLossesRawRequestBody: AnyContentAsJson        = AnyContentAsJson(allBadValueFieldsWithLossesJson)
+    val validRawRequestBody: AnyContentAsJson = AnyContentAsJson(validRequestBodyJson)
+    val emptyRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyRequestBodyJson)
+    val nonsenseRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonsenseRequestBodyJson)
+    val nonValidRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonValidRequestBodyJson)
+    val missingMandatoryFieldsRawRequestBody: AnyContentAsJson = AnyContentAsJson(missingMandatoryFieldsJson)
+    val emptyArrayRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyArrayJson)
+    val oneBadValueFieldRawRequestBody: AnyContentAsJson = AnyContentAsJson(oneBadValueFieldJson)
+    val allBadValueFieldsWithGainsRawRequestBody: AnyContentAsJson = AnyContentAsJson(allBadValueFieldsWithGainsJson)
+    val allBadValueFieldsWithLossesRawRequestBody: AnyContentAsJson = AnyContentAsJson(allBadValueFieldsWithLossesJson)
     val allBadValueFieldsMultipleDisposalsRawRequestBody: AnyContentAsJson = AnyContentAsJson(allBadValueFieldsMultipleDisposalsJson)
-    val badDateRawRequestBody: AnyContentAsJson                            = AnyContentAsJson(badDateJson)
-    val badCustomerReferenceRawRequestBody: AnyContentAsJson               = AnyContentAsJson(badCustomerReferenceJson)
-    val gainAndLossRawRequestBody: AnyContentAsJson                        = AnyContentAsJson(gainAndLossJson)
+    val badDateRawRequestBody: AnyContentAsJson = AnyContentAsJson(badDateJson)
+    val badCustomerReferenceRawRequestBody: AnyContentAsJson = AnyContentAsJson(badCustomerReferenceJson)
+    val gainAndLossRawRequestBody: AnyContentAsJson = AnyContentAsJson(gainAndLossJson)
   }
 
   import Data._
 
   class Test extends MockAppConfig with MockCurrentDateTime {
 
-    implicit val appConfig: AppConfig              = mockAppConfig
+    implicit val appConfig: AppConfig = mockAppConfig
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
 
     val validator = new CreateAmendCgtResidentialPropertyDisposalsValidator()

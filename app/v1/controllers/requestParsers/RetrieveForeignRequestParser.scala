@@ -24,8 +24,8 @@ import v1.models.request.retrieveForeign.{RetrieveForeignRawData, RetrieveForeig
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveForeignRequestParser @Inject() (val validator: RetrieveForeignValidator)
-    extends RequestParser[RetrieveForeignRawData, RetrieveForeignRequest] {
+class RetrieveForeignRequestParser @Inject()(val validator: RetrieveForeignValidator)
+  extends RequestParser[RetrieveForeignRawData, RetrieveForeignRequest] {
 
   override protected def requestFor(data: RetrieveForeignRawData): RetrieveForeignRequest =
     RetrieveForeignRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

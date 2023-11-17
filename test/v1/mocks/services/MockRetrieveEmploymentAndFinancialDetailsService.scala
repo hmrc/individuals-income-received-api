@@ -34,7 +34,7 @@ trait MockRetrieveEmploymentAndFinancialDetailsService extends MockFactory {
   object MockRetrieveEmploymentAndFinancialDetailsService {
 
     def retrieve(requestData: RetrieveEmploymentAndFinancialDetailsRequest)
-        : CallHandler[Future[ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
+    : CallHandler[Future[ServiceOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
       (
         mockRetrieveEmploymentAndFinancialDetailsService
           .retrieve(_: RetrieveEmploymentAndFinancialDetailsRequest)(

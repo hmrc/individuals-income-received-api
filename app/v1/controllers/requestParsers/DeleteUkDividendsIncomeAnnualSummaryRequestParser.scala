@@ -24,8 +24,8 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.{DeleteUkDividends
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryRequestParser @Inject() (val validator: DeleteUkDividendsIncomeAnnualSummaryValidator)
-    extends RequestParser[DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest] {
+class DeleteUkDividendsIncomeAnnualSummaryRequestParser @Inject()(val validator: DeleteUkDividendsIncomeAnnualSummaryValidator)
+  extends RequestParser[DeleteUkDividendsIncomeAnnualSummaryRawData, DeleteUkDividendsIncomeAnnualSummaryRequest] {
 
   override protected def requestFor(data: DeleteUkDividendsIncomeAnnualSummaryRawData): DeleteUkDividendsIncomeAnnualSummaryRequest =
     DeleteUkDividendsIncomeAnnualSummaryRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

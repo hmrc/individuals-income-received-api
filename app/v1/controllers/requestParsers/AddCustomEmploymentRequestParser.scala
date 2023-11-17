@@ -24,8 +24,8 @@ import v1.models.request.addCustomEmployment._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AddCustomEmploymentRequestParser @Inject() (val validator: AddCustomEmploymentValidator)
-    extends RequestParser[AddCustomEmploymentRawData, AddCustomEmploymentRequest] {
+class AddCustomEmploymentRequestParser @Inject()(val validator: AddCustomEmploymentValidator)
+  extends RequestParser[AddCustomEmploymentRawData, AddCustomEmploymentRequest] {
 
   override protected def requestFor(data: AddCustomEmploymentRawData): AddCustomEmploymentRequest =
     AddCustomEmploymentRequest(Nino(data.nino), data.taxYear, data.body.json.as[AddCustomEmploymentRequestBody])

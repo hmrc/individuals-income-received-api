@@ -27,7 +27,7 @@ import v1.models.request.amendForeign.AmendForeignRawData
 
 class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2018-19"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -233,18 +233,18 @@ class AmendForeignValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
       |""".stripMargin
   )
 
-  private val validRawRequestBody                       = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody                       = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody                    = AnyContentAsJson(nonsenseRequestBodyJson)
-  private val nonValidRawRequestBody                    = AnyContentAsJson(nonValidRequestBodyJson)
-  private val missingMandatoryFieldRequestBody          = AnyContentAsJson(missingMandatoryFieldJson)
-  private val invalidEarningsNotTaxableUKRequestBody    = AnyContentAsJson(invalidEarningsNotTaxableUKRequestBodyJson)
-  private val invalidCustomerReferenceRequestBody       = AnyContentAsJson(invalidCustomerReferenceRequestBodyJson)
-  private val invalidCountryCodeRequestBody             = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
-  private val invalidCountryCodeFormatRequestBody       = AnyContentAsJson(invalidCountryCodeFormatRequestBodyJson)
+  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
+  private val invalidEarningsNotTaxableUKRequestBody = AnyContentAsJson(invalidEarningsNotTaxableUKRequestBodyJson)
+  private val invalidCustomerReferenceRequestBody = AnyContentAsJson(invalidCustomerReferenceRequestBodyJson)
+  private val invalidCountryCodeRequestBody = AnyContentAsJson(invalidCountryCodeRequestBodyJson)
+  private val invalidCountryCodeFormatRequestBody = AnyContentAsJson(invalidCountryCodeFormatRequestBodyJson)
   private val invalidAmountInForeignCurrencyRequestBody = AnyContentAsJson(invalidAmountInForeignCurrencyRequestBodyJson)
-  private val invalidAmountTaxPaidRequestBody           = AnyContentAsJson(invalidAmountTaxPaidRequestBodyJson)
-  private val allInvalidValueRawRequestBody             = AnyContentAsJson(allInvalidValueRawRequestBodyJson)
+  private val invalidAmountTaxPaidRequestBody = AnyContentAsJson(invalidAmountTaxPaidRequestBodyJson)
+  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRawRequestBodyJson)
 
   class Test extends MockAppConfig {
 

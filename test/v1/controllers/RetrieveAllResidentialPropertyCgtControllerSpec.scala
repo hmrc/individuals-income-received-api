@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -47,7 +47,7 @@ class RetrieveAllResidentialPropertyCgtControllerSpec
     with HateoasLinks
     with MockIdGenerator {
 
-  val taxYear: String        = "2019-20"
+  val taxYear: String = "2019-20"
   val source: Option[String] = Some("latest")
 
   val rawData: RetrieveAllResidentialPropertyCgtRawData = RetrieveAllResidentialPropertyCgtRawData(

@@ -37,7 +37,7 @@ object CommonInsurancePoliciesItem {
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int] and
       (JsPath \ "deficiencyRelief").readNullable[BigDecimal]
-  )(CommonInsurancePoliciesItem.apply _)
+    )(CommonInsurancePoliciesItem.apply _)
 
   implicit val writes: OWrites[CommonInsurancePoliciesItem] = Json.writes[CommonInsurancePoliciesItem]
 }

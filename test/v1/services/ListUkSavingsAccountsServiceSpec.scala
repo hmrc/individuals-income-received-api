@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class ListUkSavingsAccountsServiceSpec extends ServiceSpec {
 
-  private val nino             = "AA112233A"
+  private val nino = "AA112233A"
   private val savingsAccountId = "SAVKB2UVwUTBQGJ"
 
   private val requestData = ListUkSavingsAccountsRequest(Nino(nino), Some(savingsAccountId))

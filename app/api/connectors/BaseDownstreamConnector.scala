@@ -49,7 +49,7 @@ trait BaseDownstreamConnector {
     }
   }
 
-  def get[Resp](uri: DownstreamUri[Resp], queryParams: Seq[(String, String)] = Seq.empty)(implicit
+  def get[Resp](uri: DownstreamUri[Resp], queryParams: Seq[(String, String)] = Seq.empty, intent: Option[String] = None)(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier,
       httpReads: HttpReads[DownstreamOutcome[Resp]],
@@ -58,7 +58,10 @@ trait BaseDownstreamConnector {
     def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] =
       http.GET(getBackendUri(uri), queryParams = queryParams)
 
-    doGet(getBackendHeaders(uri, hc, correlationId))
+    intent match {
+      case Some(intent) => doGet(getBackendHeaders(uri, hc, correlationId, intentHeader(intent)))
+      case None =>  doGet(getBackendHeaders(uri, hc, correlationId))
+    }
   }
 
   def delete[Resp](uri: DownstreamUri[Resp], intent: Option[String] = None)(implicit
@@ -78,7 +81,7 @@ trait BaseDownstreamConnector {
 
   }
 
-  def put[Body: Writes, Resp](uri: DownstreamUri[Resp], body: Body = "")(implicit
+  def put[Body: Writes, Resp](uri: DownstreamUri[Resp], body: Body = "", intent:Option[String]= None)(implicit
       ec: ExecutionContext,
       hc: HeaderCarrier,
       httpReads: HttpReads[DownstreamOutcome[Resp]],
@@ -88,7 +91,10 @@ trait BaseDownstreamConnector {
       http.PUT(getBackendUri(uri), body)
     }
 
-    doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+    intent match {
+      case Some(intent) => doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader(intent)))
+      case None => doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+    }
   }
 
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String =

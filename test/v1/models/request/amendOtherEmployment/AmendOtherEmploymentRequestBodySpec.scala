@@ -208,10 +208,10 @@ class AmendOtherEmploymentRequestBodySpec extends UnitSpec {
       "produce an empty AmendOtherEmploymentRequestBody object" in {
         val json = Json.parse(
           """
-          |{
-          |   "shareOption": [ ],
-          |   "sharesAwardedOrReceived": [ ]
-          |}
+            |{
+            |   "shareOption": [ ],
+            |   "sharesAwardedOrReceived": [ ]
+            |}
         """.stripMargin
         )
 

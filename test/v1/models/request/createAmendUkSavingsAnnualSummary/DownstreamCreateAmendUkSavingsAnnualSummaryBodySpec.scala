@@ -30,7 +30,8 @@ class DownstreamCreateAmendUkSavingsAnnualSummaryBodySpec extends UnitSpec {
             incomeSourceId = "someIncomeSourceId",
             taxedUkInterest = Some(10.12),
             untaxedUkInterest = Some(11.12))) shouldBe
-          Json.parse("""{
+          Json.parse(
+            """{
               |  "incomeSourceId": "someIncomeSourceId",
               |  "taxedUkInterest": 10.12,
               |  "untaxedUkInterest": 11.12

@@ -24,21 +24,22 @@ class DownstreamUkSavingsAnnualIncomeResponseSpec extends UnitSpec {
   "Reads" must {
     "read from downstream JSON" in {
       Json
-        .parse("""{
-                   |  "savingsInterestAnnualIncome": [
-                   |    {
-                   |      "incomeSourceId": "id1",
-                   |      "taxedUkInterest": 1.12,
-                   |      "untaxedUkInterest": 2.12
-                   |    },
-                   |    {
-                   |      "incomeSourceId": "id2",
-                   |      "taxedUkInterest": 3.12,
-                   |      "untaxedUkInterest": 4.12
-                   |    }
-                   |  ]
-                   |}
-          |""".stripMargin)
+        .parse(
+          """{
+            |  "savingsInterestAnnualIncome": [
+            |    {
+            |      "incomeSourceId": "id1",
+            |      "taxedUkInterest": 1.12,
+            |      "untaxedUkInterest": 2.12
+            |    },
+            |    {
+            |      "incomeSourceId": "id2",
+            |      "taxedUkInterest": 3.12,
+            |      "untaxedUkInterest": 4.12
+            |    }
+            |  ]
+            |}
+            |""".stripMargin)
         .as[DownstreamUkSavingsAnnualIncomeResponse] shouldBe
         DownstreamUkSavingsAnnualIncomeResponse(
           Seq(

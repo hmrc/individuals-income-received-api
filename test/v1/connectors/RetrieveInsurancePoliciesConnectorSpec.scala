@@ -30,7 +30,8 @@ class RetrieveInsurancePoliciesConnectorSpec extends ConnectorSpec {
     "return the expected response for a non-TYS request" when {
       "a valid request is made" in new Api1661Test with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-        val outcome          = Right(ResponseWrapper(correlationId, response))
+
+        val outcome = Right(ResponseWrapper(correlationId, response))
 
         willGet(
           url = s"$baseUrl/income-tax/insurance-policies/income/$nino/2019-20"
@@ -42,7 +43,8 @@ class RetrieveInsurancePoliciesConnectorSpec extends ConnectorSpec {
     "return the expected response for a TYS request" when {
       "a valid request is made" in new TysIfsTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-        val outcome          = Right(ResponseWrapper(correlationId, response))
+
+        val outcome = Right(ResponseWrapper(correlationId, response))
 
         willGet(
           url = s"$baseUrl/income-tax/insurance-policies/income/23-24/$nino"

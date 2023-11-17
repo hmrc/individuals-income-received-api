@@ -54,6 +54,6 @@ object Disposal {
       (__ \ "lossesFromPreviousYear").writeNullable[BigDecimal] and
       (__ \ "amountOfNetGain").writeNullable[BigDecimal] and
       (__ \ "amountOfLoss").writeNullable[BigDecimal]
-  )(unlift(Disposal.unapply))
+    )(unlift(Disposal.unapply))
 
 }

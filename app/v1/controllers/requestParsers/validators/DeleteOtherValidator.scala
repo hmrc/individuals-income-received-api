@@ -25,7 +25,7 @@ import v1.models.request.deleteOther.DeleteOtherRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteOtherValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteOtherRawData] {
+class DeleteOtherValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteOtherRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

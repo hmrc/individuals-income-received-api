@@ -20,7 +20,8 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 
 object RetrieveUkSavingsAccountAnnualSummaryControllerFixture {
 
-  val mtdRetrieveResponse: JsValue = Json.parse("""
+  val mtdRetrieveResponse: JsValue = Json.parse(
+    """
       |{
       |   "taxedUkInterest": 93556675358.99,
       |   "untaxedUkInterest": 34514974058.99
@@ -30,20 +31,20 @@ object RetrieveUkSavingsAccountAnnualSummaryControllerFixture {
   def mtdRetrieveResponseWithHateaos(nino: String, taxYear: String, savingsAccountId: String): JsValue = mtdRetrieveResponse.as[JsObject] ++ Json
     .parse(
       s"""
-      |{
-      |"links":[
-      |{
-      |   "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
-      |   "rel":"create-and-amend-uk-savings-account-annual-summary",
-      |   "method":"PUT"
-      |},
-      |{
-      |   "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
-      |   "rel":"self",
-      |   "method":"GET"
-      |}
-      |]
-      |}
+         |{
+         |"links":[
+         |{
+         |   "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
+         |   "rel":"create-and-amend-uk-savings-account-annual-summary",
+         |   "method":"PUT"
+         |},
+         |{
+         |   "href":"/individuals/income-received/savings/uk-accounts/$nino/$taxYear/$savingsAccountId",
+         |   "rel":"self",
+         |   "method":"GET"
+         |}
+         |]
+         |}
   """.stripMargin
     )
     .as[JsObject]

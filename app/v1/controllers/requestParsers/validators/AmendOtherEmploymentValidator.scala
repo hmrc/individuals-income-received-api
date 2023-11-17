@@ -26,8 +26,8 @@ import v1.controllers.requestParsers.validators.validations.DateFormatValidation
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendOtherEmploymentValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[AmendOtherEmploymentRawData]
+class AmendOtherEmploymentValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[AmendOtherEmploymentRawData]
     with ValueFormatErrorMessages {
 
   private val validationSet = List(

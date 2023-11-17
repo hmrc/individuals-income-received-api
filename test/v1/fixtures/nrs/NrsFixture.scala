@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 
 trait NrsFixture {
   val nino: String = "AA111111A"
-  val event        = "some-event"
+  val event = "some-event"
 
   val body: JsValue = Json.parse("""{"a": "A", "b": 1 }""")
 }

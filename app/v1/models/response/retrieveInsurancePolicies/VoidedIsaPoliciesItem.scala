@@ -35,7 +35,7 @@ object VoidedIsaPoliciesItem {
       (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int] and
       (JsPath \ "yearsHeldSinceLastGain").readNullable[Int]
-  )(VoidedIsaPoliciesItem.apply _)
+    )(VoidedIsaPoliciesItem.apply _)
 
   implicit val writes: OWrites[VoidedIsaPoliciesItem] = Json.writes[VoidedIsaPoliciesItem]
 }

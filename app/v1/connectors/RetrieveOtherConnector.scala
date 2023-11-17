@@ -27,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveOtherConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveOtherRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveOtherResponse]] = {
+                                              hc: HeaderCarrier,
+                                              ec: ExecutionContext,
+                                              correlationId: String): Future[DownstreamOutcome[RetrieveOtherResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -44,7 +44,7 @@ class RetrieveOtherConnector @Inject() (val http: HttpClient, val appConfig: App
         DesUri[RetrieveOtherResponse](s"income-tax/income/other/${nino.value}/${taxYear.asMtd}")
       }
 
-    get(uri = downstreamUri)
+    get(uri = downstreamUri, intent = Some("IIR"))
   }
 
 }

@@ -125,40 +125,40 @@ object RetrieveDividendsFixtures {
 
   val responseJson: JsValue = Json.parse(
     s"""
-      |{
-      |   "submittedOn": "2020-07-06T09:37:17.000Z",
-      |   "foreignDividend": [$foreignDividendJson],
-      |   "dividendIncomeReceivedWhilstAbroad": [$dividendIncomeReceivedWhilstAbroadJson],
-      |   "stockDividend": $stockDividendJson,
-      |   "redeemableShares": $redeemableSharesJson,
-      |   "bonusIssuesOfSecurities": $bonusIssuesOfSecuritiesJson,
-      |   "closeCompanyLoansWrittenOff": $closeCompanyLoansWrittenOffJson
-      |}
+       |{
+       |   "submittedOn": "2020-07-06T09:37:17.000Z",
+       |   "foreignDividend": [$foreignDividendJson],
+       |   "dividendIncomeReceivedWhilstAbroad": [$dividendIncomeReceivedWhilstAbroadJson],
+       |   "stockDividend": $stockDividendJson,
+       |   "redeemableShares": $redeemableSharesJson,
+       |   "bonusIssuesOfSecurities": $bonusIssuesOfSecuritiesJson,
+       |   "closeCompanyLoansWrittenOff": $closeCompanyLoansWrittenOffJson
+       |}
     """.stripMargin
   )
 
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = responseJson.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-dividends-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-dividends-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-dividends-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/dividends/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-dividends-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

@@ -38,10 +38,10 @@ object RetrieveEmploymentAndFinancialDetailsResponse extends HateoasLinks {
       (JsPath \ "customerAdded").readNullable[Timestamp] and
       (JsPath \ "dateIgnored").readNullable[Timestamp] and
       (JsPath \ "employment").read[Employment]
-  )(RetrieveEmploymentAndFinancialDetailsResponse.apply _)
+    )(RetrieveEmploymentAndFinancialDetailsResponse.apply _)
 
   implicit object RetrieveFinancialDetailsLinksFactory
-      extends HateoasLinksFactory[RetrieveEmploymentAndFinancialDetailsResponse, RetrieveFinancialDetailsHateoasData] {
+    extends HateoasLinksFactory[RetrieveEmploymentAndFinancialDetailsResponse, RetrieveFinancialDetailsHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveFinancialDetailsHateoasData): Seq[Link] = {
       import data._

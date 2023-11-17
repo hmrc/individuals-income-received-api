@@ -24,8 +24,8 @@ import v1.models.request.createAmendOtherCgt._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherCgtRequestParser @Inject() (val validator: CreateAmendOtherCgtValidator)
-    extends RequestParser[CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest] {
+class CreateAmendOtherCgtRequestParser @Inject()(val validator: CreateAmendOtherCgtValidator)
+  extends RequestParser[CreateAmendOtherCgtRawData, CreateAmendOtherCgtRequest] {
 
   override protected def requestFor(data: CreateAmendOtherCgtRawData): CreateAmendOtherCgtRequest = {
     val taxYear = TaxYear.fromMtd(data.taxYear)

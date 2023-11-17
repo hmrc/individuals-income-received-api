@@ -32,6 +32,6 @@ object AmendForeignPoliciesItem {
       (JsPath \ "gainAmount").write[BigDecimal] and
       (JsPath \ "taxPaidAmount").writeNullable[BigDecimal] and
       (JsPath \ "yearsHeld").writeNullable[Int]
-  )(unlift(AmendForeignPoliciesItem.unapply))
+    )(unlift(AmendForeignPoliciesItem.unapply))
 
 }

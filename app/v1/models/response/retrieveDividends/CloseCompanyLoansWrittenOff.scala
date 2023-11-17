@@ -26,7 +26,7 @@ object CloseCompanyLoansWrittenOff {
   implicit val reads: Reads[CloseCompanyLoansWrittenOff] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "grossAmount").read[BigDecimal]
-  )(CloseCompanyLoansWrittenOff.apply _)
+    )(CloseCompanyLoansWrittenOff.apply _)
 
   implicit val writes: OWrites[CloseCompanyLoansWrittenOff] = Json.writes[CloseCompanyLoansWrittenOff]
 

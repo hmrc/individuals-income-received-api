@@ -29,7 +29,7 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
 
   object Data {
 
-    val validNino    = "AA123456A"
+    val validNino = "AA123456A"
     val validTaxYear = "2019-20"
 
     private val validRequestBodyJson: JsValue = Json.parse(
@@ -439,26 +439,26 @@ class CreateAmendOtherCgtValidatorSpec extends UnitSpec with ValueFormatErrorMes
     """.stripMargin
     )
 
-    val validRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(validRequestBodyJson)
-    val emptyRawRequestBody: AnyContentAsJson                              = AnyContentAsJson(emptyRequestBodyJson)
-    val nonsenseRawRequestBody: AnyContentAsJson                           = AnyContentAsJson(nonsenseRequestBodyJson)
-    val nonValidRawRequestBody: AnyContentAsJson                           = AnyContentAsJson(nonValidRequestBodyJson)
-    val missingMandatoryFieldRawRequestBody: AnyContentAsJson              = AnyContentAsJson(missingMandatoryFieldJson)
-    val emptyObjectsRawRequestBody: AnyContentAsJson                       = AnyContentAsJson(emptyObjectsJson)
-    val gainAndLossRawRequestBody: AnyContentAsJson                        = AnyContentAsJson(gainAndLossJson)
-    val oneBadValueFieldRawRequestBody: AnyContentAsJson                   = AnyContentAsJson(oneBadValueFieldJson)
-    val badAdjustmentsRawRequestBody: AnyContentAsJson                     = AnyContentAsJson(badAdjustmentsJson)
-    val allBadValueFieldsWithGainsRawRequestBody: AnyContentAsJson         = AnyContentAsJson(allBadValueFieldsWithGainsJson)
-    val allBadValueFieldsWithLossesRawRequestBody: AnyContentAsJson        = AnyContentAsJson(allBadValueFieldsWithLossesJson)
+    val validRawRequestBody: AnyContentAsJson = AnyContentAsJson(validRequestBodyJson)
+    val emptyRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyRequestBodyJson)
+    val nonsenseRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonsenseRequestBodyJson)
+    val nonValidRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonValidRequestBodyJson)
+    val missingMandatoryFieldRawRequestBody: AnyContentAsJson = AnyContentAsJson(missingMandatoryFieldJson)
+    val emptyObjectsRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyObjectsJson)
+    val gainAndLossRawRequestBody: AnyContentAsJson = AnyContentAsJson(gainAndLossJson)
+    val oneBadValueFieldRawRequestBody: AnyContentAsJson = AnyContentAsJson(oneBadValueFieldJson)
+    val badAdjustmentsRawRequestBody: AnyContentAsJson = AnyContentAsJson(badAdjustmentsJson)
+    val allBadValueFieldsWithGainsRawRequestBody: AnyContentAsJson = AnyContentAsJson(allBadValueFieldsWithGainsJson)
+    val allBadValueFieldsWithLossesRawRequestBody: AnyContentAsJson = AnyContentAsJson(allBadValueFieldsWithLossesJson)
     val allBadValueFieldsMultipleDisposalsRawRequestBody: AnyContentAsJson = AnyContentAsJson(allBadValueFieldsMultipleDisposalsJson)
-    val badDateRawRequestBody: AnyContentAsJson                            = AnyContentAsJson(badDateJson)
-    val badAssetDescriptionRawRequestBody: AnyContentAsJson                = AnyContentAsJson(badAssetDescriptionJson)
-    val badAssetTypeRawRequestBody: AnyContentAsJson                       = AnyContentAsJson(badAssetTypeJson)
-    val badClaimOrElectionCodesRawRequestBody: AnyContentAsJson            = AnyContentAsJson(badClaimOrElectionCodesJson)
-    val badDisposalDateRawRequestBody: AnyContentAsJson                    = AnyContentAsJson(badDisposalDateJson)
-    val badAcquisitionDateRawRequestBody: AnyContentAsJson                 = AnyContentAsJson(badAcquisitionDateJson)
-    val badGainAfterReliefLossAfterReliefRawRequestBody: AnyContentAsJson  = AnyContentAsJson(badGainAfterReliefLossAfterReliefJson)
-    val allThreeGainsMissingRequestBody: AnyContentAsJson                  = AnyContentAsJson(allThreeGainsMissingJson)
+    val badDateRawRequestBody: AnyContentAsJson = AnyContentAsJson(badDateJson)
+    val badAssetDescriptionRawRequestBody: AnyContentAsJson = AnyContentAsJson(badAssetDescriptionJson)
+    val badAssetTypeRawRequestBody: AnyContentAsJson = AnyContentAsJson(badAssetTypeJson)
+    val badClaimOrElectionCodesRawRequestBody: AnyContentAsJson = AnyContentAsJson(badClaimOrElectionCodesJson)
+    val badDisposalDateRawRequestBody: AnyContentAsJson = AnyContentAsJson(badDisposalDateJson)
+    val badAcquisitionDateRawRequestBody: AnyContentAsJson = AnyContentAsJson(badAcquisitionDateJson)
+    val badGainAfterReliefLossAfterReliefRawRequestBody: AnyContentAsJson = AnyContentAsJson(badGainAfterReliefLossAfterReliefJson)
+    val allThreeGainsMissingRequestBody: AnyContentAsJson = AnyContentAsJson(allThreeGainsMissingJson)
   }
 
   import Data._

@@ -70,9 +70,9 @@ class RetrieveEmploymentServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveEmploymentConnector {
 
-    private val nino    = "AA112233A"
+    private val nino = "AA112233A"
     private val taxYear = "2019-20"
-    val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+    val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
     val request: RetrieveEmploymentRequest = RetrieveEmploymentRequest(Nino(nino), taxYear, employmentId)
 
@@ -87,7 +87,7 @@ class RetrieveEmploymentServiceSpec extends ServiceSpec {
       submittedOn = None
     )
 
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "RetrieveEmployment")
 
     val service: RetrieveEmploymentService = new RetrieveEmploymentService(

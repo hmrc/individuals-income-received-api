@@ -25,8 +25,8 @@ import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDivide
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveUkDividendsIncomeAnnualSummaryValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[RetrieveUkDividendsAnnualIncomeSummaryRawData] {
+class RetrieveUkDividendsIncomeAnnualSummaryValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[RetrieveUkDividendsAnnualIncomeSummaryRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

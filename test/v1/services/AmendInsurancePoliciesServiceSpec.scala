@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendInsurancePoliciesServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = TaxYear.fromMtd("2019-20")
 
   private val voidedIsaModel = AmendVoidedIsaPoliciesItem(

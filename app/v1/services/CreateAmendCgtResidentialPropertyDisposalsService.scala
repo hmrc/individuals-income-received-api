@@ -27,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
-    extends BaseService {
+class CreateAmendCgtResidentialPropertyDisposalsService @Inject()(connector: CreateAmendCgtResidentialPropertyDisposalsConnector)
+  extends BaseService {
 
   def createAndAmend(request: CreateAmendCgtResidentialPropertyDisposalsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+                                                                                 ctx: RequestContext,
+                                                                                 ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.createAndAmend(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
@@ -40,14 +40,14 @@ class CreateAmendCgtResidentialPropertyDisposalsService @Inject() (connector: Cr
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "INVALID_DISPOSAL_DATE"     -> RuleDisposalDateError,
-      "INVALID_COMPLETION_DATE"   -> RuleCompletionDateError,
-      "INVALID_ACQUISITION_DATE"  -> RuleAcquisitionDateAfterDisposalDateError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_PAYLOAD" -> InternalError,
+      "INVALID_DISPOSAL_DATE" -> RuleDisposalDateError,
+      "INVALID_COMPLETION_DATE" -> RuleCompletionDateError,
+      "INVALID_ACQUISITION_DATE" -> RuleAcquisitionDateAfterDisposalDateError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(

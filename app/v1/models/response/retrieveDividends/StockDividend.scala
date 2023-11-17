@@ -26,7 +26,7 @@ object StockDividend {
   implicit val reads: Reads[StockDividend] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "grossAmount").read[BigDecimal]
-  )(StockDividend.apply _)
+    )(StockDividend.apply _)
 
   implicit val writes: OWrites[StockDividend] = Json.writes[StockDividend]
 }

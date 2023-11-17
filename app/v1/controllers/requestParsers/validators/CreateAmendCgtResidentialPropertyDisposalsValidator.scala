@@ -26,8 +26,8 @@ import v1.models.request.createAmendCgtResidentialPropertyDisposals._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData]
+class CreateAmendCgtResidentialPropertyDisposalsValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[CreateAmendCgtResidentialPropertyDisposalsRawData]
     with DisposalDateErrorMessages {
 
   private val validationSet = List(

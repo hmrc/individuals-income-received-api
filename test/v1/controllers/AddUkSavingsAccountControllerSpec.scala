@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AddUkSavingsAccountControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockAppConfig
     with MockAddUkSavingsAccountService
@@ -46,7 +46,7 @@ class AddUkSavingsAccountControllerSpec
     with HateoasLinks {
 
   val savingsAccountId: String = "SAVKB2UVwUTBQGJ"
-  val mtdId: String            = "test-mtd-id"
+  val mtdId: String = "test-mtd-id"
 
   "AddUkSavingsAccountController" should {
     "return OK" when {
@@ -126,11 +126,12 @@ class AddUkSavingsAccountControllerSpec
       listUkSavings(mockAppConfig, nino)
     )
 
-    val requestBodyJson: JsValue = Json.parse("""
-      |{
-      |   "accountName": "Shares savings account"
-      |}
-      |""".stripMargin)
+    val requestBodyJson: JsValue = Json.parse(
+      """
+        |{
+        |   "accountName": "Shares savings account"
+        |}
+        |""".stripMargin)
 
     val rawData: AddUkSavingsAccountRawData = AddUkSavingsAccountRawData(
       nino = nino,
@@ -146,18 +147,19 @@ class AddUkSavingsAccountControllerSpec
       savingsAccountId = savingsAccountId
     )
 
-    val responseJson: JsValue = Json.parse(s"""
-      |{
-      |    "savingsAccountId": "$savingsAccountId",
-      |    "links":[
-      |      {
-      |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
-      |         "method":"GET",
-      |         "rel":"list-all-uk-savings-account"
-      |      }
-      |   ]
-      |}
-      |""".stripMargin)
+    val responseJson: JsValue = Json.parse(
+      s"""
+         |{
+         |    "savingsAccountId": "$savingsAccountId",
+         |    "links":[
+         |      {
+         |         "href":"/individuals/income-received/savings/uk-accounts/$nino",
+         |         "method":"GET",
+         |         "rel":"list-all-uk-savings-account"
+         |      }
+         |   ]
+         |}
+         |""".stripMargin)
 
   }
 

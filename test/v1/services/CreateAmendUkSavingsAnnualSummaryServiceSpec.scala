@@ -28,8 +28,8 @@ import scala.concurrent.Future
 
 class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
 
-  private val nino                     = Nino("AA112233A")
-  private val taxYear                  = TaxYear.fromMtd("2019-20")
+  private val nino = Nino("AA112233A")
+  private val taxYear = TaxYear.fromMtd("2019-20")
   private val savingsAccountId: String = "ABC1234567890"
 
   private val request = CreateAmendUkSavingsAnnualSummaryRequest(
@@ -91,12 +91,12 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
           ("SERVICE_UNAVAILABLE", InternalError)
         )
         val tysErrors = List(
-          ("INVALID_TAX_YEAR"           -> TaxYearFormatError),
-          ("INCOME_SOURCE_NOT_FOUND"    -> NotFoundError),
-          ("INVALID_INCOMESOURCE_TYPE"  -> InternalError),
-          ("INVALID_CORRELATIONID"      -> InternalError),
+          ("INVALID_TAX_YEAR" -> TaxYearFormatError),
+          ("INCOME_SOURCE_NOT_FOUND" -> NotFoundError),
+          ("INVALID_INCOMESOURCE_TYPE" -> InternalError),
+          ("INVALID_CORRELATIONID" -> InternalError),
           ("INCOMPATIBLE_INCOME_SOURCE" -> InternalError),
-          ("TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError)
+          ("TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError)
         )
 
         (errors ++ tysErrors).foreach(args => (serviceError _).tupled(args))

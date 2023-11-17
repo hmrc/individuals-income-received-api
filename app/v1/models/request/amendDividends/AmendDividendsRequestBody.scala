@@ -37,7 +37,7 @@ object AmendDividendsRequestBody extends JsonUtils {
       (JsPath \ "redeemableShares").readNullable[AmendCommonDividends] and
       (JsPath \ "bonusIssuesOfSecurities").readNullable[AmendCommonDividends] and
       (JsPath \ "closeCompanyLoansWrittenOff").readNullable[AmendCommonDividends]
-  )(AmendDividendsRequestBody.apply _)
+    )(AmendDividendsRequestBody.apply _)
 
   implicit val writes: OWrites[AmendDividendsRequestBody] = (
     (JsPath \ "foreignDividend").writeNullable[Seq[AmendForeignDividendItem]] and
@@ -46,6 +46,6 @@ object AmendDividendsRequestBody extends JsonUtils {
       (JsPath \ "redeemableShares").writeNullable[AmendCommonDividends] and
       (JsPath \ "bonusIssuesOfSecurities").writeNullable[AmendCommonDividends] and
       (JsPath \ "closeCompanyLoansWrittenOff").writeNullable[AmendCommonDividends]
-  )(unlift(AmendDividendsRequestBody.unapply))
+    )(unlift(AmendDividendsRequestBody.unapply))
 
 }

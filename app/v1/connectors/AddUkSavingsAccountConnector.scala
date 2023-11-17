@@ -27,20 +27,26 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddUkSavingsAccountConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AddUkSavingsAccountConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def addSavings(request: AddUkSavingsAccountRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[AddUkSavingsAccountResponse]] = {
+                                                      hc: HeaderCarrier,
+                                                      ec: ExecutionContext,
+                                                      correlationId: String): Future[DownstreamOutcome[AddUkSavingsAccountResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     val nino = request.nino.nino
 
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
     post(
       uri = DesUri[AddUkSavingsAccountResponse](s"income-tax/income-sources/nino/$nino"),
-      body = request.body
+      body = request.body,
+      intent = intent
     )
   }
 

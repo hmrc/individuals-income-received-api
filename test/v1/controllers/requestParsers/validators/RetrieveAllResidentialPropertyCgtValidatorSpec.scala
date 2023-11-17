@@ -28,14 +28,14 @@ import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentia
 
 class RetrieveAllResidentialPropertyCgtValidatorSpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2021-22"
-  private val validSource  = Some("hmrcHeld")
+  private val validSource = Some("hmrcHeld")
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 

@@ -28,8 +28,8 @@ import scala.concurrent.Future
 
 class AmendCustomEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino         = "AA112233A"
-  private val taxYear      = "2021-22"
+  private val nino = "AA112233A"
+  private val taxYear = "2021-22"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   val amendCustomEmploymentRequestBody: AmendCustomEmploymentRequestBody = AmendCustomEmploymentRequestBody(

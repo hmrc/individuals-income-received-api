@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendOtherCgtControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -186,11 +186,12 @@ class CreateAmendOtherCgtControllerSpec
     )
   )
 
-  val auditData: JsValue = Json.parse(s"""
-                                         |{
-                                         |  "nino":"$nino",
-                                         |  "taxYear": "$taxYear"
-                                         |  }""".stripMargin)
+  val auditData: JsValue = Json.parse(
+    s"""
+       |{
+       |  "nino":"$nino",
+       |  "taxYear": "$taxYear"
+       |  }""".stripMargin)
 
   "CreateAmendOtherCgtController" should {
     "return OK" when {

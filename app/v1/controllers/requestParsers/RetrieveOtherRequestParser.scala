@@ -24,7 +24,7 @@ import v1.models.request.retrieveOther.{RetrieveOtherRawData, RetrieveOtherReque
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveOtherRequestParser @Inject() (val validator: RetrieveOtherValidator) extends RequestParser[RetrieveOtherRawData, RetrieveOtherRequest] {
+class RetrieveOtherRequestParser @Inject()(val validator: RetrieveOtherValidator) extends RequestParser[RetrieveOtherRawData, RetrieveOtherRequest] {
 
   override protected def requestFor(data: RetrieveOtherRawData): RetrieveOtherRequest =
     RetrieveOtherRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

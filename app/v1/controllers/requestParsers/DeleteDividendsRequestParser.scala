@@ -24,8 +24,8 @@ import v1.models.request.deleteDividends.{DeleteDividendsRawData, DeleteDividend
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteDividendsRequestParser @Inject() (val validator: DeleteDividendsValidator)
-    extends RequestParser[DeleteDividendsRawData, DeleteDividendsRequest] {
+class DeleteDividendsRequestParser @Inject()(val validator: DeleteDividendsValidator)
+  extends RequestParser[DeleteDividendsRawData, DeleteDividendsRequest] {
 
   override protected def requestFor(data: DeleteDividendsRawData): DeleteDividendsRequest =
     DeleteDividendsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

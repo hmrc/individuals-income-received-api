@@ -27,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveDividendsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveDividendsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieve(request: RetrieveDividendsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveDividendsResponse]] = {
+                                                  hc: HeaderCarrier,
+                                                  ec: ExecutionContext,
+                                                  correlationId: String): Future[DownstreamOutcome[RetrieveDividendsResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -44,7 +44,7 @@ class RetrieveDividendsConnector @Inject() (val http: HttpClient, val appConfig:
         IfsUri[RetrieveDividendsResponse](s"income-tax/income/dividends/$nino/${taxYear.asMtd}")
       }
 
-    get(uri = downstreamUri)
+    get(uri = downstreamUri, intent = Some("IIR"))
   }
 
 }

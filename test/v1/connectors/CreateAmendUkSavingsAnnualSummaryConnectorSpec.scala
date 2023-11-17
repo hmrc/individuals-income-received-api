@@ -28,8 +28,8 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA111111A"
 
-  val incomeSourceId: String                = "ABCDE1234567890"
-  val taxedUkInterest: Option[BigDecimal]   = Some(31554452289.99)
+  val incomeSourceId: String = "ABCDE1234567890"
+  val taxedUkInterest: Option[BigDecimal] = Some(31554452289.99)
   val untaxedUkInterest: Option[BigDecimal] = Some(91523009816.00)
 
   val transactionReference: String = "0000000000000001"
@@ -38,13 +38,14 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec {
     DownstreamCreateAmendUkSavingsAnnualSummaryBody(incomeSourceId, taxedUkInterest, untaxedUkInterest)
 
   private val validResponse: JsObject = Json.obj("transactionReference" -> transactionReference)
-  val outcome                         = Right(ResponseWrapper(correlationId, validResponse))
+  val outcome = Right(ResponseWrapper(correlationId, validResponse))
 
   "CreateAmendUkSavingsAccountAnnualSummaryConnector" when {
     "createAmendUkSavingsAccountAnnualSummary called for a non Tax Year Specific tax year" must {
       "return a 200 status for a success scenario" in new DesTest with Test {
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-        val url: String      = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/${taxYear.asDownstream}"
+
+        val url: String = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/${taxYear.asDownstream}"
         willPost(url, body) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.createOrAmendUKSavingsAccountSummary(Nino(nino), taxYear, request))
@@ -54,7 +55,8 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec {
       "createAmendUkSavingsAccountAnnualSummary for a Tax Year Specific tax year" must {
         "return a 200 status for a success scenario " in new TysIfsTest with Test {
           def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-          val url              = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/savings/annual"
+
+          val url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/savings/annual"
           willPost(url, body) returns Future.successful(outcome)
           val result: DownstreamOutcome[Unit] = await(connector.createOrAmendUKSavingsAccountSummary(Nino(nino), taxYear, request))
           result shouldBe outcome

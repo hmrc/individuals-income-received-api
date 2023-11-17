@@ -25,7 +25,8 @@ import scala.concurrent.Future
 
 class AmendInsurancePoliciesConnectorSpec extends ConnectorSpec {
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
 
     val nino: String = "AA111111A"
     val taxYear: TaxYear

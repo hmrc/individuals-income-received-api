@@ -25,10 +25,10 @@ class CreateAndAmendUkSavingsAnnualSummaryHateoasDataSpec extends UnitSpec with 
 
   "LinksFactory" should {
     "return the correct links" in {
-      val nino             = "someNino"
-      val taxYear          = "2017-18"
+      val nino = "someNino"
+      val taxYear = "2017-18"
       val savingsAccountId = "someAcctId"
-      val context          = "some/context"
+      val context = "some/context"
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()
       CreateAndAmendUkSavingsAnnualSummaryHateoasData.LinksFactory.links(

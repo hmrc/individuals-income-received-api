@@ -35,7 +35,7 @@ object AmendOtherEmploymentRequestBody extends JsonUtils {
       (JsPath \ "disability").readNullable[AmendCommonOtherEmployment] and
       (JsPath \ "foreignService").readNullable[AmendCommonOtherEmployment] and
       (JsPath \ "lumpSums").readNullable[Seq[AmendLumpSums]].mapEmptySeqToNone
-  )(AmendOtherEmploymentRequestBody.apply _)
+    )(AmendOtherEmploymentRequestBody.apply _)
 
   implicit val writes: OWrites[AmendOtherEmploymentRequestBody] = (
     (JsPath \ "shareOption").writeNullable[Seq[AmendShareOptionItem]] and
@@ -43,6 +43,6 @@ object AmendOtherEmploymentRequestBody extends JsonUtils {
       (JsPath \ "disability").writeNullable[AmendCommonOtherEmployment] and
       (JsPath \ "foreignService").writeNullable[AmendCommonOtherEmployment] and
       (JsPath \ "lumpSums").writeNullable[Seq[AmendLumpSums]]
-  )(unlift(AmendOtherEmploymentRequestBody.unapply))
+    )(unlift(AmendOtherEmploymentRequestBody.unapply))
 
 }

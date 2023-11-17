@@ -24,10 +24,10 @@ import v1.models.request.retrieveFinancialDetails.{RetrieveEmploymentAndFinancia
 
 class RetrieveEmploymentAndFinancialDetailsRequestParserSpec extends UnitSpec {
 
-  val nino: String                   = "AA123456B"
-  val taxYear: String                = "2021-22"
-  val employmentId: String           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  val validSource: String            = "latest"
+  val nino: String = "AA123456B"
+  val taxYear: String = "2021-22"
+  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val validSource: String = "latest"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val retrieveFinancialDetailsRawData: RetrieveFinancialDetailsRawData = RetrieveFinancialDetailsRawData(

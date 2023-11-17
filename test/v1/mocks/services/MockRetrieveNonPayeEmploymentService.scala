@@ -33,7 +33,7 @@ trait MockRetrieveNonPayeEmploymentService extends MockFactory {
   object MockRetrieveNonPayeEmploymentService {
 
     def retrieveNonPayeEmployment(
-        requestData: RetrieveNonPayeEmploymentIncomeRequest): CallHandler[Future[ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]]] = {
+                                   requestData: RetrieveNonPayeEmploymentIncomeRequest): CallHandler[Future[ServiceOutcome[RetrieveNonPayeEmploymentIncomeResponse]]] = {
       (
         mockRetrieveNonPayeEmploymentService
           .retrieveNonPayeEmployment(_: RetrieveNonPayeEmploymentIncomeRequest)(

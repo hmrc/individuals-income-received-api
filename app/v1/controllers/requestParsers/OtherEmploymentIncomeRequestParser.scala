@@ -24,8 +24,8 @@ import v1.models.request.otherEmploymentIncome.{OtherEmploymentIncomeRequest, Ot
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class OtherEmploymentIncomeRequestParser @Inject() (val validator: OtherEmploymentIncomeRequestValidator)
-    extends RequestParser[OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest] {
+class OtherEmploymentIncomeRequestParser @Inject()(val validator: OtherEmploymentIncomeRequestValidator)
+  extends RequestParser[OtherEmploymentIncomeRequestRawData, OtherEmploymentIncomeRequest] {
 
   override protected def requestFor(data: OtherEmploymentIncomeRequestRawData): OtherEmploymentIncomeRequest =
     OtherEmploymentIncomeRequest(

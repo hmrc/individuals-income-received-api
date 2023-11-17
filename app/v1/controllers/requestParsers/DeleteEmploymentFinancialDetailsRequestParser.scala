@@ -24,8 +24,8 @@ import v1.models.request.deleteEmploymentFinancialDetails.{DeleteEmploymentFinan
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteEmploymentFinancialDetailsRequestParser @Inject() (val validator: DeleteEmploymentFinancialDetailsValidator)
-    extends RequestParser[DeleteEmploymentFinancialDetailsRawData, DeleteEmploymentFinancialDetailsRequest] {
+class DeleteEmploymentFinancialDetailsRequestParser @Inject()(val validator: DeleteEmploymentFinancialDetailsValidator)
+  extends RequestParser[DeleteEmploymentFinancialDetailsRawData, DeleteEmploymentFinancialDetailsRequest] {
 
   override protected def requestFor(data: DeleteEmploymentFinancialDetailsRawData): DeleteEmploymentFinancialDetailsRequest =
     DeleteEmploymentFinancialDetailsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.employmentId)

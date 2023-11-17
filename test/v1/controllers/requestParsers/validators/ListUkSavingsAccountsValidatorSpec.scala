@@ -24,7 +24,7 @@ import v1.models.request.listUkSavingsAccounts.ListUkSavingsAccountsRawData
 
 class ListUkSavingsAccountsValidatorSpec extends UnitSpec {
 
-  private val validNino             = "AA123456A"
+  private val validNino = "AA123456A"
   private val validSavingsAccountId = "SAVKB2UVwUTBQGJ"
 
   class Test extends MockCurrentDateTime with MockAppConfig {

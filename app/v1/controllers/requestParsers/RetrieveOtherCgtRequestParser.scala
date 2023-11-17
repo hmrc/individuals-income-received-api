@@ -24,8 +24,8 @@ import v1.models.request.retrieveOtherCgt.{RetrieveOtherCgtRawData, RetrieveOthe
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveOtherCgtRequestParser @Inject() (val validator: RetrieveOtherCgtValidator)
-    extends RequestParser[RetrieveOtherCgtRawData, RetrieveOtherCgtRequest] {
+class RetrieveOtherCgtRequestParser @Inject()(val validator: RetrieveOtherCgtValidator)
+  extends RequestParser[RetrieveOtherCgtRawData, RetrieveOtherCgtRequest] {
 
   override protected def requestFor(data: RetrieveOtherCgtRawData): RetrieveOtherCgtRequest =
     RetrieveOtherCgtRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

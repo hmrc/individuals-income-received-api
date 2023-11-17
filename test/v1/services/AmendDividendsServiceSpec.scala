@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class AmendDividendsServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = TaxYear.fromMtd("2019-20")
 
   val amendDividendsRequest: AmendDividendsRequest = AmendDividendsRequest(

@@ -35,7 +35,7 @@ object ListUkSavingsAccountsResponse extends HateoasLinks with JsonUtils {
       .map(ListUkSavingsAccountsResponse(_))
 
   implicit object ListUkSavingsAccountsLinksFactory
-      extends HateoasLinksFactory[ListUkSavingsAccountsResponse[UkSavingsAccount], ListUkSavingsAccountsHateoasData] {
+    extends HateoasLinksFactory[ListUkSavingsAccountsResponse[UkSavingsAccount], ListUkSavingsAccountsHateoasData] {
 
     override def links(appConfig: AppConfig, data: ListUkSavingsAccountsHateoasData): Seq[Link] = {
       import data._

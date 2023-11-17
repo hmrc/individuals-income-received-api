@@ -219,35 +219,35 @@ object RetrieveAllResidentialPropertyCgtControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = mtdJson.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
-       |         "method":"DELETE",
-       |         "rel":"delete-report-and-pay-capital-gains-tax-on-property-overrides"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-cgt-residential-property-disposals"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-cgt-residential-property-disposals"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-report-and-pay-capital-gains-tax-on-property-overrides"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear/ppd",
+         |         "method":"DELETE",
+         |         "rel":"delete-report-and-pay-capital-gains-tax-on-property-overrides"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-cgt-residential-property-disposals"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-cgt-residential-property-disposals"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/residential-property/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

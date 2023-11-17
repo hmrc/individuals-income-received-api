@@ -24,9 +24,9 @@ import v1.models.request.deleteCustomEmployment.{DeleteCustomEmploymentRawData, 
 
 class DeleteCustomEmploymentRequestParserSpec extends UnitSpec {
 
-  val nino: String                   = "AA123456B"
-  val taxYear: String                = "2021-22"
-  val employmentId: String           = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String = "AA123456B"
+  val taxYear: String = "2021-22"
+  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val deleteCustomEmploymentRawData: DeleteCustomEmploymentRawData = DeleteCustomEmploymentRawData(

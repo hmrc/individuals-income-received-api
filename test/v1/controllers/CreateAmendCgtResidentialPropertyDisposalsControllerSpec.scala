@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -155,11 +155,12 @@ class CreateAmendCgtResidentialPropertyDisposalsControllerSpec
     )
   )
 
-  val auditData: JsValue = Json.parse(s"""
-                                         |{
-                                         |  "nino":"$nino",
-                                         |  "taxYear": "$taxYear"
-                                         |  }""".stripMargin)
+  val auditData: JsValue = Json.parse(
+    s"""
+       |{
+       |  "nino":"$nino",
+       |  "taxYear": "$taxYear"
+       |  }""".stripMargin)
 
   "CreateAmendCgtResidentialPropertyDisposalsController" should {
     "return a successful response with status OK" when {

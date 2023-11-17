@@ -34,14 +34,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuthService,
-                                                 val lookupService: MtdIdLookupService,
-                                                 parser: DeleteCgtPpdOverridesRequestParser,
-                                                 service: DeleteCgtPpdOverridesService,
-                                                 auditService: AuditService,
-                                                 cc: ControllerComponents,
-                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) {
+class DeleteCgtPpdOverridesController @Inject()(val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                parser: DeleteCgtPpdOverridesRequestParser,
+                                                service: DeleteCgtPpdOverridesService,
+                                                auditService: AuditService,
+                                                cc: ControllerComponents,
+                                                val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext = EndpointLogContext(
     controllerName = "DeleteCgtPpdOverridesController",
@@ -65,8 +65,8 @@ class DeleteCgtPpdOverridesController @Inject() (val authService: EnrolmentsAuth
   private def auditHandler(nino: String, taxYear: String, request: UserRequest[AnyContent]): AuditHandler = {
     new AuditHandler() {
       override def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-          ctx: RequestContext,
-          ec: ExecutionContext): Unit = {
+                                                                                                                            ctx: RequestContext,
+                                                                                                                            ec: ExecutionContext): Unit = {
 
         response match {
           case Left(err: ErrorWrapper) =>

@@ -27,8 +27,8 @@ import v1.models.request.createAmendOther._
 
 class CreateAmendOtherRequestParserSpec extends UnitSpec {
 
-  val nino: String                   = "AA123456B"
-  val taxYear: String                = "2019-20"
+  val nino: String = "AA123456B"
+  val taxYear: String = "2019-20"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRawRequestBody = AnyContentAsJson(requestBodyJson)

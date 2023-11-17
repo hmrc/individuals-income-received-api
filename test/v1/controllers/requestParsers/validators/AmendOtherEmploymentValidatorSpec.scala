@@ -27,7 +27,7 @@ import v1.models.request.amendOtherEmployment.AmendOtherEmploymentRawData
 
 class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2020-21"
 
   private val validRequestBodyJson: JsValue = Json.parse(
@@ -679,27 +679,27 @@ class AmendOtherEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMe
     """.stripMargin
   )
 
-  private val validRawRequestBody    = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody    = AnyContentAsJson(emptyRequestBodyJson)
+  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
   private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val nonValidRawRequestBody = AnyContentAsJson(nonValidRequestBodyJson)
 
-  private val invalidEmployerNameRawRequestBody          = AnyContentAsJson(invalidEmployerNameJson)
-  private val invalidEmployerRefRawRequestBody           = AnyContentAsJson(invalidEmployerRefJson)
-  private val invalidSchemePlanRawRequestBody            = AnyContentAsJson(invalidSchemePlanTypeJson)
-  private val invalidDateRawRequestBody                  = AnyContentAsJson(invalidDateJson)
+  private val invalidEmployerNameRawRequestBody = AnyContentAsJson(invalidEmployerNameJson)
+  private val invalidEmployerRefRawRequestBody = AnyContentAsJson(invalidEmployerRefJson)
+  private val invalidSchemePlanRawRequestBody = AnyContentAsJson(invalidSchemePlanTypeJson)
+  private val invalidDateRawRequestBody = AnyContentAsJson(invalidDateJson)
   private val invalidClassOfSharesAcquiredRawRequestBody = AnyContentAsJson(invalidClassOfSharesAcquiredJson)
-  private val invalidClassOfSharesAwardedRawRequestBody  = AnyContentAsJson(invalidClassOfSharesAwardedJson)
-  private val invalidCustomerRefRawRequestBody           = AnyContentAsJson(invalidCustomerRefJson)
+  private val invalidClassOfSharesAwardedRawRequestBody = AnyContentAsJson(invalidClassOfSharesAwardedJson)
+  private val invalidCustomerRefRawRequestBody = AnyContentAsJson(invalidCustomerRefJson)
 
-  private val invalidShareOptionRawRequestBody             = AnyContentAsJson(invalidShareOptionJson)
+  private val invalidShareOptionRawRequestBody = AnyContentAsJson(invalidShareOptionJson)
   private val invalidSharesAwardedOrReceivedRawRequestBody = AnyContentAsJson(invalidSharesAwardedOrReceivedJson)
-  private val invalidDisabilityRawRequestBody              = AnyContentAsJson(invalidDisabilityJson)
-  private val invalidForeignServiceRawRequestBody          = AnyContentAsJson(invalidForeignServiceJson)
-  private val invalidLumpSumsRawRequestBody                = AnyContentAsJson(invalidLumpSumsJson)
-  private val ruleLumpSumsSingleScenarioRawRequestBody     = AnyContentAsJson(ruleLumpSumsSingleErrorScenarioJson)
-  private val ruleLumpSumsMultipleScenarioRawRequestBody   = AnyContentAsJson(ruleLumpSumsMultipleErrorScenarioJson)
-  private val allInvalidValueRawRequestBody                = AnyContentAsJson(allInvalidValueRequestBodyJson)
+  private val invalidDisabilityRawRequestBody = AnyContentAsJson(invalidDisabilityJson)
+  private val invalidForeignServiceRawRequestBody = AnyContentAsJson(invalidForeignServiceJson)
+  private val invalidLumpSumsRawRequestBody = AnyContentAsJson(invalidLumpSumsJson)
+  private val ruleLumpSumsSingleScenarioRawRequestBody = AnyContentAsJson(ruleLumpSumsSingleErrorScenarioJson)
+  private val ruleLumpSumsMultipleScenarioRawRequestBody = AnyContentAsJson(ruleLumpSumsMultipleErrorScenarioJson)
+  private val allInvalidValueRawRequestBody = AnyContentAsJson(allInvalidValueRequestBodyJson)
 
   class Test extends MockAppConfig {
 

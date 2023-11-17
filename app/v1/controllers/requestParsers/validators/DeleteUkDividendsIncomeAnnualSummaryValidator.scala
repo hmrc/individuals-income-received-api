@@ -25,8 +25,8 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsI
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[DeleteUkDividendsIncomeAnnualSummaryRawData] {
+class DeleteUkDividendsIncomeAnnualSummaryValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[DeleteUkDividendsIncomeAnnualSummaryRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

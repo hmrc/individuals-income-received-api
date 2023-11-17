@@ -27,7 +27,7 @@ object TaxableLumpSumsAndCertainIncomeItem {
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "taxPaid").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").read[Boolean]
-  )(TaxableLumpSumsAndCertainIncomeItem.apply _)
+    )(TaxableLumpSumsAndCertainIncomeItem.apply _)
 
   implicit val writes: OWrites[TaxableLumpSumsAndCertainIncomeItem] = Json.writes[TaxableLumpSumsAndCertainIncomeItem]
 }

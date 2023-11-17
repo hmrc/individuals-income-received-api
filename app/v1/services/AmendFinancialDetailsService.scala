@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsConnector) extends BaseService {
+class AmendFinancialDetailsService @Inject()(connector: AmendFinancialDetailsConnector) extends BaseService {
 
   def amendFinancialDetails(request: AmendFinancialDetailsRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] =
     connector.amendFinancialDetails(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
@@ -35,19 +35,19 @@ class AmendFinancialDetailsService @Inject() (connector: AmendFinancialDetailsCo
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID"     -> NotFoundError,
-      "INVALID_PAYLOAD"           -> InternalError,
-      "BEFORE_TAX_YEAR_END"       -> RuleTaxYearNotEndedError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID" -> NotFoundError,
+      "INVALID_PAYLOAD" -> InternalError,
+      "BEFORE_TAX_YEAR_END" -> RuleTaxYearNotEndedError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(
       "INCOME_SOURCE_NOT_FOUND" -> NotFoundError,
-      "INVALID_CORRELATION_ID"  -> InternalError,
-      "TAX_YEAR_NOT_SUPPORTED"  -> RuleTaxYearNotSupportedError
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
     )
     errors ++ extraTysErrors
   }

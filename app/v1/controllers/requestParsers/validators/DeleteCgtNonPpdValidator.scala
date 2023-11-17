@@ -25,7 +25,7 @@ import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCgtNonPpdValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCgtNonPpdRawData] {
+class DeleteCgtNonPpdValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteCgtNonPpdRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

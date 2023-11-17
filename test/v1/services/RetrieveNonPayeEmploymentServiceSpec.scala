@@ -29,9 +29,9 @@ import scala.concurrent.Future
 
 class RetrieveNonPayeEmploymentServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
-  private val source  = MtdSourceEnum.latest
+  private val source = MtdSourceEnum.latest
 
   private val requestData = RetrieveNonPayeEmploymentIncomeRequest(Nino(nino), TaxYear.fromMtd(taxYear), source)
 
@@ -69,12 +69,12 @@ class RetrieveNonPayeEmploymentServiceSpec extends ServiceSpec {
 
         val errors = List(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "INVALID_VIEW"              -> InternalError,
-          "INVALID_CORRELATIONID"     -> InternalError,
-          "NO_DATA_FOUND"             -> NotFoundError,
-          "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-          "SERVER_ERROR"              -> InternalError
+          "INVALID_TAX_YEAR" -> TaxYearFormatError,
+          "INVALID_VIEW" -> InternalError,
+          "INVALID_CORRELATIONID" -> InternalError,
+          "NO_DATA_FOUND" -> NotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+          "SERVER_ERROR" -> InternalError
         )
 
         val extraTysErrors = List(

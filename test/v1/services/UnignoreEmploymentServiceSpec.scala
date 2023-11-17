@@ -80,11 +80,11 @@ class UnignoreEmploymentServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockUnignoreEmploymentConnector {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val nino         = "AA112233A"
-    val taxYear      = "2021-22"
+    val nino = "AA112233A"
+    val taxYear = "2021-22"
     val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
     val request: IgnoreEmploymentRequest = IgnoreEmploymentRequest(

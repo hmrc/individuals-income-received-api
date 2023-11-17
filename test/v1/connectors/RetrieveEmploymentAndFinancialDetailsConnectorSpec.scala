@@ -28,8 +28,8 @@ import scala.concurrent.Future
 
 class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
 
-  val nino: String          = "AA123456A"
-  val employmentId: String  = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  val nino: String = "AA123456A"
+  val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
   val source: MtdSourceEnum = MtdSourceEnum.latest
 
   val queryParams: Seq[(String, String)] = Seq(("view", source.toDesViewString))
@@ -78,7 +78,8 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
       "downstream returns OK" when {
         "the connector sends a valid request downstream with a Tax Year Specific (TYS) tax year" in new TysIfsTest with Test {
           override def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-          val expected                  = Right(ResponseWrapper(correlationId, response))
+
+          val expected = Right(ResponseWrapper(correlationId, response))
 
           stubTysHttpResponse(expected)
 
@@ -101,7 +102,7 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
       new RetrieveEmploymentAndFinancialDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(outcome: DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse])
-        : CallHandler[Future[DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]]#Derived = {
+    : CallHandler[Future[DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/employments/$nino/${taxYear.asMtd}/$employmentId",
         queryParams
@@ -109,7 +110,7 @@ class RetrieveEmploymentAndFinancialDetailsConnectorSpec extends ConnectorSpec {
     }
 
     protected def stubTysHttpResponse(outcome: DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse])
-        : CallHandler[Future[DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]]#Derived = {
+    : CallHandler[Future[DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/employments/${taxYear.asTysDownstream}/$nino/$employmentId",
         queryParams

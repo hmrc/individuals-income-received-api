@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveInsurancePoliciesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveInsurancePoliciesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveInsurancePolicies(request: RetrieveInsurancePoliciesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveInsurancePoliciesResponse]] = {
+                                                                           hc: HeaderCarrier,
+                                                                           ec: ExecutionContext,
+                                                                           correlationId: String): Future[DownstreamOutcome[RetrieveInsurancePoliciesResponse]] = {
 
     import request._
 
@@ -47,7 +47,12 @@ class RetrieveInsurancePoliciesConnector @Inject() (val http: HttpClient, val ap
       )
     }
 
-    get(uri = downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    get(uri = downstreamUri, intent = intent)
 
   }
 

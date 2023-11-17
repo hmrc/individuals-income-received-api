@@ -87,11 +87,11 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
   }
 
   trait Test extends MockDeleteUkDividendsIncomeAnnualSummaryConnector {
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    val validNino: String              = "AA123456A"
-    val validTaxYear: String           = "2019-20"
+    val validNino: String = "AA123456A"
+    val validTaxYear: String = "2019-20"
     implicit val correlationId: String = "X-123"
 
     val requestData: DeleteUkDividendsIncomeAnnualSummaryRequest =

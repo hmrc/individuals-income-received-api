@@ -30,7 +30,7 @@ trait MockCreateAmendUkDividendsAnnualSummaryRequestParser extends MockFactory {
   object MockCreateAmendUkDividendsAnnualSummaryRequestParser {
 
     def parse(
-        data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CallHandler[Either[ErrorWrapper, CreateAmendUkDividendsIncomeAnnualSummaryRequest]] =
+               data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CallHandler[Either[ErrorWrapper, CreateAmendUkDividendsIncomeAnnualSummaryRequest]] =
       (mockCreateAmendUkDividendsAnnualSummaryRequestParser
         .parseRequest(_: CreateAmendUkDividendsIncomeAnnualSummaryRawData)(_: String))
         .expects(data, *)

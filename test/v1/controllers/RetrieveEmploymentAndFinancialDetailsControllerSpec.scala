@@ -36,16 +36,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveEmploymentAndFinancialDetailsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveEmploymentAndFinancialDetailsService
     with MockHateoasFactory
     with MockRetrieveEmploymentAndFinancialDetailsRequestParser
     with HateoasLinks {
 
-  val taxYear: String      = "2017-18"
+  val taxYear: String = "2017-18"
   val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-  val source: String       = "latest"
+  val source: String = "latest"
 
   val rawData: RetrieveFinancialDetailsRawData = RetrieveFinancialDetailsRawData(
     nino = nino,

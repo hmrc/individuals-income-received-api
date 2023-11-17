@@ -28,10 +28,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveOtherCgtService @Inject() (connector: RetrieveOtherCgtConnector) extends BaseService {
+class RetrieveOtherCgtService @Inject()(connector: RetrieveOtherCgtConnector) extends BaseService {
 
   def retrieve(
-      request: RetrieveOtherCgtRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherCgtResponse]] = {
+                request: RetrieveOtherCgtRequest)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[RetrieveOtherCgtResponse]] = {
 
     connector.retrieveOtherCgt(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
@@ -39,11 +39,11 @@ class RetrieveOtherCgtService @Inject() (connector: RetrieveOtherCgtConnector) e
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(

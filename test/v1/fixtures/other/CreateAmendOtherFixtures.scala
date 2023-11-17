@@ -111,13 +111,13 @@ object CreateAmendOtherFixtures {
 
   val requestBodyJson: JsValue = Json.parse(
     s"""
-      |{
-      |   "businessReceipts": [$businessReceiptsJson],
-      |   "allOtherIncomeReceivedWhilstAbroad": [$allOtherIncomeReceivedWhilstAbroadJson],
-      |   "overseasIncomeAndGains": $overseasIncomeAndGainsJson,
-      |   "chargeableForeignBenefitsAndGifts": $chargeableForeignBenefitsAndGiftsJson,
-      |   "omittedForeignIncome": $omittedForeignIncomeJson
-      |}
+       |{
+       |   "businessReceipts": [$businessReceiptsJson],
+       |   "allOtherIncomeReceivedWhilstAbroad": [$allOtherIncomeReceivedWhilstAbroadJson],
+       |   "overseasIncomeAndGains": $overseasIncomeAndGainsJson,
+       |   "chargeableForeignBenefitsAndGifts": $chargeableForeignBenefitsAndGiftsJson,
+       |   "omittedForeignIncome": $omittedForeignIncomeJson
+       |}
     """.stripMargin
   )
 

@@ -74,7 +74,7 @@ class RetrieveInsurancePoliciesServiceSpec extends ServiceSpec {
   trait Test extends MockRetrieveInsurancePoliciesConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    private val nino    = Nino("AA112233A")
+    private val nino = Nino("AA112233A")
     private val taxYear = TaxYear.fromMtd("2019-20")
 
     val request: RetrieveInsurancePoliciesRequest = RetrieveInsurancePoliciesRequest(

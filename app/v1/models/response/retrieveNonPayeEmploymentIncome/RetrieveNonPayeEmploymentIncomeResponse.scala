@@ -35,12 +35,12 @@ object RetrieveNonPayeEmploymentIncomeResponse extends HateoasLinks {
       (JsPath \ "source").read[DownstreamSourceEnum].map(_.toMtdEnum) and
       (JsPath \ "totalNonPayeIncome").readNullable[BigDecimal] and
       (JsPath \ "nonPayeIncome").readNullable[NonPayeIncome]
-  )(RetrieveNonPayeEmploymentIncomeResponse.apply _)
+    )(RetrieveNonPayeEmploymentIncomeResponse.apply _)
 
   implicit val writes: OWrites[RetrieveNonPayeEmploymentIncomeResponse] = Json.writes[RetrieveNonPayeEmploymentIncomeResponse]
 
   implicit object RetrieveOtherEmploymentLinksFactory
-      extends HateoasLinksFactory[RetrieveNonPayeEmploymentIncomeResponse, RetrieveNonPayeEmploymentIncomeHateoasData] {
+    extends HateoasLinksFactory[RetrieveNonPayeEmploymentIncomeResponse, RetrieveNonPayeEmploymentIncomeHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveNonPayeEmploymentIncomeHateoasData): Seq[Link] = {
       import data._

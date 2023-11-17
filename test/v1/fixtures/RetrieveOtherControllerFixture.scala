@@ -87,25 +87,25 @@ object RetrieveOtherControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveOtherResponse.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/other/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-other-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/other/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/other/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-other-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/other/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-other-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/other/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/other/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-other-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

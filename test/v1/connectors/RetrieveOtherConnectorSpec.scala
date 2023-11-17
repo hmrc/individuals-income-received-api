@@ -58,7 +58,8 @@ class RetrieveOtherConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
 
     protected val nino: String = "AA111111A"
-    def taxYear: TaxYear       = TaxYear.fromMtd("2019-20")
+
+    def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
     val request: RetrieveOtherRequest =
       RetrieveOtherRequest(Nino(nino), taxYear)
@@ -77,14 +78,14 @@ class RetrieveOtherConnectorSpec extends ConnectorSpec {
       new RetrieveOtherConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(
-        outcome: DownstreamOutcome[RetrieveOtherResponse]): CallHandler[Future[DownstreamOutcome[RetrieveOtherResponse]]]#Derived = {
+                                    outcome: DownstreamOutcome[RetrieveOtherResponse]): CallHandler[Future[DownstreamOutcome[RetrieveOtherResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/other/$nino/${taxYear.asMtd}"
       ).returns(Future.successful(outcome))
     }
 
     protected def stubTysHttpResponse(
-        outcome: DownstreamOutcome[RetrieveOtherResponse]): CallHandler[Future[DownstreamOutcome[RetrieveOtherResponse]]]#Derived = {
+                                       outcome: DownstreamOutcome[RetrieveOtherResponse]): CallHandler[Future[DownstreamOutcome[RetrieveOtherResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/other/${taxYear.asTysDownstream}/$nino"
       ).returns(Future.successful(outcome))

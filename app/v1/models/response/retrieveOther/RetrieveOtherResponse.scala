@@ -44,10 +44,10 @@ object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
         .readNullable[ChargeableForeignBenefitsAndGifts]
         .map(_.flatMap {
           case ChargeableForeignBenefitsAndGifts.empty => None
-          case chargeableForeignBenefitsAndGifts       => Some(chargeableForeignBenefitsAndGifts)
+          case chargeableForeignBenefitsAndGifts => Some(chargeableForeignBenefitsAndGifts)
         }) and
       (JsPath \ "omittedForeignIncome").readNullable[OmittedForeignIncome]
-  )(RetrieveOtherResponse.apply _)
+    )(RetrieveOtherResponse.apply _)
 
   implicit val writes: OWrites[RetrieveOtherResponse] = Json.writes[RetrieveOtherResponse]
 

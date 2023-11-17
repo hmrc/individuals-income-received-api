@@ -25,7 +25,7 @@ import v1.models.request.retrieveInsurancePolicies.RetrieveInsurancePoliciesRawD
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveInsurancePoliciesValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveInsurancePoliciesRawData] {
+class RetrieveInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveInsurancePoliciesRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

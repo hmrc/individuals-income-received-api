@@ -28,23 +28,23 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListUkSavingsAccountsService @Inject() (connector: ListUkSavingsAccountsConnector) extends BaseService {
+class ListUkSavingsAccountsService @Inject()(connector: ListUkSavingsAccountsConnector) extends BaseService {
 
   def listUkSavingsAccounts(request: ListUkSavingsAccountsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]] =
+                                                                   ctx: RequestContext,
+                                                                   ec: ExecutionContext): Future[ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]] =
     connector.listUkSavingsAccounts(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
   private val downstreamErrorMap: Map[String, MtdError] = Map(
-    "INVALID_ID_TYPE"          -> InternalError,
-    "INVALID_IDVALUE"          -> NinoFormatError,
+    "INVALID_ID_TYPE" -> InternalError,
+    "INVALID_IDVALUE" -> NinoFormatError,
     "INVALID_INCOMESOURCETYPE" -> InternalError,
-    "INVALID_TAXYEAR"          -> InternalError,
-    "INVALID_INCOMESOURCEID"   -> SavingsAccountIdFormatError,
-    "INVALID_ENDDATE"          -> InternalError,
-    "NOT_FOUND"                -> NotFoundError,
-    "SERVER_ERROR"             -> InternalError,
-    "SERVICE_UNAVAILABLE"      -> InternalError
+    "INVALID_TAXYEAR" -> InternalError,
+    "INVALID_INCOMESOURCEID" -> SavingsAccountIdFormatError,
+    "INVALID_ENDDATE" -> InternalError,
+    "NOT_FOUND" -> NotFoundError,
+    "SERVER_ERROR" -> InternalError,
+    "SERVICE_UNAVAILABLE" -> InternalError
   )
 
 }

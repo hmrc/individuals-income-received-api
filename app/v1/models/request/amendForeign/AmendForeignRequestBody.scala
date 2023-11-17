@@ -28,11 +28,11 @@ object AmendForeignRequestBody extends JsonUtils {
   implicit val reads: Reads[AmendForeignRequestBody] = (
     (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncomeItem]].mapEmptySeqToNone
-  )(AmendForeignRequestBody.apply _)
+    )(AmendForeignRequestBody.apply _)
 
   implicit val writes: OWrites[AmendForeignRequestBody] = (
     (JsPath \ "foreignEarnings").writeNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").writeNullable[Seq[UnremittableForeignIncomeItem]]
-  )(unlift(AmendForeignRequestBody.unapply))
+    )(unlift(AmendForeignRequestBody.unapply))
 
 }

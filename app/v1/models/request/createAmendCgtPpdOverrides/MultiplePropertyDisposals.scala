@@ -37,6 +37,6 @@ object MultiplePropertyDisposals {
     (JsPath \ "ppdSubmissionId").write[String] and
       (JsPath \ "amountOfNetGain").writeNullable[BigDecimal] and
       (JsPath \ "amountOfLoss").writeNullable[BigDecimal]
-  )(unlift(MultiplePropertyDisposals.unapply))
+    )(unlift(MultiplePropertyDisposals.unapply))
 
 }

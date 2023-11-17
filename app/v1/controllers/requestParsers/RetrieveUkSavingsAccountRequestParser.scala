@@ -24,8 +24,8 @@ import v1.models.request.retrieveUkSavingsAnnualSummary.{RetrieveUkSavingsAnnual
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveUkSavingsAccountRequestParser @Inject() (val validator: RetrieveUkSavingsAccountValidator)
-    extends RequestParser[RetrieveUkSavingsAnnualSummaryRawData, RetrieveUkSavingsAnnualSummaryRequest] {
+class RetrieveUkSavingsAccountRequestParser @Inject()(val validator: RetrieveUkSavingsAccountValidator)
+  extends RequestParser[RetrieveUkSavingsAnnualSummaryRawData, RetrieveUkSavingsAnnualSummaryRequest] {
 
   override protected def requestFor(data: RetrieveUkSavingsAnnualSummaryRawData): RetrieveUkSavingsAnnualSummaryRequest =
     RetrieveUkSavingsAnnualSummaryRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.savingsAccountId)

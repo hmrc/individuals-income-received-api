@@ -34,7 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveUkDividendsAnnualIncomeSummaryService
     with MockRetrieveUkDividendsAnnualIncomeSummaryRequestParser
@@ -62,7 +62,8 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerSpec
     Some(100.99)
   )
 
-  private val mtdResponse = Json.parse("""
+  private val mtdResponse = Json.parse(
+    """
       |{
       |  "ukDividends":100.99,
       |  "otherUkDividends":100.99,

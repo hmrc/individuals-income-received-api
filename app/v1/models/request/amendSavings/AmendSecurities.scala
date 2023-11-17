@@ -28,6 +28,6 @@ object AmendSecurities {
     (JsPath \ "taxTakenOff").writeNullable[BigDecimal] and
       (JsPath \ "grossAmount").write[BigDecimal] and
       (JsPath \ "netAmount").writeNullable[BigDecimal]
-  )(unlift(AmendSecurities.unapply))
+    )(unlift(AmendSecurities.unapply))
 
 }

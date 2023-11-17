@@ -25,7 +25,7 @@ import v1.models.request.ignoreEmployment.IgnoreEmploymentRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class IgnoreEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[IgnoreEmploymentRawData] {
+class IgnoreEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[IgnoreEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

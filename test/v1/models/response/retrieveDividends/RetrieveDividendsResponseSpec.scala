@@ -64,8 +64,8 @@ class RetrieveDividendsResponseSpec extends UnitSpec {
   "LinksFactory" when {
     class Test extends MockAppConfig {
       val hateoasFactory = new HateoasFactory(mockAppConfig)
-      val nino           = "someNino"
-      val taxYear        = "2019-20"
+      val nino = "someNino"
+      val taxYear = "2019-20"
       MockedAppConfig.apiGatewayContext.returns("individuals/income-received").anyNumberOfTimes()
     }
 

@@ -28,7 +28,7 @@ object ForeignPoliciesItem {
       (JsPath \ "gainAmount").read[BigDecimal] and
       (JsPath \ "taxPaidAmount").readNullable[BigDecimal] and
       (JsPath \ "yearsHeld").readNullable[Int]
-  )(ForeignPoliciesItem.apply _)
+    )(ForeignPoliciesItem.apply _)
 
   implicit val writes: OWrites[ForeignPoliciesItem] = Json.writes[ForeignPoliciesItem]
 }

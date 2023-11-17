@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveNonPayeEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveNonPayeEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveNonPayeEmployment(request: RetrieveNonPayeEmploymentIncomeRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveNonPayeEmploymentIncomeResponse]] = {
+                                                                                 hc: HeaderCarrier,
+                                                                                 ec: ExecutionContext,
+                                                                                 correlationId: String): Future[DownstreamOutcome[RetrieveNonPayeEmploymentIncomeResponse]] = {
 
     import request._
 
@@ -47,7 +47,12 @@ class RetrieveNonPayeEmploymentConnector @Inject() (val http: HttpClient, val ap
       )
     }
 
-    get(downstreamUri)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    get(downstreamUri, intent = intent)
 
   }
 

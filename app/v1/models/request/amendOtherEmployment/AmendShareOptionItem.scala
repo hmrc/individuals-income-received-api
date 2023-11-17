@@ -54,6 +54,6 @@ object AmendShareOptionItem {
       (JsPath \ "profitOnOptionExercised").write[BigDecimal] and
       (JsPath \ "employersNicPaid").write[BigDecimal] and
       (JsPath \ "taxableAmount").write[BigDecimal]
-  )(unlift(AmendShareOptionItem.unapply))
+    )(unlift(AmendShareOptionItem.unapply))
 
 }

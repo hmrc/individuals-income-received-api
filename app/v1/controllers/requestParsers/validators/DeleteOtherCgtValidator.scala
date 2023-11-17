@@ -25,7 +25,7 @@ import v1.models.request.deleteOtherCgt.DeleteOtherCgtRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteOtherCgtValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteOtherCgtRawData] {
+class DeleteOtherCgtValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteOtherCgtRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

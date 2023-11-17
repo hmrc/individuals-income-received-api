@@ -25,7 +25,7 @@ import v1.models.request.createAmendOther._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherValidator @Inject() (implicit appConfig: AppConfig) extends Validator[CreateAmendOtherRawData] with ValueFormatErrorMessages {
+class CreateAmendOtherValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateAmendOtherRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 

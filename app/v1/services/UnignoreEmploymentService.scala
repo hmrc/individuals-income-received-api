@@ -30,13 +30,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UnignoreEmploymentService @Inject() (connector: UnignoreEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
+class UnignoreEmploymentService @Inject()(connector: UnignoreEmploymentConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def unignoreEmployment(request: IgnoreEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[ServiceOutcome[Unit]] = {
+                                                           hc: HeaderCarrier,
+                                                           ec: ExecutionContext,
+                                                           logContext: EndpointLogContext,
+                                                           correlationId: String): Future[ServiceOutcome[Unit]] = {
 
     connector.unignoreEmployment(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
 
@@ -45,14 +45,14 @@ class UnignoreEmploymentService @Inject() (connector: UnignoreEmploymentConnecto
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_EMPLOYMENT_ID"     -> EmploymentIdFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "CUSTOMER_ADDED"            -> RuleCustomEmploymentUnignoreError,
-      "NO_DATA_FOUND"             -> NotFoundError,
-      "BEFORE_TAX_YEAR_ENDED"     -> RuleTaxYearNotEndedError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_EMPLOYMENT_ID" -> EmploymentIdFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "CUSTOMER_ADDED" -> RuleCustomEmploymentUnignoreError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "BEFORE_TAX_YEAR_ENDED" -> RuleTaxYearNotEndedError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
     val extraTysErrors = Map(

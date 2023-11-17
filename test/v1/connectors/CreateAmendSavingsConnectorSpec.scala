@@ -46,7 +46,8 @@ class CreateAmendSavingsConnectorSpec extends ConnectorSpec {
 
   trait Test {
     _: ConnectorTest =>
-    def nino: String     = "AA111111A"
+    def nino: String = "AA111111A"
+
     def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
     val requestBody: CreateAmendSavingsRequestBody = CreateAmendSavingsRequestBody(securities = None, foreignInterest = None)

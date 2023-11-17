@@ -24,8 +24,8 @@ import v1.models.request.listUkSavingsAccounts.{ListUkSavingsAccountsRawData, Li
 
 class ListUkSavingsAccountsRequestParserSpec extends UnitSpec {
 
-  val nino: String                   = "AA123456B"
-  val savingsAccountId: String       = "someSavingsId"
+  val nino: String = "AA123456B"
+  val savingsAccountId: String = "someSavingsId"
   implicit val correlationId: String = "someCorrelationId"
 
   trait Test extends MockListUkSavingsAccountsValidator {

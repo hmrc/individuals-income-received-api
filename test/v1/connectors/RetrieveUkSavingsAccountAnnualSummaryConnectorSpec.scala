@@ -26,7 +26,7 @@ import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
 
-  val nino: String           = "AA111111A"
+  val nino: String = "AA111111A"
   val incomeSourceId: String = "SAVKB2UVwUTBQGJ"
 
   trait Test {
@@ -65,7 +65,7 @@ class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
         private val outcome = Right(ResponseWrapper(correlationId, response))
 
         willGet(
-          s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/2020?incomeSourceId=$incomeSourceId"
+          s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/2020?incomeSourceId=$incomeSourceId",
         ) returns Future.successful(outcome)
 
         await(connector.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe outcome

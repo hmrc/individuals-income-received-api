@@ -33,7 +33,7 @@ trait MockRetrieveEmploymentAndFinancialDetailsConnector extends MockFactory {
   object MockRetrieveEmploymentAndFinancialDetailsConnector {
 
     def retrieve(requestData: RetrieveEmploymentAndFinancialDetailsRequest)
-        : CallHandler[Future[DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
+    : CallHandler[Future[DownstreamOutcome[RetrieveEmploymentAndFinancialDetailsResponse]]] = {
       (mockConnector
         .retrieve(_: RetrieveEmploymentAndFinancialDetailsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

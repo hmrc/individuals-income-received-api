@@ -24,4 +24,4 @@ case class AmendCustomEmploymentRawData(nino: String,
                                         employmentId: String,
                                         body: AnyContentAsJson,
                                         temporalValidationEnabled: Boolean = true)
-    extends RawData
+  extends RawData

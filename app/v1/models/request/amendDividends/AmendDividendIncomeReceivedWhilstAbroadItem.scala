@@ -36,6 +36,6 @@ object AmendDividendIncomeReceivedWhilstAbroadItem {
       (JsPath \ "specialWithholdingTax").writeNullable[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").write[Boolean] and
       (JsPath \ "taxableAmount").write[BigDecimal]
-  )(unlift(AmendDividendIncomeReceivedWhilstAbroadItem.unapply))
+    )(unlift(AmendDividendIncomeReceivedWhilstAbroadItem.unapply))
 
 }

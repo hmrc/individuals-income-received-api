@@ -45,7 +45,7 @@ import v1.models.request.otherEmploymentIncome.OtherEmploymentIncomeRequestRawDa
 class OtherEmploymentIncomeRequestValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
-    val validNino    = "AA123456A"
+    val validNino = "AA123456A"
     val validTaxYear = "2019-20"
   }
 
@@ -53,9 +53,9 @@ class OtherEmploymentIncomeRequestValidatorSpec extends UnitSpec with MockAppCon
 
   class Test extends MockAppConfig with MockCurrentDateTime {
 
-    implicit val appConfig: AppConfig              = mockAppConfig
+    implicit val appConfig: AppConfig = mockAppConfig
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     val validator = new OtherEmploymentIncomeRequestValidator()
 

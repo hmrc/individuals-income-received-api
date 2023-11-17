@@ -57,7 +57,8 @@ class RetrieveNonPayeEmploymentConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
     def taxYear: TaxYear
 
     protected val connector: RetrieveNonPayeEmploymentConnector =

@@ -72,7 +72,7 @@ class CreateAmendSavingsServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockCreateAmendSavingsConnector {
-    private val nino    = "AA112233A"
+    private val nino = "AA112233A"
     private val taxYear = "2019-20"
 
     val request = CreateAmendSavingsRequest(

@@ -31,7 +31,7 @@ import v1.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRa
 
 class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2019-20"
 
   private val validRequestJson: JsValue = Json.parse(
@@ -553,23 +553,23 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
       |""".stripMargin
   )
 
-  private val validRequestBody                                       = AnyContentAsJson(validRequestJson)
-  private val missingMandatoryFieldRequestBody                       = AnyContentAsJson(missingMandatoryFieldJson)
-  private val emptyMultiplePropertyDisposalsRequestBody              = AnyContentAsJson(emptyMultiplePropertyDisposalsRequestJson)
-  private val emptySinglePropertyDisposalsRequestBody                = AnyContentAsJson(emptySinglePropertyDisposalsRequestJson)
-  private val invalidSubmissionIdRequestBody                         = AnyContentAsJson(invalidSubmissionIdRequestBodyJson)
-  private val invalidValueRequestBody                                = AnyContentAsJson(invalidValueRequestBodyJson)
-  private val invalidDateRequestBody                                 = AnyContentAsJson(invalidDateRequestBodyJson)
-  private val bothGainsAndLossMultiplePropertyDisposalsRequestBody   = AnyContentAsJson(bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson)
-  private val bothGainsAndLossSinglePropertyDisposalsRequestBody     = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
+  private val validRequestBody = AnyContentAsJson(validRequestJson)
+  private val missingMandatoryFieldRequestBody = AnyContentAsJson(missingMandatoryFieldJson)
+  private val emptyMultiplePropertyDisposalsRequestBody = AnyContentAsJson(emptyMultiplePropertyDisposalsRequestJson)
+  private val emptySinglePropertyDisposalsRequestBody = AnyContentAsJson(emptySinglePropertyDisposalsRequestJson)
+  private val invalidSubmissionIdRequestBody = AnyContentAsJson(invalidSubmissionIdRequestBodyJson)
+  private val invalidValueRequestBody = AnyContentAsJson(invalidValueRequestBodyJson)
+  private val invalidDateRequestBody = AnyContentAsJson(invalidDateRequestBodyJson)
+  private val bothGainsAndLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossMultiplePropertyDisposalsRequestBodyJson)
+  private val bothGainsAndLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(bothGainsAndLossSinglePropertyDisposalsRequestBodyJson)
   private val neitherGainsOrLossMultiplePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossMultiplePropertyDisposalsRequestBodyJson)
-  private val neitherGainsOrLossSinglePropertyDisposalsRequestBody   = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
+  private val neitherGainsOrLossSinglePropertyDisposalsRequestBody = AnyContentAsJson(neitherGainsOrLossSinglePropertyDisposalsRequestBodyJson)
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
-    implicit val appConfig: AppConfig              = mockAppConfig
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+    implicit val appConfig: AppConfig = mockAppConfig
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
 

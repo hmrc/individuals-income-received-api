@@ -197,6 +197,6 @@ object BenefitsInKind {
   implicit val reads: Reads[BenefitsInKind] = (
     JsPath.read[BenefitsInKindPart1](formatPt1) and
       JsPath.read[BenefitsInKindPart2](formatPt2)
-  )(BenefitsInKind.buildBenefitsObject _)
+    )(BenefitsInKind.buildBenefitsObject _)
 
 }

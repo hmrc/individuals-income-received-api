@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class CreateAmendOtherServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
   val createAmendOtherRequest: CreateAmendOtherRequest = CreateAmendOtherRequest(

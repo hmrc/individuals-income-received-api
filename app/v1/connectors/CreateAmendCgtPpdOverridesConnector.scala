@@ -27,15 +27,15 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendCgtPpdOverridesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAmend(request: CreateAmendCgtPpdOverridesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                              hc: HeaderCarrier,
+                                                              ec: ExecutionContext,
+                                                              correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
-    val nino    = request.nino.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
 
     val downstreamUri =
@@ -45,7 +45,7 @@ class CreateAmendCgtPpdOverridesConnector @Inject() (val http: HttpClient, val a
         Api1661Uri[Unit](s"income-tax/income/disposals/residential-property/ppd/$nino/${taxYear.asMtd}")
       }
 
-    put(downstreamUri, request.body)
+    put(downstreamUri, request.body, intent = Some("IIR"))
   }
 
 }

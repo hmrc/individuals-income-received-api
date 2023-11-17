@@ -24,8 +24,8 @@ import v1.models.request.deletePensions.{DeletePensionsRawData, DeletePensionsRe
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeletePensionsRequestParser @Inject() (val validator: DeletePensionsValidator)
-    extends RequestParser[DeletePensionsRawData, DeletePensionsRequest] {
+class DeletePensionsRequestParser @Inject()(val validator: DeletePensionsValidator)
+  extends RequestParser[DeletePensionsRawData, DeletePensionsRequest] {
 
   override protected def requestFor(data: DeletePensionsRawData): DeletePensionsRequest =
     DeletePensionsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

@@ -25,7 +25,7 @@ import v1.models.request.retrieveEmployment.RetrieveEmploymentRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveEmploymentRawData] {
+class RetrieveEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

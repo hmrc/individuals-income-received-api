@@ -25,7 +25,7 @@ import v1.models.request.amendDividends._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
+class AmendDividendsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[AmendDividendsRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 

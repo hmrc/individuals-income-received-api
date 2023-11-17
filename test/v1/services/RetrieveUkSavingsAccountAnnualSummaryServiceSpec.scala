@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
 
-  private val nino           = "AA112233A"
-  private val taxYear        = "2019-20"
+  private val nino = "AA112233A"
+  private val taxYear = "2019-20"
   private val incomeSourceId = "SAVKB2UVwUTBQGJ"
 
   private val request = RetrieveUkSavingsAnnualSummaryRequest(Nino(nino), TaxYear.fromMtd(taxYear), incomeSourceId)

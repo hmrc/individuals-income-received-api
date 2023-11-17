@@ -27,7 +27,7 @@ object RedundancyCompensationPaymentsOverExemptionItem {
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "taxPaid").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").read[Boolean]
-  )(RedundancyCompensationPaymentsOverExemptionItem.apply _)
+    )(RedundancyCompensationPaymentsOverExemptionItem.apply _)
 
   implicit val writes: OWrites[RedundancyCompensationPaymentsOverExemptionItem] = Json.writes[RedundancyCompensationPaymentsOverExemptionItem]
 }

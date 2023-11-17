@@ -34,7 +34,7 @@ object RetrieveForeignResponse extends HateoasLinks with JsonUtils {
     (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "foreignEarnings").readNullable[ForeignEarnings] and
       (JsPath \ "unremittableForeignIncome").readNullable[Seq[UnremittableForeignIncome]].mapEmptySeqToNone
-  )(RetrieveForeignResponse.apply _)
+    )(RetrieveForeignResponse.apply _)
 
   implicit val writes: OWrites[RetrieveForeignResponse] = Json.writes[RetrieveForeignResponse]
 

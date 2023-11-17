@@ -24,8 +24,8 @@ import v1.models.request.retrieveDividends.{RetrieveDividendsRawData, RetrieveDi
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveDividendsRequestParser @Inject() (val validator: RetrieveDividendsValidator)
-    extends RequestParser[RetrieveDividendsRawData, RetrieveDividendsRequest] {
+class RetrieveDividendsRequestParser @Inject()(val validator: RetrieveDividendsValidator)
+  extends RequestParser[RetrieveDividendsRawData, RetrieveDividendsRequest] {
 
   override protected def requestFor(data: RetrieveDividendsRawData): RetrieveDividendsRequest =
     RetrieveDividendsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

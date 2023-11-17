@@ -24,8 +24,8 @@ import v1.models.request.deleteCgtNonPpd.{DeleteCgtNonPpdRawData, DeleteCgtNonPp
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCgtNonPpdRequestParser @Inject() (val validator: DeleteCgtNonPpdValidator)
-    extends RequestParser[DeleteCgtNonPpdRawData, DeleteCgtNonPpdRequest] {
+class DeleteCgtNonPpdRequestParser @Inject()(val validator: DeleteCgtNonPpdValidator)
+  extends RequestParser[DeleteCgtNonPpdRawData, DeleteCgtNonPpdRequest] {
 
   override protected def requestFor(data: DeleteCgtNonPpdRawData): DeleteCgtNonPpdRequest =
     DeleteCgtNonPpdRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

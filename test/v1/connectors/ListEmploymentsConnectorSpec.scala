@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class ListEmploymentsConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
+  val nino: String = "AA111111A"
   val taxYear: String = "2019"
 
   val request: ListEmploymentsRequest = ListEmploymentsRequest(Nino(nino), taxYear)
@@ -69,7 +69,7 @@ class ListEmploymentsConnectorSpec extends ConnectorSpec {
   "ListEmploymentsConnector" when {
     "listEmployments" must {
       "return a 200 status for a success scenario" in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, validResponse))
+        val outcome = Right(ResponseWrapper(correlationId, validResponse))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         MockedHttpClient

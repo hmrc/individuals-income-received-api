@@ -27,8 +27,8 @@ import v1.models.request.addCustomEmployment._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AddCustomEmploymentValidator @Inject() (implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
-    extends Validator[AddCustomEmploymentRawData] {
+class AddCustomEmploymentValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+  extends Validator[AddCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 

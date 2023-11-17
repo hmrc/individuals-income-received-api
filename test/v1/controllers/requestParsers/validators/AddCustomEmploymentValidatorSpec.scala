@@ -31,10 +31,11 @@ import v1.models.request.addCustomEmployment.AddCustomEmploymentRawData
 
 class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2020-21"
 
-  private def requestJsonWithDates(startDate: String = "2019-01-01", cessationDate: String = "2020-06-01") = AnyContentAsJson(Json.parse(s"""
+  private def requestJsonWithDates(startDate: String = "2019-01-01", cessationDate: String = "2020-06-01") = AnyContentAsJson(Json.parse(
+    s"""
        |{
        |  "employerRef": "123/AZ12334",
        |  "employerName": "AMD infotech Ltd",
@@ -52,33 +53,33 @@ class AddCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMes
   private val incorrectFormatRawBody = AnyContentAsJson(
     Json.parse(
       """
-      |{
-      |  "employerRef": true,
-      |  "cessationDate": 400,
-      |  "payrollId": [],
-      |  "occupationalPension": 20
-      |}
+        |{
+        |  "employerRef": true,
+        |  "cessationDate": 400,
+        |  "payrollId": [],
+        |  "occupationalPension": 20
+        |}
     """.stripMargin
     ))
 
   private val incorrectValueRawBody = AnyContentAsJson(
     Json.parse(
       s"""
-       |{
-       |  "employerRef": "notValid",
-       |  "employerName": "${"a" * 75}",
-       |  "startDate": "notValid",
-       |  "cessationDate": "notValid",
-       |  "payrollId": "${"b" * 75}",
-       |  "occupationalPension": false
-       |}
+         |{
+         |  "employerRef": "notValid",
+         |  "employerName": "${"a" * 75}",
+         |  "startDate": "notValid",
+         |  "cessationDate": "notValid",
+         |  "payrollId": "${"b" * 75}",
+         |  "occupationalPension": false
+         |}
     """.stripMargin
     ))
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     MockCurrentDateTime.getDateTime
       .returns(DateTime.parse("2022-07-11", dateTimeFormatter))

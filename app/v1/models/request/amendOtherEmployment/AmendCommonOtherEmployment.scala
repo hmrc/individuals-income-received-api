@@ -27,6 +27,6 @@ object AmendCommonOtherEmployment {
   implicit val writes: OWrites[AmendCommonOtherEmployment] = (
     (JsPath \ "customerReference").writeNullable[String] and
       (JsPath \ "amountDeducted").write[BigDecimal]
-  )(unlift(AmendCommonOtherEmployment.unapply))
+    )(unlift(AmendCommonOtherEmployment.unapply))
 
 }

@@ -24,8 +24,8 @@ import v1.models.request.deleteInsurancePolicies.{DeleteInsurancePoliciesRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteInsurancePoliciesRequestParser @Inject() (val validator: DeleteInsurancePoliciesValidator)
-    extends RequestParser[DeleteInsurancePoliciesRawData, DeleteInsurancePoliciesRequest] {
+class DeleteInsurancePoliciesRequestParser @Inject()(val validator: DeleteInsurancePoliciesValidator)
+  extends RequestParser[DeleteInsurancePoliciesRawData, DeleteInsurancePoliciesRequest] {
 
   override protected def requestFor(data: DeleteInsurancePoliciesRawData): DeleteInsurancePoliciesRequest =
     DeleteInsurancePoliciesRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

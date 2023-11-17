@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class CreateAmendPensionsServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
   private val foreignPensionsModel = Seq(

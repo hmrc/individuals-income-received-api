@@ -24,7 +24,7 @@ import v1.models.request.deleteUkDividendsIncomeAnnualSummary.DeleteUkDividendsI
 
 class DeleteUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2017-18"
 
   class Test extends MockAppConfig {

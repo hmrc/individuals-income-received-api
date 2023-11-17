@@ -25,7 +25,7 @@ import v1.models.request.retrieveFinancialDetails.RetrieveFinancialDetailsRawDat
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveFinancialDetailsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveFinancialDetailsRawData] {
+class RetrieveFinancialDetailsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveFinancialDetailsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

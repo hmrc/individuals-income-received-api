@@ -34,7 +34,7 @@ trait MockRetrieveUkSavingsAccountAnnualSummaryConnector extends MockFactory {
   object MockRetrieveUkSavingsAccountAnnualSummaryConnector {
 
     def retrieveUkSavingsAccountAnnualSummary(
-        requestData: RetrieveUkSavingsAnnualSummaryRequest): CallHandler[Future[DownstreamOutcome[DownstreamUkSavingsAnnualIncomeResponse]]] = {
+                                               requestData: RetrieveUkSavingsAnnualSummaryRequest): CallHandler[Future[DownstreamOutcome[DownstreamUkSavingsAnnualIncomeResponse]]] = {
       (
         mockRetrieveUkSavingsAccountAnnualSummaryConnector
           .retrieveUkSavingsAccountAnnualSummary(_: RetrieveUkSavingsAnnualSummaryRequest)(

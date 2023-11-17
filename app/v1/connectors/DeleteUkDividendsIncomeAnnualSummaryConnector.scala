@@ -28,22 +28,34 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)(implicit
-    featureSwitches: FeatureSwitches)
-    extends BaseDownstreamConnector {
+class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject()(val http: HttpClient, val appConfig: AppConfig)(implicit
+                                                                                                              featureSwitches: FeatureSwitches)
+  extends BaseDownstreamConnector {
 
   def delete(request: DeleteUkDividendsIncomeAnnualSummaryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                                   hc: HeaderCarrier,
+                                                                   ec: ExecutionContext,
+                                                                   correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 
-    val intent = if (featureSwitches.isPassDeleteIntentEnabled) Some("DELETE") else None
+    val apiIsVersion1 = hc.otherHeaders.toMap.get("Accept").contains("application/vnd.hmrc.1.0+json")
+
+    val intent = ((featureSwitches.isPassDeleteIntentEnabled), apiIsVersion1) match {
+      case (true, true) => Some("IIR_DELETE")
+      case (true, false) => Some("DELETE")
+      case (false, true) => Some("IIR")
+      case _ => None
+    }
+
+    val tysIntent = (taxYear.useTaxYearSpecificApi, apiIsVersion1) match {
+      case (true, true) => intent
+      case _ => None
+    }
 
     if (taxYear.useTaxYearSpecificApi) {
       delete(
-        uri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/${nino.nino}/income-source/dividends/annual")
+        uri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/${nino.nino}/income-source/dividends/annual"), intent = tysIntent
       )
     } else {
       post(

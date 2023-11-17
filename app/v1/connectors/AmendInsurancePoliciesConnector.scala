@@ -27,18 +27,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AmendInsurancePoliciesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AmendInsurancePoliciesConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def amendInsurancePolicies(request: AmendInsurancePoliciesRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                                     hc: HeaderCarrier,
+                                                                     ec: ExecutionContext,
+                                                                     correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
     implicit val successCode: SuccessCode = SuccessCode(Status.CREATED)
 
-    val nino    = request.nino.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
@@ -47,7 +47,12 @@ class AmendInsurancePoliciesConnector @Inject() (val http: HttpClient, val appCo
       IfsUri[Unit](s"income-tax/insurance-policies/income/$nino/${taxYear.asMtd}")
     }
 
-    put(downstreamUri, request.body)
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
+    put(downstreamUri, request.body, intent = intent)
   }
 
 }

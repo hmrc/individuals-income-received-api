@@ -24,8 +24,8 @@ import v1.models.request.amendDividends.{AmendDividendsRawData, AmendDividendsRe
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendDividendsRequestParser @Inject() (val validator: AmendDividendsValidator)
-    extends RequestParser[AmendDividendsRawData, AmendDividendsRequest] {
+class AmendDividendsRequestParser @Inject()(val validator: AmendDividendsValidator)
+  extends RequestParser[AmendDividendsRawData, AmendDividendsRequest] {
 
   override protected def requestFor(data: AmendDividendsRawData): AmendDividendsRequest =
     AmendDividendsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[AmendDividendsRequestBody])

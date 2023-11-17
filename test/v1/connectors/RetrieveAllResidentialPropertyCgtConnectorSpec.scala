@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
 
-  val nino: String          = "AA111111A"
+  val nino: String = "AA111111A"
   val source: MtdSourceEnum = MtdSourceEnum.latest
 
   val queryParams: Seq[(String, String)] = Seq(("view", source.toDesViewString))
@@ -49,7 +49,7 @@ class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
       new RetrieveAllResidentialPropertyCgtConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     protected def stubHttpResponse(outcome: DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse])
-        : CallHandler[Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]]]#Derived = {
+    : CallHandler[Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/disposals/residential-property/$nino/${taxYear.asMtd}",
         queryParams
@@ -57,7 +57,7 @@ class RetrieveAllResidentialPropertyCgtConnectorSpec extends ConnectorSpec {
     }
 
     protected def stubTysHttpResponse(outcome: DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse])
-        : CallHandler[Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]]]#Derived = {
+    : CallHandler[Future[DownstreamOutcome[RetrieveAllResidentialPropertyCgtResponse]]]#Derived = {
       willGet(
         url = s"$baseUrl/income-tax/income/disposals/residential-property/${taxYear.asTysDownstream}/$nino",
         queryParams

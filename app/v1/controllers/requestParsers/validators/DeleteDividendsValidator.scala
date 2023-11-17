@@ -25,7 +25,7 @@ import v1.models.request.deleteDividends.DeleteDividendsRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteDividendsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteDividendsRawData] {
+class DeleteDividendsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteDividendsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

@@ -28,7 +28,7 @@ object RetrieveAllResidentialPropertyCgtResponse extends HateoasLinks {
   implicit val format: OFormat[RetrieveAllResidentialPropertyCgtResponse] = Json.format[RetrieveAllResidentialPropertyCgtResponse]
 
   implicit object RetrieveSavingsLinksFactory
-      extends HateoasLinksFactory[RetrieveAllResidentialPropertyCgtResponse, RetrieveAllResidentialPropertyCgtHateoasData] {
+    extends HateoasLinksFactory[RetrieveAllResidentialPropertyCgtResponse, RetrieveAllResidentialPropertyCgtHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveAllResidentialPropertyCgtHateoasData): Seq[Link] = {
       import data._

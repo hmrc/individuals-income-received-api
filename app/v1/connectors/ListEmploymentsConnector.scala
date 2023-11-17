@@ -27,20 +27,26 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListEmploymentsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListEmploymentsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def listEmployments(request: ListEmploymentsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[ListEmploymentResponse[Employment]]] = {
+                                                       hc: HeaderCarrier,
+                                                       ec: ExecutionContext,
+                                                       correlationId: String): Future[DownstreamOutcome[ListEmploymentResponse[Employment]]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino    = request.nino.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
 
+    val intent = hc.otherHeaders.toMap.get("Accept") match {
+      case Some("application/vnd.hmrc.1.0+json") => Some("IIR")
+      case _ => None
+    }
+
     get(
-      Release6Uri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear")
+      Release6Uri[ListEmploymentResponse[Employment]](s"income-tax/income/employments/$nino/$taxYear"),
+      intent = intent
     )
   }
 

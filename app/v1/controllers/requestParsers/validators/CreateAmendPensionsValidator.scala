@@ -25,8 +25,8 @@ import v1.models.request.createAmendPensions._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendPensionsValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[CreateAmendPensionsRawData]
+class CreateAmendPensionsValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[CreateAmendPensionsRawData]
     with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)

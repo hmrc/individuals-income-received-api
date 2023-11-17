@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class DeleteCgtNonPpdServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA112233A"
+  private val nino = "AA112233A"
   private val taxYear = "2019-20"
 
   private val requestData = DeleteCgtNonPpdRequest(Nino(nino), TaxYear.fromMtd(taxYear))
@@ -67,17 +67,17 @@ class DeleteCgtNonPpdServiceSpec extends ServiceSpec {
 
         val errors = List(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-          "INVALID_CORRELATIONID"     -> InternalError,
-          "NO_DATA_FOUND"             -> NotFoundError,
-          "SERVER_ERROR"              -> InternalError,
-          "SERVICE_UNAVAILABLE"       -> InternalError
+          "INVALID_TAX_YEAR" -> TaxYearFormatError,
+          "INVALID_CORRELATIONID" -> InternalError,
+          "NO_DATA_FOUND" -> NotFoundError,
+          "SERVER_ERROR" -> InternalError,
+          "SERVICE_UNAVAILABLE" -> InternalError
         )
 
         val extraTysErrors = List(
           "INVALID_CORRELATION_ID" -> InternalError,
           "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-          "NOT_FOUND"              -> NotFoundError
+          "NOT_FOUND" -> NotFoundError
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))

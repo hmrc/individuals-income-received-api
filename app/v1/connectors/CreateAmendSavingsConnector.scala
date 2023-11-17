@@ -26,12 +26,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendSavingsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def createAmendSavings(request: CreateAmendSavingsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+                                                             hc: HeaderCarrier,
+                                                             ec: ExecutionContext,
+                                                             correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
     import request._
@@ -43,7 +43,7 @@ class CreateAmendSavingsConnector @Inject() (val http: HttpClient, val appConfig
         IfsUri[Unit](s"income-tax/income/savings/${nino.value}/${taxYear.asMtd}")
       }
 
-    put(downstreamUri, request.body)
+    put(downstreamUri, request.body, intent = Some("IIR"))
 
   }
 

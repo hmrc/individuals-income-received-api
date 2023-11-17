@@ -60,7 +60,8 @@ class AmendFinancialDetailsConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
 
     val nino: String = "AA111111A"
     val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"

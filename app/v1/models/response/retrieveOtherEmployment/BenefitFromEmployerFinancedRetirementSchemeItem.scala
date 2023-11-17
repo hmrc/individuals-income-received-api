@@ -31,7 +31,7 @@ object BenefitFromEmployerFinancedRetirementSchemeItem {
       (JsPath \ "exemptAmount").readNullable[BigDecimal] and
       (JsPath \ "taxPaid").readNullable[BigDecimal] and
       (JsPath \ "taxTakenOffInEmployment").read[Boolean]
-  )(BenefitFromEmployerFinancedRetirementSchemeItem.apply _)
+    )(BenefitFromEmployerFinancedRetirementSchemeItem.apply _)
 
   implicit val writes: OWrites[BenefitFromEmployerFinancedRetirementSchemeItem] = Json.writes[BenefitFromEmployerFinancedRetirementSchemeItem]
 }

@@ -29,7 +29,7 @@ object Deductions {
     .readNullable[StudentLoans]
     .map {
       case Some(StudentLoans.empty) => None
-      case other                    => other
+      case other => other
     }
     .map(Deductions.apply)
 

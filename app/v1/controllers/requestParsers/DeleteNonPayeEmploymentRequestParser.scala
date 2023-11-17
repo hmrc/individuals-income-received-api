@@ -23,8 +23,8 @@ import v1.models.request.deleteNonPayeEmployment.{DeleteNonPayeEmploymentRawData
 
 import javax.inject.Inject
 
-class DeleteNonPayeEmploymentRequestParser @Inject() (val validator: DeleteNonPayeEmploymentValidator)
-    extends RequestParser[DeleteNonPayeEmploymentRawData, DeleteNonPayeEmploymentRequest] {
+class DeleteNonPayeEmploymentRequestParser @Inject()(val validator: DeleteNonPayeEmploymentValidator)
+  extends RequestParser[DeleteNonPayeEmploymentRawData, DeleteNonPayeEmploymentRequest] {
 
   override protected def requestFor(data: DeleteNonPayeEmploymentRawData): DeleteNonPayeEmploymentRequest =
     DeleteNonPayeEmploymentRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

@@ -24,8 +24,8 @@ import v1.models.request.retrieveAllResidentialPropertyCgt.{RetrieveAllResidenti
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtRequestParser @Inject() (val validator: RetrieveAllResidentialPropertyCgtValidator)
-    extends RequestParser[RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest] {
+class RetrieveAllResidentialPropertyCgtRequestParser @Inject()(val validator: RetrieveAllResidentialPropertyCgtValidator)
+  extends RequestParser[RetrieveAllResidentialPropertyCgtRawData, RetrieveAllResidentialPropertyCgtRequest] {
 
   override protected def requestFor(data: RetrieveAllResidentialPropertyCgtRawData): RetrieveAllResidentialPropertyCgtRequest =
     RetrieveAllResidentialPropertyCgtRequest(

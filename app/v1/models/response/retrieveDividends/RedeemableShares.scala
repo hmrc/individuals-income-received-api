@@ -26,7 +26,7 @@ object RedeemableShares {
   implicit val reads: Reads[RedeemableShares] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "grossAmount").read[BigDecimal]
-  )(RedeemableShares.apply _)
+    )(RedeemableShares.apply _)
 
   implicit val writes: OWrites[RedeemableShares] = Json.writes[RedeemableShares]
 }

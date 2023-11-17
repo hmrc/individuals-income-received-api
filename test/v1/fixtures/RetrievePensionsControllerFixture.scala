@@ -71,25 +71,25 @@ object RetrievePensionsControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrievePensionsResponse.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-pensions-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-pensions-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-pensions-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-pensions-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

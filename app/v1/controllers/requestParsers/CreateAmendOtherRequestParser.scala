@@ -24,8 +24,8 @@ import v1.models.request.createAmendOther.{CreateAmendOtherRawData, CreateAmendO
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherRequestParser @Inject() (val validator: CreateAmendOtherValidator)
-    extends RequestParser[CreateAmendOtherRawData, CreateAmendOtherRequest] {
+class CreateAmendOtherRequestParser @Inject()(val validator: CreateAmendOtherValidator)
+  extends RequestParser[CreateAmendOtherRawData, CreateAmendOtherRequest] {
 
   override protected def requestFor(data: CreateAmendOtherRawData): CreateAmendOtherRequest =
     CreateAmendOtherRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.json.as[CreateAmendOtherRequestBody])

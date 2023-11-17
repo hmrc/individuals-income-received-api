@@ -33,7 +33,7 @@ trait MockRetrieveUkSavingsAnnualSummaryService extends MockFactory {
   object MockRetrieveUkSavingsAnnualSummaryService {
 
     def retrieveUkSavings(
-        requestData: RetrieveUkSavingsAnnualSummaryRequest): CallHandler[Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]]] = {
+                           requestData: RetrieveUkSavingsAnnualSummaryRequest): CallHandler[Future[ServiceOutcome[RetrieveUkSavingsAnnualSummaryResponse]]] = {
       (
         mockRetrieveUkSavingsAnnualSummaryService
           .retrieveUkSavingsAccountAnnualSummary(_: RetrieveUkSavingsAnnualSummaryRequest)(

@@ -33,7 +33,7 @@ trait MockListUkSavingsAccountsConnector extends MockFactory {
   object MockListUkSavingsAccountsConnector {
 
     def listUkSavingsAccounts(
-        requestData: ListUkSavingsAccountsRequest): CallHandler[Future[DownstreamOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
+                               requestData: ListUkSavingsAccountsRequest): CallHandler[Future[DownstreamOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
       (mockListUkSavingsAccountsConnector
         .listUkSavingsAccounts(_: ListUkSavingsAccountsRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

@@ -25,8 +25,8 @@ import v1.models.request.createAmendUkDividendsIncomeAnnualSummary._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject() (appConfig: AppConfig)
-    extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
+class CreateAmendUkDividendsIncomeAnnualSummaryValidator @Inject()(appConfig: AppConfig)
+  extends Validator[CreateAmendUkDividendsIncomeAnnualSummaryRawData] {
 
   private val validationSet = List(
     parameterFormatValidation,

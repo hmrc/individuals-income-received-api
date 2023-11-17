@@ -25,7 +25,7 @@ import v1.models.request.deleteInsurancePolicies.DeleteInsurancePoliciesRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteInsurancePoliciesValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteInsurancePoliciesRawData] {
+class DeleteInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteInsurancePoliciesRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

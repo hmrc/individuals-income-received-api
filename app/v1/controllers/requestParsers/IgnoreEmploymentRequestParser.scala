@@ -24,8 +24,8 @@ import v1.models.request.ignoreEmployment.{IgnoreEmploymentRawData, IgnoreEmploy
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class IgnoreEmploymentRequestParser @Inject() (val validator: IgnoreEmploymentValidator)
-    extends RequestParser[IgnoreEmploymentRawData, IgnoreEmploymentRequest] {
+class IgnoreEmploymentRequestParser @Inject()(val validator: IgnoreEmploymentValidator)
+  extends RequestParser[IgnoreEmploymentRawData, IgnoreEmploymentRequest] {
 
   override protected def requestFor(data: IgnoreEmploymentRawData): IgnoreEmploymentRequest =
     IgnoreEmploymentRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.employmentId)

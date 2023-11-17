@@ -24,7 +24,7 @@ import v1.models.request.deleteOther.{DeleteOtherRawData, DeleteOtherRequest}
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteOtherRequestParser @Inject() (val validator: DeleteOtherValidator) extends RequestParser[DeleteOtherRawData, DeleteOtherRequest] {
+class DeleteOtherRequestParser @Inject()(val validator: DeleteOtherValidator) extends RequestParser[DeleteOtherRawData, DeleteOtherRequest] {
 
   override protected def requestFor(data: DeleteOtherRawData): DeleteOtherRequest =
     DeleteOtherRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

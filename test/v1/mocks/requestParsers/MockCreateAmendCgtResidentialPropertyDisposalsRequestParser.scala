@@ -30,7 +30,7 @@ trait MockCreateAmendCgtResidentialPropertyDisposalsRequestParser extends MockFa
   object MockCreateAmendCgtResidentialPropertyDisposalsRequestParser {
 
     def parse(data: CreateAmendCgtResidentialPropertyDisposalsRawData)
-        : CallHandler[Either[ErrorWrapper, CreateAmendCgtResidentialPropertyDisposalsRequest]] = {
+    : CallHandler[Either[ErrorWrapper, CreateAmendCgtResidentialPropertyDisposalsRequest]] = {
       (mockCreateAmendCgtResidentialPropertyDisposalsRequestParser
         .parseRequest(_: CreateAmendCgtResidentialPropertyDisposalsRawData)(_: String))
         .expects(data, *)

@@ -35,7 +35,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendPensionsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockCreateAmendPensionsService
     with MockCreateAmendPensionsRequestParser
@@ -157,25 +157,25 @@ class CreateAmendPensionsControllerSpec
 
   private val responseBodyJson: JsValue = Json.parse(
     s"""
-      |{
-      |   "links":[
-      |      {
-      |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-      |         "method":"PUT",
-      |         "rel":"create-and-amend-pensions-income"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-      |         "method":"GET",
-      |         "rel":"self"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
-      |         "method":"DELETE",
-      |         "rel":"delete-pensions-income"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
+       |         "method":"PUT",
+       |         "rel":"create-and-amend-pensions-income"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
+       |         "method":"GET",
+       |         "rel":"self"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/pensions/$nino/$taxYear",
+       |         "method":"DELETE",
+       |         "rel":"delete-pensions-income"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 

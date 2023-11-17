@@ -27,18 +27,19 @@ class RetrieveUkSavingsAnnualSummaryResponseSpec extends UnitSpec with MockAppCo
   "writes" must {
     "write as MTD JSON" in {
       Json.toJson(RetrieveUkSavingsAnnualSummaryResponse(taxedUkInterest = Some(1.12), untaxedUkInterest = Some(2.12))) shouldBe
-        Json.parse("""{
-          |  "taxedUkInterest": 1.12,
-          |  "untaxedUkInterest": 2.12
-          |}""".stripMargin)
+        Json.parse(
+          """{
+            |  "taxedUkInterest": 1.12,
+            |  "untaxedUkInterest": 2.12
+            |}""".stripMargin)
     }
   }
 
   "LinksFactory" should {
     "return the correct links" in {
-      val nino      = "mynino"
-      val taxYear   = "mytaxyear"
-      val context   = "individuals/income-received"
+      val nino = "mynino"
+      val taxYear = "mytaxyear"
+      val context = "individuals/income-received"
       val accountId = "someAccount"
 
       MockedAppConfig.apiGatewayContext.returns(context).anyNumberOfTimes()

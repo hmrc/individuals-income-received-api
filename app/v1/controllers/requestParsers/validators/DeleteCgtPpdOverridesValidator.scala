@@ -25,7 +25,7 @@ import v1.models.request.deleteCgtPpdOverrides.DeleteCgtPpdOverridesRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCgtPpdOverridesValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCgtPpdOverridesRawData] {
+class DeleteCgtPpdOverridesValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteCgtPpdOverridesRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

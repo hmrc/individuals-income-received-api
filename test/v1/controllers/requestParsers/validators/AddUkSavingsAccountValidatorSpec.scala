@@ -54,11 +54,11 @@ class AddUkSavingsAccountValidatorSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private val validRawRequestBody            = AnyContentAsJson(validRequestBodyJson)
-  private val emptyRawRequestBody            = AnyContentAsJson(emptyRequestBodyJson)
-  private val nonsenseRawRequestBody         = AnyContentAsJson(nonsenseRequestBodyJson)
+  private val validRawRequestBody = AnyContentAsJson(validRequestBodyJson)
+  private val emptyRawRequestBody = AnyContentAsJson(emptyRequestBodyJson)
+  private val nonsenseRawRequestBody = AnyContentAsJson(nonsenseRequestBodyJson)
   private val invalidFieldTypeRawRequestBody = AnyContentAsJson(invalidFieldTypeRequestBodyJson)
-  private val invalidValueRawRequestBody     = AnyContentAsJson(invalidValueRequestBodyJson)
+  private val invalidValueRawRequestBody = AnyContentAsJson(invalidValueRequestBodyJson)
 
   val validator = new AddUkSavingsAccountValidator()
 

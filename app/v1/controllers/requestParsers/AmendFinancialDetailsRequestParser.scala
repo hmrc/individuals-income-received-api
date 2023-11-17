@@ -24,8 +24,8 @@ import v1.models.request.amendFinancialDetails.{AmendFinancialDetailsRawData, Am
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendFinancialDetailsRequestParser @Inject() (val validator: AmendFinancialDetailsValidator)
-    extends RequestParser[AmendFinancialDetailsRawData, AmendFinancialDetailsRequest] {
+class AmendFinancialDetailsRequestParser @Inject()(val validator: AmendFinancialDetailsValidator)
+  extends RequestParser[AmendFinancialDetailsRawData, AmendFinancialDetailsRequest] {
 
   override protected def requestFor(data: AmendFinancialDetailsRawData): AmendFinancialDetailsRequest =
     AmendFinancialDetailsRequest(

@@ -32,17 +32,18 @@ import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUk
 class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
-    val validNino             = "AA123456A"
-    val validTaxYear          = "2019-20"
-    val validUkDividends      = 55844806400.99
+    val validNino = "AA123456A"
+    val validTaxYear = "2019-20"
+    val validUkDividends = 55844806400.99
     val validOtherUkDividends = 60267421355.99
 
-    private val validRequestBodyJson: JsValue = Json.parse(s"""
-                                                              |{
-                                                              | "ukDividends": $validUkDividends,
-                                                              | "otherUkDividends": $validOtherUkDividends
-                                                              |}
-                                                              |""".stripMargin)
+    private val validRequestBodyJson: JsValue = Json.parse(
+      s"""
+         |{
+         | "ukDividends": $validUkDividends,
+         | "otherUkDividends": $validOtherUkDividends
+         |}
+         |""".stripMargin)
 
     private val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
 
@@ -56,25 +57,27 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
     """.stripMargin
     )
 
-    private val invalidUkDividendsJson: JsValue = Json.parse(s"""
-                                                        |{
-                                                        |  "ukDividends": -1,
-                                                        |  "otherUkDividends": $validOtherUkDividends
-                                                        |}
-                                                        |""".stripMargin)
+    private val invalidUkDividendsJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "ukDividends": -1,
+         |  "otherUkDividends": $validOtherUkDividends
+         |}
+         |""".stripMargin)
 
-    private val invalidOtherUkDividendsJson: JsValue = Json.parse(s"""
-                                                                     |{
-                                                                     |  "ukDividends": $validUkDividends,
-                                                                     |  "otherUkDividends": -1
-                                                                     |}
-                                                                     |""".stripMargin)
+    private val invalidOtherUkDividendsJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "ukDividends": $validUkDividends,
+         |  "otherUkDividends": -1
+         |}
+         |""".stripMargin)
 
-    val validRawRequestBody: AnyContentAsJson                   = AnyContentAsJson(validRequestBodyJson)
-    val emptyRawRequestBody: AnyContentAsJson                   = AnyContentAsJson(emptyRequestBodyJson)
-    val nonsenseRawRequestBody: AnyContentAsJson                = AnyContentAsJson(nonsenseRequestBodyJson)
-    val nonValidRawRequestBody: AnyContentAsJson                = AnyContentAsJson(nonValidRequestBodyJson)
-    val invalidUkDividendsRawRequestBody: AnyContentAsJson      = AnyContentAsJson(invalidUkDividendsJson)
+    val validRawRequestBody: AnyContentAsJson = AnyContentAsJson(validRequestBodyJson)
+    val emptyRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyRequestBodyJson)
+    val nonsenseRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonsenseRequestBodyJson)
+    val nonValidRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonValidRequestBodyJson)
+    val invalidUkDividendsRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidUkDividendsJson)
     val invalidOtherUkDividendsRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidOtherUkDividendsJson)
   }
 
@@ -82,9 +85,9 @@ class CreateAmendUkDividendsIncomeAnnualSummaryValidatorSpec extends UnitSpec wi
 
   class Test extends MockAppConfig with MockCurrentDateTime {
 
-    implicit val appConfig: AppConfig              = mockAppConfig
+    implicit val appConfig: AppConfig = mockAppConfig
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     val validator = new CreateAmendUkDividendsIncomeAnnualSummaryValidator(appConfig: AppConfig)
 

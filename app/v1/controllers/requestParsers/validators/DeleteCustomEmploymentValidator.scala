@@ -25,7 +25,7 @@ import v1.models.request.deleteCustomEmployment.DeleteCustomEmploymentRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCustomEmploymentValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCustomEmploymentRawData] {
+class DeleteCustomEmploymentValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteCustomEmploymentRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

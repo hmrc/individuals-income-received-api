@@ -32,7 +32,7 @@ object RetrieveSavingsResponse extends HateoasLinks with JsonUtils {
     (JsPath \ "submittedOn").read[Timestamp] and
       (JsPath \ "securities").readNullable[Securities] and
       (JsPath \ "foreignInterest").readNullable[Seq[ForeignInterestItem]].mapEmptySeqToNone
-  )(RetrieveSavingsResponse.apply _)
+    )(RetrieveSavingsResponse.apply _)
 
   implicit val writes: OWrites[RetrieveSavingsResponse] = Json.writes[RetrieveSavingsResponse]
 

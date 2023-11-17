@@ -74,8 +74,8 @@ class AmendOtherEmploymentServiceSpec extends ServiceSpec {
   trait Test extends MockAmendOtherEmploymentConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    private val nino        = Nino("AA112233A")
-    private val taxYear     = TaxYear.fromMtd("2019-20")
+    private val nino = Nino("AA112233A")
+    private val taxYear = TaxYear.fromMtd("2019-20")
     private val requestBody = AmendOtherEmploymentRequestBody(None, None, None, None, None)
 
     val amendOtherEmploymentRequest: AmendOtherEmploymentRequest = AmendOtherEmploymentRequest(

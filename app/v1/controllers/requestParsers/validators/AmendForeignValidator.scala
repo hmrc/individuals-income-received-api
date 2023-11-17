@@ -25,7 +25,7 @@ import v1.models.request.amendForeign._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendForeignValidator @Inject() (implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
+class AmendForeignValidator @Inject()(implicit val appConfig: AppConfig) extends Validator[AmendForeignRawData] with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)
 

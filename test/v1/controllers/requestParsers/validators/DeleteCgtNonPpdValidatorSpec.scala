@@ -24,7 +24,7 @@ import v1.models.request.deleteCgtNonPpd.DeleteCgtNonPpdRawData
 
 class DeleteCgtNonPpdValidatorSpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
+  private val validNino = "AA123456A"
   private val validTaxYear = "2020-21"
 
   class Test extends MockAppConfig {

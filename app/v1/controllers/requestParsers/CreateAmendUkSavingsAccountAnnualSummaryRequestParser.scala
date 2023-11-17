@@ -24,8 +24,8 @@ import v1.models.request.createAmendUkSavingsAnnualSummary.{CreateAmendUkSavings
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUkSavingsAccountAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUkSavingsAccountAnnualSummaryValidator)
-    extends RequestParser[CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest] {
+class CreateAmendUkSavingsAccountAnnualSummaryRequestParser @Inject()(val validator: CreateAmendUkSavingsAccountAnnualSummaryValidator)
+  extends RequestParser[CreateAmendUkSavingsAnnualSummaryRawData, CreateAmendUkSavingsAnnualSummaryRequest] {
 
   override protected def requestFor(data: CreateAmendUkSavingsAnnualSummaryRawData): CreateAmendUkSavingsAnnualSummaryRequest =
     CreateAmendUkSavingsAnnualSummaryRequest(

@@ -47,25 +47,25 @@ object RetrieveForeignFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String): JsObject = fullRetrieveForeignResponseJson.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-foreign-income"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-foreign-income"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-foreign-income"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-foreign-income"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

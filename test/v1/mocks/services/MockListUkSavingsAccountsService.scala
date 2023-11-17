@@ -33,7 +33,7 @@ trait MockListUkSavingsAccountsService extends MockFactory {
   object MockListUkSavingsAccountsService {
 
     def listUkSavingsAccounts(
-        requestData: ListUkSavingsAccountsRequest): CallHandler[Future[ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
+                               requestData: ListUkSavingsAccountsRequest): CallHandler[Future[ServiceOutcome[ListUkSavingsAccountsResponse[UkSavingsAccount]]]] = {
       (mockListUkSavingsAccountsService
         .listUkSavingsAccounts(_: ListUkSavingsAccountsRequest)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)

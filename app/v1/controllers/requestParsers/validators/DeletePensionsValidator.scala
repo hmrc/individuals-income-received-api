@@ -25,7 +25,7 @@ import v1.models.request.deletePensions.DeletePensionsRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeletePensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeletePensionsRawData] {
+class DeletePensionsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeletePensionsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

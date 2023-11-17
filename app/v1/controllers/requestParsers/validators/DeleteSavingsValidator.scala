@@ -25,7 +25,7 @@ import v1.models.request.deleteSavings.DeleteSavingsRawData
 import javax.inject._
 
 @Singleton
-class DeleteSavingsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteSavingsRawData] {
+class DeleteSavingsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteSavingsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

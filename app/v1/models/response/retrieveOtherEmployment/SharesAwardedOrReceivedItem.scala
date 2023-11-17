@@ -52,7 +52,7 @@ object SharesAwardedOrReceivedItem {
       (JsPath \ "amountPaidForSharesOnAward").read[BigDecimal] and
       (JsPath \ "marketValueAfterRestrictionsLifted").read[BigDecimal] and
       (JsPath \ "taxableAmount").read[BigDecimal]
-  )(SharesAwardedOrReceivedItem.apply _)
+    )(SharesAwardedOrReceivedItem.apply _)
 
   implicit val writes: OWrites[SharesAwardedOrReceivedItem] = Json.writes[SharesAwardedOrReceivedItem]
 }

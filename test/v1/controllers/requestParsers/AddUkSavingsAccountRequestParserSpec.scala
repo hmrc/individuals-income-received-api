@@ -26,7 +26,7 @@ import v1.models.request.addUkSavingsAccount._
 
 class AddUkSavingsAccountRequestParserSpec extends UnitSpec {
 
-  private val nino                   = "AA123456B"
+  private val nino = "AA123456B"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   private val validRequestBodyJson: JsValue = Json.parse(

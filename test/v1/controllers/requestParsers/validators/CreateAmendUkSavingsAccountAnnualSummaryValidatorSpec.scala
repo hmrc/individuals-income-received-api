@@ -32,18 +32,19 @@ import v1.models.request.createAmendUkSavingsAnnualSummary.CreateAmendUkSavingsA
 class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec with MockAppConfig {
 
   object Data {
-    val validNino              = "AA123456A"
-    val validTaxYear           = "2017-18"
-    val validTaxedUkInterest   = 31554452289.99
+    val validNino = "AA123456A"
+    val validTaxYear = "2017-18"
+    val validTaxedUkInterest = 31554452289.99
     val validUntaxedUkInterest = 91523009816.00
-    val validSavingsAccountId  = "SAVKB2UVwUTBQGJ"
+    val validSavingsAccountId = "SAVKB2UVwUTBQGJ"
 
-    private val validRequestBodyJson: JsValue = Json.parse(s"""
-                                                              |{
-                                                              | "taxedUkInterest": $validTaxedUkInterest,
-                                                              | "validUntaxedUkInterest": $validUntaxedUkInterest
-                                                              |}
-                                                              |""".stripMargin)
+    private val validRequestBodyJson: JsValue = Json.parse(
+      s"""
+         |{
+         | "taxedUkInterest": $validTaxedUkInterest,
+         | "validUntaxedUkInterest": $validUntaxedUkInterest
+         |}
+         |""".stripMargin)
 
     private val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
 
@@ -58,25 +59,27 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec wit
     """.stripMargin
     )
 
-    private val invalidTaxedUkInterestJson: JsValue = Json.parse(s"""
-                                                                |{
-                                                                |  "taxedUkInterest": -1,
-                                                                |  "untaxedUkInterest": $validUntaxedUkInterest
-                                                                |}
-                                                                |""".stripMargin)
+    private val invalidTaxedUkInterestJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "taxedUkInterest": -1,
+         |  "untaxedUkInterest": $validUntaxedUkInterest
+         |}
+         |""".stripMargin)
 
-    private val invalidUntaxedUkInterestJson: JsValue = Json.parse(s"""
-                                                                     |{
-                                                                     |  "taxedUkInterest": $validTaxedUkInterest,
-                                                                     |  "untaxedUkInterest": -1
-                                                                     |}
-                                                                     |""".stripMargin)
+    private val invalidUntaxedUkInterestJson: JsValue = Json.parse(
+      s"""
+         |{
+         |  "taxedUkInterest": $validTaxedUkInterest,
+         |  "untaxedUkInterest": -1
+         |}
+         |""".stripMargin)
 
-    val validRawRequestBody: AnyContentAsJson                    = AnyContentAsJson(validRequestBodyJson)
-    val emptyRawRequestBody: AnyContentAsJson                    = AnyContentAsJson(emptyRequestBodyJson)
-    val nonsenseRawRequestBody: AnyContentAsJson                 = AnyContentAsJson(nonsenseRequestBodyJson)
-    val nonValidRawRequestBody: AnyContentAsJson                 = AnyContentAsJson(nonValidRequestBodyJson)
-    val invalidTaxedUkInterestRawRequestBody: AnyContentAsJson   = AnyContentAsJson(invalidTaxedUkInterestJson)
+    val validRawRequestBody: AnyContentAsJson = AnyContentAsJson(validRequestBodyJson)
+    val emptyRawRequestBody: AnyContentAsJson = AnyContentAsJson(emptyRequestBodyJson)
+    val nonsenseRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonsenseRequestBodyJson)
+    val nonValidRawRequestBody: AnyContentAsJson = AnyContentAsJson(nonValidRequestBodyJson)
+    val invalidTaxedUkInterestRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidTaxedUkInterestJson)
     val invalidUntaxedUkInterestRawRequestBody: AnyContentAsJson = AnyContentAsJson(invalidUntaxedUkInterestJson)
   }
 
@@ -84,9 +87,9 @@ class CreateAmendUkSavingsAccountAnnualSummaryValidatorSpec extends UnitSpec wit
 
   class Test extends MockAppConfig with MockCurrentDateTime {
 
-    implicit val appConfig: AppConfig              = mockAppConfig
+    implicit val appConfig: AppConfig = mockAppConfig
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     val validator = new CreateAmendUkSavingsAccountAnnualSummaryValidator(appConfig: AppConfig)
 

@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
+  val nino: String = "AA111111A"
   val taxYear: String = "2021-22"
 
   val addCustomEmploymentRequestBody: AddCustomEmploymentRequestBody = AddCustomEmploymentRequestBody(
@@ -65,7 +65,7 @@ class AddCustomEmploymentConnectorSpec extends ConnectorSpec {
   "AddCustomEmploymentConnector" when {
     ".addEmployment" should {
       "return a success upon HttpClient success" in new Test {
-        val outcome                    = Right(ResponseWrapper(correlationId, response))
+        val outcome = Right(ResponseWrapper(correlationId, response))
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredApi1661HeadersPost: Seq[(String, String)] = requiredApi1661Headers ++ Seq("Content-Type" -> "application/json")
 

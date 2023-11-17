@@ -31,11 +31,12 @@ import v1.models.request.amendCustomEmployment.AmendCustomEmploymentRawData
 
 class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
-  private val validNino         = "AA123456A"
-  private val validTaxYear      = "2020-21"
+  private val validNino = "AA123456A"
+  private val validTaxYear = "2020-21"
   private val validEmploymentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
-  private def requestJsonWithDates(startDate: String = "2019-01-01", cessationDate: String = "2020-06-01") = AnyContentAsJson(Json.parse(s"""
+  private def requestJsonWithDates(startDate: String = "2019-01-01", cessationDate: String = "2020-06-01") = AnyContentAsJson(Json.parse(
+    s"""
        |{
        |  "employerRef": "123/AZ12334",
        |  "employerName": "AMD infotech Ltd",
@@ -53,33 +54,33 @@ class AmendCustomEmploymentValidatorSpec extends UnitSpec with ValueFormatErrorM
   private val incorrectFormatRawBody = AnyContentAsJson(
     Json.parse(
       """
-      |{
-      |  "employerRef": true,
-      |  "cessationDate": 400,
-      |  "payrollId": [],
-      |  "occupationalPension": 321
-      |}
+        |{
+        |  "employerRef": true,
+        |  "cessationDate": 400,
+        |  "payrollId": [],
+        |  "occupationalPension": 321
+        |}
     """.stripMargin
     ))
 
   private val incorrectValueRawBody = AnyContentAsJson(
     Json.parse(
       s"""
-      |{
-      |  "employerRef": "notValid",
-      |  "employerName": "${"a" * 75}",
-      |  "startDate": "notValid",
-      |  "cessationDate": "notValid",
-      |  "payrollId": "${"b" * 75}",
-      |  "occupationalPension": false
-      |}
+         |{
+         |  "employerRef": "notValid",
+         |  "employerName": "${"a" * 75}",
+         |  "startDate": "notValid",
+         |  "cessationDate": "notValid",
+         |  "payrollId": "${"b" * 75}",
+         |  "occupationalPension": false
+         |}
     """.stripMargin
     ))
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 

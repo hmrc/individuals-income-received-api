@@ -28,7 +28,8 @@ class CreateAmendNonPayeEmploymentConnectorSpec extends ConnectorSpec {
 
   private val nino: String = "AA111111A"
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
     def taxYear: TaxYear
 
     def request = CreateAmendNonPayeEmploymentRequest(

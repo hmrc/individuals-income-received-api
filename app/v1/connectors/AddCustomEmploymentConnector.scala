@@ -27,19 +27,19 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AddCustomEmploymentConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class AddCustomEmploymentConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def addEmployment(request: AddCustomEmploymentRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[AddCustomEmploymentResponse]] = {
+                                                         hc: HeaderCarrier,
+                                                         ec: ExecutionContext,
+                                                         correlationId: String): Future[DownstreamOutcome[AddCustomEmploymentResponse]] = {
 
     import api.connectors.httpparsers.StandardDownstreamHttpParser._
 
-    val nino    = request.nino.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
 
-    post(request.body, Api1661Uri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"))
+    post(request.body, Api1661Uri[AddCustomEmploymentResponse](s"income-tax/income/employments/$nino/$taxYear/custom"), intent = Some("IIR"))
   }
 
 }

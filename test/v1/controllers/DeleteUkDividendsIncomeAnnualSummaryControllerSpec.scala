@@ -32,13 +32,13 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteUkDividendsIncomeAnnualSummaryControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockDeleteUkDividendsIncomeAnnualSummaryService
     with MockDeleteUkDividendsIncomeAnnualSummaryRequestParser {
 
   private val taxYear = "2017-18"
-  private val mtdId   = "test-mtd-id"
+  private val mtdId = "test-mtd-id"
 
   private val rawData: DeleteUkDividendsIncomeAnnualSummaryRawData = DeleteUkDividendsIncomeAnnualSummaryRawData(
     nino = nino,

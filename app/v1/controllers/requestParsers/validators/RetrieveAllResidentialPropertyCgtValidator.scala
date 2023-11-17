@@ -25,8 +25,8 @@ import v1.models.request.retrieveAllResidentialPropertyCgt.RetrieveAllResidentia
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveAllResidentialPropertyCgtValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[RetrieveAllResidentialPropertyCgtRawData] {
+class RetrieveAllResidentialPropertyCgtValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[RetrieveAllResidentialPropertyCgtRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

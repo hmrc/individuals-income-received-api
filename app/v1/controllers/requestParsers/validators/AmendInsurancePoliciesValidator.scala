@@ -25,8 +25,8 @@ import v1.models.request.amendInsurancePolicies._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AmendInsurancePoliciesValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[AmendInsurancePoliciesRawData]
+class AmendInsurancePoliciesValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[AmendInsurancePoliciesRawData]
     with ValueFormatErrorMessages {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation, bodyFormatValidator, bodyValueValidator)

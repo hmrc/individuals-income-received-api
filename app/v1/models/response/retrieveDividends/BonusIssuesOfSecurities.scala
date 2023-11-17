@@ -26,7 +26,7 @@ object BonusIssuesOfSecurities {
   implicit val reads: Reads[BonusIssuesOfSecurities] = (
     (JsPath \ "customerReference").readNullable[String] and
       (JsPath \ "grossAmount").read[BigDecimal]
-  )(BonusIssuesOfSecurities.apply _)
+    )(BonusIssuesOfSecurities.apply _)
 
   implicit val writes: OWrites[BonusIssuesOfSecurities] = Json.writes[BonusIssuesOfSecurities]
 }

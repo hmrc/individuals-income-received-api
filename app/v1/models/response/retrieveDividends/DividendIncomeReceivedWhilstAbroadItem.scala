@@ -35,7 +35,7 @@ object DividendIncomeReceivedWhilstAbroadItem {
       (JsPath \ "specialWithholdingTax").readNullable[BigDecimal] and
       (JsPath \ "foreignTaxCreditRelief").read[Boolean] and
       (JsPath \ "taxableAmount").read[BigDecimal]
-  )(DividendIncomeReceivedWhilstAbroadItem.apply _)
+    )(DividendIncomeReceivedWhilstAbroadItem.apply _)
 
   implicit val writes: OWrites[DividendIncomeReceivedWhilstAbroadItem] = Json.writes[DividendIncomeReceivedWhilstAbroadItem]
 

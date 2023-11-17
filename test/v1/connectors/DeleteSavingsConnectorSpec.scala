@@ -53,7 +53,8 @@ class DeleteSavingsConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
     val taxYear: String
 
     val connector: DeleteSavingsConnector = new DeleteSavingsConnector(

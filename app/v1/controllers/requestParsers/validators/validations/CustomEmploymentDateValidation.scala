@@ -27,7 +27,7 @@ object CustomEmploymentDateValidation {
   def validate(startDate: String, cessationDate: Option[String], taxYear: String): List[MtdError] = {
 
     lazy val taxYearStartDate: LocalDate = LocalDate.parse(taxYear.take(4) + "-04-06", dateFormat)
-    lazy val taxYearEndDate: LocalDate   = LocalDate.parse(TaxYear.fromMtd(taxYear).asDownstream + "-04-05", dateFormat)
+    lazy val taxYearEndDate: LocalDate = LocalDate.parse(TaxYear.fromMtd(taxYear).asDownstream + "-04-05", dateFormat)
 
     val formatErrors: List[MtdError] = List(
       Some(DateFormatValidation.validate(startDate, StartDateFormatError)),
@@ -36,7 +36,7 @@ object CustomEmploymentDateValidation {
 
     formatErrors match {
       case Nil =>
-        val employmentStartDate     = LocalDate.parse(startDate, dateFormat)
+        val employmentStartDate = LocalDate.parse(startDate, dateFormat)
         val employmentCessationDate = cessationDate.map(LocalDate.parse(_, dateFormat))
 
         List(

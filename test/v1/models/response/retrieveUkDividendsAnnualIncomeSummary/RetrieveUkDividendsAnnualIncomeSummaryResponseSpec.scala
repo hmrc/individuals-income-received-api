@@ -37,7 +37,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryResponseSpec extends UnitSpec with M
 
   "LinksFactory" should {
     "return the correct links" in {
-      val nino    = "mynino"
+      val nino = "mynino"
       val taxYear = "mytaxyear"
       val context = "individuals/income-received"
 

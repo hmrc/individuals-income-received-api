@@ -27,7 +27,7 @@ object Securities {
     (JsPath \ "taxTakenOff").readNullable[BigDecimal] and
       (JsPath \ "grossAmount").read[BigDecimal] and
       (JsPath \ "netAmount").readNullable[BigDecimal]
-  )(Securities.apply _)
+    )(Securities.apply _)
 
   implicit val writes: OWrites[Securities] = Json.writes[Securities]
 }

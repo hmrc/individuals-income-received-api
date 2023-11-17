@@ -26,8 +26,8 @@ import v1.models.request.createAmendOtherCgt._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
-    extends Validator[CreateAmendOtherCgtRawData]
+class CreateAmendOtherCgtValidator @Inject()(implicit appConfig: AppConfig)
+  extends Validator[CreateAmendOtherCgtRawData]
     with ValueFormatErrorMessages
     with DisposalDateErrorMessages {
 
@@ -59,10 +59,10 @@ class CreateAmendOtherCgtValidator @Inject() (implicit appConfig: AppConfig)
     val emptyValidation: List[List[MtdError]] = List(
       requestBodyData
         .map { body =>
-          val disposalsMissingFields        = if (body.disposals.exists(_.isEmpty)) List("/disposals") else List()
+          val disposalsMissingFields = if (body.disposals.exists(_.isEmpty)) List("/disposals") else List()
           val nonStandardGainsMissingFields = if (body.nonStandardGains.contains(NonStandardGains.empty)) List("/nonStandardGains") else List()
-          val lossesMissingFields           = if (body.losses.contains(Losses.empty)) List("/losses") else List()
-          val allMissingFields              = disposalsMissingFields ++ nonStandardGainsMissingFields ++ lossesMissingFields
+          val lossesMissingFields = if (body.losses.contains(Losses.empty)) List("/losses") else List()
+          val allMissingFields = disposalsMissingFields ++ nonStandardGainsMissingFields ++ lossesMissingFields
           if (allMissingFields.isEmpty) NoValidationErrors else List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(allMissingFields)))
         }
         .getOrElse(NoValidationErrors))

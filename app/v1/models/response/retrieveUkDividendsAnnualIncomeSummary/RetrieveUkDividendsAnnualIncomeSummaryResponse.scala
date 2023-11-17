@@ -27,7 +27,7 @@ object RetrieveUkDividendsAnnualIncomeSummaryResponse extends HateoasLinks {
   implicit val format: OFormat[RetrieveUkDividendsAnnualIncomeSummaryResponse] = Json.format
 
   implicit object LinksFactory
-      extends HateoasLinksFactory[RetrieveUkDividendsAnnualIncomeSummaryResponse, RetrieveUkDividendsAnnualIncomeSummaryHateoasData] {
+    extends HateoasLinksFactory[RetrieveUkDividendsAnnualIncomeSummaryResponse, RetrieveUkDividendsAnnualIncomeSummaryHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveUkDividendsAnnualIncomeSummaryHateoasData): Seq[Link] = {
       import data._

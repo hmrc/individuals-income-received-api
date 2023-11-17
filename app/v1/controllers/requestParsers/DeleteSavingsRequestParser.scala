@@ -24,7 +24,7 @@ import v1.models.request.deleteSavings.{DeleteSavingsRawData, DeleteSavingsReque
 import javax.inject._
 
 @Singleton
-class DeleteSavingsRequestParser @Inject() (val validator: DeleteSavingsValidator) extends RequestParser[DeleteSavingsRawData, DeleteSavingsRequest] {
+class DeleteSavingsRequestParser @Inject()(val validator: DeleteSavingsValidator) extends RequestParser[DeleteSavingsRawData, DeleteSavingsRequest] {
 
   override protected def requestFor(data: DeleteSavingsRawData): DeleteSavingsRequest =
     DeleteSavingsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

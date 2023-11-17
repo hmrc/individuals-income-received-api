@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class AmendFinancialDetailsServiceSpec extends ServiceSpec {
 
-  private val nino         = "AA112233A"
-  private val taxYear      = "2019-20"
+  private val nino = "AA112233A"
+  private val taxYear = "2019-20"
   private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   private val payModel = AmendPay(

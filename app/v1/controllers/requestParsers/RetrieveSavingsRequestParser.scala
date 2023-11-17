@@ -24,8 +24,8 @@ import v1.models.request.retrieveSavings.{RetrieveSavingsRawData, RetrieveSaving
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveSavingsRequestParser @Inject() (val validator: RetrieveSavingsValidator)
-    extends RequestParser[RetrieveSavingsRawData, RetrieveSavingsRequest] {
+class RetrieveSavingsRequestParser @Inject()(val validator: RetrieveSavingsValidator)
+  extends RequestParser[RetrieveSavingsRawData, RetrieveSavingsRequest] {
 
   override protected def requestFor(data: RetrieveSavingsRawData): RetrieveSavingsRequest =
     RetrieveSavingsRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

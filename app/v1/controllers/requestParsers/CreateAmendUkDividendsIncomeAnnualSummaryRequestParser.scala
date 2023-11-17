@@ -24,8 +24,8 @@ import v1.models.request.createAmendUkDividendsIncomeAnnualSummary._
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class CreateAmendUkDividendsIncomeAnnualSummaryRequestParser @Inject() (val validator: CreateAmendUkDividendsIncomeAnnualSummaryValidator)
-    extends RequestParser[CreateAmendUkDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest] {
+class CreateAmendUkDividendsIncomeAnnualSummaryRequestParser @Inject()(val validator: CreateAmendUkDividendsIncomeAnnualSummaryValidator)
+  extends RequestParser[CreateAmendUkDividendsIncomeAnnualSummaryRawData, CreateAmendUkDividendsIncomeAnnualSummaryRequest] {
 
   override protected def requestFor(data: CreateAmendUkDividendsIncomeAnnualSummaryRawData): CreateAmendUkDividendsIncomeAnnualSummaryRequest =
     CreateAmendUkDividendsIncomeAnnualSummaryRequest(

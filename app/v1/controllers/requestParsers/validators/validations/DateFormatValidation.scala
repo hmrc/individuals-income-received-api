@@ -24,13 +24,17 @@ import scala.util.Try
 
 object DateFormatValidation {
 
-  private def parseDate(date:String): Either[Throwable, LocalDate] = Try {LocalDate.parse(date, dateFormat)}.toEither
-  private def isDateRangeValid(date:LocalDate): Boolean = date.getYear >= 1900 && date.getYear <= 2100
-  private def convertPathToError(path:String): MtdError = DateFormatError.copy(paths = Some(Seq(path)))
+  private def parseDate(date: String): Either[Throwable, LocalDate] = Try {
+    LocalDate.parse(date, dateFormat)
+  }.toEither
+
+  private def isDateRangeValid(date: LocalDate): Boolean = date.getYear >= 1900 && date.getYear <= 2100
+
+  private def convertPathToError(path: String): MtdError = DateFormatError.copy(paths = Some(Seq(path)))
 
   def validate(date: String, error: MtdError): List[MtdError] =
     parseDate(date) match {
-      case Right(d) => if(isDateRangeValid(d)) NoValidationErrors else List(error)
+      case Right(d) => if (isDateRangeValid(d)) NoValidationErrors else List(error)
       case Left(_) => List(error)
     }
 
@@ -40,11 +44,11 @@ object DateFormatValidation {
       case Some(date) => validate(date, error)
     }
 
-  def validateWithPath(date: String, path: String): List[MtdError] = validate(date,convertPathToError(path))
+  def validateWithPath(date: String, path: String): List[MtdError] = validate(date, convertPathToError(path))
 
   def validateOptionalWithPath(date: Option[String], path: String): List[MtdError] = date match {
-    case None       => NoValidationErrors
-    case Some(date) => validate(date,convertPathToError(path))
+    case None => NoValidationErrors
+    case Some(date) => validate(date, convertPathToError(path))
   }
 
 

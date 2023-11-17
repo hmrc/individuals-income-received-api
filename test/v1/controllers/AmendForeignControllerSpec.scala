@@ -37,7 +37,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class AmendForeignControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockAuditService
     with MockAmendForeignService
@@ -108,25 +108,25 @@ class AmendForeignControllerSpec
 
   val hateoasResponse: JsValue = Json.parse(
     s"""
-      |{
-      |   "links":[
-      |      {
-      |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-      |         "rel":"create-and-amend-foreign-income",
-      |         "method":"PUT"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-      |         "rel":"self",
-      |         "method":"GET"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
-      |         "rel":"delete-foreign-income",
-      |         "method":"DELETE"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+       |         "rel":"create-and-amend-foreign-income",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/foreign/$nino/$taxYear",
+       |         "rel":"delete-foreign-income",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 

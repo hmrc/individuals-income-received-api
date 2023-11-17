@@ -74,9 +74,9 @@ class DeleteEmploymentFinancialDetailsServiceSpec extends ServiceSpec {
   trait Test extends MockDeleteEmploymentFinancialDetailsConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
-    private val nino                 = Nino("AA112233A")
+    private val nino = Nino("AA112233A")
     private val employmentId: String = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
-    private val taxYear              = TaxYear.fromMtd("2019-20")
+    private val taxYear = TaxYear.fromMtd("2019-20")
 
     val request: DeleteEmploymentFinancialDetailsRequest = DeleteEmploymentFinancialDetailsRequest(
       nino = nino,

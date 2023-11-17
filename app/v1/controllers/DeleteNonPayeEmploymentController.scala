@@ -27,14 +27,14 @@ import v1.services.DeleteNonPayeEmploymentService
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class DeleteNonPayeEmploymentController @Inject() (val authService: EnrolmentsAuthService,
-                                                   val lookupService: MtdIdLookupService,
-                                                   parser: DeleteNonPayeEmploymentRequestParser,
-                                                   service: DeleteNonPayeEmploymentService,
-                                                   auditService: AuditService,
-                                                   cc: ControllerComponents,
-                                                   val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc) {
+class DeleteNonPayeEmploymentController @Inject()(val authService: EnrolmentsAuthService,
+                                                  val lookupService: MtdIdLookupService,
+                                                  parser: DeleteNonPayeEmploymentRequestParser,
+                                                  service: DeleteNonPayeEmploymentService,
+                                                  auditService: AuditService,
+                                                  cc: ControllerComponents,
+                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(

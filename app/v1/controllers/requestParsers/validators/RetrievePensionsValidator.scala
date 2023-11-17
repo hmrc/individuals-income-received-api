@@ -25,7 +25,7 @@ import v1.models.request.retrievePensions.RetrievePensionsRawData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrievePensionsValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrievePensionsRawData] {
+class RetrievePensionsValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrievePensionsRawData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

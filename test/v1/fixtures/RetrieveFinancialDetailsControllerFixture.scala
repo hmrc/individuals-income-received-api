@@ -323,25 +323,25 @@ object RetrieveFinancialDetailsControllerFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String, employmentId: String): JsObject = mtdJson.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-employment-financial-details"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
-       |         "method":"DELETE",
-       |         "rel":"delete-employment-financial-details"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-employment-financial-details"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/employments/$nino/$taxYear/$employmentId/financial-details",
+         |         "method":"DELETE",
+         |         "rel":"delete-employment-financial-details"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

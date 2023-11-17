@@ -38,7 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveOtherCgtControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
@@ -163,25 +163,25 @@ class RetrieveOtherCgtControllerSpec
   val mtdResponse: JsObject = validResponseJson.as[JsObject] ++ Json
     .parse(
       s"""
-       |{
-       |   "links":[
-       |      {
-       |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
-       |         "method":"PUT",
-       |         "rel":"create-and-amend-other-capital-gains-and-disposals"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
-       |         "method":"DELETE",
-       |         "rel":"delete-other-capital-gains-and-disposals"
-       |      }
-       |   ]
-       |}
+         |{
+         |   "links":[
+         |      {
+         |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+         |         "method":"PUT",
+         |         "rel":"create-and-amend-other-capital-gains-and-disposals"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+         |         "method":"GET",
+         |         "rel":"self"
+         |      },
+         |      {
+         |         "href":"/individuals/income-received/disposals/other-gains/$nino/$taxYear",
+         |         "method":"DELETE",
+         |         "rel":"delete-other-capital-gains-and-disposals"
+         |      }
+         |   ]
+         |}
     """.stripMargin
     )
     .as[JsObject]

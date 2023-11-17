@@ -28,7 +28,8 @@ class CreateAmendCgtResidentialPropertyDisposalsConnectorSpec extends ConnectorS
 
   private val nino: String = "AA111111A"
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
 
     val connector: CreateAmendCgtResidentialPropertyDisposalsConnector = new CreateAmendCgtResidentialPropertyDisposalsConnector(
       http = mockHttpClient,

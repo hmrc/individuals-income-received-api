@@ -28,14 +28,14 @@ import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualS
 
 class RetrieveUkSavingsAccountValidatorSpec extends UnitSpec {
 
-  private val validNino             = "AA123456A"
-  private val validTaxYear          = "2021-22"
+  private val validNino = "AA123456A"
+  private val validTaxYear = "2021-22"
   private val validSavingsAccountId = "SAVKB2UVwUTBQGJ"
 
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 

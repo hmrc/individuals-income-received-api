@@ -35,7 +35,7 @@ object AmendLumpSums {
       (JsPath \ "benefitFromEmployerFinancedRetirementScheme").readNullable[AmendBenefitFromEmployerFinancedRetirementSchemeItem] and
       (JsPath \ "redundancyCompensationPaymentsOverExemption").readNullable[AmendRedundancyCompensationPaymentsOverExemptionItem] and
       (JsPath \ "redundancyCompensationPaymentsUnderExemption").readNullable[AmendRedundancyCompensationPaymentsUnderExemptionItem]
-  )(AmendLumpSums.apply _)
+    )(AmendLumpSums.apply _)
 
   implicit val writes: OWrites[AmendLumpSums] = Json.writes[AmendLumpSums]
 }

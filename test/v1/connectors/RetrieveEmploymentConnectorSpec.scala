@@ -26,9 +26,9 @@ import scala.concurrent.Future
 
 class RetrieveEmploymentConnectorSpec extends ConnectorSpec {
 
-  private val nino: String    = "AA111111A"
+  private val nino: String = "AA111111A"
   private val taxYear: String = "2019-20"
-  private val employmentId    = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
+  private val employmentId = "4557ecb5-fd32-48cc-81f5-e6acd1099f3c"
 
   "RetrieveEmploymentConnector" should {
     "return a 200 status and expected response for a success scenario" in new Release6Test with Test {
@@ -39,7 +39,8 @@ class RetrieveEmploymentConnectorSpec extends ConnectorSpec {
     }
   }
 
-  trait Test { _: ConnectorTest =>
+  trait Test {
+    _: ConnectorTest =>
 
     val connector: RetrieveEmploymentConnector = new RetrieveEmploymentConnector(
       http = mockHttpClient,

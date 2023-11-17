@@ -35,7 +35,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateAmendSavingsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockCreateAmendSavingsService
     with MockCreateCreateAmendSavingsRequestParser
@@ -124,25 +124,25 @@ class CreateAmendSavingsControllerSpec
 
   private val responseBodyJson: JsValue = Json.parse(
     s"""
-      |{
-      |   "links":[
-      |      {
-      |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-      |         "rel":"create-and-amend-savings-income",
-      |         "method":"PUT"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-      |         "rel":"self",
-      |         "method":"GET"
-      |      },
-      |      {
-      |         "href":"/individuals/income-received/savings/$nino/$taxYear",
-      |         "rel":"delete-savings-income",
-      |         "method":"DELETE"
-      |      }
-      |   ]
-      |}
+       |{
+       |   "links":[
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "rel":"create-and-amend-savings-income",
+       |         "method":"PUT"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "rel":"self",
+       |         "method":"GET"
+       |      },
+       |      {
+       |         "href":"/individuals/income-received/savings/$nino/$taxYear",
+       |         "rel":"delete-savings-income",
+       |         "method":"DELETE"
+       |      }
+       |   ]
+       |}
     """.stripMargin
   )
 
