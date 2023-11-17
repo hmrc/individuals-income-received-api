@@ -41,9 +41,11 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
 
     val intent = if (featureSwitches.isPassDeleteIntentEnabled) Some("DELETE") else None
 
+
     if (taxYear.useTaxYearSpecificApi) {
       delete(
-        uri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/${nino.nino}/income-source/dividends/annual")
+        uri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/${nino.nino}/income-source/dividends/annual"),
+        intent
       )
     } else {
       post(

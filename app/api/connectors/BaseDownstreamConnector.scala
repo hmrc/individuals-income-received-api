@@ -44,8 +44,8 @@ trait BaseDownstreamConnector {
     }
 
     intent match {
-      case Some(intent) => doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader(intent)))
-      case None         => doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+      case Some(intent) => doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader(s"IIR_$intent")))
+      case None         => doPost(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader("IIR")))
     }
   }
 
@@ -58,7 +58,7 @@ trait BaseDownstreamConnector {
     def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] =
       http.GET(getBackendUri(uri), queryParams = queryParams)
 
-    doGet(getBackendHeaders(uri, hc, correlationId))
+    doGet(getBackendHeaders(uri, hc, correlationId, intentHeader("IIR")))
   }
 
   def delete[Resp](uri: DownstreamUri[Resp], intent: Option[String] = None)(implicit
@@ -72,8 +72,8 @@ trait BaseDownstreamConnector {
     }
 
     intent match {
-      case Some(intent) => doDelete(getBackendHeaders(uri, hc, correlationId, intentHeader(intent)))
-      case None         => doDelete(getBackendHeaders(uri, hc, correlationId))
+      case Some(intent) => doDelete(getBackendHeaders(uri, hc, correlationId, intentHeader(s"IIR_$intent")))
+      case None         => doDelete(getBackendHeaders(uri, hc, correlationId, intentHeader("IIR")))
     }
 
   }
@@ -88,7 +88,7 @@ trait BaseDownstreamConnector {
       http.PUT(getBackendUri(uri), body)
     }
 
-    doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader))
+    doPut(getBackendHeaders(uri, hc, correlationId, jsonContentTypeHeader, intentHeader("IIR")))
   }
 
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String =
