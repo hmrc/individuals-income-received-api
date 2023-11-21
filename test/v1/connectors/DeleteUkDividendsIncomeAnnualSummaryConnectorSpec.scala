@@ -29,7 +29,7 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
   "DeleteUkDividendsIncomeAnnualSummaryConnector" should {
     "return the expected response for a non-TYS request" when {
       "a valid request is made and `isPassDeleteIntentEnabled` feature switch is on" in new DesTest with Test {
-        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "DELETE")
+        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "IIR_DELETE")
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
         val outcome          = Right(ResponseWrapper(correlationId, ()))
@@ -44,7 +44,7 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
         await(connector.delete(request)) shouldBe outcome
       }
       "a valid request is made and `isPassDeleteIntentEnabled` feature switch is off" in new DesTest with Test {
-        override lazy val excludedHeaders: scala.Seq[(String, String)] = super.excludedHeaders :+ ("intent" -> "DELETE")
+        override lazy val excludedHeaders: scala.Seq[(String, String)] = super.excludedHeaders :+ ("intent" -> "IIR_DELETE")
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
         val outcome          = Right(ResponseWrapper(correlationId, ()))
