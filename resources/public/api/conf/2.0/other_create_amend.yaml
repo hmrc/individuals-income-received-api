@@ -34,12 +34,18 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/other_amend_request.json'
+        oneOf:
+          - $ref: './schemas/pre_TYS/other_amend_request.json'
+          - $ref: './schemas/2023_24/other_amend_request.json'
       examples:
-        full_amendment:
+        Before TY 2023-24:
           description: Full Other Income Amendment
           value:
-            $ref: './examples/otherIncome/amend_request.json'
+            $ref: './examples/otherIncome/pre_TYS/amend_request.json'
+        TY 2023-24 or later:
+          description: Full Other Income Amendment
+          value:
+            $ref: './examples/otherIncome/2023_24/amend_request.json'
 responses:
   "200":
     description: Success

@@ -38,12 +38,18 @@ responses:
     content:
       application/json:
         schema:
-          $ref: './schemas/other_retrieve_response.json'
+          oneOf:
+            - $ref: './schemas/pre_TYS/other_retrieve_response.json'
+            - $ref: './schemas/2023_24/other_retrieve_response.json'
         examples:
-          default:
-            description: Full Other Response
+          Before TY 2023-24:
+            description: Full Other Income Amendment
             value:
-              $ref: './examples/otherIncome/retrieve_response.json'
+              $ref: './examples/otherIncome/pre_TYS/retrieve_response.json'
+          TY 2023-24 or later:
+            description: Full Other Income Amendment
+            value:
+              $ref: './examples/otherIncome/2023_24/retrieve_response.json'
 
   "400":
     description: Bad request
