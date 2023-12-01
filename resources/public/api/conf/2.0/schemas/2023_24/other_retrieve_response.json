@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "TY 2023-24 or later",
+  "description": "Retrieve Other Income Request",
+  "type": "object",
+  "properties": {
+    "submittedOn": {"$ref": "../other_definitions.json#/definitions/submittedOn"},
+    "postCessationReceipts": {"$ref": "../other_definitions.json#/definitions/postCessationReceipts"},
+    "businessReceipts": {"$ref": "../other_definitions.json#/definitions/businessReceipts"},
+    "allOtherIncomeReceivedWhilstAbroad": {"$ref": "../other_definitions.json#/definitions/allOtherIncomeReceivedWhilstAbroad"},
+    "overseasIncomeAndGains": {"$ref": "../other_definitions.json#/definitions/overseasIncomeAndGains"},
+    "chargeableForeignBenefitsAndGifts": {"$ref": "../other_definitions.json#/definitions/chargeableForeignBenefitsAndGifts"},
+    "omittedForeignIncome": {"$ref": "../other_definitions.json#/definitions/omittedForeignIncome"},
+    "links": {"$ref": "../other_definitions.json#/definitions/links"}
+  },
+  "required": ["submittedOn"]
+}
