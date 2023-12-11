@@ -35,7 +35,7 @@ case class RetrieveOtherResponse(submittedOn: Timestamp,
 object RetrieveOtherResponse extends HateoasLinks with JsonUtils {
 
   implicit val reads: Reads[RetrieveOtherResponse] = (
-    (JsPath \ "submittedOn").read[Timestamp] and
+    (JsPath \ "submittedOnly").read[Timestamp] and
       (JsPath \ "postCessationReceipts").readNullable[Seq[PostCessationReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "businessReceipts").readNullable[Seq[BusinessReceiptsItem]].mapEmptySeqToNone and
       (JsPath \ "allOtherIncomeReceivedWhilstAbroad").readNullable[Seq[AllOtherIncomeReceivedWhilstAbroadItem]].mapEmptySeqToNone and
