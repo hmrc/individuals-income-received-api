@@ -27,6 +27,7 @@ Run the microservice from the console using: `sbt run` (starts on port 7794 by d
 
 Start the service manager profile: `sm --start MTDFB_INDIVIDUALS_INCOME_RECEIVED`
 
+
 ## Run Tests
 
 Run unit tests: `sbt test`
