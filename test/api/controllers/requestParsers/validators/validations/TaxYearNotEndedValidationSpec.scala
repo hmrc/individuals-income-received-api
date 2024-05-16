@@ -18,21 +18,20 @@ package api.controllers.requestParsers.validators.validations
 
 import api.mocks.MockCurrentDateTime
 import api.models.errors.RuleTaxYearNotEndedError
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalamock.handlers.CallHandler
 import support.UnitSpec
 import utils.CurrentDateTime
+
+import java.time.LocalDate
 
 class TaxYearNotEndedValidationSpec extends UnitSpec {
 
   class Test extends MockCurrentDateTime {
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
-    def setupTimeProvider(date: String): CallHandler[DateTime] =
-      MockCurrentDateTime.getDateTime
-        .returns(DateTime.parse(date, dateTimeFormatter))
+    def setupTimeProvider(date: String): CallHandler[LocalDate] =
+      MockCurrentDateTime.getLocalDate
+        .returns(LocalDate.parse(date))
 
   }
 

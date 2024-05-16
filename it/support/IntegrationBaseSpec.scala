@@ -16,14 +16,15 @@
 
 package support
 
-import org.joda.time.format.DateTimeFormat
-import org.joda.time.{DateTime, DateTimeZone}
+
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSClient, WSRequest, WSResponse}
 import play.api.{Application, Environment, Mode}
+
+import java.time.LocalDate
 
 trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServerPerSuite with BeforeAndAfterEach with BeforeAndAfterAll {
 
@@ -80,11 +81,9 @@ trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServ
   def document(response: WSResponse): JsValue = Json.parse(response.body)
 
   def getCurrentTaxYear: String = {
-    val currentDate = DateTime.now(DateTimeZone.UTC)
+    val currentDate = LocalDate.now()
 
-    val taxYearStartDate: DateTime = DateTime.parse(
-      s"${currentDate.getYear}-04-06",
-      DateTimeFormat.forPattern("yyyy-MM-dd")
+    val taxYearStartDate: LocalDate = LocalDate.parse(s"${currentDate.getYear}-04-06"
     )
 
     def fromDesIntToString(taxYear: Int): String = s"${taxYear - 1}-${taxYear.toString.drop(2)}"
