@@ -19,12 +19,13 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockFeatureSwitches
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
 import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse}
 
 import scala.concurrent.Future
 
-class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
+class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec with MockFeatureSwitches {
 
   val nino: String           = "AA111111A"
   val incomeSourceId: String = "SAVKB2UVwUTBQGJ"
@@ -58,8 +59,26 @@ class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
   }
 
   "RetrieveUkSavingsAccountAnnualSummaryConnector" when {
-    "retrieveUkSavingsAccountAnnualSummary called" must {
+    "retrieveUkSavingsAccountAnnualSummary called and isDefIf_MigrationEnabled is on" must {
+      "return a 200 status for a success scenario" in new IfsTest with Test {
+        MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+        private val outcome = Right(ResponseWrapper(correlationId, response))
+
+        willGet(
+          s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/2020?incomeSourceId=$incomeSourceId"
+        ) returns Future.successful(outcome)
+
+        await(connector.retrieveUkSavingsAccountAnnualSummary(request)) shouldBe outcome
+      }
+    }
+
+    "retrieveUkSavingsAccountAnnualSummary called and isDefIf_MigrationEnabled is off" must {
       "return a 200 status for a success scenario" in new DesTest with Test {
+        MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
+
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
         private val outcome = Right(ResponseWrapper(correlationId, response))

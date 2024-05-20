@@ -16,9 +16,9 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
@@ -27,7 +27,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)
+  (implicit featureSwitches: FeatureSwitches)
+  extends BaseDownstreamConnector {
 
   def retrieveUKDividendsIncomeAnnualSummary(request: RetrieveUkDividendsAnnualIncomeSummaryRequest)(implicit
       hc: HeaderCarrier,
@@ -38,11 +40,14 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpC
     import request.nino.nino
     import request.taxYear
 
+    val path = s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}"
+
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {
-
         TaxYearSpecificIfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](
           s"income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
+      } else if (featureSwitches.isDesIf_MigrationEnabled) {
+        IfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](path)
       } else {
         DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
       }

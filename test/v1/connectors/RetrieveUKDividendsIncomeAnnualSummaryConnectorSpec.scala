@@ -19,13 +19,14 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockFeatureSwitches
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryRequest
 import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryResponse
 
 import scala.concurrent.Future
 
-class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec {
+class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec with MockFeatureSwitches {
 
   val nino: String              = "AA111111A"
   val taxYearMtd: String        = "2018-19"
@@ -38,9 +39,36 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
   )
 
   "RetrieveUkDividendsIncomeAnnualSummaryConnectorSpec" when {
-    "retrieveUKDividendsIncomeAnnualSummary is called" must {
+    "retrieveUKDividendsIncomeAnnualSummary is called and isDefIf_MigrationEnabled is off" must {
       "return a 200 for success scenario" in {
         new DesTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
+
+          def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
+
+          val outcome                             = Right(ResponseWrapper(correlationId, validResponse))
+          override implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
+
+          MockedHttpClient
+            .get(
+              url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/$taxYearDownstream",
+              config = dummyDesHeaderCarrierConfig,
+              requiredHeaders = requiredDesHeaders,
+              excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+            )
+            .returns(Future.successful(outcome))
+
+          await(connector.retrieveUKDividendsIncomeAnnualSummary(request)) shouldBe outcome
+
+        }
+      }
+    }
+
+    "retrieveUKDividendsIncomeAnnualSummary is called and isDefIf_MigrationEnabled is on" must {
+      "return a 200 for success scenario" in {
+        new IfsTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+
           def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
 
           val outcome                             = Right(ResponseWrapper(correlationId, validResponse))

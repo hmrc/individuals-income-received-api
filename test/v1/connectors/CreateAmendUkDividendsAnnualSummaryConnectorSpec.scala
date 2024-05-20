@@ -19,19 +19,38 @@ package v1.connectors
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockFeatureSwitches
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.{CreateAmendUkDividendsIncomeAnnualSummaryBody, CreateAmendUkDividendsIncomeAnnualSummaryRequest}
 
 import scala.concurrent.Future
 
-class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec {
+class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec with MockFeatureSwitches {
 
   val nino: String = "AA123456A"
   private val body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
 
-  "CreateAmendUkDividendsAnnualSummaryConnector" when {
+  "CreateAmendUkDividendsAnnualSummaryConnector and isDefIf_MigrationEnabled is off" when {
     "createOrAmendAnnualSummary called" must {
       "return a 200 status for a success scenario" in
         new DesTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
+
+          def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+          val outcome = Right(ResponseWrapper(correlationId, ()))
+
+          willPost(s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}", body) returns Future.successful(outcome)
+
+          val result: DownstreamOutcome[Unit] = await(connector.createAmendUkDividends(request))
+          result shouldBe outcome
+        }
+    }
+
+    "createOrAmendAnnualSummary called and isDefIf_MigrationEnabled is on" must {
+      "return a 200 status for a success scenario" in
+        new IfsTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+
           def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
           val outcome = Right(ResponseWrapper(correlationId, ()))

@@ -30,6 +30,7 @@ trait FeatureSwitches {
   def isPassDeleteIntentEnabled: Boolean
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
   def isOpwEnabled: Boolean
+  def isDesIf_MigrationEnabled: Boolean
 }
 
 @Singleton
@@ -41,6 +42,7 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
   val isPostCessationReceiptsEnabled: Boolean = isEnabled("postCessationReceipts.enabled")
   val isPassDeleteIntentEnabled: Boolean      = isEnabled("passDeleteIntentHeader.enabled")
   val isOpwEnabled: Boolean                   = isEnabled("opw.enabled")
+  val isDesIf_MigrationEnabled: Boolean       = isEnabled("desIf_Migration.enabled")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension.enabled")) {
