@@ -57,7 +57,6 @@ class CreateAmendUkSavingsAnnualSummaryService @Inject() (connector: CreateAmend
       "INVALID_TAX_YEAR"           -> TaxYearFormatError,
       "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
       "INVALID_INCOMESOURCE_TYPE"  -> InternalError,
-      "INVALID_CORRELATIONID"      -> InternalError,
       "INCOMPATIBLE_INCOME_SOURCE" -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError
     )

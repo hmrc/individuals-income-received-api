@@ -76,7 +76,7 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
 
         val errors = List(
           ("INVALID_NINO", NinoFormatError),
-          ("INVALID_TAXYEAR", TaxYearFormatError),
+          ("INVALID_TAXYEAR", TaxYearFormatError),  //remove once DES to IFS migration complete
           ("INVALID_TYPE", InternalError),
           ("INVALID_PAYLOAD", InternalError),
           ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
@@ -94,7 +94,6 @@ class CreateAmendUkSavingsAnnualSummaryServiceSpec extends ServiceSpec {
           ("INVALID_TAX_YEAR"           -> TaxYearFormatError),
           ("INCOME_SOURCE_NOT_FOUND"    -> NotFoundError),
           ("INVALID_INCOMESOURCE_TYPE"  -> InternalError),
-          ("INVALID_CORRELATIONID"      -> InternalError),
           ("INCOMPATIBLE_INCOME_SOURCE" -> InternalError),
           ("TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError)
         )

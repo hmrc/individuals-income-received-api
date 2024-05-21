@@ -53,7 +53,6 @@ class RetrieveUkDividendsIncomeAnnualSummaryService @Inject() (connector: Retrie
       "INVALID_TAX_YEAR"             -> TaxYearFormatError,
       "INVALID_INCOMESOURCE_ID"      -> InternalError,
       "INVALID_INCOMESOURCE_TYPE"    -> InternalError,
-      "INVALID_CORRELATION_ID"       -> InternalError,
       "SUBMISSION_PERIOD_NOT_FOUND"  -> NotFoundError,
       "INCOME_DATA_SOURCE_NOT_FOUND" -> NotFoundError,
       "TAX_YEAR_NOT_SUPPORTED"       -> RuleTaxYearNotSupportedError

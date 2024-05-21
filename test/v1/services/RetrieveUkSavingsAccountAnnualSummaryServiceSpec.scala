@@ -111,7 +111,7 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
       val errors = List(
         ("INVALID_NINO", NinoFormatError),
         ("INVALID_TYPE", InternalError),
-        ("INVALID_TAXYEAR", TaxYearFormatError),
+        ("INVALID_TAXYEAR", TaxYearFormatError),  //remove once DES to IFS migration complete
         ("INVALID_INCOME_SOURCE", SavingsAccountIdFormatError),
         ("NOT_FOUND_PERIOD", NotFoundError),
         ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
@@ -121,7 +121,6 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
 
       val tysErrors = List(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_CORRELATION_ID", InternalError),
         ("INVALID_INCOMESOURCE_ID", SavingsAccountIdFormatError),
         ("INVALID_INCOMESOURCE_TYPE", InternalError),
         ("SUBMISSION_PERIOD_NOT_FOUND", NotFoundError),
