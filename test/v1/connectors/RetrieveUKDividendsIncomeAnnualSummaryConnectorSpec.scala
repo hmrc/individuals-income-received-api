@@ -52,8 +52,8 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
           MockedHttpClient
             .get(
               url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/$taxYearDownstream",
-              config = dummyDesHeaderCarrierConfig,
-              requiredHeaders = requiredDesHeaders,
+              config = dummyIfsHeaderCarrierConfig,
+              requiredHeaders = requiredIfsHeaders,
               excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
             )
             .returns(Future.successful(outcome))

@@ -43,7 +43,7 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec with 
 
   "CreateAmendUkSavingsAccountAnnualSummaryConnector" when {
     "createAmendUkSavingsAccountAnnualSummary called and isDesIf_MigrationEnabled is on" must {
-      "return a 200 status for a success scenario" in new DesTest with Test {
+      "return a 200 status for a success scenario" in new IfsTest with Test {
         MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
@@ -57,7 +57,7 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec with 
     }
 
     "createAmendUkSavingsAccountAnnualSummary called and isDefIf_MigrationEnabled is off" must {
-      "return a 200 status for a success scenario" in new IfsTest with Test {
+      "return a 200 status for a success scenario" in new DesTest with Test {
         MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")

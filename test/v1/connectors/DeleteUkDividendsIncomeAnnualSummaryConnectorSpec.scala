@@ -30,7 +30,7 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec wi
   "DeleteUkDividendsIncomeAnnualSummaryConnector" should {
     "return the expected response for a non-TYS request" when {
       "a valid request is made and `isPassDeleteIntentEnabled` feature switch is on and isDefIf_MigrationEnabled is on" in new IfsTest with Test {
-        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "IIR_DELETE")
+        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredIfsHeaders :+ ("intent" -> "IIR_DELETE")
         MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
 
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
