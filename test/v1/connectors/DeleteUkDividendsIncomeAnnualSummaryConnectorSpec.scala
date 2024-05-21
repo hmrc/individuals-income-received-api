@@ -29,6 +29,40 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec wi
 
   "DeleteUkDividendsIncomeAnnualSummaryConnector" should {
     "return the expected response for a non-TYS request" when {
+      "a valid request is made and `isPassDeleteIntentEnabled` feature switch is on and isDefIf_MigrationEnabled is on" in new IfsTest with Test {
+        override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "IIR_DELETE")
+        MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+        val outcome          = Right(ResponseWrapper(correlationId, ()))
+
+        willPost(
+          url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}",
+          body = Json.parse("""{}""")
+        ).returns(Future.successful(outcome))
+
+        MockFeatureSwitches.isPassDeleteIntentEnabled.returns(true)
+
+        await(connector.delete(request)) shouldBe outcome
+      }
+
+      "a valid request is made and `isPassDeleteIntentEnabled` feature switch is off and isDefMigration is on" in new IfsTest with Test {
+        override lazy val excludedHeaders: scala.Seq[(String, String)] = super.excludedHeaders :+ ("intent" -> "IIR_DELETE")
+        MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+        val outcome          = Right(ResponseWrapper(correlationId, ()))
+
+        willPost(
+          url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}",
+          body = Json.parse("""{}""")
+        ).returns(Future.successful(outcome))
+
+        MockFeatureSwitches.isPassDeleteIntentEnabled.returns(false)
+
+        await(connector.delete(request)) shouldBe outcome
+      }
+
       "a valid request is made and `isPassDeleteIntentEnabled` feature switch is on and isDefIf_MigrationEnabled is off" in new DesTest with Test {
         override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "IIR_DELETE")
         MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
@@ -62,40 +96,6 @@ class DeleteUkDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec wi
 
         await(connector.delete(request)) shouldBe outcome
       }
-    }
-
-    "a valid request is made and `isPassDeleteIntentEnabled` feature switch is on and isDefIf_MigrationEnabled is on" in new IfsTest with Test {
-      override lazy val requiredHeaders: scala.Seq[(String, String)] = requiredDesHeaders :+ ("intent" -> "IIR_DELETE")
-      MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
-
-      def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-      val outcome          = Right(ResponseWrapper(correlationId, ()))
-
-      willPost(
-        url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}",
-        body = Json.parse("""{}""")
-      ).returns(Future.successful(outcome))
-
-      MockFeatureSwitches.isPassDeleteIntentEnabled.returns(true)
-
-      await(connector.delete(request)) shouldBe outcome
-    }
-
-    "a valid request is made and `isPassDeleteIntentEnabled` feature switch is off and isDefMigration is on" in new IfsTest with Test {
-      override lazy val excludedHeaders: scala.Seq[(String, String)] = super.excludedHeaders :+ ("intent" -> "IIR_DELETE")
-      MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
-
-      def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-      val outcome          = Right(ResponseWrapper(correlationId, ()))
-
-      willPost(
-        url = s"$baseUrl/income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}",
-        body = Json.parse("""{}""")
-      ).returns(Future.successful(outcome))
-
-      MockFeatureSwitches.isPassDeleteIntentEnabled.returns(false)
-
-      await(connector.delete(request)) shouldBe outcome
     }
 
     "return the expected response for a TYS request" when {

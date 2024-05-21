@@ -29,11 +29,11 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec wit
   val nino: String = "AA123456A"
   private val body = CreateAmendUkDividendsIncomeAnnualSummaryBody(None, None)
 
-  "CreateAmendUkDividendsAnnualSummaryConnector and isDefIf_MigrationEnabled is off" when {
-    "createOrAmendAnnualSummary called" must {
+  "CreateAmendUkDividendsAnnualSummaryConnector" when {
+    "createOrAmendAnnualSummary called and isDefIf_MigrationEnabled is on" must {
       "return a 200 status for a success scenario" in
-        new DesTest with Test {
-          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
+        new IfsTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
 
           def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
@@ -46,10 +46,10 @@ class CreateAmendUkDividendsAnnualSummaryConnectorSpec extends ConnectorSpec wit
         }
     }
 
-    "createOrAmendAnnualSummary called and isDefIf_MigrationEnabled is on" must {
+    "createOrAmendAnnualSummary called and isDefIf_MigrationEnabled is off" must {
       "return a 200 status for a success scenario" in
-        new IfsTest with Test {
-          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+        new DesTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
 
           def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 

@@ -19,13 +19,12 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockFeatureSwitches
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
 import v1.models.response.retrieveUkSavingsAnnualSummary.{DownstreamUkSavingsAnnualIncomeItem, DownstreamUkSavingsAnnualIncomeResponse}
 
 import scala.concurrent.Future
 
-class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec with MockFeatureSwitches {
+class RetrieveUkSavingsAccountAnnualSummaryConnectorSpec extends ConnectorSpec {
 
   val nino: String           = "AA111111A"
   val incomeSourceId: String = "SAVKB2UVwUTBQGJ"

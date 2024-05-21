@@ -39,10 +39,10 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
   )
 
   "RetrieveUkDividendsIncomeAnnualSummaryConnectorSpec" when {
-    "retrieveUKDividendsIncomeAnnualSummary is called and isDefIf_MigrationEnabled is off" must {
+    "retrieveUKDividendsIncomeAnnualSummary is called and isDefIf_MigrationEnabled is on" must {
       "return a 200 for success scenario" in {
-        new DesTest with Test {
-          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
+        new IfsTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
 
           def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
 
@@ -64,10 +64,10 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnectorSpec extends ConnectorSpec 
       }
     }
 
-    "retrieveUKDividendsIncomeAnnualSummary is called and isDefIf_MigrationEnabled is on" must {
+    "retrieveUKDividendsIncomeAnnualSummary is called and isDefIf_MigrationEnabled is off" must {
       "return a 200 for success scenario" in {
-        new IfsTest with Test {
-          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+        new DesTest with Test {
+          MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
 
           def taxYear: TaxYear = TaxYear.fromMtd("2018-19")
 
