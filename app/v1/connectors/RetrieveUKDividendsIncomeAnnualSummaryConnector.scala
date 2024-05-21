@@ -49,7 +49,7 @@ class RetrieveUKDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpC
       } else if (featureSwitches.isDesIf_MigrationEnabled) {
         IfsUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](path)
       } else {
-        DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
+        DesUri[RetrieveUkDividendsAnnualIncomeSummaryResponse](path)
       }
 
     get(downstreamUri)
