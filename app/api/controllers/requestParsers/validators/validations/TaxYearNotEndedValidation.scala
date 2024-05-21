@@ -18,9 +18,9 @@ package api.controllers.requestParsers.validators.validations
 
 import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleTaxYearNotEndedError}
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import utils.CurrentDateTime
+
+import java.time.LocalDate
 
 object TaxYearNotEndedValidation {
 
@@ -28,17 +28,14 @@ object TaxYearNotEndedValidation {
   def validate(taxYear: String)(implicit dateTimeProvider: CurrentDateTime): List[MtdError] = {
 
     val downstreamTaxYear     = Integer.parseInt(TaxYear.fromMtd(taxYear).asDownstream)
-    val currentDate: DateTime = dateTimeProvider.getDateTime
+    val currentDate: LocalDate = dateTimeProvider.getLocalDate
 
     if (downstreamTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError)
     else NoValidationErrors
   }
 
-  private val expectedDateFormat = DateTimeFormat.forPattern("yyyy-MM-dd")
-
-  private def getCurrentTaxYear(date: DateTime): Int = {
-
-    lazy val taxYearStartDate: DateTime = DateTime.parse(s"${date.getYear}-04-06", expectedDateFormat)
+  private def getCurrentTaxYear(date: LocalDate): Int = {
+    lazy val taxYearStartDate: LocalDate = LocalDate.parse(s"${date.getYear}-04-06")
 
     if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
   }

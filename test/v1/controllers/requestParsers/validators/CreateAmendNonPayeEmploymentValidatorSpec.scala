@@ -20,13 +20,13 @@ import api.mocks.MockCurrentDateTime
 import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.models.request.createAmendNonPayeEmployment.CreateAmendNonPayeEmploymentRawData
+
+import java.time.LocalDate
 
 class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppConfig {
 
@@ -73,12 +73,11 @@ class CreateAmendNonPayeEmploymentValidatorSpec extends UnitSpec with MockAppCon
 
     implicit val appConfig: AppConfig              = mockAppConfig
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     val validator = new CreateAmendNonPayeEmploymentValidator()
 
-    MockCurrentDateTime.getDateTime
-      .returns(DateTime.parse("2021-07-29", dateTimeFormatter))
+    MockCurrentDateTime.getLocalDate
+      .returns(LocalDate.parse("2021-07-29"))
       .anyNumberOfTimes()
 
     private val MINIMUM_YEAR = 2020

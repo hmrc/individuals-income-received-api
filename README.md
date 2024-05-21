@@ -18,14 +18,14 @@ The Individuals Income Received API allows a developer to create, amend, retriev
 
 - Scala 2.13.x
 - Java 11
-- sbt 1.7.x
+- sbt 1.9.7
 - [Service Manager V2](https://github.com/hmrc/sm2)
 
 ## Development Setup
 
 Run the microservice from the console using: `sbt run` (starts on port 7794 by default)
 
-Start the service manager profile: `sm --start MTDFB_INDIVIDUALS_INCOME_RECEIVED`
+Start the service manager profile: `sm2 --start MTDFB_INDIVIDUALS_INCOME_RECEIVED`
 
 ## Run Tests
 
