@@ -20,11 +20,12 @@ import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsObject, Json}
+import mocks.MockFeatureSwitches
 import v1.models.request.createAmendUkSavingsAnnualSummary.DownstreamCreateAmendUkSavingsAnnualSummaryBody
 
 import scala.concurrent.Future
 
-class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec {
+class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec with MockFeatureSwitches {
 
   val nino: String = "AA111111A"
 
@@ -41,26 +42,45 @@ class CreateAmendUkSavingsAnnualSummaryConnectorSpec extends ConnectorSpec {
   val outcome                         = Right(ResponseWrapper(correlationId, validResponse))
 
   "CreateAmendUkSavingsAccountAnnualSummaryConnector" when {
-    "createAmendUkSavingsAccountAnnualSummary called for a non Tax Year Specific tax year" must {
-      "return a 200 status for a success scenario" in new DesTest with Test {
+    "createAmendUkSavingsAccountAnnualSummary called and isDesIf_MigrationEnabled is on" must {
+      "return a 200 status for a success scenario" in new IfsTest with Test {
+        MockFeatureSwitches.isDesIf_MigrationEnabled.returns(true)
+
         def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
-        val url: String      = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/${taxYear.asDownstream}"
+
+        val url: String = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/${taxYear.asDownstream}"
         willPost(url, body) returns Future.successful(outcome)
 
         val result: DownstreamOutcome[Unit] = await(connector.createOrAmendUKSavingsAccountSummary(Nino(nino), taxYear, request))
         result shouldBe outcome
       }
+    }
 
-      "createAmendUkSavingsAccountAnnualSummary for a Tax Year Specific tax year" must {
-        "return a 200 status for a success scenario " in new TysIfsTest with Test {
-          def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
-          val url              = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/savings/annual"
-          willPost(url, body) returns Future.successful(outcome)
-          val result: DownstreamOutcome[Unit] = await(connector.createOrAmendUKSavingsAccountSummary(Nino(nino), taxYear, request))
-          result shouldBe outcome
-        }
+    "createAmendUkSavingsAccountAnnualSummary called and isDefIf_MigrationEnabled is off" must {
+      "return a 200 status for a success scenario" in new DesTest with Test {
+        MockFeatureSwitches.isDesIf_MigrationEnabled.returns(false)
+
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
+
+        val url: String = s"$baseUrl/income-tax/nino/$nino/income-source/savings/annual/${taxYear.asDownstream}"
+        willPost(url, body) returns Future.successful(outcome)
+
+        val result: DownstreamOutcome[Unit] = await(connector.createOrAmendUKSavingsAccountSummary(Nino(nino), taxYear, request))
+        result shouldBe outcome
       }
     }
+
+    "createAmendUkSavingsAccountAnnualSummary for a Tax Year Specific tax year" must {
+      "return a 200 status for a success scenario " in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/$nino/income-source/savings/annual"
+        willPost(url, body) returns Future.successful(outcome)
+        val result: DownstreamOutcome[Unit] = await(connector.createOrAmendUKSavingsAccountSummary(Nino(nino), taxYear, request))
+        result shouldBe outcome
+      }
+    }
+
   }
 
   trait Test {

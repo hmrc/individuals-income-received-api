@@ -16,9 +16,9 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveUkSavingsAnnualSummary.RetrieveUkSavingsAnnualSummaryRequest
 import v1.models.response.retrieveUkSavingsAnnualSummary.DownstreamUkSavingsAnnualIncomeResponse
@@ -27,7 +27,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)
+  (implicit featureSwitches: FeatureSwitches)
+  extends BaseDownstreamConnector {
 
   def retrieveUkSavingsAccountAnnualSummary(request: RetrieveUkSavingsAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
@@ -38,12 +40,15 @@ class RetrieveUkSavingsAccountAnnualSummaryConnector @Inject() (val http: HttpCl
 
     val nino           = request.nino.nino
     val incomeSourceId = request.savingsAccountId
+    val path = s"income-tax/nino/$nino/income-source/savings/annual/${request.taxYear.asDownstream}?incomeSourceId=$incomeSourceId"
 
     val downstreamUri: DownstreamUri[DownstreamUkSavingsAnnualIncomeResponse] =
       if (request.taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri(s"income-tax/${request.taxYear.asTysDownstream}/$nino/income-source/savings/annual?incomeSourceId=$incomeSourceId")
+      } else if (featureSwitches.isDesIf_MigrationEnabled) {
+        IfsUri(path)
       } else {
-        DesUri(s"income-tax/nino/$nino/income-source/savings/annual/${request.taxYear.asDownstream}?incomeSourceId=$incomeSourceId")
+        DesUri(path)
       }
 
     get(downstreamUri)

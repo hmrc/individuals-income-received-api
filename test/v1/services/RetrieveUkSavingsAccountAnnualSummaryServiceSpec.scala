@@ -121,7 +121,6 @@ class RetrieveUkSavingsAccountAnnualSummaryServiceSpec extends ServiceSpec {
 
       val tysErrors = List(
         ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_CORRELATION_ID", InternalError),
         ("INVALID_INCOMESOURCE_ID", SavingsAccountIdFormatError),
         ("INVALID_INCOMESOURCE_TYPE", InternalError),
         ("SUBMISSION_PERIOD_NOT_FOUND", NotFoundError),

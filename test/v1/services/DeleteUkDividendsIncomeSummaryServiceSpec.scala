@@ -73,7 +73,6 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
         val extraTysErrors = List(
           ("INVALID_INCOMESOURCE_TYPE", InternalError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATION_ID", InternalError),
           ("INVALID_INCOMESOURCE_ID", InternalError),
           ("INCOME_SOURCE_DATA_NOT_FOUND", NotFoundError),
           ("PERIOD_NOT_FOUND", NotFoundError),

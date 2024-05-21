@@ -16,9 +16,9 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createAmendUkDividendsIncomeAnnualSummary.CreateAmendUkDividendsIncomeAnnualSummaryRequest
@@ -27,7 +27,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig)
+    (implicit featureSwitches: FeatureSwitches)
+    extends BaseDownstreamConnector {
 
   def createAmendUkDividends(request: CreateAmendUkDividendsIncomeAnnualSummaryRequest)(implicit
       hc: HeaderCarrier,
@@ -40,11 +42,15 @@ class CreateAmendUkDividendsAnnualSummaryConnector @Inject() (val http: HttpClie
 
     implicit val successCode: SuccessCode = SuccessCode(OK)
 
+    val path = s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}"
+
     val downstreamUri =
       if (taxYear.useTaxYearSpecificApi) {
         TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/$nino/income-source/dividends/annual")
+      } else if (featureSwitches.isDesIf_MigrationEnabled) {
+        IfsUri[Unit](path)
       } else {
-        DesUri[Unit](s"income-tax/nino/$nino/income-source/dividends/annual/${taxYear.asDownstream}")
+        DesUri[Unit](path)
       }
 
     post(

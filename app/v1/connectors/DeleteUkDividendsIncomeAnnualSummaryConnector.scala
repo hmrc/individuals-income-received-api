@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import api.connectors.DownstreamUri.{DesUri, IfsUri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.{AppConfig, FeatureSwitches}
@@ -41,16 +41,23 @@ class DeleteUkDividendsIncomeAnnualSummaryConnector @Inject() (val http: HttpCli
 
     val intent = if (featureSwitches.isPassDeleteIntentEnabled) Some("DELETE") else None
 
+    val path = s"income-tax/nino/${nino.nino}/income-source/dividends/annual/${taxYear.asDownstream}"
 
     if (taxYear.useTaxYearSpecificApi) {
       delete(
         uri = TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/${nino.nino}/income-source/dividends/annual"),
         intent
       )
+    } else if (featureSwitches.isDesIf_MigrationEnabled) {
+      post(
+        body = JsObject.empty,
+        uri = IfsUri[Unit](path),
+        intent
+      )
     } else {
       post(
         body = JsObject.empty,
-        uri = DesUri[Unit](s"income-tax/nino/${nino.nino}/income-source/dividends/annual/${taxYear.asDownstream}"),
+        uri = DesUri[Unit](path),
         intent
       )
     }

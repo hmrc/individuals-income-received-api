@@ -45,6 +45,8 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
     case "ERR2"                 => Error2
     case "DS"                   => InternalError
     case "UNMATCHED_STUB_ERROR" => RuleIncorrectGovTestScenarioError
+    case "INVALID_CORRELATION_ID" => InternalError
+    case "INVALID_CORRELATIONID" => InternalError
   }
 
   case class TestClass(field: Option[String])
@@ -73,6 +75,20 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
           mapping.mapDownstreamErrors(errorCodeMap)(
             ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("UNMATCHED_STUB_ERROR")))) shouldBe
             ErrorWrapper(correlationId, RuleIncorrectGovTestScenarioError)
+        }
+      }
+      "downstream returns INVALID_CORRELATIONID" must {
+        "return an InternalError error" in {
+          mapping.mapDownstreamErrors(errorCodeMap)(
+            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("INVALID_CORRELATIONID")))) shouldBe
+            ErrorWrapper(correlationId, InternalError)
+        }
+      }
+      "downstream returns INVALID_CORRELATION_ID" must {
+        "return an InternalError error" in {
+          mapping.mapDownstreamErrors(errorCodeMap)(
+            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("INVALID_CORRELATION_ID")))) shouldBe
+            ErrorWrapper(correlationId, InternalError)
         }
       }
     }

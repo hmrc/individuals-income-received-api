@@ -56,7 +56,6 @@ class CreateAmendUkDividendsAnnualSummaryService @Inject() (connector: CreateAme
     val extraTysErrors = Map(
       "INVALID_TAX_YEAR"           -> TaxYearFormatError,
       "INVALID_INCOMESOURCE_TYPE"  -> InternalError,
-      "INVALID_CORRELATIONID"      -> InternalError,
       "TAX_YEAR_NOT_SUPPORTED"     -> RuleTaxYearNotSupportedError,
       "INCOME_SOURCE_NOT_FOUND"    -> NotFoundError,
       "INCOMPATIBLE_INCOME_SOURCE" -> InternalError
