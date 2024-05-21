@@ -27,25 +27,20 @@ object AmendEmployment {
 
   implicit val reads: Reads[AmendEmployment] = Json.reads[AmendEmployment]
 
-  implicit val amendEmploymentWrites = new Writes[AmendEmployment] {
+  implicit val amendEmploymentWrites: Writes[AmendEmployment] = (amendEmployment: AmendEmployment) => {
 
-    def writes(amendEmployment: AmendEmployment): JsObject = {
-
-      val append = amendEmployment.offPayrollWorker match {
-        case Some(true) => Json.obj("offPayrollWorker" -> Some(true))
-        case _          => JsObject.empty
-      }
-
-      val result = Json.obj(
-        "pay"            -> amendEmployment.pay,
-        "deductions"     -> amendEmployment.deductions,
-        "benefitsInKind" -> amendEmployment.benefitsInKind
-      )
-
-      result ++ append
-
+    val append = amendEmployment.offPayrollWorker match {
+      case Some(true) => Json.obj("offPayrollWorker" -> Some(true))
+      case _          => JsObject.empty
     }
 
+    val result = Json.obj(
+      "pay"            -> amendEmployment.pay,
+      "deductions"     -> amendEmployment.deductions,
+      "benefitsInKind" -> amendEmployment.benefitsInKind
+    )
+
+    result ++ append
   }
 
 }

@@ -20,11 +20,11 @@ import api.mocks.MockCurrentDateTime
 import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import support.UnitSpec
 import utils.CurrentDateTime
 import v1.models.request.deleteEmploymentFinancialDetails.DeleteEmploymentFinancialDetailsRawData
+
+import java.time.LocalDate
 
 class DeleteEmploymentFinancialDetailsValidatorSpec extends UnitSpec {
 
@@ -35,14 +35,13 @@ class DeleteEmploymentFinancialDetailsValidatorSpec extends UnitSpec {
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
 
     implicit val appConfig: AppConfig = mockAppConfig
 
     val validator = new DeleteEmploymentFinancialDetailsValidator()
 
-    MockCurrentDateTime.getDateTime
-      .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
+    MockCurrentDateTime.getLocalDate
+      .returns(LocalDate.parse("2022-07-11"))
       .anyNumberOfTimes()
 
     MockedAppConfig.minimumPermittedTaxYear

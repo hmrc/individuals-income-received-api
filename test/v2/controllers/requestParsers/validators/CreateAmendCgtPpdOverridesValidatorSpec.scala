@@ -21,13 +21,13 @@ import api.mocks.MockCurrentDateTime
 import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import utils.CurrentDateTime
 import v2.models.request.createAmendCgtPpdOverrides.CreateAmendCgtPpdOverridesRawData
+
+import java.time.LocalDate
 
 class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatErrorMessages {
 
@@ -568,13 +568,12 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
   class Test extends MockCurrentDateTime with MockAppConfig {
 
     implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
     implicit val appConfig: AppConfig              = mockAppConfig
 
     val validator = new CreateAmendCgtPpdOverridesValidator()
 
-    MockCurrentDateTime.getDateTime
-      .returns(DateTime.parse("2021-07-11", dateTimeFormatter))
+    MockCurrentDateTime.getLocalDate
+      .returns(LocalDate.parse("2021-07-11"))
       .anyNumberOfTimes()
 
     MockedAppConfig.minimumPermittedTaxYear
@@ -692,7 +691,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
 
     "return a dateFormatError" when {
       "a body with an incorrect date is provided" in new Test {//20-02-28 //2020-03-29
-        val requestWithInvalidDates =  invalidDateRequestBodyJson(acquisitionDate="20-02-28",completionDate = "20-02-28")
+        val requestWithInvalidDates: JsValue =  invalidDateRequestBodyJson(acquisitionDate="20-02-28",completionDate = "20-02-28")
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, AnyContentAsJson(requestWithInvalidDates))) shouldBe
           List(
             DateFormatError.copy(paths = Some(Seq("/singlePropertyDisposals/0/completionDate","/singlePropertyDisposals/0/acquisitionDate")))
@@ -702,7 +701,7 @@ class CreateAmendCgtPpdOverridesValidatorSpec extends UnitSpec with ValueFormatE
 
     "return a invalid date range error" when {
       "a body with dates outside of acceptable range is provided" in new Test {
-        val requestWithInvalidDates = invalidDateRequestBodyJson(acquisitionDate = "0010-01-01", completionDate = "2101-02-28")
+        val requestWithInvalidDates: JsValue = invalidDateRequestBodyJson(acquisitionDate = "0010-01-01", completionDate = "2101-02-28")
         validator.validate(CreateAmendCgtPpdOverridesRawData(validNino, validTaxYear, AnyContentAsJson(requestWithInvalidDates))) shouldBe
           List(
             RuleDateRangeInvalidError.copy(paths = Some(Seq("/singlePropertyDisposals/0/completionDate","/singlePropertyDisposals/0/acquisitionDate")))
