@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import sbt._
+import sbt.*
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings}
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
@@ -31,15 +31,21 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test(),
     retrieveManaged                 := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
-    scalaVersion                    := "2.13.8",
-    scalacOptions ++= Seq("-Xfatal-warnings", "-Wconf:src=routes/.*:silent", "-feature", "-language:higherKinds")
+    scalaVersion                    := "2.13.12",
+    scalacOptions ++= List(
+      "-language:higherKinds",
+      "-Xlint:-byname-implicit",
+      "-Xfatal-warnings",
+      "-Wconf:src=routes/.*:silent",
+      "-feature"
+    )
   )
   .settings(
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )
   .settings(majorVersion := 0)
-  .settings(CodeCoverageSettings.settings: _*)
-  .settings(defaultSettings(): _*)
+  .settings(CodeCoverageSettings.settings *)
+  .settings(defaultSettings() *)
   .configs(ItTest)
   .settings(
     inConfig(ItTest)(Defaults.itSettings ++ headerSettings(ItTest) ++ automateHeaderSettings(ItTest) ++ ScalafmtPlugin.scalafmtConfigSettings),
@@ -55,13 +61,3 @@ lazy val microservice = Project(appName, file("."))
     resolvers += Resolver.jcenterRepo
   )
   .settings(PlayKeys.playDefaultPort := 7794)
-
-dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
-dependencyUpdatesFilter -= moduleFilter(name = "simple-reactivemongo")
-dependencyUpdatesFilter -= moduleFilter(name = "reactivemongo-test")
-dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
-dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")
-dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-play")
-dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-scalacheck")
-
-dependencyUpdatesFailBuild := true

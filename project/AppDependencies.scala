@@ -15,30 +15,28 @@
  */
 
 import play.core.PlayVersion
-import play.sbt.PlayImport._
-import sbt._
+import play.sbt.PlayImport.*
+import sbt.*
 
 object AppDependencies {
 
-  val bootstrap_28_version = "7.11.0"
+  val bootstrapPlayVersion = "8.1.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
-    "uk.gov.hmrc"                  %% "bootstrap-backend-play-28" % bootstrap_28_version,
+    "uk.gov.hmrc"                  %% "bootstrap-backend-play-30" % bootstrapPlayVersion,
     "org.typelevel"                %% "cats-core"                 % "2.9.0",
     "com.chuusai"                  %% "shapeless"                 % "2.4.0-M1",
     "com.neovisionaries"            % "nv-i18n"                   % "1.29",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.14.2"
+    "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.17.0"
   )
 
   def test(scope: String = "test, it"): Seq[sbt.ModuleID] = Seq(
-    "org.scalatest"         %% "scalatest"              % "3.2.15"             % scope,
-    "com.vladsch.flexmark"   % "flexmark-all"           % "0.62.2"             % scope,
+    "org.scalatest"         %% "scalatest"              % "3.2.18"             % scope,
     "org.scalacheck"        %% "scalacheck"             % "1.17.0"             % scope,
     "org.scalamock"         %% "scalamock"              % "5.2.0"              % scope,
-    "com.typesafe.play"     %% "play-test"              % PlayVersion.current  % scope,
-    "uk.gov.hmrc"           %% "bootstrap-test-play-28" % bootstrap_28_version % scope,
-    "com.github.tomakehurst" % "wiremock-jre8"          % "2.35.0"             % scope,
+    "org.playframework"      %% "play-test"              % PlayVersion.current  % scope,
+    "uk.gov.hmrc"           %% "bootstrap-test-play-30" % bootstrapPlayVersion % scope,
     "io.swagger.parser.v3"   % "swagger-parser-v3"      % "2.1.12"             % scope
   )
 
