@@ -74,7 +74,7 @@ class RetrieveUkDividendsIncomeAnnualSummaryServiceSpec extends ServiceSpec {
         val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TYPE", InternalError),
-          ("INVALID_TAXYEAR", TaxYearFormatError),  //remove once DES to IFS migration complete
+          ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_INCOME_SOURCE", InternalError),
           ("NOT_FOUND_PERIOD", NotFoundError),
           ("NOT_FOUND_INCOME_SOURCE", NotFoundError),

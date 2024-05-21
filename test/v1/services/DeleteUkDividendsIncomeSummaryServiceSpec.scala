@@ -56,7 +56,7 @@ class DeleteUkDividendsIncomeSummaryServiceSpec extends UnitSpec {
         val errors = List(
           ("INVALID_NINO", NinoFormatError),
           ("INVALID_TYPE", InternalError),
-          ("INVALID_TAXYEAR", TaxYearFormatError),  //remove once DES to IFS migration complete
+          ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_PAYLOAD", InternalError),
           ("NOT_FOUND_INCOME_SOURCE", NotFoundError),
           ("MISSING_CHARITIES_NAME_GIFT_AID", InternalError),

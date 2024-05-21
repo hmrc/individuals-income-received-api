@@ -62,7 +62,7 @@ class CreateAmendUkDividendsAnnualSummaryServiceSpec extends ServiceSpec {
 
         val errors = List(
           ("INVALID_NINO", NinoFormatError),
-          ("INVALID_TAXYEAR", TaxYearFormatError),  //remove once DES to IFS migration complete
+          ("INVALID_TAXYEAR", TaxYearFormatError),
           ("INVALID_TYPE", InternalError),
           ("INVALID_PAYLOAD", InternalError),
           ("NOT_FOUND_INCOME_SOURCE", NotFoundError),

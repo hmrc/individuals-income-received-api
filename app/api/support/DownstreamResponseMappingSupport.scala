@@ -36,7 +36,6 @@ trait DownstreamResponseMappingSupport {
         logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - An internal server error occurred")
         InternalError
 
-
       case code =>
         logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
         InternalError
