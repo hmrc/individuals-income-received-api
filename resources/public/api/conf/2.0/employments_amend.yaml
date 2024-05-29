@@ -36,10 +36,14 @@ requestBody:
       schema:
         $ref: './schemas/employments_amend_custom_request.json'
       examples:
-        example-1:
+        default-example:
           description: Default Example
           value:
             $ref: './examples/employments/amend_request.json'
+        occupational-pension-example:
+          description: Example With Occupational Pension
+          value:
+            $ref: './examples/employments/amend_request_pension_true.json'
 
 responses:
   "200":
