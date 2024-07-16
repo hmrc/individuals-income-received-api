@@ -42,7 +42,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.apiStatus(Version2) returns "BETA"
         MockedAppConfig.endpointsEnabled(Version1) returns true
         MockedAppConfig.endpointsEnabled(Version2) returns true
-        MockedAppConfig.confidenceLevelCheckEnabled
+        MockedAppConfig.confidenceLevelConfig
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
@@ -97,7 +97,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
       s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
         s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+          MockedAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)

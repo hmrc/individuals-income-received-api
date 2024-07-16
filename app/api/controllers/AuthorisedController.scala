@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.models.auth.UserDetails
-import api.models.errors.{ClientNotAuthenticatedError, InternalError, MtdError}
+import api.models.errors.MtdError
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.Enrolment
@@ -46,11 +46,10 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
         .withDelegatedAuthRule("mtd-it-auth")
 
     def invokeBlockWithAuthCheck[A](mtdId: String, request: Request[A], block: UserRequest[A] => Future[Result])(implicit
-        headerCarrier: HeaderCarrier): Future[Result] = {
+                                                                                                                 headerCarrier: HeaderCarrier): Future[Result] = {
       authService.authorised(predicate(mtdId)).flatMap[Result] {
-        case Right(userDetails)                => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
-        case Left(ClientNotAuthenticatedError) => Future.successful(Forbidden(ClientNotAuthenticatedError.asJson))
-        case Left(_)                           => Future.successful(InternalServerError(InternalError.asJson))
+        case Right(userDetails) => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
+        case Left(mtdError)     => errorResponse(mtdError)
       }
     }
 

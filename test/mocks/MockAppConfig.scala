@@ -66,7 +66,7 @@ trait MockAppConfig extends MockFactory {
     def minimumPermittedTaxYear: CallHandler[Int]                = (() => mockAppConfig.minimumPermittedTaxYear).expects()
     def ukDividendsMinimumTaxYear: CallHandler[Int]              = (() => mockAppConfig.ukDividendsMinimumTaxYear).expects()
 
-    def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] =
+    def confidenceLevelConfig: CallHandler[ConfidenceLevelConfig] =
       (() => mockAppConfig.confidenceLevelConfig).expects()
 
   }
