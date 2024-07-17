@@ -22,29 +22,30 @@ import support.UnitSpec
 
 class NinoValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  "validate" should {
-    "return no errors" when {
-      "when a valid NINO is supplied" in {
+  "NinoValidation" when {
+    "a valid NINO is supplied" must {
+      val nino = "AA123456A"
 
-        val validNino        = "AA123456A"
-        val validationResult = NinoValidation.validate(validNino)
-        validationResult.isEmpty shouldBe true
+      "be valid" in {
+        NinoValidation.isValid(nino) shouldBe true
+      }
 
+      "return no errors" in {
+        NinoValidation.validate(nino) shouldBe empty
       }
     }
 
-    "return an error" when {
-      "when an invalid NINO is supplied" in {
+    "a invalid NINO is supplied" must {
+      val nino = "AA123456ABCBBCBCBC"
 
-        val invalidNino      = "AA123456ABCBBCBCBC"
-        val validationResult = NinoValidation.validate(invalidNino)
-        validationResult.isEmpty shouldBe false
-        validationResult.length shouldBe 1
-        validationResult.head shouldBe NinoFormatError
+      "not be valid" in {
+        NinoValidation.isValid(nino) shouldBe false
+      }
 
+      "return a NinoFormatError" in {
+        NinoValidation.validate(nino) shouldBe List(NinoFormatError)
       }
     }
-
   }
 
 }
