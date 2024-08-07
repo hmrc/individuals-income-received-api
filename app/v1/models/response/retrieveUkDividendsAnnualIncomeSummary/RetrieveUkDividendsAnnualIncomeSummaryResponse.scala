@@ -19,12 +19,22 @@ package v1.models.response.retrieveUkDividendsAnnualIncomeSummary
 import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class RetrieveUkDividendsAnnualIncomeSummaryResponse(ukDividends: Option[BigDecimal], otherUkDividends: Option[BigDecimal])
 
 object RetrieveUkDividendsAnnualIncomeSummaryResponse extends HateoasLinks {
-  implicit val format: OFormat[RetrieveUkDividendsAnnualIncomeSummaryResponse] = Json.format
+
+  implicit val writes: OWrites[RetrieveUkDividendsAnnualIncomeSummaryResponse] = Json.writes
+
+  implicit val reads: Reads[RetrieveUkDividendsAnnualIncomeSummaryResponse] = {
+     val defaultReads: Reads[RetrieveUkDividendsAnnualIncomeSummaryResponse] = Json.reads
+
+    // On IFS the required object is one layer down:
+    val ifsReads = (JsPath \ "ukDividendsAnnual").read(defaultReads)
+
+    ifsReads orElse defaultReads
+  }
 
   implicit object LinksFactory
       extends HateoasLinksFactory[RetrieveUkDividendsAnnualIncomeSummaryResponse, RetrieveUkDividendsAnnualIncomeSummaryHateoasData] {
