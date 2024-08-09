@@ -25,8 +25,9 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.{IntegrationBaseSpec, WireMockMethods}
+import v1.models.response.retrieveUkDividendsAnnualIncomeSummary.RetrieveUkDividendsAnnualIncomeSummaryFixture
 
-class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec extends IntegrationBaseSpec with WireMockMethods {
+class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec extends IntegrationBaseSpec with WireMockMethods with RetrieveUkDividendsAnnualIncomeSummaryFixture {
 
   "Calling the 'retrieve dividends' endpoint" should {
     "return a 200 status code" when {
@@ -36,7 +37,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec extends IntegrationB
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, desResponseJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -50,7 +51,7 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec extends IntegrationB
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, ifsResponseJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -151,13 +152,6 @@ class RetrieveUkDividendsAnnualIncomeSummaryControllerISpec extends IntegrationB
     def downstreamUri: String
 
     def nino: String = "AA123456A"
-
-    val downstreamResponse: JsValue = Json.parse("""
-        |{
-        |  "ukDividends": 10.12,
-        |  "otherUkDividends": 11.12
-        |}
-        |""".stripMargin)
 
     val mtdResponse: JsValue = Json.parse(s"""
          |{

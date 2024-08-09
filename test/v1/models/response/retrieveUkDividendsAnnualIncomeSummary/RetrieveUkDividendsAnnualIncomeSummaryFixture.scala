@@ -20,10 +20,21 @@ import play.api.libs.json.{JsValue, Json}
 
 trait RetrieveUkDividendsAnnualIncomeSummaryFixture {
 
-  protected val downstreamResponseJson: JsValue = Json.parse("""
+  // DES #1391 has fields at top level
+  protected val desResponseJson: JsValue = Json.parse("""
+     |{
+     |  "ukDividends": 10.12,
+     |  "otherUkDividends": 11.12
+     |}
+     |""".stripMargin)
+
+  // IFS #1785 has ukDividendsAnnual parent object
+  protected val ifsResponseJson: JsValue = Json.parse("""
       |{
-      |  "ukDividends": 10.12,
-      |  "otherUkDividends": 11.12
+      |  "ukDividendsAnnual": {
+      |    "ukDividends": 10.12,
+      |    "otherUkDividends": 11.12
+      |  }
       |}
       |""".stripMargin)
 

@@ -26,8 +26,12 @@ class RetrieveUkDividendsAnnualIncomeSummaryResponseSpec extends UnitSpec with M
 
   "RetrieveUkDividendsAnnualIncomeSummaryResponse" must {
 
-    "read from downstream JSON" in {
-      downstreamResponseJson.as[RetrieveUkDividendsAnnualIncomeSummaryResponse] shouldBe responseModel
+    "read from downstream (DES) JSON" in {
+      desResponseJson.as[RetrieveUkDividendsAnnualIncomeSummaryResponse] shouldBe responseModel
+    }
+
+    "read from downstream (IFS) JSON" in {
+      ifsResponseJson.as[RetrieveUkDividendsAnnualIncomeSummaryResponse] shouldBe responseModel
     }
 
     "write to MTD JSON" in {
