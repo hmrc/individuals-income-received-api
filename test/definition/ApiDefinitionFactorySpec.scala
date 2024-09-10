@@ -17,13 +17,11 @@
 package definition
 
 import api.mocks.MockHttpClient
-import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.MockAppConfig
 import play.api.Configuration
 import routing.{Version1, Version2}
 import support.UnitSpec
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 
 class ApiDefinitionFactorySpec extends UnitSpec {
 
@@ -31,8 +29,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
     MockedAppConfig.apiGatewayContext returns "individuals/income-received"
   }
-
-  private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
   "definition" when {
     "called" should {
@@ -42,29 +38,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockedAppConfig.apiStatus(Version2) returns "BETA"
         MockedAppConfig.endpointsEnabled(Version1) returns true
         MockedAppConfig.endpointsEnabled(Version2) returns true
-        MockedAppConfig.confidenceLevelConfig
-          .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
-          .anyNumberOfTimes()
-
-        private val readScope  = "read:self-assessment"
-        private val writeScope = "write:self-assessment"
 
         apiDefinitionFactory.definition shouldBe
           Definition(
-            scopes = Seq(
-              Scope(
-                key = readScope,
-                name = "View your Self Assessment information",
-                description = "Allow read access to self assessment data",
-                confidenceLevel
-              ),
-              Scope(
-                key = writeScope,
-                name = "Change your Self Assessment information",
-                description = "Allow write access to self assessment data",
-                confidenceLevel
-              )
-            ),
             api = APIDefinition(
               name = "Individuals Income Received (MTD)",
               description = "An API for providing individual income received data",
@@ -85,24 +61,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               requiresTrust = None
             )
           )
-      }
-    }
-  }
-
-  "confidenceLevel" when {
-    Seq(
-      (true, ConfidenceLevel.L250, ConfidenceLevel.L250),
-      (true, ConfidenceLevel.L200, ConfidenceLevel.L200),
-      (false, ConfidenceLevel.L200, ConfidenceLevel.L50)
-    ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
-      s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
-        s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelConfig returns ConfidenceLevelConfig(
-            confidenceLevel = configCL,
-            definitionEnabled = definitionEnabled,
-            authValidationEnabled = true)
-          apiDefinitionFactory.confidenceLevel shouldBe expectedDefinitionCL
-        }
       }
     }
   }
